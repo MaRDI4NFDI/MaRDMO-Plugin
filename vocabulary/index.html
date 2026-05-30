@@ -1,0 +1,1904 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../concepts/providers/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Vocabulary - MaRDMO Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mardmo-vocabulary" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="MaRDMO Documentation" class="md-header__button md-logo" aria-label="MaRDMO Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            MaRDMO Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Vocabulary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="MaRDMO Documentation" class="md-nav__button md-logo" aria-label="MaRDMO Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    MaRDMO Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vocabulary
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vocabulary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#items-141" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Items (141)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties-67" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Properties (67)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/handlers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/publication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../concepts/export/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Export Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/mardmo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entry Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/checks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/payload/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Payload
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Submodules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Submodules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/publication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#items-141" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Items (141)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties-67" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Properties (67)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="mardmo-vocabulary">MaRDMO Vocabulary</h1>
+<p>MaRDMO communicates with the MaRDI Portal using a defined set of items and properties.  The tables below list every item and property that MaRDMO is capable of creating or referencing, together with its MaRDI Portal identifier.</p>
+<h2 id="items-141">Items (141)</h2>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>QID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>academic discipline</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q60231">Q60231</a></td>
+</tr>
+<tr>
+<td>algorithm</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q127020">Q127020</a></td>
+</tr>
+<tr>
+<td>algorithmic task</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775701">Q6775701</a></td>
+</tr>
+<tr>
+<td>analysis</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6825292">Q6825292</a></td>
+</tr>
+<tr>
+<td>analytical solution</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775641">Q6775641</a></td>
+</tr>
+<tr>
+<td>application</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6825298">Q6825298</a></td>
+</tr>
+<tr>
+<td>benchmark</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6825282">Q6825282</a></td>
+</tr>
+<tr>
+<td>binary data</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480276">Q6480276</a></td>
+</tr>
+<tr>
+<td>boundary condition</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534259">Q6534259</a></td>
+</tr>
+<tr>
+<td>chemical constant</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672074">Q6672074</a></td>
+</tr>
+<tr>
+<td>computational domain</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775579">Q6775579</a></td>
+</tr>
+<tr>
+<td>computational task</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534247">Q6534247</a></td>
+</tr>
+<tr>
+<td>compute node</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6767935">Q6767935</a></td>
+</tr>
+<tr>
+<td>computer hardware</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q56583">Q56583</a></td>
+</tr>
+<tr>
+<td>constant</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480317">Q6480317</a></td>
+</tr>
+<tr>
+<td>constitutive equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775587">Q6775587</a></td>
+</tr>
+<tr>
+<td>constraint</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534262">Q6534262</a></td>
+</tr>
+<tr>
+<td>continuous-space equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672088">Q6672088</a></td>
+</tr>
+<tr>
+<td>continuous-space model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672089">Q6672089</a></td>
+</tr>
+<tr>
+<td>continuous-space quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672116">Q6672116</a></td>
+</tr>
+<tr>
+<td>continuous-space quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775538">Q6775538</a></td>
+</tr>
+<tr>
+<td>continuous-space task</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775539">Q6775539</a></td>
+</tr>
+<tr>
+<td>continuous-time equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672090">Q6672090</a></td>
+</tr>
+<tr>
+<td>continuous-time model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672091">Q6672091</a></td>
+</tr>
+<tr>
+<td>continuous-time quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775540">Q6775540</a></td>
+</tr>
+<tr>
+<td>continuous-time quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775541">Q6775541</a></td>
+</tr>
+<tr>
+<td>continuous-time task</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775542">Q6775542</a></td>
+</tr>
+<tr>
+<td>coupling condition</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534266">Q6534266</a></td>
+</tr>
+<tr>
+<td>cross-platform irreproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q7226905">Q7226905</a></td>
+</tr>
+<tr>
+<td>cross-platform reproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534214">Q6534214</a></td>
+</tr>
+<tr>
+<td>CPU model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q7171486">Q7171486</a></td>
+</tr>
+<tr>
+<td>data publishing</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480291">Q6480291</a></td>
+</tr>
+<tr>
+<td>data set</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q56885">Q56885</a></td>
+</tr>
+<tr>
+<td>deterministic equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672075">Q6672075</a></td>
+</tr>
+<tr>
+<td>deterministic model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672076">Q6672076</a></td>
+</tr>
+<tr>
+<td>deterministic quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775543">Q6775543</a></td>
+</tr>
+<tr>
+<td>deterministic quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775544">Q6775544</a></td>
+</tr>
+<tr>
+<td>dimensional equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775550">Q6775550</a></td>
+</tr>
+<tr>
+<td>dimensional model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775551">Q6775551</a></td>
+</tr>
+<tr>
+<td>dimensional quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775552">Q6775552</a></td>
+</tr>
+<tr>
+<td>dimensional quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775553">Q6775553</a></td>
+</tr>
+<tr>
+<td>dimensionless equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672079">Q6672079</a></td>
+</tr>
+<tr>
+<td>dimensionless model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672080">Q6672080</a></td>
+</tr>
+<tr>
+<td>dimensionless quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6482820">Q6482820</a></td>
+</tr>
+<tr>
+<td>dimensionless quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672113">Q6672113</a></td>
+</tr>
+<tr>
+<td>discrete-space equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672092">Q6672092</a></td>
+</tr>
+<tr>
+<td>discrete-space model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672093">Q6672093</a></td>
+</tr>
+<tr>
+<td>discrete-space quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672117">Q6672117</a></td>
+</tr>
+<tr>
+<td>discrete-space quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775545">Q6775545</a></td>
+</tr>
+<tr>
+<td>discrete-space task</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775546">Q6775546</a></td>
+</tr>
+<tr>
+<td>discrete-time equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672094">Q6672094</a></td>
+</tr>
+<tr>
+<td>discrete-time model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672095">Q6672095</a></td>
+</tr>
+<tr>
+<td>discrete-time quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775547">Q6775547</a></td>
+</tr>
+<tr>
+<td>discrete-time quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775548">Q6775548</a></td>
+</tr>
+<tr>
+<td>discrete-time task</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775549">Q6775549</a></td>
+</tr>
+<tr>
+<td>documentation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672349">Q6672349</a></td>
+</tr>
+<tr>
+<td>dynamic equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672081">Q6672081</a></td>
+</tr>
+<tr>
+<td>dynamic model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672082">Q6672082</a></td>
+</tr>
+<tr>
+<td>dynamic quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672114">Q6672114</a></td>
+</tr>
+<tr>
+<td>dynamic quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775554">Q6775554</a></td>
+</tr>
+<tr>
+<td>english</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q56366">Q56366</a></td>
+</tr>
+<tr>
+<td>final condition</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534267">Q6534267</a></td>
+</tr>
+<tr>
+<td>gigabyte</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534225">Q6534225</a></td>
+</tr>
+<tr>
+<td>human</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q57162">Q57162</a></td>
+</tr>
+<tr>
+<td>initial condition</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534264">Q6534264</a></td>
+</tr>
+<tr>
+<td>input</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480299">Q6480299</a></td>
+</tr>
+<tr>
+<td>integro-differential equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6824240">Q6824240</a></td>
+</tr>
+<tr>
+<td>invention</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672344">Q6672344</a></td>
+</tr>
+<tr>
+<td>kilobyte</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534223">Q6534223</a></td>
+</tr>
+<tr>
+<td>kind of quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534245">Q6534245</a></td>
+</tr>
+<tr>
+<td>linear equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672107">Q6672107</a></td>
+</tr>
+<tr>
+<td>linear model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672112">Q6672112</a></td>
+</tr>
+<tr>
+<td>linear task</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672085">Q6672085</a></td>
+</tr>
+<tr>
+<td>MaRDI algorithm profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6503323">Q6503323</a></td>
+</tr>
+<tr>
+<td>MaRDI data set profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q5984635">Q5984635</a></td>
+</tr>
+<tr>
+<td>MaRDI formula profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q5981696">Q5981696</a></td>
+</tr>
+<tr>
+<td>MaRDI journal profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6767915">Q6767915</a></td>
+</tr>
+<tr>
+<td>MaRDI model profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534270">Q6534270</a></td>
+</tr>
+<tr>
+<td>MaRDI person profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q5976445">Q5976445</a></td>
+</tr>
+<tr>
+<td>MaRDI publication profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q5976449">Q5976449</a></td>
+</tr>
+<tr>
+<td>MaRDI quantity profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534271">Q6534271</a></td>
+</tr>
+<tr>
+<td>MaRDI research field profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534268">Q6534268</a></td>
+</tr>
+<tr>
+<td>MaRDI research problem profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534269">Q6534269</a></td>
+</tr>
+<tr>
+<td>MaRDI software profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q5976450">Q5976450</a></td>
+</tr>
+<tr>
+<td>MaRDI task profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534272">Q6534272</a></td>
+</tr>
+<tr>
+<td>MaRDI workflow profile</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534216">Q6534216</a></td>
+</tr>
+<tr>
+<td>MathAlgoDB</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6830558">Q6830558</a></td>
+</tr>
+<tr>
+<td>MathModDB</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534265">Q6534265</a></td>
+</tr>
+<tr>
+<td>mathematical constant</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672097">Q6672097</a></td>
+</tr>
+<tr>
+<td>formula</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q96183">Q96183</a></td>
+</tr>
+<tr>
+<td>mathematical model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q68663">Q68663</a></td>
+</tr>
+<tr>
+<td>mathematically irreproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q7226901">Q7226901</a></td>
+</tr>
+<tr>
+<td>mathematically reproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534210">Q6534210</a></td>
+</tr>
+<tr>
+<td>megabyte</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534224">Q6534224</a></td>
+</tr>
+<tr>
+<td>method</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q68669">Q68669</a></td>
+</tr>
+<tr>
+<td>nonlinear equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672086">Q6672086</a></td>
+</tr>
+<tr>
+<td>nonlinear model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672110">Q6672110</a></td>
+</tr>
+<tr>
+<td>nonlinear task</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672087">Q6672087</a></td>
+</tr>
+<tr>
+<td>objective function</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534255">Q6534255</a></td>
+</tr>
+<tr>
+<td>open data</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480313">Q6480313</a></td>
+</tr>
+<tr>
+<td>ordinary differential equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6481447">Q6481447</a></td>
+</tr>
+<tr>
+<td>original platform irreproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q7226904">Q7226904</a></td>
+</tr>
+<tr>
+<td>original platform reproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534213">Q6534213</a></td>
+</tr>
+<tr>
+<td>output</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480295">Q6480295</a></td>
+</tr>
+<tr>
+<td>parameter</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480341">Q6480341</a></td>
+</tr>
+<tr>
+<td>partial differential equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6822213">Q6822213</a></td>
+</tr>
+<tr>
+<td>physical constant</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534290">Q6534290</a></td>
+</tr>
+<tr>
+<td>physical law</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775588">Q6775588</a></td>
+</tr>
+<tr>
+<td>probabilistic equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672077">Q6672077</a></td>
+</tr>
+<tr>
+<td>probabilistic model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672078">Q6672078</a></td>
+</tr>
+<tr>
+<td>probabilistic quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775555">Q6775555</a></td>
+</tr>
+<tr>
+<td>probabilistic quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775556">Q6775556</a></td>
+</tr>
+<tr>
+<td>process step</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6486603">Q6486603</a></td>
+</tr>
+<tr>
+<td>programming language</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q56422">Q56422</a></td>
+</tr>
+<tr>
+<td>proprietary information</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480367">Q6480367</a></td>
+</tr>
+<tr>
+<td>publication</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q56751">Q56751</a></td>
+</tr>
+<tr>
+<td>quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534237">Q6534237</a></td>
+</tr>
+<tr>
+<td>research data archiving</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480370">Q6480370</a></td>
+</tr>
+<tr>
+<td>research problem</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534292">Q6534292</a></td>
+</tr>
+<tr>
+<td>research tool</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q77076">Q77076</a></td>
+</tr>
+<tr>
+<td>research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q68657">Q68657</a></td>
+</tr>
+<tr>
+<td>result irreproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q7226902">Q7226902</a></td>
+</tr>
+<tr>
+<td>result reproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534212">Q6534212</a></td>
+</tr>
+<tr>
+<td>review</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672366">Q6672366</a></td>
+</tr>
+<tr>
+<td>runtime irreproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q7226903">Q7226903</a></td>
+</tr>
+<tr>
+<td>runtime reproducible research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534211">Q6534211</a></td>
+</tr>
+<tr>
+<td>scholarly article</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q56887">Q56887</a></td>
+</tr>
+<tr>
+<td>scientific journal</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q56973">Q56973</a></td>
+</tr>
+<tr>
+<td>software</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q56614">Q56614</a></td>
+</tr>
+<tr>
+<td>static equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672083">Q6672083</a></td>
+</tr>
+<tr>
+<td>static model</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672084">Q6672084</a></td>
+</tr>
+<tr>
+<td>static quantity</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6672115">Q6672115</a></td>
+</tr>
+<tr>
+<td>static quantity kind</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775557">Q6775557</a></td>
+</tr>
+<tr>
+<td>stochastic differential equation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6822417">Q6822417</a></td>
+</tr>
+<tr>
+<td>strong formulation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775640">Q6775640</a></td>
+</tr>
+<tr>
+<td>study</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775621">Q6775621</a></td>
+</tr>
+<tr>
+<td>terabyte</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534226">Q6534226</a></td>
+</tr>
+<tr>
+<td>text data</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534207">Q6534207</a></td>
+</tr>
+<tr>
+<td>transferable research workflow</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6534215">Q6534215</a></td>
+</tr>
+<tr>
+<td>use</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6480405">Q6480405</a></td>
+</tr>
+<tr>
+<td>weak formulation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Item:Q6775618">Q6775618</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="properties-67">Properties (67)</h2>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>PID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>approximated by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1655">P1655</a></td>
+</tr>
+<tr>
+<td>assumes</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1674">P1674</a></td>
+</tr>
+<tr>
+<td>author</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P16">P16</a></td>
+</tr>
+<tr>
+<td>author name string</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P43">P43</a></td>
+</tr>
+<tr>
+<td>comment</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P8">P8</a></td>
+</tr>
+<tr>
+<td>community</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1495">P1495</a></td>
+</tr>
+<tr>
+<td>contains</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1560">P1560</a></td>
+</tr>
+<tr>
+<td>CPU</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1540">P1540</a></td>
+</tr>
+<tr>
+<td>data size</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1542">P1542</a></td>
+</tr>
+<tr>
+<td>defining formula</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P989">P989</a></td>
+</tr>
+<tr>
+<td>depends on software</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P342">P342</a></td>
+</tr>
+<tr>
+<td>described at URL</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P104">P104</a></td>
+</tr>
+<tr>
+<td>described by source</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P286">P286</a></td>
+</tr>
+<tr>
+<td>description</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1459">P1459</a></td>
+</tr>
+<tr>
+<td>discretized by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1656">P1656</a></td>
+</tr>
+<tr>
+<td>DOI</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P27">P27</a></td>
+</tr>
+<tr>
+<td>end time</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P411">P411</a></td>
+</tr>
+<tr>
+<td>field of work</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P437">P437</a></td>
+</tr>
+<tr>
+<td>file extension</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P921">P921</a></td>
+</tr>
+<tr>
+<td>has part(s)</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P265">P265</a></td>
+</tr>
+<tr>
+<td>has weak formulation</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1736">P1736</a></td>
+</tr>
+<tr>
+<td>implemented by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1766">P1766</a></td>
+</tr>
+<tr>
+<td>in defining formula</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P983">P983</a></td>
+</tr>
+<tr>
+<td>input data set</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1605">P1605</a></td>
+</tr>
+<tr>
+<td>instance of</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P31">P31</a></td>
+</tr>
+<tr>
+<td>ISSN</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P24">P24</a></td>
+</tr>
+<tr>
+<td>issue</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P25">P25</a></td>
+</tr>
+<tr>
+<td>language of work or name</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P34">P34</a></td>
+</tr>
+<tr>
+<td>linearized by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1657">P1657</a></td>
+</tr>
+<tr>
+<td>location</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P365">P365</a></td>
+</tr>
+<tr>
+<td>mandates</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1563">P1563</a></td>
+</tr>
+<tr>
+<td>manifestation of</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P930">P930</a></td>
+</tr>
+<tr>
+<td>MaRDI profile type</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1460">P1460</a></td>
+</tr>
+<tr>
+<td>modelled by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1513">P1513</a></td>
+</tr>
+<tr>
+<td>MORwiki ID</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1720">P1720</a></td>
+</tr>
+<tr>
+<td>nondimensionalized by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1658">P1658</a></td>
+</tr>
+<tr>
+<td>number of compute nodes</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1874">P1874</a></td>
+</tr>
+<tr>
+<td>number of processor cores</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1565">P1565</a></td>
+</tr>
+<tr>
+<td>number of records</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P139">P139</a></td>
+</tr>
+<tr>
+<td>object has role</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P560">P560</a></td>
+</tr>
+<tr>
+<td>ORCID iD</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P20">P20</a></td>
+</tr>
+<tr>
+<td>output data set</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1606">P1606</a></td>
+</tr>
+<tr>
+<td>page(s)</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P128">P128</a></td>
+</tr>
+<tr>
+<td>platform</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P143">P143</a></td>
+</tr>
+<tr>
+<td>problem statement</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1604">P1604</a></td>
+</tr>
+<tr>
+<td>programmed in</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P114">P114</a></td>
+</tr>
+<tr>
+<td>publication date</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P28">P28</a></td>
+</tr>
+<tr>
+<td>published in</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P200">P200</a></td>
+</tr>
+<tr>
+<td>quantity_property</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P149">P149</a></td>
+</tr>
+<tr>
+<td>QUDT constant ID</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1693">P1693</a></td>
+</tr>
+<tr>
+<td>QUDT quantity kind ID</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1654">P1654</a></td>
+</tr>
+<tr>
+<td>series ordinal</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P146">P146</a></td>
+</tr>
+<tr>
+<td>similar to</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1691">P1691</a></td>
+</tr>
+<tr>
+<td>solved by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1578">P1578</a></td>
+</tr>
+<tr>
+<td>source code repository URL</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P339">P339</a></td>
+</tr>
+<tr>
+<td>specialized by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1684">P1684</a></td>
+</tr>
+<tr>
+<td>subclass of</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P36">P36</a></td>
+</tr>
+<tr>
+<td>swMath work ID</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P13">P13</a></td>
+</tr>
+<tr>
+<td>symbol represents</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P984">P984</a></td>
+</tr>
+<tr>
+<td>tested by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P1750">P1750</a></td>
+</tr>
+<tr>
+<td>title</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P159">P159</a></td>
+</tr>
+<tr>
+<td>URL</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P188">P188</a></td>
+</tr>
+<tr>
+<td>used by</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P147">P147</a></td>
+</tr>
+<tr>
+<td>uses</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P557">P557</a></td>
+</tr>
+<tr>
+<td>volume</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P26">P26</a></td>
+</tr>
+<tr>
+<td>Wikidata QID</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P12">P12</a></td>
+</tr>
+<tr>
+<td>zbMATH author ID</td>
+<td><a href="https://portal.mardi4nfdi.de/wiki/Property:P676">P676</a></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

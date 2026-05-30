@@ -1,0 +1,1448 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../publication/">
+      
+      
+        <link rel="next" href="../../reference/mardmo/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Export Pipeline - MaRDMO Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#export-pipeline" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="MaRDMO Documentation" class="md-header__button md-logo" aria-label="MaRDMO Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            MaRDMO Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Export Pipeline
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="MaRDMO Documentation" class="md-nav__button md-logo" aria-label="MaRDMO Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    MaRDMO Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vocabulary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vocabulary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dynamic Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../handlers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../publication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Export Pipeline
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Export Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Preview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-credential-and-catalog-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Credential and Catalog Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-collecting-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Collecting Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-validation-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Validation Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-payload-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Payload Construction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cyclic-dependency-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Cyclic Dependency Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-oauth2-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. OAuth2 Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-background-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Background Upload
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Background Upload">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-success-page-and-catalog-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Success Page and Catalog Update
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Success Page and Catalog Update">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter Panel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Core
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mardmo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entry Points
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/checks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/payload/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Payload
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Submodules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Submodules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/algorithm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Algorithm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/publication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Publication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Preview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-credential-and-catalog-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Credential and Catalog Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-collecting-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Collecting Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-validation-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Validation Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-payload-construction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Payload Construction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-cyclic-dependency-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Cyclic Dependency Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-oauth2-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. OAuth2 Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-background-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Background Upload
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Background Upload">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-success-page-and-catalog-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Success Page and Catalog Update
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Success Page and Catalog Update">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filter-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter Panel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="export-pipeline">Export Pipeline</h1>
+<p>Clicking "Export to MaRDI Portal" on an RDMO project page starts a multi-step pipeline that validates the questionnaire, builds a structured Wikibase payload, authenticates the user against the MaRDI Portal, and uploads the data.  This page walks through every step in order.</p>
+<h2 id="1-preview">1. Preview</h2>
+<p>The first click on "Export to MaRDI Portal" renders an <strong>HTML documentation preview</strong> — a human-readable rendering of everything the user has entered in the questionnaire.  Errors, invalid URLs, and important missing fields are already flagged with red text at this stage, giving the user a chance to review and correct the documentation before committing to the export.  A second "Export to MaRDI Portal" button at the bottom of the preview page triggers the actual export.</p>
+<h2 id="2-credential-and-catalog-check">2. Credential and Catalog Check</h2>
+<p><code>submit()</code> immediately checks two preconditions:</p>
+<ul>
+<li><strong>OAuth2 credentials</strong>: if <code>oauth2_client_id</code> or <code>oauth2_client_secret</code> are missing from the Django settings, an error page is returned before any data processing happens.</li>
+<li><strong>Catalog support</strong>: if the active project catalog is not one of the supported MaRDMO catalogs, an error page is returned.</li>
+</ul>
+<h2 id="3-collecting-answers">3. Collecting Answers</h2>
+<p><code>get_post_data()</code> reads all RDMO project values and assembles them into a nested Python dict via <code>process_question_dict()</code>, organised by entity type (e.g. <code>{"model": {...}, "formulation": {...}, "publication": {...}}</code>).</p>
+<h2 id="4-validation-checks">4. Validation Checks</h2>
+<p><code>Checks.run_X()</code> validates the collected answers for completeness and consistency.  In addition, for every entity that would be newly created on the MaRDI Portal, a request is sent to the portal to check whether an item with the same label and description combination already exists.  If any check fails, a readable error list is returned and the export is aborted.</p>
+<h2 id="5-payload-construction">5. Payload Construction</h2>
+<p><code>PrepareX().export()</code> translates the answers dict into a Wikibase-ready payload dict and a dependency graph:</p>
+<ul>
+<li><strong><code>unique_items()</code></strong> deduplicates all entities referenced across the questionnaire.</li>
+<li><strong><code>process_items()</code></strong> assigns each unique item to one of two tracks:<ul>
+<li>Items already on the MaRDI Portal (<code>mardi:</code> prefix) are registered with their real QID.</li>
+<li>All other items (from Wikidata, or newly defined) are again checked against the MaRDI Portal for duplicates (<code>_check_mardi_and_raise</code>), then registered as new with an empty QID and a seed list of statements (Wikidata QID, ORCiD, zbMath code, or ISSN as appropriate).</li>
+</ul>
+</li>
+<li><strong><code>add_answer()</code> calls</strong> accumulate statements:<ul>
+<li>For <strong>new items</strong>: statements are appended to the item's payload and will be created together with the item in a single API call.</li>
+<li>For <strong>existing items</strong>: each statement becomes a separate <code>RELATION&lt;n&gt;</code> entry that will be posted individually.</li>
+</ul>
+</li>
+<li><strong>Relation existence check</strong>: <code>build_relation_check_query()</code> generates a SPARQL query that checks, for every <code>RELATION</code> entry targeting an existing item, whether that exact statement already exists on the MaRDI Portal.  Only genuinely new relations are posted during upload.  For <code>math</code>-datatype statements a separate API-based check is used, because SPARQL returns MathML while the MaRDI Portal stores LaTeX.</li>
+<li><strong>Dependency graph</strong>: whenever a new item's statement references another new item (identified by an <code>Item&lt;n&gt;</code> placeholder), that dependency is recorded so that items can be created in the correct order.</li>
+</ul>
+<h2 id="6-cyclic-dependency-check">6. Cyclic Dependency Check</h2>
+<p><code>is_cyclic(dependency)</code> inspects the dependency graph before proceeding.  If a cycle is detected an error page is returned.</p>
+<h2 id="7-oauth2-authentication">7. OAuth2 Authentication</h2>
+<p><code>post()</code> serialises the payload and the topological item order into the Django session and redirects the user to the MaRDI Portal OAuth2 authorisation endpoint.  After the user approves the access, the portal redirects back to the MaRDMO callback URL.  <code>callback()</code> validates the CSRF state token, exchanges the authorisation code for an access token, and launches the background upload.</p>
+<h2 id="8-background-upload">8. Background Upload</h2>
+<p>The upload runs in a <strong>daemon thread</strong> so the browser can display a live progress page immediately.  The upload proceeds in two phases:</p>
+<p><strong>Phase 1 — New items</strong> (in topological dependency order):
+Each new item is posted to the Wikibase REST API as a single request containing its label, description, aliases, and <strong>all</strong> its statements at once.  Once the MaRDI Portal assigns a real QID, every remaining <code>Item&lt;n&gt;</code> placeholder in the payload is replaced with that QID, so subsequent items that depend on it reference the correct identifier.</p>
+<p><strong>Phase 2 — Relations</strong>:
+<code>RELATION&lt;n&gt;</code> entries (statements targeting existing items) and <code>ALIAS&lt;n&gt;</code> entries are posted <strong>individually</strong>, one statement per request.  Relations already flagged as existing by the SPARQL check in step 5 are skipped.</p>
+<h3 id="error-handling">Error Handling</h3>
+<p>The upload layer handles MaRDI Portal communication errors gracefully:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Timeout / connection error</td>
+<td>Retry up to 5 times with exponential back-off</td>
+</tr>
+<tr>
+<td>HTTP 429 (rate limit)</td>
+<td>Wait for the <code>Retry-After</code> duration, then retry</td>
+</tr>
+<tr>
+<td>HTTP 403 / 5xx</td>
+<td>Exponential back-off retry</td>
+</tr>
+<tr>
+<td>HTTP 422 <code>item-label-description-duplicate</code></td>
+<td>Reuse the conflicting item's QID and continue</td>
+</tr>
+<tr>
+<td>Any other HTTP error</td>
+<td>Extract a human-readable message from the response and surface it to the user</td>
+</tr>
+</tbody>
+</table>
+<h2 id="9-success-page-and-catalog-update">9. Success Page and Catalog Update</h2>
+<p>After all items and relations have been posted, <code>compare_items()</code> compares the initial payload (before upload) with the final payload (after upload, containing real QIDs) to identify every newly created item.  <code>replace_ids()</code> then updates all matching RDMO project Values in place:</p>
+<ul>
+<li><strong>Wikidata items</strong>: the <code>external_id</code> is updated from <code>wikidata:&lt;QID&gt;</code> to <code>mardi:&lt;QID&gt;</code> and <code>[wikidata]</code> is replaced by <code>[mardi]</code> in the text field.</li>
+<li><strong>User-defined items</strong>: Values referencing <code>not found</code> are matched by their label/description pair and updated to <code>mardi:&lt;QID&gt;</code>.  ID-question Values (where <code>text</code> is <code>"not found"</code>) are resolved via sibling Name/Description Values at the same set index.</li>
+</ul>
+<p>After the catalog update, a success page is rendered showing the exported data in two switchable views.</p>
+<h3 id="list-view">List View</h3>
+<p>All newly created MaRDI Portal items are shown grouped by class (Mathematical Model, Research Problem, Formula, …) in a fixed display order.  Each item is rendered as a collapsible section showing every statement that was written to the portal as <code>property → value</code> lines.</p>
+<ul>
+<li><strong>Portal item objects</strong> (another item on the MaRDI Portal) are shown as clickable blue links leading to that item's portal page.</li>
+<li><strong>External identifier and URL properties</strong> (Wikidata QID, DOI, ORCID, swMath work ID, MORwiki ID, zbMATH author ID, ISSN, QUDT quantity kind / constant, and plain URLs) are resolved to their canonical base URLs and rendered as clickable links.</li>
+<li><strong>Quantity values</strong> are displayed as the numeric amount followed by the unit name.  If the unit is a named portal item (e.g. <em>kilobyte</em>) it is rendered as a clickable blue link to that item's portal page.  The dimensionless unit <code>1</code> is suppressed.</li>
+<li><strong>Formulas</strong> stored with the <code>math</code> datatype are typeset inline using <a href="https://www.mathjax.org/">MathJax</a> (Apache 2.0).</li>
+<li><strong>Qualifier statements</strong> are shown indented below their parent statement.  Qualifier objects follow the same link-resolution rules as top-level objects: portal items link to the portal, Wikidata QIDs, DOI/ORCID/URL identifiers link to their external base URL.</li>
+<li><strong>Relations to existing items</strong> (statements added to items that already existed on the portal before the export) are shown in a separate <em>Relations to existing items</em> section at the bottom of the list.</li>
+</ul>
+<h3 id="graph-view">Graph View</h3>
+<p>An interactive network diagram built with <a href="https://js.cytoscape.org/">Cytoscape.js</a> (MIT) provides a visual overview of the exported data.</p>
+<p><strong>Node types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Shape</th>
+<th>Colour</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Circle</td>
+<td>Distinct colour per class</td>
+<td>Newly created MaRDI Portal item</td>
+</tr>
+<tr>
+<td>Circle</td>
+<td>Grey</td>
+<td>Existing MaRDI Portal item (referenced but not created)</td>
+</tr>
+<tr>
+<td>Rectangle</td>
+<td>Light yellow</td>
+<td>Literal value (text, number, URL, …)</td>
+</tr>
+</tbody>
+</table>
+<p>Formulas (<code>math</code> datatype) replace their node label with a rendered MathJax image inside the node rectangle.</p>
+<p>Clicking any circle node opens its MaRDI Portal page in a new tab.  Clicking any rectangle node that has an associated URL (e.g. a DOI or swMath link) opens the external URL.</p>
+<p><strong>Edges</strong> are directed and labelled with the property name.  Quantity nodes are connected to their unit via an additional <code>unit</code> edge.</p>
+<p><strong>Qualifier tooltip</strong>: clicking an edge opens a floating tooltip listing all qualifier statements for that edge.  Qualifier objects are rendered as clickable links using the same rules as the list view.</p>
+<p><strong>Zoom and pan</strong>: standard Cytoscape scroll-to-zoom and drag-to-pan apply.  The fit button resets the viewport to show all nodes.</p>
+<h3 id="filter-panel">Filter Panel</h3>
+<p>A collapsible <em>Filter</em> panel on the graph view lets users reduce visual noise:</p>
+<ul>
+<li><strong>Legend (class toggles)</strong>: clicking a class label in the legend dims the label and hides all nodes of that class together with their edges.  Clicking again restores them.</li>
+<li><strong>Node-type toggles</strong>: separate <em>Hide literal nodes</em> and <em>Hide existing items</em> checkboxes toggle those entire node layers.</li>
+<li><strong>Property checklist</strong>: each distinct edge-label (property name) has a checkbox.  Unchecking a property hides all edges with that label.  Literal nodes that become fully disconnected after property-edge filtering are automatically hidden to avoid floating rectangles with no visible connections.</li>
+</ul>
+<p>All filter dimensions compose: the effective visibility of any node or edge is the intersection of all active filters.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
