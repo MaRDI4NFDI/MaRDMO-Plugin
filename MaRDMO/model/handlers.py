@@ -12,7 +12,7 @@ from functools import partial
 from rdmo.options.models import Option
 
 from . import models
-from .constants import props, relatant_uris, relation_uris, index_counters
+from .constants import props, relatant_uris, relation_uris
 
 from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source
 from ..constants import BASE_URI
@@ -342,6 +342,25 @@ class Information(BaseInformation):
                                    'external_id': qty.id, 'set_index': idx,
                                    'set_prefix': f'{set_index}|0|0'})
 
+            # A quantity's defining formula references other quantities; give
+            # each its own page, as _fill_formulation_batch does for formulae.
+            self._hydrate_relatants(
+                project=project, data=data, prop_keys=['contains_quantity'],
+                spec=_RelatantSpec(
+                    question_id_uri=f'{self.base}{self.questions["Quantity"]["ID"]["uri"]}',
+                    question_set_uri=f'{self.base}{self.questions["Quantity"]["uri"]}',
+                    prefix='QQK',
+                    fill_method=partial(self._fill, item_type='Quantity',
+                                        batch_fill_method=self._fill_quantity_batch),
+                    catalog=catalog, visited=visited,
+                    batch_fill_method=self._fill_quantity_batch,
+                ))
+
+            # Per-page counters: each quantity page numbers its own relation
+            # sub-lists from 0. (Previously a module-level dict that never
+            # reset, so indices grew without bound across imports and a
+            # re-import wrote fresh rows past the old ones instead of over them.)
+            rel_idx = {pair: 0 for pair in relation_uris}
             for prop in props['Quantity']:
                 for val in getattr(data, prop):
                     pair = (data.qclass, val.item_class)
@@ -350,16 +369,16 @@ class Information(BaseInformation):
                         uri=f'{self.base}{quantity[relation_uris[pair]]["uri"]}',
                         info={'option': Option.objects.get(
                                   uri=self.mathmoddb.get(key=prop)['url']),
-                              'set_index': index_counters[pair],
+                              'set_index': rel_idx[pair],
                               'set_prefix': str(set_index)})
                     value_editor(
                         project=project,
                         uri=f'{self.base}{quantity[relatant_uris[pair]]["uri"]}',
                         info={'text': f'{val.label} ({val.description}) [mardi]',
                               'external_id': val.id,
-                              'set_index': index_counters[pair],
+                              'set_index': rel_idx[pair],
                               'set_prefix': str(set_index)})
-                    index_counters[pair] += 1
+                    rel_idx[pair] += 1
 
             self._hydrate_publications(project, data.publications,
                                        catalog, visited)

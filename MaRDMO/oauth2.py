@@ -337,7 +337,6 @@ class OauthProviderMixin:
         payload = item['payload']
         headers = self.get_authorization_headers(access_token)
         response = None
-
         for attempt in range(1, 6):
             try:
                 response = session.post(url, json=payload, headers=headers, timeout=120)

@@ -22,7 +22,7 @@ tracking (:mod:`MaRDMO.store`, :mod:`MaRDMO.views`).
 """
 
 __title__ = 'MaRDMO'
-__version__ = '0.6.1'
+__version__ = '0.6.2'
 __author__ = 'Marco Reidelbach'
 __email__ = 'reidelbach@zib.de'
 __license__ = 'Apache-2.0'

@@ -17,6 +17,8 @@ Provides:
 # pylint: disable=too-many-lines
 
 import logging
+import random
+import time
 
 from dataclasses import dataclass, field
 from typing import Optional
@@ -33,9 +35,39 @@ logger = logging.getLogger(__name__)
 
 _USER_AGENT = 'MaRDMO (https://zib.de; reidelbach@zib.de)'
 
+# --- wbgetentities resilience knobs -----------------------------------------
+# The MaRDI portal API is prone to transient failures under database load:
+# HTTP 500/503 pages *and* HTTP 200 responses whose body is a MediaWiki
+# ``{"error": ...}`` object (e.g. ``internal_api_error_DBConnectionError``).
+_WB_CHUNK_SIZE   = 50     # QIDs per request
+_WB_MAX_ATTEMPTS = 4      # attempts per (sub-)chunk before splitting / giving up
+_WB_BACKOFF_BASE = 1.0    # seconds; delay is base * 2**(attempt-1) + jitter
+_WB_MAX_BACKOFF  = 20.0   # cap on a single retry delay
+_WB_TIMEOUT      = 30     # per-request timeout (seconds)
+_WB_OUTAGE_TRIP  = 3      # consecutive dead chunks that open the circuit breaker
+_WB_COOLDOWN     = 120    # seconds to stay "open" (fail fast) after tripping
+
+# Process-wide circuit-breaker state, keyed by endpoint. While a breaker is
+# open, calls to that endpoint return immediately with whatever is cached so a
+# full portal outage degrades to "partial import" fast instead of retrying for
+# minutes on every entity.
+_wb_breakers: dict = {}
+
+
+class _WbOutage(Exception):
+    '''A wbgetentities failure that looks endpoint-wide (5xx / connection / DB error).'''
+
 
 def _wbgetentities_batch(api_url, qids, props, extra_params=None):
-    '''Fetch Wikibase entities in batches of 50 via the ``wbgetentities`` API.
+    '''Fetch Wikibase entities via ``wbgetentities`` with retry and a circuit breaker.
+
+    QIDs are requested in chunks of :data:`_WB_CHUNK_SIZE`. Each chunk is
+    retried with exponential backoff on transient failures — HTTP 5xx, network
+    errors, timeouts, and HTTP 200 bodies carrying a MediaWiki ``error``
+    object. A chunk that keeps timing out is bisected to isolate a single
+    unresponsive entity. Once :data:`_WB_OUTAGE_TRIP` chunks die in a row the
+    endpoint's circuit breaker opens for :data:`_WB_COOLDOWN` seconds and
+    further calls short-circuit, returning only what resolved.
 
     Args:
         api_url:     Base URL of the Wikibase API endpoint.
@@ -45,29 +77,115 @@ def _wbgetentities_batch(api_url, qids, props, extra_params=None):
         extra_params: Optional dict of additional API parameters (e.g. ``{'languages': 'en'}``).
 
     Returns:
-        Dict mapping QID strings to their entity data dicts as returned by the API.
+        Dict mapping QID strings to their entity data dicts. May be partial or
+        empty if the endpoint is unavailable.
     '''
-    result = {}
     params_base = {
         'action': 'wbgetentities',
         'props':  props,
         'format': 'json',
         **(extra_params or {}),
     }
-    for i in range(0, len(qids), 50):
-        chunk = qids[i:i + 50]
+
+    if _wb_circuit_open(api_url):
+        logger.warning("wbgetentities: circuit open for %s, skipping %s qids",
+                       api_url, len(qids))
+        return {}
+
+    result = {}
+    for i in range(0, len(qids), _WB_CHUNK_SIZE):
+        chunk = qids[i:i + _WB_CHUNK_SIZE]
+        try:
+            result.update(_wbget_chunk(api_url, params_base, chunk))
+        except _WbOutage:
+            _wb_record_failure(api_url)
+            if _wb_circuit_open(api_url):
+                logger.error("wbgetentities: %s unresponsive, aborting batch", api_url)
+                break
+        else:
+            _wb_reset(api_url)
+
+    return result
+
+
+def _wb_circuit_open(api_url):
+    '''True while *api_url*'s breaker is within its cooldown window.'''
+    tripped_at = _wb_breakers.get(api_url, {}).get('open_until', 0)
+    return time.monotonic() < tripped_at
+
+
+def _wb_record_failure(api_url):
+    '''Count one dead chunk; open the breaker once the streak hits the limit.'''
+    breaker = _wb_breakers.setdefault(api_url, {'fails': 0, 'open_until': 0})
+    breaker['fails'] += 1
+    if breaker['fails'] >= _WB_OUTAGE_TRIP:
+        breaker['open_until'] = time.monotonic() + _WB_COOLDOWN
+
+
+def _wb_reset(api_url):
+    '''Clear the failure streak for *api_url* after a successful chunk.'''
+    if api_url in _wb_breakers:
+        _wb_breakers[api_url] = {'fails': 0, 'open_until': 0}
+
+
+def _wbget_chunk(api_url, params_base, chunk):
+    '''Fetch one chunk of QIDs, retrying transient failures with backoff.
+
+    Args:
+        api_url:     Wikibase API endpoint.
+        params_base: Shared query params (without ``ids``).
+        chunk:       List of QID strings for this (sub-)request.
+
+    Returns:
+        Dict ``{qid: entity}`` for every QID that resolved (may be partial).
+
+    Raises:
+        _WbOutage: The chunk still fails after all retries with an
+            endpoint-wide error. The caller feeds this to the circuit breaker.
+    '''
+    params = {**params_base, 'ids': '|'.join(chunk)}
+    outage = None
+
+    for attempt in range(1, _WB_MAX_ATTEMPTS + 1):
+        retry_after = None
         try:
             resp = requests.get(
-                api_url,
-                params={**params_base, 'ids': '|'.join(chunk)},
-                headers={'User-Agent': _USER_AGENT},
-                timeout=10,
+                api_url, params=params,
+                headers={'User-Agent': _USER_AGENT}, timeout=_WB_TIMEOUT,
             )
+            if resp.status_code >= 500:
+                retry_after = resp.headers.get('Retry-After')
+                raise _WbOutage(f'HTTP {resp.status_code}')
             resp.raise_for_status()
-            result.update(resp.json().get('entities', {}))
-        except requests.exceptions.RequestException as exc:
-            logger.error("wbgetentities batch failed: %s", exc)
-    return result
+            body = resp.json()
+            if isinstance(body, dict) and 'error' in body:
+                raise _WbOutage(f"api-error:{body['error'].get('code', 'unknown')}")
+            return body.get('entities', {})
+        except requests.exceptions.Timeout:
+            outage = None
+        except (requests.exceptions.RequestException, _WbOutage, ValueError) as exc:
+            outage = _WbOutage(str(exc))
+
+        if attempt < _WB_MAX_ATTEMPTS:
+            delay = min(_WB_BACKOFF_BASE * 2 ** (attempt - 1), _WB_MAX_BACKOFF)
+            if retry_after and str(retry_after).isdigit():
+                delay = max(delay, float(retry_after))
+            delay += random.uniform(0, 0.5)
+            time.sleep(delay)
+
+    # Retries exhausted. A persistent timeout may be one oversized entity —
+    # bisect to isolate it. An endpoint-wide error propagates to the breaker.
+    if outage is None and len(chunk) > 1:
+        mid = len(chunk) // 2
+        return {
+            **_wbget_chunk(api_url, params_base, chunk[:mid]),
+            **_wbget_chunk(api_url, params_base, chunk[mid:]),
+        }
+
+    logger.error("wbgetentities failed for %s..%s", chunk[0], chunk[-1])
+    if outage is not None:
+        raise outage
+    return {}
 
 
 def _extract_qualifier_qid(claim, pid_sym_rep):

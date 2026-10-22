@@ -219,14 +219,6 @@ props = {
     ],
 }
 
-# Index counters for different qclass combinations
-index_counters = {
-    ("Quantity", "Quantity"): 0,
-    ("QuantityKind", "QuantityKind"): 0,
-    ("Quantity", "QuantityKind"): 0,
-    ("QuantityKind", "Quantity"): 0,
-}
-
 # URI mappings for quantity relations
 relation_uris = {
     ("Quantity", "Quantity"): "Q2Q",

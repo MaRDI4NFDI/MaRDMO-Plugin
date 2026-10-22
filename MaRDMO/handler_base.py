@@ -54,9 +54,13 @@ class _RelatantSpec:
     visited           – mutable set of already-processed external IDs
     batch_fill_method – optional batch SPARQL hydrator; when set, mardi/wikidata
                         relatants are collected and dispatched in one query
-    section_indices   – optional shared dict {question_set_uri: next_idx};
-                        pass the same dict to sibling calls to avoid repeated
-                        DB queries for the max set_index of the same section
+    section_indices   – deprecated / ignored. Was a shared {question_set_uri:
+                        next_idx} cache to skip the max-set_index DB query, but
+                        hydration recurses and creates sibling pages mid-loop,
+                        so a cached index went stale and caused entities to
+                        overwrite each other. The set_index is now always read
+                        fresh via _next_set_index. Kept in the signature so the
+                        existing call sites need not change.
     '''
     question_id_uri: str
     question_set_uri: str
@@ -80,6 +84,20 @@ def _values_clause(items):
         into a SPARQL VALUES clause.
     '''
     return ' '.join(f'wd:{ext_id.split(":")[-1]}' for _, ext_id, _ in items)
+
+
+def _next_set_index(project, question_set_uri):
+    '''Return the next free ``set_index`` for the section at *question_set_uri*.
+
+    Always reads the current maximum straight from the database. Hydration is
+    recursive: while an entity is being filled it can pull in and create sibling
+    pages in the *same* section, so any ``set_index`` cached in memory goes stale
+    mid-loop. Reusing a stale index makes :func:`~MaRDMO.helpers.value_editor`
+    (which keys ``update_or_create`` on ``set_index`` alone) overwrite an
+    unrelated page — the entity then silently vanishes from the questionnaire.
+    '''
+    existing = get_id(project, question_set_uri, ['set_index'])
+    return max((e for e in existing if e is not None), default=-1) + 1
 
 
 def _fetch_by_source(items, mardi_file, wikidata_file, model_class):
@@ -212,22 +230,21 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
             prop_keys: Sequence of attribute names on *data* to iterate.
             spec:      :class:`_RelatantSpec` instance bundling context parameters.
         '''
-        if spec.section_indices is not None and spec.question_set_uri in spec.section_indices:
-            next_idx = spec.section_indices[spec.question_set_uri]
-        else:
-            existing = get_id(project, spec.question_set_uri, ['set_index'])
-            next_idx = max((e for e in existing if e is not None), default=-1) + 1
-
         batch_items = []
 
         for prop in prop_keys:
             for relatant in getattr(data, prop, []):
-                if relatant.id in spec.visited:
+                if not relatant.id or relatant.id in spec.visited:
                     continue
                 spec.visited.add(relatant.id)
 
                 source = relatant.id.split(':')[0]
                 text   = f'{relatant.label} ({relatant.description}) [{source}]'
+
+                # Re-read the free index every iteration: a preceding
+                # fill_method / batch_fill_method call may have created pages
+                # in this same section (see _next_set_index).
+                next_idx = _next_set_index(project, spec.question_set_uri)
 
                 value_editor(project=project, uri=spec.question_set_uri,
                              info={'text': f'{spec.prefix}{next_idx + 1}',
@@ -242,11 +259,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                     spec.fill_method(project=project, text=text,
                                      external_id=relatant.id, set_index=next_idx,
                                      catalog=spec.catalog, visited=spec.visited)
-
-                next_idx += 1
-
-        if spec.section_indices is not None:
-            spec.section_indices[spec.question_set_uri] = next_idx
 
         if batch_items and spec.batch_fill_method:
             spec.batch_fill_method(project=project, items=batch_items,
@@ -279,12 +291,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                        question URIs, prefix, fill methods, ``catalog``,
                        ``visited``, and optional ``section_indices``.
         '''
-        if spec.section_indices is not None and spec.question_set_uri in spec.section_indices:
-            next_idx = spec.section_indices[spec.question_set_uri]
-        else:
-            existing = get_id(project, spec.question_set_uri, ['set_index'])
-            next_idx = max((e for e in existing if e is not None), default=-1) + 1
-
         batch_items = []
 
         for prop in prop_keys:
@@ -312,6 +318,9 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                     source = ext_id.split(':')[0]
                     text   = f'{item["label"]} ({item["description"]}) [{source}]'
 
+                    # Re-read every iteration — see _hydrate_relatants / _next_set_index.
+                    next_idx = _next_set_index(project, spec.question_set_uri)
+
                     value_editor(project=project, uri=spec.question_set_uri,
                                  info={'text': f'{spec.prefix}{next_idx + 1}',
                                        'set_index': next_idx})
@@ -325,11 +334,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                         spec.fill_method(project=project, text=text,
                                          external_id=ext_id, set_index=next_idx,
                                          catalog=spec.catalog, visited=spec.visited)
-
-                    next_idx += 1
-
-        if spec.section_indices is not None:
-            spec.section_indices[spec.question_set_uri] = next_idx
 
         if batch_items and spec.batch_fill_method:
             spec.batch_fill_method(project=project, items=batch_items,
