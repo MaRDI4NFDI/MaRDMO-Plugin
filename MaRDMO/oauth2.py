@@ -35,12 +35,9 @@ from rdmo.projects.models import Project
 from .constants import BASE_URI
 from .getters import get_items, get_properties
 from .helpers import replace_in_dict, compare_items, replace_ids, collect_statements
-from .store import _register_job_for_session
+from .store import _progress_store, _register_job_for_session
 
 logger = logging.getLogger(__name__)
-
-# Global in-memory progress store
-_progress_store = {}
 
 
 class OauthProviderMixin:

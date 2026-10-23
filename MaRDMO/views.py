@@ -43,8 +43,12 @@ from .constants import (DOI_BASE_URL, ISSN_BASE_URL, MORWIKI_BASE_URL, ORCID_BAS
                         QUDT_CONSTANT_URL, QUDT_QUANTITYKIND_URL, SWMATH_BASE_URL,
                         WIKIDATA, ZBMATH_AUTHOR_BASE_URL)
 from .getters import get_item_url
-from .oauth2 import _progress_store
-from .store import clear_progress, _unregister_job_for_session, _job_belongs_to_session
+from .store import (
+    _progress_store,
+    clear_progress,
+    _unregister_job_for_session,
+    _job_belongs_to_session,
+)
 
 @login_required
 def get_progress(request, job_id):
