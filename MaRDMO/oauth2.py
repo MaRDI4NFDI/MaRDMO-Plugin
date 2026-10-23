@@ -22,6 +22,9 @@ import time
 import random
 import threading
 
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
+
 from urllib.parse import urlencode
 
 import requests
@@ -44,6 +47,15 @@ logger = logging.getLogger(__name__)
 # Field path in a Wikibase REST API 400 error, e.g.
 # "Invalid value at '/item/statements/P69/0/value/content'"
 _PORTAL_INVALID_VALUE_RE = re.compile(r"Invalid value at '(/[^']+)'")
+
+# Plain-language reasons for Wikibase REST API data policy violations (HTTP 422)
+_POLICY_VIOLATIONS = {
+    'label-description-same-value': 'label and description must not be identical',
+    'item-label-description-duplicate':
+        'an item with the same label and description already exists',
+    'property-label-duplicate': 'a property with the same label already exists',
+    'sitelink-conflict': 'the sitelink is already used by another item',
+}
 
 
 class OauthProviderMixin:
@@ -250,24 +262,43 @@ class OauthProviderMixin:
         - ``partial`` — failed after something was created; redirect to the
           result page, which shows the error and what was created
         - ``error``   — failed before anything was created
+
+        Items linked to an existing portal item instead of being created
+        (duplicate label and description) are written back to the project,
+        but reported as notes rather than as created items.
         '''
+        # Linked duplicates: their IDs go to the project, but neither the item
+        # nor its (never posted) creation statements count as created
+        linked_keys = sorted(
+            k for k, v in jsons.items() if k.startswith('Item') and v.get('linked_existing')
+        )
+        notes = [
+            f"'{jsons[k].get('label', k)}' already existed on the MaRDI Portal ({jsons[k]['id']}) "
+            f"and was linked instead of created. Its details from the questionnaire were not "
+            f"added to it."
+            for k in linked_keys
+        ]
+        linked_qids = {jsons[k]['id'] for k in linked_keys}
+
         created = compare_items(init, jsons, get_properties().get('Wikidata QID'))
         if created and project is not None:
             replace_ids(project, created, BASE_URI)
         ids = [
             [info.get('class', ''), f'{label} ({desc})' if desc else label, info['new_qid']]
             for (label, desc), info in created.items()
+            if info['new_qid'] not in linked_qids
         ]
         pid_to_name = {qid: name for name, qid in get_properties().items()}
         qid_to_name = {qid: name for name, qid in get_items().items()}
-        statements = collect_statements(init, jsons, pid_to_name, qid_to_name)
+        init_existing = {**init, **{k: {**init[k], 'id': jsons[k]['id']} for k in linked_keys}}
+        statements = collect_statements(init_existing, jsons, pid_to_name, qid_to_name)
 
         if error and not (ids or statements):
             _progress_store[job_id] = {
                 "progress": int((completed / total) * 100) if total else 0,
                 "done": True,
                 "phase": "error",
-                "error": error,
+                "error": ' '.join([error] + notes),
             }
             return
 
@@ -279,10 +310,11 @@ class OauthProviderMixin:
             "done": True,
             "phase": "partial" if error else "done",
             "error": error,
+            "notes": notes,
             "ids": ids,
             "statements": statements,
             "counts": {
-                "items_created": len(created),
+                "items_created": len(ids),
                 "items_planned": sum(
                     1 for k, v in init.items() if k.startswith('Item') and not v['id']
                 ),
@@ -471,10 +503,11 @@ class OauthProviderMixin:
                 resp = exc.response
                 status = resp.status_code if resp is not None else "no_response"
                 if status == 429:
-                    retry_after = int(resp.headers.get("Retry-After", 5))
-                    time.sleep(retry_after)
+                    time.sleep(self._retry_after_seconds(resp))
                     continue
                 if status == 403:
+                    # The portal sometimes answers 403 when it is merely
+                    # unstable, so 403 is retried like a server error
                     time.sleep(1.5 ** attempt + random.uniform(0, 0.5))
                     continue
                 if isinstance(status, int) and status >= 500:
@@ -492,6 +525,23 @@ class OauthProviderMixin:
                 ) from exc
 
         if response is not None:
+            if response.status_code == 403:
+                raise RuntimeError(
+                    _("The MaRDI Portal refused the request %(attempts)s times (HTTP 403: "
+                      "%(detail)s). This is usually temporary; please try again later. If it "
+                      "keeps happening, check that your account may edit the MaRDI Portal.") % {
+                        'attempts': 5,
+                        'detail': self._extract_error_message(response),
+                    }
+                )
+            if response.status_code >= 500:
+                raise RuntimeError(
+                    _("The MaRDI Portal did not accept the request after %(attempts)s attempts "
+                      "(HTTP %(status)s). This is usually temporary; please try again later.") % {
+                        'attempts': 5,
+                        'status': response.status_code,
+                    }
+                )
             error_detail = self._extract_error_message(response)
             raise RuntimeError(
                 _("POST request failed after %(attempts)s retries: %(detail)s") % {
@@ -500,7 +550,27 @@ class OauthProviderMixin:
                 }
             )
 
-        raise RuntimeError(_("POST request failed after multiple retries (no response)"))
+        raise RuntimeError(
+            _("The MaRDI Portal could not be reached (no response after several attempts). "
+              "Please try again later.")
+        )
+
+    @staticmethod
+    def _retry_after_seconds(response, default=5, maximum=60):
+        '''Return the wait time requested by a 429 response's ``Retry-After`` header.
+
+        The header is either a number of seconds or an HTTP date; anything
+        unparsable falls back to *default*.  The wait is capped at *maximum*.
+        '''
+        value = (response.headers.get('Retry-After') or '').strip()
+        if value.isdigit():
+            seconds = int(value)
+        else:
+            try:
+                seconds = (parsedate_to_datetime(value) - datetime.now(timezone.utc)).total_seconds()
+            except (TypeError, ValueError):
+                seconds = default
+        return min(max(seconds, 1), maximum)
 
     def _extract_error_message(self, response):
         """Extract a human-readable error message from an API response.
@@ -567,35 +637,46 @@ class OauthProviderMixin:
         return jsons
 
     def _handle_policy_violation(self, response, key, jsons):
-        """Handle a ``data-policy-violation`` HTTP 422 error from the Wikibase API.
+        """Handle an HTTP 422 (``data-policy-violation``) error from the Wikibase API.
 
         When the violation is ``item-label-description-duplicate``, the
-        conflicting existing item's ID is extracted and used as the resolved
-        QID so the export can proceed without creating a duplicate.
+        conflicting existing item's ID is used as the resolved QID so the
+        export can proceed without creating a duplicate.  The entry is marked
+        with ``linked_existing`` so the result page can tell the user that
+        the item was linked, not created, and its statements were not added.
+
+        Every other violation stops the export: silently continuing would
+        leave the item uncreated and break later references to it.
 
         Args:
-            response: :class:`requests.Response` object with a 422 status and a
-                      JSON body containing ``code`` and ``context`` fields.
+            response: :class:`requests.Response` object with a 422 status.
             key:      Payload key that caused the violation.
             jsons:    Full payload dict; mutated in place when a duplicate is resolved.
 
         Returns:
-            Updated payload dict, or the original *jsons* if the violation
-            could not be resolved.
+            Updated payload dict with the conflicting item's QID substituted.
+
+        Raises:
+            RuntimeError: For any violation other than a resolvable duplicate.
         """
-        error_json = response.json()
-        if error_json.get("code") == "data-policy-violation":
-            violation = error_json.get("context", {}).get("violation")
-            if violation == 'item-label-description-duplicate':
-                conflict_id = (
-                    error_json["context"]
-                    .get("violation_context", {})
-                    .get("conflicting_item_id")
-                )
-                if conflict_id:
-                    jsons[key]['id'] = conflict_id
-                    return replace_in_dict(jsons, key, conflict_id)
-        return jsons
+        try:
+            error_json = response.json()
+        except ValueError:
+            error_json = {}
+        context = error_json.get("context") if isinstance(error_json.get("context"), dict) else {}
+        violation = context.get("violation", "")
+
+        if violation == 'item-label-description-duplicate' and key.startswith('Item'):
+            conflict_id = context.get("violation_context", {}).get("conflicting_item_id")
+            if conflict_id:
+                jsons[key]['id'] = conflict_id
+                jsons[key]['linked_existing'] = True
+                return replace_in_dict(jsons, key, conflict_id)
+
+        reason = _POLICY_VIOLATIONS.get(violation) or self._extract_error_message(response)
+        raise RuntimeError(
+            _("The MaRDI Portal rejected the request (HTTP 422): %(reason)s") % {'reason': reason}
+        )
 
     # ------------------- HELPERS -------------------
 

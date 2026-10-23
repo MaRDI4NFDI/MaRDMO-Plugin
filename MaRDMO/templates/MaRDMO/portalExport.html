@@ -38,6 +38,15 @@ window.MathJax = {
         </div>
     {% endif %}
 
+    {% if export_notes %}
+        <div style="width:90%;margin:0 auto 30px auto;padding:16px 20px;text-align:left;border:2px solid #b8860b;border-radius:6px;background:#fff8e1;">
+            <p style="color:#8a6d00;font-size:20px;font-weight:bold;margin:0 0 8px 0">Please note</p>
+            {% for note in export_notes %}
+                <p style="color:#333;font-size:15px;margin:0 0 4px 0">{{ note }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     {% if grouped_ids or relation_stmts %}
 
         <!-- Tab buttons -->

@@ -297,6 +297,8 @@ def show_success(request, job_id):
             "relation_stmts": relation_stmts,
             # Set when the export failed after some entities were created
             "export_error": job_data.get("error"),
+            # Items linked to existing portal items instead of being created
+            "export_notes": job_data.get("notes", []),
             "counts": job_data.get("counts", {}),
             "mardi_uri": mardi_uri,
             "graph_data": graph_data,
