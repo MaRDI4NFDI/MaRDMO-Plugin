@@ -321,9 +321,11 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
 
         if mode == 'preview':
             publication = PublicationRetriever()
+            # MaRDMO always works on the current values, also when the export
+            # was opened from a snapshot
             answers = publication.get_information(
                 project=self.project,
-                snapshot=self.snapshot,
+                snapshot=None,
                 answers=answers,
                 options=options
             )

@@ -361,6 +361,7 @@ def value_editor(project, uri, info):
     # Prepare the fields for update_or_create
     update_fields = {
         'project': project,
+        'snapshot': None,
         'attribute': attribute_object,
         'defaults': defaults
     }
@@ -1221,7 +1222,7 @@ def replace_ids(project, created, base_uri):
     }
     if wikidata_map:
         for v in Value.objects.filter(
-            project=project, external_id__in=wikidata_map
+            project=project, snapshot=None, external_id__in=wikidata_map
         ).select_related('attribute'):
             v.external_id = wikidata_map[v.external_id]
             v.text = v.text.replace('[wikidata]', '[mardi]')
@@ -1239,7 +1240,7 @@ def replace_ids(project, created, base_uri):
         return
 
     for v in Value.objects.filter(
-        project=project, external_id='not found'
+        project=project, snapshot=None, external_id='not found'
     ).select_related('attribute'):
 
         if v.text == 'not found':
@@ -1259,6 +1260,7 @@ def replace_ids(project, created, base_uri):
             try:
                 v_label = Value.objects.get(
                     project=project,
+                    snapshot=None,
                     attribute__uri=base_uri + f'domain/{entity}/name',
                     set_prefix=sibling_prefix,
                 ).text
@@ -1267,6 +1269,7 @@ def replace_ids(project, created, base_uri):
             try:
                 v_desc = Value.objects.get(
                     project=project,
+                    snapshot=None,
                     attribute__uri=base_uri + f'domain/{entity}/description',
                     set_prefix=sibling_prefix,
                 ).text

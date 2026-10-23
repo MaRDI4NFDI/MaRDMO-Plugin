@@ -68,6 +68,18 @@ def _catalog_name(instance):
     return str(catalog).rsplit("/", maxsplit=1)[-1]
 
 
+def _is_snapshot_rollback(instance):
+    '''Return ``True`` if *instance* is a snapshot value being restored as a live value.
+
+    RDMO's ``Snapshot.rollback`` re-saves each snapshot value with
+    ``snapshot=None``; the stored row still carries the snapshot at that point.
+    '''
+    return (
+        instance.pk is not None
+        and Value.objects.filter(pk=instance.pk, snapshot__isnull=False).exists()
+    )
+
+
 @receiver(value_created, sender=Value)
 @receiver(value_updated, sender=Value)
 def mardmo_router_post_save(sender, instance, update_fields=None, **kwargs):  # pylint: disable=unused-argument
@@ -83,7 +95,7 @@ def mardmo_router_post_save(sender, instance, update_fields=None, **kwargs):  # 
         update_fields: Fields that were updated (unused; present for signal compatibility).
         **kwargs:      Additional signal keyword arguments (unused).
     """
-    if not instance:
+    if not instance or instance.snapshot_id:
         return
 
     catalog_name = _catalog_name(instance)
@@ -115,7 +127,7 @@ def mardmo_router_post_delete(sender, instance, **kwargs):  # pylint: disable=un
         instance: The deleted :class:`~rdmo.projects.models.Value` instance.
         **kwargs: Additional signal keyword arguments (unused).
     """
-    if not instance:
+    if not instance or instance.snapshot_id:
         return
 
     catalog_name = _catalog_name(instance)
@@ -149,7 +161,8 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
     if kwargs.get('raw'):
         return
 
-    if not instance:
+    # Snapshot copies and rollbacks restore values that were valid when saved
+    if not instance or instance.snapshot_id:
         return
 
     catalog_name = _catalog_name(instance)
@@ -161,5 +174,5 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
         return
 
     validator = PRESAVE_VALIDATOR_MAP.get(catalog_name, {}).get(attr_uri)
-    if validator:
+    if validator and not _is_snapshot_rollback(instance):
         validator(instance)
