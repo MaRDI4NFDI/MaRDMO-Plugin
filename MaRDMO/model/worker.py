@@ -524,22 +524,18 @@ class PrepareModel(PublicationExport):
                 item_class = qtype
             )
 
-            if (
-                entry.get("reference")
-                and qtype == "quantity kind"
-            ):
+            reference = entry.get("reference") or {}
+
+            if qtype == "quantity kind" and reference.get(0):
                 payload.add_answer(
                     verb = self.properties["QUDT quantity kind ID"],
-                    object_and_type = [entry["reference"][0][1], "external-id"],
+                    object_and_type = [reference[0][1], "external-id"],
                 )
 
-            if (
-                entry.get("reference")
-                and qtype == "quantity"
-            ):
+            if qtype == "quantity" and reference.get(1):
                 payload.add_answer(
                     verb = self.properties["QUDT constant ID"],
-                    object_and_type = [entry["reference"][1][1], "external-id"],
+                    object_and_type = [reference[1][1], "external-id"],
                 )
 
             payload.add_answers(

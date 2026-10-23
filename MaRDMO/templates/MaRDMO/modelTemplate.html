@@ -254,7 +254,7 @@
                         <b>QUDT Quantity Kind ID</b>: <strong style="color:red;">Missing QUDT Quantity Kind ID</strong> <br>
                     {% endif %}
                 {% else %}
-                    <b>QUDT Quantity Kind ID</b>: <strong style="color:red;">{{ reference.1 }} Limited to Quantity Kinds</strong> <br>
+                    <b>QUDT Quantity Kind ID</b>: {{ reference.1 }} <strong style="color:red;">Limited to Quantity Kinds</strong> <br>
                 {% endif %}
             {% elif reference.0 == option.qudt_constant_id %}
                 {% if values.QorQK == "Quantity" %}
@@ -264,7 +264,7 @@
                         <b>QUDT Constant ID</b>: <strong style="color:red;">Missing QUDT Constant ID</strong> <br>
                     {% endif %}
                 {% else %}
-                    <b>QUDT Constant ID</b>: <strong style="color:red;">{{ reference.1 }} Limited to Quantities</strong> <br>
+                    <b>QUDT Constant ID</b>: {{ reference.1 }} <strong style="color:red;">Limited to Quantities</strong> <br>
                 {% endif %}
             {% endif %} 
         {% endfor %}

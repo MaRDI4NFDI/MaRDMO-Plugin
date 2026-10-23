@@ -425,7 +425,7 @@ class ModelMixin:
                             message = f'Invalid QUDT Constant ID format: "{ref[1][1]}"'
                         )
                     )
-                if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["url"] and ref.get(0):
+                if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["label"] and ref.get(0):
                     self.err.append(
                         self._error(
                             section = 'Quantity [Kind]',
@@ -434,7 +434,7 @@ class ModelMixin:
                         )
                     )
                 if (
-                    ivalue.get('QorQK') == self.mathmoddb.get(key='QuantityKind')["url"]
+                    ivalue.get('QorQK') == self.mathmoddb.get(key='QuantityKind')["label"]
                     and ref.get(1)
                 ):
                     self.err.append(
@@ -482,7 +482,7 @@ class ModelMixin:
                             )
                         )
 
-            if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["url"]:
+            if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["label"]:
                 self._check_flexible(
                     data       = ivalue,
                     page_name  = page_name,
@@ -495,7 +495,7 @@ class ModelMixin:
                     relation   = 'RelationQQK',
                     from_class = 'Quantity'
                 )
-            elif ivalue.get('QorQK') == self.mathmoddb.get(key='QuantityKind')["url"]:
+            elif ivalue.get('QorQK') == self.mathmoddb.get(key='QuantityKind')["label"]:
                 self._check_flexible(
                     data       = ivalue,
                     page_name  = page_name,
