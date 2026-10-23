@@ -42,6 +42,7 @@ from django.views.decorators.http import require_GET
 from .constants import (DOI_BASE_URL, ISSN_BASE_URL, MORWIKI_BASE_URL, ORCID_BASE_URL,
                         QUDT_CONSTANT_URL, QUDT_QUANTITYKIND_URL, SWMATH_BASE_URL,
                         WIKIDATA, ZBMATH_AUTHOR_BASE_URL)
+from . import VERSION
 from .getters import get_item_url
 from .store import (
     _progress_store,
@@ -82,12 +83,18 @@ def show_progress(request, job_id):
         job_id:  Unique job identifier string passed to the template.
 
     Returns:
-        Rendered ``MaRDMO/progress.html`` response with context ``{"job_id": job_id}``.
+        Rendered ``MaRDMO/progress.html`` response with context ``job_id`` and
+        ``mardmo_version`` (appended to the script URL so browsers load the
+        current script after an update).
     """
     if not _job_belongs_to_session(request, job_id):
         raise Http404()
 
-    return render(request, "MaRDMO/progress.html", {"job_id": job_id})
+    return render(
+        request,
+        "MaRDMO/progress.html",
+        {"job_id": job_id, "mardmo_version": VERSION},
+    )
 
 
 @login_required
@@ -288,6 +295,9 @@ def show_success(request, job_id):
         {
             "grouped_ids": grouped_ids,
             "relation_stmts": relation_stmts,
+            # Set when the export failed after some entities were created
+            "export_error": job_data.get("error"),
+            "counts": job_data.get("counts", {}),
             "mardi_uri": mardi_uri,
             "graph_data": graph_data,
         },

@@ -28,6 +28,17 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
+  // Show a heading plus an error message; the message may contain user text
+  // (item labels, values), so it is inserted as plain text, never as HTML.
+  function showError(heading, message, extraHTML = "") {
+    status.innerHTML = `
+      <div style="white-space:nowrap;">${heading}</div>
+      <div class="error-message" style="font-size:22px;color:darkred;max-width:600px;margin:0.5rem auto 0;"></div>
+      ${extraHTML}
+    `;
+    status.querySelector(".error-message").textContent = message;
+  }
+
   async function updateProgress() {
     try {
       const res = await fetch(progressStatusUrl, { cache: "no-store" });
@@ -39,12 +50,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Error state
       if (data.phase === "error" || data.progress === -1) {
-        status.innerHTML = `
-          <div style="white-space:nowrap;">❌ Upload failed</div>
-          <div style="font-size:22px;color:darkred;max-width:600px;margin:0.5rem auto 0;">
-            ${data.error || "Unknown error"}
-          </div>
-        `;
+        showError("❌ Upload failed", data.error || "Unknown error");
+        return;
+      }
+
+      // Failed after some entities were created: show what exists on the portal
+      if (data.phase === "partial") {
+        showError(
+          "⚠️ Upload incomplete",
+          data.error || "Unknown error",
+          `<div style="font-size:20px;margin-top:1rem;">Showing what was created${getDotHTML()}</div>`
+        );
+        if (data.redirect) {
+          setTimeout(() => {
+            window.location.href = data.redirect;
+          }, 3000);
+        }
         return;
       }
 
@@ -100,12 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (err) {
       console.error("Error updating progress:", err);
-      status.innerHTML = `
-        <div style="white-space:nowrap;">❌ Upload failed</div>
-        <div style="font-size:22px;color:darkred;max-width:600px;margin:0.5rem auto 0;">
-          Fehler beim Abrufen des Fortschritts.
-        </div>
-      `;
+      showError("❌ Upload failed", "Could not retrieve the upload progress.");
     }
   }
 

@@ -25,6 +25,19 @@ window.MathJax = {
         Mathematics rendered by <a href="https://www.mathjax.org/" target="_blank" style="color:grey;">MathJax</a> (Apache&nbsp;2.0).
     </div>
 
+    {% if export_error %}
+        <div style="width:90%;margin:0 auto 30px auto;padding:16px 20px;text-align:left;border:2px solid darkred;border-radius:6px;background:#fdecea;">
+            <p style="color:darkred;font-size:24px;font-weight:bold;margin:0 0 8px 0">Upload incomplete</p>
+            <p style="color:darkred;font-size:15px;margin:0 0 8px 0">{{ export_error }}</p>
+            <p style="color:#333;font-size:15px;margin:0">
+                Created {{ counts.items_created }} of {{ counts.items_planned }} new items
+                and {{ counts.relations_created }} of {{ counts.relations_planned }} statements on existing items
+                (listed below). The created items are linked in your project.
+                Fix the problem and export again to add the rest.
+            </p>
+        </div>
+    {% endif %}
+
     {% if grouped_ids or relation_stmts %}
 
         <!-- Tab buttons -->

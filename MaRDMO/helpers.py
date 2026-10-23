@@ -997,6 +997,8 @@ def compare_items(old, new, wikidata_qid_prop=None):
     Compares the ``id`` field of every ``Item*`` key: entries that had no id
     before posting (``old[key]['id']`` is falsy) and have one afterwards are
     collected together with the original external ID and the new QID.
+    Items still without id (export aborted before they were posted) are
+    skipped.
 
     The original external ID is inferred from the item's statements: items
     that carry a Wikidata QID external-id statement are tagged as
@@ -1016,7 +1018,7 @@ def compare_items(old, new, wikidata_qid_prop=None):
 
     created = {}
     for key, value in old.items():
-        if key.startswith('Item') and not value['id']:
+        if key.startswith('Item') and not value['id'] and new[key].get('id'):
             item = new[key]
             label = item['payload']['item']['labels']['en']
             description = item['payload']['item'].get('descriptions', {}).get('en', '')
@@ -1042,8 +1044,9 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
 
     Covers two sources:
 
-    - ``RELATION<n>`` entries where ``exists != 'true'`` (statements posted to
-      existing items).
+    - ``RELATION<n>`` entries that were posted to existing items (the portal
+      returned a statement id; entries that already existed or were not
+      reached before an aborted export have none).
     - Statements embedded in newly created ``Item<n>`` entries (items that had
       no id before posting).
 
@@ -1136,7 +1139,7 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
     for key, entry in jsons.items():
         if not key.startswith('RELATION'):
             continue
-        if entry.get('exists') == 'true':
+        if entry.get('exists') == 'true' or not entry.get('id'):
             continue
         url = entry.get('url', '')
         parts = url.split('/items/')
