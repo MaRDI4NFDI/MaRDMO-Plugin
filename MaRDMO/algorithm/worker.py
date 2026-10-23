@@ -10,15 +10,12 @@ Provides:
   and portal export for a single algorithm documentation project
 '''
 
-import logging
-import time
 
 from .constants import get_relations, preview_relations
 
 from ..getters import get_items, get_mathalgodb, get_properties, get_publication_mapping, get_url
 from ..helpers import collect_items_without_section, entity_relations, is_valid_url, unique_items
 from ..payload import GeneratePayload
-from ..queries import query_sparql
 
 from ..publication.worker import PublicationExport
 
@@ -171,32 +168,11 @@ class PrepareAlgorithm(PublicationExport):
         # Construct Item Payloads
         payload.add_item_payload()
 
-        # If Relations are added, check if they exist
-        if any(
-            key.startswith("RELATION")
-            for key in payload.get_dictionary()
-        ):
-            query = payload.build_relation_check_query()
-
-            check = None
-            for attempt in range(2):  # try twice
-                try:
-                    check = query_sparql(
-                        query = query,
-                        sparql_endpoint = get_url('mardi', 'sparql')
-                    )
-                    break
-                except Exception as e:
-                    logging.warning("SPARQL query attempt %s failed: %s", attempt + 1, e)
-                    if attempt == 0:
-                        time.sleep(1)  # short wait before retry
-            if not check:
-                # both attempts failed → pretend no results
-                check = [{}]
-
-            payload.add_check_results(
-                check = check
-            )
+        # Mark Relations that already exist on the Portal
+        payload.check_existing_relations(
+            sparql_endpoint = get_url('mardi', 'sparql'),
+            api_url = get_url('mardi', 'api'),
+        )
         return payload.get_dictionary(), payload.dependency
 
     # ---------------------------

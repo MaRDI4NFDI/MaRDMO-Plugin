@@ -1,6 +1,7 @@
+{% load mardmo_tags %}
 <h3 id="{{ anchor }}">{{ title }}</h3>
 {% if value.0.0 == option.YesLargeText %}
-    <p>Yes: {{ value.0.1 }}</p>
+    <p>Yes: {{ value.0.1|linebreaksbr }}{% if value.0.1|has_line_break %} <strong style="color:red;">LINE BREAKS NOT ALLOWED</strong>{% endif %}</p>
 {% elif value.0.0 == option.No %}
     <p>No</p>
 {% elif value.0.0 == option.NotRelevant %}

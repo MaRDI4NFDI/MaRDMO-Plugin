@@ -11,6 +11,7 @@ Provides:
 - :func:`validate_qudt_id`           — rejects QUDT IDs not matching the expected format
 - :func:`validate_doi`               — rejects DOI text not matching the expected format
 - :func:`validate_properties`        — rejects mutually exclusive data-property combinations
+- :func:`validate_single_line`       — rejects line breaks in textarea answers exported as text
 '''
 
 from django.utils.text import format_lazy
@@ -20,7 +21,29 @@ from rest_framework.exceptions import ValidationError
 from .getters import get_mathmoddb, get_options
 from .helpers import extract_parts
 from .model.constants import data_properties_check
-from .patterns import DOI_RE, QUDT_ID_RE
+from .patterns import DOI_RE, LINE_BREAK_RE, QUDT_ID_RE
+
+
+def validate_single_line(instance):
+    '''Reject text containing line breaks.
+
+    Registered for textarea answers (and textarea option inputs) that are
+    exported as single-line text statements; the MaRDI Portal rejects line
+    breaks in those values.
+
+    Args:
+        instance: RDMO ``Value`` instance about to be saved.
+
+    Raises:
+        ValidationError: when ``instance.text`` contains a line break.
+    '''
+    if instance.text and LINE_BREAK_RE.search(instance.text):
+        raise ValidationError({
+            'text': [_(
+                'Line breaks are not allowed here: the MaRDI Portal stores'
+                ' this answer as single-line text.'
+            )]
+        })
 
 
 def validate_value_format(instance):

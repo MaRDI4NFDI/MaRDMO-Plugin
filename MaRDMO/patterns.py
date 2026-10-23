@@ -22,6 +22,11 @@ DOI patterns
 - :data:`DOI_STRICT_RE` — strict, used in the documentation checker
   (:mod:`~MaRDMO.checks.workflow`).  Requires the complete
   ``10.NNNN/suffix`` form.
+
+Single-line text pattern
+------------------------
+- :data:`LINE_BREAK_RE` — line breaks, which the MaRDI Portal rejects in
+  text values.
 '''
 
 import re
@@ -74,4 +79,18 @@ DOI_STRICT_RE = re.compile(r'^10\.\d{4,}/\S+$')
 Requires the canonical ``10.NNNN/suffix`` form: the fixed prefix ``10.``,
 at least four registrant digits, a ``/`` separator, and one or more non-
 whitespace suffix characters.
+'''
+
+# ---------------------------------------------------------------------------
+# Single-line text pattern
+# ---------------------------------------------------------------------------
+
+LINE_BREAK_RE = re.compile(r'[\n\r]')
+'''Line breaks, which the MaRDI Portal rejects in text values.
+
+Only visible line breaks are matched; tabs and other invisible whitespace
+(also rejected by the portal) are replaced by spaces on export instead.
+
+Used by the pre-save validator for textarea answers (:mod:`~MaRDMO.validators`),
+the documentation checker (:mod:`~MaRDMO.checks.base`), and the preview templates.
 '''

@@ -1,5 +1,5 @@
  <head>
- {% load static %}
+ {% load static mardmo_tags %}
  <script type="text/javascript" id="MathJax-script" async
          src="{% static 'MaRDMO/js/mathjax/es5/tex-mml-chtml.js' %}">
  </script>
@@ -108,7 +108,7 @@
 
     {% if 'not found' in values.ID %}
         {% if values.reference %}
-            <b>Reference</b>: {{ values.reference }}
+            <b>Reference</b>: {{ values.reference|linebreaksbr }}{% if values.reference|has_line_break %} <strong style="color:red;">LINE BREAKS NOT ALLOWED</strong>{% endif %}
         {% else %}
             <b>Reference</b>: <strong style="color:red;">MISSING FORMULA REFERENCE</strong>
         {% endif %} <br>

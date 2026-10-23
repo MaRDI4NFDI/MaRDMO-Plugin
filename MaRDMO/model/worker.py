@@ -10,8 +10,6 @@ Provides:
   and portal export for a single model documentation project
 '''
 
-import logging
-import time
 
 from .constants import (
     data_properties_check,
@@ -27,7 +25,6 @@ from .utils import get_data_properties, map_entity_quantity
 from ..getters import get_items, get_mathmoddb, get_properties, get_publication_mapping, get_url
 from ..helpers import entity_relations, map_entity, unique_items
 from ..payload import GeneratePayload
-from ..queries import query_sparql
 
 from ..publication.worker import PublicationExport
 
@@ -214,45 +211,11 @@ class PrepareModel(PublicationExport):
         # Construct Item Payloads
         payload.add_item_payload()
 
-        # If Relations are added, check if they exist
-        if any(
-            key.startswith("RELATION")
-            for key in payload.get_dictionary()
-        ):
-            query = payload.build_relation_check_query()
-
-            check = None
-            for attempt in range(2):  # try twice
-                try:
-                    check = query_sparql(
-                        query = query,
-                        sparql_endpoint = get_url('mardi', 'sparql')
-                    )
-                    break
-                except Exception as e:
-                    logging.warning("SPARQL query attempt %s failed: %s", attempt + 1, e)
-                    if attempt == 0:
-                        time.sleep(1)  # short wait before retry
-            if not check:
-                # both attempts failed → pretend no results
-                check = [{}]
-
-            # SPARQL returns math values as MathML; check math statements via API
-            math_check = payload.check_math_relations_via_api(get_url('mardi', 'api'))
-            if math_check:
-                relation_keys = [
-                    k for k in payload.get_dictionary() if k.startswith('RELATION')
-                ]
-                for idx, key in enumerate(relation_keys):
-                    if key in math_check:
-                        check[0][f'RELATION{idx}'] = {
-                            'value': math_check[key],
-                            'type':  'literal',
-                        }
-
-            payload.add_check_results(
-                check = check
-            )
+        # Mark Relations that already exist on the Portal
+        payload.check_existing_relations(
+            sparql_endpoint = get_url('mardi', 'sparql'),
+            api_url = get_url('mardi', 'api'),
+        )
         return payload.get_dictionary(), payload.dependency
 
     # ---------------------------

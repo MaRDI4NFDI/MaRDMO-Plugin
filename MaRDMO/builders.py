@@ -32,6 +32,7 @@ from .validators import (
     validate_properties,
     validate_qudt_id,
     validate_short_description,
+    validate_single_line,
 )
 
 def build_post_save_handler_set():
@@ -265,6 +266,9 @@ def build_presave_validator_map():
       and data-set publication) across algorithm and workflow catalogs.
     - :func:`~MaRDMO.validators.validate_value_format` — for all
       ``general.relation`` question URIs across model, algorithm, and workflow.
+    - :func:`~MaRDMO.validators.validate_single_line` — for all textarea
+      answers exported as text statements (long descriptions, formula
+      reference, workflow procedure, reproducibility comments).
 
     Returns:
         dict: Nested mapping of the form
@@ -291,6 +295,21 @@ def build_presave_validator_map():
                 validate_short_description,
             f'{base}{questions_model["Mathematical Model"]["Description"]["uri"]}':
                 validate_short_description,
+            # Single-line textarea answers
+            f'{base}{questions_model["Research Field"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Research Problem"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Quantity"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Mathematical Formulation"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Task"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Mathematical Model"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Mathematical Formulation"]["Reference"]["uri"]}':
+                validate_single_line,
             # Data properties (model, formulation, quantity, task)
             f'{base}{questions_model["Mathematical Model"]["Properties"]["uri"]}':
                 validate_properties,
@@ -342,6 +361,9 @@ def build_presave_validator_map():
                 validate_short_description,
             f'{base}{questions_model["Mathematical Model"]["Description"]["uri"]}':
                 validate_short_description,
+            # Single-line textarea answers (no long descriptions in basics catalog)
+            f'{base}{questions_model["Mathematical Formulation"]["Reference"]["uri"]}':
+                validate_single_line,
             # Data properties (no Quantity in basics catalog)
             f'{base}{questions_model["Mathematical Model"]["Properties"]["uri"]}':
                 validate_properties,
@@ -411,6 +433,19 @@ def build_presave_validator_map():
                 validate_short_description,
             f'{base}{questions_workflow["Process Step"]["Description"]["uri"]}':
                 validate_short_description,
+            # Single-line textarea answers (procedure, reproducibility comments)
+            f'{base}{questions_workflow["Workflow"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Mathematical"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Runtime"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Result"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Original Platform"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Other Platform"]["uri"]}':
+                validate_single_line,
             # DOI reference (publication, software, PS documentation, DS to-publish)
             f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
                 validate_doi,

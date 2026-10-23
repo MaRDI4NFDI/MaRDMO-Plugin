@@ -11,6 +11,16 @@ from ..constants import (
 )
 from ..getters import get_mathmoddb, get_mathalgodb
 from ..helpers import is_valid_url
+from ..patterns import LINE_BREAK_RE
+
+# Workflow textarea answers besides the procedure: answer key -> field label
+_WORKFLOW_SINGLE_LINE_FIELDS = {
+    'mathematical':     'Mathematical Reproducibility',
+    'runtime':          'Runtime Reproducibility',
+    'result':           'Reproducibility of Results',
+    'originalplatform': 'Reproducibility on original Hardware or Instrument',
+    'otherplatform':    'Reproducibility on other Hardware or Instrument',
+}
 
 
 class ChecksBase:
@@ -273,6 +283,58 @@ class ChecksBase:
                             section = section_map[okey],
                             page    = page_name,
                             message = 'Short Description Too Long'
+                        )
+                    )
+
+    def single_line_text(self, project, data, catalog):
+        '''Flag textarea answers containing line breaks, which the MaRDI Portal rejects.
+
+        Covers the detailed descriptions (workflow: procedure), the formula
+        reference, and the workflow reproducibility comments.  Values saved
+        before the pre-save validator existed, imported projects, and API
+        writes are only caught here.
+
+        Args:
+            project: RDMO project instance (used to look up page labels).
+            data:    Top-level answers dict.
+            catalog: Active catalog URI suffix.
+        '''
+        if catalog in (CATALOG_MODEL, CATALOG_MODEL_BASICS):
+            section_map = SECTION_MAP_MODEL
+            okeys = ('field', 'problem', 'model', 'formulation', 'quantity', 'task')
+        elif catalog == CATALOG_WORKFLOW:
+            section_map = SECTION_MAP_WORKFLOW
+            okeys = ('workflow',)
+        else:
+            return
+        for okey in okeys:
+            if not data.get(okey):
+                continue
+            values = project.values.filter(
+                snapshot  = None,
+                attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/{okey}')
+            )
+            for ikey, ivalue in data[okey].items():
+                long_label = 'Procedure' if okey == 'workflow' else 'Detailed Description'
+                fields = [(long_label, text) for text in ivalue.get('descriptionLong', {}).values()]
+                if isinstance(ivalue.get('reference'), str):
+                    fields.append(('Reference', ivalue['reference']))
+                if okey == 'workflow':
+                    for key, label in _WORKFLOW_SINGLE_LINE_FIELDS.items():
+                        for answer in ivalue.get(key, {}).values():
+                            if answer and len(answer) > 1:
+                                fields.append((label, answer[1]))
+                flagged = set()
+                for label, text in fields:
+                    if label in flagged or not (isinstance(text, str) and LINE_BREAK_RE.search(text)):
+                        continue
+                    flagged.add(label)
+                    page = values.filter(set_index=ikey).first()
+                    self.err.append(
+                        self._error(
+                            section = section_map[okey],
+                            page    = page.text if page else ikey,
+                            message = f'Line Breaks Not Allowed in {label}'
                         )
                     )
 

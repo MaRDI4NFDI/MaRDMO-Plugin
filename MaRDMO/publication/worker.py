@@ -19,6 +19,17 @@ from ..constants import BASE_URI
 from ..getters import get_items, get_properties, get_questions
 from ..helpers import date_precision, value_editor
 
+
+def _single_line(text):
+    '''Collapse whitespace (incl. line breaks) in fetched metadata text.
+
+    Crossref/DataCite titles and names occasionally contain line breaks, which
+    the MaRDI Portal rejects.  Users cannot edit this background data, so it is
+    normalised when stored instead of blocking the export.
+    '''
+    return ' '.join(text.split()) if isinstance(text, str) else text
+
+
 class PublicationRetriever:
     '''Retrieve Metadata from MaRDI Portal, Wikidata, and other
        sources like Crossref, DataCite, zbMath, DOI, and ORCid for Workflow,
@@ -89,8 +100,9 @@ class PublicationRetriever:
                             project = project,
                             uri = f'{BASE_URI}{self.questions["Publication"]["ID"]["uri"]}',
                             info = {
-                                'text': 
-                                    f"{data.label} ({data.description}) [{data.id.split(':')[0]}]",
+                                'text':
+                                    f"{_single_line(data.label)} ({_single_line(data.description)})"
+                                    f" [{data.id.split(':')[0]}]",
                                 'external_id': data.id,
                                 'set_index': key
                             }
@@ -101,7 +113,7 @@ class PublicationRetriever:
                             project = project,
                             uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
                             info = {
-                                'text': getattr(data, data_key), 
+                                'text': _single_line(getattr(data, data_key)),
                                 'set_index': key
                             }
                         )
@@ -111,7 +123,7 @@ class PublicationRetriever:
                                 project = project,
                                 uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
                                 info = {
-                                    'text': getattr(language, data_key), 
+                                    'text': _single_line(getattr(language, data_key)),
                                     'collection_index': idx, 
                                     'set_index': key
                                 }
@@ -122,7 +134,7 @@ class PublicationRetriever:
                                 project = project,
                                 uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
                                 info = {
-                                    'text': getattr(journal, data_key), 
+                                    'text': _single_line(getattr(journal, data_key)),
                                     'collection_index': idx, 
                                     'set_index': key
                                 }
@@ -133,7 +145,7 @@ class PublicationRetriever:
                                 project = project,
                                 uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
                                 info = {
-                                    'text': getattr(author, data_key), 
+                                    'text': _single_line(getattr(author, data_key)),
                                     'collection_index': idx, 
                                     'set_index': key
                                 }
@@ -142,8 +154,8 @@ class PublicationRetriever:
                     #...output dictionary.
                     if data_all.get('mardi') or data_all.get('wikidata'):
                         answers['publication'][key]['ID'] = data.id
-                    answers['publication'][key]['Name'] = data.label
-                    answers['publication'][key]['Description'] = data.description
+                    answers['publication'][key]['Name'] = _single_line(data.label)
+                    answers['publication'][key]['Description'] = _single_line(data.description)
 
         return answers
 

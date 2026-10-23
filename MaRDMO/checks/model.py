@@ -575,7 +575,7 @@ class ModelMixin:
     def run_model(self, project, data, catalog):
         '''Run all model-catalog checks and return the collected error list.
 
-        Executes, in order: ID/Name/Description, data properties, model, task,
+        Executes, in order: ID/Name/Description, single-line text, data properties, model, task,
         formulation, quantity, research problem, academic discipline, and
         publication checks.
 
@@ -589,6 +589,7 @@ class ModelMixin:
             checks pass.
         '''
         self.id_name_description(project, data, catalog)
+        self.single_line_text(project, data, catalog)
         self.properties(project, data, catalog)
         self.model(project, data, catalog)
         self.task(project, data, catalog)

@@ -1,8 +1,9 @@
+{% load mardmo_tags %}
 {% if detailed_descriptions %}
     <b>Detailed Description</b>:
     <ol style="margin-left: 1.5em;">
         {% for detailed_description in detailed_descriptions.values %}
-            <li style="margin-bottom: 0.5em;">{{ detailed_description }}</li>
+            <li style="margin-bottom: 0.5em;">{{ detailed_description|linebreaksbr }}{% if detailed_description|has_line_break %} <strong style="color:red;">LINE BREAKS NOT ALLOWED</strong>{% endif %}</li>
         {% endfor %}
     </ol>
 {% endif %}

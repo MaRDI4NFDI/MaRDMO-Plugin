@@ -435,7 +435,7 @@ class WorkflowMixin:
     def run_workflow(self, project, data, catalog=None):
         '''Run all workflow-catalog checks and return the collected error list.
 
-        Executes, in order: ID/Name/Description, workflow, process step,
+        Executes, in order: ID/Name/Description, single-line text, workflow, process step,
         algorithm, software, hardware, dataset, and publication checks.
 
         Args:
@@ -447,6 +447,7 @@ class WorkflowMixin:
             checks pass.
         '''
         self.id_name_description(project, data, CATALOG_WORKFLOW)
+        self.single_line_text(project, data, CATALOG_WORKFLOW)
         self.workflow(project, data)
         self.step(project, data)
         self.workflow_algorithm(project, data)

@@ -5,8 +5,6 @@ into a :class:`~MaRDMO.payload.GeneratePayload` ready for submission to the
 MaRDI Portal Wikibase instance.
 '''
 
-import logging
-import time
 
 from .constants import get_relations, preview_relations, REPRODUCIBILITY, IRREPRODUCIBILITY
 
@@ -24,7 +22,6 @@ from ..helpers import (
     is_valid_url, unique_items,
 )
 from ..patterns import DOI_STRICT_RE
-from ..queries import query_sparql
 from ..payload import GeneratePayload
 
 from ..publication.worker import PublicationExport
@@ -362,25 +359,10 @@ class PrepareWorkflow(PublicationExport):
 
         payload.add_item_payload()
 
-        if any(key.startswith('RELATION') for key in payload.get_dictionary()):
-            query = payload.build_relation_check_query()
-
-            check = None
-            for attempt in range(2):
-                try:
-                    check = query_sparql(
-                        query           = query,
-                        sparql_endpoint = get_url('mardi', 'sparql'),
-                    )
-                    break
-                except Exception as e:
-                    logging.warning("SPARQL query attempt %s failed: %s", attempt + 1, e)
-                    if attempt == 0:
-                        time.sleep(1)
-            if not check:
-                check = [{}]
-
-            payload.add_check_results(check=check)
+        payload.check_existing_relations(
+            sparql_endpoint = get_url('mardi', 'sparql'),
+            api_url         = get_url('mardi', 'api'),
+        )
 
         return payload.get_dictionary(), payload.dependency
 
