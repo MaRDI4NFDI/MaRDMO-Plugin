@@ -1,0 +1,40 @@
+/* Styles for the MaRDMO documentation previews (mardmoPreview.html). */
+
+/* Tables (e.g. symbols of a defining formula), scoped to the preview so
+   that the rest of the RDMO page is not affected */
+.mardmo-preview table {
+    margin-left: 0;
+    margin-right: auto;
+    margin-bottom: 24px;
+    border-spacing: 0;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.mardmo-preview table th {
+    padding: 3px 10px;
+    background-color: white;
+    border-top: none;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    text-align: center;
+}
+
+.mardmo-preview table td {
+    padding: 3px 10px;
+    border: 1px solid black;
+    text-align: center;
+}
+
+/* Something is missing or invalid and blocks the export */
+.mardmo-error {
+    color: red;
+    font-weight: bold;
+}
+
+/* Optional information that was not documented */
+.mardmo-empty {
+    color: black;
+    font-weight: bold;
+}

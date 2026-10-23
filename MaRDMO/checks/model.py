@@ -8,6 +8,7 @@ from ..model.constants import (
 )
 from ..constants import BASE_URI, CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..patterns import QUDT_ID_STRICT_RE
+from ..validators import has_equivalence_sign
 
 
 class ModelMixin:
@@ -446,9 +447,8 @@ class ModelMixin:
                     )
 
             if ivalue.get('Formula'):
-                equiv_sign_encodings = ('>≡</', '>&#x2261;</', '>&equiv;</', '\\equiv', '\\Equiv')
                 for formula in ivalue['Formula'].values():
-                    if not any(equiv in formula for equiv in equiv_sign_encodings):
+                    if not has_equivalence_sign(formula):
                         self.err.append(
                             self._error(
                                 section = 'Quantity [Kind]',

@@ -2,18 +2,18 @@
 {% for relation in relations.values %}
     {# Add Relation - Relatant Statements #}
     {% if not relation.relation %}
-        <strong style="color:red;">MISSING RELATION TYPE</strong>:
+        <strong class="mardmo-error">MISSING RELATION TYPE</strong>:
         {% if relation.relatant == 'MISSING OBJECT ITEM' %}
-            <strong style="color:red;">{{ relation.relatant }}</strong>
+            <strong class="mardmo-error">{{ relation.relatant }}</strong>
         {% elif relation.relatant == 'not found' %}
-            <strong style="color:red;">SELECTED {{ class }} NOT FOUND IN {{ class }} SECTION</strong>
+            <strong class="mardmo-error">SELECTED {{ class }} NOT FOUND IN {{ class }} SECTION</strong>
         {% else %}
             {{ relation.relatant }}
         {% endif %}
     {% elif relation.relatant == 'MISSING OBJECT ITEM' %}
-        {{ relation.relation.label }}: <strong style="color:red;">{{ relation.relatant }}</strong>
+        {{ relation.relation.label }}: <strong class="mardmo-error">{{ relation.relatant }}</strong>
     {% elif relation.relatant == 'not found' %}
-        {{ relation.relation.label }}: <strong style="color:red;">SELECTED {{ class }} NOT FOUND IN {{ class }} SECTION</strong>
+        {{ relation.relation.label }}: <strong class="mardmo-error">SELECTED {{ class }} NOT FOUND IN {{ class }} SECTION</strong>
     {% else %}
         {{ relation.relation.label }}: {{ relation.relatant }}
     {% endif %}
@@ -23,7 +23,7 @@
             - assumptions (general to special): 
             {% for val in relation.assumption.values %} 
                 {% if val == 'not found' %} 
-                    <strong style="color:red;">SELECTED MATHEMATICAL EXPRESSION NOT FOUND IN MATHEMATICAL EXPRESSION SECTION</strong> 
+                    <strong class="mardmo-error">SELECTED MATHEMATICAL EXPRESSION NOT FOUND IN MATHEMATICAL EXPRESSION SECTION</strong> 
                 {% else %} 
                     {{ val }} 
                 {% endif %} 
@@ -31,7 +31,7 @@
                     , 
                 {% endif %}
             {% empty %} 
-                <strong style="color:red;">MISSING ASSUMPTIONS</strong> 
+                <strong class="mardmo-error">MISSING ASSUMPTIONS</strong> 
             {% endfor %}
         {% endif %}
     {% endif %}
@@ -42,15 +42,15 @@
             {% if relation.order %} 
                 {{ relation.order }} 
             {% else %} 
-                <strong style="color:red;">MISSING ORDER NUMBER</strong> 
+                <strong class="mardmo-error">MISSING ORDER NUMBER</strong> 
             {% endif %}
         {% endif %}
     {% endif %}
     <br>
 {% empty %}
     {% if empty_msg == "True" %}
-        <strong style="color:red;">MISSING {{ class }}</strong>
+        <strong class="mardmo-error">MISSING {{ class }}</strong>
     {% else %}
-        <strong style="color:black;">NOT DOCUMENTED</strong>
+        <strong class="mardmo-empty">NOT DOCUMENTED</strong>
     {% endif %}
 {% endfor %}

@@ -7,11 +7,18 @@ Validators are registered in ``builders.py`` via ``build_presave_validator_map``
 Provides:
 
 - :func:`validate_value_format`      — rejects entries not matching ``Label (Description)``
-- :func:`validate_short_description` — rejects descriptions longer than 2000 characters
+- :func:`validate_short_description` — rejects descriptions longer than the maximum length
 - :func:`validate_qudt_id`           — rejects QUDT IDs not matching the expected format
 - :func:`validate_doi`               — rejects DOI text not matching the expected format
 - :func:`validate_properties`        — rejects mutually exclusive data-property combinations
 - :func:`validate_single_line`       — rejects line breaks in textarea answers exported as text
+
+Shared rules, also used by the documentation checker (:mod:`~MaRDMO.checks`)
+and the preview templates (:mod:`~MaRDMO.templatetags.mardmo_tags`), so that
+all three always agree:
+
+- :func:`short_description_problem` — what is wrong with a short description
+- :func:`has_equivalence_sign`      — whether a defining formula contains ``≡``
 '''
 
 from django.utils.text import format_lazy
@@ -22,6 +29,38 @@ from .getters import get_mathmoddb, get_options
 from .helpers import extract_parts
 from .model.constants import data_properties_check
 from .patterns import DOI_RE, LINE_BREAK_RE, QUDT_ID_RE
+
+SHORT_DESCRIPTION_MAX_LENGTH = 2000
+
+# Encodings of the equivalence sign accepted in defining formulas
+# (MathML from the portal or LaTeX entered by users)
+EQUIVALENCE_SIGNS = ('>≡</', '>&#x2261;</', '>&equiv;</', '\\equiv', '\\Equiv')
+
+
+def short_description_problem(description, name):
+    '''Return what is wrong with an entity's short description, or ``None``.
+
+    Args:
+        description: Short description text (may be empty or ``None``).
+        name:        Name of the same entity.
+
+    Returns:
+        ``'missing'``, ``'too_long'`` (more than
+        :data:`SHORT_DESCRIPTION_MAX_LENGTH` characters), ``'same_as_name'``,
+        or ``None`` if the description is fine.
+    '''
+    if not description:
+        return 'missing'
+    if len(description) > SHORT_DESCRIPTION_MAX_LENGTH:
+        return 'too_long'
+    if description == name:
+        return 'same_as_name'
+    return None
+
+
+def has_equivalence_sign(formula):
+    '''Return ``True`` if *formula* contains an equivalence sign (``\\equiv`` or ``≡``).'''
+    return isinstance(formula, str) and any(sign in formula for sign in EQUIVALENCE_SIGNS)
 
 
 def validate_single_line(instance):
@@ -71,17 +110,21 @@ def validate_value_format(instance):
 
 
 def validate_short_description(instance):
-    '''Reject a short description that exceeds 2000 characters.
+    '''Reject a short description that exceeds the maximum length.
 
     Args:
         instance: RDMO ``Value`` instance about to be saved.
 
     Raises:
-        ValidationError: when ``instance.text`` exceeds 2000 characters.
+        ValidationError: when ``instance.text`` exceeds
+            :data:`SHORT_DESCRIPTION_MAX_LENGTH` characters.
     '''
-    if instance.text and len(instance.text) > 2000:
+    if instance.text and len(instance.text) > SHORT_DESCRIPTION_MAX_LENGTH:
         raise ValidationError({
-            'text': [_('Short description must not exceed 2000 characters.')]
+            'text': [format_lazy(
+                _('Short description must not exceed {max_length} characters.'),
+                max_length=SHORT_DESCRIPTION_MAX_LENGTH,
+            )]
         })
 
 

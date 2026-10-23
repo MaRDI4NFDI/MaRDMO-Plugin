@@ -1,38 +1,3 @@
-<head>
-    {% load static %}
-    {% include "MaRDMO/partials/_mathjax_safe_config.html" %}
-    <script type="text/javascript" id="MathJax-script" async
-            src="{% static 'MaRDMO/js/mathjax/es5/tex-mml-chtml.js' %}">
-    </script>
-    <style>
-        table {
-          margin-left: 0;
-          margin-right: auto;
-          margin-bottom: 24px;
-          border-spacing: 0;
-          border-bottom: 2px solid black;
-          border-top: 2px solid black;
-        }
-        table th {
-          padding: 3px 10px;
-          background-color: white;
-          border-top: none;
-          border-left: 1px solid black;
-          border-right: 1px solid black;
-          border-bottom: 1px solid black;
-          text-align: center;
-        }
-        table td {
-          padding: 3px 10px;
-          border-top: 1px solid black;
-          border-left: 1px solid black;
-          border-bottom: 1px solid black;
-          border-right: 1px solid black;
-          text-align: center;
-        }
-    </style>
-</head>
-<body>
 <h1 id="title"> {{ title }} </h1>
 
 <h1 id="Algorithm"> Algorithms </h1>
@@ -51,13 +16,13 @@
     {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2AT" title="Algorithmic Tasks" relation="solves" relatants=values.RelationP class="ALGORITHMIC TASK" empty_msg="True" %}
 
     {# Include Block for single Relation between Algorithm and Software #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2S" title="Softwares" relation="implemented by" relatants=values.RelationS class="SOFTWARE" empty_msg="True" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2S" title="Software" relation="implemented by" relatants=values.RelationS class="SOFTWARE" empty_msg="True" %}
         
     {# Include Block for multiple Relations between Algorithm and Algorithm #}
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="A2A" title="Algorithms" relations=values.RelationA class="ALGORITHM" empty_msg="False" %}
     
 {% empty %}
-    <strong style="color:black;">NO ALGORITHM DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO ALGORITHM DOCUMENTED</strong>
 {% endfor %}
     
 <h1 id="Task"> Algorithmic Tasks </h1> 
@@ -79,10 +44,10 @@
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="AT2AT" title="Algorithmic Tasks" relations=values.RelationP class="ALGORITHMIC TASK" empty_msg="False" %}
     
 {% empty %}
-    <strong style="color:black;">NO ALGORITHMIC TASK DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO ALGORITHMIC TASK DOCUMENTED</strong>
 {% endfor %}
     
-<h1 id="Software"> Softwares </h1> 
+<h1 id="Software"> Software </h1> 
 {% for values in answers.software.values %}
 
     {# Include Software Name #}
@@ -100,13 +65,13 @@
     {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="S2PL" title="Programming Languages" relation="programmed in" relatants=values.programminglanguage class="PROGRAMMING LANGUAGE" %}
 
     {# Include Block for single Relation between Software and Software Dependencies without Section #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2SD" title="Software" relation="depends of software" relatants=values.RelationS class="SOFTWARE" empty_msg="False" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2SD" title="Software" relation="depends on software" relatants=values.RelationS class="SOFTWARE" empty_msg="False" %}
 
     {# Include Block for single Relation between Software and Benchmark #}
     {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2B" title="Benchmarks" relation="tests" relatants=values.RelationB class="BENCHMARK" empty_msg="False" %}
 
 {% empty %}
-    <strong style="color:black;">NO SOFTWARE DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO SOFTWARE DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="Benchmark"> Benchmarks </h1> 
@@ -124,7 +89,7 @@
     {% include "MaRDMO/partials/_id.html" with class="BENCHMARK" id=values.ID %}
 
 {% empty %}
-    <strong style="color:black;">NO BENCHMARK DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO BENCHMARK DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="Publication"> Publications </h1>
@@ -139,7 +104,7 @@
 	    {% endif %} 
     {% empty %}
         {% if 'not found' in values.ID %}
-            <strong style="color:red;">MISSING PUBLICATION DOI</strong>
+            <strong class="mardmo-error">MISSING PUBLICATION DOI</strong>
         {% endif %}
     {% endfor %}
 
@@ -152,14 +117,12 @@
         {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2A" title="Algorithms" relations=values.RelationA class="ALGORITHM" empty_msg="False" %}
 
         {# Include Block for multiple Relations between Publication and Benchmark or Software #}
-        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2BS" title="Benchmarks or Softwares" relations=values.RelationBS class="BENCHMARK OR SOFTWARE" empty_msg="False" %}
+        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2BS" title="Benchmarks or Software" relations=values.RelationBS class="BENCHMARK OR SOFTWARE" empty_msg="False" %}
 
     {% else %}
-        <strong style="color:red;">MISSING PUBLICATION to ALGORITHM, BENCHMARK, OR SOFTWARE RELATION</strong>
+        <strong class="mardmo-error">MISSING PUBLICATION RELATION TO ALGORITHM, BENCHMARK, OR SOFTWARE</strong>
     {% endif %}
 
 {% empty %}
-    <strong style="color:black;">NO PUBLICATION DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO PUBLICATION DOCUMENTED</strong>
 {% endfor %}
-
-</body>

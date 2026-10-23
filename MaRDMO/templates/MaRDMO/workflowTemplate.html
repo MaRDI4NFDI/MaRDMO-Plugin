@@ -1,39 +1,5 @@
- <head>
- {% load static %}
- {% include "MaRDMO/partials/_mathjax_safe_config.html" %}
- <script type="text/javascript" id="MathJax-script" async
-         src="{% static 'MaRDMO/js/mathjax/es5/tex-mml-chtml.js' %}">
- </script>
- <style>
-         table {
-           margin-left: 0;
-           margin-right: auto;
-           margin-bottom: 24px;
-           border-spacing: 0;
-           border-bottom: 2px solid black;
-           border-top: 2px solid black;
-         }
-         table th {
-           padding: 3px 10px;
-           background-color: white;
-           border-top: none;
-           border-left: 1px solid black;
-           border-right: 1px solid black;
-           border-bottom: 1px solid black;
-           text-align: center;
-         }
-         table td {
-           padding: 3px 10px;
-           border-top: 1px solid black;
-           border-left: 1px solid black;
-           border-bottom: 1px solid black;
-           border-right: 1px solid black;
-           text-align: center;
-         }
-</style>
-</head>
+{% load mardmo_tags %}
 
-<body>
 <h1 id="title"> {{ title }} </h1>
 
 <h1 id="Interdisciplinary Workflow"> Interdisciplinary Workflow </h1>
@@ -84,7 +50,7 @@
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="IW2IW" title="Interdisciplinary Workflows" relations=values.RelationWF class="INTERDISCIPLINARY WORKFLOW" empty_msg="False" %}
 
 {% empty %}
-    <strong style="color:black;">NO WORKFLOW DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO WORKFLOW DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="Process Steps"> Process Step </h1>
@@ -119,7 +85,7 @@
     {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="PS2AD" title="Academic Disciplines" relation="field of work" relatants=values.RFRelatant class="ACADEMIC DISCIPLINE" empty_msg="True" %}    
 
 {% empty %}
-    <strong style="color:black;">NO STEP DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO STEP DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="Algorithm"> Algorithm </h1>
@@ -138,10 +104,10 @@
     {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="A2AD" title="Algorithmic Tasks" relation="solves" relatants=values.PRelatant class="ALGORITHMIC TASK" empty_msg="True" %}
 
     {# Include Block for single Relation between Algorithm and Software #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2S" title="Softwares" relation="implemented by" relatants=values.RelationS class="SOFTWARE" empty_msg="True" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2S" title="Software" relation="implemented by" relatants=values.RelationS class="SOFTWARE" empty_msg="True" %}
     
 {% empty %}
-    <strong style="color:black;">NO ALGORITHM DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO ALGORITHM DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="Software"> Software </h1> 
@@ -162,10 +128,10 @@
     {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="S2PL" title="Programming Languages" relation="programmed in" relatants=values.programminglanguage class="PROGRAMMING LANGUAGE" %}
 
     {# Include Block for single Relation between Software and Software Dependencies without Section #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2SD" title="Software" relation="depends of software" relatants=values.RelationS class="SOFTWARE" empty_msg="False" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2SD" title="Software" relation="depends on software" relatants=values.RelationS class="SOFTWARE" empty_msg="False" %}
 
 {% empty %}
-    <strong style="color:black;">NO SOFTWARE DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO SOFTWARE DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="Hardware"> Hardware </h1> 
@@ -185,10 +151,10 @@
         {% if values.nodes_valid %}
             <strong>Number of Compute Nodes:</strong> {{ values.nodes }} <br>
         {% else %}
-            <strong>Number of Compute Nodes:</strong> <strong style="color:red;">INVALID COMPUTE NODES VALUE</strong> <br>
+            <strong>Number of Compute Nodes:</strong> <strong class="mardmo-error">INVALID COMPUTE NODES VALUE</strong> <br>
         {% endif %}
     {% else %}
-        <strong>Number of Compute Nodes:</strong> <strong style="color:red;">NUMBER OF COMPUTE NODES MISSING</strong> <br>
+        <strong>Number of Compute Nodes:</strong> <strong class="mardmo-error">NUMBER OF COMPUTE NODES MISSING</strong> <br>
     {% endif %}
 
     {# Include CPU List #}
@@ -196,51 +162,34 @@
     {% if values.cpu_entries %}
         {% for cpu in values.cpu_entries %}
             {{ forloop.counter }}.
-            {% if cpu.id and cpu.id != 'not found' %}
-                <strong>CPU:</strong> {{ cpu.id }} <br>
-            {% else %}
-                {% if cpu.name %}
-                    <strong>CPU:</strong> {{ cpu.name }}
-                {% else %}
-                    <strong>CPU:</strong> <strong style="color:red;">MISSING CPU NAME</strong>
-                {% endif %}
-                {% if not cpu.description %}
-                    (<strong style="color:red;">MISSING CPU SHORT DESCRIPTION</strong>) <br>
-                {% elif cpu.description|length > 2000 %}
-                    ({{ cpu.description }}) <strong style="color:red;">CPU SHORT DESCRIPTION TOO LONG</strong> <br>
-                {% elif cpu.description == cpu.name %}
-                    ({{ cpu.description }}) <strong style="color:red;">CPU NAME AND SHORT DESCRIPTION MUST BE DIFFERENT</strong> <br>
-                {% else %}
-                    ({{ cpu.description }}) <br>
-                {% endif %}
-            {% endif %}
+            <strong>CPU:</strong> {% user_entity cpu.id cpu.name cpu.description "CPU" %} <br>
             &nbsp;&nbsp;&nbsp;&nbsp;-&gt; Occurrence in Hardware:
             {% if cpu.count %}
                 {% if cpu.count_valid %}
                     {{ cpu.count }} <br>
                 {% else %}
-                    <strong style="color:red;">INVALID OCCURRENCE VALUE</strong> <br>
+                    <strong class="mardmo-error">INVALID OCCURRENCE VALUE</strong> <br>
                 {% endif %}
             {% else %}
-                <strong style="color:red;">MISSING OCCURRENCE</strong> <br>
+                <strong class="mardmo-error">MISSING OCCURRENCE</strong> <br>
             {% endif %}
             &nbsp;&nbsp;&nbsp;&nbsp;-&gt; Number of Processor Cores:
             {% if cpu.cores %}
                 {% if cpu.cores_valid %}
                     {{ cpu.cores }} <br>
                 {% else %}
-                    <strong style="color:red;">INVALID PROCESSOR CORES VALUE</strong> <br>
+                    <strong class="mardmo-error">INVALID PROCESSOR CORES VALUE</strong> <br>
                 {% endif %}
             {% else %}
-                <strong style="color:red;">MISSING PROCESSOR CORES</strong> <br>
+                <strong class="mardmo-error">MISSING PROCESSOR CORES</strong> <br>
             {% endif %}
         {% endfor %}
     {% else %}
-        <strong style="color:red;">NO CPU DOCUMENTED</strong> <br>
+        <strong class="mardmo-error">NO CPU DOCUMENTED</strong> <br>
     {% endif %}
 
 {% empty %}
-    <strong style="color:black;">NO HARDWARE DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO HARDWARE DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="Data Set"> Data Set </h1> 
@@ -257,36 +206,28 @@
 
     {# Include Data Set Size #}
     <strong>Data Size:</strong>
-    {% if values.Size.0 == option.kilobyte or values.Size.0 == option.megabyte or values.Size.0 == option.gigabyte or values.Size.0 == option.terabyte or values.Size.0 == option.items %}
-        {% if values.Size.1 %}
-            {% if values.size_value_valid %}
-                {% if values.Size.0 == option.kilobyte %}
-                    {{ values.Size.1 }} kilobyte <br>
-                {% elif values.Size.0 == option.megabyte %}
-                    {{ values.Size.1 }} megabyte <br>
-                {% elif values.Size.0 == option.gigabyte %}
-                    {{ values.Size.1 }} gigabyte <br>
-                {% elif values.Size.0 == option.terabyte %}
-                    {{ values.Size.1 }} terabyte <br>
-                {% elif values.Size.0 == option.items %}
-                    {{ values.Size.1 }} items <br>
+    {% with unit=values.Size.0|option_name %}
+        {% if unit %}
+            {% if values.Size.1 %}
+                {% if values.size_value_valid %}
+                    {{ values.Size.1 }} {{ unit }} <br>
+                {% else %}
+                    <strong class="mardmo-error">INVALID DATA SIZE VALUE</strong> <br>
                 {% endif %}
             {% else %}
-                <strong style="color:red;">INVALID DATA SIZE VALUE</strong> <br>
+                <strong class="mardmo-error">MISSING DATA SIZE VALUE</strong> <br>
             {% endif %}
         {% else %}
-            <strong style="color:red;">MISSING DATA SIZE VALUE</strong> <br>
+            <strong class="mardmo-error">MISSING DATA SIZE</strong> <br>
         {% endif %}
-    {% else %}
-        <strong style="color:red;">MISSING DATA SIZE</strong> <br>
-    {% endif %}
+    {% endwith %}
 
     {# Include Data Set File Format #}
     <strong>File Format:</strong>
     {% if values.FileFormat %}
         {{ values.FileFormat }} <br>
     {% else %}
-        <strong style="color:red;">MISSING FILE FORMAT</strong> <br>
+        <strong class="mardmo-error">MISSING FILE FORMAT</strong> <br>
     {% endif %}
 
     {# Include Data Set Type #}
@@ -296,7 +237,7 @@
     {% elif values.BinaryText == option.text %}
         text <br>
     {% else %}
-        <strong style="color:red;">MISSING DATA SET TYPE</strong> <br>
+        <strong class="mardmo-error">MISSING DATA SET TYPE</strong> <br>
     {% endif %}
 
     {# Include Data Set Proprietary #}
@@ -306,21 +247,21 @@
     {% elif values.Proprietary == option.No %}
         No <br>
     {% else %}
-        <strong style="color:red;">MISSING DATA SET PROPRIETARY</strong> <br>
+        <strong class="mardmo-error">MISSING DATA SET PROPRIETARY</strong> <br>
     {% endif %}
 
     {# Include Data Set Publication #}
     <strong>Data Set Publication:</strong>
     {% if values.ToPublish.0 == option.YesText %}
         {% if values.ToPublish.1 %}
-            Yes ({{ values.ToPublish.1 }}{% if values.publish_doi_valid == False %} <strong style="color:red;">INVALID DOI FORMAT</strong>{% endif %}) <br>
+            Yes ({{ values.ToPublish.1 }}{% if values.publish_doi_valid == False %} <strong class="mardmo-error">INVALID DOI FORMAT</strong>{% endif %}) <br>
         {% else %}
             Yes <br>
         {% endif %}
     {% elif values.ToPublish.0 == option.NoText %}
         No <br>
     {% else %}
-        <strong style="color:red;">MISSING DATA SET PUBLICATION STATEMENT</strong> <br>
+        <strong class="mardmo-error">MISSING DATA SET PUBLICATION STATEMENT</strong> <br>
     {% endif %}
 
     {# Include Data Set Archiving #}
@@ -330,19 +271,19 @@
             {% if values.archive_year_valid %}
                 Yes ({{ values.ToArchive.1 }}) <br>
             {% else %}
-                Yes (<strong style="color:red;">INVALID ARCHIVAL YEAR</strong>) <br>
+                Yes (<strong class="mardmo-error">INVALID ARCHIVAL YEAR</strong>) <br>
             {% endif %}
         {% else %}
-            Yes, <strong style="color:red;">MISSING ARCHIVAL YEAR</strong> <br>
+            Yes, <strong class="mardmo-error">MISSING ARCHIVAL YEAR</strong> <br>
         {% endif %}
     {% elif values.ToArchive.0 == option.NoText %}
         No <br>
     {% else %}
-        <strong style="color:red;">MISSING DATA SET ARCHIVAL STATEMENT</strong> <br>
+        <strong class="mardmo-error">MISSING DATA SET ARCHIVAL STATEMENT</strong> <br>
     {% endif %}
 
 {% empty %}
-    <strong style="color:black;">NO DATA SET DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO DATA SET DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="Publication"> Publications </h1>
@@ -357,7 +298,7 @@
 	    {% endif %} 
     {% empty %}
         {% if 'not found' in values.ID %}
-            <strong style="color:red;">MISSING PUBLICATION DOI</strong>
+            <strong class="mardmo-error">MISSING PUBLICATION DOI</strong>
         {% endif %}
     {% endfor %}
 
@@ -369,18 +310,16 @@
         {# Include Block for multiple Relations between Publication and Algorithm #}
         {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2A" title="Algorithms" relations=values.RelationA class="ALGORITHM" empty_msg="False" %}
 
-        {# Include Block for multiple Relations between Publication and Hardwae or Software #}
+        {# Include Block for multiple Relations between Publication and Hardware or Software #}
         {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2HS" title="Hardware or Software" relations=values.RelationHS class="HARDWARE OR SOFTWARE" empty_msg="False" %}
 
         {# Include Block for multiple Relations between Publication and remaining Workflow Entities #}
-        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2E" title="Inerdisciplinary Workflows, Process Steps, or Data Sets" relations=values.RelationP class="INTERDISCIPLINARY WORKFLOW, PROCESS STEP, OR DATA SET" empty_msg="False" %}
+        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2E" title="Interdisciplinary Workflows, Process Steps, or Data Sets" relations=values.RelationP class="INTERDISCIPLINARY WORKFLOW, PROCESS STEP, OR DATA SET" empty_msg="False" %}
 
     {% else %}
-        <strong style="color:red;">MISSING PUBLICATION to ALGORITHM, BENCHMARK, OR SOFTWARE RELATION</strong>
+        <strong class="mardmo-error">MISSING PUBLICATION RELATION TO ALGORITHM, HARDWARE OR SOFTWARE, OR WORKFLOW ENTITY</strong>
     {% endif %}
 
 {% empty %}
-    <strong style="color:black;">NO PUBLICATION DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO PUBLICATION DOCUMENTED</strong>
 {% endfor %}
-
-</body>

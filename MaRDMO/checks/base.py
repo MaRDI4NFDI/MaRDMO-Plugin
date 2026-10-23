@@ -12,6 +12,7 @@ from ..constants import (
 from ..getters import get_mathmoddb, get_mathalgodb
 from ..helpers import is_valid_url
 from ..patterns import LINE_BREAK_RE
+from ..validators import short_description_problem
 
 # Workflow textarea answers besides the procedure: answer key -> field label
 _WORKFLOW_SINGLE_LINE_FIELDS = {
@@ -113,21 +114,14 @@ class ChecksBase:
                     parent_class, parent_page,
                     f'Missing {item_class} Name ({label})'
                 ))
-            if not desc:
-                self.err.append(self._error(
-                    parent_class, parent_page,
-                    f'Missing {item_class} Short Description ({label})'
-                ))
-            elif len(desc) > 2000:
-                self.err.append(self._error(
-                    parent_class, parent_page,
-                    f'{item_class} Short Description Too Long ({label})'
-                ))
-            elif desc == name:
-                self.err.append(self._error(
-                    parent_class, parent_page,
-                    f'Equal {item_class} Name and Short Description Forbidden ({label})'
-                ))
+            problem = short_description_problem(desc, name)
+            if problem:
+                message = {
+                    'missing':      f'Missing {item_class} Short Description',
+                    'too_long':     f'{item_class} Short Description Too Long',
+                    'same_as_name': f'Equal {item_class} Name and Short Description Forbidden',
+                }[problem]
+                self.err.append(self._error(parent_class, parent_page, f'{message} ({label})'))
 
     def _check_doc_entries(self, doc, options, page_name, context_label):
         '''Validate that each selected doc entry has a non-empty text value.
@@ -210,8 +204,9 @@ class ChecksBase:
     def id_name_description(self, project, data, catalog):
         '''Check that every entity page has a non-empty ID, Name, and Description.
 
-        Also flags equal Name/Description pairs and descriptions exceeding
-        2000 characters.  Skips entity types not relevant to *catalog*.
+        Also flags equal Name/Description pairs and overlong descriptions
+        (rules from :func:`~MaRDMO.validators.short_description_problem`).
+        Skips entity types not relevant to *catalog*.
 
         Args:
             project: RDMO project instance (used to look up page labels).
@@ -261,28 +256,17 @@ class ChecksBase:
                             message = 'Missing Name'
                         )
                     )
-                if not ivalue.get('Description'):
+                problem = short_description_problem(ivalue.get('Description'), ivalue.get('Name'))
+                if problem:
                     self.err.append(
                         self._error(
                             section = section_map[okey],
                             page    = page_name,
-                            message = 'Missing Short Description'
-                        )
-                    )
-                if ivalue.get('Name') == ivalue.get('Description'):
-                    self.err.append(
-                        self._error(
-                            section = section_map[okey],
-                            page    = page_name,
-                            message = 'Equal Name and Short Description Forbidden'
-                        )
-                    )
-                if ivalue.get('Description') and len(ivalue['Description']) > 2000:
-                    self.err.append(
-                        self._error(
-                            section = section_map[okey],
-                            page    = page_name,
-                            message = 'Short Description Too Long'
+                            message = {
+                                'missing':      'Missing Short Description',
+                                'too_long':     'Short Description Too Long',
+                                'same_as_name': 'Equal Name and Short Description Forbidden',
+                            }[problem]
                         )
                     )
 

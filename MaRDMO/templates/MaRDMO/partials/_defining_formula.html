@@ -1,18 +1,19 @@
+{% load mardmo_tags %}
 <p>
     <b>Defining formulations</b>:
     <ol style="margin-left: 1.5em;">
         {% for value in formula.values %}
             {% if definition == 'True' %}
-                {% if '\\equiv' in value or '\\Equiv' in value %}
+                {% if value|has_equivalence_sign %}
                     <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; \( {{ value }} \)</li>
                 {% else %}
-                    <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; \( {{ value }} \) <strong style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;Inconsistent Definition (missing equivalent sign)</strong></li>
+                    <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; \( {{ value }} \) <strong class="mardmo-error">&nbsp;&nbsp;&nbsp;&nbsp;Inconsistent Definition (missing equivalent sign)</strong></li>
                 {% endif %}
             {% else %}
                 <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; \( {{ value }} \) </li>
             {% endif %}
         {% empty %}
-            <strong style="color:red;">MISSING MATHEMATICAL EXPRESSION FORMULA</strong>
+            <strong class="mardmo-error">MISSING MATHEMATICAL EXPRESSION FORMULA</strong>
         {% endfor %}
     </ol>
 </p>

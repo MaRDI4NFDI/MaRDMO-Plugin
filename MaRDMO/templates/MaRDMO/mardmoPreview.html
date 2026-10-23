@@ -1,10 +1,25 @@
 {% extends 'core/page.html' %}
 {% load i18n %}
+{% load static %}
 {% load core_tags %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'MaRDMO/css/mardmo.css' %}?v={{ mardmo_version }}">
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    {% include "MaRDMO/partials/_mathjax_safe_config.html" %}
+    <script type="text/javascript" id="MathJax-script" async
+            src="{% static 'MaRDMO/js/mathjax/es5/tex-mml-chtml.js' %}"></script>
+{% endblock %}
 
 {% block page %}
 
-    {% include include_file with title=include_params.title%}
+    <div class="mardmo-preview">
+        {% include include_file with title=include_params.title %}
+    </div>
     <br>
     <br>
     <br>

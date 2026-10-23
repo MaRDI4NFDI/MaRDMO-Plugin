@@ -5,7 +5,7 @@
             {% if pair.has_model %}
                 {{ pair.model.Name }}
             {% else %}
-                <strong style="color:red;">MISSING MATHEMATICAL MODEL</strong>
+                <strong class="mardmo-error">MISSING MATHEMATICAL MODEL</strong>
             {% endif %}
             {% if pair.has_tasks %}
             <ul style="margin-top: 0.3em; list-style-type: none; padding-left: 1em;">
@@ -15,7 +15,7 @@
             </ul>
             {% else %}
                 <ul style="margin-top: 0.3em; list-style-type: none; padding-left: 1em;">
-                    <li>&#8594; <strong style="color:red;">MISSING COMPUTATIONAL TASK</strong> </li>
+                    <li>&#8594; <strong class="mardmo-error">MISSING COMPUTATIONAL TASK</strong> </li>
                 </ul>
             {% endif %}
         </li>

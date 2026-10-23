@@ -1,12 +1,8 @@
+{% load mardmo_tags %}
+{% description_error description name class as error %}
 <b>Short Description</b>:
 {% if description %}
-    {% if description|length > 2000 %}
-        {{ description }} <strong style="color:red;">SHORT DESCRIPTION TOO LONG</strong> <br>
-    {% elif description == name %}
-        {{ description }} <strong style="color:red;">NAME AND SHORT DESCRIPTION MUST BE DIFFERENT</strong> <br>
-    {% else %}
-        {{ description }} <br>
-    {% endif %}
+    {{ description }}{% if error %} <strong class="mardmo-error">{{ error }}</strong>{% endif %} <br>
 {% else %}
-     <strong style="color:red;">MISSING {{ class }} SHORT DESCRIPTION</strong> <br>
+    <strong class="mardmo-error">{{ error }}</strong> <br>
 {% endif %}

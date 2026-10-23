@@ -22,31 +22,31 @@
             {% for value in element.values %}
                 {% if value.Info.Type == "Quantity" %}
                     <tr>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} \( {{ value.symbol }} \) {% else %} <strong style="color:red;">MISSING SYMBOL</strong> {% endif %} </td>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.Info.Name %} {{ value.Info.Name }} {% else %} <strong style="color:red;">MISSING NAME</strong> {% endif %} </td>
+                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} \( {{ value.symbol }} \) {% else %} <strong class="mardmo-error">MISSING SYMBOL</strong> {% endif %} </td>
+                        <td style="text-align: center; vertical-align: middle;">{% if value.Info.Name %} {{ value.Info.Name }} {% else %} <strong class="mardmo-error">MISSING NAME</strong> {% endif %} </td>
                         <td style="text-align: center; vertical-align: middle;">{% if value.Info.ID != 'not found' %} {{ value.Info.ID }} {% else %} - {% endif %}</td>
                         <td style="text-align: center; vertical-align: middle;">{{ value.Info.QKName }}</td>
                         <td style="text-align: center; vertical-align: middle;">{% if value.Info.QKID == 'not found' %} - {% else %} {{ value.Info.QKID }} {% endif %}</td>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.Info.Description %} {{ value.Info.Description }} {% else %} <strong style="color:red;">MISSING DESCRIPTION</strong> {% endif %}</td>				
+                        <td style="text-align: center; vertical-align: middle;">{% if value.Info.Description %} {{ value.Info.Description }} {% else %} <strong class="mardmo-error">MISSING DESCRIPTION</strong> {% endif %}</td>				
                     </tr>
                 {% elif value.Info.Type == "Quantity Kind" %}
                     <tr>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} \( {{ value.symbol }} \) {% else %} <strong style="color:red;">MISSING SYMBOL</strong> {% endif %} </td>
+                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} \( {{ value.symbol }} \) {% else %} <strong class="mardmo-error">MISSING SYMBOL</strong> {% endif %} </td>
                         <td style="text-align: center; vertical-align: middle;"></td>
                         <td style="text-align: center; vertical-align: middle;"></td>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.Info.Name %} {{ value.Info.Name }} {% else %} <strong style="color:red;">MISSING NAME</strong> {% endif %}</td>
+                        <td style="text-align: center; vertical-align: middle;">{% if value.Info.Name %} {{ value.Info.Name }} {% else %} <strong class="mardmo-error">MISSING NAME</strong> {% endif %}</td>
                         <td style="text-align: center; vertical-align: middle;">{% if value.Info.ID == 'not found' %} - {% else %} {{ value.Info.ID }} {% endif %}</td>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.Info.Description %} {{ value.Info.Description }} {% else %} <strong style="color:red;">MISSING DESCRIPTION</strong> {% endif %}</td>				
+                        <td style="text-align: center; vertical-align: middle;">{% if value.Info.Description %} {{ value.Info.Description }} {% else %} <strong class="mardmo-error">MISSING DESCRIPTION</strong> {% endif %}</td>				
                     </tr>
                 {% else %}
                     <tr>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} \( {{ value.symbol }} \) {% else %} <strong style="color:red;">MISSING SYMBOL</strong> {% endif %} </td>
-                        <td colspan="5" style="text-align: center; vertical-align: middle;"> <strong style="color:red;">MISSING QUANTITY OR QUANTITY KIND</strong> </td>
+                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} \( {{ value.symbol }} \) {% else %} <strong class="mardmo-error">MISSING SYMBOL</strong> {% endif %} </td>
+                        <td colspan="5" style="text-align: center; vertical-align: middle;"> <strong class="mardmo-error">MISSING QUANTITY OR QUANTITY KIND</strong> </td>
                     </tr>
                 {% endif %}
             {% endfor %}
         </tbody>
     </table>
 {% else %}
-    <strong style="color:red;">MISSING MATHEMATICAL EXPRESSION ELEMENT INFORMATION</strong>
+    <strong class="mardmo-error">MISSING MATHEMATICAL EXPRESSION ELEMENT INFORMATION</strong>
 {% endif %}

@@ -1,12 +1,13 @@
+{% load mardmo_tags %}
 {% if doc_dict %}
     <ul style="list-style-type: none; padding-left: 2em;">
     {% for key, entry in doc_dict.items %}
         <li>
-        {% if entry.0 == option.DOI %}DOI{% elif entry.0 == option.URL %}URL{% else %}Reference{% endif %}:
-        {% if entry.1 %}{{ entry.1 }}{% if entry.0 == option.URL and key in doc_url_invalid %} <strong style="color:red;">INVALID URL FORMAT</strong>{% endif %}{% else %}<strong style="color:red;">{% if entry.0 == option.DOI %}MISSING DOI{% elif entry.0 == option.URL %}MISSING URL{% else %}MISSING VALUE{% endif %}</strong>{% endif %}
+        {{ entry.0|option_name|default:"Reference" }}:
+        {% if entry.1 %}{{ entry.1 }}{% if entry.0 == option.URL and key in doc_url_invalid %} <strong class="mardmo-error">INVALID URL FORMAT</strong>{% endif %}{% else %}<strong class="mardmo-error">MISSING {{ entry.0|option_name|default:"value"|upper }}</strong>{% endif %}
         </li>
     {% endfor %}
     </ul>
 {% else %}
-    <strong style="color:red;">MISSING {{ doc_label|upper }}</strong>
+    <strong class="mardmo-error">MISSING {{ doc_label|upper }}</strong>
 {% endif %}

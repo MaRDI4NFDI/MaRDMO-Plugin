@@ -334,6 +334,8 @@ def render_preview(self, template, answers, option, submit_label):
             'submit_label': submit_label,
             'mardiURI': get_item_url('mardi'),
             'wikidataURI': get_item_url('wikidata'),
+            # Appended to the stylesheet URL so browsers reload it after an update
+            'mardmo_version': VERSION,
         },
         status=200
     )

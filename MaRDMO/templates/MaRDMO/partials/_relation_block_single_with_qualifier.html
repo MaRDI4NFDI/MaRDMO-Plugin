@@ -1,3 +1,4 @@
+{% load mardmo_tags %}
 {% if pairs %}
     <h3 id="{{ anchor }}">Relations to {{ title }}</h3>
     <ul style="list-style-type: none; padding-left: 1em;">
@@ -7,21 +8,16 @@
                 {% for item in pair.primary %}
                     {% if has_sections %}
                         {% if item == 'not found' %}
-                            {{ primary_label }}: <strong style="color:red;">SELECTED {{ primary_class }} NOT FOUND IN {{ primary_class }} SECTION</strong>{% if not forloop.last %}<br>{% endif %}
+                            {{ primary_label }}: <strong class="mardmo-error">SELECTED {{ primary_class }} NOT FOUND IN {{ primary_class }} SECTION</strong>{% if not forloop.last %}<br>{% endif %}
                         {% else %}
                             {{ primary_label }}: {{ item }}{% if not forloop.last %}<br>{% endif %}
                         {% endif %}
                     {% else %}
-                        {% if item.ID == 'not found' %}
-                            {% if item.Name %}{{ primary_label }}: {{ item.Name }}{% else %}{{ primary_label }}: <strong style="color:red;">MISSING {{ primary_class }} NAME</strong>{% endif %}
-                            {% if not item.Description %} — <strong style="color:red;">MISSING {{ primary_class }} SHORT DESCRIPTION</strong>{% elif item.Description|length > 2000 %} ({{ item.Description }}) — <strong style="color:red;">SHORT DESCRIPTION TOO LONG</strong>{% elif item.Description == item.Name %} ({{ item.Description }}) — <strong style="color:red;">NAME AND SHORT DESCRIPTION MUST BE DIFFERENT</strong>{% else %} ({{ item.Description }}){% endif %}{% if not forloop.last %}<br>{% endif %}
-                        {% else %}
-                            {{ primary_label }}: {{ item.ID }}{% if not forloop.last %}<br>{% endif %}
-                        {% endif %}
+                        {{ primary_label }}: {% user_entity item.ID item.Name item.Description primary_class %}{% if not forloop.last %}<br>{% endif %}
                     {% endif %}
                 {% endfor %}
             {% else %}
-                <strong style="color:red;">{{ primary_missing }}</strong>
+                <strong class="mardmo-error">{{ primary_missing }}</strong>
             {% endif %}
             <ul style="margin-top: 0.3em; list-style-type: none; padding-left: 1em;">
                 {% if pair.parameters %}
@@ -31,20 +27,15 @@
                     {% if pair.has_qualifier %}
                         {% if has_sections %}
                             {% if pair.qualifier == 'not found' %}
-                                <strong style="color:red;">SELECTED {{ qualifier_class }} NOT FOUND IN {{ qualifier_class }} SECTION</strong>
+                                <strong class="mardmo-error">SELECTED {{ qualifier_class }} NOT FOUND IN {{ qualifier_class }} SECTION</strong>
                             {% else %}
                                 {{ pair.qualifier }}
                             {% endif %}
                         {% else %}
-                            {% if pair.qualifier.ID == 'not found' %}
-                                {% if pair.qualifier.Name %}{{ pair.qualifier.Name }}{% else %}<strong style="color:red;">MISSING {{ qualifier_class }} NAME</strong>{% endif %}
-                                {% if not pair.qualifier.Description %} — <strong style="color:red;">MISSING {{ qualifier_class }} SHORT DESCRIPTION</strong>{% elif pair.qualifier.Description|length > 2000 %} ({{ pair.qualifier.Description }}) — <strong style="color:red;">SHORT DESCRIPTION TOO LONG</strong>{% elif pair.qualifier.Description == pair.qualifier.Name %} ({{ pair.qualifier.Description }}) — <strong style="color:red;">NAME AND SHORT DESCRIPTION MUST BE DIFFERENT</strong>{% else %} ({{ pair.qualifier.Description }}){% endif %}
-                            {% else %}
-                                {{ pair.qualifier.ID }}
-                            {% endif %}
+                            {% user_entity pair.qualifier.ID pair.qualifier.Name pair.qualifier.Description qualifier_class %}
                         {% endif %}
                     {% else %}
-                        <strong style="color:red;">{{ qualifier_missing }}</strong>
+                        <strong class="mardmo-error">{{ qualifier_missing }}</strong>
                     {% endif %}
                 </li>
                 <li>&#8594; {{ doc_label }}:
@@ -58,12 +49,12 @@
                 <li>&#8594; Hardware-Environment:
                     {% if pair.hardware %}
                         {% if pair.hardware == 'not found' %}
-                            <strong style="color:red;">SELECTED HARDWARE NOT FOUND IN HARDWARE SECTION</strong>
+                            <strong class="mardmo-error">SELECTED HARDWARE NOT FOUND IN HARDWARE SECTION</strong>
                         {% else %}
                             {{ pair.hardware }}
                         {% endif %}
                     {% else %}
-                        <strong style="color:red;">MISSING HARDWARE ENVIRONMENT</strong>
+                        <strong class="mardmo-error">MISSING HARDWARE ENVIRONMENT</strong>
                     {% endif %}
                 </li>
                 {% endif %}
@@ -77,6 +68,6 @@
 {% elif show_empty_msg %}
     <h3 id="{{ anchor }}">Relations to {{ title }}</h3>
     <ul style="list-style-type: none; padding-left: 1em;">
-        <li><strong style="color:red;">{{ show_empty_msg }}</strong></li>
+        <li><strong class="mardmo-error">{{ show_empty_msg }}</strong></li>
     </ul>
 {% endif %}
