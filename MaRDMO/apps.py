@@ -55,4 +55,4 @@ class MaRDMOConfig(AppConfig):
         self.items = get_data(settings.MARDMO_PROVIDER['mardi']['items'])
         self.properties = get_data(settings.MARDMO_PROVIDER['mardi']['properties'])
 
-        from . import router
+        from . import router  # noqa: F401  (registers the signal receivers)
