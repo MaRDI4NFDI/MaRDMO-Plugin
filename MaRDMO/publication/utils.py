@@ -22,6 +22,7 @@ Provides:
 - ``additional_queries``      — run supplementary SPARQL queries for linked entities
 '''
 
+import logging
 import re
 from multiprocessing.pool import ThreadPool
 
@@ -35,6 +36,8 @@ from .models import Author, Journal, Publication
 from ..constants import BASE_URI
 from ..getters import get_items, get_properties, get_sparql_query, get_url
 from ..queries import query_sparql, query_sparql_pool
+
+logger = logging.getLogger(__name__)
 
 # Timeout (seconds) for each external metadata request (Crossref, DataCite,
 # zbMATH, DOI resolver, ORCID); the sources are queried in parallel
@@ -258,10 +261,12 @@ def get_citation(doi):
 
     # Structure Publication Information
     for key in ['mardi', 'wikidata']:
-        try:
-            publication[key] = Publication.from_query(results.get(key))
-        except:
-            publication[key] = None
+        publication[key] = None
+        if results.get(key):
+            try:
+                publication[key] = Publication.from_query(results[key])
+            except Exception:  # pylint: disable=broad-exception-caught
+                logger.exception("Could not read publication %s from %s", doi, key)
 
     # Return if Publication found on MaRDI
     if publication['mardi']:
@@ -269,37 +274,34 @@ def get_citation(doi):
 
     if not publication['wikidata']:
         # If no Citation Data in KGs get information from CrossRef, DataCite, DOI, zbMath
-        pool = ThreadPool(processes=4)
-        results = pool.map(
-            lambda fn: fn(doi),
-            [
-                get_crossref_data,
-                get_datacite_data,
-                get_zbmath_data,
-                get_doi_data
-            ]
-        )
+        with ThreadPool(processes=4) as pool:
+            results = pool.map(
+                lambda fn: fn(doi),
+                [
+                    get_crossref_data,
+                    get_datacite_data,
+                    get_zbmath_data,
+                    get_doi_data
+                ]
+            )
 
         for idx, source in enumerate(['crossref', 'datacite', 'zbmath', 'doi']):
+            publication[source] = None
             if hasattr(results[idx], "status_code") and results[idx].status_code == 200:
-                source_func_name = f"from_{source}"
-                source_func = getattr(Publication, source_func_name)
-                publication[source] = source_func(results[idx])
-            else:
-                publication[source] = None
+                # An unexpected answer from one source counts as "not available";
+                # the other sources are still used
+                try:
+                    parsed = getattr(Publication, f"from_{source}")(results[idx])
+                except Exception:  # pylint: disable=broad-exception-caught
+                    logger.exception("Could not read publication %s from %s", doi, source)
+                    continue
+                # Without a title the publication cannot be exported; let the
+                # next source take over instead of an empty record
+                if parsed.label:
+                    publication[source] = parsed
 
     # Get Authors assigned to publication from ORCID
-    publication['orcid'] = {}
-    response = get_orcids(doi)
-    if response.status_code == 200:
-        orcids = response.json().get('result')
-        if orcids:
-            for idx, entry in enumerate(orcids):
-                orcid_id = entry.get('orcid-identifier', {}).get('path', '')
-                response = get_author_by_orcid(orcid_id)
-                if response.status_code == 200:
-                    orcid_author = response.json()
-                    publication['orcid'][idx] = Author.from_orcid(orcid_author)
+    publication['orcid'] = _orcid_authors(doi)
 
     # Add (missing) ORCID IDs to authors
     for choice in ['mardi', 'wikidata', 'crossref', 'datacite', 'zbmath', 'doi']:
@@ -327,7 +329,9 @@ def get_citation(doi):
 
         properties = get_properties()
         if orcid_id and zbmath_id and wikidata_id:
-            additional_queries(
+            _try_enrichment(
+                'authors',
+                additional_queries,
                 publication,
                 choice,
                 'authors', 
@@ -364,7 +368,9 @@ def get_citation(doi):
                 wikidata_id = f'"{publication[choice].journal[0].id.split(":")[1]}"'
 
         if journal_id or wikidata_id:
-            additional_queries(
+            _try_enrichment(
+                'journal',
+                additional_queries,
                 publication,
                 choice,
                 'journal',
@@ -386,6 +392,39 @@ def get_citation(doi):
             )
 
     return publication
+
+def _try_enrichment(label, function, *args):
+    '''Run an optional enrichment step (author/journal IDs); log instead of failing.
+
+    The publication data is complete without it, so an unexpected answer from
+    the MaRDI Portal or Wikidata must not break the lookup.
+    '''
+    try:
+        function(*args)
+    except Exception:  # pylint: disable=broad-exception-caught
+        logger.exception("Could not look up %s IDs on MaRDI Portal / Wikidata", label)
+
+
+def _orcid_authors(doi):
+    '''Return ``{index: Author}`` for researchers who list *doi* in their ORCID record.
+
+    ORCID only adds missing ORCID iDs to authors from other sources, so any
+    failure (service unavailable, unexpected answer) yields ``{}``.
+    '''
+    authors = {}
+    try:
+        response = get_orcids(doi)
+        if response is None or response.status_code != 200:
+            return authors
+        for idx, entry in enumerate(response.json().get('result') or []):
+            orcid_id = entry.get('orcid-identifier', {}).get('path', '')
+            person = get_author_by_orcid(orcid_id)
+            if person is not None and person.status_code == 200:
+                authors[idx] = Author.from_orcid(person.json())
+    except Exception:  # pylint: disable=broad-exception-caught
+        logger.exception("Could not look up ORCID authors for %s", doi)
+    return authors
+
 
 def get_crossref_data(doi):
     '''Fetch citation metadata for *doi* from the CrossRef REST API.
@@ -476,8 +515,8 @@ def get_orcids(doi):
 
     Returns:
         :class:`requests.Response` (status 200) containing a JSON payload with
-        an ``"result"`` list of ORCID records on success, or the caught
-        :class:`requests.exceptions.RequestException` on failure.
+        an ``"result"`` list of ORCID records on success, or ``None``
+        on failure (logged as a warning).
     '''
     try:
         request = requests.get(
@@ -488,7 +527,8 @@ def get_orcids(doi):
         request.raise_for_status()
         return request
     except requests.exceptions.RequestException as error:
-        return error
+        logger.warning("ORCID search for %s failed: %s", doi, error)
+        return None
 
 def get_author_by_orcid(orcid_id):
     '''Fetch personal-details for a researcher from the ORCID public API.
@@ -498,8 +538,8 @@ def get_author_by_orcid(orcid_id):
 
     Returns:
         :class:`requests.Response` (status 200) containing a JSON payload with
-        the researcher's personal details on success, or the caught
-        :class:`requests.exceptions.RequestException` on failure.
+        the researcher's personal details on success, or ``None``
+        on failure (logged as a warning).
     '''
     try:
         request = requests.get(
@@ -510,4 +550,5 @@ def get_author_by_orcid(orcid_id):
         request.raise_for_status()
         return request
     except requests.exceptions.RequestException as error:
-        return error
+        logger.warning("ORCID lookup of %s failed: %s", orcid_id, error)
+        return None

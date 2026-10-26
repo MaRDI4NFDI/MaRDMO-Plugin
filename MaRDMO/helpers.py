@@ -17,6 +17,8 @@ Contains:
   :func:`define_setup`, :func:`rank_by_search_term`.
 '''
 
+import re
+
 from typing import Callable, Optional, Any
 from collections import defaultdict, deque
 from urllib.parse import urlparse
@@ -140,15 +142,25 @@ def is_cyclic(dependencies: dict[str, set[str]]) -> bool:
     # If not all items were processed → cycle exists
     return processed != len(dependencies)
 
-def date_format(parts: list[int]) -> str | None:
-    """Return a date string as YYYY-MM-DDT00:00:00Z given a list of date parts."""
-    if not parts:
+def date_format(parts: list) -> str | None:
+    """Return a date string as YYYY-MM-DDT00:00:00Z given a list of date parts.
+
+    Tolerates the shapes external sources deliver: numbers or strings, a
+    missing (``None``) part, or a part with trailing text such as
+    ``"13T10:00:00Z"``.  The date ends at the first missing or unreadable
+    part, so ``[2020, None]`` gives a year-only date; ``None`` is returned
+    if not even the year is readable.
+    """
+    numbers = []
+    for part in (parts or [])[:3]:
+        match = re.match(r'\s*(\d+)', str(part)) if part is not None else None
+        if not match:
+            break
+        numbers.append(int(match.group(1)))
+    if not numbers:
         return None
-    if len(parts) == 1:
-        return f"{int(parts[0]):04d}-00-00T00:00:00Z"
-    if len(parts) == 2:
-        return f"{int(parts[0]):04d}-{int(parts[1]):02d}-00T00:00:00Z"
-    return f"{int(parts[0]):04d}-{int(parts[1]):02d}-{int(parts[2]):02d}T00:00:00Z"
+    year, month, day = (numbers + [0, 0])[:3]
+    return f"{year:04d}-{month:02d}-{day:02d}T00:00:00Z"
 
 def date_precision(date_str: str) -> int | None:
     """

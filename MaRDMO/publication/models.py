@@ -17,6 +17,17 @@ from typing import Optional, ClassVar
 
 from ..getters import get_items, get_options
 from ..helpers import date_format, split_value
+
+
+def _first(values):
+    '''Return the first element of a list (``None`` if empty); other values unchanged.
+
+    External APIs deliver some fields sometimes as list, sometimes as plain
+    value, and sometimes as empty list.
+    '''
+    if isinstance(values, list):
+        return values[0] if values else None
+    return values
 from ..models import Relatant, RelatantWithClass
 
 @dataclass
@@ -713,7 +724,7 @@ class Publication:
             # Get ID
             'id': None,
             # Get Label
-            'label': data.get('title', [''])[0],
+            'label': _first(data.get('title')),
             # Get Description
             'description': 
                 f'scientific article (doi: {data["DOI"]})'
@@ -736,10 +747,10 @@ class Publication:
                 else []
             ),
             # Get Title
-            'title': data.get('title', [''])[0],
+            'title': _first(data.get('title')),
             # Get Date
             'date': date_format(
-                data.get('published', {}).get('date-parts', [[]])[0]
+                _first((data.get('published') or {}).get('date-parts'))
             ),
             # Get Volume
             'volume': data.get('volume'),
@@ -827,7 +838,8 @@ class Publication:
             'date': 
                 next(
                     (
-                        date_format(date_part['date'].split('-'))
+                        # A range ("2019/2020") counts from its start
+                        date_format(date_part['date'].split('/')[0].split('-'))
                         for date_part in data.get('dates', [])
                         if date_part.get('dateType') == 'Issued' and date_part.get('date')
                     ),
@@ -923,7 +935,7 @@ class Publication:
             'title': data.get('title'),
             # Get Date ('issued' is the CSL standard, 'published' Crossref-specific)
             'date': date_format(
-                (data.get('published') or data.get('issued') or {}).get('date-parts', [[]])[0]
+                _first((data.get('published') or data.get('issued') or {}).get('date-parts'))
             ),
             # Get Volume
             'volume': data.get('volume'),
@@ -976,13 +988,13 @@ class Publication:
         options = cls.get_options()
         items = get_items()
 
-        data = raw_data.json().get('result', [''])[0]
+        data = _first(raw_data.json().get('result')) or {}
 
         publication = {
             # Get ID
             'id': None,
             # Get Label
-            'label': data.get('title', {}).get('title'),
+            'label': (data.get('title') or {}).get('title'),
             # Get Description
             'description': (
                 f"scientific article (doi: {doi})"
@@ -1018,15 +1030,13 @@ class Publication:
                 else []
             ),
             # Get Date
-            'date':
-                f"{int(data['year']):04d}-00-00T00:00:00Z"
-                if data.get('year') else None,
+            'date': date_format([data.get('year')]),
             # Get Title
-            'title': data.get('title', {}).get('title'),
+            'title': (data.get('title') or {}).get('title'),
             # Get Volume
-            'volume': (data.get('source', {}).get('series') or [''])[0].get('volume'),
+            'volume': (_first((data.get('source') or {}).get('series')) or {}).get('volume'),
             # Get Issue
-            'issue': (data.get('source', {}).get('series') or [''])[0].get('issue'),
+            'issue': (_first((data.get('source') or {}).get('series')) or {}).get('issue'),
             # Get Page
             'page': data.get('source', {}).get('page'),
             # Get Reference
