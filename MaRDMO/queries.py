@@ -160,9 +160,10 @@ def query_sparql_pool(query_input):
         Dict with the same keys as *query_input*, each mapping to the list of
         SPARQL result bindings returned by :func:`query_sparql`.
     '''
-    pool = ThreadPool(processes = len(query_input))
-    # Map each endpoint's query and store results in a dictionary
-    results = pool.map(lambda args: query_sparql(*args), query_input.values())
+    # Map each endpoint's query and store results in a dictionary; the pool
+    # is closed afterwards so its worker threads do not linger
+    with ThreadPool(processes = len(query_input)) as pool:
+        results = pool.map(lambda args: query_sparql(*args), query_input.values())
     data = dict(zip(query_input.keys(), results))
     return data
 
@@ -194,8 +195,9 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
     if 'wikidata' in sources:
         source_functions['wikidata'] = lambda s: query_api(get_url('wikidata', 'api'), s)
 
-    pool = ThreadPool(processes=len(source_functions))
-    results = pool.map(lambda func: func(search), source_functions.values())
+    # Runs on every autocomplete search; close the pool so threads do not pile up
+    with ThreadPool(processes=len(source_functions)) as pool:
+        results = pool.map(lambda func: func(search), source_functions.values())
     results_dict = dict(zip(source_functions.keys(), results))
 
     options = []
