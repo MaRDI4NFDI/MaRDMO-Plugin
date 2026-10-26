@@ -25,6 +25,7 @@ import time
 import requests
 
 from .queries import query_item, query_sparql, sparql_string
+from .validators import REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, url_problem
 
 _logger = logging.getLogger(__name__)
 
@@ -567,6 +568,56 @@ class GeneratePayload:
         relation_keys = [k for k in self.state.dictionary if k.startswith('RELATION')]
         for idx, key in enumerate(relation_keys):
             self.state.dictionary[key]['exists'] = check.get(f'RELATION{idx}', 'false')
+
+    def validate_urls(self):
+        '''Reject URL values the portal would refuse, before anything is posted.
+
+        Applies the strict rule (:func:`~MaRDMO.validators.url_problem`) to every
+        URL statement and qualifier.  This catches values that bypassed the
+        pre-save validator, the preview and the checks, so an export never fails
+        halfway because of a malformed URL.
+
+        Raises:
+            ValueError: One argument per invalid URL, naming item and property.
+        '''
+        properties = self.wikibase['properties']
+        pid_to_name = {pid: name for name, pid in properties.items()}
+        repository_pid = properties.get('source code repository URL')
+        errors = []
+
+        def check(item_name, prop_id, value):
+            schemes = REPOSITORY_URL_SCHEMES if prop_id == repository_pid else WEB_URL_SCHEMES
+            text = value if isinstance(value, str) else ''
+            problem = url_problem(text, schemes) if text else None
+            if problem:
+                shown = text if len(text) <= 60 else f'{text[:57]}...'
+                errors.append(f'"{item_name}", {pid_to_name.get(prop_id, prop_id)}: {problem} ("{shown}")')
+
+        def check_statement(item_name, prop_id, data_type, value, qualifiers):
+            if data_type in ('url', 'URL'):
+                check(item_name, prop_id, value)
+            for qualifier in qualifiers or []:
+                if qualifier['property']['data_type'] in ('url', 'URL'):
+                    check(item_name, qualifier['property']['id'], qualifier['value']['content'])
+
+        for key, entry in self.state.dictionary.items():
+            if key.startswith('Item'):
+                for statement in entry.get('statements', []):
+                    check_statement(
+                        entry.get('label') or key, statement[0], statement[1], statement[2],
+                        statement[3] if len(statement) > 3 else [],
+                    )
+            elif key.startswith('RELATION'):
+                item_key = entry['url'].split('/items/')[1].split('/')[0]
+                statement = entry['payload']['statement']
+                check_statement(
+                    self.state.dictionary.get(item_key, {}).get('label') or item_key,
+                    statement['property']['id'], statement['property']['data_type'],
+                    statement['value']['content'], statement.get('qualifiers', []),
+                )
+
+        if errors:
+            raise ValueError(*errors)
 
     def check_existing_relations(self, sparql_endpoint, api_url):
         '''Mark every RELATION entry that already exists on the portal.

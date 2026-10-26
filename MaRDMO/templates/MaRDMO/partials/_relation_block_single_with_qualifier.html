@@ -40,9 +40,9 @@
                 </li>
                 <li>&#8594; {{ doc_label }}:
                     {% if has_sections %}
-                        {% include "MaRDMO/partials/_doc_entries.html" with doc_dict=pair.software_doc doc_url_invalid=pair.software_doc_url_invalid %}
+                        {% include "MaRDMO/partials/_doc_entries.html" with doc_dict=pair.software_doc %}
                     {% else %}
-                        {% include "MaRDMO/partials/_doc_entries.html" with doc_dict=pair.method_doc doc_url_invalid=pair.method_doc_url_invalid %}
+                        {% include "MaRDMO/partials/_doc_entries.html" with doc_dict=pair.method_doc %}
                     {% endif %}
                 </li>
                 {% if show_hardware %}

@@ -75,11 +75,28 @@ SOFTWARE_PROPS = {
     'S2B':  ['tested_by'],
 }
 
+# Export mapping of reference answers: (option key, portal property, datatype).
+# Looked up by option, not by position (see helpers.find_reference).
+SOFTWARE_REFERENCES = (
+    ('DOI',             'DOI',                        'external-id'),
+    ('SWMATH',          'swMath work ID',             'external-id'),
+    ('SOURCECODE_URL',  'source code repository URL', 'URL'),
+    ('DESCRIPTION_URL', 'described at URL',           'URL'),
+)
+BENCHMARK_REFERENCES = (
+    ('DOI',             'DOI',                        'external-id'),
+    ('MORWIKI',         'MORwiki ID',                 'external-id'),
+    ('SOURCECODE_URL',  'source code repository URL', 'URL'),
+    ('DESCRIPTION_URL', 'described at URL',           'URL'),
+)
+
+# Same order as the options in the questionnaire: the list position is
+# used as collection_index when imported references are stored
 software_reference_ids = [
     'DOI',
     'SWMATH',
-    'SOURCECODE_URL',
     'DESCRIPTION_URL',
+    'SOURCECODE_URL',
 ]
 
 # Tuple fields: (set_prefix, set_index, collection_index, external_id, option_text)

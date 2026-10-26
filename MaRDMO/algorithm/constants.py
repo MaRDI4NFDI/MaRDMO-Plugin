@@ -26,18 +26,22 @@ PROPS = {
     'Problem': ['specializes', 'specialized_by'],
 }
 
+# Same order as the options in the questionnaire: the list position is
+# used as collection_index when imported references are stored
 software_reference_ids = [
     'DOI',
     'SWMATH',
+    'DESCRIPTION_URL',
     'SOURCECODE_URL',
-    'DESCRIPTION_URL'
 ]
 
+# Same order as the options in the questionnaire: the list position is
+# used as collection_index when imported references are stored
 benchmark_reference_ids = [
     'DOI',
     'MORWIKI',
+    'DESCRIPTION_URL',
     'SOURCECODE_URL',
-    'DESCRIPTION_URL'
 ]
 
 # Relations

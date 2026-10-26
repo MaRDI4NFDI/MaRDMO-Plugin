@@ -94,3 +94,16 @@ Only visible line breaks are matched; tabs and other invisible whitespace
 Used by the pre-save validator for textarea answers (:mod:`~MaRDMO.validators`),
 the documentation checker (:mod:`~MaRDMO.checks.base`), and the preview templates.
 '''
+
+# ---------------------------------------------------------------------------
+# URL patterns
+# ---------------------------------------------------------------------------
+
+URL_FORBIDDEN_CHARS_RE = re.compile(r'[<>"{}|\\^`\x00-\x1f\x7f]')
+'''Characters that are never valid in a URL (and break SPARQL IRIs).
+
+Whitespace is checked separately to give a more specific message.
+'''
+
+URL_HOST_RE = re.compile(r'^[^\s.]+(\.[^\s.]+)+$')
+'''Host with at least one dot (``example.org``); IP addresses are handled separately.'''

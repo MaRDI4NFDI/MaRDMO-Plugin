@@ -10,9 +10,24 @@ from ..constants import (
     CATALOG_MODEL_BASICS, CATALOG_WORKFLOW,
 )
 from ..getters import get_mathmoddb, get_mathalgodb
-from ..helpers import is_valid_url
+from ..getters import get_options
+from ..helpers import find_reference
 from ..patterns import LINE_BREAK_RE
-from ..validators import short_description_problem
+from ..validators import short_description_problem, url_problem, url_schemes
+
+# Reference answers to check: (option key, label in messages, noun for "no ... provided")
+SOFTWARE_REFERENCE_CHECKS = (
+    ('DOI',             'DOI',             'ID'),
+    ('SWMATH',          'swMath ID',       'ID'),
+    ('DESCRIPTION_URL', 'Description URL', 'URL'),
+    ('SOURCECODE_URL',  'Repository URL',  'URL'),
+)
+BENCHMARK_REFERENCE_CHECKS = (
+    ('DOI',             'DOI',             'ID'),
+    ('MORWIKI',         'MORwiki ID',      'ID'),
+    ('DESCRIPTION_URL', 'Description URL', 'URL'),
+    ('SOURCECODE_URL',  'Repository URL',  'URL'),
+)
 
 # Workflow textarea answers besides the procedure: answer key -> field label
 _WORKFLOW_SINGLE_LINE_FIELDS = {
@@ -123,6 +138,31 @@ class ChecksBase:
                 }[problem]
                 self.err.append(self._error(parent_class, parent_page, f'{message} ({label})'))
 
+    def _check_references(self, references, section, page_name, checks):
+        '''Check selected reference options: value present, URLs valid.
+
+        References are looked up by option, not by position (see
+        :func:`~MaRDMO.helpers.find_reference`).
+
+        Args:
+            references: Reference answers ``{collection_index: [option_uri, text]}``.
+            section:    Section name for error messages (e.g. ``"Software"``).
+            page_name:  Human-readable page label for error messages.
+            checks:     Tuples ``(option key, label, noun)``, e.g.
+                        :data:`SOFTWARE_REFERENCE_CHECKS`.
+        '''
+        options = get_options()
+        for option_key, label, noun in checks:
+            entry = find_reference(references, options[option_key])
+            if not entry:
+                continue
+            if not entry[1]:
+                self.err.append(self._error(section, page_name, f'{label} selected, but no {noun} provided!'))
+            elif noun == 'URL':
+                problem = url_problem(entry[1], url_schemes(options[option_key]))
+                if problem:
+                    self.err.append(self._error(section, page_name, f'Invalid {label}: {problem}'))
+
     def _check_doc_entries(self, doc, options, page_name, context_label):
         '''Validate that each selected doc entry has a non-empty text value.
 
@@ -144,10 +184,10 @@ class ChecksBase:
                     'Process Step', page_name,
                     f'Missing {context_label} {label}'
                 ))
-            elif entry[0] == options['URL'] and not is_valid_url(entry[1]):
+            elif entry[0] == options['URL'] and url_problem(entry[1]):
                 self.err.append(self._error(
                     'Process Step', page_name,
-                    f'Invalid {context_label} URL: must start with http:// or https://'
+                    f'Invalid {context_label} URL: {url_problem(entry[1])}'
                 ))
 
     def _check_flexible(

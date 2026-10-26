@@ -16,8 +16,8 @@ from .constants import ITEMINFOS, CITATIONINFOS, JOURNALS, AUTHORS, LANGUAGES
 from .utils import clean_background_data, get_citation
 
 from ..constants import BASE_URI
-from ..getters import get_items, get_properties, get_questions
-from ..helpers import date_precision, value_editor
+from ..getters import get_items, get_options, get_properties, get_questions
+from ..helpers import date_precision, find_reference, value_editor
 
 
 def _single_line(text):
@@ -206,6 +206,24 @@ class PublicationExport:
                 mardmo_property = "descriptionLong",
                 wikibase_property = "description",
             )
+
+    def _add_references(self, payload, references, mapping):
+        '''Add one statement per reference answer (DOI, IDs, URLs) of the current subject.
+
+        Args:
+            payload:    :class:`~MaRDMO.payload.GeneratePayload` instance.
+            references: Reference answers ``{collection_index: [option_uri, text]}``.
+            mapping:    Tuples ``(option key, portal property, datatype)``, e.g.
+                        :data:`~MaRDMO.constants.SOFTWARE_REFERENCES`.
+        '''
+        options = get_options()
+        for option_key, prop, datatype in mapping:
+            entry = find_reference(references, options[option_key])
+            if entry:
+                payload.add_answer(
+                    verb = self.properties[prop],
+                    object_and_type = [entry[1], datatype],
+                )
 
     def _export_journals(self, payload, publications: dict):
         '''Add journal item entries (instance-of + ISSN) for all publications.

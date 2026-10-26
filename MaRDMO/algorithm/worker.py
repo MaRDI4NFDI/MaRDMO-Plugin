@@ -13,8 +13,9 @@ Provides:
 
 from .constants import get_relations, preview_relations
 
+from ..constants import BENCHMARK_REFERENCES, SOFTWARE_REFERENCES
 from ..getters import get_items, get_mathalgodb, get_properties, get_publication_mapping, get_url
-from ..helpers import collect_items_without_section, entity_relations, is_valid_url, unique_items
+from ..helpers import collect_items_without_section, entity_relations, unique_items
 from ..payload import GeneratePayload
 
 from ..publication.worker import PublicationExport
@@ -74,21 +75,6 @@ class PrepareAlgorithm(PublicationExport):
         answers['programminglanguage'] = collect_items_without_section(
             answers, 'software', 'programminglanguage'
         )
-
-        # URL validity flags for software and benchmark reference URLs
-        for sw_data in answers.get('software', {}).values():
-            ref = sw_data.get('reference', {})
-            if ref.get(2) and ref[2][1]:
-                sw_data['ref_desc_url_valid'] = is_valid_url(ref[2][1])
-            if ref.get(3) and ref[3][1]:
-                sw_data['ref_repo_url_valid'] = is_valid_url(ref[3][1])
-
-        for bm_data in answers.get('benchmark', {}).values():
-            ref = bm_data.get('reference', {})
-            if ref.get(2) and ref[2][1]:
-                bm_data['ref_desc_url_valid'] = is_valid_url(ref[2][1])
-            if ref.get(3) and ref[3][1]:
-                bm_data['ref_repo_url_valid'] = is_valid_url(ref[3][1])
 
         return answers
 
@@ -168,7 +154,8 @@ class PrepareAlgorithm(PublicationExport):
         # Construct Item Payloads
         payload.add_item_payload()
 
-        # Mark Relations that already exist on the Portal
+        # Reject malformed URLs, then mark Relations that already exist on the Portal
+        payload.validate_urls()
         payload.check_existing_relations(
             sparql_endpoint = get_url('mardi', 'sparql'),
             api_url = get_url('mardi', 'api'),
@@ -296,27 +283,7 @@ class PrepareAlgorithm(PublicationExport):
                 }
             )
 
-            if entry.get("reference"):
-                if entry['reference'].get(0):
-                    payload.add_answer(
-                        verb = self.properties["DOI"],
-                        object_and_type = [entry["reference"][0][1], "external-id"],
-                    )
-                if entry['reference'].get(1):
-                    payload.add_answer(
-                        verb = self.properties["swMath work ID"],
-                        object_and_type = [entry["reference"][1][1], "external-id"],
-                    )
-                if entry['reference'].get(2):
-                    payload.add_answer(
-                        verb = self.properties["source code repository URL"],
-                        object_and_type = [entry["reference"][2][1], "URL"],
-                    )
-                if entry['reference'].get(3):
-                    payload.add_answer(
-                        verb = self.properties["described at URL"],
-                        object_and_type = [entry["reference"][3][1], "URL"],
-                    )
+            self._add_references(payload, entry.get('reference'), SOFTWARE_REFERENCES)
 
     def _export_benchmarks(self, payload, benchmarks: dict):
         for entry in benchmarks.values():
@@ -334,27 +301,7 @@ class PrepareAlgorithm(PublicationExport):
                 qclass = self.items["benchmark"],
             )
 
-            if entry.get("reference"):
-                if entry['reference'].get(0):
-                    payload.add_answer(
-                        verb = self.properties["DOI"],
-                        object_and_type = [entry["reference"][0][1], "external-id"],
-                    )
-                if entry['reference'].get(1):
-                    payload.add_answer(
-                        verb = self.properties["MORwiki ID"],
-                        object_and_type = [entry["reference"][1][1], "external-id"],
-                    )
-                if entry['reference'].get(2):
-                    payload.add_answer(
-                        verb = self.properties["source code repository URL"],
-                        object_and_type = [entry["reference"][2][1], "URL"],
-                    )
-                if entry['reference'].get(3):
-                    payload.add_answer(
-                        verb = self.properties["described at URL"],
-                        object_and_type = [entry["reference"][3][1], "URL"],
-                    )
+            self._add_references(payload, entry.get('reference'), BENCHMARK_REFERENCES)
 
     def _export_programming_languages(self, payload, programminglanguages: dict):
         for entry in programminglanguages.values():

@@ -8,6 +8,7 @@ MaRDI Portal Wikibase instance.
 
 from .constants import get_relations, preview_relations, REPRODUCIBILITY, IRREPRODUCIBILITY
 
+from ..constants import SOFTWARE_REFERENCES
 from ..getters import (
     get_items,
     get_mathalgodb,
@@ -19,7 +20,7 @@ from ..getters import (
 )
 from ..helpers import (
     collect_items_without_section, entity_relations, entity_relations_grouped,
-    is_valid_url, unique_items,
+    unique_items,
 )
 from ..patterns import DOI_STRICT_RE
 from ..payload import GeneratePayload
@@ -235,29 +236,6 @@ class PrepareWorkflow(PublicationExport):
                 val = str(publish[1]).strip()
                 ds_data['publish_doi_valid'] = bool(DOI_STRICT_RE.match(val))
 
-        for sw_data in answers.get('software', {}).values():
-            ref = sw_data.get('reference', {})
-            if ref.get(2) and ref[2][1]:
-                sw_data['ref_desc_url_valid'] = is_valid_url(ref[2][1])
-            if ref.get(3) and ref[3][1]:
-                sw_data['ref_repo_url_valid'] = is_valid_url(ref[3][1])
-
-        for ps_data in answers.get('processstep', {}).values():
-            for pair in ps_data.get('algorithm_software_pairs', []):
-                pair['software_doc_url_invalid'] = {
-                    idx
-                    for idx, entry in pair.get('software_doc', {}).items()
-                    if entry and entry[0] == options['URL'] and entry[1]
-                    and not is_valid_url(entry[1])
-                }
-            for pair in ps_data.get('method_instrument_pairs', []):
-                pair['method_doc_url_invalid'] = {
-                    idx
-                    for idx, entry in pair.get('method_doc', {}).items()
-                    if entry and entry[0] == options['URL'] and entry[1]
-                    and not is_valid_url(entry[1])
-                }
-
         return answers
 
     def export(self, data, url):
@@ -359,6 +337,7 @@ class PrepareWorkflow(PublicationExport):
 
         payload.add_item_payload()
 
+        payload.validate_urls()
         payload.check_existing_relations(
             sparql_endpoint = get_url('mardi', 'sparql'),
             api_url         = get_url('mardi', 'api'),
@@ -687,27 +666,7 @@ class PrepareWorkflow(PublicationExport):
                 }
             )
 
-            if entry.get("reference"):
-                if entry['reference'].get(0):
-                    payload.add_answer(
-                        verb = self.properties["DOI"],
-                        object_and_type = [entry["reference"][0][1], "external-id"],
-                    )
-                if entry['reference'].get(1):
-                    payload.add_answer(
-                        verb = self.properties["swMath work ID"],
-                        object_and_type = [entry["reference"][1][1], "external-id"],
-                    )
-                if entry['reference'].get(2):
-                    payload.add_answer(
-                        verb = self.properties["source code repository URL"],
-                        object_and_type = [entry["reference"][2][1], "URL"],
-                    )
-                if entry['reference'].get(3):
-                    payload.add_answer(
-                        verb = self.properties["described at URL"],
-                        object_and_type = [entry["reference"][3][1], "URL"],
-                    )
+            self._add_references(payload, entry.get('reference'), SOFTWARE_REFERENCES)
 
     def _export_hardwares(self, payload, hardwares: dict):
         '''Export each hardware item.

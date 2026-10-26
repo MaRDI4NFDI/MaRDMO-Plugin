@@ -31,6 +31,7 @@ from .validators import (
     validate_value_format,
     validate_properties,
     validate_qudt_id,
+    validate_reference,
     validate_short_description,
     validate_single_line,
 )
@@ -264,6 +265,8 @@ def build_presave_validator_map():
     - :func:`~MaRDMO.validators.validate_doi` — for all reference URIs that
       accept a DOI (publication, software, benchmark, process-step documentation,
       and data-set publication) across algorithm and workflow catalogs.
+    - :func:`~MaRDMO.validators.validate_reference` — DOI or URL check for the
+      software/benchmark references and the process-step documentation.
     - :func:`~MaRDMO.validators.validate_value_format` — for all
       ``general.relation`` question URIs across model, algorithm, and workflow.
     - :func:`~MaRDMO.validators.validate_single_line` — for all textarea
@@ -400,13 +403,13 @@ def build_presave_validator_map():
                 validate_short_description,
             f'{base}{questions_algorithm["Benchmark"]["Description"]["uri"]}':
                 validate_short_description,
-            # DOI reference (publication, software, benchmark)
+            # DOI reference (publication); DOI or URL (software, benchmark)
             f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
                 validate_doi,
             f'{base}{questions_algorithm["Software"]["Reference"]["uri"]}':
-                validate_doi,
+                validate_reference,
             f'{base}{questions_algorithm["Benchmark"]["Reference"]["uri"]}':
-                validate_doi,
+                validate_reference,
             # Relation label format
             f'{base}{questions_algorithm["Problem"]["BRelatant"]["uri"]}':
                 validate_value_format,
@@ -446,15 +449,15 @@ def build_presave_validator_map():
                 validate_single_line,
             f'{base}{questions_workflow["Workflow"]["Other Platform"]["uri"]}':
                 validate_single_line,
-            # DOI reference (publication, software, PS documentation, DS to-publish)
+            # DOI reference (publication, DS to-publish); DOI or URL (software, PS documentation)
             f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
                 validate_doi,
             f'{base}{questions_workflow["Software"]["Reference"]["uri"]}':
-                validate_doi,
+                validate_reference,
             f'{base}{questions_workflow["Process Step"]["Software-Documentation"]["uri"]}':
-                validate_doi,
+                validate_reference,
             f'{base}{questions_workflow["Process Step"]["Method-Documentation"]["uri"]}':
-                validate_doi,
+                validate_reference,
             f'{base}{questions_workflow["Data Set"]["To Publish"]["uri"]}':
                 validate_doi,
             # Relation label format

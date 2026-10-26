@@ -44,7 +44,7 @@ from .constants import (DOI_BASE_URL, ISSN_BASE_URL, MORWIKI_BASE_URL, ORCID_BAS
                         WIKIDATA, ZBMATH_AUTHOR_BASE_URL)
 from . import VERSION
 from .getters import get_item_url
-from .helpers import is_valid_url
+from .validators import url_problem
 from .store import (
     _progress_store,
     clear_progress,
@@ -166,7 +166,7 @@ def show_success(request, job_id):
             return f'{MORWIKI_BASE_URL}{obj}'
         if prop in ('described at URL', 'source code repository URL', 'URL'):
             # User-entered URL: only http(s) may become a link (no javascript: etc.)
-            return obj if is_valid_url(obj) else ''
+            return obj if not url_problem(obj) else ''
         if prop == 'QUDT quantity kind ID':
             return f'{QUDT_QUANTITYKIND_URL}{obj}'
         if prop == 'QUDT constant ID':

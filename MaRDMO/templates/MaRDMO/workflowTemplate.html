@@ -119,7 +119,7 @@
     {# Include Software Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="SOFTWARE" description=values.Description name=values.Name %}            
 
-    {% include "MaRDMO/partials/_reference_block.html" with references=values.reference id_option=option.SWMATH id_label="swMath ID" missing_msg="MISSING SOFTWARE REFERENCE" ref_desc_url_valid=values.ref_desc_url_valid ref_repo_url_valid=values.ref_repo_url_valid %}
+    {% include "MaRDMO/partials/_reference_block.html" with references=values.reference id_option=option.SWMATH id_label="swMath ID" missing_msg="MISSING SOFTWARE REFERENCE" %}
 
     {# Include Software ID #}
     {% include "MaRDMO/partials/_id.html" with class="SOFTWARE" id=values.ID %}

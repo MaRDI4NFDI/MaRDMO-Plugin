@@ -257,7 +257,8 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                 'core/error.html',
                 {
                     'title': _('Value Error'),
-                    'errors': [err]
+                    # One error line per argument (e.g. one per invalid URL)
+                    'errors': list(err.args) or [err]
                 },
                 status=200
             )

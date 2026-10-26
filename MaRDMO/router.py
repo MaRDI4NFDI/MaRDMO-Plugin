@@ -42,6 +42,7 @@ from .constants import (
     CATALOG_ALGORITHM_NAME,
     CATALOG_WORKFLOW_NAME,
 )
+from .helpers import is_internal_write
 from .builders import (
     build_post_save_handler_set,
     build_post_delete_handler_set,
@@ -174,5 +175,7 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
         return
 
     validator = PRESAVE_VALIDATOR_MAP.get(catalog_name, {}).get(attr_uri)
-    if validator and not _is_snapshot_rollback(instance):
+    # Validators check user input; MaRDMO's own writes are checked later by
+    # preview, checks and export
+    if validator and not is_internal_write() and not _is_snapshot_rollback(instance):
         validator(instance)

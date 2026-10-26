@@ -1,3 +1,4 @@
+{% load mardmo_tags %}
 {% for reference in references.values %}
     {% if id_option and reference.0 == id_option %}
         {% if reference.1 %}<b>{{ id_label }}</b>: {{ reference.1 }} <br>
@@ -8,11 +9,11 @@
         {% else %}<b>DOI</b>: <strong class="mardmo-error">MISSING DOI VALUE</strong> <br>{% endif %}
     {% endif %}
     {% if reference.0 == option.DESCRIPTION_URL %}
-        {% if reference.1 %}<b>Described at URL</b>: {{ reference.1 }}{% if ref_desc_url_valid == False %} <strong class="mardmo-error">INVALID URL FORMAT</strong>{% endif %} <br>
+        {% if reference.1 %}<b>Described at URL</b>: {{ reference.1 }}{% with problem=reference.1|url_problem:reference.0 %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
         {% else %}<b>Described at URL</b>: <strong class="mardmo-error">MISSING DESCRIPTION URL VALUE</strong> <br>{% endif %}
     {% endif %}
     {% if reference.0 == option.SOURCECODE_URL %}
-        {% if reference.1 %}<b>Source Code URL</b>: {{ reference.1 }}{% if ref_repo_url_valid == False %} <strong class="mardmo-error">INVALID URL FORMAT</strong>{% endif %} <br>
+        {% if reference.1 %}<b>Source Code URL</b>: {{ reference.1 }}{% with problem=reference.1|url_problem:reference.0 %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
         {% else %}<b>Source Code URL</b>: <strong class="mardmo-error">MISSING SOURCE CODE URL VALUE</strong> <br>{% endif %}
     {% endif %}
 {% empty %}

@@ -19,13 +19,49 @@ Contains:
 
 import re
 
+from contextlib import contextmanager
+from contextvars import ContextVar
 from typing import Callable, Optional, Any
 from collections import defaultdict, deque
-from urllib.parse import urlparse
 
 from rdmo.projects.models import Value
 from rdmo.domain.models import Attribute
 from rdmo.options.models import Option
+
+# Set while MaRDMO itself writes values (hydration, publication lookup, ID
+# write-back); the pre-save router skips validators then, since they are meant
+# for user input and imported data is checked by preview, checks and export
+_INTERNAL_WRITE = ContextVar('mardmo_internal_write', default=False)
+
+
+@contextmanager
+def internal_write():
+    '''Mark the values saved inside this block as written by MaRDMO itself.'''
+    token = _INTERNAL_WRITE.set(True)
+    try:
+        yield
+    finally:
+        _INTERNAL_WRITE.reset(token)
+
+
+def is_internal_write():
+    '''Return ``True`` while MaRDMO itself is writing values (see :func:`internal_write`).'''
+    return _INTERNAL_WRITE.get()
+
+
+def find_reference(references, option_uri):
+    '''Return the ``[option_uri, text]`` entry for *option_uri* in a reference dict, or ``None``.
+
+    Reference and documentation answers are stored as
+    ``{collection_index: [option_uri, text]}``.  The collection index is the
+    option's position in the questionnaire, so entries are looked up by
+    option rather than by position.
+    '''
+    for entry in (references or {}).values():
+        if entry and entry[0] == option_uri:
+            return entry
+    return None
+
 
 class PropertyRegistry:
     """Registry class to look up MathModDB / MathAlgoDB properties by key, label, or URL.
@@ -96,22 +132,6 @@ def topological_order(direct_dependencies: dict[str, set[str]]) -> list[str]:
             if in_degree[dependent] == 0:
                 queue.append(dependent)
     return order
-
-def is_valid_url(url: str) -> bool:
-    '''Return ``True`` if *url* is a Wikibase-conformant HTTP/HTTPS URL.
-
-    Args:
-        url: String to validate.
-
-    Returns:
-        ``True`` when *url* has ``http`` or ``https`` scheme and a non-empty
-        netloc; ``False`` otherwise.
-    '''
-    try:
-        result = urlparse(url)
-        return bool(result.scheme in ('http', 'https') and result.netloc)
-    except Exception:
-        return False
 
 def is_cyclic(dependencies: dict[str, set[str]]) -> bool:
     '''Return ``True`` if the dependency graph contains a cycle (Kahn's algorithm).
@@ -388,7 +408,8 @@ def value_editor(project, uri, info):
         update_fields['set_prefix'] = info['set_prefix']
 
     # Update or create the value
-    obj, created = Value.objects.update_or_create(**update_fields)
+    with internal_write():
+        obj, created = Value.objects.update_or_create(**update_fields)
 
     return obj, created
 
@@ -1241,7 +1262,8 @@ def replace_ids(project, created, base_uri):
         ).select_related('attribute'):
             v.external_id = wikidata_map[v.external_id]
             v.text = v.text.replace('[wikidata]', '[mardi]')
-            v.save()
+            with internal_write():
+                v.save()
 
     # ------------------------------------------------------------------ #
     # Cases B1 + B2 — user-defined items ('not found')                   #
@@ -1300,7 +1322,8 @@ def replace_ids(project, created, base_uri):
             label, desc = key
             v.external_id = nf_map[key]
             v.text = f'{label} ({desc}) [mardi]' if desc else f'{label} [mardi]'
-            v.save()
+            with internal_write():
+                v.save()
 
 def is_flat(d):
     """Return ``True`` if *d* is a dict whose values are all strings (or *d* is empty).
