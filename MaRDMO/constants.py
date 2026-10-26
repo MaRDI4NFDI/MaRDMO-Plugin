@@ -42,6 +42,10 @@ ORCID_BASE_URL           = 'https://orcid.org/'
 ZBMATH_AUTHOR_BASE_URL   = 'https://zbmath.org/authors/?q=ai:'
 ISSN_BASE_URL            = 'http://www.issn.cc/'
 
+# TeX check of the production MaRDI Portal (same texvc as the export); used for
+# all instances, since the check does not depend on the target portal's data
+TEX_CHECK_URL            = 'https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex'
+
 # Mapping from catalog slug to preview template
 CATALOG_TEMPLATE_MAP = {
     CATALOG_MODEL_NAME:        'MaRDMO/modelTemplate.html',

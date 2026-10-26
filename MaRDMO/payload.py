@@ -570,10 +570,11 @@ class GeneratePayload:
             self.state.dictionary[key]['exists'] = check.get(f'RELATION{idx}', 'false')
 
     def validate_identifiers(self):
-        '''Reject malformed URLs, DOIs and swMATH IDs before anything is posted.
+        '''Reject malformed URLs, DOIs, swMATH IDs and dates before anything is posted.
 
         Applies the strict rules from :mod:`~MaRDMO.validators` to every URL
-        statement and qualifier and to every "DOI" and "swMath work ID" value.
+        statement and qualifier and to every "DOI" and "swMath work ID" value,
+        and checks that every time value is a ``+YYYY-MM-DDThh:mm:ssZ`` string.
         This catches values that bypassed the pre-save validator, the preview
         and the checks, so an export never fails halfway because of them.
 
@@ -587,7 +588,13 @@ class GeneratePayload:
         swmath_pid = properties.get('swMath work ID')
         errors = []
 
-        def check(item_name, prop_id, value):
+        def check(item_name, prop_id, data_type, value):
+            if data_type == 'time':
+                text = value.get('time', '') if isinstance(value, dict) else str(value)
+                if not _TIME_RE.match(text):
+                    errors.append(f'"{item_name}", {pid_to_name.get(prop_id, prop_id)}: '
+                                  f'invalid date ("{text}")')
+                return
             text = value if isinstance(value, str) else ''
             if not text:
                 return
@@ -603,14 +610,15 @@ class GeneratePayload:
                 errors.append(f'"{item_name}", {pid_to_name.get(prop_id, prop_id)}: {problem} ("{shown}")')
 
         def relevant(prop_id, data_type):
-            return data_type in ('url', 'URL') or prop_id in (doi_pid, swmath_pid)
+            return data_type in ('url', 'URL', 'time') or prop_id in (doi_pid, swmath_pid)
 
         def check_statement(item_name, prop_id, data_type, value, qualifiers):
             if relevant(prop_id, data_type):
-                check(item_name, prop_id, value)
+                check(item_name, prop_id, data_type, value)
             for qualifier in qualifiers or []:
-                if relevant(qualifier['property']['id'], qualifier['property']['data_type']):
-                    check(item_name, qualifier['property']['id'], qualifier['value']['content'])
+                q_type = qualifier['property']['data_type']
+                if relevant(qualifier['property']['id'], q_type):
+                    check(item_name, qualifier['property']['id'], q_type, qualifier['value']['content'])
 
         for key, entry in self.state.dictionary.items():
             if key.startswith('Item'):

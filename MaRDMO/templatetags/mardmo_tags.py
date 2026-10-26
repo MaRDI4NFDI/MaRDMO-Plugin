@@ -12,21 +12,28 @@ Provides:
 - ``url_problem``           — filter: what is wrong with a URL, or ``''``
 - ``doi_problem``           — filter: what is wrong with a DOI, or ``''``
 - ``swmath_problem``        — filter: what is wrong with a swMATH ID, or ``''``
+- ``archive_year_problem``  — filter: what is wrong with an archival year, or ``''``
 - ``description_error``     — tag: error text for a short description, or ``''``
+- ``get_item``              — filter: ``dict[key]`` (``None`` if absent)
+- ``formula``               — tag: a formula for MathJax, or as raw TeX with an
+  error marker if the MaRDI Portal's TeX checker rejected it
 - ``user_entity``           — tag: one entity as ``Name (Description)`` with
   error markers if user-defined, otherwise its portal ID
 '''
 
 from django import template
+from django.utils.html import format_html
 
 from ..getters import get_options
 from ..patterns import LINE_BREAK_RE
 from ..validators import has_equivalence_sign as _has_equivalence_sign
 from ..validators import short_description_problem
+from ..validators import archive_year_problem as _archive_year_problem
 from ..validators import doi_problem as _doi_problem
 from ..validators import swmath_problem as _swmath_problem
 from ..validators import url_problem as _url_problem
 from ..validators import url_schemes
+from ..tex_check import UNAVAILABLE
 
 register = template.Library()
 
@@ -73,6 +80,49 @@ def doi_problem(doi):
 def swmath_problem(swmath_id):
     '''Return what is wrong with a swMATH work ID (same rule everywhere), or ``''``.'''
     return _swmath_problem(swmath_id) or ''
+
+
+@register.filter
+def archive_year_problem(year):
+    '''Return what is wrong with an archival year (same rule as checks and export), or ``''``.'''
+    return _archive_year_problem(year) or ''
+
+
+@register.filter
+def get_item(mapping, key):
+    '''Return ``mapping[key]``, or ``None`` if *mapping* is not a dict or lacks *key*.'''
+    return mapping.get(key) if isinstance(mapping, dict) else None
+
+
+@register.simple_tag
+def formula(tex, verdict=None):
+    '''Render *tex* for MathJax, or as raw TeX with a marker if it is invalid.
+
+    Args:
+        tex:     TeX string.
+        verdict: Result of :func:`~MaRDMO.tex_check.check_formulas` for *tex*:
+                 ``None`` (valid), :data:`~MaRDMO.tex_check.UNAVAILABLE`, or the
+                 checker's message.
+
+    Invalid formulas are not handed to MathJax (an unbalanced brace would
+    swallow the rest of the line); the browser fills ``mardmo-tex-hint`` with
+    MathJax's explanation.  Other formulas are wrapped in ``mardmo-formula``,
+    so the browser can show them as raw TeX if MathJax cannot render them.
+    Formulas that could not be checked get a note.
+    '''
+    if verdict == UNAVAILABLE:
+        return format_html(
+            '<span class="mardmo-formula" data-tex="{}">\\( {} \\)</span> '
+            '<span class="mardmo-note">(not verified by the MaRDI Portal)</span>', tex, tex
+        )
+    if verdict:
+        return format_html(
+            '<code class="mardmo-tex">{}</code> <strong class="mardmo-error">'
+            'INVALID FORMULA: {} (MARDI PORTAL)<span class="mardmo-tex-hint" data-tex="{}"></span>'
+            '</strong>',
+            tex, str(verdict).upper(), tex,
+        )
+    return format_html('<span class="mardmo-formula" data-tex="{}">\\( {} \\)</span>', tex, tex)
 
 
 @register.simple_tag

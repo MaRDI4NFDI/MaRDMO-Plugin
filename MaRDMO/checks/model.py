@@ -8,6 +8,7 @@ from ..model.constants import (
 )
 from ..constants import BASE_URI, CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..patterns import QUDT_ID_STRICT_RE
+from ..tex_check import UNAVAILABLE, check_formulas, collect_formulas, verdict
 from ..validators import has_equivalence_sign
 
 
@@ -17,6 +18,30 @@ class ModelMixin:
     # -------------------------------------------------------------------------
     # Model Documentation Checks
     # -------------------------------------------------------------------------
+
+    def _check_formula_syntax(self, ivalue, section, page_name):
+        '''Append an error for every formula or symbol the portal's TeX checker rejects.
+
+        Uses the verdicts collected in :meth:`run_model`; formulas the checker
+        could not answer are not reported (the portal checks them at upload).
+        '''
+        verdicts = getattr(self, '_tex_verdicts', {})
+        for number, tex in enumerate((ivalue.get('Formula') or {}).values(), start=1):
+            problem = verdict(verdicts, tex)
+            if problem and problem != UNAVAILABLE:
+                self.err.append(self._error(
+                    section, page_name,
+                    f'Invalid Formula {number}: rejected by the MaRDI Portal ({problem}), '
+                    'see the preview for details'
+                ))
+        for element in (ivalue.get('element') or {}).values():
+            symbol = element.get('symbol') if isinstance(element, dict) else None
+            problem = verdict(verdicts, symbol)
+            if problem and problem != UNAVAILABLE:
+                self.err.append(self._error(
+                    section, page_name,
+                    f'Invalid Symbol "{symbol}": rejected by the MaRDI Portal ({problem})'
+                ))
 
     def properties(self, project, data, catalog):
         '''Check for mutually exclusive (conflicting) data-property combinations.
@@ -110,7 +135,7 @@ class ModelMixin:
             )
 
             if catalog == CATALOG_MODEL_BASICS:
-                return
+                continue
 
             if any(
                 mval['relation']['url'] in self._pairs(
@@ -199,7 +224,7 @@ class ModelMixin:
             )
 
             if catalog == CATALOG_MODEL_BASICS:
-                return
+                continue
 
             if any(
                 tval['relation']['url'] in self._pairs(
@@ -289,7 +314,7 @@ class ModelMixin:
                             message = 'Missing Reference'
                         )
                     )
-                return
+                continue
 
             if any(
                 mval['relation']['url'] in self._pairs(
@@ -327,6 +352,7 @@ class ModelMixin:
                         message = 'Missing Formula Formula'
                     )
                 )
+            self._check_formula_syntax(ivalue, 'Formula', page_name)
 
             if not ivalue.get('element'):
                 self.err.append(
@@ -447,6 +473,7 @@ class ModelMixin:
                     )
 
             if ivalue.get('Formula'):
+                self._check_formula_syntax(ivalue, 'Quantity [Kind]', page_name)
                 for formula in ivalue['Formula'].values():
                     if not has_equivalence_sign(formula):
                         self.err.append(
@@ -533,7 +560,7 @@ class ModelMixin:
                 from_class = 'Research Problem'
             )
             if catalog == CATALOG_MODEL_BASICS:
-                return
+                continue
             self._check_static(
                 data       = ivalue,
                 page_name  = page_name,
@@ -588,6 +615,10 @@ class ModelMixin:
             List of human-readable error strings, or an empty list when all
             checks pass.
         '''
+        # Portal verdicts for all formulas and symbols (only the full catalog has them)
+        self._tex_verdicts = (
+            check_formulas(collect_formulas(data)) if catalog == CATALOG_MODEL else {}
+        )
         self.id_name_description(project, data, catalog)
         self.single_line_text(project, data, catalog)
         self.properties(project, data, catalog)

@@ -11,6 +11,7 @@
 {% block js %}
     {{ block.super }}
     {% include "MaRDMO/partials/_mathjax_safe_config.html" %}
+    {% include "MaRDMO/partials/_mathjax_errors.html" %}
     <script type="text/javascript" id="MathJax-script" async
             src="{% static 'MaRDMO/js/mathjax/es5/tex-mml-chtml.js' %}"></script>
 {% endblock %}

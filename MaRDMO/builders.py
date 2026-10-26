@@ -27,6 +27,7 @@ from .workflow.handlers import Information as WorkflowInformation
 from .publication.handlers import Information as PublicationInformation
 from .handlers import Information as GeneralInformation
 from .validators import (
+    validate_archive_year,
     validate_doi,
     validate_value_format,
     validate_properties,
@@ -268,6 +269,8 @@ def build_presave_validator_map():
     - :func:`~MaRDMO.validators.validate_reference` — DOI, URL and swMATH ID
       check for the software/benchmark references and the process-step
       documentation.
+    - :func:`~MaRDMO.validators.validate_archive_year` — for the data-set
+      "to archive" year in the workflow catalog.
     - :func:`~MaRDMO.validators.validate_value_format` — for all
       ``general.relation`` question URIs across model, algorithm, and workflow.
     - :func:`~MaRDMO.validators.validate_single_line` — for all textarea
@@ -461,6 +464,8 @@ def build_presave_validator_map():
                 validate_reference,
             f'{base}{questions_workflow["Data Set"]["To Publish"]["uri"]}':
                 validate_doi,
+            f'{base}{questions_workflow["Data Set"]["To Archive"]["uri"]}':
+                validate_archive_year,
             # Relation label format
             f'{base}{questions_workflow["Process Step"]["Algorithm"]["uri"]}':
                 validate_value_format,

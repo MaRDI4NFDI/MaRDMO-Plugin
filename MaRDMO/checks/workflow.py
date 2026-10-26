@@ -5,7 +5,7 @@ from rdmo.domain.models import Attribute
 from ..constants import BASE_URI, CATALOG_WORKFLOW
 from ..getters import get_options
 from .base import SOFTWARE_REFERENCE_CHECKS
-from ..validators import doi_problem
+from ..validators import archive_year_problem, doi_problem
 
 
 class WorkflowMixin:
@@ -402,11 +402,10 @@ class WorkflowMixin:
                 if not to_archive[1]:
                     self.err.append(self._error('Data Set', page_name, 'Missing Archival Year'))
                 else:
-                    val = str(to_archive[1]).strip()
-                    if not (len(val) == 4 and val.isdigit()):
+                    problem = archive_year_problem(to_archive[1])
+                    if problem:
                         self.err.append(self._error(
-                            'Data Set', page_name,
-                            'Invalid Archival Year (must be a 4-digit year)'
+                            'Data Set', page_name, f'Invalid Archival Year: {problem}'
                         ))
 
     # -------------------------------------------------------------------------

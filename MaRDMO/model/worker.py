@@ -27,6 +27,7 @@ from ..helpers import entity_relations, map_entity, unique_items
 from ..payload import GeneratePayload
 
 from ..publication.worker import PublicationExport
+from ..tex_check import annotate_formulas
 
 class PrepareModel(PublicationExport):
     '''Prepare Mathematical Model answers for preview rendering and MaRDI Portal export.
@@ -132,6 +133,9 @@ class PrepareModel(PublicationExport):
                     {'label': self.mathmoddb.get(key=k)['label'], 'error': k in wrong}
                     for k in correct | wrong
                 ]
+
+        # Portal verdict for every formula and symbol (shown next to each)
+        annotate_formulas(answers)
 
         return answers
 

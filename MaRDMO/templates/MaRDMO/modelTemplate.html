@@ -95,7 +95,7 @@
     {% include "MaRDMO/partials/_properties.html" with properties=values.Properties_Check %}
 
     {# Include Formulation Defining Formulas #}
-    {% include "MaRDMO/partials/_defining_formula.html" with formula=values.Formula definition="False" %}
+    {% include "MaRDMO/partials/_defining_formula.html" with formula=values.Formula formula_check=values.FormulaCheck definition="False" %}
 
     {# Include Formulation In Defining Formulas #}
     {% include "MaRDMO/partials/_in_defining_formula.html" with element=values.element %}
@@ -248,7 +248,7 @@
         <h3 id="QuantityOrQuantityKindDefinition"> Definition of {{ values.QorQK }} </h3>
         
         {# Include Quantity / Quantity Kind Formulas #}
-        {% include "MaRDMO/partials/_defining_formula.html" with formula=values.Formula definition="True" %}
+        {% include "MaRDMO/partials/_defining_formula.html" with formula=values.Formula formula_check=values.FormulaCheck definition="True" %}
         
         {# Include Quantity / Quantity Kind In Defining Formulas #}
         {% include "MaRDMO/partials/_in_defining_formula.html" with element=values.element %}

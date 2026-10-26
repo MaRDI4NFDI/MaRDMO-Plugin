@@ -38,3 +38,14 @@
     color: black;
     font-weight: bold;
 }
+
+/* A formula shown as raw TeX because it cannot be rendered or was rejected */
+.mardmo-tex {
+    white-space: pre-wrap;
+}
+
+/* Information that does not block the export (e.g. formula not verified) */
+.mardmo-note {
+    color: #6c757d;
+    font-style: italic;
+}

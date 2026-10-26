@@ -1,0 +1,63 @@
+{# Show formulas MathJax cannot render as raw TeX with MathJax's message instead  #}
+{# of its red error box, and fill the hints next to formulas the MaRDI Portal     #}
+{# rejected (see the "formula" template tag).  Include before the MathJax script. #}
+<script>
+(function () {
+    // MathJax's explanation for an invalid formula, or null if it can render it
+    function texProblem(tex) {
+        return MathJax.tex2mmlPromise(tex).then(function (mml) {
+            var doc = new DOMParser().parseFromString(mml, 'text/xml');
+            var error = doc.querySelector('merror');
+            if (error) {
+                return error.textContent.trim();
+            }
+            // Unknown macros are rendered as red text instead of an error
+            var unknown = Array.from(doc.querySelectorAll('mtext[mathcolor="red"]')).find(function (node) {
+                return node.textContent.trim().charAt(0) === '\\';
+            });
+            return unknown ? 'Undefined control sequence ' + unknown.textContent.trim() : null;
+        }, function (err) {
+            return err.message;
+        });
+    }
+
+    function rawFormula(tex, message) {
+        var span = document.createElement('span');
+        var code = document.createElement('code');
+        code.className = 'mardmo-tex';
+        code.textContent = tex.trim();
+        var marker = document.createElement('strong');
+        marker.className = 'mardmo-error';
+        marker.textContent = 'FORMULA CANNOT BE DISPLAYED: ' + message.toUpperCase();
+        span.appendChild(code);
+        span.appendChild(document.createTextNode(' '));
+        span.appendChild(marker);
+        return span;
+    }
+
+    window.MathJax = window.MathJax || {};
+    window.MathJax.startup = window.MathJax.startup || {};
+    window.MathJax.startup.pageReady = function () {
+        return MathJax.startup.defaultPageReady().then(function () {
+            var jobs = [];
+            // Also covers formulas MathJax did not even recognise (unbalanced braces)
+            document.querySelectorAll('.mardmo-formula[data-tex]').forEach(function (formula) {
+                var tex = formula.getAttribute('data-tex');
+                jobs.push(texProblem(tex).then(function (message) {
+                    if (message) {
+                        formula.replaceChildren(rawFormula(tex, message));
+                    }
+                }));
+            });
+            document.querySelectorAll('.mardmo-tex-hint[data-tex]').forEach(function (hint) {
+                jobs.push(texProblem(hint.getAttribute('data-tex')).then(function (message) {
+                    if (message) {
+                        hint.textContent = ' – ' + message.toUpperCase();
+                    }
+                }));
+            });
+            return Promise.all(jobs);
+        });
+    };
+})();
+</script>

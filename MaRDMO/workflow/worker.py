@@ -226,10 +226,6 @@ class PrepareWorkflow(PublicationExport):
                         ds_data['size_value_valid'] = True
                     except (ValueError, TypeError):
                         ds_data['size_value_valid'] = False
-            archive = ds_data.get('ToArchive')
-            if archive and archive[0] and archive[1]:
-                val = str(archive[1]).strip()
-                ds_data['archive_year_valid'] = len(val) == 4 and val.isdigit()
 
         return answers
 
@@ -831,12 +827,13 @@ class PrepareWorkflow(PublicationExport):
             if entry.get("ToArchive"):
                 if entry["ToArchive"][0] == options["YesText"]:
                     qualifier = []
-                    if entry["ToArchive"][1]:
+                    year = str(entry["ToArchive"][1] or "").strip()
+                    if year:
                         qualifier = payload.add_qualifier(
                             self.properties["end time"],
                             "time",
                             {
-                                "time": f"+{entry['ToArchive'][1]}-00-00T00:00:00Z",
+                                "time": f"+{year}-00-00T00:00:00Z",
                                 "precision": 9,
                                 "calendarmodel": "http://www.wikidata.org/entity/Q1985727",
                             },

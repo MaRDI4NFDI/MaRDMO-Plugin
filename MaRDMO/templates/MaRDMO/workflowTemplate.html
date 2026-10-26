@@ -268,11 +268,7 @@
     <strong>Data Set Archiving:</strong>
     {% if values.ToArchive.0 == option.YesText %}
         {% if values.ToArchive.1 %}
-            {% if values.archive_year_valid %}
-                Yes ({{ values.ToArchive.1 }}) <br>
-            {% else %}
-                Yes (<strong class="mardmo-error">INVALID ARCHIVAL YEAR</strong>) <br>
-            {% endif %}
+            Yes ({{ values.ToArchive.1 }}{% with problem=values.ToArchive.1|archive_year_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %}) <br>
         {% else %}
             Yes, <strong class="mardmo-error">MISSING ARCHIVAL YEAR</strong> <br>
         {% endif %}

@@ -15,6 +15,7 @@ Provides:
 - :func:`validate_url`               — rejects URLs that can never become valid while typing
 - :func:`validate_swmath`            — rejects swMATH IDs that are not numbers
 - :func:`validate_reference`         — DOI, URL or swMATH check, depending on the selected option
+- :func:`validate_archive_year`      — rejects archival years that can never become four digits
 
 Shared rules, also used by the documentation checker (:mod:`~MaRDMO.checks`)
 and the preview templates (:mod:`~MaRDMO.templatetags.mardmo_tags`), so that
@@ -26,6 +27,7 @@ all three always agree:
 - :func:`url_typing_problem`        — progressive URL check while typing (pre-save)
 - :func:`doi_problem`               — what is wrong with a complete DOI
 - :func:`swmath_problem`            — what is wrong with a swMATH work ID
+- :func:`archive_year_problem`      — what is wrong with a complete archival year
 '''
 
 import ipaddress
@@ -40,7 +42,7 @@ from .helpers import extract_parts
 from .model.constants import data_properties_check
 from .patterns import (
     DOI_RE, DOI_STRICT_RE, LINE_BREAK_RE, QUDT_ID_RE, SWMATH_ID_RE,
-    URL_FORBIDDEN_CHARS_RE, URL_HOST_RE,
+    URL_FORBIDDEN_CHARS_RE, URL_HOST_RE, YEAR_RE, YEAR_STRICT_RE,
 )
 
 SHORT_DESCRIPTION_MAX_LENGTH = 2000
@@ -202,6 +204,20 @@ def swmath_problem(swmath_id):
         return 'Enter only the swMATH number (e.g. 7554), not the link'
     if not SWMATH_ID_RE.match(swmath_id):
         return 'swMATH ID must be a number (e.g. 7554)'
+    return None
+
+
+def archive_year_problem(year):
+    '''Return what is wrong with a complete archival year, or ``None`` if it is valid.
+
+    Used by the preview, the documentation checker, and the export (the
+    pre-save validator uses the progressive :data:`~MaRDMO.patterns.YEAR_RE`).
+    '''
+    year = str(year or '').strip()
+    if not year:
+        return None
+    if not YEAR_STRICT_RE.match(year):
+        return 'Archival year must be a 4-digit year (e.g. 2030)'
     return None
 
 
@@ -383,6 +399,28 @@ def validate_swmath(instance):
     problem = swmath_problem(instance.text)
     if problem:
         raise ValidationError({'text': [problem]})
+
+
+def validate_archive_year(instance):
+    '''Reject an archival year that can never become a 4-digit year.
+
+    Triggers only for the ``YesText`` option (Data Set "To Archive") with
+    non-empty text; up to four digits are accepted while typing.
+
+    Args:
+        instance: RDMO ``Value`` instance about to be saved.
+
+    Raises:
+        ValidationError: when the text contains anything but up to four digits.
+    '''
+    if not instance.option or not instance.text:
+        return
+    if instance.option.uri != get_options().get('YesText'):
+        return
+    if not YEAR_RE.match(instance.text.strip()):
+        raise ValidationError({
+            'text': [_('Archival year must be a 4-digit year (e.g. 2030).')]
+        })
 
 
 def validate_reference(instance):

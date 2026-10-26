@@ -2,15 +2,15 @@
 <p>
     <b>Defining formulations</b>:
     <ol style="margin-left: 1.5em;">
-        {% for value in formula.values %}
+        {% for idx, value in formula.items %}
             {% if definition == 'True' %}
                 {% if value|has_equivalence_sign %}
-                    <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; \( {{ value }} \)</li>
+                    <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; {% formula value formula_check|get_item:idx %}</li>
                 {% else %}
-                    <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; \( {{ value }} \) <strong class="mardmo-error">&nbsp;&nbsp;&nbsp;&nbsp;Inconsistent Definition (missing equivalent sign)</strong></li>
+                    <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; {% formula value formula_check|get_item:idx %} <strong class="mardmo-error">&nbsp;&nbsp;&nbsp;&nbsp;Inconsistent Definition (missing equivalent sign)</strong></li>
                 {% endif %}
             {% else %}
-                <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; \( {{ value }} \) </li>
+                <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; {% formula value formula_check|get_item:idx %} </li>
             {% endif %}
         {% empty %}
             <strong class="mardmo-error">MISSING MATHEMATICAL EXPRESSION FORMULA</strong>

@@ -118,3 +118,13 @@ SWMATH_ID_RE = re.compile(r'^[0-9]+$')
 Every prefix of a valid ID is valid, so the same pattern serves the pre-save
 validator, the preview, the documentation checker, and the export.
 '''
+
+# ---------------------------------------------------------------------------
+# Archival year patterns
+# ---------------------------------------------------------------------------
+
+YEAR_RE = re.compile(r'^\d{0,4}$')
+'''Progressive year pattern (pre-save): up to four digits while typing.'''
+
+YEAR_STRICT_RE = re.compile(r'^\d{4}$')
+'''Complete year (preview, documentation checker, export): exactly four digits.'''
