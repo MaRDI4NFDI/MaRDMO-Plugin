@@ -430,7 +430,8 @@ class MaRDMOQueryProvider(Export):
             {
                 'datatype': datatype,
                 'noResults': answers['no_results'],
-                'links': answers['links']
+                'links': answers['links'],
+                'searchFailed': answers.get('search_failed', False),
             },
             status=200
         )

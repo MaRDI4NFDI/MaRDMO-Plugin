@@ -5,28 +5,27 @@
 {% block page %}
 
     <h1>{{ title }}</h1>
-    <!DOCTYPE html>
-    <html>
-        <body>
-            <br><br><br>
-            <div align='center'>
-               <figure>
-                   <img src="{% static 'MaRDMO/images/MaRDMOLogo.png' %}" alt="Logo of MaRDMO Plugin">
-               </figure>
-               <br><br><br>
-	       <p style="color:Black;font-size:40px;font-weight:bold">{{ noResults }} {{ datatype }}</p>
-               <p style="color:Black;font-size:40px;font-weight:bold">in MaRDI Portal!</p>
-	       <br>
-	        {% for x,y in links%}
-                    <p style="color:grey;font-size:20px;font-weight:bold"><a href="{{ y }}" style="color:dodgerblue;">{{ x }}</a>&#x1F517;</p>
+    <br><br><br>
+    <div align='center'>
+        <figure>
+            <img src="{% static 'MaRDMO/images/MaRDMOLogo.png' %}" alt="Logo of MaRDMO Plugin">
+        </figure>
+        <br><br><br>
+        {% if searchFailed %}
+            <p style="color:darkred;font-size:32px;font-weight:bold">The search could not be run on the MaRDI Portal.</p>
+            <p style="color:Black;font-size:20px">The portal did not answer or rejected the query. Please try again later.</p>
+        {% else %}
+            <p style="color:Black;font-size:40px;font-weight:bold">{{ noResults }} {{ datatype }}</p>
+            <p style="color:Black;font-size:40px;font-weight:bold">in MaRDI Portal!</p>
+            <br>
+            {% for x, y in links %}
+                <p style="color:grey;font-size:20px;font-weight:bold"><a href="{{ y }}" style="color:dodgerblue;">{{ x }}</a>&#x1F517;</p>
             {% endfor %}
-            </div>
-	    <!-- Attribution Section -->
-            <div align='center' style="margin-top: 50px; font-size: 14px; color: grey;">
-            <p>MaRDMO Logo by <a href="https://www.mardi4nfdi.de/about/mission" target="_blank" style="color: grey;">MaRDI</a>, licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color: grey;">CC BY-NC-ND 4.0</a>.</p>
-          </div>
-        </body>
-    </html> 
+        {% endif %}
+    </div>
+    <!-- Attribution Section -->
+    <div align='center' style="margin-top: 50px; font-size: 14px; color: grey;">
+        <p>MaRDMO Logo by <a href="https://www.mardi4nfdi.de/about/mission" target="_blank" style="color: grey;">MaRDI</a>, licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color: grey;">CC BY-NC-ND 4.0</a>.</p>
+    </div>
 
 {% endblock %}
-

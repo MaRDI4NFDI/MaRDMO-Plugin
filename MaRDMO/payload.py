@@ -24,7 +24,7 @@ import re
 import time
 import requests
 
-from .queries import query_item, query_sparql
+from .queries import query_item, query_sparql, sparql_string
 
 _logger = logging.getLogger(__name__)
 
@@ -45,23 +45,6 @@ _INVISIBLE_WHITESPACE_RE = re.compile(r'[\t\v\f]')
 _RELATION_CHECK_CHUNK = 50
 # Pauses (seconds) before retrying a failed existence-check query
 _RELATION_CHECK_RETRY_DELAYS = (2, 5)
-
-
-def _sparql_string(value):
-    '''Return *value* as a double-quoted SPARQL string literal.
-
-    Escapes backslashes, quotes, and line breaks so that arbitrary user text
-    (multi-line descriptions, Windows paths, LaTeX) yields a valid query.
-    '''
-    escaped = (
-        str(value)
-        .replace('\\', '\\\\')
-        .replace('"', '\\"')
-        .replace('\n', '\\n')
-        .replace('\r', '\\r')
-        .replace('\t', '\\t')
-    )
-    return f'"{escaped}"'
 
 
 def _text_of(value):
@@ -309,11 +292,11 @@ class GeneratePayload:
             else:
                 text, language = value, 'en'
             if text and _LANG_TAG_RE.match(str(language)):
-                return f'{_sparql_string(text)}@{language}'
+                return f'{sparql_string(text)}@{language}'
             return None
         if value is None or isinstance(value, (dict, list)):
             return None
-        return _sparql_string(value)
+        return sparql_string(value)
 
     def _value_node_triples(self, statement_var, predicate, node_var, value, data_type):
         '''Build triples matching a quantity or time value node.
@@ -329,7 +312,7 @@ class GeneratePayload:
             Triple-pattern string, or ``None`` for unsupported values.
         '''
         if data_type == 'quantity' and value.get('amount'):
-            literal = f'{_sparql_string(value["amount"])}^^<{_XSD}decimal>'
+            literal = f'{sparql_string(value["amount"])}^^<{_XSD}decimal>'
             unit = str(value.get('unit', '1'))
             if unit == '1':
                 unit_triples = f'  {node_var} wikibase:quantityUnit <{_UNITLESS_IRI}> .\n'
@@ -351,7 +334,7 @@ class GeneratePayload:
         if data_type == 'time':
             time_str = _normalize_time(value.get('time', ''))
             if time_str:
-                literal = f'{_sparql_string(time_str)}^^<{_XSD}dateTime>'
+                literal = f'{sparql_string(time_str)}^^<{_XSD}dateTime>'
                 return (
                     f'  {statement_var} {predicate} {node_var} .\n'
                     f'  {node_var} wikibase:timeValue {literal} .\n'

@@ -4,6 +4,7 @@ Provides helpers for:
 
 * ``query_item`` / ``query_api`` – Wikibase ``wbsearchentities`` lookups
 * ``query_sparql`` / ``query_sparql_pool`` – SPARQL SELECT requests
+* ``sparql_string`` – escape text as a SPARQL string literal
 * ``query_sources`` / ``query_sources_with_user_additions`` – combined
   MaRDI + Wikidata search with optional user-defined entries
 * ``query_api_per_class`` – class-filtered full-text search on the MaRDI portal
@@ -99,20 +100,42 @@ def query_api(api_url, search_term, timeout=5):
 
     return []
 
-def query_sparql(query, sparql_endpoint):
+def sparql_string(value):
+    '''Return *value* as a double-quoted SPARQL string literal.
+
+    Escapes backslashes, quotes, and line breaks so that arbitrary user text
+    (multi-line descriptions, Windows paths, LaTeX, apostrophes) yields a
+    valid query.
+    '''
+    escaped = (
+        str(value)
+        .replace('\\', '\\\\')
+        .replace('"', '\\"')
+        .replace('\n', '\\n')
+        .replace('\r', '\\r')
+        .replace('\t', '\\t')
+    )
+    return f'"{escaped}"'
+
+def query_sparql(query, sparql_endpoint, strict=False):
     '''Execute a SPARQL SELECT query against *sparql_endpoint* and return bindings.
 
     Args:
         query:           SPARQL SELECT query string (UTF-8 encoded on the wire).
         sparql_endpoint: URL of the SPARQL endpoint (e.g. the MaRDI or Wikidata endpoint).
+        strict:          If ``True``, return ``None`` instead of ``[]`` when the
+                         query fails, so callers can tell "failed" from "no results".
 
     Returns:
-        List of result-binding dicts from ``results.bindings``; empty list on
-        any network error, HTTP error, or missing endpoint.
+        List of result-binding dicts from ``results.bindings``; on any network
+        error, HTTP error, invalid answer, or missing endpoint an empty list
+        (or ``None`` with *strict*).
     '''
+    failed = None if strict else []
+
     if not sparql_endpoint:
         logger.warning("SPARQL query attempted without a valid endpoint.")
-        return []
+        return failed
 
     try:
         response = requests.post(
@@ -136,8 +159,6 @@ def query_sparql(query, sparql_endpoint):
             response.text,
         )
 
-        return []
-
     except requests.exceptions.ConnectionError:
         logger.error(
             "SPARQL query failed: Unable to connect to the %s.",
@@ -147,7 +168,10 @@ def query_sparql(query, sparql_endpoint):
     except requests.exceptions.RequestException as e:
         logger.exception("SPARQL request failed: %s", e)
 
-    return []
+    except ValueError as e:
+        logger.error("SPARQL answer from %s is not valid JSON: %s", sparql_endpoint, e)
+
+    return failed
 
 def query_sparql_pool(query_input):
     '''Execute multiple SPARQL queries in parallel and return a keyed result dict.
