@@ -35,17 +35,6 @@
             {% endfor %}
         {% endif %}
     {% endif %}
-    {# Add Order Number Qualifiers #}
-    {% if anchor == 'CT2CT' %}
-        {% if relation.relation.key == 'contained_in_task' or relation.relation.key == 'contains_task' %}
-            - order number: 
-            {% if relation.order %} 
-                {{ relation.order }} 
-            {% else %} 
-                <strong class="mardmo-error">MISSING ORDER NUMBER</strong> 
-            {% endif %}
-        {% endif %}
-    {% endif %}
     <br>
 {% empty %}
     {% if empty_msg == "True" %}

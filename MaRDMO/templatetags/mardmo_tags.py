@@ -13,6 +13,8 @@ Provides:
 - ``doi_problem``           — filter: what is wrong with a DOI, or ``''``
 - ``swmath_problem``        — filter: what is wrong with a swMATH ID, or ``''``
 - ``archive_year_problem``  — filter: what is wrong with an archival year, or ``''``
+- ``count_problem``         — filter: what is wrong with a count (nodes, CPUs, cores), or ``''``
+- ``size_problem``          — filter: what is wrong with a data size (arg: unit option URI), or ``''``
 - ``description_error``     — tag: error text for a short description, or ``''``
 - ``get_item``              — filter: ``dict[key]`` (``None`` if absent)
 - ``formula``               — tag: a formula for MathJax, or as raw TeX with an
@@ -29,6 +31,8 @@ from ..patterns import LINE_BREAK_RE
 from ..validators import has_equivalence_sign as _has_equivalence_sign
 from ..validators import short_description_problem
 from ..validators import archive_year_problem as _archive_year_problem
+from ..validators import count_problem as _count_problem
+from ..validators import size_problem as _size_problem
 from ..validators import doi_problem as _doi_problem
 from ..validators import swmath_problem as _swmath_problem
 from ..validators import url_problem as _url_problem
@@ -86,6 +90,18 @@ def swmath_problem(swmath_id):
 def archive_year_problem(year):
     '''Return what is wrong with an archival year (same rule as checks and export), or ``''``.'''
     return _archive_year_problem(year) or ''
+
+
+@register.filter
+def count_problem(value):
+    '''Return what is wrong with a count (same rule as checks and export), or ``''``.'''
+    return _count_problem(value) or ''
+
+
+@register.filter
+def size_problem(value, unit_uri):
+    '''Return what is wrong with a data size for the unit option *unit_uri*, or ``''``.'''
+    return _size_problem(value, integer=unit_uri == get_options().get('items')) or ''
 
 
 @register.filter

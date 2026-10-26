@@ -148,11 +148,7 @@
 
     {# Include Hardware Number of Compute Nodes #}
     {% if values.nodes %}
-        {% if values.nodes_valid %}
-            <strong>Number of Compute Nodes:</strong> {{ values.nodes }} <br>
-        {% else %}
-            <strong>Number of Compute Nodes:</strong> <strong class="mardmo-error">INVALID COMPUTE NODES VALUE</strong> <br>
-        {% endif %}
+        <strong>Number of Compute Nodes:</strong> {{ values.nodes }}{% with problem=values.nodes|count_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
     {% else %}
         <strong>Number of Compute Nodes:</strong> <strong class="mardmo-error">NUMBER OF COMPUTE NODES MISSING</strong> <br>
     {% endif %}
@@ -165,21 +161,13 @@
             <strong>CPU:</strong> {% user_entity cpu.id cpu.name cpu.description "CPU" %} <br>
             &nbsp;&nbsp;&nbsp;&nbsp;-&gt; Occurrence in Hardware:
             {% if cpu.count %}
-                {% if cpu.count_valid %}
-                    {{ cpu.count }} <br>
-                {% else %}
-                    <strong class="mardmo-error">INVALID OCCURRENCE VALUE</strong> <br>
-                {% endif %}
+                {{ cpu.count }}{% with problem=cpu.count|count_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
             {% else %}
                 <strong class="mardmo-error">MISSING OCCURRENCE</strong> <br>
             {% endif %}
             &nbsp;&nbsp;&nbsp;&nbsp;-&gt; Number of Processor Cores:
             {% if cpu.cores %}
-                {% if cpu.cores_valid %}
-                    {{ cpu.cores }} <br>
-                {% else %}
-                    <strong class="mardmo-error">INVALID PROCESSOR CORES VALUE</strong> <br>
-                {% endif %}
+                {{ cpu.cores }}{% with problem=cpu.cores|count_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
             {% else %}
                 <strong class="mardmo-error">MISSING PROCESSOR CORES</strong> <br>
             {% endif %}
@@ -209,11 +197,7 @@
     {% with unit=values.Size.0|option_name %}
         {% if unit %}
             {% if values.Size.1 %}
-                {% if values.size_value_valid %}
-                    {{ values.Size.1 }} {{ unit }} <br>
-                {% else %}
-                    <strong class="mardmo-error">INVALID DATA SIZE VALUE</strong> <br>
-                {% endif %}
+                {{ values.Size.1 }} {{ unit }}{% with problem=values.Size.1|size_problem:values.Size.0 %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
             {% else %}
                 <strong class="mardmo-error">MISSING DATA SIZE VALUE</strong> <br>
             {% endif %}

@@ -102,18 +102,15 @@ class RelatantWithClass:
 
 @dataclass
 class RelatantWithQualifier:
-    '''Entity triple extended with a qualifier value and an optional free-form field.
+    '''Entity triple extended with a qualifier value.
 
     The ``qualifier`` field holds the ID of a qualifier entity (e.g. a platform
-    or formulation type).  The ``other`` field carries any additional free-form
-    payload encoded after a ``" >|< "`` separator in the SPARQL result string
-    (e.g. a ``" || "``-joined list of parameters).
+    or formulation type).
     '''
     id: Optional[str]
     label: Optional[str]
     description: Optional[str]
     qualifier: Optional[str]
-    other: Optional[str]
 
     @classmethod
     def from_query(cls, raw: str) -> 'RelatantWithQualifier':
@@ -121,23 +118,17 @@ class RelatantWithQualifier:
 
         Args:
             raw: Delimited string with four ``||``-separated fields (identifier,
-                 label, description, qualifier) and an optional ``>|<``-separated
-                 other suffix.
+                 label, description, qualifier).
 
         Returns:
             RelatantWithQualifier instance populated from the parsed fields.
         '''
-        if ">|<" in raw:
-            raw, other = raw.split(" >|< ")
-        else:
-            other = None
         identifier, label, description, qualifier = raw.split(" || ", 3)
         return cls(
             id = identifier,
             label = label,
             description = description,
             qualifier = qualifier,
-            other = other
         )
 
 @dataclass

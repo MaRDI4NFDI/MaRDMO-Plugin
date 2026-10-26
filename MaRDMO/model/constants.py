@@ -389,8 +389,6 @@ preview_relations = [
         "old_name": "RPRelatant",
         "new_name": "RelationRP",
         "encryption": "RP",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -400,8 +398,6 @@ preview_relations = [
         "old_name": "MFRelatant",
         "new_name": "RelationMF",
         "encryption": "F",
-        "formulation": True,
-        "task": False,
         "assumption": False,
     },
     {
@@ -411,8 +407,6 @@ preview_relations = [
         "old_name": "TRelatant",
         "new_name": "RelationT",
         "encryption": "CT",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -422,8 +416,6 @@ preview_relations = [
         "old_name": "IntraClassElement",
         "new_name": "RelationMM",
         "encryption": "MM",
-        "formulation": False,
-        "task": False,
         "assumption": True,
     },
     {
@@ -433,8 +425,6 @@ preview_relations = [
         "old_name": "MFRelatant",
         "new_name": "RelationMF",
         "encryption": "F",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -444,8 +434,6 @@ preview_relations = [
         "old_name": "QRelatant",
         "new_name": "RelationQQK",
         "encryption": "QQK",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -455,8 +443,6 @@ preview_relations = [
         "old_name": "IntraClassElement",
         "new_name": "RelationT",
         "encryption": "CT",
-        "formulation": False,
-        "task": True,
         "assumption": True,
     },
     {
@@ -466,8 +452,6 @@ preview_relations = [
         "old_name": "MFRelatant",
         "new_name": "RelationMF1",
         "encryption": "F",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -477,8 +461,6 @@ preview_relations = [
         "old_name": "IntraClassElement",
         "new_name": "RelationMF2",
         "encryption": "F",
-        "formulation": False,
-        "task": False,
         "assumption": True,
     },
     {
@@ -488,8 +470,6 @@ preview_relations = [
         "old_name": "QRelatant-Q",
         "new_name": "RelationQQ",
         "encryption": "QQK",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -499,8 +479,6 @@ preview_relations = [
         "old_name": "QKRelatant-QK",
         "new_name": "RelationQKQK",
         "encryption": "QQK",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -510,8 +488,6 @@ preview_relations = [
         "old_name": "QKRelatant-Q",
         "new_name": "RelationQQK",
         "encryption": "QQK",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -521,8 +497,6 @@ preview_relations = [
         "old_name": "QRelatant-QK",
         "new_name": "RelationQKQ",
         "encryption": "QQK",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -532,8 +506,6 @@ preview_relations = [
         "old_name": "IntraClassElement",
         "new_name": "RelationRF",
         "encryption": "AD",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -543,8 +515,6 @@ preview_relations = [
         "old_name": "RFRelatant",
         "new_name": "RelationRF",
         "encryption": "AD",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -554,8 +524,6 @@ preview_relations = [
         "old_name": "IntraClassElement",
         "new_name": "RelationRP",
         "encryption": "RP",
-        "formulation": False,
-        "task": False,
         "assumption": False,
     },
     {
@@ -568,8 +536,6 @@ preview_relations = [
         "old_name": "EntityRelatant",
         "new_name": "RelationP",
         "encryption": ["RF", "RP", "MM", "F", "QQK", "CT"],
-        "formulation": False,
-        "task": False,
         "assumption": False,
         "mapping": "publication",
     },

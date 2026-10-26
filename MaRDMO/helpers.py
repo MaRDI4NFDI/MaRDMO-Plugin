@@ -478,11 +478,11 @@ def resolve_target(name, description, id_, entity_enc, label_map):
         return f"{entity_enc}{label_map[label_description] + 1}"
     return id_
 
-def build_new_value(from_entry, entity, key, resolved, order, assumption, mapping):
+def build_new_value(from_entry, entity, key, resolved, assumption, mapping):
     """Assemble the processed relation dict for a single relatant.
 
     Combines the resolved relatant reference with the relation type and
-    optional order/assumption qualifiers into the dict format expected by
+    the optional assumption qualifier into the dict format expected by
     the preview templates.
 
     Args:
@@ -491,8 +491,6 @@ def build_new_value(from_entry, entity, key, resolved, order, assumption, mappin
                     ``new_name``, and ``encryption``.
         key:        Relation key within *from_entry*.
         resolved:   Resolved relatant reference (local index or external ID).
-        order:      Dict with boolean flags ``formulation`` and ``task``
-                    controlling which order qualifier is attached.
         assumption: Boolean; if ``True``, attach assumption qualifier.
         mapping:    :class:`~MaRDMO.helpers.PropertyRegistry` for relation lookup.
 
@@ -514,20 +512,6 @@ def build_new_value(from_entry, entity, key, resolved, order, assumption, mappin
             'relatant': resolved
         }
 
-    if order['formulation']:
-        new_value.update(
-            {
-                'order': from_entry.get('formulation_number', {}).get(key)
-            }
-        )
-
-    if order['task']:
-        new_value.update(
-            {
-                'order': from_entry.get('task_number', {}).get(key)
-            }
-        )
-
     if assumption:
         new_value.update(
             {
@@ -538,7 +522,7 @@ def build_new_value(from_entry, entity, key, resolved, order, assumption, mappin
     return new_value
 
 
-def entity_relations(data, idx, entity, order, assumption, mapping):
+def entity_relations(data, idx, entity, assumption, mapping):
     """Resolve cross-entity relations and write processed entries into *data*.
 
     For every source entity in ``data[idx['from']]``, iterates over its raw
@@ -553,7 +537,6 @@ def entity_relations(data, idx, entity, order, assumption, mapping):
                     target types used for label resolution).
         entity:     Dict with keys ``relation``, ``old_name``, ``new_name``,
                     and ``encryption``.
-        order:      Dict with boolean flags ``formulation`` and ``task``.
         assumption: Boolean controlling assumption qualifier attachment.
         mapping:    :class:`~MaRDMO.helpers.PropertyRegistry` for relation type lookup.
     """
@@ -596,7 +579,6 @@ def entity_relations(data, idx, entity, order, assumption, mapping):
                         entity,
                         key,
                         resolved,
-                        order,
                         assumption,
                         mapping
                     )
@@ -618,11 +600,11 @@ def entity_relations(data, idx, entity, order, assumption, mapping):
                     if resolved != values.get("ID"):
                         break
                 # Build new Item Value
-                new_value = build_new_value(from_entry, entity, key, resolved, order, assumption, mapping)
+                new_value = build_new_value(from_entry, entity, key, resolved, assumption, mapping)
                 if new_value not in entity_values.values():
                     entity_values[key] = new_value
 
-def entity_relations_grouped(data, idx, entity, order, assumption, mapping):
+def entity_relations_grouped(data, idx, entity, assumption, mapping):
     """Resolve cross-entity relations without value-level deduplication.
 
     Identical to :func:`entity_relations` except that every resolved entry is
@@ -636,7 +618,6 @@ def entity_relations_grouped(data, idx, entity, order, assumption, mapping):
         idx:        Dict with keys ``from`` and ``to``.
         entity:     Dict with keys ``relation``, ``old_name``, ``new_name``,
                     and ``encryption``.
-        order:      Dict with boolean flags ``formulation`` and ``task``.
         assumption: Boolean controlling assumption qualifier attachment.
         mapping:    :class:`~MaRDMO.helpers.PropertyRegistry` for relation type lookup.
     """
@@ -666,7 +647,7 @@ def entity_relations_grouped(data, idx, entity, order, assumption, mapping):
                             if resolved != value.get("ID"):
                                 break
                     new_value = build_new_value(
-                        from_entry, entity, key, resolved, order, assumption, mapping
+                        from_entry, entity, key, resolved, assumption, mapping
                     )
                     entity_values[f"{key}|{key2}"] = new_value
             else:
@@ -682,7 +663,7 @@ def entity_relations_grouped(data, idx, entity, order, assumption, mapping):
                     if resolved != values.get("ID"):
                         break
                 new_value = build_new_value(
-                    from_entry, entity, key, resolved, order, assumption, mapping
+                    from_entry, entity, key, resolved, assumption, mapping
                 )
                 entity_values[key] = new_value
 

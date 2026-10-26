@@ -128,3 +128,22 @@ YEAR_RE = re.compile(r'^\d{0,4}$')
 
 YEAR_STRICT_RE = re.compile(r'^\d{4}$')
 '''Complete year (preview, documentation checker, export): exactly four digits.'''
+
+# ---------------------------------------------------------------------------
+# Count and size patterns (hardware, data set)
+# ---------------------------------------------------------------------------
+
+COUNT_RE = re.compile(r'^([1-9][0-9]*)?$')
+'''Progressive count pattern (pre-save): digits without a leading zero.'''
+
+COUNT_STRICT_RE = re.compile(r'^[1-9][0-9]*$')
+'''Whole number of at least 1, without leading zeros (Wikibase rejects ``+08``).'''
+
+SIZE_RE = re.compile(r'^((0|[1-9][0-9]*)(\.[0-9]*)?)?$')
+'''Progressive size pattern (pre-save): a decimal with a dot, ``1.`` allowed while typing.'''
+
+SIZE_STRICT_RE = re.compile(r'^(0|[1-9][0-9]*)(\.[0-9]+)?$')
+'''Complete decimal with a dot as separator and no leading zeros.'''
+
+QUANTITY_AMOUNT_RE = re.compile(r'^[+-](0|[1-9][0-9]*)(\.[0-9]+)?$')
+'''Amount of a Wikibase quantity value (``+8``, ``+1.5``), checked before export.'''

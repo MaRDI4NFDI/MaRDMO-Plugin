@@ -13,8 +13,8 @@ SELECT
 (GROUP_CONCAT(DISTINCT CONCAT(?st, " || ", ?stl, " || ", ?std, " || ", ?stq); SEPARATOR=" <|> ") AS ?specializes)
 (GROUP_CONCAT(DISTINCT CONCAT(?abt, " || ", ?abtl, " || ", ?abtd); SEPARATOR=" <|> ") AS ?approximated_by)
 (GROUP_CONCAT(DISTINCT CONCAT(?at, " || ", ?atl, " || ", ?atd); SEPARATOR=" <|> ") AS ?approximates)
-(GROUP_CONCAT(DISTINCT CONCAT(?cont, " || ", ?contl, " || ", ?contd, " || ", " >|< ", ?corder); SEPARATOR=" <|> ") AS ?contains_task)
-(GROUP_CONCAT(DISTINCT CONCAT(?conit, " || ", ?conitl, " || ", ?conitd, " || ", " >|< ", ?ciorder); SEPARATOR=" <|> ") AS ?contained_in_task)
+(GROUP_CONCAT(DISTINCT CONCAT(?cont, " || ", ?contl, " || ", ?contd, " || "); SEPARATOR=" <|> ") AS ?contains_task)
+(GROUP_CONCAT(DISTINCT CONCAT(?conit, " || ", ?conitl, " || ", ?conitd, " || "); SEPARATOR=" <|> ") AS ?contained_in_task)
 (GROUP_CONCAT(DISTINCT CONCAT(?dbt, " || ", ?dbtl, " || ", ?dbtd); SEPARATOR=" <|> ") AS ?discretized_by)
 (GROUP_CONCAT(DISTINCT CONCAT(?dt, " || ", ?dtl, " || ", ?dtd); SEPARATOR=" <|> ") AS ?discretizes)
 (GROUP_CONCAT(DISTINCT CONCAT(?lbt, " || ", ?lbtl, " || ", ?lbtd); SEPARATOR=" <|> ") AS ?linearized_by)
@@ -301,11 +301,6 @@ WHERE {{
             FILTER (lang(?contdraw) = 'en')
         }}
         BIND(COALESCE(?contdraw, "No Description Provided!") AS ?contd)
-
-        OPTIONAL {{
-            ?statement5 pq:{series ordinal} ?corder_raw.
-        }}
-        BIND(COALESCE(?corder_raw, "") AS ?corder)
     }}
 
     OPTIONAL {{
@@ -326,11 +321,6 @@ WHERE {{
             FILTER (lang(?conitdraw) = 'en')
         }}
         BIND(COALESCE(?conitdraw, "No Description Provided!") AS ?conitd)
-        
-        OPTIONAL {{
-            ?statement6 pq:{series ordinal} ?ciorder_raw.
-        }}
-        BIND(COALESCE(?ciorder_raw, "") AS ?ciorder)
     }}
 
     OPTIONAL {{

@@ -28,6 +28,8 @@ from .publication.handlers import Information as PublicationInformation
 from .handlers import Information as GeneralInformation
 from .validators import (
     validate_archive_year,
+    validate_count,
+    validate_data_size,
     validate_doi,
     validate_value_format,
     validate_properties,
@@ -271,6 +273,9 @@ def build_presave_validator_map():
       documentation.
     - :func:`~MaRDMO.validators.validate_archive_year` — for the data-set
       "to archive" year in the workflow catalog.
+    - :func:`~MaRDMO.validators.validate_data_size` and
+      :func:`~MaRDMO.validators.validate_count` — for the data-set size and
+      the hardware counts (nodes, CPUs, cores) in the workflow catalog.
     - :func:`~MaRDMO.validators.validate_value_format` — for all
       ``general.relation`` question URIs across model, algorithm, and workflow.
     - :func:`~MaRDMO.validators.validate_single_line` — for all textarea
@@ -466,6 +471,15 @@ def build_presave_validator_map():
                 validate_doi,
             f'{base}{questions_workflow["Data Set"]["To Archive"]["uri"]}':
                 validate_archive_year,
+            f'{base}{questions_workflow["Data Set"]["Size"]["uri"]}':
+                validate_data_size,
+            # Counts (hardware)
+            f'{base}{questions_workflow["Hardware"]["Nodes"]["uri"]}':
+                validate_count,
+            f'{base}{questions_workflow["Hardware"]["Number of CPU"]["uri"]}':
+                validate_count,
+            f'{base}{questions_workflow["Hardware"]["Cores"]["uri"]}':
+                validate_count,
             # Relation label format
             f'{base}{questions_workflow["Process Step"]["Algorithm"]["uri"]}':
                 validate_value_format,

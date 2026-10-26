@@ -92,7 +92,7 @@ class ModelMixin:
 
         Verifies that each model page has mandatory Research Problem and Task
         links, valid Formula relations, and (for the full
-        catalog) consistent specialisation assumptions and expression ordering.
+        catalog) consistent specialisation assumptions.
 
         Args:
             project: RDMO project instance.
@@ -167,35 +167,12 @@ class ModelMixin:
                     )
                 )
 
-            relation_mf = ivalue.get('RelationMF', {})
-            if relation_mf:
-                orders = [val.get('order') for val in relation_mf.values()]
-                if any(order is not None for order in orders):
-                    if not all(order is not None for order in orders):
-                        self.err.append(
-                            self._error(
-                                section = 'Mathematical Model',
-                                page    = page_name,
-                                message = 'Missing Order Number (Formula)'
-                            )
-                        )
-                    else:
-                        order_numbers = set(int(order) for order in orders)
-                        if order_numbers != set(range(1, len(relation_mf) + 1)):
-                            self.err.append(
-                                self._error(
-                                    section = 'Mathematical Model',
-                                    page    = page_name,
-                                    message = 'Incorrect Order Number (Formula)'
-                                )
-                            )
-
     def task(self, project, data, catalog):
         '''Check Computational Task documentation completeness and consistency.
 
         Verifies that each task page has mandatory Formula links,
         valid task–task relations, and (for the full catalog) specialisation
-        assumptions, containment order numbers, and Quantity links.
+        assumptions and Quantity links.
 
         Args:
             project: RDMO project instance.
@@ -253,21 +230,6 @@ class ModelMixin:
                         section = 'Computational Task',
                         page    = page_name,
                         message = 'Selected Formula not found in Section'
-                    )
-                )
-
-            if any(
-                tval['relation']['url'] in self._pairs(
-                    self.mathmoddb, 'contains_task', 'contained_in_task'
-                )
-                and not tval.get('order')
-                for tval in ivalue.get('RelationT', {}).values()
-            ):
-                self.err.append(
-                    self._error(
-                        section = 'Computational Task',
-                        page    = page_name,
-                        message = 'Missing Order Number (Computational Task Containment)'
                     )
                 )
 

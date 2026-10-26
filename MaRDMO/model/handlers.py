@@ -638,7 +638,6 @@ class Information(BaseInformation):
                     'relation':   f'{self.base}{task["IntraClassRelation"]["uri"]}',
                     'relatant':   f'{self.base}{task["IntraClassElement"]["uri"]}',
                     'assumption': f'{self.base}{task["Assumption"]["uri"]}',
-                    'order':      f'{self.base}{task["Order Number"]["uri"]}',
                 })
 
             self._hydrate_qualifier_entities(
@@ -730,7 +729,6 @@ class Information(BaseInformation):
                 statement={
                     'relation': f'{self.base}{model_q["MM2MF"]["uri"]}',
                     'relatant': f'{self.base}{model_q["MFRelatant"]["uri"]}',
-                    'order':    f'{self.base}{model_q["Order Number"]["uri"]}',
                 })
 
             self._hydrate_relatants(

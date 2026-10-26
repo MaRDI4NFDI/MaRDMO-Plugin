@@ -8,7 +8,7 @@ SELECT
 ?is_space_continuous ?is_space_discrete
 ?is_time_continuous ?is_time_discrete
 (GROUP_CONCAT(DISTINCT CONCAT(?rp, " || ", ?rpl, " || ", ?rpd); SEPARATOR=" <|> ") AS ?models)
-(GROUP_CONCAT(DISTINCT CONCAT(?ass, " || ", ?assl, " || ", ?assd, " ||  >|< ", ?assq); SEPARATOR=" <|> ") AS ?assumes)
+(GROUP_CONCAT(DISTINCT CONCAT(?ass, " || ", ?assl, " || ", ?assd, " || "); SEPARATOR=" <|> ") AS ?assumes)
 (GROUP_CONCAT(DISTINCT CONCAT(?ta, " || ", ?tal, " || ", ?tad); SEPARATOR=" <|> ") AS ?used_by)
 (GROUP_CONCAT(DISTINCT CONCAT(?conf, " || ", ?confl, " || ", ?confd, " || ", ?confq); SEPARATOR=" <|> ") AS ?contains_formulation)
 (GROUP_CONCAT(DISTINCT CONCAT(?sbm, " || ", ?sbml, " || ", ?sbmd, " || ", ?sbmq); SEPARATOR=" <|> ") AS ?specialized_by)
@@ -97,11 +97,6 @@ WHERE {{
             FILTER (lang(?assdraw) = 'en')
         }}
         BIND(COALESCE(?assdraw, "No Description Provided!") AS ?assd)
-
-        OPTIONAL {{
-            ?statement_x pq:{series ordinal} ?assqraw.
-        }}
-        BIND(COALESCE(?assqraw, "") AS ?assq)
     }}
 
     OPTIONAL {{

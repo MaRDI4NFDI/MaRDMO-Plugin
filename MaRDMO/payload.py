@@ -24,6 +24,7 @@ import re
 import time
 import requests
 
+from .patterns import QUANTITY_AMOUNT_RE
 from .queries import query_item, query_sparql, sparql_string
 from .validators import REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, doi_problem, swmath_problem, url_problem
 
@@ -76,6 +77,21 @@ def _strip_text(value, data_type):
     if isinstance(value, dict) and isinstance(value.get('text'), str):
         return {**value, 'text': _clean_text(value['text'])}
     return value
+
+
+def quantity_amount(text):
+    '''Return *text* as a Wikibase quantity amount (``"08"`` → ``"+8"``, ``" 1.50"`` → ``"+1.50"``).
+
+    Strips whitespace and leading zeros of plain decimals; anything else is
+    passed through with a ``+`` so that :meth:`GeneratePayload.validate_identifiers`
+    reports it instead of the portal rejecting it during the upload.
+    '''
+    text = str(text or '').strip()
+    integer, dot, fraction = text.partition('.')
+    if integer.isascii() and integer.isdigit() and (not dot or (fraction.isascii() and fraction.isdigit())):
+        integer = integer.lstrip('0') or '0'
+        return f"+{integer}{dot}{fraction}"
+    return f"+{text}"
 
 
 def _normalize_time(value):
@@ -570,11 +586,12 @@ class GeneratePayload:
             self.state.dictionary[key]['exists'] = check.get(f'RELATION{idx}', 'false')
 
     def validate_identifiers(self):
-        '''Reject malformed URLs, DOIs, swMATH IDs and dates before anything is posted.
+        '''Reject malformed URLs, DOIs, swMATH IDs, dates and amounts before anything is posted.
 
         Applies the strict rules from :mod:`~MaRDMO.validators` to every URL
         statement and qualifier and to every "DOI" and "swMath work ID" value,
-        and checks that every time value is a ``+YYYY-MM-DDThh:mm:ssZ`` string.
+        checks that every time value is a ``+YYYY-MM-DDThh:mm:ssZ`` string and
+        every quantity amount a Wikibase decimal (``+8``, ``+1.5``).
         This catches values that bypassed the pre-save validator, the preview
         and the checks, so an export never fails halfway because of them.
 
@@ -589,6 +606,12 @@ class GeneratePayload:
         errors = []
 
         def check(item_name, prop_id, data_type, value):
+            if data_type == 'quantity':
+                text = str(value.get('amount', '')) if isinstance(value, dict) else str(value)
+                if not QUANTITY_AMOUNT_RE.match(text):
+                    errors.append(f'"{item_name}", {pid_to_name.get(prop_id, prop_id)}: '
+                                  f'invalid number ("{text.lstrip("+")}")')
+                return
             if data_type == 'time':
                 text = value.get('time', '') if isinstance(value, dict) else str(value)
                 if not _TIME_RE.match(text):
@@ -610,7 +633,7 @@ class GeneratePayload:
                 errors.append(f'"{item_name}", {pid_to_name.get(prop_id, prop_id)}: {problem} ("{shown}")')
 
         def relevant(prop_id, data_type):
-            return data_type in ('url', 'URL', 'time') or prop_id in (doi_pid, swmath_pid)
+            return data_type in ('url', 'URL', 'time', 'quantity') or prop_id in (doi_pid, swmath_pid)
 
         def check_statement(item_name, prop_id, data_type, value, qualifiers):
             if relevant(prop_id, data_type):
@@ -951,14 +974,14 @@ class GeneratePayload:
         '''Add one statement per (relation, relatant) pair in the current subject.
 
         Iterates over ``subject[statement["relation"]]`` and
-        ``subject[statement["relatant"]]`` simultaneously, attaching optional
-        series-ordinal, assumption, and object-role qualifiers as configured
-        by *optional_qualifier*.
+        ``subject[statement["relatant"]]`` simultaneously, attaching the
+        optional assumption qualifier (if configured by *optional_qualifier*)
+        and object-role qualifiers.
 
         Args:
             statement:          Dict with ``relation`` and ``relatant`` keys.
             optional_qualifier: List of qualifier type strings to attach; supported
-                                values are ``"series ordinal"``, ``"assumes"``.
+                                value: ``"assumes"``.
             reverse:            If ``True``, swap subject and object.
         '''
 
@@ -975,16 +998,6 @@ class GeneratePayload:
 
                 # Set Up Qualifier
                 qualifier = []
-
-                # Add Formulation and Task Order Numbers to Qualifier
-                if 'series ordinal' in optional_qualifier:
-                    for number in ('formulation_number', 'task_number'):
-                        if self.state.subject.get(number, {}).get(key, {}):
-                            qualifier = self.add_qualifier(
-                                self.wikibase['properties']['series ordinal'],
-                                'string', 
-                                self.state.subject[number][key]
-                            )
 
                 # Add Assumptions to Qualifier
                 if 'assumes' in optional_qualifier:

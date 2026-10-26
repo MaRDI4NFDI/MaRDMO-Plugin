@@ -384,8 +384,8 @@ def add_relations_flexible(project, data, props, index, statement):
 
     For each relatant in ``data.<prop>`` (where *prop* ∈ ``props['keys']``),
     checks whether the (relation-type, relatant) pair already exists.  If not,
-    writes the relation-type option and the relatant text/ID, handling optional
-    order-number and assumption qualifiers.
+    writes the relation-type option and the relatant text/ID, handling the
+    optional assumption qualifier.
 
     Args:
         project:   RDMO project instance.
@@ -396,7 +396,7 @@ def add_relations_flexible(project, data, props, index, statement):
         index:     Dict containing ``'set_prefix'``; updated with
                    ``'set_prefix_reduced'`` and ``'idx'`` in place.
         statement: Dict with keys ``'relation'``, ``'relatant'``, and
-                   optionally ``'order'`` and ``'assumption'`` (attribute URIs).
+                   optionally ``'assumption'`` (attribute URIs).
     '''
 
     # Get existing Set, Item and Relation Information
@@ -420,10 +420,8 @@ def add_relations_flexible(project, data, props, index, statement):
     for prop in props['keys']:
         inner_idx = 0
         assumption_store = {}
-        order_number_store = {}
         for value in getattr(data, prop):
             assumption_index = None
-            order_number_index = None
             # Get Source and Label Description String
             source, _ = value.id.split(':')
 
@@ -438,24 +436,6 @@ def add_relations_flexible(project, data, props, index, statement):
             if matches:
                 # Continue if existing
                 continue
-
-            # Add Order Number
-            if statement.get('order') and hasattr(value, 'other') and value.other:
-                if value.other not in order_number_store:
-                    index['idx'] +=1
-                    inner_idx = 0
-                    order_number_store.update({value.other: index['idx']})
-                order_number_index = order_number_store.get(value.other)
-                # Add Order Number to Questionnaire
-                value_editor(
-                    project = project,
-                    uri = statement['order'],
-                    info = {
-                        'text': value.other,
-                        'set_index': order_number_index,
-                        'set_prefix': index['set_prefix']
-                    }
-                )
 
             # Add Assumption
             if statement.get('assumption') and hasattr(value, 'qualifier') and value.qualifier:
@@ -489,7 +469,7 @@ def add_relations_flexible(project, data, props, index, statement):
                 info = {
                     'option': Option.objects.get(uri=props['mapping'].get(key=prop)["url"]),
                     'collection_index': None,
-                    'set_index': order_number_index or assumption_index or index['idx'],
+                    'set_index': assumption_index or index['idx'],
                     'set_prefix': index['set_prefix']
                 }
             )
@@ -502,7 +482,7 @@ def add_relations_flexible(project, data, props, index, statement):
                     'text': f"{value.label} ({value.description}) [{source}]",
                     'external_id': value.id,
                     'collection_index': inner_idx,
-                    'set_index': order_number_index or assumption_index or index['idx'],
+                    'set_index': assumption_index or index['idx'],
                     'set_prefix': index['set_prefix']
                 }
             )

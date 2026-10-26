@@ -5,7 +5,7 @@ from rdmo.domain.models import Attribute
 from ..constants import BASE_URI, CATALOG_WORKFLOW
 from ..getters import get_options
 from .base import SOFTWARE_REFERENCE_CHECKS
-from ..validators import archive_year_problem, doi_problem
+from ..validators import archive_year_problem, count_problem, doi_problem, size_problem
 
 
 class WorkflowMixin:
@@ -289,10 +289,9 @@ class WorkflowMixin:
                 self.err.append(self._error(
                     'Hardware', page_name, 'Missing Number of Compute Nodes'
                 ))
-            elif not str(nodes).strip().isdigit():
+            elif problem := count_problem(nodes):
                 self.err.append(self._error(
-                    'Hardware', page_name,
-                    'Invalid Number of Compute Nodes (must be an integer)'
+                    'Hardware', page_name, f'Invalid Number of Compute Nodes: {problem}'
                 ))
 
             cpu_entries = ivalue.get('cpu_entries', [])
@@ -311,20 +310,18 @@ class WorkflowMixin:
                             'Hardware', page_name,
                             'Missing CPU Occurrence in Hardware'
                         ))
-                    elif not entry.get('count_valid'):
+                    elif problem := count_problem(entry['count']):
                         self.err.append(self._error(
-                            'Hardware', page_name,
-                            'Invalid CPU Occurrence (must be an integer)'
+                            'Hardware', page_name, f'Invalid CPU Occurrence: {problem}'
                         ))
                     if not entry.get('cores'):
                         self.err.append(self._error(
                             'Hardware', page_name,
                             'Missing Number of Processor Cores'
                         ))
-                    elif not entry.get('cores_valid'):
+                    elif problem := count_problem(entry['cores']):
                         self.err.append(self._error(
-                            'Hardware', page_name,
-                            'Invalid Number of Processor Cores (must be an integer)'
+                            'Hardware', page_name, f'Invalid Number of Processor Cores: {problem}'
                         ))
 
     def dataset(self, project, data):
@@ -362,22 +359,10 @@ class WorkflowMixin:
                 self.err.append(self._error('Data Set', page_name, 'Missing Data Size'))
             elif not size[1]:
                 self.err.append(self._error('Data Set', page_name, 'Missing Data Size Value'))
-            else:
-                val = str(size[1]).strip()
-                if size[0] == options['items']:
-                    if not val.isdigit():
-                        self.err.append(self._error(
-                            'Data Set', page_name,
-                            'Invalid Data Size Value (must be an integer for items)'
-                        ))
-                else:
-                    try:
-                        float(val)
-                    except (ValueError, TypeError):
-                        self.err.append(self._error(
-                            'Data Set', page_name,
-                            'Invalid Data Size Value (must be a number)'
-                        ))
+            elif problem := size_problem(size[1], integer=size[0] == options['items']):
+                self.err.append(self._error(
+                    'Data Set', page_name, f'Invalid Data Size Value: {problem}'
+                ))
 
             if not ivalue.get('ToPublish') or not ivalue['ToPublish'][0]:
                 self.err.append(self._error(

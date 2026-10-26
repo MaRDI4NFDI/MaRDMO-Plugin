@@ -16,6 +16,8 @@ Provides:
 - :func:`validate_swmath`            — rejects swMATH IDs that are not numbers
 - :func:`validate_reference`         — DOI, URL or swMATH check, depending on the selected option
 - :func:`validate_archive_year`      — rejects archival years that can never become four digits
+- :func:`validate_count`             — rejects counts (nodes, CPUs, cores) that are not whole numbers
+- :func:`validate_data_size`         — rejects data sizes that are not numbers (whole for items)
 
 Shared rules, also used by the documentation checker (:mod:`~MaRDMO.checks`)
 and the preview templates (:mod:`~MaRDMO.templatetags.mardmo_tags`), so that
@@ -28,6 +30,8 @@ all three always agree:
 - :func:`doi_problem`               — what is wrong with a complete DOI
 - :func:`swmath_problem`            — what is wrong with a swMATH work ID
 - :func:`archive_year_problem`      — what is wrong with a complete archival year
+- :func:`count_problem`             — what is wrong with a count (whole number ≥ 1)
+- :func:`size_problem`              — what is wrong with a data size
 '''
 
 import ipaddress
@@ -42,6 +46,7 @@ from .helpers import extract_parts
 from .model.constants import data_properties_check
 from .patterns import (
     DOI_RE, DOI_STRICT_RE, LINE_BREAK_RE, QUDT_ID_RE, SWMATH_ID_RE,
+    COUNT_RE, COUNT_STRICT_RE, SIZE_RE, SIZE_STRICT_RE,
     URL_FORBIDDEN_CHARS_RE, URL_HOST_RE, YEAR_RE, YEAR_STRICT_RE,
 )
 
@@ -399,6 +404,90 @@ def validate_swmath(instance):
     problem = swmath_problem(instance.text)
     if problem:
         raise ValidationError({'text': [problem]})
+
+
+def count_problem(value):
+    '''Return what is wrong with a count (nodes, CPUs, cores, items), or ``None``.
+
+    A count is a whole number of at least 1 without leading zeros.  Used by
+    the preview, the documentation checker, and the export.
+    '''
+    text = str(value or '').strip()
+    if not text:
+        return None
+    if not text.isascii() or not text.isdigit():
+        return 'must be a whole number (e.g. 4)'
+    if int(text) == 0:
+        return 'must be at least 1'
+    if not COUNT_STRICT_RE.match(text):
+        return 'must not start with 0 (e.g. 8 instead of 08)'
+    return None
+
+
+def size_problem(value, integer=False):
+    '''Return what is wrong with a data size, or ``None`` if it is valid.
+
+    Args:
+        value:   Size text.
+        integer: ``True`` for the unit "items", which needs a whole number.
+    '''
+    if integer:
+        return count_problem(value)
+    text = str(value or '').strip()
+    if not text:
+        return None
+    if ',' in text:
+        return 'use a dot as decimal separator (e.g. 1.5)'
+    if not SIZE_STRICT_RE.match(text):
+        if SIZE_STRICT_RE.match(text.lstrip('0')) and text.lstrip('0')[:1] not in ('', '.'):
+            return 'must not start with 0 (e.g. 7.5 instead of 07.5)'
+        return 'must be a number (e.g. 12 or 1.5)'
+    if float(text) == 0:
+        return 'must be greater than 0'
+    return None
+
+
+def validate_count(instance):
+    '''Reject a count (nodes, CPUs, cores) that can never become a whole number ≥ 1.
+
+    Args:
+        instance: RDMO ``Value`` instance about to be saved.
+
+    Raises:
+        ValidationError: when the text contains anything but digits or starts with 0.
+    '''
+    text = (instance.text or '').strip()
+    if text and not COUNT_RE.match(text):
+        raise ValidationError({'text': [
+            _('Enter a whole number of at least 1 without leading zeros (e.g. 4).')
+        ]})
+
+
+def validate_data_size(instance):
+    '''Reject a data size that can never become valid for the selected unit.
+
+    Whole numbers for the unit "items", otherwise decimals with a dot
+    (``1.`` is accepted while typing).
+
+    Args:
+        instance: RDMO ``Value`` instance about to be saved.
+
+    Raises:
+        ValidationError: when the text cannot become a valid size.
+    '''
+    text = (instance.text or '').strip()
+    if not instance.option or not text:
+        return
+    if instance.option.uri == get_options().get('items'):
+        if not COUNT_RE.match(text):
+            raise ValidationError({'text': [
+                _('Enter the number of items as a whole number of at least 1 (e.g. 250).')
+            ]})
+        return
+    if ',' in text:
+        raise ValidationError({'text': [_('Use a dot as decimal separator (e.g. 1.5).')]})
+    if not SIZE_RE.match(text):
+        raise ValidationError({'text': [_('Enter the size as a number (e.g. 12 or 1.5).')]})
 
 
 def validate_archive_year(instance):

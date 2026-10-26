@@ -60,10 +60,6 @@ class PrepareAlgorithm(PublicationExport):
                     'new_name': relation['new_name'],
                     'encryption': relation['encryption']
                 },
-                order = {
-                    'formulation': False,
-                    'task': False
-                },
                 assumption = False,
                 mapping = (
                     self.publication_mapping if relation.get('mapping') == 'publication'

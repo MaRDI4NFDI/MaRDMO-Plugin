@@ -86,10 +86,6 @@ class PrepareModel(PublicationExport):
                     'new_name': relation['new_name'],
                     'encryption': relation['encryption']
                 },
-                order = {
-                    'formulation': relation['formulation'],
-                    'task': relation['task']
-                },
                 assumption = relation['assumption'],
                 mapping = (
                     self.publication_mapping if relation.get('mapping') == 'publication'
@@ -325,8 +321,7 @@ class PrepareModel(PublicationExport):
                 statement = {
                     'relation': "MM2MF",
                     'relatant': "MFRelatant"
-                },
-                optional_qualifier = ['series ordinal']
+                }
             )
 
             payload.add_single_relation(
@@ -397,7 +392,7 @@ class PrepareModel(PublicationExport):
                     'relation': "IntraClassRelation",
                     'relatant': "IntraClassElement"
                 },
-                optional_qualifier = ['assumes', 'series ordinal']
+                optional_qualifier = ['assumes']
             )
 
     def _export_formulations(self, payload, formulations: dict):

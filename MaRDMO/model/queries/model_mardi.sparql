@@ -10,8 +10,8 @@ SELECT
 (GROUP_CONCAT(DISTINCT ?descriptionLong; SEPARATOR=" <|> ") AS ?description_long)
 (GROUP_CONCAT(DISTINCT ?alias; SEPARATOR=" <|> ") AS ?aliases)
 (GROUP_CONCAT(DISTINCT CONCAT(?rp, " || ", ?rpl, " || ", ?rpd); SEPARATOR=" <|> ") AS ?models)
-(GROUP_CONCAT(DISTINCT CONCAT(?ass, " || ", ?assl, " || ", ?assd, " ||  >|< ", ?assq); SEPARATOR=" <|> ") AS ?assumes)
-(GROUP_CONCAT(DISTINCT CONCAT(?conf, " || ", ?confl, " || ", ?confd, " || ", ?confq, " >|< ", ?confq2); SEPARATOR=" <|> ") AS ?contains_formulation)
+(GROUP_CONCAT(DISTINCT CONCAT(?ass, " || ", ?assl, " || ", ?assd, " || "); SEPARATOR=" <|> ") AS ?assumes)
+(GROUP_CONCAT(DISTINCT CONCAT(?conf, " || ", ?confl, " || ", ?confd, " || ", ?confq); SEPARATOR=" <|> ") AS ?contains_formulation)
 (GROUP_CONCAT(DISTINCT CONCAT(?ta, " || ", ?tal, " || ", ?tad); SEPARATOR=" <|> ") AS ?used_by)
 (GROUP_CONCAT(DISTINCT CONCAT(?sbm, " || ", ?sbml, " || ", ?sbmd, " || ", ?sbmq); SEPARATOR=" <|> ") AS ?specialized_by)
 (GROUP_CONCAT(DISTINCT CONCAT(?sm, " || ", ?sml, " || ", ?smd, " || ", ?smq); SEPARATOR=" <|> ") AS ?specializes)
@@ -108,11 +108,6 @@ WHERE {{
             FILTER (lang(?assdraw) = 'en')
         }}
         BIND(COALESCE(?assdraw, "No Description Provided!") AS ?assd)
-        
-        OPTIONAL {{
-            ?statement_x pq:{series ordinal} ?assqraw.
-        }}
-        BIND(COALESCE(?assqraw, "") AS ?assq)
     }}
 
     OPTIONAL {{
@@ -138,11 +133,6 @@ WHERE {{
             BIND(CONCAT("mardi:", STRAFTER(STR(?quaraw), STR(wd:))) AS ?qua)
         }}
         BIND(COALESCE(?qua, "") AS ?confq)
-        
-        OPTIONAL {{
-            ?statement_y pq:{series ordinal} ?qua2raw.
-        }}
-        BIND(COALESCE(?qua2raw, "") AS ?confq2)
     }}
 
     OPTIONAL {{

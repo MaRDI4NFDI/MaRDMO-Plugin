@@ -22,7 +22,7 @@ from ..helpers import (
     collect_items_without_section, entity_relations, entity_relations_grouped,
     unique_items,
 )
-from ..payload import GeneratePayload
+from ..payload import GeneratePayload, quantity_amount
 
 from ..publication.worker import PublicationExport
 
@@ -87,10 +87,6 @@ class PrepareWorkflow(PublicationExport):
                     'old_name': relation['old_name'],
                     'new_name': relation['new_name'],
                     'encryption': relation['encryption']
-                },
-                order = {
-                    'formulation': False,
-                    'task': False
                 },
                 assumption = False,
                 mapping = (
@@ -180,20 +176,10 @@ class PrepareWorkflow(PublicationExport):
                     'name':        cpu_dict.get(idx, {}).get('Name'),
                     'description': cpu_dict.get(idx, {}).get('Description'),
                     'count':       count_dict.get(idx),
-                    'count_valid': (
-                        str(count_dict.get(idx, '')).strip().isdigit()
-                        if count_dict.get(idx) else False
-                    ),
                     'cores':       cores_dict.get(idx),
-                    'cores_valid': (
-                        str(cores_dict.get(idx, '')).strip().isdigit()
-                        if cores_dict.get(idx) else False
-                    ),
                 }
                 for idx in all_indices
             ]
-            nodes = hw_data.get('nodes')
-            hw_data['nodes_valid'] = str(nodes).strip().isdigit() if nodes else False
 
         answers['cpu'] = collect_items_without_section(answers, 'hardware', 'cpu')
         answers['programminglanguage'] = collect_items_without_section(
@@ -211,21 +197,6 @@ class PrepareWorkflow(PublicationExport):
         answers['instrument'] = collect_items_without_section(
             answers, 'processstep', 'IRelatant'
         )
-
-        options = get_options()
-
-        for ds_data in answers.get('dataset', {}).values():
-            size = ds_data.get('Size')
-            if size and size[0] and size[1]:
-                val = str(size[1]).strip()
-                if size[0] == options['items']:
-                    ds_data['size_value_valid'] = val.isdigit()
-                else:
-                    try:
-                        float(val)
-                        ds_data['size_value_valid'] = True
-                    except (ValueError, TypeError):
-                        ds_data['size_value_valid'] = False
 
         return answers
 
@@ -680,12 +651,12 @@ class PrepareWorkflow(PublicationExport):
                 qclass  = self.items["computer hardware"],
             )
 
-            nodes = str(entry.get('nodes', '')).strip()
-            if nodes.isdigit():
+            nodes = str(entry.get('nodes') or '').strip()
+            if nodes:
                 payload.add_answer(
                     verb = self.properties["number of compute nodes"],
                     object_and_type = [
-                        {"amount": f"+{nodes}", "unit": "1"},
+                        {"amount": quantity_amount(nodes), "unit": "1"},
                         "quantity",
                     ],
                 )
@@ -695,13 +666,13 @@ class PrepareWorkflow(PublicationExport):
                     continue
 
                 # Add number of processor cores as a statement on the CPU item
-                cores = str(entry.get('cores', {}).get(idx, '')).strip()
-                if cores.isdigit():
+                cores = str(entry.get('cores', {}).get(idx) or '').strip()
+                if cores:
                     payload.get_item_key(cpu_entry)
                     payload.add_answer(
                         verb = self.properties["number of processor cores"],
                         object_and_type = [
-                            {"amount": f"+{cores}", "unit": "1"},
+                            {"amount": quantity_amount(cores), "unit": "1"},
                             "quantity",
                         ],
                     )
@@ -712,12 +683,12 @@ class PrepareWorkflow(PublicationExport):
                 if cpu_item not in payload.get_dictionary():
                     continue
                 qualifiers = []
-                count = str(entry.get('number-of-cpu', {}).get(idx, '')).strip()
-                if count.isdigit():
+                count = str(entry.get('number-of-cpu', {}).get(idx) or '').strip()
+                if count:
                     qualifiers += payload.add_qualifier(
                         self.properties["quantity_property"],
                         "quantity",
-                        {"amount": f"+{count}", "unit": "1"},
+                        {"amount": quantity_amount(count), "unit": "1"},
                     )
                 payload.add_answer(
                     verb = self.properties["CPU"],
@@ -757,13 +728,13 @@ class PrepareWorkflow(PublicationExport):
                     options["terabyte"]: self.items["terabyte"],
                 }
                 size_unit = entry["Size"][0]
-                size_val  = entry["Size"][1]
+                size_val  = quantity_amount(entry["Size"][1] if len(entry["Size"]) > 1 else '')
                 if size_unit in unit_map:
                     payload.add_answer(
                         verb = self.properties["data size"],
                         object_and_type = [
                             {
-                                "amount": f"+{size_val}",
+                                "amount": size_val,
                                 "unit": (
                                     f"{get_url('mardi', 'entity_uri')}"
                                     f"/entity/{unit_map[size_unit]}"
@@ -776,7 +747,7 @@ class PrepareWorkflow(PublicationExport):
                     payload.add_answer(
                         verb = self.properties["number of records"],
                         object_and_type = [
-                            {"amount": f"+{size_val}", "unit": "1"},
+                            {"amount": size_val, "unit": "1"},
                             "quantity",
                         ],
                     )
