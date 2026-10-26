@@ -1,16 +1,19 @@
 '''Cache-backed progress and result store for MaRDMO background workers.
 
-Background workers (preview, export) run asynchronously and need a way to
-communicate state and results back to the requesting view.  This module
-provides a thin Django-cache wrapper that stores per-task progress percentages,
-status messages, and final payloads keyed by a UUID task identifier.
+The background export runs in a separate thread and needs a way to
+communicate its state and result back to the requesting views.  This module
+provides a thin Django-cache wrapper that stores one progress dict per job
+(status, messages, final result), keyed by a UUID job identifier, so every
+server process sees the same state.
 
 Provides:
 
-- ``store_progress`` — write a progress percentage and status message
-- ``retrieve_progress`` — read the current progress entry for a task
-- ``store_result`` — persist the final worker output
-- ``retrieve_result`` — fetch the final worker output
+- ``get_progress_data`` / ``set_progress_data`` / ``clear_progress`` — read,
+  write and delete a job's progress dict
+- ``ProgressStore`` / ``_progress_store`` — dict-like access to the same data
+- ``_register_job_for_session`` / ``_unregister_job_for_session`` /
+  ``_job_belongs_to_session`` — tie jobs to the session that started them, so
+  only that user can poll a job or see its result
 '''
 
 from django.core.cache import cache

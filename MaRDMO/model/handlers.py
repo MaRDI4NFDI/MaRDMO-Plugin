@@ -374,7 +374,7 @@ class Information(BaseInformation):
                     value_editor(
                         project=project,
                         uri=f'{self.base}{quantity[relatant_uris[pair]]["uri"]}',
-                        info={'text': f'{val.label} ({val.description}) [mardi]',
+                        info={'text': f'{val.label} ({val.description}) [{val.id.split(":")[0]}]',
                               'external_id': val.id,
                               'set_index': rel_idx[pair],
                               'set_prefix': str(set_index)})

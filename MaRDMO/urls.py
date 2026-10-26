@@ -1,11 +1,12 @@
 '''URL configuration for the MaRDMO plugin.
 
-Registers the three endpoints used by the questionnaire frontend to
-communicate with background workers:
+Registers the three endpoints used for the background export.  Paths are
+relative to the prefix under which the instance includes ``MaRDMO.urls`` in its
+``config/urls.py`` (e.g. ``services/``); MaRDMO itself only refers to them by name.
 
-- ``mardmo/progress/<uuid>/`` — ``get_progress``: poll current task progress
-- ``mardmo/show/<uuid>/``     — ``show_progress``: render live progress page
-- ``mardmo/result/<uuid>/``   — ``show_success``: render completed-task result
+- ``progress/<job_id>/``        — ``show_progress``: render the live progress page
+- ``progress/<job_id>/status/`` — ``get_progress``: JSON progress for polling
+- ``success/<job_id>/``         — ``show_success``: render the export result page
 '''
 
 from django.urls import path

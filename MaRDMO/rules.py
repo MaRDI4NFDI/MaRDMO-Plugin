@@ -1,14 +1,14 @@
 '''Functional rules that map RDMO ``Value`` instances to structured dict entries.
 
-Each rule corresponds to a distinct flag-combo (0–16) that determines how a
+Each rule handles one combination of the five flags ``(set_prefix, set_index,
+collection_index, external_id, option_text)`` and determines how a
 questionnaire value is extracted and where it is stored in the result dict.
 All rules share the same call signature so they can be dispatched uniformly
-via a lookup table (``RULES`` dict) in the caller.
+via :data:`~MaRDMO.constants.flag_dict`, which maps each flag tuple to its rule.
 
 Provides:
 
 - ``rule_0`` … ``rule_19`` — individual rule implementations
-- ``RULES`` — ``{int: callable}`` dispatch table used by the handler layer
 '''
 
 from .helpers import basic_dict, basic_list

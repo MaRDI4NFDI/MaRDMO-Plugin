@@ -253,20 +253,21 @@ def build_presave_validator_map():
     """Build and return the pre-save attribute-URI-to-validator dispatch map.
 
     Maps each attribute URI that requires pre-save validation to the appropriate
-    validator function from :mod:`MaRDMO.validators`.  Three validators are
-    registered:
+    validator function from :mod:`MaRDMO.validators`.  Registered validators:
 
     - :func:`~MaRDMO.validators.validate_short_description` — for all entity
-      ``Description`` question URIs across all catalogs (max 250 characters).
+      ``Description`` question URIs across all catalogs (max
+      :data:`~MaRDMO.validators.SHORT_DESCRIPTION_MAX_LENGTH` characters).
     - :func:`~MaRDMO.validators.validate_properties` — for the four data-property
       question URIs (model, formulation, quantity, task) in the model catalogs.
     - :func:`~MaRDMO.validators.validate_qudt_id` — for the Quantity reference
       URI in the full model catalog only.
-    - :func:`~MaRDMO.validators.validate_doi` — for all reference URIs that
-      accept a DOI (publication, software, benchmark, process-step documentation,
-      and data-set publication) across algorithm and workflow catalogs.
-    - :func:`~MaRDMO.validators.validate_reference` — DOI or URL check for the
-      software/benchmark references and the process-step documentation.
+    - :func:`~MaRDMO.validators.validate_doi` — for the publication reference
+      URIs in all catalogs and the data-set "to publish" DOI in the workflow
+      catalog.
+    - :func:`~MaRDMO.validators.validate_reference` — DOI, URL and swMATH ID
+      check for the software/benchmark references and the process-step
+      documentation.
     - :func:`~MaRDMO.validators.validate_value_format` — for all
       ``general.relation`` question URIs across model, algorithm, and workflow.
     - :func:`~MaRDMO.validators.validate_single_line` — for all textarea
@@ -403,7 +404,7 @@ def build_presave_validator_map():
                 validate_short_description,
             f'{base}{questions_algorithm["Benchmark"]["Description"]["uri"]}':
                 validate_short_description,
-            # DOI reference (publication); DOI or URL (software, benchmark)
+            # DOI reference (publication); DOI, URL or swMATH ID (software, benchmark)
             f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
                 validate_doi,
             f'{base}{questions_algorithm["Software"]["Reference"]["uri"]}':
@@ -449,7 +450,7 @@ def build_presave_validator_map():
                 validate_single_line,
             f'{base}{questions_workflow["Workflow"]["Other Platform"]["uri"]}':
                 validate_single_line,
-            # DOI reference (publication, DS to-publish); DOI or URL (software, PS documentation)
+            # DOI reference (publication, DS to-publish); DOI, URL or swMATH ID (software, PS documentation)
             f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
                 validate_doi,
             f'{base}{questions_workflow["Software"]["Reference"]["uri"]}':

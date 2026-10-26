@@ -60,7 +60,7 @@ class Author:
             if orcid_id:
                 description = f'scientist (ORCID iD {orcid_id})'
             elif zbmath_id:
-                description = f'scientist (zbMath ID {orcid_id})'
+                description = f'scientist (zbMath ID {zbmath_id})'
             else:
                 description = 'scientist'
 
