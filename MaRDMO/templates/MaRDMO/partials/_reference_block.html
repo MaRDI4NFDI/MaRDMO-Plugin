@@ -1,11 +1,11 @@
 {% load mardmo_tags %}
 {% for reference in references.values %}
     {% if id_option and reference.0 == id_option %}
-        {% if reference.1 %}<b>{{ id_label }}</b>: {{ reference.1 }} <br>
+        {% if reference.1 %}<b>{{ id_label }}</b>: {{ reference.1 }}{% if id_option == option.SWMATH %}{% with problem=reference.1|swmath_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %}{% endif %} <br>
         {% else %}<b>{{ id_label }}</b>: <strong class="mardmo-error">MISSING {{ id_label|upper }} VALUE</strong> <br>{% endif %}
     {% endif %}
     {% if reference.0 == option.DOI %}
-        {% if reference.1 %}<b>DOI</b>: {{ reference.1 }} <br>
+        {% if reference.1 %}<b>DOI</b>: {{ reference.1 }}{% with problem=reference.1|doi_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
         {% else %}<b>DOI</b>: <strong class="mardmo-error">MISSING DOI VALUE</strong> <br>{% endif %}
     {% endif %}
     {% if reference.0 == option.DESCRIPTION_URL %}

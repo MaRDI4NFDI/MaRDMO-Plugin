@@ -5,7 +5,7 @@ from rdmo.domain.models import Attribute
 from ..constants import BASE_URI, CATALOG_WORKFLOW
 from ..getters import get_options
 from .base import SOFTWARE_REFERENCE_CHECKS
-from ..patterns import DOI_STRICT_RE
+from ..validators import doi_problem
 
 
 class WorkflowMixin:
@@ -386,12 +386,11 @@ class WorkflowMixin:
             elif (
                 ivalue['ToPublish'][0] == options['YesText']
                 and len(ivalue['ToPublish']) > 1
-                and ivalue['ToPublish'][1]
-                and not DOI_STRICT_RE.match(str(ivalue['ToPublish'][1]))
+                and doi_problem(str(ivalue['ToPublish'][1] or ''))
             ):
                 self.err.append(self._error(
                     'Data Set', page_name,
-                    'Invalid Publication DOI: expected format 10.XXXX/suffix'
+                    f"Invalid Publication DOI: {doi_problem(str(ivalue['ToPublish'][1]))}"
                 ))
 
             to_archive = ivalue.get('ToArchive')

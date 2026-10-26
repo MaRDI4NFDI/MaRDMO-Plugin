@@ -4,7 +4,7 @@
     {% for key, entry in doc_dict.items %}
         <li>
         {{ entry.0|option_name|default:"Reference" }}:
-        {% if entry.1 %}{{ entry.1 }}{% if entry.0 == option.URL %}{% with problem=entry.1|url_problem:entry.0 %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %}{% endif %}{% else %}<strong class="mardmo-error">MISSING {{ entry.0|option_name|default:"value"|upper }}</strong>{% endif %}
+        {% if entry.1 %}{{ entry.1 }}{% if entry.0 == option.URL %}{% with problem=entry.1|url_problem:entry.0 %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %}{% elif entry.0 == option.DOI %}{% with problem=entry.1|doi_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %}{% endif %}{% else %}<strong class="mardmo-error">MISSING {{ entry.0|option_name|default:"value"|upper }}</strong>{% endif %}
         </li>
     {% endfor %}
     </ul>

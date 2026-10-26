@@ -254,7 +254,7 @@
     <strong>Data Set Publication:</strong>
     {% if values.ToPublish.0 == option.YesText %}
         {% if values.ToPublish.1 %}
-            Yes ({{ values.ToPublish.1 }}{% if values.publish_doi_valid == False %} <strong class="mardmo-error">INVALID DOI FORMAT</strong>{% endif %}) <br>
+            Yes ({{ values.ToPublish.1 }}{% with problem=values.ToPublish.1|doi_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %}) <br>
         {% else %}
             Yes <br>
         {% endif %}
@@ -294,7 +294,7 @@
     
     {% for reference in values.reference.values %}
         {% if reference.0 == option.DOI %}
-            <b>DOI</b>: {{ reference.1 }} <br>
+            <b>DOI</b>: {{ reference.1 }}{% with problem=reference.1|doi_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
 	    {% endif %} 
     {% empty %}
         {% if 'not found' in values.ID %}

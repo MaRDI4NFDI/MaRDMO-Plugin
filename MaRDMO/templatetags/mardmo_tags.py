@@ -10,6 +10,8 @@ Provides:
 - ``has_equivalence_sign``  — filter: defining formula contains ``\\equiv`` / ``≡``
 - ``option_name``           — filter: name of an RDMO option URI (e.g. ``"kilobyte"``)
 - ``url_problem``           — filter: what is wrong with a URL, or ``''``
+- ``doi_problem``           — filter: what is wrong with a DOI, or ``''``
+- ``swmath_problem``        — filter: what is wrong with a swMATH ID, or ``''``
 - ``description_error``     — tag: error text for a short description, or ``''``
 - ``user_entity``           — tag: one entity as ``Name (Description)`` with
   error markers if user-defined, otherwise its portal ID
@@ -21,6 +23,8 @@ from ..getters import get_options
 from ..patterns import LINE_BREAK_RE
 from ..validators import has_equivalence_sign as _has_equivalence_sign
 from ..validators import short_description_problem
+from ..validators import doi_problem as _doi_problem
+from ..validators import swmath_problem as _swmath_problem
 from ..validators import url_problem as _url_problem
 from ..validators import url_schemes
 
@@ -57,6 +61,18 @@ def url_problem(url, option_uri=None):
     use ``git://`` etc.).  Usage: ``{{ reference.1|url_problem:reference.0 }}``.
     '''
     return _url_problem(url, url_schemes(option_uri)) or ''
+
+
+@register.filter
+def doi_problem(doi):
+    '''Return what is wrong with *doi* (same rule as checks and export), or ``''``.'''
+    return _doi_problem(doi) or ''
+
+
+@register.filter
+def swmath_problem(swmath_id):
+    '''Return what is wrong with a swMATH work ID (same rule everywhere), or ``''``.'''
+    return _swmath_problem(swmath_id) or ''
 
 
 @register.simple_tag

@@ -1,3 +1,5 @@
+{% load mardmo_tags %}
+
 <h1 id="title"> {{ title }} </h1>
 
 <h1 id="MathematicalModel"> Mathematical Models </h1>
@@ -116,7 +118,7 @@
     
     {% for reference in values.reference.values %}
         {% if reference.0 == option.DOI %}
-            <b>DOI</b>: {{ reference.1 }} <br>
+            <b>DOI</b>: {{ reference.1 }}{% with problem=reference.1|doi_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
 	    {% endif %} 
     {% empty %}
         {% if 'not found' in values.ID %}

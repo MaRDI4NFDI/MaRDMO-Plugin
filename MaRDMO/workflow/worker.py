@@ -22,7 +22,6 @@ from ..helpers import (
     collect_items_without_section, entity_relations, entity_relations_grouped,
     unique_items,
 )
-from ..patterns import DOI_STRICT_RE
 from ..payload import GeneratePayload
 
 from ..publication.worker import PublicationExport
@@ -231,10 +230,6 @@ class PrepareWorkflow(PublicationExport):
             if archive and archive[0] and archive[1]:
                 val = str(archive[1]).strip()
                 ds_data['archive_year_valid'] = len(val) == 4 and val.isdigit()
-            publish = ds_data.get('ToPublish')
-            if publish and len(publish) > 1 and publish[1]:
-                val = str(publish[1]).strip()
-                ds_data['publish_doi_valid'] = bool(DOI_STRICT_RE.match(val))
 
         return answers
 
@@ -337,7 +332,7 @@ class PrepareWorkflow(PublicationExport):
 
         payload.add_item_payload()
 
-        payload.validate_urls()
+        payload.validate_identifiers()
         payload.check_existing_relations(
             sparql_endpoint = get_url('mardi', 'sparql'),
             api_url         = get_url('mardi', 'api'),
@@ -517,14 +512,15 @@ class PrepareWorkflow(PublicationExport):
                         )
 
                 for doc in entry.get('software-documentation', {}).get(set_idx, {}).values():
-                    if doc and len(doc) > 1 and doc[1]:
+                    text = (doc[1] or '').strip() if doc and len(doc) > 1 else ''
+                    if text:
                         if doc[0] == options['DOI']:
                             qualifiers += payload.add_qualifier(
-                                self.properties["DOI"], "external-id", doc[1]
+                                self.properties["DOI"], "external-id", text
                             )
                         elif doc[0] == options['URL']:
                             qualifiers += payload.add_qualifier(
-                                self.properties["URL"], "url", doc[1]
+                                self.properties["URL"], "url", text
                             )
 
                 for algo_item in algo_items.values():
@@ -558,14 +554,15 @@ class PrepareWorkflow(PublicationExport):
                         )
 
                 for doc in entry.get('method-documentation', {}).get(set_idx, {}).values():
-                    if doc and len(doc) > 1 and doc[1]:
+                    text = (doc[1] or '').strip() if doc and len(doc) > 1 else ''
+                    if text:
                         if doc[0] == options['DOI']:
                             qualifiers += payload.add_qualifier(
-                                self.properties["DOI"], "external-id", doc[1]
+                                self.properties["DOI"], "external-id", text
                             )
                         elif doc[0] == options['URL']:
                             qualifiers += payload.add_qualifier(
-                                self.properties["URL"], "url", doc[1]
+                                self.properties["URL"], "url", text
                             )
 
                 for meth_item in meth_items.values():
@@ -824,7 +821,7 @@ class PrepareWorkflow(PublicationExport):
                         verb = self.properties["mandates"],
                         object_and_type = [self.items["data publishing"], "wikibase-item"],
                     )
-                    val = entry["ToPublish"][1] if len(entry["ToPublish"]) > 1 else ""
+                    val = (entry["ToPublish"][1] or "").strip() if len(entry["ToPublish"]) > 1 else ""
                     if val:
                         payload.add_answer(
                             verb = self.properties["DOI"],

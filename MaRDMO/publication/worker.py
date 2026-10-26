@@ -219,10 +219,11 @@ class PublicationExport:
         options = get_options()
         for option_key, prop, datatype in mapping:
             entry = find_reference(references, options[option_key])
-            if entry:
+            text = (entry[1] or '').strip() if entry else ''
+            if text:
                 payload.add_answer(
                     verb = self.properties[prop],
-                    object_and_type = [entry[1], datatype],
+                    object_and_type = [text, datatype],
                 )
 
     def _export_journals(self, payload, publications: dict):

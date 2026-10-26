@@ -56,7 +56,7 @@ lone capital is rejected as an incomplete identifier.
 # DOI patterns
 # ---------------------------------------------------------------------------
 
-DOI_RE = re.compile(r'^1(0(\.\d*(/\S*)?)?)?$')
+DOI_RE = re.compile(r'^1(0(\.[\d.]*(/\S*)?)?)?$')
 '''Progressive DOI pattern (pre-save).
 
 Accepts the DOI string character-by-character as the user types:
@@ -64,7 +64,7 @@ Accepts the DOI string character-by-character as the user types:
 - ``1``           — first character of the fixed prefix
 - ``10``          — prefix so far
 - ``10.``         — separator typed
-- ``10.1234``     — registrant code being entered
+- ``10.1234``     — registrant code being entered (also ``10.1234.10``)
 - ``10.1234/``    — separator between prefix and suffix
 - ``10.1234/abc`` — suffix in progress
 
@@ -73,12 +73,12 @@ Completeness (``10.NNNN/suffix``) is enforced by :data:`DOI_STRICT_RE` at
 export time.
 '''
 
-DOI_STRICT_RE = re.compile(r'^10\.\d{4,}/\S+$')
+DOI_STRICT_RE = re.compile(r'^10\.\d{4,}(\.\d+)*/\S+$')
 '''Strict DOI pattern (documentation checker).
 
 Requires the canonical ``10.NNNN/suffix`` form: the fixed prefix ``10.``,
-at least four registrant digits, a ``/`` separator, and one or more non-
-whitespace suffix characters.
+at least four registrant digits (optionally sub-divided, ``10.1000.10``), a
+``/`` separator, and one or more non-whitespace suffix characters.
 '''
 
 # ---------------------------------------------------------------------------
@@ -107,3 +107,14 @@ Whitespace is checked separately to give a more specific message.
 
 URL_HOST_RE = re.compile(r'^[^\s.]+(\.[^\s.]+)+$')
 '''Host with at least one dot (``example.org``); IP addresses are handled separately.'''
+
+# ---------------------------------------------------------------------------
+# swMATH pattern
+# ---------------------------------------------------------------------------
+
+SWMATH_ID_RE = re.compile(r'^[0-9]+$')
+'''swMATH work ID: digits only (format of Wikidata property P6830).
+
+Every prefix of a valid ID is valid, so the same pattern serves the pre-save
+validator, the preview, the documentation checker, and the export.
+'''

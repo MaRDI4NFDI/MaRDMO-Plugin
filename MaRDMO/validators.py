@@ -13,7 +13,8 @@ Provides:
 - :func:`validate_properties`        — rejects mutually exclusive data-property combinations
 - :func:`validate_single_line`       — rejects line breaks in textarea answers exported as text
 - :func:`validate_url`               — rejects URLs that can never become valid while typing
-- :func:`validate_reference`         — DOI or URL check, depending on the selected option
+- :func:`validate_swmath`            — rejects swMATH IDs that are not numbers
+- :func:`validate_reference`         — DOI, URL or swMATH check, depending on the selected option
 
 Shared rules, also used by the documentation checker (:mod:`~MaRDMO.checks`)
 and the preview templates (:mod:`~MaRDMO.templatetags.mardmo_tags`), so that
@@ -23,6 +24,8 @@ all three always agree:
 - :func:`has_equivalence_sign`      — whether a defining formula contains ``≡``
 - :func:`url_problem`               — what is wrong with a complete URL
 - :func:`url_typing_problem`        — progressive URL check while typing (pre-save)
+- :func:`doi_problem`               — what is wrong with a complete DOI
+- :func:`swmath_problem`            — what is wrong with a swMATH work ID
 '''
 
 import ipaddress
@@ -35,7 +38,10 @@ from rest_framework.exceptions import ValidationError
 from .getters import get_mathmoddb, get_options
 from .helpers import extract_parts
 from .model.constants import data_properties_check
-from .patterns import DOI_RE, LINE_BREAK_RE, QUDT_ID_RE, URL_FORBIDDEN_CHARS_RE, URL_HOST_RE
+from .patterns import (
+    DOI_RE, DOI_STRICT_RE, LINE_BREAK_RE, QUDT_ID_RE, SWMATH_ID_RE,
+    URL_FORBIDDEN_CHARS_RE, URL_HOST_RE,
+)
 
 SHORT_DESCRIPTION_MAX_LENGTH = 2000
 
@@ -157,6 +163,45 @@ def url_typing_problem(url, schemes=WEB_URL_SCHEMES):
             return _scheme_message(schemes)
     elif not any(f'{scheme}://'.startswith(lowered) for scheme in schemes):
         return _scheme_message(schemes)
+    return None
+
+
+def _looks_like_link(text):
+    '''Return ``True`` if *text* looks like a pasted link instead of a bare identifier.'''
+    lowered = text.lower()
+    return lowered.startswith(('http:', 'https:', 'www.', 'doi:')) or '.org/' in lowered
+
+
+def doi_problem(doi):
+    '''Return what is wrong with a complete DOI, or ``None`` if it is valid.
+
+    Used by the preview, the documentation checker, and the export (the
+    pre-save validator uses the progressive :data:`~MaRDMO.patterns.DOI_RE`).
+    '''
+    doi = (doi or '').strip()
+    if not doi:
+        return None
+    if _looks_like_link(doi):
+        return 'Enter only the DOI (e.g. 10.1000/xyz123), not the link'
+    if not DOI_STRICT_RE.match(doi):
+        return 'DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)'
+    return None
+
+
+def swmath_problem(swmath_id):
+    '''Return what is wrong with a swMATH work ID, or ``None`` if it is valid.
+
+    swMATH IDs are numbers; the same rule applies while typing and when
+    complete, so it is used by all four places (pre-save, preview, checks,
+    export).
+    '''
+    swmath_id = (swmath_id or '').strip()
+    if not swmath_id:
+        return None
+    if _looks_like_link(swmath_id) or '/' in swmath_id:
+        return 'Enter only the swMATH number (e.g. 7554), not the link'
+    if not SWMATH_ID_RE.match(swmath_id):
+        return 'swMATH ID must be a number (e.g. 7554)'
     return None
 
 
@@ -286,7 +331,11 @@ def validate_doi(instance):
     opts = get_options()
     if instance.option.uri not in (opts.get('DOI'), opts.get('YesText')):
         return
-    if not DOI_RE.match(instance.text):
+    if _looks_like_link(instance.text.strip()):
+        raise ValidationError({
+            'text': [_('Enter only the DOI (e.g. 10.1000/xyz123), not the link.')]
+        })
+    if not DOI_RE.match(instance.text.strip()):
         raise ValidationError({
             'text': [_('Invalid DOI. Expected format: 10.XXXX/suffix (e.g. 10.1000/xyz123).')]
         })
@@ -316,14 +365,35 @@ def validate_url(instance):
         raise ValidationError({'text': [problem]})
 
 
-def validate_reference(instance):
-    '''Validate a reference or documentation answer: DOI or URL, depending on the option.
+def validate_swmath(instance):
+    '''Reject a swMATH work ID that is not a number.
 
-    Registered for questions whose options include both DOI and URL entries;
+    Triggers only for the swMATH option with non-empty text.
+
+    Args:
+        instance: RDMO ``Value`` instance about to be saved.
+
+    Raises:
+        ValidationError: when the text is not a plain number.
+    '''
+    if not instance.option or not instance.text:
+        return
+    if instance.option.uri != get_options().get('SWMATH'):
+        return
+    problem = swmath_problem(instance.text)
+    if problem:
+        raise ValidationError({'text': [problem]})
+
+
+def validate_reference(instance):
+    '''Validate a reference or documentation answer: DOI, URL, or swMATH ID, depending on the option.
+
+    Registered for questions whose options include several of these entries;
     each validator only reacts to its own options.
     '''
     validate_doi(instance)
     validate_url(instance)
+    validate_swmath(instance)
 
 
 def validate_properties(instance):

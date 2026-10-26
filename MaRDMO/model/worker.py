@@ -211,7 +211,8 @@ class PrepareModel(PublicationExport):
         # Construct Item Payloads
         payload.add_item_payload()
 
-        # Mark Relations that already exist on the Portal
+        # Reject malformed DOIs (publications), then mark existing Relations
+        payload.validate_identifiers()
         payload.check_existing_relations(
             sparql_endpoint = get_url('mardi', 'sparql'),
             api_url = get_url('mardi', 'api'),

@@ -25,7 +25,7 @@ import time
 import requests
 
 from .queries import query_item, query_sparql, sparql_string
-from .validators import REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, url_problem
+from .validators import REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, doi_problem, swmath_problem, url_problem
 
 _logger = logging.getLogger(__name__)
 
@@ -569,35 +569,47 @@ class GeneratePayload:
         for idx, key in enumerate(relation_keys):
             self.state.dictionary[key]['exists'] = check.get(f'RELATION{idx}', 'false')
 
-    def validate_urls(self):
-        '''Reject URL values the portal would refuse, before anything is posted.
+    def validate_identifiers(self):
+        '''Reject malformed URLs, DOIs and swMATH IDs before anything is posted.
 
-        Applies the strict rule (:func:`~MaRDMO.validators.url_problem`) to every
-        URL statement and qualifier.  This catches values that bypassed the
-        pre-save validator, the preview and the checks, so an export never fails
-        halfway because of a malformed URL.
+        Applies the strict rules from :mod:`~MaRDMO.validators` to every URL
+        statement and qualifier and to every "DOI" and "swMath work ID" value.
+        This catches values that bypassed the pre-save validator, the preview
+        and the checks, so an export never fails halfway because of them.
 
         Raises:
-            ValueError: One argument per invalid URL, naming item and property.
+            ValueError: One argument per invalid value, naming item and property.
         '''
         properties = self.wikibase['properties']
         pid_to_name = {pid: name for name, pid in properties.items()}
         repository_pid = properties.get('source code repository URL')
+        doi_pid = properties.get('DOI')
+        swmath_pid = properties.get('swMath work ID')
         errors = []
 
         def check(item_name, prop_id, value):
-            schemes = REPOSITORY_URL_SCHEMES if prop_id == repository_pid else WEB_URL_SCHEMES
             text = value if isinstance(value, str) else ''
-            problem = url_problem(text, schemes) if text else None
+            if not text:
+                return
+            if prop_id == doi_pid:
+                problem = doi_problem(text)
+            elif prop_id == swmath_pid:
+                problem = swmath_problem(text)
+            else:
+                schemes = REPOSITORY_URL_SCHEMES if prop_id == repository_pid else WEB_URL_SCHEMES
+                problem = url_problem(text, schemes)
             if problem:
                 shown = text if len(text) <= 60 else f'{text[:57]}...'
                 errors.append(f'"{item_name}", {pid_to_name.get(prop_id, prop_id)}: {problem} ("{shown}")')
 
+        def relevant(prop_id, data_type):
+            return data_type in ('url', 'URL') or prop_id in (doi_pid, swmath_pid)
+
         def check_statement(item_name, prop_id, data_type, value, qualifiers):
-            if data_type in ('url', 'URL'):
+            if relevant(prop_id, data_type):
                 check(item_name, prop_id, value)
             for qualifier in qualifiers or []:
-                if qualifier['property']['data_type'] in ('url', 'URL'):
+                if relevant(qualifier['property']['id'], qualifier['property']['data_type']):
                     check(item_name, qualifier['property']['id'], qualifier['value']['content'])
 
         for key, entry in self.state.dictionary.items():

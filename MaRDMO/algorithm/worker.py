@@ -154,8 +154,8 @@ class PrepareAlgorithm(PublicationExport):
         # Construct Item Payloads
         payload.add_item_payload()
 
-        # Reject malformed URLs, then mark Relations that already exist on the Portal
-        payload.validate_urls()
+        # Reject malformed URLs/DOIs/swMATH IDs, then mark existing Relations
+        payload.validate_identifiers()
         payload.check_existing_relations(
             sparql_endpoint = get_url('mardi', 'sparql'),
             api_url = get_url('mardi', 'api'),

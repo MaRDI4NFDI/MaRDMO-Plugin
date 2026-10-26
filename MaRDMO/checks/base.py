@@ -13,7 +13,7 @@ from ..getters import get_mathmoddb, get_mathalgodb
 from ..getters import get_options
 from ..helpers import find_reference
 from ..patterns import LINE_BREAK_RE
-from ..validators import short_description_problem, url_problem, url_schemes
+from ..validators import doi_problem, short_description_problem, swmath_problem, url_problem, url_schemes
 
 # Reference answers to check: (option key, label in messages, noun for "no ... provided")
 SOFTWARE_REFERENCE_CHECKS = (
@@ -139,7 +139,7 @@ class ChecksBase:
                 self.err.append(self._error(parent_class, parent_page, f'{message} ({label})'))
 
     def _check_references(self, references, section, page_name, checks):
-        '''Check selected reference options: value present, URLs valid.
+        '''Check selected reference options: value present; DOI, swMATH ID and URLs valid.
 
         References are looked up by option, not by position (see
         :func:`~MaRDMO.helpers.find_reference`).
@@ -158,8 +158,15 @@ class ChecksBase:
                 continue
             if not entry[1]:
                 self.err.append(self._error(section, page_name, f'{label} selected, but no {noun} provided!'))
-            elif noun == 'URL':
-                problem = url_problem(entry[1], url_schemes(options[option_key]))
+            else:
+                if noun == 'URL':
+                    problem = url_problem(entry[1], url_schemes(options[option_key]))
+                elif option_key == 'DOI':
+                    problem = doi_problem(entry[1])
+                elif option_key == 'SWMATH':
+                    problem = swmath_problem(entry[1])
+                else:
+                    problem = None
                 if problem:
                     self.err.append(self._error(section, page_name, f'Invalid {label}: {problem}'))
 
@@ -188,6 +195,11 @@ class ChecksBase:
                 self.err.append(self._error(
                     'Process Step', page_name,
                     f'Invalid {context_label} URL: {url_problem(entry[1])}'
+                ))
+            elif entry[0] == options['DOI'] and doi_problem(entry[1]):
+                self.err.append(self._error(
+                    'Process Step', page_name,
+                    f'Invalid {context_label} DOI: {doi_problem(entry[1])}'
                 ))
 
     def _check_flexible(
@@ -397,6 +409,15 @@ class ChecksBase:
                         section = 'Publication',
                         page    = page_name,
                         message = 'Missing Publication DOI'
+                    )
+                )
+            doi = find_reference(ivalue.get('reference'), get_options()['DOI'])
+            if doi and doi_problem(doi[1]):
+                self.err.append(
+                    self._error(
+                        section = 'Publication',
+                        page    = page_name,
+                        message = f'Invalid Publication DOI: {doi_problem(doi[1])}'
                     )
                 )
 
