@@ -282,8 +282,9 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         (relation resolution, publication retrieval, etc.), and returns the
         structured answers dict alongside the global options dict.
 
-        Supports the model, algorithm, and workflow documentation catalogs.
-        The search catalog is handled by :class:`MaRDMOQueryProvider`.
+        Supports the model, algorithm, and workflow documentation catalogs;
+        callers check the catalog beforehand.  The search catalog is handled
+        by :class:`MaRDMOQueryProvider`.
 
         Args:
             mode: ``'preview'`` additionally fetches publication metadata and
@@ -298,20 +299,7 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         options = get_options()
 
         catalog_slug = str(self.project.catalog).rsplit('/', 1)[-1]
-        entry = _CATALOG_PREPARE_MAP.get(catalog_slug)
-
-        if not entry:
-            return render(
-                self.request,
-                'core/error.html',
-                {
-                    'title': _('Unknown catalog'),
-                    'errors': [_('Cannot handle this catalog type.')]
-                },
-                status=400
-            )
-
-        question_set, PrepareClass, _ = entry
+        question_set, prepare_class, _check_method = _CATALOG_PREPARE_MAP[catalog_slug]
         questions = get_questions(question_set) | get_questions('publication')
         answers = process_question_dict(
             project=self.project,
@@ -330,7 +318,7 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                 options=options
             )
 
-        prepare = PrepareClass()
+        prepare = prepare_class()
         answers = prepare.preview(answers)
 
         return answers, options
@@ -441,7 +429,8 @@ class MaRDMOQueryProvider(Export):
 
         Reads the search configuration from RDMO project values and dispatches
         to the :func:`~MaRDMO.search.worker.search` function to retrieve
-        matching items from the MaRDI Portal, MathModDB KG, or MathAlgoDB KG.
+        matching items from the MaRDI Portal.  Callers check beforehand that
+        the project uses the search catalog.
 
         Returns:
             Tuple ``(answers, options)`` where *answers* contains the search
@@ -449,25 +438,10 @@ class MaRDMOQueryProvider(Export):
         '''
         options = get_options()
 
-        if str(self.project.catalog).endswith('mardmo-search-catalog'):
-            questions = get_questions('search')
-
-            answers = process_question_dict(
-                project = self.project,
-                questions = questions,
-                get_answer = get_answers
-            )
-
-            answers = search(answers, options)
-
-            return answers, options
-
-        return render(
-            self.request,
-            'core/error.html',
-            {
-                'title': _('Unknown catalog'),
-                'errors': [_('Cannot handle this catalog type.')]
-            },
-            status=400
+        answers = process_question_dict(
+            project = self.project,
+            questions = get_questions('search'),
+            get_answer = get_answers
         )
+
+        return search(answers, options), options
