@@ -921,9 +921,9 @@ class Publication:
             ),
             # Get Title
             'title': data.get('title'),
-            # Get Date
+            # Get Date ('issued' is the CSL standard, 'published' Crossref-specific)
             'date': date_format(
-                data.get('published', {}).get('date-parts', [[]])[0]
+                (data.get('published') or data.get('issued') or {}).get('date-parts', [[]])[0]
             ),
             # Get Volume
             'volume': data.get('volume'),

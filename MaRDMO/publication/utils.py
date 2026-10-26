@@ -36,6 +36,10 @@ from ..constants import BASE_URI
 from ..getters import get_items, get_properties, get_sparql_query, get_url
 from ..queries import query_sparql, query_sparql_pool
 
+# Timeout (seconds) for each external metadata request (Crossref, DataCite,
+# zbMATH, DOI resolver, ORCID); the sources are queried in parallel
+REQUEST_TIMEOUT = 10
+
 def additional_queries(publication, choice, key, parameter, function):
     '''Run supplemental Wikidata and MaRDI Portal SPARQL queries for a sub-entity type.
 
@@ -396,7 +400,7 @@ def get_crossref_data(doi):
     try:
         request = requests.get(
             f"https://api.crossref.org/works/{doi}",
-            timeout = 5
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
@@ -416,7 +420,7 @@ def get_datacite_data(doi):
     try:
         request = requests.get(
             f"https://api.datacite.org/dois/{doi}",
-            timeout = 5
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
@@ -437,7 +441,7 @@ def get_doi_data(doi):
         request = requests.get(
             f"https://citation.doi.org/metadata?doi={doi}",
             headers = {"accept": "application/json"},
-            timeout = 0.0000001
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
@@ -457,7 +461,7 @@ def get_zbmath_data(doi):
     try:
         request = requests.get(
             f"https://api.zbmath.org/v1/document/_structured_search?page=0&results_per_page=100&DOI={doi}",
-            timeout = 5
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
@@ -479,7 +483,7 @@ def get_orcids(doi):
         request = requests.get(
             f'https://pub.orcid.org/v3.0/search/?q=doi-self:"{doi}"',
             headers = {'Accept': 'application/json'},
-            timeout = 5
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
@@ -501,7 +505,7 @@ def get_author_by_orcid(orcid_id):
         request = requests.get(
             f"https://pub.orcid.org/v3.0/{orcid_id}/personal-details",
             headers = {'Accept': 'application/json'},
-            timeout = 5
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
