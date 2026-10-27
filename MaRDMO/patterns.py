@@ -96,6 +96,19 @@ the documentation checker (:mod:`~MaRDMO.checks.base`), and the preview template
 '''
 
 # ---------------------------------------------------------------------------
+# Formula patterns
+# ---------------------------------------------------------------------------
+
+FORMULA_WHITESPACE_RE = re.compile(r'[\r\n\t\v\f]+')
+'''Line breaks and tabs in a formula, replaced by a space before the TeX check and the export.
+
+TeX treats them as spaces, the MaRDI Portal rejects them in math values.
+'''
+
+TEX_COMMENT_RE = re.compile(r'(?:^|[^\\])(?:\\\\)*%')
+'''A ``%`` that starts a TeX comment, i.e. not escaped as ``\\%``.'''
+
+# ---------------------------------------------------------------------------
 # URL patterns
 # ---------------------------------------------------------------------------
 

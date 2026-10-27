@@ -25,6 +25,8 @@ all three always agree:
 
 - :func:`short_description_problem` — what is wrong with a short description
 - :func:`has_equivalence_sign`      — whether a defining formula contains ``≡``
+- :func:`normalize_formula`         — a formula as one line, as checked and exported
+- :func:`formula_comment_problem`   — a ``%`` comment that joining the lines would break
 - :func:`url_problem`               — what is wrong with a complete URL
 - :func:`url_typing_problem`        — progressive URL check while typing (pre-save)
 - :func:`doi_problem`               — what is wrong with a complete DOI
@@ -46,7 +48,7 @@ from .helpers import extract_parts
 from .model.constants import data_properties_check
 from .patterns import (
     DOI_RE, DOI_STRICT_RE, LINE_BREAK_RE, QUDT_ID_RE, SWMATH_ID_RE,
-    COUNT_RE, COUNT_STRICT_RE, SIZE_RE, SIZE_STRICT_RE,
+    COUNT_RE, COUNT_STRICT_RE, FORMULA_WHITESPACE_RE, SIZE_RE, SIZE_STRICT_RE, TEX_COMMENT_RE,
     URL_FORBIDDEN_CHARS_RE, URL_HOST_RE, YEAR_RE, YEAR_STRICT_RE,
 )
 
@@ -229,6 +231,30 @@ def archive_year_problem(year):
 def has_equivalence_sign(formula):
     '''Return ``True`` if *formula* contains an equivalence sign (``\\equiv`` or ``≡``).'''
     return isinstance(formula, str) and any(sign in formula for sign in EQUIVALENCE_SIGNS)
+
+
+def normalize_formula(tex):
+    '''Return *tex* as one line: line breaks and tabs become spaces, outer whitespace is removed.
+
+    The MaRDI Portal rejects line breaks, tabs and leading/trailing whitespace
+    in math values.  TeX reads a line break as a space, so the formula keeps
+    its meaning (``\\\\`` line breaks are untouched), except after a ``%``
+    comment, see :func:`formula_comment_problem`.  Used by the TeX check and
+    the export.
+    '''
+    return FORMULA_WHITESPACE_RE.sub(' ', str(tex or '')).strip()
+
+
+def formula_comment_problem(tex):
+    '''Return what is wrong with a multi-line formula containing a ``%`` comment, or ``None``.
+
+    A comment runs to the end of its line; once the lines are joined for the
+    export it would hide the rest of the formula.  ``\\%`` (a percent sign)
+    is fine.
+    '''
+    if isinstance(tex, str) and LINE_BREAK_RE.search(tex) and TEX_COMMENT_RE.search(tex):
+        return 'contains a % comment, which would hide the rest of the formula (use \\% for a percent sign)'
+    return None
 
 
 def validate_single_line(instance):

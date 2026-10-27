@@ -28,6 +28,7 @@ from django.utils.html import format_html
 
 from ..getters import get_options
 from ..patterns import LINE_BREAK_RE
+from ..validators import formula_comment_problem
 from ..validators import has_equivalence_sign as _has_equivalence_sign
 from ..validators import short_description_problem
 from ..validators import archive_year_problem as _archive_year_problem
@@ -124,8 +125,15 @@ def formula(tex, verdict=None):
     swallow the rest of the line); the browser fills ``mardmo-tex-hint`` with
     MathJax's explanation.  Other formulas are wrapped in ``mardmo-formula``,
     so the browser can show them as raw TeX if MathJax cannot render them.
-    Formulas that could not be checked get a note.
+    Formulas that could not be checked get a note, multi-line formulas with a
+    ``%`` comment a marker (see :func:`~MaRDMO.validators.formula_comment_problem`).
     '''
+    comment = formula_comment_problem(tex)
+    if comment:
+        return format_html(
+            '<code class="mardmo-tex">{}</code> <strong class="mardmo-error">INVALID FORMULA: {}</strong>',
+            tex, comment.upper(),
+        )
     if verdict == UNAVAILABLE:
         return format_html(
             '<span class="mardmo-formula" data-tex="{}">\\( {} \\)</span> '

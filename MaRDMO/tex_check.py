@@ -20,6 +20,7 @@ import requests
 from django.core.cache import cache
 
 from .constants import TEX_CHECK_URL
+from .validators import normalize_formula
 
 logger = logging.getLogger(__name__)
 
@@ -99,7 +100,8 @@ def check_formulas(formulas):
         message (e.g. ``"syntax error"``) for invalid ones, and
         :data:`UNAVAILABLE` when the checker could not be reached.
     '''
-    unique = sorted({tex.strip() for tex in formulas if isinstance(tex, str) and tex.strip()})
+    # checked as exported: on one line, see normalize_formula
+    unique = sorted({normalize_formula(tex) for tex in formulas if isinstance(tex, str)} - {''})
     if not unique:
         return {}
     with ThreadPool(processes=min(len(unique), _MAX_THREADS)) as pool:
@@ -126,9 +128,9 @@ def collect_formulas(answers):
 
 def verdict(verdicts, tex):
     '''Look up the verdict for *tex* in a :func:`check_formulas` result.'''
-    if not isinstance(tex, str) or not tex.strip():
+    if not isinstance(tex, str) or not normalize_formula(tex):
         return None
-    return verdicts.get(tex.strip())
+    return verdicts.get(normalize_formula(tex))
 
 
 def annotate_formulas(answers):

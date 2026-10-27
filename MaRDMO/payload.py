@@ -26,7 +26,9 @@ import requests
 
 from .patterns import QUANTITY_AMOUNT_RE
 from .queries import query_item, query_sparql, sparql_string
-from .validators import REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, doi_problem, swmath_problem, url_problem
+from .validators import (
+    REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, doi_problem, normalize_formula, swmath_problem, url_problem,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -66,10 +68,12 @@ def _clean_text(text):
 
 
 def _strip_text(value, data_type):
-    '''Apply :func:`_clean_text` to text values.
+    '''Apply :func:`_clean_text` to text values and put formulas on one line.
 
-    Values of non-text datatypes are returned unchanged.
+    Values of other datatypes are returned unchanged.
     '''
+    if data_type == 'math' and isinstance(value, str):
+        return normalize_formula(value)
     if data_type not in _TEXT_TYPES:
         return value
     if isinstance(value, str):
@@ -1141,7 +1145,7 @@ class GeneratePayload:
             'url': self._statement_url(item),
             'payload': self._build_statement(
                 statement['property_id'],
-                statement['value'],
+                _strip_text(statement['value'], statement['datatype']),
                 statement['datatype'],
                 qualifier
             )

@@ -9,7 +9,7 @@ from ..model.constants import (
 from ..constants import BASE_URI, CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..patterns import QUDT_ID_STRICT_RE
 from ..tex_check import UNAVAILABLE, check_formulas, collect_formulas, verdict
-from ..validators import has_equivalence_sign
+from ..validators import formula_comment_problem, has_equivalence_sign
 
 
 class ModelMixin:
@@ -27,6 +27,8 @@ class ModelMixin:
         '''
         verdicts = getattr(self, '_tex_verdicts', {})
         for number, tex in enumerate((ivalue.get('Formula') or {}).values(), start=1):
+            if comment := formula_comment_problem(tex):
+                self.err.append(self._error(section, page_name, f'Invalid Formula {number}: {comment}'))
             problem = verdict(verdicts, tex)
             if problem and problem != UNAVAILABLE:
                 self.err.append(self._error(
@@ -36,6 +38,8 @@ class ModelMixin:
                 ))
         for element in (ivalue.get('element') or {}).values():
             symbol = element.get('symbol') if isinstance(element, dict) else None
+            if comment := formula_comment_problem(symbol):
+                self.err.append(self._error(section, page_name, f'Invalid Symbol "{symbol}": {comment}'))
             problem = verdict(verdicts, symbol)
             if problem and problem != UNAVAILABLE:
                 self.err.append(self._error(
