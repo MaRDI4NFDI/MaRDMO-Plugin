@@ -10,10 +10,12 @@ Provides:
 - :func:`check_formulas`   — portal verdict for a set of formulas (parallel, cached)
 - :func:`collect_formulas` — all formulas and symbols of a model answers dict
 - :func:`annotate_formulas` — store the verdicts next to the formulas for the preview
+- :func:`environment_hint` — explanation for a rejection caused by an unsupported environment
 - :data:`UNAVAILABLE`      — verdict when the checker could not be reached
 '''
 import hashlib
 import logging
+import re
 from multiprocessing.pool import ThreadPool
 
 import requests
@@ -35,6 +37,33 @@ _MAX_THREADS = 8
 
 # Answer sections whose entries carry defining formulas and formula elements
 _FORMULA_SECTIONS = ('formulation', 'quantity')
+
+# Environments accepted by the portal's checker (tested against production,
+# 2026-10-27).  Starred variants (align*) and e.g. equation, gather, split or
+# multline are rejected with a bare "syntax error", which environment_hint explains.
+SUPPORTED_ENVIRONMENTS = (
+    'aligned', 'alignedat', 'align', 'cases', 'array',
+    'matrix', 'pmatrix', 'bmatrix', 'Bmatrix', 'vmatrix', 'Vmatrix', 'smallmatrix',
+)
+_ENVIRONMENT_RE = re.compile(r'\\begin\s*\{([^}]*)\}')
+
+
+def environment_hint(tex):
+    '''Explain a rejected formula that uses environments the portal does not support, or ``None``.
+
+    The portal's checker only answers "syntax error"; KaTeX and MathJax render
+    these environments, so without a hint the rejection is hard to understand.
+    '''
+    unsupported = sorted({
+        name.strip() for name in _ENVIRONMENT_RE.findall(tex or '')
+        if name.strip() not in SUPPORTED_ENVIRONMENTS
+    })
+    if not unsupported:
+        return None
+    return (
+        f'{", ".join(unsupported)} {"is" if len(unsupported) == 1 else "are"} not supported; '
+        f'supported environments are {", ".join(SUPPORTED_ENVIRONMENTS)}'
+    )
 
 
 def _cache_key(tex):

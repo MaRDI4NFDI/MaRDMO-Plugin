@@ -38,7 +38,7 @@ from ..validators import doi_problem as _doi_problem
 from ..validators import swmath_problem as _swmath_problem
 from ..validators import url_problem as _url_problem
 from ..validators import url_schemes
-from ..tex_check import UNAVAILABLE
+from ..tex_check import UNAVAILABLE, environment_hint
 
 register = template.Library()
 
@@ -140,6 +140,14 @@ def formula(tex, verdict=None):
             '<span class="mardmo-note">(not verified by the MaRDI Portal)</span>', tex, tex
         )
     if verdict:
+        hint = environment_hint(tex)
+        if hint:
+            # environment names are case-sensitive (bmatrix, Bmatrix), so the hint keeps its case
+            return format_html(
+                '<code class="mardmo-tex">{}</code> <strong class="mardmo-error">'
+                'INVALID FORMULA: {} (MARDI PORTAL)</strong> <span class="mardmo-error">– {}</span>',
+                tex, str(verdict).upper(), hint,
+            )
         return format_html(
             '<code class="mardmo-tex">{}</code> <strong class="mardmo-error">'
             'INVALID FORMULA: {} (MARDI PORTAL)<span class="mardmo-tex-hint" data-tex="{}"></span>'

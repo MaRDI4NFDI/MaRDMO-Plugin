@@ -8,7 +8,7 @@ from ..model.constants import (
 )
 from ..constants import BASE_URI, CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..patterns import QUDT_ID_STRICT_RE
-from ..tex_check import UNAVAILABLE, check_formulas, collect_formulas, verdict
+from ..tex_check import UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
 from ..validators import formula_comment_problem, has_equivalence_sign
 
 
@@ -31,10 +31,11 @@ class ModelMixin:
                 self.err.append(self._error(section, page_name, f'Invalid Formula {number}: {comment}'))
             problem = verdict(verdicts, tex)
             if problem and problem != UNAVAILABLE:
+                hint = environment_hint(tex)
                 self.err.append(self._error(
                     section, page_name,
                     f'Invalid Formula {number}: rejected by the MaRDI Portal ({problem}), '
-                    'see the preview for details'
+                    + (hint or 'see the preview for details')
                 ))
         for element in (ivalue.get('element') or {}).values():
             symbol = element.get('symbol') if isinstance(element, dict) else None
