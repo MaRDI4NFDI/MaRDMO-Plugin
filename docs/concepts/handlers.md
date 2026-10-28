@@ -37,20 +37,16 @@ The batching principle ensures that the number of SPARQL queries scales with the
 
 ## Pre-Save Validation
 
-In addition to the post-save handler dispatch, MaRDMO registers a `pre_save` receiver on the RDMO `Value` model.  Before every questionnaire answer is written to the database, the router looks up the attribute URI in `PRESAVE_VALIDATOR_MAP` and calls the matching validator function if one is registered.  A validator raises `rest_framework.exceptions.ValidationError` to reject the value; RDMO surfaces the error message inline next to the offending question in the interview UI without disrupting the rest of the page.
+In addition to the post-save handler dispatch, MaRDMO registers a `pre_save`
+receiver on the RDMO `Value` model.  Before an answer is written to the
+database, the router looks up the attribute URI in `PRESAVE_VALIDATOR_MAP`
+(assembled by `build_presave_validator_map()` in `builders.py`) and calls the
+matching validator.  A validator raises `rest_framework.exceptions.ValidationError`
+to reject the value; RDMO then shows the message below the question in the
+interview.
 
-`PRESAVE_VALIDATOR_MAP` is assembled once at startup by `build_presave_validator_map()` and covers the model, algorithm, and workflow catalogs.  Four validators are provided:
-
-| Validator | Applies to | What it checks |
-|---|---|---|
-| `validate_value_format` | Relation questions | Text must match `Label (Description)` or `Label (Description) [source]` |
-| `validate_short_description` | Description questions | Text must not exceed 2000 characters |
-| `validate_qudt_id` | QUDT reference questions | Text must match `^[A-Z][a-zA-Z_\-]*$` when an option is selected |
-| `validate_properties` | Data-property questions | Selected options must not form a mutually exclusive pair |
-
-Pre-save validation only guards **user input**.  When handlers write portal-fetched data programmatically via `value_editor()`, those writes also trigger `pre_save`.  To prevent valid portal data from being incorrectly rejected, `adders.py` sanitizes the data before calling `value_editor()`:
-
-- **`add_properties`** — collects all incoming property option URIs, identifies every mutually exclusive pair, and silently drops the entire conflicting pair.  Neither side can be judged correct when the portal itself reports a contradiction.
-- **`add_references`** — skips any QUDT reference entry whose text does not match `^[A-Z][a-zA-Z_\-]+$` (strict format required for complete portal data).
-
-Any values dropped during sanitization are surfaced by the documentation checker at export time, prompting the user to correct them manually.
+Writes made by the handlers themselves run inside `helpers.internal_write()` and
+skip these validators, so importing an item never fails because of a pre-save
+rule; imported data is checked before the export instead.  The rules, the
+places where they are applied, and the exceptions are described in
+[Validation](validation.md).

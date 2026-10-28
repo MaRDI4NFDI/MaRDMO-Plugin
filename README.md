@@ -28,7 +28,7 @@ In addition to documentation, MaRDMO provides a dedicated interview for searchin
   
 ## MaRDMO Plugin Installation
 
-To use the MaRDMO Plugin at least `RDMO v2.5.0` is required. Follow the installation / update instructions of [RDMO](https://rdmo.readthedocs.io/en/latest/installation) if required. 
+To use the MaRDMO Plugin at least `RDMO v2.5.1` is required. Follow the installation / update instructions of [RDMO](https://rdmo.readthedocs.io/en/latest/installation) if required. 
 
 Go to the `rdmo-app` directory of your RDMO installation. In the virtual environment of the RDMO installation install the MaRDMO Plugin:
 
@@ -150,6 +150,8 @@ MARDMO_PROVIDER = {
 ``` 
 Contact the MaRDI consortium for the individual credentials.
 
+Formulas entered in the questionnaires are checked with the TeX checker of the MaRDI Portal before the export, so the RDMO server needs to be able to reach the MaRDI Portal. No credentials are needed for this check.
+
 ## MaRDMO-Questionnaire        
 
 The MaRDMO Plugin requires the [MaRDMO-Questionnaire](https://github.com/MarcoReidelbach/MaRDMO-Questionnaire), download its latest release [![Latest Release](https://img.shields.io/github/v/release/MarcoReidelbach/MaRDMO-Questionnaire)](https://github.com/MarcoReidelbach/MaRDMO-Questionnaire/releases/latest).
@@ -162,7 +164,7 @@ python manage.py import /path/to/MaRDMO-Questionnaire/catalog/optionsets.xml
 python manage.py import /path/to/MaRDMO-Questionnaire/catalog/conditions.xml
 python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-search-catalog.xml
 python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-model-catalog.xml
-python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-model-basic-catalog.xml
+python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-model-basics-catalog.xml
 python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-interdisciplinary-workflow-catalog.xml
 python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-algorithm-catalog.xml
 ```

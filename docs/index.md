@@ -21,7 +21,7 @@ MaRDMO provides five catalogs:
 
 ## Prerequisites
 
-- RDMO ≥ 2.4.1 — see the [RDMO installation guide](https://rdmo.readthedocs.io/en/latest/installation) if an update is needed.
+- RDMO ≥ 2.5.1 — see the [RDMO installation guide](https://rdmo.readthedocs.io/en/latest/installation) if an update is needed.
 
 ## Installation
 
@@ -56,7 +56,7 @@ path('services/', include("MaRDMO.urls")),
 
 ## Portal Connection
 
-Add the following to `config/settings/local.py` to connect MaRDMO to the MaRDI Portal and Wikidata:
+Add the following to `config/settings/local.py` to connect MaRDMO to the MaRDI Portal:
 
 ```python
 MARDMO_PROVIDER = {
@@ -70,15 +70,15 @@ MARDMO_PROVIDER = {
         'oauth2_client_id':    '',
         'oauth2_client_secret': '',
     },
-    'wikidata': {
-        'uri':    'https://www.wikidata.org',
-        'api':    'https://www.wikidata.org/w/api.php',
-        'sparql': 'https://query-main.wikidata.org/sparql',
-    },
 }
 ```
 
-Contact the MaRDI consortium for OAuth2 credentials.
+Contact the MaRDI consortium for OAuth2 credentials.  Wikidata needs no
+configuration; its endpoints are built into MaRDMO.
+
+Formulas entered in the questionnaires are checked with the TeX checker of the
+MaRDI Portal before the export, so the RDMO server needs to be able to reach the
+MaRDI Portal.  No credentials are needed for this check.
 
 ## Questionnaire Import
 

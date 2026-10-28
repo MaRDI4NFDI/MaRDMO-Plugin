@@ -214,8 +214,8 @@ def split_value(
     object_role: Optional[Callable[[Any], bool]] = None,
 ) -> list:
     """
-    Split data[key]['value'] on ' <|> '. Optionally apply a transform
-    to each element and filter the results with `object_role`.
+    Split ``data[key]['value']`` on ``' <|> '``. Optionally apply a transform
+    to each element and filter the results with ``object_role``.
     """
     if key not in data:
         return []

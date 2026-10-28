@@ -147,7 +147,7 @@ MaRDMO communicates with the MaRDI Portal using a defined set of items and prope
 | use | [Q6480405](https://portal.mardi4nfdi.de/wiki/Item:Q6480405) |
 | weak formulation | [Q6775618](https://portal.mardi4nfdi.de/wiki/Item:Q6775618) |
 
-## Properties (67)
+## Properties (66)
 
 | Label | PID |
 |---|---|
@@ -202,7 +202,6 @@ MaRDMO communicates with the MaRDI Portal using a defined set of items and prope
 | quantity_property | [P149](https://portal.mardi4nfdi.de/wiki/Property:P149) |
 | QUDT constant ID | [P1693](https://portal.mardi4nfdi.de/wiki/Property:P1693) |
 | QUDT quantity kind ID | [P1654](https://portal.mardi4nfdi.de/wiki/Property:P1654) |
-| series ordinal | [P146](https://portal.mardi4nfdi.de/wiki/Property:P146) |
 | similar to | [P1691](https://portal.mardi4nfdi.de/wiki/Property:P1691) |
 | solved by | [P1578](https://portal.mardi4nfdi.de/wiki/Property:P1578) |
 | source code repository URL | [P339](https://portal.mardi4nfdi.de/wiki/Property:P339) |
