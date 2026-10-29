@@ -14,10 +14,12 @@ Both maps are assembled once at startup via
 :func:`~MaRDMO.builders.build_post_save_handler_set` and
 :func:`~MaRDMO.builders.build_post_delete_handler_set`.
 
-Before every ``Value`` save the pre-save router looks up the attribute URI in
-``PRESAVE_VALIDATOR_MAP`` and calls the matching validator, which may raise
-``ValidationError`` to reject the value and surface an error in the UI.
-``PRESAVE_VALIDATOR_MAP`` is assembled explicitly by
+Before a ``Value`` is saved through the interview, the pre-save router looks up
+the attribute URI in ``PRESAVE_VALIDATOR_MAP`` and calls the matching validator,
+which may raise ``ValidationError`` to reject the value and surface an error in
+the UI.  Saves from anywhere else (project import, management commands,
+MaRDMO's own writes) are not validated there; preview, checks and export
+check all values.  ``PRESAVE_VALIDATOR_MAP`` is assembled explicitly by
 :func:`~MaRDMO.builders.build_presave_validator_map`.
 
 All maps are assembled once at startup.
@@ -32,8 +34,12 @@ Provides:
 - ``mardmo_router_pre_save``    — receiver wired to Django's ``pre_save`` on ``Value``
 '''
 
+from contextvars import ContextVar
+
+from django.core.signals import request_finished, request_started
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
+from django.urls import Resolver404, resolve
 from rdmo.projects.models import Value
 from rdmo.projects.signals import value_created, value_updated
 from .constants import (
@@ -67,6 +73,53 @@ def _catalog_name(instance):
     if not catalog or not str(catalog).endswith(_MARDMO_CATALOGS):
         return None
     return str(catalog).rsplit("/", maxsplit=1)[-1]
+
+
+# Path of the request handled in the current context, set by request_started
+_request_path = ContextVar('mardmo_request_path', default=None)
+
+# The interview saves answers through RDMO's project value API (create, update)
+_INTERVIEW_VALUE_VIEWS = {
+    'v1-projects:project-value-list',
+    'v1-projects:project-value-detail',
+}
+
+
+@receiver(request_started)
+def _remember_request_path(sender, environ=None, scope=None, **kwargs):  # pylint: disable=unused-argument
+    '''Store the path of the request that is about to be handled (WSGI or ASGI).'''
+    if environ is not None:
+        path = environ.get('PATH_INFO')
+    elif scope is not None:
+        path, root = scope.get('path', ''), scope.get('root_path', '')
+        path = path[len(root):] if root and path.startswith(root) else path
+    else:
+        path = None
+    _request_path.set(path)
+
+
+@receiver(request_finished)
+def _forget_request_path(sender, **kwargs):  # pylint: disable=unused-argument
+    '''Clear the stored request path once the response is finished.'''
+    _request_path.set(None)
+
+
+def _is_interview_save():
+    '''Return ``True`` if the current request is the interview saving an answer.
+
+    Project imports, set copies, management commands and background threads
+    save values too; those are not validated here (the values are checked by
+    preview, checks and export), so an old project with values that newer
+    rules reject can still be imported.
+    '''
+    path = _request_path.get()
+    if not path:
+        return False
+    try:
+        match = resolve(path)
+    except Resolver404:
+        return False
+    return match.view_name in _INTERVIEW_VALUE_VIEWS
 
 
 def _is_snapshot_rollback(instance):
@@ -149,9 +202,11 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
     """Pre-save router: validate Value text before it is written to the database.
 
     Connected to Django's ``pre_save`` signal on ``Value``.
-    Skips fixture loads, non-MaRDMO catalogs, and attributes with no registered
-    validator.  Calls the matching validator from ``PRESAVE_VALIDATOR_MAP``,
-    which raises ``ValidationError`` to reject malformed input.
+    Only answers saved through the interview are validated; skips fixture
+    loads, snapshots, non-MaRDMO catalogs, attributes with no registered
+    validator, and every other save (see :func:`_is_interview_save`).  Calls
+    the matching validator from ``PRESAVE_VALIDATOR_MAP``, which raises
+    ``ValidationError`` to reject malformed input.
 
     Args:
         sender:   Signal sender class (``Value``).
@@ -175,7 +230,9 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
         return
 
     validator = PRESAVE_VALIDATOR_MAP.get(catalog_name, {}).get(attr_uri)
-    # Validators check user input; MaRDMO's own writes are checked later by
-    # preview, checks and export
-    if validator and not is_internal_write() and not _is_snapshot_rollback(instance):
+    # Validators check input from the interview; everything else (imports,
+    # MaRDMO's own writes, snapshot rollbacks) is checked by preview, checks
+    # and export
+    if (validator and _is_interview_save() and not is_internal_write()
+            and not _is_snapshot_rollback(instance)):
         validator(instance)

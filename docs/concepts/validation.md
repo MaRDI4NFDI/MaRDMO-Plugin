@@ -126,15 +126,22 @@ The list is kept in `tex_check.SUPPORTED_ENVIRONMENTS`.
 
 ## Which writes are checked
 
-Pre-save validation guards **user input**.  It is skipped for:
+Pre-save validation guards **what the user types in the interview**: it only
+runs for answers saved through RDMO's project value API, which the interview
+uses (the router remembers the path of the current request and checks it).
+Everything else saves values without pre-save validation and is checked by the
+preview, the checks and the export like all other data:
 
+- **Project imports** — an RDMO project file may contain values written before a
+  rule existed; rejecting them would make the import fail halfway.
 - **MaRDMO's own writes** — values written by the handlers when an item is
   imported from the MaRDI Portal or Wikidata, and the IDs written back after an
-  export.  These run inside `helpers.internal_write()`; imported data is checked
-  by the preview, the checks and the export like everything else.
+  export.  These run inside `helpers.internal_write()`, which also covers
+  handler writes during an interview request.
 - **Snapshots** — creating a snapshot copies values, rolling back restores them;
   both were valid when they were saved.
-- **Fixture loads** (`raw` saves).
+- **Management commands, scripts and fixture loads**, which run outside a
+  request.
 
 In addition, `adders.py` drops imported values that cannot be stored
 consistently: of a mutually exclusive pair of data properties, both are dropped

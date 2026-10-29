@@ -177,10 +177,10 @@ Check each place with a valid value, an unfinished value, and a wrong one:
 1. **Pre-save:** in the interview, enter `7554` (saved), `https://swmath.org/software/7554`
    and `75a4` (rejected with a message below the question).
 2. **Preview, checks, export:** write a wrong value past the validator — for
-   example in a Django shell inside `helpers.internal_write()`, or by
-   temporarily removing the registration — and confirm that the preview shows
-   the marker, the checks list the error, and the export is blocked with the
-   value named.
+   example in a Django shell, where pre-save validation does not run because
+   there is no interview request — and confirm that the preview shows the
+   marker, the checks list the error, and the export is blocked with the value
+   named.
 3. **Imported data:** select an existing item from the MaRDI Portal that carries
    the field and confirm that the import is not blocked.
 4. **Docs:** add the rule to the table in [Validation](../../concepts/validation.md).

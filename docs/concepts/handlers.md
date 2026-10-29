@@ -45,8 +45,9 @@ matching validator.  A validator raises `rest_framework.exceptions.ValidationErr
 to reject the value; RDMO then shows the message below the question in the
 interview.
 
-Writes made by the handlers themselves run inside `helpers.internal_write()` and
-skip these validators, so importing an item never fails because of a pre-save
-rule; imported data is checked before the export instead.  The rules, the
+Only answers saved through the interview are validated.  Writes made by the
+handlers themselves run inside `helpers.internal_write()` and skip these
+validators, so importing an item never fails because of a pre-save rule;
+imported data is checked before the export instead.  The rules, the
 places where they are applied, and the exceptions are described in
 [Validation](validation.md).
