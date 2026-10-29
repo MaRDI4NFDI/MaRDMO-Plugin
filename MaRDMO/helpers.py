@@ -5,7 +5,8 @@ Contains:
 - :class:`PropertyRegistry` — O(1) lookup for ontology properties by key, label, or URL.
 - Answer-routing utilities: :func:`extract_parts`, :func:`basic_dict`,
   :func:`basic_list`, :func:`split_value`, :func:`nested_set`.
-- Questionnaire write helpers: :func:`value_editor`.
+- Questionnaire write helpers: :func:`value_editor`, :func:`batched_writes`,
+  :func:`commit_writes`, :func:`get_attribute`.
 - Graph utilities: :func:`topological_order`, :func:`is_cyclic`.
 - Date helpers: :func:`date_format`, :func:`date_precision`.
 - Entity-relation processing: :func:`entity_relations`,
@@ -18,12 +19,14 @@ Contains:
 '''
 
 import re
+import sys
 
 from contextlib import contextmanager
 from contextvars import ContextVar
 from typing import Callable, Optional, Any
 from collections import defaultdict, deque
 
+from django.db import connection, transaction
 from rdmo.projects.models import Value
 from rdmo.domain.models import Attribute
 from rdmo.options.models import Option
@@ -47,6 +50,92 @@ def internal_write():
 def is_internal_write():
     '''Return ``True`` while MaRDMO itself is writing values (see :func:`internal_write`).'''
     return _INTERNAL_WRITE.get()
+
+
+# Set inside batched_writes(): the open transaction (or None) and the
+# attributes already looked up in this block
+_WRITE_BATCH = ContextVar('mardmo_write_batch', default=None)
+
+
+@contextmanager
+def batched_writes():
+    '''Commit MaRDMO's own writes in batches instead of one transaction per value.
+
+    Adding an entry from the MaRDI Portal writes hundreds of values, which
+    otherwise means hundreds of commits.  Inside this block, the writes of
+    :func:`value_editor` are collected in one transaction, which is committed
+    before every request to an external service (see :func:`commit_writes`)
+    and at the end of the block.  The database is therefore never locked
+    while MaRDMO waits for the network.  If the block raises, the writes
+    since the last commit are rolled back.
+
+    On SQLite every value is still committed on its own: SQLite locks the
+    whole database, and a transaction that reads before it writes fails
+    with "database is locked" when another user saves in between.
+
+    Attributes looked up by URI are also remembered until the block ends.
+    A nested block (e.g. a handler deleting further values) joins the
+    outer one.
+    '''
+    if _WRITE_BATCH.get() is not None:
+        yield
+        return
+    batch = {'atomic': None, 'attributes': {}}
+    token = _WRITE_BATCH.set(batch)
+    try:
+        yield
+    except BaseException:
+        _close_transaction(batch, sys.exc_info())
+        raise
+    else:
+        _close_transaction(batch)
+    finally:
+        _WRITE_BATCH.reset(token)
+
+
+def _close_transaction(batch, exc_info=(None, None, None)):
+    '''Commit (or, with *exc_info*, roll back) the open transaction of *batch*.'''
+    atomic = batch['atomic']
+    if atomic is not None:
+        batch['atomic'] = None
+        atomic.__exit__(*exc_info)
+
+
+def commit_writes():
+    '''Commit the writes collected by :func:`batched_writes` so far.
+
+    Called before every request to an external service.  Does nothing
+    outside :func:`batched_writes`.
+    '''
+    batch = _WRITE_BATCH.get()
+    if batch is not None:
+        _close_transaction(batch)
+
+
+def _begin_write():
+    '''Open the transaction of the current :func:`batched_writes` block, if needed.'''
+    batch = _WRITE_BATCH.get()
+    if batch is not None and batch['atomic'] is None and connection.vendor != 'sqlite':
+        atomic = transaction.atomic()
+        atomic.__enter__()
+        batch['atomic'] = atomic
+
+
+def get_attribute(uri):
+    '''Return the :class:`~rdmo.domain.models.Attribute` with *uri*.
+
+    Inside :func:`batched_writes` each attribute is looked up only once.
+
+    Raises:
+        Attribute.DoesNotExist: If there is no attribute with *uri*.
+    '''
+    batch = _WRITE_BATCH.get()
+    if batch is None:
+        return Attribute.objects.get(uri=uri)
+    attributes = batch['attributes']
+    if uri not in attributes:
+        attributes[uri] = Attribute.objects.get(uri=uri)
+    return attributes[uri]
 
 
 def find_reference(references, option_uri):
@@ -374,7 +463,7 @@ def value_editor(project, uri, info):
     Returns:
         Tuple ``(obj, created)`` as returned by ``update_or_create``.
     '''
-    attribute_object = Attribute.objects.get(uri=uri)
+    attribute_object = get_attribute(uri)
     # Prepare the defaults dictionary
     defaults = {
         'project': project,
@@ -408,6 +497,7 @@ def value_editor(project, uri, info):
         update_fields['set_prefix'] = info['set_prefix']
 
     # Update or create the value
+    _begin_write()
     with internal_write():
         obj, created = Value.objects.update_or_create(**update_fields)
 

@@ -48,7 +48,7 @@ from .constants import (
     CATALOG_ALGORITHM_NAME,
     CATALOG_WORKFLOW_NAME,
 )
-from .helpers import is_internal_write
+from .helpers import batched_writes, is_internal_write
 from .builders import (
     build_post_save_handler_set,
     build_post_delete_handler_set,
@@ -162,7 +162,8 @@ def mardmo_router_post_save(sender, instance, update_fields=None, **kwargs):  # 
 
     handler = HANDLER_MAP.get(catalog_name, {}).get(attr_uri)
     if handler:
-        handler(instance)
+        with batched_writes():
+            handler(instance)
 
 
 @receiver(post_delete, sender=Value)
@@ -194,7 +195,8 @@ def mardmo_router_post_delete(sender, instance, **kwargs):  # pylint: disable=un
 
     handler = DELETE_HANDLER_MAP.get(catalog_name, {}).get(attr_uri)
     if handler:
-        handler(instance)
+        with batched_writes():
+            handler(instance)
 
 
 @receiver(pre_save, sender=Value)
@@ -214,7 +216,8 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
         **kwargs: Additional signal keyword arguments (includes ``raw`` for
                   fixture loads).
     """
-    if kwargs.get('raw'):
+    # Fixture loads and MaRDMO's own writes are not validated (see below)
+    if kwargs.get('raw') or is_internal_write():
         return
 
     # Snapshot copies and rollbacks restore values that were valid when saved
@@ -233,6 +236,5 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
     # Validators check input from the interview; everything else (imports,
     # MaRDMO's own writes, snapshot rollbacks) is checked by preview, checks
     # and export
-    if (validator and _is_interview_save() and not is_internal_write()
-            and not _is_snapshot_rollback(instance)):
+    if validator and _is_interview_save() and not _is_snapshot_rollback(instance):
         validator(instance)

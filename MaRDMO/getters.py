@@ -34,7 +34,7 @@ from rdmo.domain.models import Attribute
 
 from .constants import BASE_URI, WIKIDATA
 from .constants import flag_dict
-from .helpers import PropertyRegistry, nested_set
+from .helpers import PropertyRegistry, get_attribute, nested_set
 def get_mathmoddb():
     '''Return a :class:`~.helpers.PropertyRegistry` for the MathModDB ontology.
 
@@ -207,9 +207,7 @@ def get_id(project, uri, keys):
     '''
     values = project.values.filter(
         snapshot=None,
-        attribute=Attribute.objects.get(
-            uri=uri
-        )
+        attribute=get_attribute(uri)
     )
     identifiers = []
     if len(keys) == 1:

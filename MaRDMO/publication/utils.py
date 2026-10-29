@@ -22,12 +22,14 @@ Provides:
 - ``additional_queries``      — run supplementary SPARQL queries for linked entities
 '''
 
+import hashlib
 import logging
 import re
 from multiprocessing.pool import ThreadPool
 
 import requests
 
+from django.core.cache import cache
 from rdmo.projects.models import Value
 from rdmo.domain.models import Attribute
 
@@ -35,13 +37,17 @@ from .models import Author, Journal, Publication
 
 from ..constants import BASE_URI
 from ..getters import get_items, get_properties, get_sparql_query, get_url
-from ..queries import query_sparql, query_sparql_pool
+from ..queries import http_session, query_sparql, query_sparql_pool
 
 logger = logging.getLogger(__name__)
 
 # Timeout (seconds) for each external metadata request (Crossref, DataCite,
 # zbMATH, DOI resolver, ORCID); the sources are queried in parallel
 REQUEST_TIMEOUT = 10
+
+# Citation data of a DOI is reused for this long (preview runs the lookup on
+# every click); failed lookups are not kept
+CITATION_CACHE_TIMEOUT = 60 * 60
 
 def additional_queries(publication, choice, key, parameter, function):
     '''Run supplemental Wikidata and MaRDI Portal SPARQL queries for a sub-entity type.
@@ -222,6 +228,10 @@ def get_citation(doi):
     metadata service.  Then enriches authors with ORCID iDs and runs
     supplemental author/journal queries against MaRDI Portal and Wikidata.
 
+    The result is cached per DOI for :data:`CITATION_CACHE_TIMEOUT` seconds
+    if the MaRDI Portal and Wikidata answered and some source knows the
+    publication.  Otherwise the next call looks it up again.
+
     Args:
         doi: DOI string (e.g. ``"10.1000/xyz123"``).
 
@@ -230,11 +240,26 @@ def get_citation(doi):
         etc.) to :class:`~.models.Publication` instances or ``None``; empty
         dict if *doi* does not match the expected format.
     '''
-    publication = {}
-
     if not re.match(r'10.\d{4,9}/[-._;()/:a-z0-9A-Z]+', doi):
-        return publication
+        return {}
 
+    key = 'mardmo_citation_' + hashlib.sha1(doi.encode('utf-8')).hexdigest()
+    publication = cache.get(key)
+    if publication is None:
+        publication, complete = _lookup_citation(doi)
+        if complete:
+            cache.set(key, publication, CITATION_CACHE_TIMEOUT)
+    return publication
+
+
+def _lookup_citation(doi):
+    '''Look up *doi* in all sources (see :func:`get_citation`).
+
+    Returns:
+        Tuple ``(publication, complete)``; *complete* is ``True`` if the MaRDI
+        Portal and Wikidata answered and some source knows the publication.
+    '''
+    publication = {}
     choice = None
 
     # Define MaRDI Portal / Wikidata / MathAlgoDB SPARQL Queries
@@ -251,13 +276,15 @@ def get_citation(doi):
         doi
     )
 
-    # Get Citation Data from MaRDI Portal / Wikidata / MathAlgoDB
+    # Get Citation Data from MaRDI Portal / Wikidata / MathAlgoDB; a failed
+    # query gives None (strict), so the result is not cached
     results = query_sparql_pool(
         {
-            'wikidata': (wikidata_query, get_url('wikidata', 'sparql')),
-            'mardi':(mardi_query, get_url('mardi', 'sparql')),
+            'wikidata': (wikidata_query, get_url('wikidata', 'sparql'), True),
+            'mardi':(mardi_query, get_url('mardi', 'sparql'), True),
         }
     )
+    answered = results['mardi'] is not None and results['wikidata'] is not None
 
     # Structure Publication Information
     for key in ['mardi', 'wikidata']:
@@ -270,7 +297,7 @@ def get_citation(doi):
 
     # Return if Publication found on MaRDI
     if publication['mardi']:
-        return publication
+        return publication, answered
 
     if not publication['wikidata']:
         # If no Citation Data in KGs get information from CrossRef, DataCite, DOI, zbMath
@@ -391,7 +418,9 @@ def get_citation(doi):
                 extract_journals
             )
 
-    return publication
+    found = any(publication.get(source)
+                for source in ('mardi', 'wikidata', 'crossref', 'datacite', 'zbmath', 'doi'))
+    return publication, answered and found
 
 def _try_enrichment(label, function, *args):
     '''Run an optional enrichment step (author/journal IDs); log instead of failing.
@@ -437,7 +466,7 @@ def get_crossref_data(doi):
         :class:`requests.exceptions.RequestException` on failure.
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f"https://api.crossref.org/works/{doi}",
             timeout = REQUEST_TIMEOUT
         )
@@ -457,7 +486,7 @@ def get_datacite_data(doi):
         :class:`requests.exceptions.RequestException` on failure.
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f"https://api.datacite.org/dois/{doi}",
             timeout = REQUEST_TIMEOUT
         )
@@ -477,7 +506,7 @@ def get_doi_data(doi):
         :class:`requests.exceptions.RequestException` on failure.
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f"https://citation.doi.org/metadata?doi={doi}",
             headers = {"accept": "application/json"},
             timeout = REQUEST_TIMEOUT
@@ -498,7 +527,7 @@ def get_zbmath_data(doi):
         :class:`requests.exceptions.RequestException` on failure.
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f"https://api.zbmath.org/v1/document/_structured_search?page=0&results_per_page=100&DOI={doi}",
             timeout = REQUEST_TIMEOUT
         )
@@ -519,7 +548,7 @@ def get_orcids(doi):
         on failure (logged as a warning).
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f'https://pub.orcid.org/v3.0/search/?q=doi-self:"{doi}"',
             headers = {'Accept': 'application/json'},
             timeout = REQUEST_TIMEOUT
@@ -542,7 +571,7 @@ def get_author_by_orcid(orcid_id):
         on failure (logged as a warning).
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f"https://pub.orcid.org/v3.0/{orcid_id}/personal-details",
             headers = {'Accept': 'application/json'},
             timeout = REQUEST_TIMEOUT

@@ -8,10 +8,12 @@ Provides helpers for:
 * ``query_sources`` / ``query_sources_with_user_additions`` – combined
   MaRDI + Wikidata search with optional user-defined entries
 * ``query_api_per_class`` – class-filtered full-text search on the MaRDI portal
+* ``http_session`` – shared HTTP session for all requests to external services
 '''
 import hashlib
 import json
 import logging
+import threading
 from multiprocessing.pool import ThreadPool
 
 import requests
@@ -20,12 +22,30 @@ from rdmo.domain.models import Attribute
 
 from .constants import BASE_URI
 from .getters import get_properties, get_url
-from .helpers import extract_parts, rank_by_search_term
+from .helpers import commit_writes, extract_parts, rank_by_search_term
 
 logger = logging.getLogger(__name__)
 
 # Search results of the MaRDI Portal and Wikidata are reused for this long
 SEARCH_CACHE_TIMEOUT = 5 * 60
+
+_SESSIONS = threading.local()
+
+
+def http_session():
+    '''Return this thread's HTTP session for requests to external services.
+
+    Reusing the session keeps connections open, so repeated requests to the
+    same service skip the connection setup.  MaRDMO's pending writes are
+    committed first (see :func:`~MaRDMO.helpers.batched_writes`), so no
+    transaction stays open while waiting for the answer.
+    '''
+    commit_writes()
+    session = getattr(_SESSIONS, 'session', None)
+    if session is None:
+        session = _SESSIONS.session = requests.Session()
+    return session
+
 
 def query_item(label, description, api = get_url('mardi', 'api')):
     '''Search a Wikibase API for an item matching *label* and *description* exactly.
@@ -86,7 +106,7 @@ def query_api(api_url, search_term, timeout=5, raise_errors=False):
         (unless *raise_errors*).
     '''
     try:
-        response = requests.get(
+        response = http_session().get(
             api_url,
             params={
                 'action': 'wbsearchentities',
@@ -152,7 +172,7 @@ def query_sparql(query, sparql_endpoint, strict=False):
         return failed
 
     try:
-        response = requests.post(
+        response = http_session().post(
             sparql_endpoint,
             data=query.encode("utf-8"),
             headers={
@@ -192,7 +212,9 @@ def query_sparql_pool(query_input):
 
     Args:
         query_input: Dict mapping a source key to a ``(query, endpoint)`` tuple,
-                     e.g. ``{"mardi": (query_str, url), "wikidata": ...}``.
+                     e.g. ``{"mardi": (query_str, url), "wikidata": ...}``;
+                     a third element ``True`` makes a failed query give
+                     ``None`` (see the *strict* argument of :func:`query_sparql`).
 
     Returns:
         Dict with the same keys as *query_input*, each mapping to the list of
@@ -200,6 +222,7 @@ def query_sparql_pool(query_input):
     '''
     # Map each endpoint's query and store results in a dictionary; the pool
     # is closed afterwards so its worker threads do not linger
+    commit_writes()
     with ThreadPool(processes = len(query_input)) as pool:
         results = pool.map(lambda args: query_sparql(*args), query_input.values())
     data = dict(zip(query_input.keys(), results))
@@ -438,7 +461,7 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
     api_url      = get_url('mardi', 'api')
 
     try:
-        search_resp = requests.get(
+        search_resp = http_session().get(
             api_url,
             params={
                 'action':      'query',
@@ -466,7 +489,7 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
     qids = [hit['title'].removeprefix('Item:') for hit in hits]
 
     try:
-        entity_resp = requests.get(
+        entity_resp = http_session().get(
             api_url,
             params={
                 'action':    'wbgetentities',

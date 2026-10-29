@@ -25,6 +25,13 @@ answers dict, and `prepare.preview()` pre-processes the data into display-ready
 structures for the template (e.g. paired algorithm–software entries, model–task
 pairs).
 
+Publications taken from Wikidata or entered by the user are looked up by their DOI
+(MaRDI Portal, Wikidata, Crossref, DataCite, zbMATH, doi.org, ORCID).  Up to three
+publications are looked up at the same time, and the result for a DOI is kept in
+Django's cache for an hour, so clicking the preview again does not repeat the
+lookups.  A result is only kept if the MaRDI Portal and Wikidata answered and some
+source knows the publication; otherwise the next preview looks it up again.
+
 ### 3. Preview
 
 The answers dict is passed to the catalog-appropriate Django template, which renders

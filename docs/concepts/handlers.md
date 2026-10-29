@@ -35,6 +35,24 @@ The sequence when a user picks a *Mathematical Model* from the portal:
 
 The batching principle ensures that the number of SPARQL queries scales with the number of distinct *entity types* in the cascade, not with the number of individual entities.
 
+## Database Writes and Network Requests
+
+Selecting a large item writes hundreds of values.  The router therefore runs every
+handler inside `helpers.batched_writes()`:
+
+- On PostgreSQL and MySQL, the writes of `value_editor()` are collected in one
+  transaction, which is committed before every request to an external service and
+  at the end.  The database is never locked while MaRDMO waits for the network.
+  If a handler fails, only the writes since the last commit are rolled back.
+- On SQLite, every value is still committed on its own.  SQLite locks the whole
+  database, and a longer transaction that reads before it writes fails with
+  *database is locked* when another user saves at the same time.
+- Attributes looked up by URI are remembered until the handler finishes.
+
+All requests to external services go through `queries.http_session()`, which
+commits the pending writes and reuses one HTTP session per thread, so repeated
+requests to the same service keep their connection open.
+
 ## Pre-Save Validation
 
 In addition to the post-save handler dispatch, MaRDMO registers a `pre_save`

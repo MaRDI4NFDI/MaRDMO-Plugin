@@ -30,6 +30,7 @@ from .constants import data_properties_per_class, qudt_reference_ids
 from ..getters import get_items, get_mathmoddb, get_options, get_properties, get_url
 from ..helpers import split_value
 from ..models import Relatant, RelatantWithClass, RelatantWithQualifier
+from ..queries import http_session
 
 logger = logging.getLogger(__name__)
 
@@ -149,7 +150,7 @@ def _wbget_chunk(api_url, params_base, chunk):
     for attempt in range(1, _WB_MAX_ATTEMPTS + 1):
         retry_after = None
         try:
-            resp = requests.get(
+            resp = http_session().get(
                 api_url, params=params,
                 headers={'User-Agent': _USER_AGENT}, timeout=_WB_TIMEOUT,
             )

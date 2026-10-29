@@ -143,7 +143,6 @@ class Information(BaseInformation):
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -168,7 +167,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_benchmark_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_benchmark_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(

@@ -12,12 +12,17 @@ Provides:
   workers that package questionnaire answers for portal submission
 '''
 
+from multiprocessing.pool import ThreadPool
+
 from .constants import ITEMINFOS, CITATIONINFOS, JOURNALS, AUTHORS, LANGUAGES
 from .utils import clean_background_data, get_citation
 
 from ..constants import BASE_URI
 from ..getters import get_items, get_options, get_properties, get_questions
-from ..helpers import date_precision, find_reference, value_editor
+from ..helpers import commit_writes, date_precision, find_reference, value_editor
+
+# Publications whose citation data is looked up at the same time
+CITATION_LOOKUPS_IN_PARALLEL = 3
 
 
 def _single_line(text):
@@ -54,6 +59,8 @@ class PublicationRetriever:
             options:  Global RDMO options dict (used for the ``"Yes"`` option check).
         '''
 
+        citations = self._lookup_citations(answers)
+
         for key in answers.get('publication', {}):
 
             # If ID is missing (not answered or deleted)
@@ -77,7 +84,7 @@ class PublicationRetriever:
                     continue
 
                 #Get the Citation of several ressource.
-                data_all = get_citation(answers['publication'][key]['reference'][0][1].upper())
+                data_all = citations[key]
 
                 #If Publication available at MaRDI, Wikidata, Crossref, Datacite, zbMath or DOI...
                 if any(
@@ -158,6 +165,30 @@ class PublicationRetriever:
                     answers['publication'][key]['Description'] = _single_line(data.description)
 
         return answers
+
+    @staticmethod
+    def _lookup_citations(answers):
+        '''Look up the citation data of all publications that need it, in parallel.
+
+        These are the publications from Wikidata or entered by the user
+        (``not found``) that have a DOI.
+
+        Returns:
+            Dict mapping the publication's set index to the result of
+            :func:`~.utils.get_citation`.
+        '''
+        dois = {
+            key: publication['reference'][0][1].upper()
+            for key, publication in answers.get('publication', {}).items()
+            if (publication.get('ID') or '').startswith(('wikidata', 'not found'))
+            and publication.get('reference', {}).get(0, ['', ''])[1]
+        }
+        if not dois:
+            return {}
+        commit_writes()
+        with ThreadPool(min(CITATION_LOOKUPS_IN_PARALLEL, len(dois))) as pool:
+            results = pool.map(get_citation, dois.values())
+        return dict(zip(dois, results))
 
 class PublicationExport:
     '''Base class providing author, journal, and publication export helpers.

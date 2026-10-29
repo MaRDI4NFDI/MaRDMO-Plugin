@@ -11,8 +11,8 @@ Both handlers pass catalog through every call.  The algorithm handler
 simply uses the default catalog='' everywhere.
 '''
 
-from dataclasses import dataclass, field
-from typing import Any, Optional
+from dataclasses import dataclass
+from typing import Any
 
 from .constants import ALGORITHM_PROPS, SOFTWARE_PROPS
 from .models import Algorithm, Software
@@ -54,13 +54,8 @@ class _RelatantSpec:
     visited           – mutable set of already-processed external IDs
     batch_fill_method – optional batch SPARQL hydrator; when set, mardi/wikidata
                         relatants are collected and dispatched in one query
-    section_indices   – deprecated / ignored. Was a shared {question_set_uri:
-                        next_idx} cache to skip the max-set_index DB query, but
-                        hydration recurses and creates sibling pages mid-loop,
-                        so a cached index went stale and caused entities to
-                        overwrite each other. The set_index is now always read
-                        fresh via _next_set_index. Kept in the signature so the
-                        existing call sites need not change.
+
+    The free set_index of a section is always read fresh via _next_set_index.
     '''
     question_id_uri: str
     question_set_uri: str
@@ -69,7 +64,6 @@ class _RelatantSpec:
     catalog: str
     visited: set
     batch_fill_method: Any = None
-    section_indices: Optional[dict] = field(default=None)
 
 
 def _values_clause(items):
@@ -288,8 +282,8 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
             prop_keys: Sequence of attribute names on *data* to inspect for
                        qualifier values.
             spec:      :class:`_RelatantSpec` instance bundling the target
-                       question URIs, prefix, fill methods, ``catalog``,
-                       ``visited``, and optional ``section_indices``.
+                       question URIs, prefix, fill methods, ``catalog``
+                       and ``visited``.
         '''
         batch_items = []
 
@@ -406,7 +400,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -432,7 +425,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                                             batch_fill_method=self._fill_problem_batch),
                         catalog=catalog, visited=visited,
                         batch_fill_method=self._fill_problem_batch,
-                        section_indices=section_indices,
                     ))
 
             add_relations_static(
@@ -451,7 +443,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                                         batch_fill_method=self._fill_software_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_software_batch,
-                    section_indices=section_indices,
                 ))
 
             if self.mathalgodb is not None and 'IntraClassRelation' in algorithm:
@@ -497,7 +488,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -539,7 +529,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                                             batch_fill_method=self._fill_benchmark_batch),
                         catalog=catalog, visited=visited,
                         batch_fill_method=self._fill_benchmark_batch,
-                        section_indices=section_indices,
                     ))
 
             if 'Publication' in self.questions:

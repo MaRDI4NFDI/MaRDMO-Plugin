@@ -37,6 +37,7 @@ from .getters import (
     get_url
 )
 from .helpers import (
+    batched_writes,
     is_cyclic,
     process_question_dict,
     topological_order
@@ -312,12 +313,13 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
             publication = PublicationRetriever()
             # MaRDMO always works on the current values, also when the export
             # was opened from a snapshot
-            answers = publication.get_information(
-                project=self.project,
-                snapshot=None,
-                answers=answers,
-                options=options
-            )
+            with batched_writes():
+                answers = publication.get_information(
+                    project=self.project,
+                    snapshot=None,
+                    answers=answers,
+                    options=options
+                )
 
         prepare = prepare_class()
         answers = prepare.preview(answers)

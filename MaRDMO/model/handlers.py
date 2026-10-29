@@ -194,7 +194,6 @@ class Information(BaseInformation):
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -230,7 +229,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_field_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_field_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -429,7 +427,6 @@ class Information(BaseInformation):
                     data_by_id[external_id].symbols           = fd['symbols']
                     data_by_id[external_id].contains_quantity = fd['contains_quantity']
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -484,7 +481,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_quantity_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_quantity_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -508,7 +504,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -533,7 +528,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
             self._hydrate_publications(project, data.publications,
                                        catalog, visited)
@@ -560,7 +554,6 @@ class Information(BaseInformation):
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -605,7 +598,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -627,7 +619,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_quantity_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_quantity_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -652,7 +643,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
             self._hydrate_publications(project, data.publications,
                                        catalog, visited)
@@ -679,7 +669,6 @@ class Information(BaseInformation):
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -719,7 +708,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_problem_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_problem_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -743,7 +731,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_static(
@@ -762,7 +749,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_task_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_task_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -787,7 +773,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
             self._hydrate_publications(project, data.publications,
                                        catalog, visited)

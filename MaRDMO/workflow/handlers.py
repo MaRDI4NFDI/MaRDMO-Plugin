@@ -213,7 +213,6 @@ class Information(BaseInformation):
             'workflow/queries/workflow_wikidata.sparql',
             Workflow,
         )
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -329,7 +328,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_process_step_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_process_step_batch,
-                    section_indices=section_indices,
                 ))
 
     def _fill_hardware_batch(self, project, items, catalog='', visited=None):
@@ -486,7 +484,6 @@ class Information(BaseInformation):
             'workflow/queries/process_step_wikidata.sparql',
             ProcessStep,
         )
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -511,7 +508,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_data_set_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_data_set_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_static(
@@ -530,7 +526,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_data_set_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_data_set_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_static(
@@ -557,7 +552,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_algorithm_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_algorithm_batch,
-                    section_indices=section_indices,
                 ))
 
             self._hydrate_qualifier_entities(
@@ -570,7 +564,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_software_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_software_batch,
-                    section_indices=section_indices,
                 ))
 
             self._hydrate_qualifier_entities(
@@ -584,7 +577,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_hardware_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_hardware_batch,
-                    section_indices=section_indices,
                 ),
                 attr='hardware')
 
