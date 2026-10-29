@@ -142,8 +142,10 @@ class PrepareWorkflow(PublicationExport):
 
             # Use raw MRelatant/IRelatant dicts so the template can display
             # Name (Description) for inline items that have no dedicated section.
+            # MRelatant is {set_index: {collection_index: item}}; list the
+            # methods of each set in collection order.
             meth_by_set = {
-                set_idx: [raw]
+                set_idx: [raw[c] for c in sorted(raw)]
                 for set_idx, raw in ps_data.get('MRelatant', {}).items()
             }
             instruments = ps_data.get('IRelatant', {})
