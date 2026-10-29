@@ -51,6 +51,6 @@ The following steps happen each time the user types in an autocomplete field:
       &format=json
     ```
 
-4. **Cache** — results are stored in Django's cache framework so that repeated searches for the same term avoid redundant API calls.
+4. **Cache** — the results of each source (MaRDI Portal, Wikidata) are kept in Django's cache for five minutes, keyed by search text and item class.  Repeated searches — while typing, or for the same entity type on another page — are then answered without querying the portal again.  Failed requests are not cached, so the next search tries again.  The results do not depend on the project, so the user's own answers cannot make them outdated.
 
-5. **Merge and return** — for Tier 2 and 3 providers, matching project items are appended to the external results before the list is returned to the autocomplete widget.
+5. **Merge and return** — for Tier 2 and 3 providers, the matching items the user has already entered in the project are put before the external results, and the list is returned to the autocomplete widget.  These project items are read from the database on every request (two queries, regardless of how many entity types the provider covers), so an item saved a moment ago is offered right away.

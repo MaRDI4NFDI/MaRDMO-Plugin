@@ -22,7 +22,6 @@ Provides:
 - ``get_sparql_query_optional``  — load and cache a SPARQL query file, or ``None`` if absent
 - ``get_id``                     — retrieve attribute field(s) from all questionnaire values at a URI
 - ``get_answers``                — read questionnaire values for one attribute and merge into a dict
-- ``get_user_entries``           — fetch raw ID/name/description values for a domain attribute
 '''
 
 import json
@@ -301,25 +300,3 @@ def get_answers(project, val, config):
                    entry=entry)
 
     return val
-
-def get_user_entries(project, query_attribute, values):
-    '''Fetch raw ID, Name, and Description questionnaire values for a domain attribute.
-
-    Args:
-        project:         RDMO project instance.
-        query_attribute: Attribute path fragment (e.g. ``"software"``); the
-                         three sub-attributes ``<fragment>/id``, ``/name``,
-                         and ``/description`` are queried.
-        values:          Dict to populate; mutated in place.
-
-    Returns:
-        The *values* dict with keys ``"id"``, ``"name"``, and ``"description"``
-        each holding a :class:`~django.db.models.QuerySet` of
-        :class:`~rdmo.projects.models.Value` instances.
-    '''
-    for question in ('id', 'name', 'description'):
-        attr = Attribute.objects.filter(
-            uri=f'{BASE_URI}domain/{query_attribute}/{question}'
-        ).first()
-        values[question] = project.values.filter(snapshot=None, attribute=attr) if attr else []
-    return values
