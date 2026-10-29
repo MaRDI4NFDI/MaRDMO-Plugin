@@ -26,7 +26,8 @@ logger = logging.getLogger(__name__)
 class Information(BaseInformation):
     '''Handlers for the Workflow Documentation questionnaire.'''
 
-    _ENTITY_KEYS = ('Workflow', 'Algorithm', 'Software', 'Hardware', 'Data Set', 'Process Step')
+    _ENTITY_KEYS = ('Workflow', 'Algorithm', 'Software', 'Hardware', 'Data Set', 'Process Step',
+                    'Publication')
 
     def __init__(self):
         '''Load workflow questions, base URI, RDMO options, and MathAlgoDB registry.'''
