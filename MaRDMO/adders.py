@@ -416,11 +416,17 @@ def add_relations_flexible(project, data, props, index, statement):
     # Set initial value of counter
     index.update({'idx': initialize_counter(ids)})
 
+    # Relatants without an assumption share one set, each assumption gets a set
+    # of its own; group them first, as the portal returns them in no fixed order
+    def assumption_group(value):
+        qualifier = getattr(value, 'qualifier', None) if statement.get('assumption') else None
+        return (bool(qualifier), qualifier or '')
+
     # Add Relations and Relatants
     for prop in props['keys']:
         inner_idx = 0
         assumption_store = {}
-        for value in getattr(data, prop):
+        for value in sorted(getattr(data, prop), key=assumption_group):
             assumption_index = None
             # Get Source and Label Description String
             source, _ = value.id.split(':')
