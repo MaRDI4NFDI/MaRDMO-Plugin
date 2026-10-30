@@ -1,0 +1,29 @@
+# Part 2 of 6 of the MaRDI query task-basics_mardi.sparql (see README.md).
+SELECT
+?id
+?is_linear
+?is_not_linear
+?is_space_continuous
+?is_space_discrete
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{linear task}. BIND("True" AS ?is_linear_raw) }}
+
+    BIND(COALESCE(?is_linear_raw, "False") AS ?is_linear)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{nonlinear task}. BIND("True" AS ?is_not_linear_raw) }}
+
+    BIND(COALESCE(?is_not_linear_raw, "False") AS ?is_not_linear)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{continuous-space task}. BIND("True" AS ?is_space_continuous_raw) }}
+
+    BIND(COALESCE(?is_space_continuous_raw, "False") AS ?is_space_continuous)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{discrete-space task}. BIND("True" AS ?is_space_discrete_raw) }}
+
+    BIND(COALESCE(?is_space_discrete_raw, "False") AS ?is_space_discrete)
+}}
+GROUP BY ?id ?is_linear ?is_not_linear ?is_space_continuous ?is_space_discrete

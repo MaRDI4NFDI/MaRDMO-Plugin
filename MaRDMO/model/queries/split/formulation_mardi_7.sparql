@@ -1,0 +1,165 @@
+# Part 7 of 10 of the MaRDI query formulation_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?sbf, " || ", ?sbfl, " || ", ?sbfd, " || ", ?sbfq); SEPARATOR=" <|> ") AS ?specialized_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?sf, " || ", ?sfl, " || ", ?sfd, " || ", ?sfq); SEPARATOR=" <|> ") AS ?specializes)
+(GROUP_CONCAT(DISTINCT CONCAT(?abf, " || ", ?abfl, " || ", ?abfd); SEPARATOR=" <|> ") AS ?approximated_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?af, " || ", ?afl, " || ", ?afd); SEPARATOR=" <|> ") AS ?approximates)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{   
+
+        OPTIONAL {{
+                                                          
+            {{
+                SELECT ?statement3 (GROUP_CONCAT(DISTINCT ?sbfq_entry; separator=" <<||>> ") AS ?sbfq)
+                WHERE {{
+                    ?id p:{specialized by} ?statement3.
+
+                    OPTIONAL {{
+                        ?statement3 pq:{assumes} ?qua3raw.
+                        BIND(CONCAT("mardi:", STRAFTER(STR(?qua3raw), STR(wd:))) AS ?qua3)
+                                                             
+                        OPTIONAL {{
+                            ?qua3raw rdfs:label ?sbfqlraw.
+                            FILTER (lang(?sbfqlraw) = "en")
+                        }}
+                        BIND(COALESCE(?sbfqlraw, "No Label Provided!") AS ?sbfql)
+
+                        OPTIONAL {{
+                            ?qua3raw schema:description ?sbfqdraw.
+                            FILTER (lang(?sbfqdraw) = "en")
+                        }}
+                        BIND(COALESCE(?sbfqdraw, "No Description Provided!") AS ?sbfqd)
+                    }}
+
+                    BIND(COALESCE(?qua3, "") AS ?qua3_final)
+                    BIND(COALESCE(?sbfql, "") AS ?sbfql_final)
+                    BIND(COALESCE(?sbfqd, "") AS ?sbfqd_final)
+                    
+                    BIND(IF((?qua3_final = "" && ?sbfql_final = "" && ?sbfqd_final = ""),"",CONCAT(?qua3_final, " || ", ?sbfql_final, " || ", ?sbfqd_final)) AS ?sbfq_entry)
+                                                             
+                }}
+                GROUP BY ?statement3
+            }}
+        }}
+                                                        
+        ?id p:{specialized by} ?statement3.
+        ?statement3 ps:{specialized by} ?sbfraw.                                    
+        BIND(CONCAT("mardi:", STRAFTER(STR(?sbfraw), STR(wd:))) AS ?sbf)
+                                                          
+        ?sbfraw wdt:{instance of} wd:{formula}.
+
+        OPTIONAL {{
+            ?sbfraw rdfs:label ?sbflraw
+            FILTER (lang(?sbflraw) = 'en')
+        }}
+        BIND(COALESCE(?sbflraw, "No Label Provided!") AS ?sbfl)
+
+        OPTIONAL {{
+            ?sbfraw schema:description ?sbfdraw
+            FILTER (lang(?sbfdraw) = 'en')
+        }}
+        BIND(COALESCE(?sbfdraw, "No Description Provided!") AS ?sbfd)
+                                                  
+    }}
+
+    OPTIONAL {{   
+                                                    
+        OPTIONAL {{
+                                                          
+            {{
+                SELECT ?statement4 (GROUP_CONCAT(DISTINCT ?sfq_entry; separator=" <<||>> ") AS ?sfq)
+                WHERE {{
+                    ?sfraw wdt:{specialized by} ?id.
+                    ?sfraw p:{specialized by} ?statement4.
+                                                          
+                    OPTIONAL {{
+                        ?statement4 pq:{assumes} ?qua4raw.
+                        BIND(CONCAT("mardi:", STRAFTER(STR(?qua4raw), STR(wd:))) AS ?qua4)
+                                                             
+                        OPTIONAL {{
+                            ?qua4raw rdfs:label ?sfqlraw.
+                            FILTER (lang(?sfqlraw) = "en")
+                        }}
+                        BIND(COALESCE(?sfqlraw, "No Label Provided!") AS ?sfql)
+
+                        OPTIONAL {{
+                            ?qua4raw schema:description ?sfqdraw.
+                            FILTER (lang(?sfqdraw) = "en")
+                        }}
+                        BIND(COALESCE(?sfqdraw, "No Description Provided!") AS ?sfqd)                                   
+                    }}
+
+                    BIND(COALESCE(?qua4, "") AS ?qua4_final)
+                    BIND(COALESCE(?sfql, "") AS ?sfql_final)
+                    BIND(COALESCE(?sfqd, "") AS ?sfqd_final)
+                    
+                    BIND(IF((?qua4_final = "" && ?sfql_final = "" && ?sfqd_final = ""),"",CONCAT(?qua4_final, " || ", ?sfql_final, " || ", ?sfqd_final)) AS ?sfq_entry)
+                                                             
+                }}
+                GROUP BY ?statement4
+            }}
+        }}
+                                                        
+        ?sfraw p:{specialized by} ?statement4.
+        ?statement4 ps:{specialized by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?sfraw), STR(wd:))) AS ?sf)
+                                                          
+        ?sfraw wdt:{instance of} wd:{formula}.
+
+        OPTIONAL {{
+            ?sfraw rdfs:label ?sflraw
+            FILTER (lang(?sflraw) = 'en')
+        }}
+        BIND(COALESCE(?sflraw, "No Label Provided!") AS ?sfl)
+
+        OPTIONAL {{
+            ?sfraw schema:description ?sfdraw
+            FILTER (lang(?sfdraw) = 'en')
+        }}
+        BIND(COALESCE(?sfdraw, "No Description Provided!") AS ?sfd)
+
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{approximated by} ?abfraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?abfraw), STR(wd:))) AS ?abf)
+
+        ?abfraw wdt:{instance of} wd:{formula}.
+
+        OPTIONAL {{
+            ?abfraw rdfs:label ?abflraw.
+            FILTER (lang(?abflraw) = 'en')
+        }}
+        BIND(COALESCE(?abflraw, "No Label Provided!") AS ?abfl)
+
+        OPTIONAL {{
+            ?abfraw schema:description ?abfdraw
+            FILTER (lang(?abfdraw) = 'en')
+        }}
+        BIND(COALESCE(?abfdraw, "No Description Provided!") AS ?abfd)
+    }}
+
+    OPTIONAL {{
+        ?afraw wdt:{approximated by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?afraw), STR(wd:))) AS ?af)
+         
+        ?afraw wdt:{instance of} wd:{formula}.
+        OPTIONAL {{
+            ?afraw rdfs:label ?aflraw.
+            FILTER (lang(?aflraw) = 'en')
+        }}
+        BIND(COALESCE(?aflraw, "No Label Provided!") AS ?afl)
+        
+        OPTIONAL {{
+            ?afraw schema:description ?afdraw
+            FILTER (lang(?afdraw) = 'en')
+        }}
+        BIND(COALESCE(?afdraw, "No Description Provided!") AS ?afd)
+    }}
+}}
+GROUP BY ?id

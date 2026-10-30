@@ -1,0 +1,30 @@
+# Part 2 of 8 of the MaRDI query quantity_mardi.sparql (see README.md).
+SELECT
+?id
+?is_dynamic
+?is_static
+(GROUP_CONCAT(DISTINCT ?alias; SEPARATOR=" <|> ") AS ?aliases)
+(GROUP_CONCAT(DISTINCT ?descriptionLong; SEPARATOR=" <|> ") AS ?description_long)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?id skos:altLabel ?alias .
+        FILTER (LANG(?alias) = "en")
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{description} ?descriptionLong
+    }}
+
+    OPTIONAL {{ {{ ?id wdt:{instance of} wd:{dynamic quantity}. }} UNION {{ ?id wdt:{instance of} wd:{dynamic quantity kind}. }} BIND("True" AS ?is_dynamic_raw) }}
+
+    BIND(COALESCE(?is_dynamic_raw, "False") AS ?is_dynamic)
+
+    OPTIONAL {{ {{ ?id wdt:{instance of} wd:{static quantity}. }} UNION {{ ?id wdt:{instance of} wd:{static quantity kind}. }} BIND("True" AS ?is_static_raw) }}
+
+    BIND(COALESCE(?is_static_raw, "False") AS ?is_static)
+}}
+GROUP BY ?id ?is_dynamic ?is_static

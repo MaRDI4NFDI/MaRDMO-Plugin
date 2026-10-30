@@ -1,0 +1,60 @@
+# Part 5 of 9 of the MaRDI query model_mardi.sparql (see README.md).
+SELECT
+?id
+?is_time_continuous
+?is_time_discrete
+(GROUP_CONCAT(DISTINCT CONCAT(?rp, " || ", ?rpl, " || ", ?rpd); SEPARATOR=" <|> ") AS ?models)
+(GROUP_CONCAT(DISTINCT CONCAT(?ass, " || ", ?assl, " || ", ?assd, " || "); SEPARATOR=" <|> ") AS ?assumes)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{continuous-time model}. BIND("True" AS ?is_time_continuous_raw) }}
+
+    BIND(COALESCE(?is_time_continuous_raw, "False") AS ?is_time_continuous)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{discrete-time model}. BIND("True" AS ?is_time_discrete_raw) }}
+
+    BIND(COALESCE(?is_time_discrete_raw, "False") AS ?is_time_discrete)
+
+    OPTIONAL {{
+        ?rpraw wdt:{modelled by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?rpraw), STR(wd:))) AS ?rp)
+         
+        ?rpraw wdt:{instance of} wd:{research problem}.
+        
+        OPTIONAL {{
+            ?rpraw rdfs:label ?rplraw.
+            FILTER (lang(?rplraw) = 'en')
+        }}
+        BIND(COALESCE(?rplraw, "No Label Provided!") AS ?rpl)
+        
+        OPTIONAL {{
+            ?rpraw schema:description ?rpdraw
+            FILTER (lang(?rpdraw) = 'en')
+        }}
+        BIND(COALESCE(?rpdraw, "No Description Provided!") AS ?rpd)
+    }}
+
+    OPTIONAL {{
+        ?id p:{assumes} ?statement_x.
+        ?statement_x ps:{assumes} ?assraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?assraw), STR(wd:))) AS ?ass)
+         
+        ?assraw wdt:{instance of} wd:{formula}.
+        
+        OPTIONAL {{
+            ?assraw rdfs:label ?asslraw.
+            FILTER (lang(?asslraw) = 'en')
+        }}
+        BIND(COALESCE(?asslraw, "No Label Provided!") AS ?assl)
+        
+        OPTIONAL {{
+            ?assraw schema:description ?assdraw
+            FILTER (lang(?assdraw) = 'en')
+        }}
+        BIND(COALESCE(?assdraw, "No Description Provided!") AS ?assd)
+    }}
+}}
+GROUP BY ?id ?is_time_continuous ?is_time_discrete

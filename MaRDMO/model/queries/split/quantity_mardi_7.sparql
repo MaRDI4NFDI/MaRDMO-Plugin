@@ -1,0 +1,121 @@
+# Part 7 of 8 of the MaRDI query quantity_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?aq, " || ", ?aql, " || ", ?aqd, " || ", ?aqc); SEPARATOR=" <|> ") AS ?approximates)
+(GROUP_CONCAT(DISTINCT CONCAT(?lbq, " || ", ?lbql, " || ", ?lbqd, " || ", ?lbqc); SEPARATOR=" <|> ") AS ?linearized_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?lq, " || ", ?lql, " || ", ?lqd, " || ", ?lqc); SEPARATOR=" <|> ") AS ?linearizes)
+(GROUP_CONCAT(DISTINCT CONCAT(?nbq, " || ", ?nbql, " || ", ?nbqd, " || ", ?nbqc); SEPARATOR=" <|> ") AS ?nondimensionalized_by)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?aqraw wdt:{approximated by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?aqraw), STR(wd:))) AS ?aq)
+                                                               
+        {{
+            ?aqraw wdt:{instance of} wd:{quantity}.
+            BIND("Quantity" AS ?aqc)
+        }}
+        UNION
+        {{
+            ?aqraw wdt:{instance of} wd:{kind of quantity}.
+            BIND("QuantityKind" AS ?aqc)
+        }}
+
+        OPTIONAL {{
+            ?aqraw rdfs:label ?aqlraw.
+            FILTER (lang(?aqlraw) = 'en')
+        }}
+        BIND(COALESCE(?aqlraw, "No Label Provided!") AS ?aql)
+
+        OPTIONAL {{
+            ?aqraw schema:description ?aqdraw
+            FILTER (lang(?aqdraw) = 'en')
+        }}
+        BIND(COALESCE(?aqdraw, "No Description Provided!") AS ?aqd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{linearized by} ?lbqraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?lbqraw), STR(wd:))) AS ?lbq)
+                                                               
+        {{
+            ?lbqraw wdt:{instance of} wd:{quantity}.
+            BIND("Quantity" AS ?lbqc)
+        }}
+        UNION
+        {{
+            ?lbqraw wdt:{instance of} wd:{kind of quantity}.
+            BIND("QuantityKind" AS ?lbqc)
+        }}
+
+        OPTIONAL {{
+            ?lbqraw rdfs:label ?lbqlraw.
+            FILTER (lang(?lbqlraw) = 'en')
+        }}
+        BIND(COALESCE(?lbqlraw, "No Label Provided!") AS ?lbql)
+
+        OPTIONAL {{
+            ?lbqraw schema:description ?lbqdraw
+            FILTER (lang(?lbqdraw) = 'en')
+        }}
+        BIND(COALESCE(?lbqdraw, "No Description Provided!") AS ?lbqd)
+    }}
+
+    OPTIONAL {{
+        ?lqraw wdt:{linearized by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?lqraw), STR(wd:))) AS ?lq)
+                                                               
+        {{
+            ?lqraw wdt:{instance of} wd:{quantity}.
+            BIND("Quantity" AS ?lqc)
+        }}
+        UNION
+        {{
+            ?lqraw wdt:{instance of} wd:{kind of quantity}.
+            BIND("QuantityKind" AS ?lqc)
+        }}
+
+        OPTIONAL {{
+            ?lqraw rdfs:label ?lqlraw.
+            FILTER (lang(?lqlraw) = 'en')
+        }}
+        BIND(COALESCE(?lqlraw, "No Label Provided!") AS ?lql)
+
+        OPTIONAL {{
+            ?lqraw schema:description ?lqdraw
+            FILTER (lang(?lqdraw) = 'en')
+        }}
+        BIND(COALESCE(?lqdraw, "No Description Provided!") AS ?lqd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{nondimensionalized by} ?nbqraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?nbqraw), STR(wd:))) AS ?nbq)
+                                                               
+        {{
+            ?nbqraw wdt:{instance of} wd:{quantity}.
+            BIND("Quantity" AS ?nbqc)
+        }}
+        UNION
+        {{
+            ?nbqraw wdt:{instance of} wd:{kind of quantity}.
+            BIND("QuantityKind" AS ?nbqc)
+        }}
+
+        OPTIONAL {{
+            ?nbqraw rdfs:label ?nbqlraw.
+            FILTER (lang(?nbqlraw) = 'en')
+        }}
+        BIND(COALESCE(?nbqlraw, "No Label Provided!") AS ?nbql)
+
+        OPTIONAL {{
+            ?nbqraw schema:description ?nbqdraw
+            FILTER (lang(?nbqdraw) = 'en')
+        }}
+        BIND(COALESCE(?nbqdraw, "No Description Provided!") AS ?nbqd)
+    }}
+}}
+GROUP BY ?id

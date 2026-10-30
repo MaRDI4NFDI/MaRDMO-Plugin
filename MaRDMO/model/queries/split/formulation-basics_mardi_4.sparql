@@ -1,0 +1,29 @@
+# Part 4 of 9 of the MaRDI query formulation-basics_mardi.sparql (see README.md).
+SELECT
+?id
+?is_deterministic
+?is_stochastic
+?is_dimensionless
+?is_dimensional
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{deterministic equation}. BIND("True" AS ?is_deterministic_raw) }}
+
+    BIND(COALESCE(?is_deterministic_raw, "False") AS ?is_deterministic)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{probabilistic equation}. BIND("True" AS ?is_stochastic_raw) }}
+
+    BIND(COALESCE(?is_stochastic_raw, "False") AS ?is_stochastic)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{dimensionless equation}. BIND("True" AS ?is_dimensionless_raw) }}
+
+    BIND(COALESCE(?is_dimensionless_raw, "False") AS ?is_dimensionless)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{dimensional equation}. BIND("True" AS ?is_dimensional_raw) }}
+
+    BIND(COALESCE(?is_dimensional_raw, "False") AS ?is_dimensional)
+}}
+GROUP BY ?id ?is_deterministic ?is_stochastic ?is_dimensionless ?is_dimensional

@@ -4,6 +4,7 @@ Provides helpers for:
 
 * ``query_item`` / ``query_api`` – Wikibase ``wbsearchentities`` lookups
 * ``query_sparql`` / ``query_sparql_pool`` – SPARQL SELECT requests
+* ``query_sparql_parts`` – run the split parts of a query and merge their rows
 * ``sparql_string`` – escape text as a SPARQL string literal
 * ``query_sources`` / ``query_sources_with_user_additions`` – combined
   MaRDI + Wikidata search with optional user-defined entries
@@ -206,6 +207,40 @@ def query_sparql(query, sparql_endpoint, strict=False):
         logger.error("SPARQL answer from %s is not valid JSON: %s", sparql_endpoint, e)
 
     return failed
+
+def query_sparql_parts(queries, sparql_endpoint):
+    '''Run the parts of a split query one after another and merge their rows.
+
+    The first part decides which items exist and how many rows each has,
+    exactly like the full query; every further part returns one row per item
+    with its own columns, which are added to that item's rows.
+
+    Args:
+        queries:         Part query strings, the deciding part first.
+        sparql_endpoint: URL of the SPARQL endpoint.
+
+    Returns:
+        List of result-binding dicts shaped like those of the full query; an
+        empty list if any part fails, so no item is filled half.
+    '''
+    results = []
+    for number, query in enumerate(queries, 1):
+        rows = query_sparql(query, sparql_endpoint, strict=True)
+        if rows is None:
+            logger.warning(
+                "Part %s of %s of a split SPARQL query failed; no items are filled from it.",
+                number, len(queries),
+            )
+            return []
+        if not rows and not results:
+            return []                 # no item exists, so the other parts have nothing to add
+        results.append(rows)
+
+    columns = {}
+    for rows in results[1:]:
+        for row in rows:
+            columns.setdefault(row['id']['value'], {}).update(row)
+    return [{**columns.get(row['id']['value'], {}), **row} for row in results[0]]
 
 def query_sparql_pool(query_input):
     '''Execute multiple SPARQL queries in parallel and return a keyed result dict.

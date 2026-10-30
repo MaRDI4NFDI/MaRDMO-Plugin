@@ -27,13 +27,34 @@ The sequence when a user picks a *Mathematical Model* from the portal:
 1. RDMO emits `value_created` / `value_updated` for the model ID field.
 2. The router dispatches to `Information.model(instance)`.
 3. `model()` calls `_entry()`, which collects the selected QID and calls `_fill_model_batch()`.
-4. `_fetch_by_source()` fires a **single SPARQL query** (against MaRDI Portal, and optionally Wikidata) to retrieve the model's metadata.
+4. `_fetch_by_source()` fires a SPARQL query (against MaRDI Portal, and optionally Wikidata) to retrieve the model's metadata; for the large MaRDI queries it runs the query in parts (see [Split Queries](#split-queries)).
 5. `_fill_model_batch()` writes labels, descriptions, aliases, properties, and relations into the appropriate questionnaire pages via `value_editor()`.
 6. For each related sub-entity type (Research Problems, Mathematical Formulations, Computational Tasks, …), `_fill_model_batch()` calls `_hydrate_relatants()`, which in turn calls the corresponding `_fill_*_batch()` method **directly** — no signal is emitted.
 7. Each `_fill_*_batch()` call batches its SPARQL query across **all** entities of that type at once.  For example, if the selected model contains ten Mathematical Formulations, all ten are fetched in a single query and then distributed across the ten questionnaire pages.  The same applies to linked Research Problems, Computational Tasks, and so on.
 8. A `visited` set is passed through the entire call tree to prevent infinite loops when entities reference each other cyclically.
 
 The batching principle ensures that the number of SPARQL queries scales with the number of distinct *entity types* in the cascade, not with the number of individual entities.
+
+## Split Queries
+
+The MaRDI Portal answers queries with many `OPTIONAL` blocks slowly: the cost grows faster than the
+number of blocks, and blocks with several values each (aliases, relations, publications) multiply
+each other's rows before they are grouped.  The MaRDI queries for models, formulations, tasks and
+quantities (and their basics variants) therefore exist only as parts, in `model/queries/split/`
+(`task_mardi_1.sparql`, `task_mardi_2.sparql`, …), each with about four blocks.  The handlers still
+name the query by its path (`model/queries/task_mardi.sparql`), and `_fetch_by_source()` runs its parts
+instead; every other query, including all Wikidata queries, is a single file as before.
+
+`query_sparql_parts()` runs the parts one after another and merges their rows:
+
+- the first part contains the required patterns and decides which items exist and how many rows each
+  has; if it finds nothing, the other parts are not run;
+- every further part returns one row per item with its own columns, which are added to that item's rows;
+- if any part fails, no item of the batch is filled.
+
+The merged rows have the shape of a single query's rows, so the parsing in `model/models.py` does not
+depend on the split.  Which part requests which column, and the rules for changing the parts, are
+listed in the [README of the split queries](https://github.com/MaRDI4NFDI/MaRDMO-Plugin/blob/main/MaRDMO/model/queries/split/README.md).
 
 ## Database Writes and Network Requests
 

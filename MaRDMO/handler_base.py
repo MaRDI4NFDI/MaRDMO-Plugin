@@ -22,12 +22,13 @@ from .getters import (
     get_properties,
     get_sparql_query,
     get_sparql_query_optional,
+    get_sparql_query_parts,
     get_url,
 )
 from .helpers import process_qualifier, value_editor
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .workflow.models import ProcessStepUsage
-from .queries import query_sparql
+from .queries import query_sparql, query_sparql_parts
 
 # Lazy singleton – instantiated on first use so that the Django app registry
 # is guaranteed to be ready (publication.handlers imports rdmo ORM models).
@@ -98,7 +99,10 @@ def _fetch_by_source(items, mardi_file, wikidata_file, model_class):
     '''Run one SPARQL query per source and return a ``{external_id: instance}`` dict.
 
     Splits *items* by source prefix (``mardi:`` / ``wikidata:``), fires a
-    separate SPARQL request to each endpoint, and merges the results.
+    separate SPARQL request to each endpoint, and merges the results.  If the
+    MaRDI template exists as split parts (see
+    :func:`~MaRDMO.getters.get_sparql_query_parts`), the parts are run and
+    their rows merged.
 
     Uses :func:`~MaRDMO.getters.get_sparql_query` for the MaRDI template
     (always required) and :func:`~MaRDMO.getters.get_sparql_query_optional`
@@ -120,10 +124,16 @@ def _fetch_by_source(items, mardi_file, wikidata_file, model_class):
     wikidata_items = [(t, eid, si) for t, eid, si in items if eid.startswith('wikidata:')]
 
     if mardi_items:
-        query   = get_sparql_query(mardi_file).format(
-            _values_clause(mardi_items), **get_items(), **get_properties()
-        )
-        results = query_sparql(query, get_url('mardi', 'sparql'))
+        values = _values_clause(mardi_items)
+        parts  = get_sparql_query_parts(mardi_file)
+        if parts:
+            results = query_sparql_parts(
+                [part.format(values, **get_items(), **get_properties()) for part in parts],
+                get_url('mardi', 'sparql'),
+            )
+        else:
+            query   = get_sparql_query(mardi_file).format(values, **get_items(), **get_properties())
+            results = query_sparql(query, get_url('mardi', 'sparql'))
         if results:
             data_by_id.update(model_class.from_query_batch(results))
 

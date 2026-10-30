@@ -1,0 +1,90 @@
+# Part 5 of 6 of the MaRDI query task-basics_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?conit, " || ", ?conitl, " || ", ?conitd, " || "); SEPARATOR=" <|> ") AS ?contained_in_task)
+(GROUP_CONCAT(DISTINCT CONCAT(?dbt, " || ", ?dbtl, " || ", ?dbtd); SEPARATOR=" <|> ") AS ?discretized_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?dt, " || ", ?dtl, " || ", ?dtd); SEPARATOR=" <|> ") AS ?discretizes)
+(GROUP_CONCAT(DISTINCT CONCAT(?lbt, " || ", ?lbtl, " || ", ?lbtd); SEPARATOR=" <|> ") AS ?linearized_by)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?conitraw p:{contains} ?statement6.
+        ?statement6 ps:{contains} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?conitraw), STR(wd:))) AS ?conit)
+         
+        ?conitraw wdt:{instance of} wd:{computational task}.
+        
+        OPTIONAL {{
+            ?conitraw rdfs:label ?conitlraw.
+            FILTER (lang(?conitlraw) = 'en')
+        }}
+        BIND(COALESCE(?conitlraw, "No Label Provided!") AS ?conitl)
+        
+        OPTIONAL {{
+            ?conitraw schema:description ?conitdraw
+            FILTER (lang(?conitdraw) = 'en')
+        }}
+        BIND(COALESCE(?conitdraw, "No Description Provided!") AS ?conitd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{discretized by} ?dbtraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?dbtraw), STR(wd:))) AS ?dbt)
+                   
+        ?dbtraw wdt:{instance of} wd:{computational task}.
+        
+        OPTIONAL {{
+            ?dbtraw rdfs:label ?dbtlraw.
+            FILTER (lang(?dbtlraw) = 'en')
+        }}
+        BIND(COALESCE(?dbtlraw, "No Label Provided!") AS ?dbtl)
+
+        OPTIONAL {{
+            ?dbtraw schema:description ?dbtdraw
+            FILTER (lang(?dbtdraw) = 'en')
+        }}
+        BIND(COALESCE(?dbtdraw, "No Description Provided!") AS ?dbtd)
+    }}
+
+    OPTIONAL {{
+         ?dtraw wdt:{discretized by} ?id.
+         BIND(CONCAT("mardi:", STRAFTER(STR(?dtraw), STR(wd:))) AS ?dt)
+
+         ?dtraw wdt:{instance of} wd:{computational task}.
+
+         OPTIONAL {{
+            ?dtraw rdfs:label ?dtlraw.
+            FILTER (lang(?dtlraw) = 'en')
+        }}
+        BIND(COALESCE(?dtlraw, "No Label Provided!") AS ?dtl)
+
+        OPTIONAL {{
+            ?dtraw schema:description ?dtdraw
+            FILTER (lang(?dtdraw) = 'en')
+        }}
+        BIND(COALESCE(?dtdraw, "No Description Provided!") AS ?dtd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{linearized by} ?lbtraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?lbtraw), STR(wd:))) AS ?lbt)
+         
+        ?lbtraw wdt:{instance of} wd:{computational task}.
+
+        OPTIONAL {{
+            ?lbtraw rdfs:label ?lbtlraw.
+            FILTER (lang(?lbtlraw) = 'en')
+        }}
+        BIND(COALESCE(?lbtlraw, "No Label Provided!") AS ?lbtl)
+
+        OPTIONAL {{
+            ?lbtraw schema:description ?lbtdraw
+            FILTER (lang(?lbtdraw) = 'en')
+        }}
+        BIND(COALESCE(?lbtdraw, "No Description Provided!") AS ?lbtd)
+    }}
+}}
+GROUP BY ?id

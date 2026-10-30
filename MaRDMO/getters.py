@@ -20,12 +20,14 @@ Provides:
 - ``get_data``                   — load and cache JSON data from a package-relative file
 - ``get_sparql_query``           — load and cache a SPARQL query file
 - ``get_sparql_query_optional``  — load and cache a SPARQL query file, or ``None`` if absent
+- ``get_sparql_query_parts``     — load and cache the split parts of a SPARQL query file, if any
 - ``get_id``                     — retrieve attribute field(s) from all questionnaire values at a URI
 - ``get_answers``                — read questionnaire values for one attribute and merge into a dict
 '''
 
 import json
 import os
+import re
 from functools import lru_cache
 
 from django.apps import apps
@@ -188,6 +190,43 @@ def get_sparql_query_optional(file_name):
         return None
     with open(path, "r", encoding="utf-8") as sparql_file:
         return sparql_file.read()
+
+@lru_cache(maxsize=None)
+def get_sparql_query_parts(file_name):
+    '''Load the split parts of a SPARQL query file, or return ``None`` if it has none.
+
+    The parts of ``model/queries/task_mardi.sparql`` are
+    ``model/queries/split/task_mardi_1.sparql``, ``..._2.sparql`` and so on;
+    the query itself exists only as these parts.  Each part has only a few
+    OPTIONAL blocks, which the portal answers much faster than one query
+    with all of them (see ``model/queries/split/README.md``).
+    Result is cached indefinitely after the first read.
+
+    Args:
+        file_name: Path of the query relative to the package directory.
+
+    Returns:
+        Tuple of query strings in part order, or ``None``.
+    '''
+    folder, name = os.path.split(file_name)
+    stem = os.path.splitext(name)[0]
+    split_dir = os.path.join(os.path.dirname(__file__), folder, 'split')
+    if not os.path.isdir(split_dir):
+        return None
+    pattern = re.compile(rf'{re.escape(stem)}_(\d+)\.sparql')
+    numbers = sorted(
+        int(match.group(1))
+        for match in map(pattern.fullmatch, os.listdir(split_dir))
+        if match
+    )
+    if not numbers:
+        return None
+    parts = []
+    for number in numbers:
+        path = os.path.join(split_dir, f'{stem}_{number}.sparql')
+        with open(path, "r", encoding="utf-8") as sparql_file:
+            parts.append(sparql_file.read())
+    return tuple(parts)
 
 def get_id(project, uri, keys):
     '''Retrieve one or more attribute fields from all questionnaire values at *uri*.

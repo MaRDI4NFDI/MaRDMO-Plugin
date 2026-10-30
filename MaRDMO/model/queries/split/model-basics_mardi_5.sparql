@@ -1,0 +1,96 @@
+# Part 5 of 9 of the MaRDI query model-basics_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?rp, " || ", ?rpl, " || ", ?rpd); SEPARATOR=" <|> ") AS ?models)
+(GROUP_CONCAT(DISTINCT CONCAT(?ass, " || ", ?assl, " || ", ?assd, " || "); SEPARATOR=" <|> ") AS ?assumes)
+(GROUP_CONCAT(DISTINCT CONCAT(?ta, " || ", ?tal, " || ", ?tad); SEPARATOR=" <|> ") AS ?used_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?conf, " || ", ?confl, " || ", ?confd, " || ", ?confq); SEPARATOR=" <|> ") AS ?contains_formulation)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?rpraw wdt:{modelled by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?rpraw), STR(wd:))) AS ?rp)
+         
+        ?rpraw wdt:{instance of} wd:{research problem}.
+        
+        OPTIONAL {{
+            ?rpraw rdfs:label ?rplraw.
+            FILTER (lang(?rplraw) = 'en')
+        }}
+        BIND(COALESCE(?rplraw, "No Label Provided!") AS ?rpl)
+        
+        OPTIONAL {{
+            ?rpraw schema:description ?rpdraw
+            FILTER (lang(?rpdraw) = 'en')
+        }}
+        BIND(COALESCE(?rpdraw, "No Description Provided!") AS ?rpd)
+    }}
+
+    OPTIONAL {{
+        ?id p:{assumes} ?statement_x.
+        ?statement_x ps:{assumes} ?assraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?assraw), STR(wd:))) AS ?ass)
+
+        ?assraw wdt:{instance of} wd:{formula}.
+
+        OPTIONAL {{
+            ?assraw rdfs:label ?asslraw.
+            FILTER (lang(?asslraw) = 'en')
+        }}
+        BIND(COALESCE(?asslraw, "No Label Provided!") AS ?assl)
+
+        OPTIONAL {{
+            ?assraw schema:description ?assdraw
+            FILTER (lang(?assdraw) = 'en')
+        }}
+        BIND(COALESCE(?assdraw, "No Description Provided!") AS ?assd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{used by} ?taraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?taraw), STR(wd:))) AS ?ta)
+         
+        ?taraw wdt:{instance of} wd:{computational task}.
+        
+        OPTIONAL {{
+            ?taraw rdfs:label ?talraw.
+            FILTER (lang(?talraw) = 'en')
+        }}
+        BIND(COALESCE(?talraw, "No Label Provided!") AS ?tal)
+        
+        OPTIONAL {{
+            ?taraw schema:description ?tadraw
+            FILTER (lang(?tadraw) = 'en')
+        }}
+        BIND(COALESCE(?tadraw, "No Description Provided!") AS ?tad)
+    }}
+
+    OPTIONAL {{
+        ?id p:{contains} ?statement_y.
+        ?statement_y ps:{contains} ?confraw.
+        ?confraw wdt:{instance of} wd:{formula}.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?confraw), STR(wd:))) AS ?conf)
+         
+        OPTIONAL {{
+            ?confraw rdfs:label ?conflraw.
+            FILTER (lang(?conflraw) = 'en')
+        }}
+        BIND(COALESCE(?conflraw, "No Label Provided!") AS ?confl)
+        
+        OPTIONAL {{
+            ?confraw schema:description ?confdraw
+            FILTER (lang(?confdraw) = 'en')
+        }}
+        BIND(COALESCE(?confdraw, "No Description Provided!") AS ?confd)
+        
+        OPTIONAL {{
+            ?statement_y pq:{object has role} ?quaraw.
+            BIND(CONCAT("mardi:", STRAFTER(STR(?quaraw), STR(wd:))) AS ?qua)
+        }}
+        BIND(COALESCE(?qua, "") AS ?confq)
+    }}
+}}
+GROUP BY ?id
