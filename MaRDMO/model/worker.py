@@ -122,12 +122,14 @@ class PrepareModel(PublicationExport):
                         present.discard(opt_a)
                         present.discard(opt_b)
 
-                all_prop_keys = {k for k, _ in DEPENDENT_PROPERTIES + INDEPENDENT_PROPERTIES}
+                all_prop_keys = [k for k, _ in DEPENDENT_PROPERTIES + INDEPENDENT_PROPERTIES]
                 correct = {key for key in all_prop_keys if self.mathmoddb.get(key=key)["url"] in present}
 
+                # Fixed order of the constants, so contradicting pairs stand together
                 class_item['Properties_Check'] = [
                     {'label': self.mathmoddb.get(key=k)['label'], 'error': k in wrong}
-                    for k in correct | wrong
+                    for k in all_prop_keys
+                    if k in correct or k in wrong
                 ]
 
         # Portal verdict for every formula and symbol (shown next to each)
