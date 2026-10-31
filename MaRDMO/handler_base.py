@@ -362,6 +362,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         existing = get_id(project, pub_set_uri, ['set_index'])
         next_idx = max((e for e in existing if e is not None), default=-1) + 1
 
+        entries = []
         for pub in publications:
             if pub.id in visited:
                 continue
@@ -375,10 +376,11 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                          info={'text': text, 'external_id': pub.id,
                                'set_index': next_idx})
 
-            pub_info.fill_citation(project=project, text=text,
-                                   external_id=pub.id, set_index=next_idx,
-                                   catalog=catalog)
+            entries.append((text, pub.id, next_idx))
             next_idx += 1
+
+        # One citation query per source for all publications
+        pub_info.fill_citations(project=project, entries=entries, catalog=catalog)
 
     def _fill_algorithm_batch(self, project, items, catalog='', visited=None):
         '''Hydrate multiple Algorithm pages with a single SPARQL query per source.
