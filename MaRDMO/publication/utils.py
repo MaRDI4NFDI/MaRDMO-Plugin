@@ -128,18 +128,25 @@ def assign_id(entities, target, prefix):
     ``label``, and ``description`` fields when the entity currently has no ID
     or a placeholder such as ``"not found"``.
 
+    An ID is not given to a second entity: Wikidata often lists an author as
+    item and as name string, and the name string then stays a name string.
+    Entities with a Wikidata ID are therefore matched first.
+
     Args:
         entities: Iterable of entity dataclass instances to update.
         target:   Dict of resolved entities (from SPARQL results) to match against.
         prefix:   Source prefix prepended to the resolved ID (e.g. ``"mardi"``).
     '''
-    for entity in entities:
+    entities = list(entities)
+    for entity in sorted(entities, key=lambda e: not (e.id or '').startswith('wikidata')):
         if (
             not entity.id
             or entity.id in ('not found', 'no author found', 'no journal found')
             or entity.id.startswith('wikidata')
         ):
             for id_entity in target.values():
+                if any(other.id == f"{prefix}:{id_entity.id}" for other in entities):
+                    continue
                 if entity.label.lower() == id_entity.label.lower():
                     entity.id = f"{prefix}:{id_entity.id}"
                     entity.label = id_entity.label
