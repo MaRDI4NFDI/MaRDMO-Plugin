@@ -24,8 +24,10 @@ The first source in that order that returns a valid response wins.
 Once the primary metadata has been retrieved, the **ORCiD public API** is queried to find researchers associated with the DOI:
 
 ```
-https://pub.orcid.org/v3.0/search/?q=doi-self:"{doi}"
+https://pub.orcid.org/v3.0/expanded-search/?q=doi-self:"{doi}"
 ```
+
+The expanded search returns the names together with the ORCiD iDs, so one request suffices however many researchers list the DOI.
 
 The results enrich author records with ORCiD identifiers regardless of which primary source was chosen.
 

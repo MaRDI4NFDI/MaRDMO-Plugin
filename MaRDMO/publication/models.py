@@ -279,11 +279,11 @@ class Author:
 
     @classmethod
     def from_orcid(cls, raw: str) -> 'Author':
-        '''Build an Author instance from an ORCID API person record.
+        '''Build an Author instance from an ORCID expanded-search record.
 
         Args:
-            raw: Dict-like object from the ORCID API with an optional ``name``
-                 sub-dict containing ``given-names``, ``family-name``, and ``path``.
+            raw: Dict-like entry of the ``expanded-result`` list with
+                 ``orcid-id``, ``given-names``, and ``family-names``.
 
         Returns:
             Author instance; ``id`` is ``'no author found'`` when a name is present
@@ -291,19 +291,14 @@ class Author:
         '''
 
         label = None
-        given = family = None
-        orcid_id = zbmath_id = wikidata_id = None
+        zbmath_id = wikidata_id = None
 
         # Get Name & ORCID ID
-        if raw.get('name'):
-            name = raw.get('name', {})
-            if name.get('given-names', {}):
-                given = name.get('given-names', {}).get('value')
-            if name.get('family-name', {}):
-                family = name.get('family-name', {}).get('value')
-            orcid_id = name.get('path')
-            if given and family:
-                label = f"{given} {family}"
+        given = raw.get('given-names')
+        family = raw.get('family-names')
+        orcid_id = raw.get('orcid-id')
+        if given and family:
+            label = f"{given} {family}"
 
         # Get MaRDI Portal ID
         identifier = None

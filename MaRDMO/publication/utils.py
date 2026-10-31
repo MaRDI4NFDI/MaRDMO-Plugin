@@ -12,8 +12,7 @@ Provides:
 - ``get_datacite_data``       — query the DataCite REST API
 - ``get_doi_data``            — DOI resolver wrapper
 - ``get_zbmath_data``         — query the ZbMATH Open API
-- ``get_orcids``              — look up ORCID IDs for publication authors
-- ``get_author_by_orcid``     — fetch a single author record from the ORCID API
+- ``get_orcids``              — look up the ORCID records of publication authors
 - ``extract_authors``         — parse author list from API response
 - ``extract_journals``        — parse journal info from API response
 - ``assign_id``               — attach portal / ZbMATH IDs to entity dicts
@@ -452,11 +451,8 @@ def _orcid_authors(doi):
         response = get_orcids(doi)
         if response is None or response.status_code != 200:
             return authors
-        for idx, entry in enumerate(response.json().get('result') or []):
-            orcid_id = entry.get('orcid-identifier', {}).get('path', '')
-            person = get_author_by_orcid(orcid_id)
-            if person is not None and person.status_code == 200:
-                authors[idx] = Author.from_orcid(person.json())
+        for idx, entry in enumerate(response.json().get('expanded-result') or []):
+            authors[idx] = Author.from_orcid(entry)
     except Exception:  # pylint: disable=broad-exception-caught
         logger.exception("Could not look up ORCID authors for %s", doi)
     return authors
@@ -546,17 +542,21 @@ def get_zbmath_data(doi):
 def get_orcids(doi):
     '''Query the ORCID public API for researchers associated with *doi*.
 
+    The expanded search returns the names with the ORCID iDs, so no further
+    request per researcher is needed.
+
     Args:
         doi: DOI string used as the ``doi-self`` search criterion.
 
     Returns:
         :class:`requests.Response` (status 200) containing a JSON payload with
-        an ``"result"`` list of ORCID records on success, or ``None``
+        an ``"expanded-result"`` list of ORCID records on success, or ``None``
         on failure (logged as a warning).
     '''
     try:
         request = http_session().get(
-            f'https://pub.orcid.org/v3.0/search/?q=doi-self:"{doi}"',
+            'https://pub.orcid.org/v3.0/expanded-search/',
+            params = {'q': f'doi-self:"{doi}"'},
             headers = {'Accept': 'application/json'},
             timeout = REQUEST_TIMEOUT
         )
@@ -564,27 +564,4 @@ def get_orcids(doi):
         return request
     except requests.exceptions.RequestException as error:
         logger.warning("ORCID search for %s failed: %s", doi, error)
-        return None
-
-def get_author_by_orcid(orcid_id):
-    '''Fetch personal-details for a researcher from the ORCID public API.
-
-    Args:
-        orcid_id: ORCID iD string (e.g. ``"0000-0002-1825-0097"``).
-
-    Returns:
-        :class:`requests.Response` (status 200) containing a JSON payload with
-        the researcher's personal details on success, or ``None``
-        on failure (logged as a warning).
-    '''
-    try:
-        request = http_session().get(
-            f"https://pub.orcid.org/v3.0/{orcid_id}/personal-details",
-            headers = {'Accept': 'application/json'},
-            timeout = REQUEST_TIMEOUT
-        )
-        request.raise_for_status()
-        return request
-    except requests.exceptions.RequestException as error:
-        logger.warning("ORCID lookup of %s failed: %s", orcid_id, error)
         return None
