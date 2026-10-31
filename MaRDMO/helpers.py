@@ -305,11 +305,14 @@ def split_value(
     """
     Split ``data[key]['value']`` on ``' <|> '``. Optionally apply a transform
     to each element and filter the results with ``object_role``.
+
+    The elements are sorted (relatants thereby by ID), as SPARQL's
+    ``GROUP_CONCAT`` returns them in no fixed order.
     """
     if key not in data:
         return []
 
-    raw = data.get(key, {}).get('value', '').split(" <|> ")
+    raw = sorted(data.get(key, {}).get('value', '').split(" <|> "))
 
     parts = [part for part in raw if part]
 

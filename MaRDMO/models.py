@@ -124,6 +124,10 @@ class RelatantWithQualifier:
             RelatantWithQualifier instance populated from the parsed fields.
         '''
         identifier, label, description, qualifier = raw.split(" || ", 3)
+        # The qualifier entries come in no fixed order; sorted, equal
+        # qualifiers compare equal (see adders.add_relations_flexible)
+        if qualifier:
+            qualifier = ' <<||>> '.join(sorted(qualifier.split(' <<||>> ')))
         return cls(
             id = identifier,
             label = label,

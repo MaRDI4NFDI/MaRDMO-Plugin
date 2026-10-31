@@ -15,6 +15,7 @@ import hashlib
 import json
 import logging
 import threading
+import time
 from multiprocessing.pool import ThreadPool
 
 import requests
@@ -29,6 +30,14 @@ logger = logging.getLogger(__name__)
 
 # Search results of the MaRDI Portal and Wikidata are reused for this long
 SEARCH_CACHE_TIMEOUT = 5 * 60
+
+# A SPARQL query is given up after this many seconds and retried once on a
+# timeout, a connection error or one of these answers, after the portal's
+# Retry-After (at most SPARQL_MAX_RETRY_WAIT seconds) or SPARQL_RETRY_WAIT
+SPARQL_TIMEOUT = 30
+SPARQL_RETRY_STATUS = (429, 502, 503, 504)
+SPARQL_RETRY_WAIT = 2
+SPARQL_MAX_RETRY_WAIT = 10
 
 _SESSIONS = threading.local()
 
@@ -161,6 +170,10 @@ def query_sparql(query, sparql_endpoint, strict=False):
         strict:          If ``True``, return ``None`` instead of ``[]`` when the
                          query fails, so callers can tell "failed" from "no results".
 
+    A query that times out (after :data:`SPARQL_TIMEOUT` seconds), cannot
+    connect, or is answered with one of :data:`SPARQL_RETRY_STATUS` is
+    retried once.
+
     Returns:
         List of result-binding dicts from ``results.bindings``; on any network
         error, HTTP error, invalid answer, or missing endpoint an empty list
@@ -172,39 +185,54 @@ def query_sparql(query, sparql_endpoint, strict=False):
         logger.warning("SPARQL query attempted without a valid endpoint.")
         return failed
 
-    try:
-        response = http_session().post(
-            sparql_endpoint,
-            data=query.encode("utf-8"),
-            headers={
-                "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
-                "Content-Type": "application/sparql-query; charset=UTF-8",
-                "Accept": "application/sparql-results+json"
-            },
-            timeout = 60
-        )
-        # Check if request was successful
-        if response.status_code == 200:
-            return response.json().get('results', {}).get('bindings', [])
+    for attempt in (1, 2):
+        retry_after = None
+        try:
+            response = http_session().post(
+                sparql_endpoint,
+                data=query.encode("utf-8"),
+                headers={
+                    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+                    "Content-Type": "application/sparql-query; charset=UTF-8",
+                    "Accept": "application/sparql-results+json"
+                },
+                timeout = SPARQL_TIMEOUT
+            )
+            # Check if request was successful
+            if response.status_code == 200:
+                return response.json().get('results', {}).get('bindings', [])
 
-        logger.error(
-            "SPARQL request to %s failed with status %s: %s",
-            sparql_endpoint,
-            response.status_code,
-            response.text,
-        )
+            if attempt == 2 or response.status_code not in SPARQL_RETRY_STATUS:
+                logger.error(
+                    "SPARQL request to %s failed with status %s: %s",
+                    sparql_endpoint,
+                    response.status_code,
+                    response.text,
+                )
+                return failed
+            retry_after = response.headers.get('Retry-After')
+            reason = f"status {response.status_code}"
 
-    except requests.exceptions.ConnectionError:
-        logger.error(
-            "SPARQL query failed: Unable to connect to the %s.",
-            sparql_endpoint
-        )
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+            if attempt == 2:
+                logger.error("SPARQL query to %s failed: %s", sparql_endpoint, e)
+                return failed
+            reason = type(e).__name__
 
-    except requests.exceptions.RequestException as e:
-        logger.exception("SPARQL request failed: %s", e)
+        except requests.exceptions.RequestException as e:
+            logger.exception("SPARQL request failed: %s", e)
+            return failed
 
-    except ValueError as e:
-        logger.error("SPARQL answer from %s is not valid JSON: %s", sparql_endpoint, e)
+        except ValueError as e:
+            logger.error("SPARQL answer from %s is not valid JSON: %s", sparql_endpoint, e)
+            return failed
+
+        wait = SPARQL_RETRY_WAIT
+        if retry_after and str(retry_after).isdigit():
+            wait = min(float(retry_after), SPARQL_MAX_RETRY_WAIT)
+        logger.warning("SPARQL query to %s failed (%s); retrying in %s s.",
+                       sparql_endpoint, reason, wait)
+        time.sleep(wait)
 
     return failed
 

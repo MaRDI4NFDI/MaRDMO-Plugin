@@ -74,6 +74,20 @@ All requests to external services go through `queries.http_session()`, which
 commits the pending writes and reuses one HTTP session per thread, so repeated
 requests to the same service keep their connection open.
 
+A handler runs inside the request that saves the answer, so a struggling portal must not
+hold it for minutes:
+
+- A SPARQL query is given up after 30 seconds and retried once on a timeout, a
+  connection error, or the answers 429, 502, 503 and 504, after the portal's
+  `Retry-After` (at most 10 seconds) or 2 seconds.  If it fails again, the items of
+  that query are not filled and the failure is logged.
+- `wbgetentities` retries with backoff, caps every wait (including `Retry-After`) at
+  20 seconds and stops retrying after 45 seconds per batch.
+
+The portal returns the values of a list column (relations, aliases, publications, …)
+in no fixed order.  `helpers.split_value()` sorts them, relatants thereby by ID, so
+adding the same item twice fills the same pages in the same order.
+
 ## Pre-Save Validation
 
 In addition to the post-save handler dispatch, MaRDMO registers a `pre_save`
