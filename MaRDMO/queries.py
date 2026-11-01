@@ -33,11 +33,17 @@ SEARCH_CACHE_TIMEOUT = 5 * 60
 
 # A SPARQL query is given up after this many seconds and retried once on a
 # timeout, a connection error or one of these answers, after the portal's
-# Retry-After (at most SPARQL_MAX_RETRY_WAIT seconds) or SPARQL_RETRY_WAIT
+# Retry-After (at most SPARQL_MAX_RETRY_WAIT seconds) or SPARQL_RETRY_WAIT;
+# request_with_retry() applies the same rule to other requests
 SPARQL_TIMEOUT = 30
 SPARQL_RETRY_STATUS = (429, 502, 503, 504)
 SPARQL_RETRY_WAIT = 2
 SPARQL_MAX_RETRY_WAIT = 10
+# A failed export check stops the export, so these requests are retried twice
+# (pauses in seconds), and all of a check's requests give up after
+# EXPORT_CHECK_DEADLINE seconds
+EXPORT_RETRY_WAITS = (2, 5)
+EXPORT_CHECK_DEADLINE = 120
 
 _SESSIONS = threading.local()
 
@@ -57,7 +63,60 @@ def http_session():
     return session
 
 
-def query_item(label, description, api = get_url('mardi', 'api')):
+def request_with_retry(method, url, waits=(SPARQL_RETRY_WAIT,), deadline=None, **kwargs):
+    '''Send a request with :func:`http_session` and retry it on transient failures.
+
+    A timeout, a connection error, or one of :data:`SPARQL_RETRY_STATUS` is
+    retried after the next pause in *waits*, or after the answer's
+    ``Retry-After`` (at most :data:`SPARQL_MAX_RETRY_WAIT` seconds).  Other
+    answers, including 400, are returned at once.
+
+    Args:
+        method:   HTTP method (``'get'`` or ``'post'``).
+        url:      Request URL.
+        waits:    Pauses (seconds) before the retries; ``()`` sends the
+                  request once.
+        deadline: :func:`time.monotonic` value after which no retry starts;
+                  the timeout of each attempt is shortened to end by then.
+        **kwargs: Passed on to :meth:`requests.Session.request`.
+
+    Returns:
+        The last :class:`requests.Response`, whatever its status code.
+
+    Raises:
+        requests.exceptions.RequestException: If the last attempt failed
+            without an answer.
+    '''
+    timeout = kwargs.pop('timeout', None)
+    for wait in (*waits, None):
+        if deadline is not None and timeout is not None:
+            kwargs['timeout'] = max(1, min(timeout, deadline - time.monotonic()))
+        else:
+            kwargs['timeout'] = timeout
+        error = None
+        try:
+            response = http_session().request(method, url, **kwargs)
+            if wait is None or response.status_code not in SPARQL_RETRY_STATUS:
+                return response
+            retry_after = response.headers.get('Retry-After')
+            if retry_after and str(retry_after).isdigit():
+                wait = min(float(retry_after), SPARQL_MAX_RETRY_WAIT)
+            reason = f"status {response.status_code}"
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+            if wait is None:
+                raise
+            error, reason = e, type(e).__name__
+        if deadline is not None and time.monotonic() + wait >= deadline:
+            logger.warning("Request to %s failed (%s); no time left for a retry.", url, reason)
+            if error is not None:
+                raise error
+            return response
+        logger.warning("Request to %s failed (%s); retrying in %s s.", url, reason, wait)
+        time.sleep(wait)
+    return response  # not reached: the last attempt returns or raises
+
+
+def query_item(label, description, api = get_url('mardi', 'api'), waits=(), deadline=None):
     '''Search a Wikibase API for an item matching *label* and *description* exactly.
 
     Skips the request if *description* is empty or the placeholder string
@@ -67,16 +126,20 @@ def query_item(label, description, api = get_url('mardi', 'api')):
         label:       Label (or alias) to search for (case-insensitive).
         description: Exact description the matched item must have.
         api:         Wikibase ``wbsearchentities`` API URL; defaults to MaRDI Portal.
+        waits:       Pauses before retries of the search (see
+                     :func:`request_with_retry`); ``()`` searches once.
+        deadline:    :func:`time.monotonic` value after which no retry starts.
 
     Returns:
-        The Wikibase QID string of the first match, or ``None`` if no match.
+        The Wikibase QID string of the first match, or ``None`` if no match
+        (also if the search failed).
     '''
     # Only check Items with description
     if not description or description == 'No Description Provided!':
         return None
 
     # Get data from API
-    data = query_api(api, label)
+    data = query_api(api, label, waits=waits, deadline=deadline)
 
     # Normalize input label for comparison (case insensitive)
     norm_label = label.strip().lower()
@@ -99,7 +162,7 @@ def query_item(label, description, api = get_url('mardi', 'api')):
 
     return None
 
-def query_api(api_url, search_term, timeout=5, raise_errors=False):
+def query_api(api_url, search_term, timeout=5, raise_errors=False, waits=(), deadline=None):
     '''Search a Wikibase API endpoint for items whose label matches *search_term*.
 
     Uses the ``wbsearchentities`` action with ``limit=10``.
@@ -110,14 +173,20 @@ def query_api(api_url, search_term, timeout=5, raise_errors=False):
         timeout:      Request timeout in seconds (default 5).
         raise_errors: Raise request and JSON errors instead of returning an
                       empty list, so callers can tell a failure from no hits.
+        waits:        Pauses before retries (see :func:`request_with_retry`);
+                      ``()`` searches once.
+        deadline:     :func:`time.monotonic` value after which no retry starts.
 
     Returns:
         List of raw Wikibase search-result dicts; empty list on any error
         (unless *raise_errors*).
     '''
     try:
-        response = http_session().get(
+        response = request_with_retry(
+            'get',
             api_url,
+            waits=waits,
+            deadline=deadline,
             params={
                 'action': 'wbsearchentities',
                 'format': 'json',
@@ -161,7 +230,7 @@ def sparql_string(value):
     )
     return f'"{escaped}"'
 
-def query_sparql(query, sparql_endpoint, strict=False):
+def query_sparql(query, sparql_endpoint, strict=False, waits=(SPARQL_RETRY_WAIT,), deadline=None):
     '''Execute a SPARQL SELECT query against *sparql_endpoint* and return bindings.
 
     Args:
@@ -169,10 +238,12 @@ def query_sparql(query, sparql_endpoint, strict=False):
         sparql_endpoint: URL of the SPARQL endpoint (e.g. the MaRDI or Wikidata endpoint).
         strict:          If ``True``, return ``None`` instead of ``[]`` when the
                          query fails, so callers can tell "failed" from "no results".
+        waits:           Pauses before the retries (see :func:`request_with_retry`).
+        deadline:        :func:`time.monotonic` value after which no retry starts.
 
     A query that times out (after :data:`SPARQL_TIMEOUT` seconds), cannot
     connect, or is answered with one of :data:`SPARQL_RETRY_STATUS` is
-    retried once.
+    retried once (or once per pause in *waits*).
 
     Returns:
         List of result-binding dicts from ``results.bindings``; on any network
@@ -185,54 +256,38 @@ def query_sparql(query, sparql_endpoint, strict=False):
         logger.warning("SPARQL query attempted without a valid endpoint.")
         return failed
 
-    for attempt in (1, 2):
-        retry_after = None
-        try:
-            response = http_session().post(
-                sparql_endpoint,
-                data=query.encode("utf-8"),
-                headers={
-                    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
-                    "Content-Type": "application/sparql-query; charset=UTF-8",
-                    "Accept": "application/sparql-results+json"
-                },
-                timeout = SPARQL_TIMEOUT
-            )
-            # Check if request was successful
-            if response.status_code == 200:
-                return response.json().get('results', {}).get('bindings', [])
+    try:
+        response = request_with_retry(
+            'post',
+            sparql_endpoint,
+            waits=waits,
+            deadline=deadline,
+            data=query.encode("utf-8"),
+            headers={
+                "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+                "Content-Type": "application/sparql-query; charset=UTF-8",
+                "Accept": "application/sparql-results+json"
+            },
+            timeout=SPARQL_TIMEOUT
+        )
+        # Check if request was successful
+        if response.status_code == 200:
+            return response.json().get('results', {}).get('bindings', [])
+        logger.error(
+            "SPARQL request to %s failed with status %s: %s",
+            sparql_endpoint,
+            response.status_code,
+            response.text,
+        )
 
-            if attempt == 2 or response.status_code not in SPARQL_RETRY_STATUS:
-                logger.error(
-                    "SPARQL request to %s failed with status %s: %s",
-                    sparql_endpoint,
-                    response.status_code,
-                    response.text,
-                )
-                return failed
-            retry_after = response.headers.get('Retry-After')
-            reason = f"status {response.status_code}"
+    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+        logger.error("SPARQL query to %s failed: %s", sparql_endpoint, e)
 
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
-            if attempt == 2:
-                logger.error("SPARQL query to %s failed: %s", sparql_endpoint, e)
-                return failed
-            reason = type(e).__name__
+    except requests.exceptions.RequestException as e:
+        logger.exception("SPARQL request failed: %s", e)
 
-        except requests.exceptions.RequestException as e:
-            logger.exception("SPARQL request failed: %s", e)
-            return failed
-
-        except ValueError as e:
-            logger.error("SPARQL answer from %s is not valid JSON: %s", sparql_endpoint, e)
-            return failed
-
-        wait = SPARQL_RETRY_WAIT
-        if retry_after and str(retry_after).isdigit():
-            wait = min(float(retry_after), SPARQL_MAX_RETRY_WAIT)
-        logger.warning("SPARQL query to %s failed (%s); retrying in %s s.",
-                       sparql_endpoint, reason, wait)
-        time.sleep(wait)
+    except ValueError as e:
+        logger.error("SPARQL answer from %s is not valid JSON: %s", sparql_endpoint, e)
 
     return failed
 

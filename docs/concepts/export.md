@@ -78,7 +78,10 @@ and a dependency graph:
     - All other items (from Wikidata, or newly defined) are again checked against the
       MaRDI Portal for duplicates (`_check_mardi_and_raise`), then registered as new
       with an empty QID and a seed list of statements (Wikidata QID, ORCiD, zbMath
-      code, or ISSN as appropriate).
+      code, or ISSN as appropriate).  The searches for all new items run first,
+      four at a time; a search that still fails after its retries finds nothing,
+      and the MaRDI Portal itself rejects an item whose label and description
+      exist already (see below).
 - **`add_answer()` calls** accumulate statements:
     - For **new items**: statements are appended to the item's payload and will be
       created together with the item in a single API call.
@@ -95,11 +98,19 @@ and a dependency graph:
 - **Relation existence check**: `build_relation_check_queries()` generates SPARQL
   queries (in chunks of 50 relations) that check, for every `RELATION` entry
   targeting an existing item, whether that exact statement already exists on the
-  MaRDI Portal.  Only genuinely new relations are posted during upload.  Failed
-  queries are retried; if a check still cannot be completed, the export is
-  aborted, since posting without it could create duplicate statements.  For
+  MaRDI Portal.  Only genuinely new relations are posted during upload.  For
   `math`-datatype statements a separate API-based check is used, because SPARQL
-  returns MathML while the MaRDI Portal stores LaTeX.
+  returns MathML while the MaRDI Portal stores LaTeX.  If a check cannot be
+  completed, the export is aborted, since posting without it could create
+  duplicate statements.
+
+All requests of these checks (duplicate search, relation and math check) are
+retried twice on a timeout, a connection error, or the answers 429, 502, 503 and
+504, after 2 and 5 seconds or the portal's `Retry-After` (at most 10 seconds);
+other answers, such as 400, are not retried.  Each check gives up after
+2 minutes in total.  The rule is the one of `queries.request_with_retry()`,
+which also retries SPARQL queries and the TeX check once (see
+[Handlers](handlers.md#database-writes-and-network-requests)).
 - **Dependency graph**: whenever a new item's statement references another new item
   (identified by an `Item<n>` placeholder), that dependency is recorded so that items
   can be created in the correct order.

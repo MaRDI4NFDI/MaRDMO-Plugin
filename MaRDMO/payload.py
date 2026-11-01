@@ -22,10 +22,20 @@ from typing import Optional
 
 import re
 import time
+from multiprocessing.pool import ThreadPool
+
 import requests
 
+from .helpers import commit_writes
 from .patterns import QUANTITY_AMOUNT_RE
-from .queries import query_item, query_sparql, sparql_string
+from .queries import (
+    EXPORT_CHECK_DEADLINE,
+    EXPORT_RETRY_WAITS,
+    query_item,
+    query_sparql,
+    request_with_retry,
+    sparql_string,
+)
 from .validators import (
     REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, doi_problem, normalize_formula, swmath_problem, url_problem,
 )
@@ -47,8 +57,8 @@ _INVISIBLE_WHITESPACE_RE = re.compile(r'[\t\v\f]')
 
 # Relations per existence-check query; keeps single queries small and fast
 _RELATION_CHECK_CHUNK = 50
-# Pauses (seconds) before retrying a failed existence-check query
-_RELATION_CHECK_RETRY_DELAYS = (2, 5)
+# Duplicate checks of new items running at the same time
+_DUPLICATE_CHECK_THREADS = 4
 
 
 def _text_of(value):
@@ -151,6 +161,8 @@ class GeneratePayload:
         self.dependency: dict= dependency
         # Working Attributes
         self.state: PayloadState = PayloadState()
+        # (name, description) → QID of an existing portal item, or None
+        self._duplicates: dict = {}
 
     def _items_url(self):
         '''Return the Wikibase REST API endpoint URL for creating new items.'''
@@ -670,7 +682,9 @@ class GeneratePayload:
         '''Mark every RELATION entry that already exists on the portal.
 
         Runs the SPARQL existence checks from :meth:`build_relation_check_queries`
-        (retrying failed queries) and checks math statements via the API.
+        and checks math statements via the API.  Failed requests are retried
+        after :data:`~MaRDMO.queries.EXPORT_RETRY_WAITS`; all of them together
+        give up after :data:`~MaRDMO.queries.EXPORT_CHECK_DEADLINE` seconds.
 
         Args:
             sparql_endpoint: SPARQL endpoint URL of the portal.
@@ -683,15 +697,11 @@ class GeneratePayload:
         if not any(key.startswith('RELATION') for key in self.state.dictionary):
             return
 
+        deadline = time.monotonic() + EXPORT_CHECK_DEADLINE
         check = {}
         for query in self.build_relation_check_queries():
-            bindings = query_sparql(query, sparql_endpoint)
-            for delay in _RELATION_CHECK_RETRY_DELAYS:
-                if bindings:
-                    break
-                _logger.warning("Relation check query failed, retrying in %s s", delay)
-                time.sleep(delay)
-                bindings = query_sparql(query, sparql_endpoint)
+            bindings = query_sparql(query, sparql_endpoint, strict=True,
+                                    waits=EXPORT_RETRY_WAITS, deadline=deadline)
             # A successful query always returns exactly one row
             if not bindings:
                 raise ValueError(
@@ -711,12 +721,12 @@ class GeneratePayload:
                 k for k in self.state.dictionary if k.startswith('RELATION')
             )
         }
-        for key, exists in self.check_math_relations_via_api(api_url).items():
+        for key, exists in self.check_math_relations_via_api(api_url, deadline).items():
             check[f'RELATION{relation_index[key]}'] = exists
 
         self.add_check_results(check)
 
-    def check_math_relations_via_api(self, api_url):
+    def check_math_relations_via_api(self, api_url, deadline=None):
         '''Check existence of math-datatype RELATION statements via wbgetentities.
 
         SPARQL returns math values as MathML, but portal stores LaTeX.  This
@@ -757,30 +767,28 @@ class GeneratePayload:
         for i in range(0, len(items_needed), chunk_size):
             chunk = items_needed[i:i + chunk_size]
             body = None
-            for delay in (0,) + _RELATION_CHECK_RETRY_DELAYS:
-                time.sleep(delay)
-                try:
-                    resp = requests.get(
-                        api_url,
-                        params={
-                            'action': 'wbgetentities',
-                            'ids':    '|'.join(chunk),
-                            'props':  'claims',
-                            'format': 'json',
-                        },
-                        headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
-                        timeout=30,
-                    )
-                    resp.raise_for_status()
-                    body = resp.json()
-                except (requests.exceptions.RequestException, ValueError) as exc:
-                    _logger.warning("Math relation API check failed: %s", exc)
-                    continue
-                if 'error' in body:
-                    _logger.warning("Math relation API check failed: %s", body['error'])
-                    body = None
-                    continue
-                break
+            try:
+                resp = request_with_retry(
+                    'get',
+                    api_url,
+                    waits=EXPORT_RETRY_WAITS,
+                    deadline=deadline,
+                    params={
+                        'action': 'wbgetentities',
+                        'ids':    '|'.join(chunk),
+                        'props':  'claims',
+                        'format': 'json',
+                    },
+                    headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
+                    timeout=30,
+                )
+                resp.raise_for_status()
+                body = resp.json()
+            except (requests.exceptions.RequestException, ValueError) as exc:
+                _logger.warning("Math relation API check failed: %s", exc)
+            if body is not None and 'error' in body:
+                _logger.warning("Math relation API check failed: %s", body['error'])
+                body = None
             if body is None:
                 raise ValueError(
                     "Could not check which formulas already exist on the MaRDI Portal "
@@ -1218,8 +1226,14 @@ class GeneratePayload:
             item_data["payload"] = payload
 
     def _check_mardi_and_raise(self, name: str, description: str):
-        """Check if item exists in MaRDI Portal and raise error if it does."""
-        mardi_identifier = query_item(name, description)
+        """Check if item exists in MaRDI Portal and raise error if it does.
+
+        Uses the result of :meth:`_check_duplicates` if it has one.
+        """
+        if (name, description) in self._duplicates:
+            mardi_identifier = self._duplicates[(name, description)]
+        else:
+            mardi_identifier = query_item(name, description)
         if mardi_identifier:
             raise ValueError(
                 f"An item ({mardi_identifier}) with the label '{name}' "
@@ -1402,14 +1416,42 @@ class GeneratePayload:
             ),
         }
 
+        todo = []
         for key, value in self.user_items.items():
             if not value.get('ID'):
                 continue
             for id_type, handler in handlers.items():
                 if id_type in value['ID']:
-                    if id_type == 'no author found':
-                        if value['zbmath'] or value['orcid']:
-                            handler(key, value)
-                    else:
-                        handler(key, value)
+                    if id_type != 'no author found' or value['zbmath'] or value['orcid']:
+                        todo.append((id_type, handler, key, value))
                     break
+
+        self._check_duplicates(
+            (value['Name'], value['Description'])
+            for id_type, _, _, value in todo if id_type != 'mardi'
+        )
+        for _, handler, key, value in todo:
+            handler(key, value)
+
+    def _check_duplicates(self, items):
+        """Look up on the MaRDI Portal which new items exist already.
+
+        Runs the searches of :meth:`_check_mardi_and_raise` for all
+        ``(name, description)`` pairs in *items*, :data:`_DUPLICATE_CHECK_THREADS`
+        at a time, and stores the results in ``self._duplicates``.  Failed
+        searches are retried after :data:`~MaRDMO.queries.EXPORT_RETRY_WAITS`
+        and give up after :data:`~MaRDMO.queries.EXPORT_CHECK_DEADLINE` seconds;
+        a search that still fails finds nothing, and the portal itself rejects
+        an item whose label and description exist already.
+        """
+        pairs = sorted(set(items))
+        if not pairs:
+            return
+        deadline = time.monotonic() + EXPORT_CHECK_DEADLINE
+        commit_writes()
+        with ThreadPool(min(_DUPLICATE_CHECK_THREADS, len(pairs))) as pool:
+            results = pool.map(
+                lambda pair: query_item(*pair, waits=EXPORT_RETRY_WAITS, deadline=deadline),
+                pairs,
+            )
+        self._duplicates.update(zip(pairs, results))

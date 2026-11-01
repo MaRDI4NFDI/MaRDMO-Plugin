@@ -22,6 +22,8 @@ import requests
 from django.core.cache import cache
 
 from .constants import TEX_CHECK_URL
+from .helpers import commit_writes
+from .queries import request_with_retry
 from .validators import normalize_formula
 
 logger = logging.getLogger(__name__)
@@ -76,7 +78,8 @@ def _check_one(tex):
     if cached is not None:
         return None if cached == _VALID else cached
     try:
-        response = requests.post(
+        response = request_with_retry(
+            'post',
             TEX_CHECK_URL,
             data={'q': tex},
             headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
@@ -118,8 +121,9 @@ def check_formulas(formulas):
     '''Check *formulas* with the portal's TeX checker.
 
     Requests run in parallel; verdicts are cached for a week, so repeated
-    previews and checks do not resend unchanged formulas.  Failed requests are
-    not cached.
+    previews and checks do not resend unchanged formulas.  A request that
+    times out or gets a 429/502/503/504 is retried once (see
+    :func:`~MaRDMO.queries.request_with_retry`); failed requests are not cached.
 
     Args:
         formulas: Iterable of TeX strings (empty ones are skipped).
@@ -133,6 +137,7 @@ def check_formulas(formulas):
     unique = sorted({normalize_formula(tex) for tex in formulas if isinstance(tex, str)} - {''})
     if not unique:
         return {}
+    commit_writes()
     with ThreadPool(processes=min(len(unique), _MAX_THREADS)) as pool:
         verdicts = pool.map(_check_one, unique)
     return dict(zip(unique, verdicts))

@@ -83,6 +83,8 @@ hold it for minutes:
   that query are not filled and the failure is logged.
 - `wbgetentities` retries with backoff, caps every wait (including `Retry-After`) at
   20 seconds and stops retrying after 45 seconds per batch.
+- The same rule (`queries.request_with_retry()`) retries the portal's TeX check
+  once; the checks before an export retry twice (see [Export](export.md)).
 
 The portal returns the values of a list column (relations, aliases, publications, …)
 in no fixed order.  `helpers.split_value()` sorts them, relatants thereby by ID, so
