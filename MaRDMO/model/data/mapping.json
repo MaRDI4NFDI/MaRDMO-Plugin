@@ -26,7 +26,7 @@
     {"key": "contains_weak_formulation",       "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-weak-formulation",       "label": "contains weak formulation"},
     {"key": "contains_workflow",               "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains",                        "label": "contains"},
     {"key": "contained_in_workflow",           "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contained-in",                    "label": "contained in"},
-    {"key": "contained_in_field",              "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmodb/contained-in",                     "label": "contained in"},
+    {"key": "contained_in_field",              "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contained-in",                    "label": "contained in"},
     {"key": "discretizes",                     "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/discretizes",                     "label": "discretizes"},
     {"key": "discretized_by",                  "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/discretized-by",                  "label": "discretized by"},
     {"key": "has_weak_formulation",            "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/has-weak-formulation",            "label": "has weak formulation"},
