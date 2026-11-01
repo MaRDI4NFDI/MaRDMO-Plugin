@@ -161,7 +161,7 @@ class ModelMixin:
                 mval['relation']['url'] in self._pairs(
                     self.mathmoddb, 'specializes', 'specialized_by'
                 )
-                and 'not found' in mval.get('assumption', {}).values()
+                and 'not found' in (mval.get('assumption') or {}).values()
                 for mval in ivalue.get('RelationMM', {}).values()
             ):
                 self.err.append(
@@ -219,7 +219,7 @@ class ModelMixin:
                     self._error(
                         section = 'Computational Task',
                         page    = page_name,
-                        message = 'Missing Assumption (Mathematical Model Specialization)'
+                        message = 'Missing Assumption (Computational Task Specialization)'
                     )
                 )
 
@@ -227,7 +227,7 @@ class ModelMixin:
                 tval['relation']['url'] in self._pairs(
                     self.mathmoddb, 'specializes', 'specialized_by'
                 )
-                and 'not found' in tval.get('assumption', {}).values()
+                and 'not found' in (tval.get('assumption') or {}).values()
                 for tval in ivalue.get('RelationT', {}).values()
             ):
                 self.err.append(
@@ -300,7 +300,7 @@ class ModelMixin:
                 mval['relation']['url'] in self._pairs(
                     self.mathmoddb, 'specializes', 'specialized_by'
                 )
-                and 'not found' in mval.get('assumption', {}).values()
+                and 'not found' in (mval.get('assumption') or {}).values()
                 for mval in ivalue.get('RelationMF2', {}).values()
             ):
                 self.err.append(
