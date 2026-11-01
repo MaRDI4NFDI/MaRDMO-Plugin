@@ -261,16 +261,23 @@ def add_relations_static(project, data, props, index, statement):
 
     # Get existing Set and Item Information
     info = {'set_prefix_ids': get_id(project, statement['relatant'], ['set_prefix']),
-            'set_index_ids': get_id(project, statement['relatant'], ['set_index']),
-            'collection_ids': get_id(project, statement['relatant'], ['collection_index']),
             'value_ids': get_id(project, statement['relatant'], ['external_id']),
             'texts': get_id(project, statement['relatant'], ['text'])}
 
     # Get reduced set_prefixes
     index.update({'set_prefix_reduced': reduce_prefix(index['set_prefix'])})
 
-    # Set initial value of counter
-    index.update({'idx': initialize_counter(info['collection_ids'])})
+    # Count only within the sets of this entity: without platform all relatants
+    # share set 0 and idx is the collection index, with platform each relatant
+    # gets a set of its own (numbered from 1) and idx is the set index
+    own = [(set_index, collection_index) for set_prefix, set_index, collection_index in get_id(
+        project, statement['relatant'], ['set_prefix', 'set_index', 'collection_index'])
+        if str(set_prefix) == str(index['set_prefix'])]
+    if statement.get('platform'):
+        index.update({'idx': max((set_index for set_index, _ in own), default=0)})
+    else:
+        index.update({'idx': initialize_counter(
+            [collection_index for set_index, collection_index in own if set_index == 0])})
 
     # Add Relations and Relatants
     for prop in props['keys']:
