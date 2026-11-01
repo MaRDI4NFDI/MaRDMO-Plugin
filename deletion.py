@@ -16,7 +16,10 @@ Cases per item:
 - restored: the main item is selected again; afterwards every value of the
             first filling is there again (content compared without numbers)
 
-Environment: OUT (default results/deletion-<date>).
+Environment: ITEMS (a list in items.json instead of the four default items,
+e.g. model_all), QUICK=1 (no checks before deleting, one line per item),
+RDMO_FILTER_SET=fixed (patch RDMO's filter_set bug in this process only, see
+~/Work/RDMO-bugs), OUT (default results/deletion-<date>).
 """
 import collections, datetime, json, os, sys, traceback
 sys.path.insert(0, os.path.expanduser(os.environ.get('DEV_TESTS', '~/Work/MaRDMO-Plugin/dev-tests')))
@@ -32,10 +35,30 @@ TITLE = 'TEMP deletion'
 DELETION_ITEMS = [  # (type, qid)
     ('model', 'Q6534342'), ('wikidata', 'Q3660888'), ('algorithm', 'Q6825308'), ('workflow', 'Q6032641'),
 ]
+if os.environ.get('ITEMS'):   # e.g. ITEMS=model_all: every model from items.json
+    DELETION_ITEMS = [('model', qid) for qid in json.load(open(os.path.join(HERE, 'items.json')))[os.environ['ITEMS']]]
+QUICK = os.environ.get('QUICK') == '1'   # no checks/export before deleting, one line per item
+RDMO_FILTER_SET = os.environ.get('RDMO_FILTER_SET', 'original')
 HIDDEN_BY_SET_INDEX = {a for a in BY_SET_INDEX if a.startswith('domain/publication/')}
 out_base = os.environ.get('OUT') or os.path.join(HERE, 'results', f'deletion-{datetime.date.today()}')
 os.makedirs(os.path.dirname(out_base), exist_ok=True)
 print('code from', MaRDMO.__file__)
+
+if RDMO_FILTER_SET == 'fixed':
+    # RDMO's filter_set also matches set_prefix '10', '11', ... for set 1 (see ~/Work/RDMO-bugs);
+    # patched in this process only, so the test shows MaRDMO's behaviour as with a fixed RDMO
+    from django.db.models import Q
+    from rdmo.projects.managers import ValueQuerySet
+    _original_filter_set = ValueQuerySet.filter_set
+
+    def _fixed_filter_set(self, set_value):
+        prefix = (f'{set_value.set_prefix}|{set_value.set_index}' if set_value.set_prefix
+                  else str(set_value.set_index))
+        return _original_filter_set(self, set_value).filter(
+            Q(set_prefix=set_value.set_prefix, set_index=set_value.set_index) |
+            Q(set_prefix=prefix) | Q(set_prefix__startswith=f'{prefix}|'))
+    ValueQuerySet.filter_set = _fixed_filter_set
+print('RDMO filter_set:', RDMO_FILTER_SET)
 
 
 def catalog_attributes(project):
@@ -63,6 +86,12 @@ def expected_gone(values, set_attr, below, k):
         if set_attr == 'domain/publication' and attr in HIDDEN_BY_SET_INDEX and sidx == k:
             gone.add(v)
     return gone
+
+
+def rdmo_bug_hits(values, below, k):
+    """Values the unfixed RDMO filter_set would delete outside set k."""
+    return sum(1 for attr, prefix, *_ in values
+               if attr in below and prefix.startswith(str(k)) and prefix != str(k) and not prefix.startswith(f'{k}|'))
 
 
 def delete_set(project, set_attr, k):
@@ -107,19 +136,24 @@ def run_after(project):
     return report
 
 
-results = {'started': str(datetime.datetime.now()), 'items': {}}
+results = {'started': str(datetime.datetime.now()), 'rdmo filter_set': RDMO_FILTER_SET, 'items': {}}
+texts = {}
+for source in {TYPES[kind][0] for kind, _ in DELETION_ITEMS}:
+    texts.update({(source, q): t for q, t in labels(source, [q for k, q in DELETION_ITEMS if TYPES[k][0] == source]).items()})
+log = (lambda *a, **k: None) if QUICK else print
 try:
-    for kind, qid in DELETION_ITEMS:
+    for number, (kind, qid) in enumerate(DELETION_ITEMS, 1):
         source, slug, qkey, item_type = TYPES[kind]
         res = results['items'][f'{kind}:{qid}'] = {'deleted': {}}
-        print(f'\n== {kind} {qid}')
+        log(f'\n== {kind} {qid}')
         try:
-            text = labels(source, [qid])[qid]
+            text = texts[(source, qid)]
             p = new_project(slug, TITLE)
             select(p, qkey, item_type, f'{source}:{qid}', text, 0)
             first = dump(p)
             res['values'] = len(first)
-            res['before deletion'] = run_after(p)
+            if not QUICK:
+                res['before deletion'] = run_after(p)
             below = catalog_attributes(p)
             main_set = get_questions(qkey)[item_type]['uri']
             sets = collections.Counter(v[0] for v in first if v[1] == '' and v[0] in below and v[0] != main_set)
@@ -130,7 +164,9 @@ try:
                 delete_set(p, set_attr, k)
                 after = dump(p)
                 gone = set(before) - set(after)
-                entry = {'sets': count, 'deleted set': k, 'values gone': len(gone)}
+                res.setdefault('deleted items', []).extend(v[5] or v[4] for v in want if v[0] == f'{set_attr}/id' and v[1] == '')
+                entry = {'sets': count, 'deleted set': k, 'values gone': len(gone),
+                         'unfixed RDMO would also delete': rdmo_bug_hits(before, below[set_attr], k)}
                 if gone == want:
                     entry['result'] = 'exactly the set'
                 else:
@@ -140,19 +176,34 @@ try:
                     entry['left over from the set'] = sorted(want - gone)[:10]
                     entry['left over count'] = len(want - gone)
                 res['deleted'][set_attr] = entry
-                print(f"  delete {set_attr:28} set {k:2} of {count:3}: {entry['result']:16} "
+                log(f"  delete {set_attr:28} set {k:2} of {count:3}: {entry['result']:16} "
                       f"({len(gone)} values{', ' + str(entry.get('outside count')) + ' outside' if entry.get('outside count') else ''}"
                       f"{', ' + str(entry.get('left over count')) + ' left over' if entry.get('left over count') else ''})")
             res['after deletion'] = run_after(p)
-            print('  after deletion:', {k: (v if not str(k).startswith('CRASH') else v.strip().splitlines()[-1]) for k, v in res['after deletion'].items()})
+            log('  after deletion:', {k: (v if not str(k).startswith('CRASH') else v.strip().splitlines()[-1]) for k, v in res['after deletion'].items()})
             select(p, qkey, item_type, f'{source}:{qid}', text, 0, again=True)
             restored = dump(p)
             missing = content(first, True) - content(restored, True)
-            res['restored'] = 'complete' if not missing else {'missing count': sum(missing.values()), 'missing': [list(m) for m in list(missing)[:10]]}
-            print('  re-selected:', res['restored'] if isinstance(res['restored'], str) else f"{res['restored']['missing count']} values missing")
+            others = [m for m in missing if m[1] not in res.get('deleted items', [])]
+            if not missing:
+                res['restored'] = 'complete'
+            elif not others:
+                res['restored'] = {'result': 'deleted items reached only through other items not re-filled',
+                                   'missing count': sum(missing.values()), 'missing items': sorted({m[1] for m in missing})}
+            else:
+                res['restored'] = {'result': 'VALUES OF OTHER ITEMS MISSING', 'missing count': sum(missing[m] for m in others),
+                                   'missing': [list(m) for m in others[:10]], 'missing items': sorted({m[1] for m in others})}
+            log('  re-selected:', res['restored'] if isinstance(res['restored'], str) else res['restored']['result'])
+            if QUICK:
+                wrong = [a for a, e in res['deleted'].items() if e['result'] != 'exactly the set']
+                crash = [k for k in res['after deletion'] if k.startswith('CRASH')]
+                r = res['restored']
+                print(f"{number:3}/{len(DELETION_ITEMS)} {qid:11} {len(first):5} values  deleted in {len(res['deleted'])} sections: "
+                      f"{'ok' if not wrong else 'WRONG ' + ','.join(wrong)}  after: {'CRASH ' + ','.join(crash) if crash else 'ok'}  "
+                      f"re-selected: {r if isinstance(r, str) else ('deleted ' + str(len(r['missing items'])) + ' not re-filled' if r['result'].startswith('deleted') else r['result'])}", flush=True)
         except Exception:
             res['error'] = traceback.format_exc()
-            print(res['error'])
+            print(f'{qid}: ERROR', res['error'].strip().splitlines()[-1], flush=True)
         finally:
             Project.objects.filter(title=TITLE).delete()
 finally:
