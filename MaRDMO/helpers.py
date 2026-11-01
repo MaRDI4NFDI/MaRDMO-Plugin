@@ -917,7 +917,8 @@ def relevant_set_ids(info, set_prefix_red):
     '''
     relevant_set_ids_list = []
     for set_index, set_prefix in zip(info['set_index_ids'], info['set_prefix_ids']):
-        if set_prefix == set_prefix_red:
+        # Stored prefixes are strings ('3'), written ones integers
+        if set_prefix not in (None, '') and reduce_prefix(set_prefix) == set_prefix_red:
             relevant_set_ids_list.append(set_index)
     return relevant_set_ids_list
 

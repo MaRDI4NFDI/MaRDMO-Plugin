@@ -7,6 +7,7 @@ All SPARQL and write logic lives in the _fill_*_batch methods.
 '''
 
 import logging
+from dataclasses import replace
 from functools import partial
 
 from rdmo.options.models import Option
@@ -354,29 +355,26 @@ class Information(BaseInformation):
                     batch_fill_method=self._fill_quantity_batch,
                 ))
 
-            # Per-page counters: each quantity page numbers its own relation
-            # sub-lists from 0. (Previously a module-level dict that never
-            # reset, so indices grew without bound across imports and a
-            # re-import wrote fresh rows past the old ones instead of over them.)
-            rel_idx = {pair: 0 for pair in relation_uris}
-            for prop in props['Quantity']:
-                for val in getattr(data, prop):
-                    pair = (data.qclass, val.item_class)
-                    value_editor(
-                        project=project,
-                        uri=f'{self.base}{quantity[relation_uris[pair]]["uri"]}',
-                        info={'option': Option.objects.get(
-                                  uri=self.mathmoddb.get(key=prop)['url']),
-                              'set_index': rel_idx[pair],
-                              'set_prefix': str(set_index)})
-                    value_editor(
-                        project=project,
-                        uri=f'{self.base}{quantity[relatant_uris[pair]]["uri"]}',
-                        info={'text': f'{val.label} ({val.description}) [{val.id.split(":")[0]}]',
-                              'external_id': val.id,
-                              'set_index': rel_idx[pair],
-                              'set_prefix': str(set_index)})
-                    rel_idx[pair] += 1
+            # The relation questions depend on the classes of the quantity and
+            # of the relatant (Q→Q, Q→QK, QK→Q, QK→QK); one call per relatant
+            # class, so relatants of the same relation share one set
+            for (qclass, relatant_class), relation_key in relation_uris.items():
+                if qclass != data.qclass:
+                    continue
+                add_relations_flexible(
+                    project=project,
+                    data=replace(data, **{
+                        prop: [val for val in getattr(data, prop)
+                               if val.item_class == relatant_class]
+                        for prop in props['Quantity']
+                    }),
+                    props={'keys': props['Quantity'], 'mapping': self.mathmoddb},
+                    index={'set_prefix': str(set_index)},
+                    statement={
+                        'relation': f'{self.base}{quantity[relation_key]["uri"]}',
+                        'relatant': (f'{self.base}'
+                                     f'{quantity[relatant_uris[(qclass, relatant_class)]]["uri"]}'),
+                    })
 
             self._hydrate_publications(project, data.publications,
                                        catalog, visited)

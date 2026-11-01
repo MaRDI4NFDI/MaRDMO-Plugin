@@ -399,19 +399,29 @@ def add_relations_flexible(project, data, props, index, statement):
                    optionally ``'assumption'`` (attribute URIs).
     '''
 
-    # Get existing Set, Item and Relation Information
+    # Get existing Set, Item and Relation Information; 'rels' holds the
+    # relation of each relatant's set (a set has one relation, several relatants)
+    relation_of_set = {
+        (set_prefix, set_index): option_uri
+        for set_prefix, set_index, option_uri in get_id(
+            project, statement['relation'], ['set_prefix', 'set_index', 'option_uri'])
+    }
     info = {'set_prefix_ids': get_id(project, statement['relatant'], ['set_prefix']),
             'set_index_ids': get_id(project, statement['relatant'], ['set_index']),
             'collection_ids': get_id(project, statement['relatant'], ['collection_index']),
             'value_ids': get_id(project, statement['relatant'], ['external_id']),
             'texts': get_id(project, statement['relatant'], ['text']),
-            'rels': get_id(project, statement['relation'], ['option_uri'])}
+            'rels': [relation_of_set.get(tuple(key)) for key in get_id(
+                project, statement['relatant'], ['set_prefix', 'set_index'])]}
 
     # Get reduced set prefix ids
     index.update({'set_prefix_reduced': reduce_prefix(index['set_prefix'])})
 
-    # Get relevant set index ids
-    ids = relevant_set_ids(info, index['set_prefix_reduced'])
+    # Get relevant set index ids (also of sets with a relation but no relatant yet)
+    ids = relevant_set_ids(info, index['set_prefix_reduced']) + relevant_set_ids(
+        {'set_index_ids': [set_index for _, set_index in relation_of_set],
+         'set_prefix_ids': [set_prefix for set_prefix, _ in relation_of_set]},
+        index['set_prefix_reduced'])
 
     # Set initial value of counter
     index.update({'idx': initialize_counter(ids)})
@@ -422,10 +432,12 @@ def add_relations_flexible(project, data, props, index, statement):
         qualifier = getattr(value, 'qualifier', None) if statement.get('assumption') else None
         return (bool(qualifier), qualifier or '')
 
-    # Add Relations and Relatants
+    # Add Relations and Relatants; a set number is only used up once something
+    # is written into it, so the sets are numbered without gaps
     for prop in props['keys']:
         inner_idx = 0
         assumption_store = {}
+        used = False
         for value in sorted(getattr(data, prop), key=assumption_group):
             assumption_index = None
             # Get Source and Label Description String
@@ -446,7 +458,8 @@ def add_relations_flexible(project, data, props, index, statement):
             # Add Assumption
             if statement.get('assumption') and hasattr(value, 'qualifier') and value.qualifier:
                 if value.qualifier not in assumption_store:
-                    index['idx'] +=1
+                    if used:
+                        index['idx'] += 1
                     inner_idx = 0
                     assumption_store.update({value.qualifier: index['idx']})
                 assumption_index = assumption_store.get(value.qualifier)
@@ -475,7 +488,7 @@ def add_relations_flexible(project, data, props, index, statement):
                 info = {
                     'option': Option.objects.get(uri=props['mapping'].get(key=prop)["url"]),
                     'collection_index': None,
-                    'set_index': assumption_index or index['idx'],
+                    'set_index': index['idx'] if assumption_index is None else assumption_index,
                     'set_prefix': index['set_prefix']
                 }
             )
@@ -488,7 +501,7 @@ def add_relations_flexible(project, data, props, index, statement):
                     'text': f"{value.label} ({value.description}) [{source}]",
                     'external_id': value.id,
                     'collection_index': inner_idx,
-                    'set_index': assumption_index or index['idx'],
+                    'set_index': index['idx'] if assumption_index is None else assumption_index,
                     'set_prefix': index['set_prefix']
                 }
             )
@@ -500,9 +513,11 @@ def add_relations_flexible(project, data, props, index, statement):
             info['rels'].append(props['mapping'].get(key=prop)["url"])
 
             inner_idx += 1
+            used = True
 
         # Update index
-        index['idx'] += 1
+        if used:
+            index['idx'] += 1
 
 def add_properties(project, data, uri, set_prefix):
     '''Write the data-property option values from *data.properties* into the questionnaire.
