@@ -163,89 +163,91 @@ def show(case, result):
     print(f'{case:8} {short}')
 
 
-results = {'started': str(datetime.datetime.now())}
-try:
-    # twice
-    p = new_project(SLUG, TITLE)
-    select(p, 'workflow', 'Workflow', WORKFLOW, TEXT[WORKFLOW], 0)
-    first = dump(p)
-    steps = check_steps(p, first)
-    select(p, 'workflow', 'Workflow', WORKFLOW, TEXT[WORKFLOW], 0, again=True)
-    second = dump(p)
-    results['twice'] = {'values': len(first), 'usage sets': steps,
-                        'result': ('identical' if first == second else 'DIFFERENT')
-                                  + (', usage sets ok' if ok(steps) else ', USAGE SETS WRONG'),
-                        'gaps': gaps(first)}
-    if first != second:
-        results['twice']['diff'] = diff(collections.Counter(first), collections.Counter(second))
-    show('twice', results['twice'])
-
-    # gained
-    state['scenario'] = 'gained'
-    reselect(p, Value.objects.get(project=p, snapshot=None, set_prefix='', external_id=STEP_A,
-                                  attribute__uri=f'{BASE_URI}domain/processstep/id'))
-    third = dump(p)
-    steps = check_steps(p, third)
-    results['gained'] = {'usage sets': steps, 'result': 'usage sets ok' if ok(steps) else 'USAGE SETS WRONG'}
-    show('gained', results['gained'])
-    Project.objects.filter(title=TITLE).delete()
-
-    # manual
-    state['scenario'] = 'base'
-    p = new_project(SLUG, TITLE)
-    select(p, 'workflow', 'Workflow', WORKFLOW, TEXT[WORKFLOW], 0)
-    before = dump(p)
-    idx = step_index(p, STEP_A)
-    alg_attrs = [f'{BASE_URI}domain/processstep/{a}' for a in USAGE_ATTRS['algorithm']]
-    first_set = min(v[2] for v in before if v[1] == f'{idx}|0' and v[0].endswith('/algorithm-relatant'))
-    deleted = Value.objects.filter(project=p, snapshot=None, set_prefix=f'{idx}|0', set_index=first_set,
-                                   attribute__uri__in=alg_attrs).delete()[0]
-    reselect(p, Value.objects.get(project=p, snapshot=None, set_prefix='', set_index=idx,
-                                  attribute__uri=f'{BASE_URI}domain/processstep/id'))
-    after = dump(p)
-    steps = check_steps(p, after)
-    results['manual'] = {'deleted values': deleted, 'usage sets': steps,
-                         'result': ('usage sets ok' if ok(steps) else 'USAGE SETS WRONG')
-                                   + (', same content' if content(after, True) == content(before, True) else ', CONTENT DIFFERS')}
-    show('manual', results['manual'])
-    Project.objects.filter(title=TITLE).delete()
-
-    # order
-    dumps = []
-    for order in ((STEP_A, STEP_B, STEP_C), (STEP_C, STEP_B, STEP_A)):
+# the cases run only when the script is run; preview_payload.py imports the mock (MOCK=1)
+if __name__ in ('__main__', 'django.core.management.commands.shell'):
+    results = {'started': str(datetime.datetime.now())}
+    try:
+        # twice
         p = new_project(SLUG, TITLE)
-        for i, step in enumerate(order):
-            select(p, 'workflow', 'Process Step', step, TEXT[step], i)
-        values = dump(p)
-        dumps.append((values, check_steps(p, values)))
-        p.delete()
-    (a, sa), (b, sb) = dumps
-    results['order'] = {'usage sets': [sa, sb], 'gaps': [gaps(a), gaps(b)]}
-    if content(a) == content(b):
-        results['order']['result'] = 'same content'
-    elif content(a, True) == content(b, True):
-        results['order']['result'] = 'same values, other inner numbers'
-        results['order']['renumbered'] = sorted({k[0] for k in (content(a) - content(b)) + (content(b) - content(a))})
-    else:
-        results['order']['result'] = 'DIFF'
-        results['order']['loose'] = diff(content(a, True), content(b, True))
-    results['order']['result'] += ', usage sets ok' if ok(sa) and ok(sb) else ', USAGE SETS WRONG'
-    show('order', results['order'])
+        select(p, 'workflow', 'Workflow', WORKFLOW, TEXT[WORKFLOW], 0)
+        first = dump(p)
+        steps = check_steps(p, first)
+        select(p, 'workflow', 'Workflow', WORKFLOW, TEXT[WORKFLOW], 0, again=True)
+        second = dump(p)
+        results['twice'] = {'values': len(first), 'usage sets': steps,
+                            'result': ('identical' if first == second else 'DIFFERENT')
+                                      + (', usage sets ok' if ok(steps) else ', USAGE SETS WRONG'),
+                            'gaps': gaps(first)}
+        if first != second:
+            results['twice']['diff'] = diff(collections.Counter(first), collections.Counter(second))
+        show('twice', results['twice'])
 
-    # twin
-    state['scenario'] = 'twin'
-    p = new_project(SLUG, TITLE)
-    select(p, 'workflow', 'Process Step', STEP_A, TEXT[STEP_A], 0)
-    results['twin'] = {'written': written_usages(dump(p), 0)['algorithm']}
-    results['twin']['result'] = f"{len(results['twin']['written'])} of 2 usages written"
-    show('twin', results['twin'])
-except Exception:
-    results['error'] = traceback.format_exc()
-    print(results['error'])
-finally:
-    workflow_handlers._fetch_by_source = _real_fetch
-    Project.objects.filter(title=TITLE).delete()
-    results['finished'] = str(datetime.datetime.now())
-    json.dump(results, open(out_base + '.json', 'w'), indent=1, default=str)
-    print('\nresults:', out_base + '.json')
-    print('temporary projects deleted:', not Project.objects.filter(title=TITLE).exists())
+        # gained
+        state['scenario'] = 'gained'
+        reselect(p, Value.objects.get(project=p, snapshot=None, set_prefix='', external_id=STEP_A,
+                                      attribute__uri=f'{BASE_URI}domain/processstep/id'))
+        third = dump(p)
+        steps = check_steps(p, third)
+        results['gained'] = {'usage sets': steps, 'result': 'usage sets ok' if ok(steps) else 'USAGE SETS WRONG'}
+        show('gained', results['gained'])
+        Project.objects.filter(title=TITLE).delete()
+
+        # manual
+        state['scenario'] = 'base'
+        p = new_project(SLUG, TITLE)
+        select(p, 'workflow', 'Workflow', WORKFLOW, TEXT[WORKFLOW], 0)
+        before = dump(p)
+        idx = step_index(p, STEP_A)
+        alg_attrs = [f'{BASE_URI}domain/processstep/{a}' for a in USAGE_ATTRS['algorithm']]
+        first_set = min(v[2] for v in before if v[1] == f'{idx}|0' and v[0].endswith('/algorithm-relatant'))
+        deleted = Value.objects.filter(project=p, snapshot=None, set_prefix=f'{idx}|0', set_index=first_set,
+                                       attribute__uri__in=alg_attrs).delete()[0]
+        reselect(p, Value.objects.get(project=p, snapshot=None, set_prefix='', set_index=idx,
+                                      attribute__uri=f'{BASE_URI}domain/processstep/id'))
+        after = dump(p)
+        steps = check_steps(p, after)
+        results['manual'] = {'deleted values': deleted, 'usage sets': steps,
+                             'result': ('usage sets ok' if ok(steps) else 'USAGE SETS WRONG')
+                                       + (', same content' if content(after, True) == content(before, True) else ', CONTENT DIFFERS')}
+        show('manual', results['manual'])
+        Project.objects.filter(title=TITLE).delete()
+
+        # order
+        dumps = []
+        for order in ((STEP_A, STEP_B, STEP_C), (STEP_C, STEP_B, STEP_A)):
+            p = new_project(SLUG, TITLE)
+            for i, step in enumerate(order):
+                select(p, 'workflow', 'Process Step', step, TEXT[step], i)
+            values = dump(p)
+            dumps.append((values, check_steps(p, values)))
+            p.delete()
+        (a, sa), (b, sb) = dumps
+        results['order'] = {'usage sets': [sa, sb], 'gaps': [gaps(a), gaps(b)]}
+        if content(a) == content(b):
+            results['order']['result'] = 'same content'
+        elif content(a, True) == content(b, True):
+            results['order']['result'] = 'same values, other inner numbers'
+            results['order']['renumbered'] = sorted({k[0] for k in (content(a) - content(b)) + (content(b) - content(a))})
+        else:
+            results['order']['result'] = 'DIFF'
+            results['order']['loose'] = diff(content(a, True), content(b, True))
+        results['order']['result'] += ', usage sets ok' if ok(sa) and ok(sb) else ', USAGE SETS WRONG'
+        show('order', results['order'])
+
+        # twin
+        state['scenario'] = 'twin'
+        p = new_project(SLUG, TITLE)
+        select(p, 'workflow', 'Process Step', STEP_A, TEXT[STEP_A], 0)
+        results['twin'] = {'written': written_usages(dump(p), 0)['algorithm']}
+        results['twin']['result'] = f"{len(results['twin']['written'])} of 2 usages written"
+        show('twin', results['twin'])
+    except Exception:
+        results['error'] = traceback.format_exc()
+        print(results['error'])
+    finally:
+        workflow_handlers._fetch_by_source = _real_fetch
+        Project.objects.filter(title=TITLE).delete()
+        results['finished'] = str(datetime.datetime.now())
+        json.dump(results, open(out_base + '.json', 'w'), indent=1, default=str)
+        print('\nresults:', out_base + '.json')
+        print('temporary projects deleted:', not Project.objects.filter(title=TITLE).exists())
