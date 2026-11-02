@@ -20,14 +20,16 @@ Rules for every script:
 | `static_attributes.py` | attribute and option URIs used by the code exist in the questionnaire XML (`QUESTIONNAIRE`, default `~/Work/MaRDMO-Questionnaire/catalog`) | nothing |
 | `idempotence.py` | selecting an item twice changes nothing; a relatant deleted by hand comes back on re-selection; filling items in reverse order gives the same content (items from `items.json`; `TYPES`, `LIMIT`, `CASES`, `GROUPS`, `OUT`) | RDMO app, portal read access |
 | `deletion.py` | deleting one set per section the way RDMO's `delete_set` does removes exactly that set (sections with 12+ sets lose set 1, so sets 10-19 show collateral loss); checks, export and preview still run; re-selecting the main item brings the items back (`ITEMS`, e.g. `model_all` for every model in `items.json`; `QUICK=1`; `RDMO_FILTER_SET=fixed` to patch RDMO's prefix bug in-process; `OUT`) | RDMO app, portal read access |
+| `roundtrip_collect.py` | round trip portal item → project → export payload: saves answers, check messages and the payload (built also when the checks fail, nothing is posted) per item for offline comparison; an unchanged item should give no new items and only statements that already exist (`TYPE`, `ITEMS`, e.g. `model_all` or `algorithm_all`; `QIDS`; `LIMIT`; `OUT`) | RDMO app, portal read access |
 | `workflow_mock.py` | workflow Q6032641 with mock algorithm and method usages added to its process steps: selecting twice, a usage gained on the portal, a usage set deleted by hand, order of process steps; every usage set must hold exactly one usage | RDMO app, portal read access |
 
 `common.py` holds the helpers the scripts share (selecting an item the way the
 interview does, dumping values, comparing content without set numbers).
 
 `items.json` holds the test items per type: MaRDI models and algorithms and
-Wikidata models, picked evenly by number of statements, and the one MaRDMO
-workflow on the portal (Q6032641; the other items with the workflow profile are
+Wikidata models, picked evenly by number of statements, every model and every
+algorithm on the portal (`model_all`, `algorithm_all`; items with the MaRDI
+model or algorithm profile), and the one MaRDMO workflow on the portal (Q6032641; the other items with the workflow profile are
 script-based workflows created elsewhere).
 
 Run Django scripts with the RDMO app, e.g.
