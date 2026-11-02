@@ -312,7 +312,7 @@ class DataSet:
                 options[data['proprietary']['value']]
                 if data.get('proprietary', {}).get('value') else ''
             ),
-            to_publish=get_option_text_pair(data, options, 'publish', 'DOI', 'URL'),
+            to_publish=get_option_text_pair(data, options, 'publish', 'DOI'),
             to_archive=get_option_text_pair(data, options, 'archive', 'end_time'),
             publications=split_value(
                 data=data, key='publication', transform=Relatant.from_query
