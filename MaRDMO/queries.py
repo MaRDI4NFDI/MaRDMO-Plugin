@@ -369,12 +369,28 @@ def _cached_search(source, search, item_class, func):
     return results
 
 
+def _label_description(option):
+    '''Return ``(label, description)`` of an option as the export's duplicate check compares them.
+
+    The label is compared case-insensitively, the description exactly (see
+    :func:`query_item`).  Options without a description give ``None``:
+    a matching label alone does not make two items the same.
+    '''
+    label, description, _ = extract_parts(option['text'])
+    if not description or description == 'No Description Provided!':
+        return None
+    return label.strip().lower(), description.strip()
+
+
 def query_sources(search, item_class=[], sources=None, not_found=True):
     '''Query one or more knowledge-graph sources for items matching *search*.
 
     Queries the requested sources in parallel (results are cached for five
     minutes, see :func:`_cached_search`), merges the results, and sorts them by
     relevance to *search* using :func:`~.helpers.rank_by_search_term`.
+    A Wikidata result with the same label and description as a MaRDI result
+    is left out: it is the same item, and the export would ask the user to
+    select the MaRDI one.
 
     Args:
         search:     Free-text search string.
@@ -424,6 +440,13 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
                 if display_key in r
             ]
         options += raw
+
+    # A Wikidata item with the label and description of a MaRDI item is that
+    # item; offer only the MaRDI one, the export would ask to select it anyway
+    mardi_items = {_label_description(opt) for opt in options if opt['id'].startswith('mardi:')}
+    mardi_items.discard(None)
+    options = [opt for opt in options
+               if not (opt['id'].startswith('wikidata:') and _label_description(opt) in mardi_items)]
 
     options.sort(key=lambda opt: rank_by_search_term(opt, search))
 
