@@ -12,6 +12,12 @@ from MaRDMO.helpers import value_editor
 
 HERE = os.path.expanduser(os.environ.get('DEV_TESTS', '~/Work/MaRDMO-Plugin/dev-tests'))  # run via manage.py shell, no __file__
 PAUSE = 2
+PORTAL = 'https://portal.mardi4nfdi.de'
+# the tests use the test items of the MaRDI Portal; with MARDMO_PROVIDER set to another
+# Wikibase (staging) they would fail or compare against other data
+if get_url('mardi', 'uri') != PORTAL:
+    raise SystemExit(f"MaRDMO is configured for {get_url('mardi', 'uri')}, not {PORTAL} "
+                     '(MARDMO_PROVIDER in config/settings/local.py); stopped.')
 TYPES = {  # name: (source, catalog slug, questions key, item type)
     'model':     ('mardi',    'mardmo-model-catalog',                      'model',     'Mathematical Model'),
     'wikidata':  ('wikidata', 'mardmo-model-catalog',                      'model',     'Mathematical Model'),

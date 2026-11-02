@@ -14,6 +14,8 @@ Rules for every script:
 - Read-only towards the MaRDI Portal and Wikidata: no script posts anything.
 - Temporary RDMO projects are created with a `TEMP` title and deleted at the end.
 - Paths come from environment variables, with the local paths as defaults.
+- `common.py` stops every script if MaRDMO is not configured for the MaRDI Portal
+  (`MARDMO_PROVIDER` in the RDMO settings), since the test items are portal items.
 
 | Script | Checks | Needs |
 |---|---|---|
@@ -23,6 +25,8 @@ Rules for every script:
 | `roundtrip_collect.py` | round trip portal item → project → export payload: saves answers, check messages and the payload (built also when the checks fail, nothing is posted) per item for offline comparison; an unchanged item should give no new items and only statements that already exist (`TYPE`, `ITEMS`, e.g. `model_all` or `algorithm_all`; `QIDS`; `LIMIT`; `OUT`) | RDMO app, portal read access |
 | `preview_payload.py` | renders the preview as on the export page, then builds the export payload of the same project (nothing is posted); saves both per item for `preview_compare.py` (`TYPE`, `ITEMS`, `QIDS`, `LIMIT`, `MOCK=1` for the workflow with the mock usages of `workflow_mock.py`, `OUT`) | RDMO app, portal read access |
 | `preview_compare.py` | offline: parses the saved previews and compares them with the payloads in both directions — items, relations (with the expected property, direction and role per relation label), assumptions, formulas, formula elements, aliases, literals and qualifiers (`python3 preview_compare.py results/preview-model ...`) | nothing |
+| `preview_edits.py` | preview against payload after typical interview entries on a portal item (new items of the user's own, formulas with elements, relations with roles and assumptions, alias, publication by DOI); saves like `preview_payload.py`, compared with `preview_compare.py` (`CASES`, `OUT`) | RDMO app, portal read access |
+| `qualifier_merge.py` | how the export classifies statements whose qualifiers were changed (exists / partial / new) in cases on real portal items: contains with and without role, assumptions on specializations, parameters and platforms of workflow usages, publication roles; prints the expected result per case (`OUT`) | RDMO app, portal read access |
 | `workflow_mock.py` | workflow Q6032641 with mock algorithm and method usages added to its process steps: selecting twice, a usage gained on the portal, a usage set deleted by hand, order of process steps; every usage set must hold exactly one usage | RDMO app, portal read access |
 
 `common.py` holds the helpers the scripts share (selecting an item the way the
