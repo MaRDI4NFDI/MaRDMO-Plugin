@@ -44,7 +44,7 @@ RELATION_TYPES = {
     'input data set': ('input data set', '->', None), 'output data set': ('output data set', '->', None),
     'subclass of': ('subclass of', '->', None), 'has subclass': ('subclass of', '<-', None),
     'solves': ('solved by', '<-', None), 'implemented by': ('implemented by', '->', None),
-    'instantiates': ('manifestation of', '<-', None), 'programmed in': ('programmed in', '->', None),
+    'instantiated by': ('manifestation of', '<-', None), 'programmed in': ('programmed in', '->', None),
     'depends on software': ('depends on software', '->', None), 'tests': ('tests', '->', None),
     'CPU': ('CPU', '->', None),
     **{f'contains {role}': ('contains', '->', qid) for role, qid in _ROLE.items()},
