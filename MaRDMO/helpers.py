@@ -1170,9 +1170,12 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
 
     Returns:
         List of ``[subject_label, subject_qid, property_name, object_label,
-        object_qid, qualifiers]`` lists, JSON-serializable.  ``object_qid`` is
-        an empty string for non-item value types.  ``qualifiers`` is a list of
+        object_qid, qualifiers, unit_label, unit_qid, qualifiers_added]``
+        lists, JSON-serializable.  ``object_qid`` is an empty string for
+        non-item value types.  ``qualifiers`` is a list of
         ``{"prop": name, "obj": label, "obj_qid": qid}`` dicts.
+        ``qualifiers_added`` is ``True`` for a statement that was on the
+        portal already and only got the listed qualifiers.
     """
     pid_to_name = pid_to_name or {}
     qid_to_name = qid_to_name or {}
@@ -1262,8 +1265,11 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
         prop_name          = pid_to_name.get(prop_id, prop_id)
         obj_label, obj_qid = _format_value(datatype, value)
         unit_label, unit_qid = _get_unit(datatype, value)
-        quals = _format_qualifiers(stmt.get('qualifiers', []))
-        statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid])
+        # A statement that was on the portal already only got the qualifiers it lacked
+        added = entry.get('exists') == 'partial'
+        quals = _format_qualifiers(entry['add_qualifiers'] if added else stmt.get('qualifiers', []))
+        statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid,
+                           added])
 
     # --- Statements embedded in newly created items
     for key, entry in jsons.items():
@@ -1284,7 +1290,8 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
             obj_label, obj_qid = _format_value(datatype, value)
             unit_label, unit_qid = _get_unit(datatype, value)
             quals = _format_qualifiers(quals_raw)
-            statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid])
+            statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid,
+                               False])
 
     return statements
 

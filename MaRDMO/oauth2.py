@@ -443,7 +443,9 @@ class OauthProviderMixin:
         """Post the payload entry for *key* to the Wikibase REST API.
 
         Skips entries that already have an ID (items) or are marked as
-        existing (relations).  Retries up to five times on timeout or
+        existing (relations).  Relations marked ``'partial'`` are on the
+        portal already; their missing qualifiers are added to the statement
+        with a PATCH instead.  Retries up to five times on timeout or
         connection errors with exponential back-off.
 
         Args:
@@ -481,11 +483,21 @@ class OauthProviderMixin:
 
         url = item['url']
         payload = item['payload']
+        method = 'post'
+        if key.startswith('RELATION') and item.get('exists') == 'partial':
+            # The statement is on the portal already: only add the qualifiers it lacks
+            method = 'patch'
+            url = f"{url}/{item['statement_id']}"
+            payload = {'patch': [
+                {'op': 'add', 'path': '/qualifiers/-',
+                 'value': {'property': {'id': q['property']['id']}, 'value': q['value']}}
+                for q in item['add_qualifiers']
+            ]}
         headers = self.get_authorization_headers(access_token)
         response = None
         for attempt in range(1, 6):
             try:
-                response = session.post(url, json=payload, headers=headers, timeout=120)
+                response = session.request(method, url, json=payload, headers=headers, timeout=120)
                 response.raise_for_status()
                 wait = 0.1 + random.uniform(0, 0.5)
                 time.sleep(wait)

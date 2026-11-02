@@ -186,6 +186,8 @@ def show_success(request, job_id):
         qualifiers  = stmt[5] if len(stmt) > 5 else []
         unit_label  = stmt[6] if len(stmt) > 6 else ''
         unit_qid    = stmt[7] if len(stmt) > 7 else ''
+        # True: the statement was on the portal already, only qualifiers were added
+        qualifiers_added = stmt[8] if len(stmt) > 8 else False
         obj_url = _obj_url(prop, obj, obj_qid)
         for q in qualifiers:
             q['obj_url'] = _obj_url(q['prop'], q['obj'], q.get('obj_qid', ''))
@@ -201,6 +203,7 @@ def show_success(request, job_id):
                 'subject': subj, 'subject_qid': subj_qid,
                 'prop': prop, 'obj': obj, 'obj_qid': obj_qid, 'obj_url': obj_url,
                 'qualifiers': qualifiers, 'unit_label': unit_label, 'unit_qid': unit_qid,
+                'qualifiers_added': qualifiers_added,
             })
 
     # Attach statements to each item and group by class

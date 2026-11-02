@@ -15,6 +15,7 @@ Key methods: :meth:`~GeneratePayload.add_data_properties`,
 :meth:`~GeneratePayload.build_relation_check_query`.
 '''
 
+import json
 import logging
 
 from dataclasses import dataclass, field
@@ -57,6 +58,10 @@ _INVISIBLE_WHITESPACE_RE = re.compile(r'[\t\v\f]')
 
 # Relations per existence-check query; keeps single queries small and fast
 _RELATION_CHECK_CHUNK = 50
+# Qualifiers that give a statement its meaning: the same subject, property and
+# object with another (or no) value of these is a statement of its own.  All
+# other qualifiers add information and are added to an existing statement.
+_MEANING_QUALIFIERS = ('object has role', 'symbol represents', 'platform')
 # Duplicate checks of new items running at the same time
 _DUPLICATE_CHECK_THREADS = 4
 
@@ -163,6 +168,8 @@ class GeneratePayload:
         self.state: PayloadState = PayloadState()
         # (name, description) → QID of an existing portal item, or None
         self._duplicates: dict = {}
+        # QID → claims of portal items fetched during this export
+        self._claims: dict = {}
 
     def _items_url(self):
         '''Return the Wikibase REST API endpoint URL for creating new items.'''
@@ -461,6 +468,10 @@ class GeneratePayload:
         qual_triples = self._build_qualifier_triples(statement.get('qualifiers', []), idx)
         if qual_triples is None:
             return None
+        # A portal statement with more qualifiers matches too; whether it has
+        # another meaning (e.g. a role) is checked in merge_qualifiers.  A
+        # FILTER NOT EXISTS here makes the query service answer false for
+        # every relation of the query.
 
         return (
             f'BIND(EXISTS {{\n'
@@ -469,6 +480,11 @@ class GeneratePayload:
             f'{qual_triples}'
             f'}} AS ?RELATION{idx})'
         )
+
+    def _meaning_qualifiers(self):
+        '''Property IDs of the qualifiers that give a statement its meaning.'''
+        properties = self.wikibase['properties']
+        return {properties[name] for name in _MEANING_QUALIFIERS if name in properties}
 
     def _find_key_by_values(self, id_value, name_value, description_value):
         '''Look up the ``"Item<n>"`` key matching the given ID, Name, and Description.
@@ -725,6 +741,9 @@ class GeneratePayload:
             check[f'RELATION{relation_index[key]}'] = exists
 
         self.add_check_results(check)
+        # Statements that only add qualifiers (e.g. another assumption) extend
+        # the portal statement instead of duplicating it
+        self.merge_qualifiers(api_url, deadline)
 
     def check_math_relations_via_api(self, api_url, deadline=None):
         '''Check existence of math-datatype RELATION statements via wbgetentities.
@@ -758,44 +777,9 @@ class GeneratePayload:
         if not math_entries:
             return {}
 
-        # Fetch claims for all relevant items
-        items_needed   = set(v[0] for v in math_entries.values())
-        claims_by_item = {}
-        chunk_size     = 50
-
-        items_needed = sorted(items_needed)
-        for i in range(0, len(items_needed), chunk_size):
-            chunk = items_needed[i:i + chunk_size]
-            body = None
-            try:
-                resp = request_with_retry(
-                    'get',
-                    api_url,
-                    waits=EXPORT_RETRY_WAITS,
-                    deadline=deadline,
-                    params={
-                        'action': 'wbgetentities',
-                        'ids':    '|'.join(chunk),
-                        'props':  'claims',
-                        'format': 'json',
-                    },
-                    headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
-                    timeout=30,
-                )
-                resp.raise_for_status()
-                body = resp.json()
-            except (requests.exceptions.RequestException, ValueError) as exc:
-                _logger.warning("Math relation API check failed: %s", exc)
-            if body is not None and 'error' in body:
-                _logger.warning("Math relation API check failed: %s", body['error'])
-                body = None
-            if body is None:
-                raise ValueError(
-                    "Could not check which formulas already exist on the MaRDI Portal "
-                    "(API not reachable). Nothing was exported; please try again later."
-                )
-            for qid, entity in body.get('entities', {}).items():
-                claims_by_item[qid] = entity.get('claims', {})
+        claims_by_item = self._fetch_claims(
+            sorted({v[0] for v in math_entries.values()}), api_url, deadline, 'formulas',
+        )
 
         result = {}
         for key, (item_qid, prop_id, latex, qualifiers) in math_entries.items():
@@ -827,6 +811,184 @@ class GeneratePayload:
             result[key] = exists
 
         return result
+
+    def _fetch_claims(self, qids, api_url, deadline, what):
+        '''Return ``{qid: claims}`` of portal items, fetched with wbgetentities in chunks of 50.
+
+        Items fetched before during this export are taken from the earlier
+        answer (the math check and the qualifier merge often need the same).
+
+        Raises:
+            ValueError: If the claims cannot be fetched; *what* names the
+                checked statements in the message (e.g. ``'formulas'``).
+        '''
+        claims_by_item = self._claims
+        qids = [qid for qid in qids if qid not in claims_by_item]
+        for i in range(0, len(qids), 50):
+            body = None
+            try:
+                resp = request_with_retry(
+                    'get',
+                    api_url,
+                    waits=EXPORT_RETRY_WAITS,
+                    deadline=deadline,
+                    params={
+                        'action': 'wbgetentities',
+                        'ids':    '|'.join(qids[i:i + 50]),
+                        'props':  'claims',
+                        'format': 'json',
+                    },
+                    headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
+                    timeout=30,
+                )
+                resp.raise_for_status()
+                body = resp.json()
+            except (requests.exceptions.RequestException, ValueError) as exc:
+                _logger.warning("Claims check via API failed: %s", exc)
+            if body is not None and 'error' in body:
+                _logger.warning("Claims check via API failed: %s", body['error'])
+                body = None
+            if body is None:
+                raise ValueError(
+                    f"Could not check which {what} already exist on the MaRDI Portal "
+                    "(API not reachable). Nothing was exported; please try again later."
+                )
+            for qid, entity in body.get('entities', {}).items():
+                claims_by_item[qid] = entity.get('claims', {})
+        return claims_by_item
+
+    @staticmethod
+    def _snak_matches(snak, value, data_type):
+        '''Whether a portal snak (main value or qualifier) holds *value* of *data_type*.
+
+        *value* is a payload value with item placeholders already resolved;
+        an unresolved placeholder (``''``, an item created in this export)
+        never matches.
+        '''
+        if value == '' or 'datavalue' not in snak:
+            return False
+        api = snak['datavalue'].get('value')
+        if data_type == 'wikibase-item':
+            return isinstance(api, dict) and api.get('id') == value
+        if data_type == 'monolingualtext':
+            text, language = (value.get('text'), value.get('language', 'en')) \
+                if isinstance(value, dict) else (value, 'en')
+            return isinstance(api, dict) and api.get('text') == text and api.get('language') == language
+        if data_type == 'quantity':
+            if not (isinstance(api, dict) and isinstance(value, dict)):
+                return False
+            same_unit = str(api.get('unit', '1')).rsplit('/', 1)[-1] == \
+                str(value.get('unit', '1')).rsplit('/', 1)[-1]
+            return same_unit and str(api.get('amount', '')).lstrip('+') == \
+                str(value.get('amount', '')).lstrip('+')
+        if data_type == 'time':
+            return isinstance(api, dict) and isinstance(value, dict) \
+                and api.get('time') == value.get('time') \
+                and api.get('precision') == value.get('precision', api.get('precision'))
+        return api == value
+
+    def merge_qualifiers(self, api_url, deadline=None):
+        '''Turn new statements that only add qualifiers into additions to the portal statement.
+
+        For every RELATION entry not found on the portal: if its item already
+        holds a statement with the same property, value and the same
+        qualifiers that give it its meaning (role, symbol represents,
+        platform; also when there is none), the entry is marked ``'partial'``
+        with that statement's ID and the qualifiers it lacks, so posting adds
+        them to the statement instead of writing it a second time.  An entry
+        whose qualifiers are all there already is marked ``'true'``.  Several
+        entries adding to the same statement share it; a qualifier is planned
+        only once.
+
+        Entries the SPARQL check found are checked again when their property
+        can carry a meaning qualifier: the portal statement it found may have
+        one the entry lacks (a plain "contains" against "contains" with a
+        role).  Without a statement of the same meaning they are new.
+
+        Raises:
+            ValueError: If the claims of an existing item cannot be fetched.
+        '''
+        meaning = self._meaning_qualifiers()
+        # Properties whose statements can carry a meaning qualifier: a statement
+        # found by the SPARQL check may have one the payload statement lacks
+        # (e.g. "contains" with a role for a plain "contains")
+        with_meaning = {
+            statement[0] for entry in self.state.dictionary.values()
+            for statement in entry.get('statements') or []
+            if len(statement) > 3 and any(q['property']['id'] in meaning for q in statement[3])
+        } | {
+            entry['payload']['statement']['property']['id']
+            for key, entry in self.state.dictionary.items() if key.startswith('RELATION')
+            and any(q['property']['id'] in meaning for q in entry['payload']['statement'].get('qualifiers', []))
+        }
+        candidates = []
+        for key, entry in self.state.dictionary.items():
+            if not key.startswith('RELATION'):
+                continue
+            statement = entry['payload']['statement']
+            if entry.get('exists') == 'true' and statement['property']['id'] not in with_meaning:
+                continue
+            subject = self._resolve_item_reference(entry['url'].split('/')[-2])
+            value = self._resolve_item_reference(statement['value']['content'])
+            if not (isinstance(subject, str) and _QID_RE.match(subject)) or value == '':
+                continue        # new item: the statement cannot exist yet
+            qualifiers = statement.get('qualifiers', [])
+            meaning_values = {
+                (q['property']['id'], json.dumps(self._resolve_item_reference(q['value']['content']),
+                                                 sort_keys=True))
+                for q in qualifiers if q['property']['id'] in meaning
+            }
+            added = [q for q in qualifiers if q['property']['id'] not in meaning]
+            if any(v == '""' for _, v in meaning_values):
+                continue        # its meaning refers to a new item: a new statement
+            if not added and entry.get('exists') != 'true':
+                continue        # nothing to add: a new statement
+            candidates.append((key, subject, statement, value, meaning_values, added))
+        if not candidates:
+            return
+
+        claims_by_item = self._fetch_claims(
+            sorted({c[1] for c in candidates}), api_url, deadline, 'statements',
+        )
+        planned = {}    # statement ID -> qualifiers already planned for it
+        for key, subject, statement, value, meaning_values, added in candidates:
+            prop_id, data_type = statement['property']['id'], statement['property']['data_type']
+            best = None
+            for claim in claims_by_item.get(subject, {}).get(prop_id, []):
+                if not self._snak_matches(claim.get('mainsnak', {}), value, data_type):
+                    continue
+                claim_meaning = {
+                    (q_prop, json.dumps(snak['datavalue']['value'].get('id')
+                                        if isinstance(snak['datavalue']['value'], dict)
+                                        and 'id' in snak['datavalue']['value']
+                                        else snak['datavalue']['value'], sort_keys=True))
+                    for q_prop, snaks in claim.get('qualifiers', {}).items() if q_prop in meaning
+                    for snak in snaks if 'datavalue' in snak
+                }
+                if claim_meaning != meaning_values:
+                    continue
+                missing = [
+                    q for q in added
+                    if not any(self._snak_matches(snak, self._resolve_item_reference(q['value']['content']),
+                                                  q['property']['data_type'])
+                               for snak in claim.get('qualifiers', {}).get(q['property']['id'], []))
+                    and json.dumps(q, sort_keys=True) not in planned.get(claim['id'], set())
+                ]
+                if best is None or len(missing) < len(best[1]):
+                    best = (claim['id'], missing)
+            entry = self.state.dictionary[key]
+            if best is None:
+                # no statement with this meaning on the portal: a new one (also
+                # when the SPARQL check found one with another meaning)
+                entry['exists'] = 'false'
+                continue
+            if not best[1]:
+                entry['exists'] = 'true'
+                continue
+            entry['exists'] = 'partial'
+            entry['statement_id'] = best[0]
+            entry['add_qualifiers'] = best[1]
+            planned.setdefault(best[0], set()).update(json.dumps(q, sort_keys=True) for q in best[1])
 
     def add_aliases(self, aliases_dict):
         '''Add aliases for the current subject to the payload.

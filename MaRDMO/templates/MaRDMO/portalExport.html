@@ -99,6 +99,7 @@ window.MathJax = {
                         {% if r.subject_qid %}<a href="{{mardi_uri}}{{r.subject_qid}}" style="color:dodgerblue;">{{r.subject}}</a>{% else %}{{r.subject}}{% endif %}
                         &nbsp;<em style="color:#888">{{r.prop}}</em>&nbsp;
                         {% if r.obj_url %}<a href="{{r.obj_url}}" target="_blank" style="color:dodgerblue;">{{r.obj}}</a>{% elif r.obj_qid %}<a href="{{mardi_uri}}{{r.obj_qid}}" style="color:dodgerblue;">{{r.obj}}</a>{% else %}{{r.obj}}{% endif %}{% if r.unit_qid %} <a href="{{mardi_uri}}{{r.unit_qid}}" style="color:dodgerblue;">{{r.unit_label}}</a>{% endif %}
+                        {% if r.qualifiers_added %}&nbsp;<em style="color:#888">(existing statement, qualifiers added:)</em>{% endif %}
                     </p>
                     {% for q in r.qualifiers %}
                         <p style="color:#999;font-size:13px;margin:0 0 0 40px">
