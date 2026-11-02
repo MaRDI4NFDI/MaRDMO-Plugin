@@ -1,7 +1,7 @@
 <h3 id="transferability-to">Transferability to...</h3>
 {% for statements in transferability %}
     {% for statement in statements.values %}
-        {{ statement.1 }} <br>
+        {{ statement }} <br>
     {% endfor %}
     {% if not forloop.last %}<br>{% endif %}
 {% empty %}

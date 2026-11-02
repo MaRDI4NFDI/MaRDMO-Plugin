@@ -40,7 +40,7 @@
     {% include "MaRDMO/partials/_id.html" with class="ALGORITHMIC TASK" id=values.ID %}
                 
     {# Include Block for single Relation between Algorithmic Task and Benchmark #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="AT2B" title="Benchmarks" relation="instantiates" relatants=values.RelationB class="BENCHMARK" empty_msg="False" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="AT2B" title="Benchmarks" relation="instantiated by" relatants=values.RelationB class="BENCHMARK" empty_msg="False" %}
 
     {# Include Block for multiple Relations between Algorithmic Task and Algorithmic Task #}
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="AT2AT" title="Algorithmic Tasks" relations=values.RelationP class="ALGORITHMIC TASK" empty_msg="False" %}

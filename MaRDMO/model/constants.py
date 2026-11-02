@@ -535,7 +535,7 @@ preview_relations = [
         "relation": "P2E",
         "old_name": "EntityRelatant",
         "new_name": "RelationP",
-        "encryption": ["RF", "RP", "MM", "F", "QQK", "CT"],
+        "encryption": ["AD", "RP", "MM", "F", "QQK", "CT"],
         "assumption": False,
         "mapping": "publication",
     },
