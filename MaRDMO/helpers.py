@@ -1301,7 +1301,7 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
 _ID_ENTITY_URIS = [
     'field', 'problem', 'model', 'formulation', 'quantity', 'task',
     'algorithm', 'software', 'benchmark', 'workflow', 'hardware',
-    'dataset', 'processstep',
+    'dataset', 'processstep', 'publication',
 ]
 
 
@@ -1371,17 +1371,21 @@ def replace_ids(project, created, base_uri):
             )
             if entity is None:
                 continue
-            # Name/Description questions use set_prefix = parent set chain
-            sibling_prefix = (
-                f'{v.set_prefix}|{v.set_index}' if v.set_prefix
-                else str(v.set_index)
-            )
+            if entity == 'publication':
+                # A publication's name and description are answers of its own tab
+                sibling = {'set_prefix': '', 'set_index': v.set_index}
+            else:
+                # Name/Description questions use set_prefix = parent set chain
+                sibling = {'set_prefix': (
+                    f'{v.set_prefix}|{v.set_index}' if v.set_prefix
+                    else str(v.set_index)
+                )}
             try:
                 v_label = Value.objects.get(
                     project=project,
                     snapshot=None,
                     attribute__uri=base_uri + f'domain/{entity}/name',
-                    set_prefix=sibling_prefix,
+                    **sibling,
                 ).text
             except (Value.DoesNotExist, Value.MultipleObjectsReturned):
                 continue
@@ -1390,7 +1394,7 @@ def replace_ids(project, created, base_uri):
                     project=project,
                     snapshot=None,
                     attribute__uri=base_uri + f'domain/{entity}/description',
-                    set_prefix=sibling_prefix,
+                    **sibling,
                 ).text
             except (Value.DoesNotExist, Value.MultipleObjectsReturned):
                 v_desc = ''

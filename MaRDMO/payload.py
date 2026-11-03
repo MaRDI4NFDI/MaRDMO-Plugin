@@ -62,6 +62,8 @@ _RELATION_CHECK_CHUNK = 50
 # object with another (or no) value of these is a statement of its own.  All
 # other qualifiers add information and are added to an existing statement.
 _MEANING_QUALIFIERS = ('object has role', 'symbol represents', 'platform')
+# Class of items created from publication data that the worker does not handle
+_NEW_ITEM_CLASS = {'no author found': 'Author', 'no journal found': 'Journal'}
 # Duplicate checks of new items running at the same time
 _DUPLICATE_CHECK_THREADS = 4
 
@@ -1475,12 +1477,19 @@ class GeneratePayload:
                         value['issn']
                     ]
                 )
-            # Add further Statements
+            # Add further Statements (as for journals from Wikidata)
             statements.append(
                 [
                     self.wikibase['properties']['instance of'],
                     'wikibase-item',
                     self.wikibase['items']['scientific journal']
+                ]
+            )
+            statements.append(
+                [
+                    self.wikibase['properties']['MaRDI profile type'],
+                    'wikibase-item',
+                    self.wikibase['items']['MaRDI journal profile']
                 ]
             )
         return statements
@@ -1592,8 +1601,13 @@ class GeneratePayload:
             (value['Name'], value['Description'])
             for id_type, _, _, value in todo if id_type != 'mardi'
         )
-        for _, handler, key, value in todo:
+        for id_type, handler, key, value in todo:
             handler(key, value)
+            # New authors and journals get all their statements here and are
+            # skipped by the publication worker, so their class is set here too
+            # (it groups them on the success page)
+            if id_type in _NEW_ITEM_CLASS:
+                self.state.dictionary[key]['class'] = _NEW_ITEM_CLASS[id_type]
 
     def _check_duplicates(self, items):
         """Look up on the MaRDI Portal which new items exist already.
