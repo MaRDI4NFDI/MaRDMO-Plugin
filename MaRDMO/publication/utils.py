@@ -100,56 +100,89 @@ def additional_queries(publication, choice, key, parameter, function):
     )
     mardi_info = function(mardi_results)
 
-    # Add (missing) MaRDI Portal / Wikidata IDs to authors
-    if mardi_info:
-        assign_id(
-            getattr(
-                publication[choice],
-                key
-            ),
-            mardi_info,
-            'mardi'
-        )
-    elif wikidata_info:
-        assign_id(
-            getattr(
-                publication[choice],
-                key
-            ),
-            wikidata_info,
-            'wikidata'
-        )
+    # Add (missing) MaRDI Portal / Wikidata IDs, per entity the portal first
+    assign_id(getattr(publication[choice], key), mardi_info, wikidata_info)
 
-def assign_id(entities, target, prefix):
-    '''Back-fill missing or placeholder IDs on *entities* from *target*.
+# Identifiers that make two authors or journals the same, in the order they
+# decide when they point to different items
+_AUTHOR_IDENTIFIERS = ('orcid', 'zbmath', 'wikidata')
+_JOURNAL_IDENTIFIERS = ('issn', 'wikidata')
 
-    Matches entities by label (case-insensitive) and overwrites the ``id``,
-    ``label``, and ``description`` fields when the entity currently has no ID
-    or a placeholder such as ``"not found"``.
 
-    An ID is not given to a second entity: Wikidata often lists an author as
-    item and as name string, and the name string then stays a name string.
-    Entities with a Wikidata ID are therefore matched first.
+def _identifiers(entity, own_qid=None):
+    """``{(kind, value)}`` of an author or journal: ORCID, zbMATH ID, ISSN, Wikidata QID.
+
+    *own_qid* is the entity's own QID for items found on Wikidata; otherwise
+    the Wikidata QID comes from the entity's ID (``wikidata:Q…``) or its
+    ``wikidata_id`` (the Wikidata QID statement of a MaRDI Portal item).
+    """
+    found = set()
+    for kind, attribute in (('orcid', 'orcid_id'), ('zbmath', 'zbmath_id'), ('issn', 'issn')):
+        value = getattr(entity, attribute, None)
+        # "None" is no identifier (some MaRDI Portal items carry it as text)
+        if value and value != 'None':
+            found.add((kind, value.upper() if kind == 'issn' else value))
+    qid = own_qid or getattr(entity, 'wikidata_id', None)
+    if not qid and (entity.id or '').startswith('wikidata:'):
+        qid = entity.id.split(':', 1)[1]
+    if qid:
+        found.add(('wikidata', qid.removeprefix('wikidata:')))
+    return found
+
+
+def assign_id(entities, mardi_info, wikidata_info):
+    '''Give authors or journals the ID of the MaRDI Portal or Wikidata item with the same identifier.
+
+    Two entities are the same if they share an identifier (ORCID, zbMATH
+    author ID or Wikidata QID for authors, ISSN or Wikidata QID for
+    journals); names are not compared, so an author without any identifier
+    stays a name.  A Wikidata item found by an identifier adds its QID to
+    the entity's identifiers, so the MaRDI Portal item holding that QID
+    matches too.  The MaRDI Portal is preferred over Wikidata, per entity;
+    if identifiers point to different items, the first identifier kind
+    decides (ORCID, zbMATH ID, Wikidata QID; ISSN, Wikidata QID).  An item
+    is not given to a second entity.
+
+    Only entities without a MaRDI Portal ID are changed; the ID, label and
+    description of the item replace theirs.
 
     Args:
-        entities: Iterable of entity dataclass instances to update.
-        target:   Dict of resolved entities (from SPARQL results) to match against.
-        prefix:   Source prefix prepended to the resolved ID (e.g. ``"mardi"``).
+        entities:      Iterable of :class:`~.models.Author` or
+                       :class:`~.models.Journal` instances to update.
+        mardi_info:    Dict of entities found on the MaRDI Portal.
+        wikidata_info: Dict of entities found on Wikidata.
     '''
     entities = list(entities)
-    for entity in sorted(entities, key=lambda e: not (e.id or '').startswith('wikidata')):
-        if (
-            not entity.id
-            or entity.id in ('not found', 'no author found', 'no journal found')
-            or entity.id.startswith('wikidata')
-        ):
-            for id_entity in target.values():
-                if any(other.id == f"{prefix}:{id_entity.id}" for other in entities):
-                    continue
-                if entity.label.lower() == id_entity.label.lower():
-                    entity.id = f"{prefix}:{id_entity.id}"
-                    entity.label = id_entity.label
-                    entity.description = id_entity.description
+    kinds = _JOURNAL_IDENTIFIERS if any(hasattr(e, 'issn') for e in entities) else _AUTHOR_IDENTIFIERS
+    candidates = (
+        [('mardi', c, _identifiers(c)) for c in mardi_info.values()]
+        + [('wikidata', c, _identifiers(c, own_qid=c.id)) for c in wikidata_info.values()]
+    )
+    used = {e.id for e in entities if e.id}
+    for entity in entities:
+        if (entity.id or '').startswith('mardi:'):
+            continue
+        mine = _identifiers(entity)
+        mine |= {('wikidata', c.id) for prefix, c, ids in candidates if prefix == 'wikidata' and ids & mine}
+        match = next(
+            (
+                (prefix, candidate)
+                for source in ('mardi', 'wikidata')
+                for kind in kinds
+                for prefix, candidate, ids in candidates
+                if prefix == source and f'{prefix}:{candidate.id}' not in used
+                and any(k == kind for k, _ in ids & mine)
+            ),
+            None,
+        )
+        if match:
+            prefix, candidate = match
+            used.discard(entity.id)
+            entity.id = f'{prefix}:{candidate.id}'
+            entity.label = candidate.label
+            entity.description = candidate.description
+            used.add(entity.id)
+
 
 def assign_orcid(publication, source, id_type = 'orcid'):
     '''Back-fill missing ORCID iDs on authors from the *orcid* lookup result.
@@ -352,7 +385,7 @@ def _lookup_citation(doi):
             for author in publication[choice].authors
         )
         zbmath_id = ' '.join(
-            f'"{author.zbmath_id}"' if author.zbmath_id else '""'
+            f'"{author.zbmath_id}"' if author.zbmath_id and author.zbmath_id != 'None' else '""'
             for author in publication[choice].authors
         )
         wikidata_id = ' '.join(

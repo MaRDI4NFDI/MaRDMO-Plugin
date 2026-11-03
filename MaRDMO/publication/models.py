@@ -329,14 +329,17 @@ class Journal:
     issn: str
     label: str
     description: str
+    # Wikidata QID of a MaRDI Portal journal (from journal.sparql)
+    wikidata_id: Optional[str] = None
 
     @classmethod
     def from_query(cls, raw: str) -> 'Journal':
         '''Parse a ``<|>``-delimited SPARQL result string into a Journal instance.
 
         Args:
-            raw: Space-and-pipe-delimited string with three or four fields:
-                 identifier, label, description, and optionally issn.
+            raw: Space-and-pipe-delimited string with three to five fields:
+                 identifier, label, description, and optionally issn and
+                 Wikidata QID.
 
         Returns:
             Journal instance populated from the parsed fields.
@@ -346,10 +349,8 @@ class Journal:
         identifier = raw_splitted[0]
         label = raw_splitted[1]
         description = raw_splitted[2]
-        if len(raw_splitted) == 4:
-            issn = raw_splitted[3]
-        else:
-            issn = None
+        issn = raw_splitted[3] if len(raw_splitted) >= 4 else None
+        wikidata_id = raw_splitted[4] if len(raw_splitted) >= 5 else None
 
         if not description:
             if issn:
@@ -361,7 +362,8 @@ class Journal:
             id = identifier,
             issn = issn,
             label = label,
-            description = description
+            description = description,
+            wikidata_id = wikidata_id or None
         )
 
     @classmethod
@@ -725,9 +727,10 @@ class Publication:
                 f'scientific article (doi: {data["DOI"]})'
                 if data.get("DOI") else 'scientific article',
             # Get Entrytype
+            # Preprints count as scholarly articles, as on the MaRDI Portal and Wikidata
             'entrytype':
                 'scholarly article'
-                if data.get('type') == 'journal-article' else 'publication',
+                if data.get('type') in ('journal-article', 'posted-content') else 'publication',
             # Get Language
             'language': (
                 [
@@ -811,9 +814,12 @@ class Publication:
                 f'scientific article (doi: {data["doi"]})'
                 if data.get("doi") else 'scientific article',
             # Get Entrytype
+            # Preprints count as scholarly articles, as on the MaRDI Portal and Wikidata
             'entrytype':
                 'scholarly article'
-                if data.get('types', {}).get('bibtex') == 'article' else 'publication',
+                if data.get('types', {}).get('bibtex') == 'article'
+                or data.get('types', {}).get('resourceTypeGeneral') == 'Preprint'
+                else 'publication',
             # Get Language
             'language': (
                 [
@@ -908,9 +914,11 @@ class Publication:
                 f'scientific article (doi: {data["DOI"]})'
                 if data.get("DOI") else 'scientific article',
             # Get Entrytype
+            # Preprints count as scholarly articles, as on the MaRDI Portal and
+            # Wikidata; in CSL "article" is a preprint or working paper
             'entrytype': (
                 'scholarly article'
-                if data.get('type') in ('journal-article', 'article-journal')
+                if data.get('type') in ('journal-article', 'article-journal', 'posted-content', 'article')
                 else 'publication'
             ),
             # Get Language
