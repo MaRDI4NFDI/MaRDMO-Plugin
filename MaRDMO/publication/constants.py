@@ -131,8 +131,11 @@ ROUTING = {
 }
 
 # URI mappings for item infos
+# The name is the label: a publication referenced by its MaRDI Portal or
+# Wikidata ID is shown with the item's label and description (the title
+# statement may differ or be missing); for the other sources both are the title
 ITEMINFOS = {
-    "Name": "title",
+    "Name": "label",
     "Description": "description"
 }
 
