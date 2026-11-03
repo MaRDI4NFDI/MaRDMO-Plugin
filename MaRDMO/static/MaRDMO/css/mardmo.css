@@ -49,3 +49,15 @@
     color: #6c757d;
     font-style: italic;
 }
+
+/* Collapsed details, e.g. authors and journal of a publication */
+.mardmo-details {
+    margin: 0.3em 0 0.6em 0;
+}
+.mardmo-details summary {
+    cursor: pointer;
+    color: #6c757d;
+}
+.mardmo-details ul {
+    margin: 0.3em 0 0 1.5em;
+}

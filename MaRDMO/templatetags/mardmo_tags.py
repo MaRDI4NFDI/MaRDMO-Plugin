@@ -21,6 +21,8 @@ Provides:
   error marker if the MaRDI Portal's TeX checker rejected it
 - ``user_entity``           — tag: one entity as ``Name (Description)`` with
   error markers if user-defined, otherwise its portal ID
+- ``publication_info``      — tag: citation line, authors and journal of a
+  publication, each marked as on the MaRDI Portal, new, or name only
 '''
 
 from django import template
@@ -190,4 +192,88 @@ def user_entity(identifier, name, description, entity_class):
         'entity_class': entity_class,
         'error': description_error(description, name, entity_class),
         'description_missing': short_description_problem(description, name) == 'missing',
+    }
+
+
+# Authors shown in the citation line; more are listed below it
+_CITATION_AUTHORS = 3
+
+
+def _portal_status(identifier, creatable=True):
+    """``(status, QID)`` of an author or journal as the export treats it.
+
+    ``'portal'`` with its QID if it is on the MaRDI Portal, ``'new'`` if the
+    export creates it, ``'name only'`` for authors without any identifier
+    (the export adds just their name to the publication).
+    """
+    identifier = identifier or ''
+    if identifier.startswith('mardi:'):
+        return 'portal', identifier.split(':', 1)[1]
+    return ('new' if creatable else 'name only'), ''
+
+
+@register.simple_tag
+def publication_info(values):
+    '''Citation line, authors and journal of a publication answer, as the export writes them.
+
+    Usage: ``{% publication_info values as pub %}``.  Every part of the
+    citation is optional; missing ones are left out.  Authors and the
+    journal carry their status (on the MaRDI Portal, new, name only) and
+    identifiers (ORCID, zbMATH, Wikidata, ISSN).
+    '''
+    authors = []
+    for author in (values.get('author') or {}).values():
+        if not author.get('Name'):
+            continue
+        orcid, zbmath = author.get('orcid') or '', author.get('zbmath') or ''
+        wikidata = (author.get('wikidata') or '').removeprefix('wikidata:')
+        identifier = author.get('ID') or ''
+        if identifier.startswith('wikidata:'):
+            wikidata = wikidata or identifier.split(':', 1)[1]
+        status, qid = _portal_status(identifier, creatable=bool(
+            identifier.startswith('wikidata:') or orcid or zbmath))
+        authors.append({'name': author['Name'], 'status': status, 'qid': qid,
+                        'orcid': orcid, 'zbmath': zbmath, 'wikidata': wikidata})
+
+    journal = None
+    for entry in (values.get('journal') or {}).values():
+        if entry.get('Name'):
+            identifier = entry.get('ID') or ''
+            status, qid = _portal_status(identifier)
+            journal = {'name': entry['Name'], 'status': status, 'qid': qid, 'issn': entry.get('issn') or '',
+                       'wikidata': identifier.split(':', 1)[1] if identifier.startswith('wikidata:') else ''}
+            break
+
+    year = (values.get('date') or '')[:4]
+    names = [a['name'] for a in authors]
+    author_line = ', '.join(names[:_CITATION_AUTHORS]) + (' et al.' if len(names) > _CITATION_AUTHORS else '')
+    parts = []
+    if author_line:
+        parts.append(format_html('{}{}.', author_line, f' ({year})' if year else ''))
+    elif year:
+        parts.append(format_html('({}).', year))
+    if values.get('title'):
+        parts.append(format_html('{}.', values['title']))
+    if journal:
+        issue = f"({values['issue']})" if values.get('issue') else ''
+        volume = f" {values.get('volume') or ''}{issue}".rstrip()
+        pages = f", {values['page']}" if values.get('page') else ''
+        parts.append(format_html('<em>{}</em>{}{}.', journal['name'], volume, pages))
+    citation = format_html(' '.join(['{}'] * len(parts)), *parts) if parts else ''
+
+    on_portal = (values.get('ID') or '').startswith('mardi:')
+    new = [] if on_portal else ['publication']
+    if journal and journal['status'] == 'new':
+        new.append('journal')
+    new_authors = sum(a['status'] == 'new' for a in authors)
+    if new_authors:
+        new.append(f"{new_authors} author{'s' if new_authors > 1 else ''}")
+    return {
+        'citation': citation,
+        'on_portal': on_portal,
+        'new': new,
+        'name_only': sum(a['status'] == 'name only' for a in authors),
+        'authors': authors,
+        'journal': journal,
+        'language': ', '.join(l.get('Name', '') for l in (values.get('language') or {}).values() if l.get('Name')),
     }

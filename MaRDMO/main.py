@@ -320,6 +320,13 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                     answers=answers,
                     options=options
                 )
+            # The export reads the citation data (title, authors, journal, ...)
+            # from the project; read the answers again so the preview shows it too
+            answers = process_question_dict(
+                project=self.project,
+                questions=questions,
+                get_answer=get_answers
+            )
 
         prepare = prepare_class()
         answers = prepare.preview(answers)
