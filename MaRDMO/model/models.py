@@ -571,10 +571,13 @@ class MathematicalModel:
                 key = 'description_long'
             ),
             # Get Properties
+            # One line per property of the item, without empty lines in between
             'properties': {
                 idx: [mathmoddb.get(key=prop)["url"]]
-                for idx, prop in enumerate(data_properties_per_class['model'])
-                if data.get(prop, {}).get('value') == 'True'
+                for idx, prop in enumerate(
+                    prop for prop in data_properties_per_class['model']
+                    if data.get(prop, {}).get('value') == 'True'
+                )
             },
             # Get Problem Relation(s)
             'models': split_value(
@@ -828,10 +831,13 @@ class QuantityOrQuantityKind:
             # Get Quantity or Quantity Kind Class
             'qclass': data.get('class', {}).get('value'),
             # Get Properties
+            # One line per property of the item, without empty lines in between
             'properties': {
                 idx: [mathmoddb.get(key=prop)["url"]]
-                for idx, prop in enumerate(data_properties_per_class['quantity'])
-                if data.get(prop, {}).get('value') == 'True'
+                for idx, prop in enumerate(
+                    prop for prop in data_properties_per_class['quantity']
+                    if data.get(prop, {}).get('value') == 'True'
+                )
             },
             # Get Specialized By Relation(s)
             'specialized_by': split_value(
@@ -978,10 +984,13 @@ class MathematicalFormulation:
                 key = 'description_long'
             ),
             # Get Properties
+            # One line per property of the item, without empty lines in between
             'properties': {
                 idx: [mathmoddb.get(key=prop)["url"]]
-                for idx, prop in enumerate(data_properties_per_class['formulation'])
-                if data.get(prop, {}).get('value') == 'True'
+                for idx, prop in enumerate(
+                    prop for prop in data_properties_per_class['formulation']
+                    if data.get(prop, {}).get('value') == 'True'
+                )
             },
             # Get Reference
             'reference': data.get('reference', {}).get('value'),
@@ -1192,10 +1201,13 @@ class Task:
                 key = 'description_long'
             ),
             # Get Properties
+            # One line per property of the item, without empty lines in between
             'properties': {
                 idx: [mathmoddb.get(key=prop)["url"]]
-                for idx, prop in enumerate(data_properties_per_class['task'])
-                if data.get(prop, {}).get('value') == 'True'
+                for idx, prop in enumerate(
+                    prop for prop in data_properties_per_class['task']
+                    if data.get(prop, {}).get('value') == 'True'
+                )
             },
             # Get Assumption Relation(s)
             'assumes': split_value(

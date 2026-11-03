@@ -21,6 +21,8 @@ Provides:
 - ``add_references``         — write external-reference values; skips malformed QUDT IDs
 '''
 
+import itertools
+
 from rdmo.options.models import Option
 
 from .constants import BASE_URI
@@ -529,9 +531,10 @@ def add_relations_flexible(project, data, props, index, statement):
 def add_properties(project, data, uri, set_prefix):
     '''Write the data-property option values from *data.properties* into the questionnaire.
 
-    Iterates over the ``{collection_index: [option_uri, …]}`` mapping in
+    Iterates over the ``{index: [option_uri, …]}`` mapping in
     ``data.properties`` and calls :func:`~MaRDMO.helpers.value_editor` for
-    each entry at ``set_index=0``.
+    each entry at ``set_index=0``.  Properties already in the question keep
+    their line; the others fill the first free lines.
 
     Entries whose option URI belongs to a mutually exclusive pair (as defined
     by ``data_properties_check``) are silently skipped — the entire conflicting
@@ -555,15 +558,22 @@ def add_properties(project, data, uri, set_prefix):
                 conflict.add(entry_a['url'])
                 conflict.add(entry_b['url'])
 
-    for key, value in data.properties.items():
-        if value[0] in conflict:
+    # The question is a list of dropdowns: properties already in the list
+    # (from the user or an earlier filling, maybe with empty lines) stay
+    # where they are, new ones take the first free lines
+    present = dict(project.values.filter(
+        snapshot=None, attribute__uri=uri, set_prefix=str(set_prefix), set_index=0,
+    ).values_list('option__uri', 'collection_index'))
+    free = (idx for idx in itertools.count() if idx not in present.values())
+    for _, value in sorted(data.properties.items()):
+        if value[0] in conflict or value[0] in present:
             continue
         value_editor(
             project = project,
             uri  = uri,
             info = {
                 'option': Option.objects.get(uri=value[0]),
-                'collection_index': key,
+                'collection_index': next(free),
                 'set_index': 0,
                 'set_prefix': set_prefix
             }
