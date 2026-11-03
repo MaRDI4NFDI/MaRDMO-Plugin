@@ -46,7 +46,7 @@ PROJECT_EXPORTS += [
 ]
 ```
 
-The full `OPTIONSET_PROVIDERS` list required for all catalog features is available in the [README](https://github.com/MarcoReidelbach/MaRDMO-Plugin#mardmo-plugin-installation).
+The full `OPTIONSET_PROVIDERS` list required for all catalog features is available in the [README](https://github.com/MaRDI4NFDI/MaRDMO-Plugin#mardmo-plugin-installation).
 
 Add the following URL pattern to `config/urls.py`:
 
@@ -82,7 +82,7 @@ MaRDI Portal.  No credentials are needed for this check.
 
 ## Questionnaire Import
 
-MaRDMO requires the [MaRDMO-Questionnaire](https://github.com/MarcoReidelbach/MaRDMO-Questionnaire) — download the [![Latest Release](https://img.shields.io/github/v/release/MarcoReidelbach/MaRDMO-Questionnaire)](https://github.com/MarcoReidelbach/MaRDMO-Questionnaire/releases/latest).
+MaRDMO requires the [MaRDMO-Questionnaire](https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire) — download the [![Latest Release](https://img.shields.io/github/v/release/MaRDI4NFDI/MaRDMO-Questionnaire)](https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire/releases/latest).
 
 Import via the RDMO management interface (`Management → Import`) or from the command line:
 

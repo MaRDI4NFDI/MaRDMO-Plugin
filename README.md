@@ -154,7 +154,7 @@ Formulas entered in the questionnaires are checked with the TeX checker of the M
 
 ## MaRDMO-Questionnaire        
 
-The MaRDMO Plugin requires the [MaRDMO-Questionnaire](https://github.com/MarcoReidelbach/MaRDMO-Questionnaire), download its latest release [![Latest Release](https://img.shields.io/github/v/release/MarcoReidelbach/MaRDMO-Questionnaire)](https://github.com/MarcoReidelbach/MaRDMO-Questionnaire/releases/latest).
+The MaRDMO Plugin requires the [MaRDMO-Questionnaire](https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire), download its latest release [![Latest Release](https://img.shields.io/github/v/release/MaRDI4NFDI/MaRDMO-Questionnaire)](https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire/releases/latest).
 
 Integrate the MaRDMO Questionnaire into your RDMO instance through the user interface of your RDMO instance (`Management -> Import -> attributes.xml/optionsets.xml/conditions.xml/catalogs.xml`) or via 
 

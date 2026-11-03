@@ -1,15 +1,18 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+# SPDX license expression (project.license) needs setuptools 77
+requires = ["setuptools>=77.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "MaRDMO"
-version = "0.6.2"
+# The version is set in MaRDMO/__init__.py only (see [tool.setuptools.dynamic])
+dynamic = ["version"]
 description = "RDMO Plugin to document and query mathematical research data using the MaRDI infrastructure."
 readme = "README.md"
 authors = [{name = "Marco Reidelbach", email = "reidelbach@zib.de"}]
 maintainers = [{name = "Marco Reidelbach", email = "reidelbach@zib.de"}]
-license = {text = "Apache Software License"}
+license = "Apache-2.0"
+license-files = ["LICENSE.md"]
 requires-python = ">=3.10"
 
 dependencies = [
@@ -18,14 +21,18 @@ dependencies = [
 
 classifiers = [
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10"
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14"
 ]
 
 
 [project.urls]
-homepage = "https://github.com/MarcoReidelbach/MaRDMO"
+homepage = "https://github.com/MaRDI4NFDI/MaRDMO-Plugin"
+
+[tool.setuptools.dynamic]
+version = {attr = "MaRDMO.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["."]
