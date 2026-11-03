@@ -12,6 +12,8 @@ Provides:
   workers that package questionnaire answers for portal submission
 '''
 
+import html
+import re
 from multiprocessing.pool import ThreadPool
 
 from .constants import ITEMINFOS, CITATIONINFOS, JOURNALS, AUTHORS, LANGUAGES
@@ -25,14 +27,26 @@ from ..helpers import commit_writes, date_precision, find_reference, value_edito
 CITATION_LOOKUPS_IN_PARALLEL = 3
 
 
+# Formatting tags in fetched titles (Crossref, DataCite, ...); only these are
+# removed, so a title like "a < b and c > d" keeps its text
+_FORMATTING_TAG_RE = re.compile(
+    r'</?(?:i|b|u|em|strong|sup|sub|scp|tt|sc|span|jats:[a-z-]+|mml:[a-z]+)(?:\s[^<>]*)?/?>',
+    re.IGNORECASE,
+)
+
+
 def _single_line(text):
-    '''Collapse whitespace (incl. line breaks) in fetched metadata text.
+    '''Collapse whitespace (incl. line breaks), remove formatting tags and decode HTML entities in fetched metadata text.
 
     Crossref/DataCite titles and names occasionally contain line breaks, which
-    the MaRDI Portal rejects.  Users cannot edit this background data, so it is
-    normalised when stored instead of blocking the export.
+    the MaRDI Portal rejects, formatting tags (``<i>``, ``<sup>``) and HTML
+    entities (``&amp;``), which would end up literally in labels.  Users
+    cannot edit this background data, so it is normalised when stored instead
+    of blocking the export.
     '''
-    return ' '.join(text.split()) if isinstance(text, str) else text
+    if not isinstance(text, str):
+        return text
+    return ' '.join(html.unescape(_FORMATTING_TAG_RE.sub('', text)).split())
 
 
 class PublicationRetriever:
