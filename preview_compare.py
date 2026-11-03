@@ -47,6 +47,8 @@ RELATION_TYPES = {
     'instantiated by': ('manifestation of', '<-', None), 'programmed in': ('programmed in', '->', None),
     'depends on software': ('depends on software', '->', None), 'tests': ('tests', '->', None),
     'CPU': ('CPU', '->', None),
+    'author': ('author', '->', None), 'published in': ('published in', '->', None),
+    'language of work or name': ('language of work or name', '->', None),
     **{f'contains {role}': ('contains', '->', qid) for role, qid in _ROLE.items()},
     **{('P2E', label): ('described by source', '<-', qid) for label, qid in _SOURCE_ROLE.items()},
     **{('P2A', label): ('described by source', '<-', qid) for label, qid in _SOURCE_ROLE.items()},
@@ -112,6 +114,22 @@ def parse_preview(page):
         aliases = re.search(r'<b>Alias</b>:(.*?)</ol>', body)
         if aliases:
             item['aliases'] += [text(a) for a in re.findall(r'<li[^>]*>(.*?)</li>', aliases.group(1))]
+        # publication: authors, journal and language in the collapsed details
+        details = re.search(r'<details class="mardmo-details">(.*?)</details>', body)
+        for entry in re.findall(r'<li>(.*?)</li>', details.group(1)) if details else []:
+            entry = text(entry)
+            if entry.startswith('Journal: '):
+                links = [('published in', entry[len('Journal: '):].split(' — ')[0])]
+            elif entry.startswith('Language: '):
+                links = [('language of work or name', name) for name in entry[len('Language: '):].split(', ')]
+            else:
+                name, status = entry.split(' — ', 1)
+                # authors without any identifier are only a name ("author name string")
+                links = [] if status.startswith('name only') else [('author', name)]
+            # a publication already on the portal gets nothing added: its details are information only
+            block = 'publication on portal' if 'nothing is added to it' in body else 'publication details'
+            item['relations'] += [{'block': block, 'label': label, 'target': target,
+                                   'assumptions': []} for label, target in links]
         item['text'] += ' ' + text(body) + ' ' + ' '.join(formulas_in(body))
         if level == '3' and text(head.group(3)).startswith('Relevant Mathematical Models'):
             # workflow: models and their tasks, listed by name
@@ -206,7 +224,14 @@ def compare(page, payload, props):
             return value['amount'].lstrip('+')
         if isinstance(value, dict) and 'time' in value:
             return value['time'].lstrip('+')[:4]
+        if isinstance(value, dict) and 'text' in value:      # monolingual text (title)
+            return value['text']
         return value
+
+    def contains(page_text, value, case=True):
+        """Whether the preview text shows the literal (DOIs: in any case)."""
+        value = re.sub(r'\s+', ' ', str(value)).strip()
+        return value in page_text if case else value.lower() in page_text.lower()
 
     report = collections.defaultdict(list)
     nodes = {}
@@ -235,6 +260,8 @@ def compare(page, payload, props):
                 report['preview relation with unknown target'].append(f"{code} {rel['label']}: {rel['target']}")
                 continue
             shown.add(frozenset((s, t)))
+            if rel['block'] == 'publication on portal':
+                continue
             if not pairs.get(frozenset((s, t))):
                 report['preview relation not in payload'].append(f"{code} {rel['label']}: {rel['target']}")
                 continue
@@ -303,7 +330,7 @@ def compare(page, payload, props):
         elif label == 'defining formula':
             if v not in it['formulas']:
                 report['payload formula not in preview'].append(f"{where} {str(v)[:60]}")
-        elif re.sub(r'\s+', ' ', str(v)).strip() not in it['text']:
+        elif not contains(it['text'], v, case=label != 'DOI'):
             report['payload literal not in preview'].append(f"{where} {label}: {str(v)[:60]}")
 
     # formulas, elements and aliases of the preview -> payload
