@@ -1544,5 +1544,424 @@
     "Q7401806",
     "Q7401807",
     "Q7401808"
+  ],
+  "publication_sources": [
+    {
+      "doi": "10.1007/bf01389853",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1007/bf01436072",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/0045-7825(79)90016-1",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/j.jcp.2007.03.033",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1137/s0036142994264092",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1006/bulm.2000.0221",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/j.cma.2025.118089",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/j.jcp.2021.110543",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/j.jcp.2009.09.031",
+      "group": "portal",
+      "note": "many authors"
+    },
+    {
+      "doi": "10.1016/j.cma.2019.01.014",
+      "group": "portal",
+      "note": "many authors"
+    },
+    {
+      "doi": "10.48550/arXiv.1412.6980",
+      "group": "portal",
+      "note": "arXiv preprint, also on Wikidata"
+    },
+    {
+      "doi": "10.1038/207245a0",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1371/journal.pone.0009198",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1371/journal.pone.0005737",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1371/journal.pone.0089423",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1371/journal.pone.0073436",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.25587/2222-5404-2026-23-3-38-49",
+      "group": "crossref",
+      "note": "journal new everywhere"
+    },
+    {
+      "doi": "10.1038/s42005-026-02813-2",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.3390/metabo16080590",
+      "group": "crossref",
+      "note": "many authors"
+    },
+    {
+      "doi": "10.4081/dr.2026.11101",
+      "group": "crossref",
+      "note": "title with \"|\""
+    },
+    {
+      "doi": "10.1108/mip-06-2025-0454",
+      "group": "crossref",
+      "note": "journal title with &amp;"
+    },
+    {
+      "doi": "10.48550/arXiv.math/0211159",
+      "group": "datacite"
+    },
+    {
+      "doi": "10.48550/arXiv.1706.03762",
+      "group": "datacite"
+    },
+    {
+      "doi": "10.48550/arXiv.2104.13478",
+      "group": "datacite"
+    },
+    {
+      "doi": "10.48550/arXiv.2010.08895",
+      "group": "datacite"
+    },
+    {
+      "doi": "10.5281/zenodo.10983460",
+      "group": "datacite",
+      "note": "Zenodo software"
+    },
+    {
+      "doi": "10.1101/2024.01.24.577147",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.26434/chemrxiv.15003962/v2",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.21203/rs.3.rs-4202882/v1",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.1007/978-1-4757-3613-7_30",
+      "group": "book",
+      "note": "book-chapter"
+    },
+    {
+      "doi": "10.21135/893275341.010",
+      "group": "book",
+      "note": "proceedings-article"
+    },
+    {
+      "doi": "10.1007/978-3-032-35043-5",
+      "group": "book",
+      "note": "book"
+    }
+  ],
+  "publication_sources_2": [
+    {
+      "doi": "10.1007/bf01389856",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1007/bf01420415",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/0045-7825(76)90015-3",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/j.cma.2005.06.006",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1007/bf01231333",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1137/0722053",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1007/s00211-025-01470-x",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1007/s00208-020-02081-7",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1007/s00285-008-0160-8",
+      "group": "portal",
+      "note": "many authors"
+    },
+    {
+      "doi": "10.1016/j.compfluid.2017.01.016",
+      "group": "portal",
+      "note": "many authors"
+    },
+    {
+      "doi": "10.48550/arXiv.1505.04597",
+      "group": "portal",
+      "note": "arXiv preprint on the portal"
+    },
+    {
+      "doi": "10.1038/211753b0",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1038/224600a0",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1371/journal.pone.0112794",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1371/journal.pone.0106008",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1371/journal.pone.0049285",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1002/jsfa.71152",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.23917/buletinkkndik.v8i1.19514",
+      "group": "crossref",
+      "note": "many authors"
+    },
+    {
+      "doi": "10.65620/thzp2d58",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.5617/suicidologi.13655",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.1177/11795549261478021",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.48550/arXiv.1312.6114",
+      "group": "datacite"
+    },
+    {
+      "doi": "10.48550/arXiv.math/0303109",
+      "group": "datacite"
+    },
+    {
+      "doi": "10.48550/arXiv.1910.10683",
+      "group": "datacite"
+    },
+    {
+      "doi": "10.48550/arXiv.1502.03167",
+      "group": "datacite"
+    },
+    {
+      "doi": "10.5281/zenodo.21064493",
+      "group": "datacite",
+      "note": "Zenodo software"
+    },
+    {
+      "doi": "10.1101/2024.01.22.576596",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.26434/chemrxiv-2024-d4jbl",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.21203/rs.3.rs-9346107/v1",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.1007/978-94-009-4980-5_6",
+      "group": "book",
+      "note": "book-chapter"
+    },
+    {
+      "doi": "10.21135/893275341.013",
+      "group": "book",
+      "note": "proceedings-article"
+    },
+    {
+      "doi": "10.1007/978-3-663-20231-8",
+      "group": "book",
+      "note": "book"
+    }
+  ],
+  "publication_sources_3": [
+    {
+      "doi": "10.1007/bf01197330",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/0024-3795(69)90016-0",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/0001-8708(65)90038-1",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1007/bf01209389",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1006/jdeq.1997.3322",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/0001-8708(86)90072-1",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/j.aim.2021.107906",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/j.laa.2019.09.025",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1016/j.aim.2025.110620",
+      "group": "portal"
+    },
+    {
+      "doi": "10.1002/nme.5240",
+      "group": "portal",
+      "note": "many authors"
+    },
+    {
+      "doi": "10.1016/j.cpc.2021.107849",
+      "group": "portal",
+      "note": "many authors"
+    },
+    {
+      "doi": "10.1126/science.218.4577.1106",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1016/s0092-8674(03)00554-3",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1016/s0092-8674(01)00336-1",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1016/s0092-8674(02)00683-9",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1016/j.cell.2004.09.033",
+      "group": "wikidata"
+    },
+    {
+      "doi": "10.1007/s00266-026-06235-x",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.1016/j.carbpol.2026.125421",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.57083/adaletdergisi.2050428",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.1130/b39153.1",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.1016/j.aap.2026.108843",
+      "group": "crossref"
+    },
+    {
+      "doi": "10.48550/arxiv.1212.0618",
+      "group": "datacite",
+      "note": "arXiv"
+    },
+    {
+      "doi": "10.48550/arxiv.1206.3851",
+      "group": "datacite",
+      "note": "arXiv"
+    },
+    {
+      "doi": "10.48550/arxiv.2412.11161",
+      "group": "datacite",
+      "note": "arXiv"
+    },
+    {
+      "doi": "10.48550/arxiv.2412.07680",
+      "group": "datacite",
+      "note": "arXiv"
+    },
+    {
+      "doi": "10.5281/zenodo.23766950",
+      "group": "datacite",
+      "note": "Zenodo software"
+    },
+    {
+      "doi": "10.1101/2024.06.17.599351",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.26434/chemrxiv-2024-5vb65",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.2139/ssrn.4651070",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.1017/cbo9780511760082.007",
+      "group": "book",
+      "note": "book-chapter"
+    },
+    {
+      "doi": "10.1145/2938559.2938604",
+      "group": "book",
+      "note": "proceedings-article"
+    },
+    {
+      "doi": "10.1515/9783111722627",
+      "group": "book",
+      "note": "book"
+    }
   ]
 }
