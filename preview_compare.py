@@ -45,7 +45,7 @@ RELATION_TYPES = {
     'subclass of': ('subclass of', '->', None), 'has subclass': ('subclass of', '<-', None),
     'solves': ('solved by', '<-', None), 'implemented by': ('implemented by', '->', None),
     'instantiated by': ('manifestation of', '<-', None), 'programmed in': ('programmed in', '->', None),
-    'depends on software': ('depends on software', '->', None), 'tests': ('tests', '->', None),
+    'depends on software': ('depends on software', '->', None), 'tests': ('tested by', '<-', None),
     'CPU': ('CPU', '->', None),
     'author': ('author', '->', None), 'published in': ('published in', '->', None),
     'language of work or name': ('language of work or name', '->', None),

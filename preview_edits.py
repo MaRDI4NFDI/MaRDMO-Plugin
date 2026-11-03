@@ -8,7 +8,7 @@ the interview's signal sent, so MaRDMO's handlers run as in the interview.
 Preview and payload are then saved like preview_payload.py does (nothing is
 posted) and compared with preview_compare.py.
 
-Environment: CASES (comma-separated, default all: model), OUT (default
+Environment: CASES (comma-separated, default all: model, algorithm, workflow), OUT (default
 results/preview-edited).
 """
 import datetime, json, os, sys, time, traceback
@@ -118,11 +118,98 @@ def edit_model(p):
     return edits
 
 
-CASES = {'model': ('Q6775746', 'model', edit_model)}
+MATHALGODB = 'https://rdmo.mardi4nfdi.de/terms/options/mathalgodb/'
+OPTIONS = 'https://rdmo.mardi4nfdi.de/terms/options/'
+YES_NO_TEXT = 'https://rdmorganiser.github.io/terms/options/yes_with_text_no/'
+
+
+def next_collection(project, path, prefix):
+    """Next free collection index (line) of a question in a tab."""
+    return max(project.values.filter(snapshot=None, attribute__uri=f'{BASE_URI}domain/{path}', set_prefix=prefix)
+               .values_list('collection_index', flat=True), default=-1) + 1
+
+
+def edit_algorithm(p):
+    """Algorithm Q6825339: new software and benchmark with references, their relations, a subclass relation."""
+    edits = []
+    software = ('TestSolver', 'test implementation of the algorithm')
+    benchmark = ('Test benchmark set', 'benchmark problems for the test implementation')
+
+    s = new_item(p, 'software', 'S', *software)
+    answer(p, 'software/reference', option=f'{OPTIONS}swmath', text='54321', set_prefix=str(s), set_index=0,
+           collection_index=0)
+    answer(p, 'software/reference', option=f'{OPTIONS}source-code-repository-url', text='https://example.org/testsolver',
+           set_prefix=str(s), set_index=0, collection_index=1)
+    answer(p, 'software/programming-language-relatant', signal=True, set_prefix=str(s), set_index=0,
+           collection_index=0, **portal('Q6230810'))
+    edits.append(f'new software S{s + 1} {software[0]} with swMATH ID, source code URL, programming language Python')
+
+    b = new_item(p, 'benchmark', 'B', *benchmark)
+    answer(p, 'benchmark/reference', option=f'{OPTIONS}morwiki', text='Test_Benchmark', set_prefix=str(b),
+           set_index=0, collection_index=0)
+    edits.append(f'new benchmark B{b + 1} {benchmark[0]} with MORwiki ID')
+
+    answer(p, 'algorithm/software-relatant', signal=True, set_prefix='0', set_index=0,
+           collection_index=next_collection(p, 'algorithm/software-relatant', '0'), **own(*software))
+    answer(p, 'problem/benchmark-relatant', signal=True, set_prefix='0', set_index=0,
+           collection_index=next_collection(p, 'problem/benchmark-relatant', '0'), **own(*benchmark))
+    answer(p, 'software/benchmark-relatant', signal=True, set_prefix=str(s), set_index=0, collection_index=0,
+           **own(*benchmark))
+    edits.append('algorithm implemented by the new software, task instantiated by the new benchmark, '
+                 'software tests the benchmark')
+
+    k = max(p.values.filter(snapshot=None, attribute__uri=f'{BASE_URI}domain/algorithm/algorithm-relation',
+                            set_prefix='0').values_list('set_index', flat=True), default=-1) + 1
+    answer(p, 'algorithm/algorithm-relation', option=f'{MATHALGODB}subclass-of', set_prefix='0', set_index=k)
+    answer(p, 'algorithm/algorithm-relatant', signal=True, set_prefix='0', set_index=k, collection_index=0,
+           **portal('Q6825578'))
+    edits.append('algorithm subclass of Q6825578')
+    return edits
+
+
+def edit_workflow(p):
+    """Workflow Q6032641: new data set with all fields, new process step with data and an algorithm usage."""
+    edits = []
+    data = ('Validated rule set', 'logical rules checked against held-out objects')
+    step = ('Validate logical rules', 'checks the extracted rules against held-out objects')
+
+    d = new_item(p, 'dataset', 'DS', *data)
+    for path, info in (('size', {'option': f'{OPTIONS}data-set-size/items', 'text': '42'}),
+                       ('file-format', {'text': 'csv'}),
+                       ('binary-or-text', {'option': f'{OPTIONS}binary-or-text/text'}),
+                       ('proprietary', {'option': f'{OPTIONS}yes_no/no'}),
+                       ('to-publish', {'option': f'{YES_NO_TEXT}yes', 'text': '10.5281/zenodo.1234567'}),
+                       ('to-archive', {'option': f'{YES_NO_TEXT}yes', 'text': '2035'})):
+        answer(p, f'dataset/{path}', set_prefix=str(d), set_index=0, **info)
+    edits.append(f'new data set DS{d + 1} {data[0]}: 42 items, csv, text, open, published (DOI), archived until 2035')
+
+    k = new_item(p, 'processstep', 'PS', *step)
+    answer(p, 'processstep/input-data-set-relatant', signal=True, set_prefix=str(k), set_index=0, collection_index=0,
+           **portal('Q6486606'))
+    answer(p, 'processstep/output-data-set-relatant', signal=True, set_prefix=str(k), set_index=0, collection_index=0,
+           **own(*data))
+    answer(p, 'processstep/algorithm-relatant', signal=True, set_prefix=f'{k}|0', set_index=0, collection_index=0,
+           **portal('Q6032636'))
+    answer(p, 'processstep/software-relatant', signal=True, set_prefix=f'{k}|0', set_index=0, **portal('Q6230812'))
+    answer(p, 'processstep/algorithm-parameter', text='threshold = 0.5', set_prefix=f'{k}|0', set_index=0,
+           collection_index=0)
+    edits.append(f'new process step PS{k + 1} {step[0]}: input Q6486606, output the new data set, '
+                 'uses RAP Algorithm on Jupyter Notebook with a parameter')
+
+    answer(p, 'workflow/step-relatant', signal=True, set_prefix='0', set_index=0,
+           collection_index=next_collection(p, 'workflow/step-relatant', '0'), **own(*step))
+    edits.append('workflow contains the new process step')
+    return edits
+
+
+CASES = {'model': ('Q6775746', 'model', edit_model),
+         'algorithm': ('Q6825339', 'algorithm', edit_algorithm),
+         'workflow': ('Q6032641', 'workflow', edit_workflow)}
 
 if __name__ in ('__main__', 'django.core.management.commands.shell'):
     cases = os.environ.get('CASES', ','.join(CASES)).split(',')
-    TEXTS.update(labels('mardi', ['Q6775415', 'Q6675318', 'Q6775746']))
+    TEXTS.update(labels('mardi', ['Q6775415', 'Q6675318', 'Q6775746', 'Q6230810', 'Q6825578',
+                                  'Q6486606', 'Q6032636', 'Q6230812']))
     try:
         for case in cases:
             qid, kind, edit = CASES[case]
