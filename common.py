@@ -15,7 +15,11 @@ PAUSE = 2
 PORTAL = 'https://portal.mardi4nfdi.de'
 # the tests use the test items of the MaRDI Portal; with MARDMO_PROVIDER set to another
 # Wikibase (staging) they would fail or compare against other data
-if get_url('mardi', 'uri') != PORTAL:
+STAGING = 'https://staging.mardi4nfdi.org'
+if get_url('mardi', 'uri') == STAGING and os.environ.get('STAGING') == '1':
+    # only scripts made for staging (staging_projects.py) are run like this
+    print(f'NOTE: MaRDMO is configured for {STAGING} (STAGING=1)')
+elif get_url('mardi', 'uri') != PORTAL:
     raise SystemExit(f"MaRDMO is configured for {get_url('mardi', 'uri')}, not {PORTAL} "
                      '(MARDMO_PROVIDER in config/settings/local.py); stopped.')
 TYPES = {  # name: (source, catalog slug, questions key, item type)
