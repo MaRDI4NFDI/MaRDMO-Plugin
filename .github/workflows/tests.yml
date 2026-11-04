@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Check out MaRDMO
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # The questionnaire branch with the same name as this branch, else main
       - name: Find the questionnaire branch
@@ -39,14 +39,14 @@ jobs:
           fi
 
       - name: Check out the questionnaire (${{ steps.questionnaire.outputs.ref }})
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: MaRDI4NFDI/MaRDMO-Questionnaire
           ref: ${{ steps.questionnaire.outputs.ref }}
           path: questionnaire
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
 

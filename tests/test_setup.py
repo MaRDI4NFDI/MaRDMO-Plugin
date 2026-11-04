@@ -17,6 +17,7 @@ def test_version_comes_from_the_package():
     assert MaRDMO.__version__ == MaRDMO.VERSION
 
 
+@pytest.mark.filterwarnings('ignore:A test tried to use socket')
 def test_network_is_blocked():
     with pytest.raises(SocketBlockedError):
         socket.create_connection(('portal.mardi4nfdi.de', 443), timeout=1)
