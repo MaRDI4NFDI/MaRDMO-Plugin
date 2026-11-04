@@ -26,6 +26,7 @@ Rules for every script:
 | `preview_payload.py` | renders the preview as on the export page, then builds the export payload of the same project (nothing is posted); saves both per item for `preview_compare.py` (`TYPE`, `ITEMS`, `QIDS`, `LIMIT`, `MOCK=1` for the workflow with the mock usages of `workflow_mock.py`, `OUT`) | RDMO app, portal read access |
 | `preview_compare.py` | offline: parses the saved previews and compares them with the payloads in both directions — items, relations (with the expected property, direction and role per relation label), assumptions, formulas, formula elements, aliases, literals and qualifiers (`python3 preview_compare.py results/preview-model ...`) | nothing |
 | `preview_edits.py` | preview against payload after typical interview entries on a portal item (new items of the user's own, formulas with elements, relations with roles and assumptions, alias, publication by DOI); saves like `preview_payload.py`, compared with `preview_compare.py` (`CASES`, `OUT`) | RDMO app, portal read access |
+| `unchanged_export.py` | offline: what the export of an unchanged import would write, from the payloads of `preview_payload.py` or `roundtrip_collect.py` — statements not on the portal (new or extended with qualifiers) and new items, per item; should be none (`python3 unchanged_export.py results/roundtrip-model-all ...`; exit status 1 otherwise) | nothing |
 | `qualifier_merge.py` | how the export classifies statements whose qualifiers were changed (exists / partial / new) in cases on real portal items: contains with and without role, assumptions on specializations, parameters and platforms of workflow usages, publication roles; prints the expected result per case (`OUT`) | RDMO app, portal read access |
 | `publication_sources.py` | each DOI of a list in `items.json` (`publication_sources`, `publication_sources_2`, `publication_sources_3`: 32 DOIs each, the third from other journals and publishers — on the portal, only on Wikidata, new via Crossref, DataCite, preprints, books) through every citation source: once as in the interview and once per source with the others switched off in the test process; saves preview and payload per run (`ITEMS`, `CONFIGS`, `ONLY`, `LIMIT`, `OUT`) | RDMO app, portal read access |
 | `publication_report.py` | offline evaluation of `publication_sources.py`: fields per source, matching of authors and journals against identifiers looked up directly on the portal and Wikidata, `preview_compare.py` per run (`python3 publication_report.py results/publication-sources`) | portal and Wikidata read access |
@@ -38,7 +39,8 @@ interview does, dumping values, comparing content without set numbers).
 Wikidata models, picked evenly by number of statements, every model and every
 algorithm on the portal (`model_all`, `algorithm_all`; items with the MaRDI
 model or algorithm profile), and the one MaRDMO workflow on the portal (Q6032641; the other items with the workflow profile are
-script-based workflows created elsewhere).
+script-based workflows created elsewhere), and `multirole`: models whose tasks or formulas hold
+"contains" statements with several roles (e.g. initial value of an ODE and parameter).
 
 Run Django scripts with the RDMO app, e.g.
 
