@@ -50,6 +50,8 @@ _XSD = 'http://www.w3.org/2001/XMLSchema#'
 # How the query service stores the unit of unitless quantities (unit "1")
 _UNITLESS_IRI = 'http://www.wikidata.org/entity/Q199'
 _QID_RE = re.compile(r'^Q\d+$')
+# Placeholder of an item of the export, replaced by its QID while posting
+_ITEM_KEY_RE = re.compile(r'^Item\d{10}$')
 _LANG_TAG_RE = re.compile(r'^[a-zA-Z]+(-[a-zA-Z0-9]+)*$')
 _IRI_INVALID_RE = re.compile(r'[\x00-\x20<>"{}|^`\\]')
 _TIME_RE = re.compile(r'^\+?(-?\d+)-(\d{2})-(\d{2})(T.*)$')
@@ -699,8 +701,39 @@ class GeneratePayload:
                     statement['value']['content'], statement.get('qualifiers', []),
                 )
 
+        errors.extend(self._dangling_references())
         if errors:
             raise ValueError(*errors)
+
+    def _dangling_references(self):
+        '''Messages for ``Item<n>`` placeholders that refer to no item of the export.
+
+        Every placeholder is replaced by the QID of its item while posting; one
+        without an item would reach the portal as a value it rejects, after
+        other items may have been created already.
+        '''
+        found = []
+
+        def walk(value, owner):
+            if isinstance(value, dict):
+                for inner in value.values():
+                    walk(inner, owner)
+            elif isinstance(value, (list, tuple)):
+                for inner in value:
+                    walk(inner, owner)
+            elif isinstance(value, str) and _ITEM_KEY_RE.match(value) and value not in self.state.dictionary:
+                found.append(f'"{owner}": refers to an item that is not part of the export ({value}); '
+                             'nothing was exported, please report this to the MaRDMO developers')
+
+        for key, entry in self.state.dictionary.items():
+            if key.startswith('Item'):
+                walk(entry.get('statements', []), entry.get('label') or key)
+            else:
+                # RELATION and ALIAS entries: the subject in the URL and the payload
+                item_key = entry.get('url', '').split('/items/')[-1].split('/')[0]
+                owner = self.state.dictionary.get(item_key, {}).get('label') or item_key
+                walk([item_key, entry.get('payload', {})], owner)
+        return list(dict.fromkeys(found))
 
     def check_existing_relations(self, sparql_endpoint, api_url):
         '''Mark every RELATION entry that already exists on the portal.
@@ -752,6 +785,9 @@ class GeneratePayload:
         # Statements that only add qualifiers (e.g. another assumption) extend
         # the portal statement instead of duplicating it
         self.merge_qualifiers(api_url, deadline)
+        # Symbols of formulas: complete a symbol without quantity, stop if it
+        # stands for another quantity
+        self.check_symbols(api_url, deadline)
 
     def check_math_relations_via_api(self, api_url, deadline=None):
         '''Check existence of math-datatype RELATION statements via wbgetentities.
@@ -1022,6 +1058,80 @@ class GeneratePayload:
             entry['statement_id'] = best[0]
             entry['add_qualifiers'] = best[1]
             planned.setdefault(best[0], set()).update(json.dumps(q, sort_keys=True) for q in best[1])
+
+    def check_symbols(self, api_url, deadline=None):
+        '''Compare new "in defining formula" statements with the symbols of the item on the portal.
+
+        A symbol stands for exactly one quantity of its formula or quantity
+        (the checks ensure this within the questionnaire).  For every such
+        statement not on the portal yet, the statements of the same item
+        with the same symbol decide:
+
+        - one with another quantity: the export stops, MaRDMO cannot change
+          what the symbol stands for (e.g. a symbol block of a fetched
+          formula deleted and added again with another quantity);
+        - one without a quantity (no "symbol represents"): it gets the
+          quantity (``'partial'``) instead of a second statement;
+        - none: a new statement.
+
+        Raises:
+            ValueError: One argument per symbol that stands for another
+                quantity on the portal; also if the claims cannot be fetched.
+        '''
+        properties = self.wikibase['properties']
+        in_formula, represents = properties.get('in defining formula'), properties.get('symbol represents')
+        if not in_formula or not represents:
+            return
+        entries = []
+        for key, entry in self.state.dictionary.items():
+            if not key.startswith('RELATION') or entry.get('exists') != 'false':
+                continue
+            statement = entry['payload']['statement']
+            if statement['property']['id'] != in_formula:
+                continue
+            subject = self._resolve_item_reference(entry['url'].split('/')[-2])
+            quantity = [q for q in statement.get('qualifiers', []) if q['property']['id'] == represents]
+            if not (isinstance(subject, str) and _QID_RE.match(subject)) or len(quantity) != 1:
+                continue
+            entries.append((key, subject, statement['value']['content'], quantity[0]))
+        if not entries:
+            return
+
+        claims_by_item = self._fetch_claims(sorted({e[1] for e in entries}), api_url, deadline, 'formulas')
+        labels = {e.get('id'): e.get('label') for k, e in self.state.dictionary.items()
+                  if k.startswith('Item') and e.get('id')}
+        conflicts, taken = [], set()
+        for key, subject, symbol, qualifier in entries:
+            quantity = self._resolve_item_reference(qualifier['value']['content'])
+            same_symbol = [
+                (claim, {snak['datavalue']['value'].get('id')
+                         for snak in claim.get('qualifiers', {}).get(represents, [])
+                         if isinstance(snak.get('datavalue', {}).get('value'), dict)})
+                for claim in claims_by_item.get(subject, {}).get(in_formula, [])
+                if claim.get('mainsnak', {}).get('datavalue', {}).get('value') == symbol
+            ]
+            entry = self.state.dictionary[key]
+            if quantity and any(quantity in found for _, found in same_symbol):
+                entry['exists'] = 'true'
+                continue
+            other = sorted({qid for _, found in same_symbol for qid in found})
+            if other:
+                shown = ', '.join(f'{qid} ({labels[qid]})' if labels.get(qid) else qid for qid in other)
+                conflicts.append(
+                    f'"{labels.get(subject) or subject}" ({subject}): on the MaRDI Portal the symbol {symbol} '
+                    f'already stands for {shown}. MaRDMO cannot change this: use that quantity for the '
+                    'symbol, or correct it on the MaRDI Portal.'
+                )
+                continue
+            incomplete = next((claim for claim, found in same_symbol
+                               if not found and claim['id'] not in taken), None)
+            if incomplete is not None:
+                taken.add(incomplete['id'])
+                entry['exists'] = 'partial'
+                entry['statement_id'] = incomplete['id']
+                entry['add_qualifiers'] = [qualifier]
+        if conflicts:
+            raise ValueError(*conflicts)
 
     def add_aliases(self, aliases_dict):
         '''Add aliases for the current subject to the payload.

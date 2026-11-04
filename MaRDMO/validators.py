@@ -245,6 +245,68 @@ def normalize_formula(tex):
     return FORMULA_WHITESPACE_RE.sub(' ', str(tex or '')).strip()
 
 
+# What element_symbol_problems() reports, for the checks and the preview
+ELEMENT_SYMBOL_MESSAGES = {
+    'several': 'stands for several quantities (in MaRDMO a symbol stands for exactly one quantity; '
+               'properties belong to the quantity)',
+    'duplicate': 'appears twice with the same quantity',
+}
+
+
+def _quantity_key(quantity):
+    '''What makes two element quantities the same: the portal or Wikidata ID, else name and description.'''
+    if not isinstance(quantity, dict):
+        return None
+    identifier = quantity.get('ID') or ''
+    if identifier and identifier != 'not found':
+        return identifier
+    if not quantity.get('Name'):
+        return None
+    return ('own', quantity['Name'].strip().lower(), (quantity.get('Description') or '').strip())
+
+
+def element_symbol_problems(elements):
+    '''Return ``{element key: problem}`` for symbols that do not stand for exactly one quantity.
+
+    *elements* is the symbol table of one formula or one quantity definition
+    (``{key: {'symbol': ..., 'quantity': {...}}}``); it is shared by all of
+    its formula fields, so a symbol must stand for one quantity in all of
+    them.  Symbols are compared as the export writes them
+    (:func:`normalize_formula`); elements without a symbol or quantity are
+    left to the checks for missing information.  Several symbols for one
+    quantity are fine (``k_1``, ``k_2`` for a rate constant).
+
+    Returns:
+        ``'several'`` for every element whose symbol stands for more than
+        one quantity, ``'duplicate'`` for the second and later elements with
+        the same symbol and the same quantity.
+    '''
+    quantities = {}
+    seen = set()
+    duplicates = set()
+    for key, element in (elements or {}).items():
+        if not isinstance(element, dict):
+            continue
+        symbol = normalize_formula(element.get('symbol'))
+        quantity = _quantity_key(element.get('quantity'))
+        if not symbol or quantity is None:
+            continue
+        quantities.setdefault(symbol, set()).add(quantity)
+        if (symbol, quantity) in seen:
+            duplicates.add(key)
+        seen.add((symbol, quantity))
+    problems = {}
+    for key, element in (elements or {}).items():
+        if not isinstance(element, dict):
+            continue
+        symbol = normalize_formula(element.get('symbol'))
+        if len(quantities.get(symbol, ())) > 1:
+            problems[key] = 'several'
+        elif key in duplicates:
+            problems[key] = 'duplicate'
+    return problems
+
+
 def formula_comment_problem(tex):
     '''Return what is wrong with a multi-line formula containing a ``%`` comment, or ``None``.
 

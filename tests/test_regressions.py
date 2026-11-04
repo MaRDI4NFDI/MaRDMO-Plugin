@@ -4,7 +4,9 @@ Covered elsewhere: qualifier merge and PATCH of partial statements
 (unit/test_merge_qualifiers.py, unit/test_export_requests.py), results page
 "qualifiers added" (unit/test_export_requests.py), publication matching by
 identifiers, preprints and formatting tags (unit/test_publication.py),
-"manifests" relation and placeholders of the queries (static/).
+"manifests" relation and placeholders of the queries (static/), symbols
+without quantity, a symbol for two quantities and placeholders without an
+item (unit/test_symbols.py).
 '''
 from pathlib import Path
 

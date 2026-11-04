@@ -45,6 +45,37 @@ def _sparql_file(template, catalog):
     return template
 
 
+def write_defining_formula(project, page, data, set_index):
+    """Write the formulas and the symbol table of a formula or quantity into its page.
+
+    Args:
+        project:   RDMO project instance.
+        page:      Questions of the page (``questions["Mathematical Formulation"]``
+                   or ``questions["Quantity"]``).
+        data:      Item data with ``formulas``, ``symbols`` and ``contains_quantity``
+                   (a quantity per symbol, ``id`` empty if the portal has none).
+        set_index: Set index of the page.
+    """
+    for idx, formula in enumerate(data.formulas):
+        value_editor(project=project, uri=f'{BASE_URI}{page["Formula"]["uri"]}',
+                     info={'text': formula, 'collection_index': idx,
+                           'set_index': 0, 'set_prefix': f'{set_index}|0'})
+
+    for idx, symbol in enumerate(data.symbols):
+        value_editor(project=project, uri=f'{BASE_URI}{page["Element Symbol"]["uri"]}',
+                     info={'text': symbol, 'set_index': idx, 'set_prefix': f'{set_index}|0|0'})
+
+    for idx, qty in enumerate(data.contains_quantity):
+        if not qty.id:
+            # A symbol without "symbol represents" on the portal: the quantity
+            # stays empty, so the checks and the preview ask the user for it
+            continue
+        src_q = qty.id.split(':')[0]
+        value_editor(project=project, uri=f'{BASE_URI}{page["Element Quantity"]["uri"]}',
+                     info={'text': f'{qty.label} ({qty.description}) [{src_q}]',
+                           'external_id': qty.id, 'set_index': idx, 'set_prefix': f'{set_index}|0|0'})
+
+
 class Information(BaseInformation):
     '''Handlers for the Model Documentation questionnaire.'''
 
@@ -322,24 +353,7 @@ class Information(BaseInformation):
                            uri=f'{self.base}{quantity["Reference"]["uri"]}',
                            set_prefix=set_index)
 
-            for idx, formula in enumerate(data.formulas):
-                value_editor(project=project, uri=f'{self.base}{quantity["Formula"]["uri"]}',
-                             info={'text': formula, 'collection_index': idx,
-                                   'set_index': 0, 'set_prefix': f'{set_index}|0'})
-
-            for idx, symbol in enumerate(data.symbols):
-                value_editor(project=project,
-                             uri=f'{self.base}{quantity["Element Symbol"]["uri"]}',
-                             info={'text': symbol, 'set_index': idx,
-                                   'set_prefix': f'{set_index}|0|0'})
-
-            for idx, qty in enumerate(data.contains_quantity):
-                src_q = qty.id.split(':')[0]
-                value_editor(project=project,
-                             uri=f'{self.base}{quantity["Element Quantity"]["uri"]}',
-                             info={'text': f'{qty.label} ({qty.description}) [{src_q}]',
-                                   'external_id': qty.id, 'set_index': idx,
-                                   'set_prefix': f'{set_index}|0|0'})
+            write_defining_formula(project, quantity, data, set_index)
 
             # A quantity's defining formula references other quantities; give
             # each its own page, as _fill_formulation_batch does for formulae.
@@ -449,25 +463,7 @@ class Information(BaseInformation):
                            uri=f'{self.base}{formulation["Properties"]["uri"]}',
                            set_prefix=set_index)
 
-            for idx, formula in enumerate(data.formulas):
-                value_editor(project=project,
-                             uri=f'{self.base}{formulation["Formula"]["uri"]}',
-                             info={'text': formula, 'collection_index': idx,
-                                   'set_index': 0, 'set_prefix': f'{set_index}|0'})
-
-            for idx, symbol in enumerate(data.symbols):
-                value_editor(project=project,
-                             uri=f'{self.base}{formulation["Element Symbol"]["uri"]}',
-                             info={'text': symbol, 'set_index': idx,
-                                   'set_prefix': f'{set_index}|0|0'})
-
-            for idx, qty in enumerate(data.contains_quantity):
-                src_q = qty.id.split(':')[0]
-                value_editor(project=project,
-                             uri=f'{self.base}{formulation["Element Quantity"]["uri"]}',
-                             info={'text': f'{qty.label} ({qty.description}) [{src_q}]',
-                                   'external_id': qty.id, 'set_index': idx,
-                                   'set_prefix': f'{set_index}|0|0'})
+            write_defining_formula(project, formulation, data, set_index)
 
             self._hydrate_relatants(
                 project=project, data=data, prop_keys=['contains_quantity'],
