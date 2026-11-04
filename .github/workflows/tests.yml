@@ -1,0 +1,71 @@
+name: Tests
+
+# Every push: one quick combination.  Pull requests to main and releases
+# (pypi-publish.yml calls this workflow): every supported combination.
+on:
+  push:
+    branches-ignore: [gh-pages, dev-tests]
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Python ${{ matrix.python }}, RDMO ${{ matrix.rdmo }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ${{ github.event_name == 'push' && fromJSON('["3.14"]') || fromJSON('["3.10", "3.13", "3.14"]') }}
+        rdmo: ${{ github.event_name == 'push' && fromJSON('["2.5.2"]') || fromJSON('["2.5.1", "2.5.2"]') }}
+
+    steps:
+      - name: Check out MaRDMO
+        uses: actions/checkout@v4
+
+      # The questionnaire branch with the same name as this branch, else main
+      - name: Find the questionnaire branch
+        id: questionnaire
+        run: |
+          branch="${{ github.head_ref || github.ref_name }}"
+          if git ls-remote --exit-code --heads https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire "$branch" > /dev/null; then
+            echo "ref=$branch" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=main" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out the questionnaire (${{ steps.questionnaire.outputs.ref }})
+        uses: actions/checkout@v4
+        with:
+          repository: MaRDI4NFDI/MaRDMO-Questionnaire
+          ref: ${{ steps.questionnaire.outputs.ref }}
+          path: questionnaire
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install RDMO ${{ matrix.rdmo }} and MaRDMO with the test tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install "rdmo==${{ matrix.rdmo }}"
+          pip install -e ".[test]"
+
+      - name: Lint (ruff)
+        run: ruff check MaRDMO tests
+
+      - name: Tests
+        env:
+          QUESTIONNAIRE: questionnaire/catalog
+        run: coverage run -m pytest
+
+      - name: Coverage
+        run: coverage report --skip-covered --sort=cover | tail -25
+
+      - name: Build the package
+        run: python -m build

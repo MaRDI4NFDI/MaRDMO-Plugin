@@ -42,5 +42,36 @@ include = ["MaRDMO*"]
 "MaRDMO" = ["templates/MaRDMO/*.html", "templates/MaRDMO/partials/*.html", "data/*.json", "static/MaRDMO/css/*.css", "static/MaRDMO/images/*.png", "static/MaRDMO/js/**/*", "algorithm/data/*.json", "model/data/*.json", "publication/data/*.json", "search/data/*.json", "workflow/data/*.json", "model/queries/*.sparql", "model/queries/split/*.sparql", "algorithm/queries/*.sparql", "publication/queries/*.sparql", "workflow/queries/*.sparql", "queries/*.sparql"]
 
 [project.optional-dependencies]
-# Add optional dependencies here if needed
+# pip install -e ".[test]"; the tests and CI use these
+test = [
+    "pytest>=8",
+    "pytest-django>=4.9",
+    "pytest-socket>=0.7",
+    "rdflib>=7",
+    "coverage[toml]>=7",
+    "ruff>=0.6",
+    "build>=1",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+testpaths = ["tests"]
+pythonpath = ["."]
+# No network in the tests: portal, Wikidata and citation services are
+# replaced by recorded answers (pytest-socket fails every other request)
+addopts = "--disable-socket --allow-unix-socket"
+filterwarnings = [
+    # RDMO's URL fields ahead of Django 6; not MaRDMO's to fix
+    "ignore:The default scheme will be changed:DeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["MaRDMO"]
+
+[tool.ruff]
+extend-exclude = ["dev-tests"]
+
+[tool.ruff.lint]
+# Errors only (pyflakes, syntax); style rules can be added later
+select = ["F", "E9"]
 

@@ -1,1 +1,11 @@
 **/__pycache__
+
+# packaging and tests
+*.egg-info/
+build/
+dist/
+.coverage
+.pytest_cache/
+.ruff_cache/
+tests/media_root/
+tests/static_root/
