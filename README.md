@@ -28,8 +28,11 @@ In addition to documentation, MaRDMO provides a dedicated interview for searchin
   
 ## MaRDMO Plugin Installation
 
-To use the MaRDMO Plugin at least `RDMO v2.5.1` is required. Follow the installation / update instructions of [RDMO](https://rdmo.readthedocs.io/en/latest/installation) if required. 
+<!-- --8<-- [start:requirements] -->
+MaRDMO requires Python 3.10 or later and RDMO 2.5.1 or later. Follow the installation / update instructions of [RDMO](https://rdmo.readthedocs.io/en/latest/installation) if required.
+<!-- --8<-- [end:requirements] -->
 
+<!-- --8<-- [start:install] -->
 Go to the `rdmo-app` directory of your RDMO installation. In the virtual environment of the RDMO installation install the MaRDMO Plugin:
 
 ```bash
@@ -83,7 +86,7 @@ OPTIONSET_PROVIDERS = [
     ('RelatedWorkflowWithoutCreation', _('Options for related Workflows without Creation'), 'MaRDMO.workflow.providers.RelatedWorkflowWithoutCreation'),
     ('RelatedStepWithCreation', _('Options for related Process Steps with Creation'), 'MaRDMO.workflow.providers.RelatedStepWithCreation'),
     ('RelatedProgrammingLanguageWithCreation', _('Options for related Programming Languages with Creation'), 'MaRDMO.workflow.providers.RelatedProgrammingLanguageWithCreation'),
-    ('RelatedCPUModelWithCreation', _('Options for related CPU Modelss with Creation'), 'MaRDMO.workflow.providers.RelatedCPUModelWithCreation'),
+    ('RelatedCPUModelWithCreation', _('Options for related CPU Models with Creation'), 'MaRDMO.workflow.providers.RelatedCPUModelWithCreation'),
     ('RelatedHardwareOrSoftwareWithoutCreation', _('Options for related Hardware or Software without Creation'), 'MaRDMO.workflow.providers.RelatedHardwareOrSoftwareWithoutCreation'),
     ('RelatedWorkflowEntityWithoutCreation', _('Options for related Workflow Entities without Creation'), 'MaRDMO.workflow.providers.RelatedWorkflowEntityWithoutCreation'),
     # Model
@@ -98,11 +101,10 @@ OPTIONSET_PROVIDERS = [
     ('QuantityOrQuantityKind', _('Options for Quantities and Quantity Kinds'), 'MaRDMO.model.providers.QuantityOrQuantityKind'),
     ('RelatedQuantityWithoutCreation', _('Options for related Quantities without Creation'), 'MaRDMO.model.providers.RelatedQuantityWithoutCreation'),
     ('RelatedQuantityKindWithoutCreation', _('Options for related Quantity Kinds without Creation'), 'MaRDMO.model.providers.RelatedQuantityKindWithoutCreation'),
-    ('RelatedQuantityOrQuantityKindWithCreation', _('Options for related Quantites or Quantity Kinds with Creation'), 'MaRDMO.model.providers.RelatedQuantityOrQuantityKindWithCreation'),
+    ('RelatedQuantityOrQuantityKindWithCreation', _('Options for related Quantities or Quantity Kinds with Creation'), 'MaRDMO.model.providers.RelatedQuantityOrQuantityKindWithCreation'),
     ('MathematicalFormulation', _('Options for Mathematical Formulation'), 'MaRDMO.model.providers.MathematicalFormulation'),
     ('RelatedMathematicalFormulationWithCreation', _('Options for related Mathematical Formulations with Creation'), 'MaRDMO.model.providers.RelatedMathematicalFormulationWithCreation'),
     ('RelatedMathematicalFormulationWithoutCreation', _('Options for related Mathematical Formulations without Creation'), 'MaRDMO.model.providers.RelatedMathematicalFormulationWithoutCreation'),
-    ('AllEntities', _('Options for All Entities'), 'MaRDMO.model.providers.AllEntities'),
     ('Task', _('Options for Task'), 'MaRDMO.model.providers.Task'),
     ('RelatedTaskWithCreation', _('Options for related Tasks with Creation'), 'MaRDMO.model.providers.RelatedTaskWithCreation'),
     ('RelatedTaskWithoutCreation', _('Options for related Tasks without Creation'), 'MaRDMO.model.providers.RelatedTaskWithoutCreation'),
@@ -129,9 +131,11 @@ path('services/', include("MaRDMO.urls")),
 ```
 
 Thereby, the MaRDMO Plugin is installed and "Export to MaRDI Portal" and "Query MaRDI Portal" buttons are added in the project view.
+<!-- --8<-- [end:install] -->
 
 ## MaRDI Portal and Wikidata Connections
 
+<!-- --8<-- [start:connection] -->
 Add the following lines to `config/settings/local.py` to connect MaRDMO with the individual databases.
 
 ```python
@@ -148,12 +152,14 @@ MARDMO_PROVIDER = {
     }
 }
 ``` 
-Contact the MaRDI consortium for the individual credentials.
+Contact the MaRDI consortium for the individual credentials. Wikidata needs no configuration; its endpoints are built into MaRDMO.
 
 Formulas entered in the questionnaires are checked with the TeX checker of the MaRDI Portal before the export, so the RDMO server needs to be able to reach the MaRDI Portal. No credentials are needed for this check.
+<!-- --8<-- [end:connection] -->
 
 ## MaRDMO-Questionnaire        
 
+<!-- --8<-- [start:questionnaire] -->
 The MaRDMO Plugin requires the [MaRDMO-Questionnaire](https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire), download its latest release [![Latest Release](https://img.shields.io/github/v/release/MaRDI4NFDI/MaRDMO-Questionnaire)](https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire/releases/latest).
 
 Integrate the MaRDMO Questionnaire into your RDMO instance through the user interface of your RDMO instance (`Management -> Import -> attributes.xml/optionsets.xml/conditions.xml/catalogs.xml`) or via 
@@ -168,6 +174,7 @@ python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-model-basic
 python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-interdisciplinary-workflow-catalog.xml
 python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-algorithm-catalog.xml
 ```
+<!-- --8<-- [end:questionnaire] -->
 
 ## Usage of MaRDMO Plugin
 

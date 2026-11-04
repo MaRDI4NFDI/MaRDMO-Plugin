@@ -9,3 +9,4 @@ dist/
 .ruff_cache/
 tests/media_root/
 tests/static_root/
+site/
