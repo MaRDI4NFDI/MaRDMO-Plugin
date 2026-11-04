@@ -94,6 +94,33 @@ def test_new_journal_gets_the_journal_profile(new_publication_items):
     assert [properties['ISSN'], 'external-id', '1234-5678'] in statements
 
 
+# --- Export: an unchanged import of statements with several roles writes nothing
+
+def test_statements_with_several_roles_are_not_written_again():
+    '''The SIR task on the portal: "initial number of susceptibles" contains as initial value and parameter.
+
+    The import keeps the role MaRDMO knows (parameter); the export compared
+    the whole role set and wrote "contains ... as parameter" a second time.
+    '''
+    properties = get_properties()
+    contains, role = properties['contains'], properties['object has role']
+    payload = GeneratePayload(url='https://portal.example.org', dependency={},
+                              wikibase={'items': get_items(), 'properties': properties, 'relations': {}})
+    payload.state.dictionary = {'Item0000000001': {'id': 'Q7395018', 'label': 'time evolution of the SIR model'},
+                                'Item0000000002': {'id': 'Q7395013', 'label': 'initial number of susceptibles'}}
+    payload.add_answer(contains, ['Item0000000002', 'wikibase-item'], subject='Item0000000001',
+                       qualifier=payload.add_qualifier(role, 'wikibase-item', 'Q6480341'))
+    payload.state.dictionary['RELATION0']['exists'] = 'true'    # the SPARQL check finds the role
+    payload._claims = {'Q7395018': {contains: [{
+        'id': 'Q7395018$x',
+        'mainsnak': {'datavalue': {'value': {'id': 'Q7395013'}}},
+        'qualifiers': {role: [{'datavalue': {'value': {'id': 'Q7395011'}}},     # another role
+                              {'datavalue': {'value': {'id': 'Q6480341'}}}]},   # parameter
+    }]}}
+    payload.merge_qualifiers('https://portal.example.org/w/api.php')
+    assert payload.state.dictionary['RELATION0']['exists'] == 'true'
+
+
 # --- Workflow: data sets are found by DOI only
 
 @pytest.mark.parametrize('name', ['data_set_mardi.sparql', 'data_set_wikidata.sparql'])

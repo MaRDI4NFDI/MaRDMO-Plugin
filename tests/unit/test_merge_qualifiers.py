@@ -219,3 +219,65 @@ def test_found_statements_of_other_properties_are_not_fetched(payload):
     payload._fetch_claims = pytest.fail
     payload.merge_qualifiers('https://portal.example.org/w/api.php')
     assert payload.state.dictionary[key]['exists'] == 'true'
+
+
+# --- portal statements with several roles (MaRDMO writes one role per statement)
+
+def test_one_of_the_roles_of_a_statement_is_that_statement(payload):
+    key = relation(payload, (ROLE, 'Q9'), exists='true')
+    portal(payload, claim('Q1$a', 'Q2', **{ROLE: ['Q9', 'Q8']}))
+    payload.merge_qualifiers('https://portal.example.org/w/api.php')
+    assert payload.state.dictionary[key]['exists'] == 'true'
+
+
+def test_both_roles_imported_as_two_relations_are_that_statement(payload):
+    first = relation(payload, (ROLE, 'Q9'), exists='true')
+    second = relation(payload, (ROLE, 'Q8'), exists='true')
+    portal(payload, claim('Q1$a', 'Q2', **{ROLE: ['Q9', 'Q8']}))
+    payload.merge_qualifiers('https://portal.example.org/w/api.php')
+    assert payload.state.dictionary[first]['exists'] == payload.state.dictionary[second]['exists'] == 'true'
+
+
+def test_additions_go_to_the_statement_with_several_roles(payload):
+    key = relation(payload, (ROLE, 'Q9'), (ASSUMES, 'Q30'))
+    portal(payload, claim('Q1$a', 'Q2', **{ROLE: ['Q9', 'Q8']}))
+    payload.merge_qualifiers('https://portal.example.org/w/api.php')
+    entry = payload.state.dictionary[key]
+    assert (entry['exists'], entry['statement_id'], entry['add_qualifiers']) == (
+        'partial', 'Q1$a', [qualifier(ASSUMES, 'Q30')])
+
+
+def test_statement_with_exactly_these_roles_is_preferred(payload):
+    key = relation(payload, (ROLE, 'Q9'), (ASSUMES, 'Q30'))
+    portal(payload, claim('Q1$a', 'Q2', **{ROLE: ['Q9', 'Q8']}), claim('Q1$b', 'Q2', **{ROLE: ['Q9']}))
+    payload.merge_qualifiers('https://portal.example.org/w/api.php')
+    assert payload.state.dictionary[key]['statement_id'] == 'Q1$b'
+
+
+def test_more_roles_than_the_statement_is_new(payload):
+    key = relation(payload, (ROLE, 'Q9'), (ROLE, 'Q8'), exists='true')
+    portal(payload, claim('Q1$a', 'Q2', **{ROLE: ['Q9']}))
+    payload.merge_qualifiers('https://portal.example.org/w/api.php')
+    assert payload.state.dictionary[key]['exists'] == 'false'
+
+
+def test_one_of_two_platforms_is_another_usage(payload):
+    '''Software and hardware describe one usage; parameters belong to it.'''
+    key = relation(payload, (PLATFORM, 'Q40'), exists='true', prop=USES)
+    portal(payload, claim('Q1$a', 'Q2', **{PLATFORM: ['Q40', 'Q41']}), prop=USES)
+    payload.merge_qualifiers('https://portal.example.org/w/api.php')
+    assert payload.state.dictionary[key]['exists'] == 'false'
+
+
+@pytest.mark.parametrize('entry, portal_statement, same', [
+    (set(), set(), True),
+    (set(), {(ROLE, 'Q9')}, False),                                  # no role matches no role only
+    ({(ROLE, 'Q9')}, set(), False),
+    ({(ROLE, 'Q9')}, {(ROLE, 'Q9'), (ROLE, 'Q8')}, True),
+    ({(ROLE, 'Q7')}, {(ROLE, 'Q9'), (ROLE, 'Q8')}, False),
+    ({(ROLE, 'Q9'), (SYMBOL, 'Q5')}, {(ROLE, 'Q9'), (ROLE, 'Q8'), (SYMBOL, 'Q5')}, True),
+    ({(ROLE, 'Q9'), (SYMBOL, 'Q5')}, {(ROLE, 'Q9'), (SYMBOL, 'Q5'), (SYMBOL, 'Q6')}, False),
+    ({(PLATFORM, 'Q40')}, {(PLATFORM, 'Q40'), (PLATFORM, 'Q41')}, False),
+])
+def test_same_meaning(entry, portal_statement, same):
+    assert GeneratePayload._same_meaning(entry, portal_statement, ROLE) is same

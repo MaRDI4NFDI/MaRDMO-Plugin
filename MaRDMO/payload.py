@@ -895,13 +895,32 @@ class GeneratePayload:
                 and api.get('precision') == value.get('precision', api.get('precision'))
         return api == value
 
+    @staticmethod
+    def _same_meaning(entry_meaning, claim_meaning, role):
+        '''Whether a portal statement's meaning qualifiers give it the meaning of the entry.
+
+        Both are sets of ``(property ID, value)``.  Roles (*role*, the "object
+        has role" property) are contained: a portal statement "as initial
+        value and parameter" is also the one "as parameter" (MaRDMO writes one
+        role per statement and imports such a statement as a relation for
+        each role the questionnaire offers).  No role matches no role only.
+        The other meaning qualifiers (symbol represents, platform) must be
+        the same.
+        '''
+        entry_roles = {q for q in entry_meaning if q[0] == role}
+        claim_roles = {q for q in claim_meaning if q[0] == role}
+        if entry_meaning - entry_roles != claim_meaning - claim_roles:
+            return False
+        return entry_roles == claim_roles or bool(entry_roles) and entry_roles <= claim_roles
+
     def merge_qualifiers(self, api_url, deadline=None):
         '''Turn new statements that only add qualifiers into additions to the portal statement.
 
         For every RELATION entry not found on the portal: if its item already
         holds a statement with the same property, value and the same
         qualifiers that give it its meaning (role, symbol represents,
-        platform; also when there is none), the entry is marked ``'partial'``
+        platform; also when there is none; the entry's roles may be some of
+        the statement's, see :meth:`_same_meaning`), the entry is marked ``'partial'``
         with that statement's ID and the qualifiers it lacks, so posting adds
         them to the statement instead of writing it a second time.  An entry
         whose qualifiers are all there already is marked ``'true'``.  Several
@@ -918,6 +937,7 @@ class GeneratePayload:
             ValueError: If the claims of an existing item cannot be fetched.
         '''
         meaning = self._meaning_qualifiers()
+        role = self.wikibase['properties'].get('object has role')
         # Properties whose statements can carry a meaning qualifier: a statement
         # found by the SPARQL check may have one the payload statement lacks
         # (e.g. "contains" with a role for a plain "contains"), also when no
@@ -976,7 +996,7 @@ class GeneratePayload:
                     for q_prop, snaks in claim.get('qualifiers', {}).items() if q_prop in meaning
                     for snak in snaks if 'datavalue' in snak
                 }
-                if claim_meaning != meaning_values:
+                if not self._same_meaning(meaning_values, claim_meaning, role):
                     continue
                 missing = [
                     q for q in added
@@ -985,8 +1005,10 @@ class GeneratePayload:
                                for snak in claim.get('qualifiers', {}).get(q['property']['id'], []))
                     and json.dumps(q, sort_keys=True) not in planned.get(claim['id'], set())
                 ]
-                if best is None or len(missing) < len(best[1]):
-                    best = (claim['id'], missing)
+                # Fewest qualifiers to add; of those, a statement with exactly these roles
+                rank = (len(missing), claim_meaning != meaning_values)
+                if best is None or rank < best[2]:
+                    best = (claim['id'], missing, rank)
             entry = self.state.dictionary[key]
             if best is None:
                 # no statement with this meaning on the portal: a new one (also
