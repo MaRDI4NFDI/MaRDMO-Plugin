@@ -1,0 +1,29 @@
+# Part 3 of 9 of the MaRDI query model_mardi.sparql (see README.md).
+SELECT
+?id
+?is_dynamic
+?is_static
+?is_deterministic
+?is_stochastic
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{dynamic model}. BIND("True" AS ?is_dynamic_raw) }}
+
+    BIND(COALESCE(?is_dynamic_raw, "False") AS ?is_dynamic)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{static model}. BIND("True" AS ?is_static_raw) }}
+
+    BIND(COALESCE(?is_static_raw, "False") AS ?is_static)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{deterministic model}. BIND("True" AS ?is_deterministic_raw) }}
+
+    BIND(COALESCE(?is_deterministic_raw, "False") AS ?is_deterministic)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{probabilistic model}. BIND("True" AS ?is_stochastic_raw) }}
+
+    BIND(COALESCE(?is_stochastic_raw, "False") AS ?is_stochastic)
+}}
+GROUP BY ?id ?is_dynamic ?is_static ?is_deterministic ?is_stochastic

@@ -1,7 +1,5 @@
 '''Model Documentation check mixin.'''
 
-import re
-
 from rdmo.domain.models import Attribute
 
 from ..model.constants import (
@@ -9,8 +7,9 @@ from ..model.constants import (
     SECTION_MAP as SECTION_MAP_MODEL,
 )
 from ..constants import BASE_URI, CATALOG_MODEL, CATALOG_MODEL_BASICS
-
-_QUDT_ID_RE = re.compile(r'^[A-Z][a-zA-Z_\-]+$')
+from ..patterns import QUDT_ID_STRICT_RE
+from ..tex_check import UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
+from ..validators import formula_comment_problem, has_equivalence_sign
 
 
 class ModelMixin:
@@ -19,6 +18,35 @@ class ModelMixin:
     # -------------------------------------------------------------------------
     # Model Documentation Checks
     # -------------------------------------------------------------------------
+
+    def _check_formula_syntax(self, ivalue, section, page_name):
+        '''Append an error for every formula or symbol the portal's TeX checker rejects.
+
+        Uses the verdicts collected in :meth:`run_model`; formulas the checker
+        could not answer are not reported (the portal checks them at upload).
+        '''
+        verdicts = getattr(self, '_tex_verdicts', {})
+        for number, tex in enumerate((ivalue.get('Formula') or {}).values(), start=1):
+            if comment := formula_comment_problem(tex):
+                self.err.append(self._error(section, page_name, f'Invalid Formula {number}: {comment}'))
+            problem = verdict(verdicts, tex)
+            if problem and problem != UNAVAILABLE:
+                hint = environment_hint(tex)
+                self.err.append(self._error(
+                    section, page_name,
+                    f'Invalid Formula {number}: rejected by the MaRDI Portal ({problem}), '
+                    + (hint or 'see the preview for details')
+                ))
+        for element in (ivalue.get('element') or {}).values():
+            symbol = element.get('symbol') if isinstance(element, dict) else None
+            if comment := formula_comment_problem(symbol):
+                self.err.append(self._error(section, page_name, f'Invalid Symbol "{symbol}": {comment}'))
+            problem = verdict(verdicts, symbol)
+            if problem and problem != UNAVAILABLE:
+                self.err.append(self._error(
+                    section, page_name,
+                    f'Invalid Symbol "{symbol}": rejected by the MaRDI Portal ({problem})'
+                ))
 
     def properties(self, project, data, catalog):
         '''Check for mutually exclusive (conflicting) data-property combinations.
@@ -69,7 +97,7 @@ class ModelMixin:
 
         Verifies that each model page has mandatory Research Problem and Task
         links, valid Formula relations, and (for the full
-        catalog) consistent specialisation assumptions and expression ordering.
+        catalog) consistent specialisation assumptions.
 
         Args:
             project: RDMO project instance.
@@ -112,7 +140,7 @@ class ModelMixin:
             )
 
             if catalog == CATALOG_MODEL_BASICS:
-                return
+                continue
 
             if any(
                 mval['relation']['url'] in self._pairs(
@@ -133,7 +161,7 @@ class ModelMixin:
                 mval['relation']['url'] in self._pairs(
                     self.mathmoddb, 'specializes', 'specialized_by'
                 )
-                and 'not found' in mval.get('assumption', {}).values()
+                and 'not found' in (mval.get('assumption') or {}).values()
                 for mval in ivalue.get('RelationMM', {}).values()
             ):
                 self.err.append(
@@ -144,35 +172,12 @@ class ModelMixin:
                     )
                 )
 
-            relation_mf = ivalue.get('RelationMF', {})
-            if relation_mf:
-                orders = [val.get('order') for val in relation_mf.values()]
-                if any(order is not None for order in orders):
-                    if not all(order is not None for order in orders):
-                        self.err.append(
-                            self._error(
-                                section = 'Mathematical Model',
-                                page    = page_name,
-                                message = 'Missing Order Number (Formula)'
-                            )
-                        )
-                    else:
-                        order_numbers = set(int(order) for order in orders)
-                        if order_numbers != set(range(1, len(relation_mf) + 1)):
-                            self.err.append(
-                                self._error(
-                                    section = 'Mathematical Model',
-                                    page    = page_name,
-                                    message = 'Incorrect Order Number (Formula)'
-                                )
-                            )
-
     def task(self, project, data, catalog):
         '''Check Computational Task documentation completeness and consistency.
 
         Verifies that each task page has mandatory Formula links,
         valid task–task relations, and (for the full catalog) specialisation
-        assumptions, containment order numbers, and Quantity links.
+        assumptions and Quantity links.
 
         Args:
             project: RDMO project instance.
@@ -201,7 +206,7 @@ class ModelMixin:
             )
 
             if catalog == CATALOG_MODEL_BASICS:
-                return
+                continue
 
             if any(
                 tval['relation']['url'] in self._pairs(
@@ -214,7 +219,7 @@ class ModelMixin:
                     self._error(
                         section = 'Computational Task',
                         page    = page_name,
-                        message = 'Missing Assumption (Mathematical Model Specialization)'
+                        message = 'Missing Assumption (Computational Task Specialization)'
                     )
                 )
 
@@ -222,7 +227,7 @@ class ModelMixin:
                 tval['relation']['url'] in self._pairs(
                     self.mathmoddb, 'specializes', 'specialized_by'
                 )
-                and 'not found' in tval.get('assumption', {}).values()
+                and 'not found' in (tval.get('assumption') or {}).values()
                 for tval in ivalue.get('RelationT', {}).values()
             ):
                 self.err.append(
@@ -230,21 +235,6 @@ class ModelMixin:
                         section = 'Computational Task',
                         page    = page_name,
                         message = 'Selected Formula not found in Section'
-                    )
-                )
-
-            if any(
-                tval['relation']['url'] in self._pairs(
-                    self.mathmoddb, 'contains_task', 'contained_in_task'
-                )
-                and not tval.get('order')
-                for tval in ivalue.get('RelationT', {}).values()
-            ):
-                self.err.append(
-                    self._error(
-                        section = 'Computational Task',
-                        page    = page_name,
-                        message = 'Missing Order Number (Computational Task Containment)'
                     )
                 )
 
@@ -291,7 +281,7 @@ class ModelMixin:
                             message = 'Missing Reference'
                         )
                     )
-                return
+                continue
 
             if any(
                 mval['relation']['url'] in self._pairs(
@@ -310,7 +300,7 @@ class ModelMixin:
                 mval['relation']['url'] in self._pairs(
                     self.mathmoddb, 'specializes', 'specialized_by'
                 )
-                and 'not found' in mval.get('assumption', {}).values()
+                and 'not found' in (mval.get('assumption') or {}).values()
                 for mval in ivalue.get('RelationMF2', {}).values()
             ):
                 self.err.append(
@@ -329,6 +319,7 @@ class ModelMixin:
                         message = 'Missing Formula Formula'
                     )
                 )
+            self._check_formula_syntax(ivalue, 'Formula', page_name)
 
             if not ivalue.get('element'):
                 self.err.append(
@@ -404,7 +395,7 @@ class ModelMixin:
                             message = 'QUDT Quantity Kind ID selected, but no ID provided!'
                         )
                     )
-                elif ref.get(0) and ref[0][1] and not _QUDT_ID_RE.match(ref[0][1]):
+                elif ref.get(0) and ref[0][1] and not QUDT_ID_STRICT_RE.match(ref[0][1]):
                     self.err.append(
                         self._error(
                             section = 'Quantity [Kind]',
@@ -420,7 +411,7 @@ class ModelMixin:
                             message = 'QUDT Constant ID selected, but no ID provided!'
                         )
                     )
-                elif ref.get(1) and ref[1][1] and not _QUDT_ID_RE.match(ref[1][1]):
+                elif ref.get(1) and ref[1][1] and not QUDT_ID_STRICT_RE.match(ref[1][1]):
                     self.err.append(
                         self._error(
                             section = 'Quantity [Kind]',
@@ -428,7 +419,7 @@ class ModelMixin:
                             message = f'Invalid QUDT Constant ID format: "{ref[1][1]}"'
                         )
                     )
-                if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["url"] and ref.get(0):
+                if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["label"] and ref.get(0):
                     self.err.append(
                         self._error(
                             section = 'Quantity [Kind]',
@@ -437,7 +428,7 @@ class ModelMixin:
                         )
                     )
                 if (
-                    ivalue.get('QorQK') == self.mathmoddb.get(key='QuantityKind')["url"]
+                    ivalue.get('QorQK') == self.mathmoddb.get(key='QuantityKind')["label"]
                     and ref.get(1)
                 ):
                     self.err.append(
@@ -449,9 +440,9 @@ class ModelMixin:
                     )
 
             if ivalue.get('Formula'):
-                equiv_sign_encodings = ('>≡</', '>&#x2261;</', '>&equiv;</', '\\equiv', '\\Equiv')
+                self._check_formula_syntax(ivalue, 'Quantity [Kind]', page_name)
                 for formula in ivalue['Formula'].values():
-                    if not any(equiv in formula for equiv in equiv_sign_encodings):
+                    if not has_equivalence_sign(formula):
                         self.err.append(
                             self._error(
                                 section = 'Quantity [Kind]',
@@ -485,7 +476,7 @@ class ModelMixin:
                             )
                         )
 
-            if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["url"]:
+            if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["label"]:
                 self._check_flexible(
                     data       = ivalue,
                     page_name  = page_name,
@@ -498,7 +489,7 @@ class ModelMixin:
                     relation   = 'RelationQQK',
                     from_class = 'Quantity'
                 )
-            elif ivalue.get('QorQK') == self.mathmoddb.get(key='QuantityKind')["url"]:
+            elif ivalue.get('QorQK') == self.mathmoddb.get(key='QuantityKind')["label"]:
                 self._check_flexible(
                     data       = ivalue,
                     page_name  = page_name,
@@ -536,7 +527,7 @@ class ModelMixin:
                 from_class = 'Research Problem'
             )
             if catalog == CATALOG_MODEL_BASICS:
-                return
+                continue
             self._check_static(
                 data       = ivalue,
                 page_name  = page_name,
@@ -578,7 +569,7 @@ class ModelMixin:
     def run_model(self, project, data, catalog):
         '''Run all model-catalog checks and return the collected error list.
 
-        Executes, in order: ID/Name/Description, data properties, model, task,
+        Executes, in order: ID/Name/Description, single-line text, data properties, model, task,
         formulation, quantity, research problem, academic discipline, and
         publication checks.
 
@@ -591,7 +582,12 @@ class ModelMixin:
             List of human-readable error strings, or an empty list when all
             checks pass.
         '''
+        # Portal verdicts for all formulas and symbols (only the full catalog has them)
+        self._tex_verdicts = (
+            check_formulas(collect_formulas(data)) if catalog == CATALOG_MODEL else {}
+        )
         self.id_name_description(project, data, catalog)
+        self.single_line_text(project, data, catalog)
         self.properties(project, data, catalog)
         self.model(project, data, catalog)
         self.task(project, data, catalog)

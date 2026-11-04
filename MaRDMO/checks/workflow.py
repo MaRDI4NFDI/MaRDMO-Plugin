@@ -4,7 +4,8 @@ from rdmo.domain.models import Attribute
 
 from ..constants import BASE_URI, CATALOG_WORKFLOW
 from ..getters import get_options
-from ..helpers import is_valid_url
+from .base import SOFTWARE_REFERENCE_CHECKS
+from ..validators import archive_year_problem, count_problem, doi_problem, size_problem
 
 
 class WorkflowMixin:
@@ -263,25 +264,7 @@ class WorkflowMixin:
             if not ivalue.get('reference'):
                 self.err.append(self._error('Software', page_name, 'Missing Reference'))
             else:
-                ref = ivalue['reference']
-                ref_list = [
-                    (0, 'DOI', 'ID'),
-                    (1, 'swMath ID', 'ID'),
-                    (2, 'Description URL', 'URL'),
-                    (3, 'Repository URL', 'URL')
-                ]
-                for idx, label, noun in ref_list:
-                    if ref.get(idx) and not ref[idx][1]:
-                        self.err.append(self._error(
-                            'Software', page_name,
-                            f'{label} selected, but no {noun} provided!'
-                        ))
-                    elif noun == 'URL' and ref.get(idx) and ref[idx][1]:
-                        if not is_valid_url(ref[idx][1]):
-                            self.err.append(self._error(
-                                'Software', page_name,
-                                f'Invalid {label}: must start with http:// or https://'
-                            ))
+                self._check_references(ivalue['reference'], 'Software', page_name, SOFTWARE_REFERENCE_CHECKS)
 
     def hardware(self, project, data):
         '''Check Hardware documentation completeness.
@@ -306,10 +289,9 @@ class WorkflowMixin:
                 self.err.append(self._error(
                     'Hardware', page_name, 'Missing Number of Compute Nodes'
                 ))
-            elif not str(nodes).strip().isdigit():
+            elif problem := count_problem(nodes):
                 self.err.append(self._error(
-                    'Hardware', page_name,
-                    'Invalid Number of Compute Nodes (must be an integer)'
+                    'Hardware', page_name, f'Invalid Number of Compute Nodes: {problem}'
                 ))
 
             cpu_entries = ivalue.get('cpu_entries', [])
@@ -328,20 +310,18 @@ class WorkflowMixin:
                             'Hardware', page_name,
                             'Missing CPU Occurrence in Hardware'
                         ))
-                    elif not entry.get('count_valid'):
+                    elif problem := count_problem(entry['count']):
                         self.err.append(self._error(
-                            'Hardware', page_name,
-                            'Invalid CPU Occurrence (must be an integer)'
+                            'Hardware', page_name, f'Invalid CPU Occurrence: {problem}'
                         ))
                     if not entry.get('cores'):
                         self.err.append(self._error(
                             'Hardware', page_name,
                             'Missing Number of Processor Cores'
                         ))
-                    elif not entry.get('cores_valid'):
+                    elif problem := count_problem(entry['cores']):
                         self.err.append(self._error(
-                            'Hardware', page_name,
-                            'Invalid Number of Processor Cores (must be an integer)'
+                            'Hardware', page_name, f'Invalid Number of Processor Cores: {problem}'
                         ))
 
     def dataset(self, project, data):
@@ -379,22 +359,10 @@ class WorkflowMixin:
                 self.err.append(self._error('Data Set', page_name, 'Missing Data Size'))
             elif not size[1]:
                 self.err.append(self._error('Data Set', page_name, 'Missing Data Size Value'))
-            else:
-                val = str(size[1]).strip()
-                if size[0] == options['items']:
-                    if not val.isdigit():
-                        self.err.append(self._error(
-                            'Data Set', page_name,
-                            'Invalid Data Size Value (must be an integer for items)'
-                        ))
-                else:
-                    try:
-                        float(val)
-                    except (ValueError, TypeError):
-                        self.err.append(self._error(
-                            'Data Set', page_name,
-                            'Invalid Data Size Value (must be a number)'
-                        ))
+            elif problem := size_problem(size[1], integer=size[0] == options['items']):
+                self.err.append(self._error(
+                    'Data Set', page_name, f'Invalid Data Size Value: {problem}'
+                ))
 
             if not ivalue.get('ToPublish') or not ivalue['ToPublish'][0]:
                 self.err.append(self._error(
@@ -403,13 +371,11 @@ class WorkflowMixin:
             elif (
                 ivalue['ToPublish'][0] == options['YesText']
                 and len(ivalue['ToPublish']) > 1
-                and ivalue['ToPublish'][1]
-                and not str(ivalue['ToPublish'][1]).startswith('10.')
-                and not is_valid_url(ivalue['ToPublish'][1])
+                and doi_problem(str(ivalue['ToPublish'][1] or ''))
             ):
                 self.err.append(self._error(
                     'Data Set', page_name,
-                    'Invalid Publication URL: must start with http:// or https://'
+                    f"Invalid Publication DOI: {doi_problem(str(ivalue['ToPublish'][1]))}"
                 ))
 
             to_archive = ivalue.get('ToArchive')
@@ -421,11 +387,10 @@ class WorkflowMixin:
                 if not to_archive[1]:
                     self.err.append(self._error('Data Set', page_name, 'Missing Archival Year'))
                 else:
-                    val = str(to_archive[1]).strip()
-                    if not (len(val) == 4 and val.isdigit()):
+                    problem = archive_year_problem(to_archive[1])
+                    if problem:
                         self.err.append(self._error(
-                            'Data Set', page_name,
-                            'Invalid Archival Year (must be a 4-digit year)'
+                            'Data Set', page_name, f'Invalid Archival Year: {problem}'
                         ))
 
     # -------------------------------------------------------------------------
@@ -435,7 +400,7 @@ class WorkflowMixin:
     def run_workflow(self, project, data, catalog=None):
         '''Run all workflow-catalog checks and return the collected error list.
 
-        Executes, in order: ID/Name/Description, workflow, process step,
+        Executes, in order: ID/Name/Description, single-line text, workflow, process step,
         algorithm, software, hardware, dataset, and publication checks.
 
         Args:
@@ -447,6 +412,7 @@ class WorkflowMixin:
             checks pass.
         '''
         self.id_name_description(project, data, CATALOG_WORKFLOW)
+        self.single_line_text(project, data, CATALOG_WORKFLOW)
         self.workflow(project, data)
         self.step(project, data)
         self.workflow_algorithm(project, data)

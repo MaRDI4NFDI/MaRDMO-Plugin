@@ -12,8 +12,7 @@ Provides:
 - ``get_datacite_data``       — query the DataCite REST API
 - ``get_doi_data``            — DOI resolver wrapper
 - ``get_zbmath_data``         — query the ZbMATH Open API
-- ``get_orcids``              — look up ORCID IDs for publication authors
-- ``get_author_by_orcid``     — fetch a single author record from the ORCID API
+- ``get_orcids``              — look up the ORCID records of publication authors
 - ``extract_authors``         — parse author list from API response
 - ``extract_journals``        — parse journal info from API response
 - ``assign_id``               — attach portal / ZbMATH IDs to entity dicts
@@ -22,11 +21,14 @@ Provides:
 - ``additional_queries``      — run supplementary SPARQL queries for linked entities
 '''
 
+import hashlib
+import logging
 import re
 from multiprocessing.pool import ThreadPool
 
 import requests
 
+from django.core.cache import cache
 from rdmo.projects.models import Value
 from rdmo.domain.models import Attribute
 
@@ -34,7 +36,17 @@ from .models import Author, Journal, Publication
 
 from ..constants import BASE_URI
 from ..getters import get_items, get_properties, get_sparql_query, get_url
-from ..queries import query_sparql, query_sparql_pool
+from ..queries import http_session, query_sparql, query_sparql_pool
+
+logger = logging.getLogger(__name__)
+
+# Timeout (seconds) for each external metadata request (Crossref, DataCite,
+# zbMATH, DOI resolver, ORCID); the sources are queried in parallel
+REQUEST_TIMEOUT = 10
+
+# Citation data of a DOI is reused for this long (preview runs the lookup on
+# every click); failed lookups are not kept
+CITATION_CACHE_TIMEOUT = 60 * 60
 
 def additional_queries(publication, choice, key, parameter, function):
     '''Run supplemental Wikidata and MaRDI Portal SPARQL queries for a sub-entity type.
@@ -88,49 +100,89 @@ def additional_queries(publication, choice, key, parameter, function):
     )
     mardi_info = function(mardi_results)
 
-    # Add (missing) MaRDI Portal / Wikidata IDs to authors
-    if mardi_info:
-        assign_id(
-            getattr(
-                publication[choice],
-                key
-            ),
-            mardi_info,
-            'mardi'
-        )
-    elif wikidata_info:
-        assign_id(
-            getattr(
-                publication[choice],
-                key
-            ),
-            wikidata_info,
-            'wikidata'
-        )
+    # Add (missing) MaRDI Portal / Wikidata IDs, per entity the portal first
+    assign_id(getattr(publication[choice], key), mardi_info, wikidata_info)
 
-def assign_id(entities, target, prefix):
-    '''Back-fill missing or placeholder IDs on *entities* from *target*.
+# Identifiers that make two authors or journals the same, in the order they
+# decide when they point to different items
+_AUTHOR_IDENTIFIERS = ('orcid', 'zbmath', 'wikidata')
+_JOURNAL_IDENTIFIERS = ('issn', 'wikidata')
 
-    Matches entities by label (case-insensitive) and overwrites the ``id``,
-    ``label``, and ``description`` fields when the entity currently has no ID
-    or a placeholder such as ``"not found"``.
+
+def _identifiers(entity, own_qid=None):
+    """``{(kind, value)}`` of an author or journal: ORCID, zbMATH ID, ISSN, Wikidata QID.
+
+    *own_qid* is the entity's own QID for items found on Wikidata; otherwise
+    the Wikidata QID comes from the entity's ID (``wikidata:Q…``) or its
+    ``wikidata_id`` (the Wikidata QID statement of a MaRDI Portal item).
+    """
+    found = set()
+    for kind, attribute in (('orcid', 'orcid_id'), ('zbmath', 'zbmath_id'), ('issn', 'issn')):
+        value = getattr(entity, attribute, None)
+        # "None" is no identifier (some MaRDI Portal items carry it as text)
+        if value and value != 'None':
+            found.add((kind, value.upper() if kind == 'issn' else value))
+    qid = own_qid or getattr(entity, 'wikidata_id', None)
+    if not qid and (entity.id or '').startswith('wikidata:'):
+        qid = entity.id.split(':', 1)[1]
+    if qid:
+        found.add(('wikidata', qid.removeprefix('wikidata:')))
+    return found
+
+
+def assign_id(entities, mardi_info, wikidata_info):
+    '''Give authors or journals the ID of the MaRDI Portal or Wikidata item with the same identifier.
+
+    Two entities are the same if they share an identifier (ORCID, zbMATH
+    author ID or Wikidata QID for authors, ISSN or Wikidata QID for
+    journals); names are not compared, so an author without any identifier
+    stays a name.  A Wikidata item found by an identifier adds its QID to
+    the entity's identifiers, so the MaRDI Portal item holding that QID
+    matches too.  The MaRDI Portal is preferred over Wikidata, per entity;
+    if identifiers point to different items, the first identifier kind
+    decides (ORCID, zbMATH ID, Wikidata QID; ISSN, Wikidata QID).  An item
+    is not given to a second entity.
+
+    Only entities without a MaRDI Portal ID are changed; the ID, label and
+    description of the item replace theirs.
 
     Args:
-        entities: Iterable of entity dataclass instances to update.
-        target:   Dict of resolved entities (from SPARQL results) to match against.
-        prefix:   Source prefix prepended to the resolved ID (e.g. ``"mardi"``).
+        entities:      Iterable of :class:`~.models.Author` or
+                       :class:`~.models.Journal` instances to update.
+        mardi_info:    Dict of entities found on the MaRDI Portal.
+        wikidata_info: Dict of entities found on Wikidata.
     '''
+    entities = list(entities)
+    kinds = _JOURNAL_IDENTIFIERS if any(hasattr(e, 'issn') for e in entities) else _AUTHOR_IDENTIFIERS
+    candidates = (
+        [('mardi', c, _identifiers(c)) for c in mardi_info.values()]
+        + [('wikidata', c, _identifiers(c, own_qid=c.id)) for c in wikidata_info.values()]
+    )
+    used = {e.id for e in entities if e.id}
     for entity in entities:
-        if (
-            not entity.id
-            or entity.id in ('not found', 'no author found', 'no journal found')
-            or entity.id.startswith('wikidata')
-        ):
-            for id_entity in target.values():
-                if entity.label.lower() == id_entity.label.lower():
-                    entity.id = f"{prefix}:{id_entity.id}"
-                    entity.label = id_entity.label
-                    entity.description = id_entity.description
+        if (entity.id or '').startswith('mardi:'):
+            continue
+        mine = _identifiers(entity)
+        mine |= {('wikidata', c.id) for prefix, c, ids in candidates if prefix == 'wikidata' and ids & mine}
+        match = next(
+            (
+                (prefix, candidate)
+                for source in ('mardi', 'wikidata')
+                for kind in kinds
+                for prefix, candidate, ids in candidates
+                if prefix == source and f'{prefix}:{candidate.id}' not in used
+                and any(k == kind for k, _ in ids & mine)
+            ),
+            None,
+        )
+        if match:
+            prefix, candidate = match
+            used.discard(entity.id)
+            entity.id = f'{prefix}:{candidate.id}'
+            entity.label = candidate.label
+            entity.description = candidate.description
+            used.add(entity.id)
+
 
 def assign_orcid(publication, source, id_type = 'orcid'):
     '''Back-fill missing ORCID iDs on authors from the *orcid* lookup result.
@@ -215,6 +267,10 @@ def get_citation(doi):
     metadata service.  Then enriches authors with ORCID iDs and runs
     supplemental author/journal queries against MaRDI Portal and Wikidata.
 
+    The result is cached per DOI for :data:`CITATION_CACHE_TIMEOUT` seconds
+    if the MaRDI Portal and Wikidata answered and some source knows the
+    publication.  Otherwise the next call looks it up again.
+
     Args:
         doi: DOI string (e.g. ``"10.1000/xyz123"``).
 
@@ -223,11 +279,26 @@ def get_citation(doi):
         etc.) to :class:`~.models.Publication` instances or ``None``; empty
         dict if *doi* does not match the expected format.
     '''
-    publication = {}
-
     if not re.match(r'10.\d{4,9}/[-._;()/:a-z0-9A-Z]+', doi):
-        return publication
+        return {}
 
+    key = 'mardmo_citation_' + hashlib.sha1(doi.encode('utf-8')).hexdigest()
+    publication = cache.get(key)
+    if publication is None:
+        publication, complete = _lookup_citation(doi)
+        if complete:
+            cache.set(key, publication, CITATION_CACHE_TIMEOUT)
+    return publication
+
+
+def _lookup_citation(doi):
+    '''Look up *doi* in all sources (see :func:`get_citation`).
+
+    Returns:
+        Tuple ``(publication, complete)``; *complete* is ``True`` if the MaRDI
+        Portal and Wikidata answered and some source knows the publication.
+    '''
+    publication = {}
     choice = None
 
     # Define MaRDI Portal / Wikidata / MathAlgoDB SPARQL Queries
@@ -244,58 +315,59 @@ def get_citation(doi):
         doi
     )
 
-    # Get Citation Data from MaRDI Portal / Wikidata / MathAlgoDB
+    # Get Citation Data from MaRDI Portal / Wikidata / MathAlgoDB; a failed
+    # query gives None (strict), so the result is not cached
     results = query_sparql_pool(
         {
-            'wikidata': (wikidata_query, get_url('wikidata', 'sparql')),
-            'mardi':(mardi_query, get_url('mardi', 'sparql')),
+            'wikidata': (wikidata_query, get_url('wikidata', 'sparql'), True),
+            'mardi':(mardi_query, get_url('mardi', 'sparql'), True),
         }
     )
+    answered = results['mardi'] is not None and results['wikidata'] is not None
 
     # Structure Publication Information
     for key in ['mardi', 'wikidata']:
-        try:
-            publication[key] = Publication.from_query(results.get(key))
-        except:
-            publication[key] = None
+        publication[key] = None
+        if results.get(key):
+            try:
+                publication[key] = Publication.from_query(results[key])
+            except Exception:  # pylint: disable=broad-exception-caught
+                logger.exception("Could not read publication %s from %s", doi, key)
 
     # Return if Publication found on MaRDI
     if publication['mardi']:
-        return publication
+        return publication, answered
 
     if not publication['wikidata']:
         # If no Citation Data in KGs get information from CrossRef, DataCite, DOI, zbMath
-        pool = ThreadPool(processes=4)
-        results = pool.map(
-            lambda fn: fn(doi),
-            [
-                get_crossref_data,
-                get_datacite_data,
-                get_zbmath_data,
-                get_doi_data
-            ]
-        )
+        with ThreadPool(processes=4) as pool:
+            results = pool.map(
+                lambda fn: fn(doi),
+                [
+                    get_crossref_data,
+                    get_datacite_data,
+                    get_zbmath_data,
+                    get_doi_data
+                ]
+            )
 
         for idx, source in enumerate(['crossref', 'datacite', 'zbmath', 'doi']):
+            publication[source] = None
             if hasattr(results[idx], "status_code") and results[idx].status_code == 200:
-                source_func_name = f"from_{source}"
-                source_func = getattr(Publication, source_func_name)
-                publication[source] = source_func(results[idx])
-            else:
-                publication[source] = None
+                # An unexpected answer from one source counts as "not available";
+                # the other sources are still used
+                try:
+                    parsed = getattr(Publication, f"from_{source}")(results[idx])
+                except Exception:  # pylint: disable=broad-exception-caught
+                    logger.exception("Could not read publication %s from %s", doi, source)
+                    continue
+                # Without a title the publication cannot be exported; let the
+                # next source take over instead of an empty record
+                if parsed.label:
+                    publication[source] = parsed
 
     # Get Authors assigned to publication from ORCID
-    publication['orcid'] = {}
-    response = get_orcids(doi)
-    if response.status_code == 200:
-        orcids = response.json().get('result')
-        if orcids:
-            for idx, entry in enumerate(orcids):
-                orcid_id = entry.get('orcid-identifier', {}).get('path', '')
-                response = get_author_by_orcid(orcid_id)
-                if response.status_code == 200:
-                    orcid_author = response.json()
-                    publication['orcid'][idx] = Author.from_orcid(orcid_author)
+    publication['orcid'] = _orcid_authors(doi)
 
     # Add (missing) ORCID IDs to authors
     for choice in ['mardi', 'wikidata', 'crossref', 'datacite', 'zbmath', 'doi']:
@@ -313,7 +385,7 @@ def get_citation(doi):
             for author in publication[choice].authors
         )
         zbmath_id = ' '.join(
-            f'"{author.zbmath_id}"' if author.zbmath_id else '""'
+            f'"{author.zbmath_id}"' if author.zbmath_id and author.zbmath_id != 'None' else '""'
             for author in publication[choice].authors
         )
         wikidata_id = ' '.join(
@@ -323,7 +395,9 @@ def get_citation(doi):
 
         properties = get_properties()
         if orcid_id and zbmath_id and wikidata_id:
-            additional_queries(
+            _try_enrichment(
+                'authors',
+                additional_queries,
                 publication,
                 choice,
                 'authors', 
@@ -360,7 +434,9 @@ def get_citation(doi):
                 wikidata_id = f'"{publication[choice].journal[0].id.split(":")[1]}"'
 
         if journal_id or wikidata_id:
-            additional_queries(
+            _try_enrichment(
+                'journal',
+                additional_queries,
                 publication,
                 choice,
                 'journal',
@@ -381,7 +457,39 @@ def get_citation(doi):
                 extract_journals
             )
 
-    return publication
+    found = any(publication.get(source)
+                for source in ('mardi', 'wikidata', 'crossref', 'datacite', 'zbmath', 'doi'))
+    return publication, answered and found
+
+def _try_enrichment(label, function, *args):
+    '''Run an optional enrichment step (author/journal IDs); log instead of failing.
+
+    The publication data is complete without it, so an unexpected answer from
+    the MaRDI Portal or Wikidata must not break the lookup.
+    '''
+    try:
+        function(*args)
+    except Exception:  # pylint: disable=broad-exception-caught
+        logger.exception("Could not look up %s IDs on MaRDI Portal / Wikidata", label)
+
+
+def _orcid_authors(doi):
+    '''Return ``{index: Author}`` for researchers who list *doi* in their ORCID record.
+
+    ORCID only adds missing ORCID iDs to authors from other sources, so any
+    failure (service unavailable, unexpected answer) yields ``{}``.
+    '''
+    authors = {}
+    try:
+        response = get_orcids(doi)
+        if response is None or response.status_code != 200:
+            return authors
+        for idx, entry in enumerate(response.json().get('expanded-result') or []):
+            authors[idx] = Author.from_orcid(entry)
+    except Exception:  # pylint: disable=broad-exception-caught
+        logger.exception("Could not look up ORCID authors for %s", doi)
+    return authors
+
 
 def get_crossref_data(doi):
     '''Fetch citation metadata for *doi* from the CrossRef REST API.
@@ -394,9 +502,9 @@ def get_crossref_data(doi):
         :class:`requests.exceptions.RequestException` on failure.
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f"https://api.crossref.org/works/{doi}",
-            timeout = 5
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
@@ -414,9 +522,9 @@ def get_datacite_data(doi):
         :class:`requests.exceptions.RequestException` on failure.
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f"https://api.datacite.org/dois/{doi}",
-            timeout = 5
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
@@ -434,10 +542,10 @@ def get_doi_data(doi):
         :class:`requests.exceptions.RequestException` on failure.
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f"https://citation.doi.org/metadata?doi={doi}",
             headers = {"accept": "application/json"},
-            timeout = 0.0000001
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
@@ -455,9 +563,9 @@ def get_zbmath_data(doi):
         :class:`requests.exceptions.RequestException` on failure.
     '''
     try:
-        request = requests.get(
+        request = http_session().get(
             f"https://api.zbmath.org/v1/document/_structured_search?page=0&results_per_page=100&DOI={doi}",
-            timeout = 5
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
@@ -467,43 +575,26 @@ def get_zbmath_data(doi):
 def get_orcids(doi):
     '''Query the ORCID public API for researchers associated with *doi*.
 
+    The expanded search returns the names with the ORCID iDs, so no further
+    request per researcher is needed.
+
     Args:
         doi: DOI string used as the ``doi-self`` search criterion.
 
     Returns:
         :class:`requests.Response` (status 200) containing a JSON payload with
-        an ``"result"`` list of ORCID records on success, or the caught
-        :class:`requests.exceptions.RequestException` on failure.
+        an ``"expanded-result"`` list of ORCID records on success, or ``None``
+        on failure (logged as a warning).
     '''
     try:
-        request = requests.get(
-            f'https://pub.orcid.org/v3.0/search/?q=doi-self:"{doi}"',
+        request = http_session().get(
+            'https://pub.orcid.org/v3.0/expanded-search/',
+            params = {'q': f'doi-self:"{doi}"'},
             headers = {'Accept': 'application/json'},
-            timeout = 5
+            timeout = REQUEST_TIMEOUT
         )
         request.raise_for_status()
         return request
     except requests.exceptions.RequestException as error:
-        return error
-
-def get_author_by_orcid(orcid_id):
-    '''Fetch personal-details for a researcher from the ORCID public API.
-
-    Args:
-        orcid_id: ORCID iD string (e.g. ``"0000-0002-1825-0097"``).
-
-    Returns:
-        :class:`requests.Response` (status 200) containing a JSON payload with
-        the researcher's personal details on success, or the caught
-        :class:`requests.exceptions.RequestException` on failure.
-    '''
-    try:
-        request = requests.get(
-            f"https://pub.orcid.org/v3.0/{orcid_id}/personal-details",
-            headers = {'Accept': 'application/json'},
-            timeout = 5
-        )
-        request.raise_for_status()
-        return request
-    except requests.exceptions.RequestException as error:
-        return error
+        logger.warning("ORCID search for %s failed: %s", doi, error)
+        return None

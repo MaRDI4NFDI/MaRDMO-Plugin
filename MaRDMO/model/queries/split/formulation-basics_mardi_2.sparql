@@ -1,0 +1,29 @@
+# Part 2 of 9 of the MaRDI query formulation-basics_mardi.sparql (see README.md).
+SELECT
+?id
+?is_ordinary_differential_equation
+?is_partial_differential_equation
+?is_stochastic_differential_equation
+?is_integro_differential_equation
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{ordinary differential equation}. BIND("True" AS ?is_ordinary_differential_equation_raw) }}
+
+    BIND(COALESCE(?is_ordinary_differential_equation_raw, "False") AS ?is_ordinary_differential_equation)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{partial differential equation}. BIND("True" AS ?is_partial_differential_equation_raw) }}
+
+    BIND(COALESCE(?is_partial_differential_equation_raw, "False") AS ?is_partial_differential_equation)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{stochastic differential equation}. BIND("True" AS ?is_stochastic_differential_equation_raw) }}
+
+    BIND(COALESCE(?is_stochastic_differential_equation_raw, "False") AS ?is_stochastic_differential_equation)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{integro-differential equation}. BIND("True" AS ?is_integro_differential_equation_raw) }}
+
+    BIND(COALESCE(?is_integro_differential_equation_raw, "False") AS ?is_integro_differential_equation)
+}}
+GROUP BY ?id ?is_ordinary_differential_equation ?is_partial_differential_equation ?is_stochastic_differential_equation ?is_integro_differential_equation

@@ -1,0 +1,86 @@
+# Part 8 of 8 of the MaRDI query quantity_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?nq, " || ", ?nql, " || ", ?nqd, " || ", ?nqc); SEPARATOR=" <|> ") AS ?nondimensionalizes)
+(GROUP_CONCAT(DISTINCT CONCAT(?stq, " || ", ?stql, " || ", ?stqd, " || ", ?stqc); SEPARATOR=" <|> ") AS ?similar_to)
+(GROUP_CONCAT(DISTINCT CONCAT(?pub, " || ", ?publ, " || ", ?pubd); SEPARATOR=" <|> ") AS ?publication)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?nqraw wdt:{nondimensionalized by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?nqraw), STR(wd:))) AS ?nq)
+                                                               
+        {{
+            ?nqraw wdt:{instance of} wd:{quantity}.
+            BIND("Quantity" AS ?nqc)
+        }}
+        UNION
+        {{
+            ?nqraw wdt:{instance of} wd:{kind of quantity}.
+            BIND("QuantityKind" AS ?nqc)
+        }}
+
+        OPTIONAL {{
+            ?nqraw rdfs:label ?nqlraw.
+            FILTER (lang(?nqlraw) = 'en')
+        }}
+        BIND(COALESCE(?nqlraw, "No Label Provided!") AS ?nql)
+
+        OPTIONAL {{
+            ?nqraw schema:description ?nqdraw
+            FILTER (lang(?nqdraw) = 'en')
+        }}
+        BIND(COALESCE(?nqdraw, "No Description Provided!") AS ?nqd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{similar to} ?stqraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?stqraw), STR(wd:))) AS ?stq)
+                                                               
+        {{
+            ?stqraw wdt:{instance of} wd:{quantity}.
+            BIND("Quantity" AS ?stqc)
+        }}
+        UNION
+        {{
+            ?stqraw wdt:{instance of} wd:{kind of quantity}.
+            BIND("QuantityKind" AS ?stqc)
+        }}
+
+        OPTIONAL {{
+            ?stqraw rdfs:label ?stqlraw.
+            FILTER (lang(?stqlraw) = 'en')
+        }}
+        BIND(COALESCE(?stqlraw, "No Label Provided!") AS ?stql)
+
+        OPTIONAL {{
+            ?stqraw schema:description ?stqdraw
+            FILTER (lang(?stqdraw) = 'en')
+        }}
+        BIND(COALESCE(?stqdraw, "No Description Provided!") AS ?stqd)
+    }}
+
+    OPTIONAL {{
+        ?id p:{described by source} ?statement_p .
+        ?statement_p ps:{described by source} ?pubraw .
+        ?statement_p pq:{object has role} ?role .
+        VALUES ?role {{ wd:{documentation} wd:{invention} wd:{review} wd:{study} wd:{use} }}
+        BIND(CONCAT("mardi:", STRAFTER(STR(?pubraw), STR(wd:))) AS ?pub)
+                                                               
+        OPTIONAL {{
+            ?pubraw rdfs:label ?publraw.
+            FILTER (lang(?publraw) = 'en')
+        }}
+        BIND(COALESCE(?publraw, "No Label Provided!") AS ?publ)
+
+        OPTIONAL {{
+            ?pubraw schema:description ?pubdraw
+            FILTER (lang(?pubdraw) = 'en')
+        }}
+        BIND(COALESCE(?pubdraw, "No Description Provided!") AS ?pubd)
+    }}
+}}
+GROUP BY ?id

@@ -17,6 +17,17 @@ from typing import Optional, ClassVar
 
 from ..getters import get_items, get_options
 from ..helpers import date_format, split_value
+
+
+def _first(values):
+    '''Return the first element of a list (``None`` if empty); other values unchanged.
+
+    External APIs deliver some fields sometimes as list, sometimes as plain
+    value, and sometimes as empty list.
+    '''
+    if isinstance(values, list):
+        return values[0] if values else None
+    return values
 from ..models import Relatant, RelatantWithClass
 
 @dataclass
@@ -49,7 +60,7 @@ class Author:
             if orcid_id:
                 description = f'scientist (ORCID iD {orcid_id})'
             elif zbmath_id:
-                description = f'scientist (zbMath ID {orcid_id})'
+                description = f'scientist (zbMath ID {zbmath_id})'
             else:
                 description = 'scientist'
 
@@ -268,11 +279,11 @@ class Author:
 
     @classmethod
     def from_orcid(cls, raw: str) -> 'Author':
-        '''Build an Author instance from an ORCID API person record.
+        '''Build an Author instance from an ORCID expanded-search record.
 
         Args:
-            raw: Dict-like object from the ORCID API with an optional ``name``
-                 sub-dict containing ``given-names``, ``family-name``, and ``path``.
+            raw: Dict-like entry of the ``expanded-result`` list with
+                 ``orcid-id``, ``given-names``, and ``family-names``.
 
         Returns:
             Author instance; ``id`` is ``'no author found'`` when a name is present
@@ -280,19 +291,14 @@ class Author:
         '''
 
         label = None
-        given = family = None
-        orcid_id = zbmath_id = wikidata_id = None
+        zbmath_id = wikidata_id = None
 
         # Get Name & ORCID ID
-        if raw.get('name'):
-            name = raw.get('name', {})
-            if name.get('given-names', {}):
-                given = name.get('given-names', {}).get('value')
-            if name.get('family-name', {}):
-                family = name.get('family-name', {}).get('value')
-            orcid_id = name.get('path')
-            if given and family:
-                label = f"{given} {family}"
+        given = raw.get('given-names')
+        family = raw.get('family-names')
+        orcid_id = raw.get('orcid-id')
+        if given and family:
+            label = f"{given} {family}"
 
         # Get MaRDI Portal ID
         identifier = None
@@ -323,14 +329,17 @@ class Journal:
     issn: str
     label: str
     description: str
+    # Wikidata QID of a MaRDI Portal journal (from journal.sparql)
+    wikidata_id: Optional[str] = None
 
     @classmethod
     def from_query(cls, raw: str) -> 'Journal':
         '''Parse a ``<|>``-delimited SPARQL result string into a Journal instance.
 
         Args:
-            raw: Space-and-pipe-delimited string with three or four fields:
-                 identifier, label, description, and optionally issn.
+            raw: Space-and-pipe-delimited string with three to five fields:
+                 identifier, label, description, and optionally issn and
+                 Wikidata QID.
 
         Returns:
             Journal instance populated from the parsed fields.
@@ -340,10 +349,8 @@ class Journal:
         identifier = raw_splitted[0]
         label = raw_splitted[1]
         description = raw_splitted[2]
-        if len(raw_splitted) == 4:
-            issn = raw_splitted[3]
-        else:
-            issn = None
+        issn = raw_splitted[3] if len(raw_splitted) >= 4 else None
+        wikidata_id = raw_splitted[4] if len(raw_splitted) >= 5 else None
 
         if not description:
             if issn:
@@ -355,7 +362,8 @@ class Journal:
             id = identifier,
             issn = issn,
             label = label,
-            description = description
+            description = description,
+            wikidata_id = wikidata_id or None
         )
 
     @classmethod
@@ -713,15 +721,16 @@ class Publication:
             # Get ID
             'id': None,
             # Get Label
-            'label': data.get('title', [''])[0],
+            'label': _first(data.get('title')),
             # Get Description
             'description': 
                 f'scientific article (doi: {data["DOI"]})'
                 if data.get("DOI") else 'scientific article',
             # Get Entrytype
+            # Preprints count as scholarly articles, as on the MaRDI Portal and Wikidata
             'entrytype':
                 'scholarly article'
-                if data.get('type') == 'journal-article' else 'publication',
+                if data.get('type') in ('journal-article', 'posted-content') else 'publication',
             # Get Language
             'language': (
                 [
@@ -736,10 +745,10 @@ class Publication:
                 else []
             ),
             # Get Title
-            'title': data.get('title', [''])[0],
+            'title': _first(data.get('title')),
             # Get Date
             'date': date_format(
-                data.get('published', {}).get('date-parts', [[]])[0]
+                _first((data.get('published') or {}).get('date-parts'))
             ),
             # Get Volume
             'volume': data.get('volume'),
@@ -805,9 +814,12 @@ class Publication:
                 f'scientific article (doi: {data["doi"]})'
                 if data.get("doi") else 'scientific article',
             # Get Entrytype
+            # Preprints count as scholarly articles, as on the MaRDI Portal and Wikidata
             'entrytype':
                 'scholarly article'
-                if data.get('types', {}).get('bibtex') == 'article' else 'publication',
+                if data.get('types', {}).get('bibtex') == 'article'
+                or data.get('types', {}).get('resourceTypeGeneral') == 'Preprint'
+                else 'publication',
             # Get Language
             'language': (
                 [
@@ -827,7 +839,8 @@ class Publication:
             'date': 
                 next(
                     (
-                        date_format(date_part['date'].split('-'))
+                        # A range ("2019/2020") counts from its start
+                        date_format(date_part['date'].split('/')[0].split('-'))
                         for date_part in data.get('dates', [])
                         if date_part.get('dateType') == 'Issued' and date_part.get('date')
                     ),
@@ -901,9 +914,11 @@ class Publication:
                 f'scientific article (doi: {data["DOI"]})'
                 if data.get("DOI") else 'scientific article',
             # Get Entrytype
+            # Preprints count as scholarly articles, as on the MaRDI Portal and
+            # Wikidata; in CSL "article" is a preprint or working paper
             'entrytype': (
                 'scholarly article'
-                if data.get('type') in ('journal-article', 'article-journal')
+                if data.get('type') in ('journal-article', 'article-journal', 'posted-content', 'article')
                 else 'publication'
             ),
             # Get Language
@@ -921,9 +936,9 @@ class Publication:
             ),
             # Get Title
             'title': data.get('title'),
-            # Get Date
+            # Get Date ('issued' is the CSL standard, 'published' Crossref-specific)
             'date': date_format(
-                data.get('published', {}).get('date-parts', [[]])[0]
+                _first((data.get('published') or data.get('issued') or {}).get('date-parts'))
             ),
             # Get Volume
             'volume': data.get('volume'),
@@ -976,13 +991,13 @@ class Publication:
         options = cls.get_options()
         items = get_items()
 
-        data = raw_data.json().get('result', [''])[0]
+        data = _first(raw_data.json().get('result')) or {}
 
         publication = {
             # Get ID
             'id': None,
             # Get Label
-            'label': data.get('title', {}).get('title'),
+            'label': (data.get('title') or {}).get('title'),
             # Get Description
             'description': (
                 f"scientific article (doi: {doi})"
@@ -1018,15 +1033,13 @@ class Publication:
                 else []
             ),
             # Get Date
-            'date':
-                f"{int(data['year']):04d}-00-00T00:00:00Z"
-                if data.get('year') else None,
+            'date': date_format([data.get('year')]),
             # Get Title
-            'title': data.get('title', {}).get('title'),
+            'title': (data.get('title') or {}).get('title'),
             # Get Volume
-            'volume': (data.get('source', {}).get('series') or [''])[0].get('volume'),
+            'volume': (_first((data.get('source') or {}).get('series')) or {}).get('volume'),
             # Get Issue
-            'issue': (data.get('source', {}).get('series') or [''])[0].get('issue'),
+            'issue': (_first((data.get('source') or {}).get('series')) or {}).get('issue'),
             # Get Page
             'page': data.get('source', {}).get('page'),
             # Get Reference

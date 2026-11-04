@@ -7,6 +7,7 @@ All SPARQL and write logic lives in the _fill_*_batch methods.
 '''
 
 import logging
+from dataclasses import replace
 from functools import partial
 
 from rdmo.options.models import Option
@@ -194,7 +195,6 @@ class Information(BaseInformation):
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -230,7 +230,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_field_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_field_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -356,29 +355,26 @@ class Information(BaseInformation):
                     batch_fill_method=self._fill_quantity_batch,
                 ))
 
-            # Per-page counters: each quantity page numbers its own relation
-            # sub-lists from 0. (Previously a module-level dict that never
-            # reset, so indices grew without bound across imports and a
-            # re-import wrote fresh rows past the old ones instead of over them.)
-            rel_idx = {pair: 0 for pair in relation_uris}
-            for prop in props['Quantity']:
-                for val in getattr(data, prop):
-                    pair = (data.qclass, val.item_class)
-                    value_editor(
-                        project=project,
-                        uri=f'{self.base}{quantity[relation_uris[pair]]["uri"]}',
-                        info={'option': Option.objects.get(
-                                  uri=self.mathmoddb.get(key=prop)['url']),
-                              'set_index': rel_idx[pair],
-                              'set_prefix': str(set_index)})
-                    value_editor(
-                        project=project,
-                        uri=f'{self.base}{quantity[relatant_uris[pair]]["uri"]}',
-                        info={'text': f'{val.label} ({val.description}) [mardi]',
-                              'external_id': val.id,
-                              'set_index': rel_idx[pair],
-                              'set_prefix': str(set_index)})
-                    rel_idx[pair] += 1
+            # The relation questions depend on the classes of the quantity and
+            # of the relatant (Q→Q, Q→QK, QK→Q, QK→QK); one call per relatant
+            # class, so relatants of the same relation share one set
+            for (qclass, relatant_class), relation_key in relation_uris.items():
+                if qclass != data.qclass:
+                    continue
+                add_relations_flexible(
+                    project=project,
+                    data=replace(data, **{
+                        prop: [val for val in getattr(data, prop)
+                               if val.item_class == relatant_class]
+                        for prop in props['Quantity']
+                    }),
+                    props={'keys': props['Quantity'], 'mapping': self.mathmoddb},
+                    index={'set_prefix': str(set_index)},
+                    statement={
+                        'relation': f'{self.base}{quantity[relation_key]["uri"]}',
+                        'relatant': (f'{self.base}'
+                                     f'{quantity[relatant_uris[(qclass, relatant_class)]]["uri"]}'),
+                    })
 
             self._hydrate_publications(project, data.publications,
                                        catalog, visited)
@@ -429,7 +425,6 @@ class Information(BaseInformation):
                     data_by_id[external_id].symbols           = fd['symbols']
                     data_by_id[external_id].contains_quantity = fd['contains_quantity']
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -484,7 +479,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_quantity_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_quantity_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -508,7 +502,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -533,7 +526,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
             self._hydrate_publications(project, data.publications,
                                        catalog, visited)
@@ -560,7 +552,6 @@ class Information(BaseInformation):
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -605,7 +596,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -627,7 +617,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_quantity_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_quantity_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -638,7 +627,6 @@ class Information(BaseInformation):
                     'relation':   f'{self.base}{task["IntraClassRelation"]["uri"]}',
                     'relatant':   f'{self.base}{task["IntraClassElement"]["uri"]}',
                     'assumption': f'{self.base}{task["Assumption"]["uri"]}',
-                    'order':      f'{self.base}{task["Order Number"]["uri"]}',
                 })
 
             self._hydrate_qualifier_entities(
@@ -653,7 +641,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
             self._hydrate_publications(project, data.publications,
                                        catalog, visited)
@@ -680,7 +667,6 @@ class Information(BaseInformation):
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -720,7 +706,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_problem_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_problem_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -730,7 +715,6 @@ class Information(BaseInformation):
                 statement={
                     'relation': f'{self.base}{model_q["MM2MF"]["uri"]}',
                     'relatant': f'{self.base}{model_q["MFRelatant"]["uri"]}',
-                    'order':    f'{self.base}{model_q["Order Number"]["uri"]}',
                 })
 
             self._hydrate_relatants(
@@ -745,7 +729,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_static(
@@ -764,7 +747,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_task_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_task_batch,
-                    section_indices=section_indices,
                 ))
 
             add_relations_flexible(
@@ -789,7 +771,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_formulation_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
-                    section_indices=section_indices,
                 ))
             self._hydrate_publications(project, data.publications,
                                        catalog, visited)

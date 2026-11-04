@@ -12,12 +12,42 @@ Provides:
   workers that package questionnaire answers for portal submission
 '''
 
+import html
+import re
+from multiprocessing.pool import ThreadPool
+
 from .constants import ITEMINFOS, CITATIONINFOS, JOURNALS, AUTHORS, LANGUAGES
 from .utils import clean_background_data, get_citation
 
 from ..constants import BASE_URI
-from ..getters import get_items, get_properties, get_questions
-from ..helpers import date_precision, value_editor
+from ..getters import get_items, get_options, get_properties, get_questions
+from ..helpers import commit_writes, date_precision, find_reference, value_editor
+
+# Publications whose citation data is looked up at the same time
+CITATION_LOOKUPS_IN_PARALLEL = 3
+
+
+# Formatting tags in fetched titles (Crossref, DataCite, ...); only these are
+# removed, so a title like "a < b and c > d" keeps its text
+_FORMATTING_TAG_RE = re.compile(
+    r'</?(?:i|b|u|em|strong|sup|sub|scp|tt|sc|span|jats:[a-z-]+|mml:[a-z]+)(?:\s[^<>]*)?/?>',
+    re.IGNORECASE,
+)
+
+
+def _single_line(text):
+    '''Collapse whitespace (incl. line breaks), remove formatting tags and decode HTML entities in fetched metadata text.
+
+    Crossref/DataCite titles and names occasionally contain line breaks, which
+    the MaRDI Portal rejects, formatting tags (``<i>``, ``<sup>``) and HTML
+    entities (``&amp;``), which would end up literally in labels.  Users
+    cannot edit this background data, so it is normalised when stored instead
+    of blocking the export.
+    '''
+    if not isinstance(text, str):
+        return text
+    return ' '.join(html.unescape(_FORMATTING_TAG_RE.sub('', text)).split())
+
 
 class PublicationRetriever:
     '''Retrieve Metadata from MaRDI Portal, Wikidata, and other
@@ -43,6 +73,8 @@ class PublicationRetriever:
             options:  Global RDMO options dict (used for the ``"Yes"`` option check).
         '''
 
+        citations = self._lookup_citations(answers)
+
         for key in answers.get('publication', {}):
 
             # If ID is missing (not answered or deleted)
@@ -66,7 +98,7 @@ class PublicationRetriever:
                     continue
 
                 #Get the Citation of several ressource.
-                data_all = get_citation(answers['publication'][key]['reference'][0][1].upper())
+                data_all = citations[key]
 
                 #If Publication available at MaRDI, Wikidata, Crossref, Datacite, zbMath or DOI...
                 if any(
@@ -89,8 +121,9 @@ class PublicationRetriever:
                             project = project,
                             uri = f'{BASE_URI}{self.questions["Publication"]["ID"]["uri"]}',
                             info = {
-                                'text': 
-                                    f"{data.label} ({data.description}) [{data.id.split(':')[0]}]",
+                                'text':
+                                    f"{_single_line(data.label)} ({_single_line(data.description)})"
+                                    f" [{data.id.split(':')[0]}]",
                                 'external_id': data.id,
                                 'set_index': key
                             }
@@ -101,7 +134,7 @@ class PublicationRetriever:
                             project = project,
                             uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
                             info = {
-                                'text': getattr(data, data_key), 
+                                'text': _single_line(getattr(data, data_key)),
                                 'set_index': key
                             }
                         )
@@ -111,7 +144,7 @@ class PublicationRetriever:
                                 project = project,
                                 uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
                                 info = {
-                                    'text': getattr(language, data_key), 
+                                    'text': _single_line(getattr(language, data_key)),
                                     'collection_index': idx, 
                                     'set_index': key
                                 }
@@ -122,7 +155,7 @@ class PublicationRetriever:
                                 project = project,
                                 uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
                                 info = {
-                                    'text': getattr(journal, data_key), 
+                                    'text': _single_line(getattr(journal, data_key)),
                                     'collection_index': idx, 
                                     'set_index': key
                                 }
@@ -133,7 +166,7 @@ class PublicationRetriever:
                                 project = project,
                                 uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
                                 info = {
-                                    'text': getattr(author, data_key), 
+                                    'text': _single_line(getattr(author, data_key)),
                                     'collection_index': idx, 
                                     'set_index': key
                                 }
@@ -142,10 +175,34 @@ class PublicationRetriever:
                     #...output dictionary.
                     if data_all.get('mardi') or data_all.get('wikidata'):
                         answers['publication'][key]['ID'] = data.id
-                    answers['publication'][key]['Name'] = data.label
-                    answers['publication'][key]['Description'] = data.description
+                    answers['publication'][key]['Name'] = _single_line(data.label)
+                    answers['publication'][key]['Description'] = _single_line(data.description)
 
         return answers
+
+    @staticmethod
+    def _lookup_citations(answers):
+        '''Look up the citation data of all publications that need it, in parallel.
+
+        These are the publications from Wikidata or entered by the user
+        (``not found``) that have a DOI.
+
+        Returns:
+            Dict mapping the publication's set index to the result of
+            :func:`~.utils.get_citation`.
+        '''
+        dois = {
+            key: publication['reference'][0][1].upper()
+            for key, publication in answers.get('publication', {}).items()
+            if (publication.get('ID') or '').startswith(('wikidata', 'not found'))
+            and publication.get('reference', {}).get(0, ['', ''])[1]
+        }
+        if not dois:
+            return {}
+        commit_writes()
+        with ThreadPool(min(CITATION_LOOKUPS_IN_PARALLEL, len(dois))) as pool:
+            results = pool.map(get_citation, dois.values())
+        return dict(zip(dois, results))
 
 class PublicationExport:
     '''Base class providing author, journal, and publication export helpers.
@@ -194,6 +251,25 @@ class PublicationExport:
                 mardmo_property = "descriptionLong",
                 wikibase_property = "description",
             )
+
+    def _add_references(self, payload, references, mapping):
+        '''Add one statement per reference answer (DOI, IDs, URLs) of the current subject.
+
+        Args:
+            payload:    :class:`~MaRDMO.payload.GeneratePayload` instance.
+            references: Reference answers ``{collection_index: [option_uri, text]}``.
+            mapping:    Tuples ``(option key, portal property, datatype)``, e.g.
+                        :data:`~MaRDMO.constants.SOFTWARE_REFERENCES`.
+        '''
+        options = get_options()
+        for option_key, prop, datatype in mapping:
+            entry = find_reference(references, options[option_key])
+            text = (entry[1] or '').strip() if entry else ''
+            if text:
+                payload.add_answer(
+                    verb = self.properties[prop],
+                    object_and_type = [text, datatype],
+                )
 
     def _export_journals(self, payload, publications: dict):
         '''Add journal item entries (instance-of + ISSN) for all publications.

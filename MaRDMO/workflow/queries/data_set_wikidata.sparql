@@ -2,7 +2,7 @@ SELECT
 ?id
 (REPLACE(STR(?id), "http://www.wikidata.org/entity/", "wikidata:") AS ?qid)
 ?size_value ?size_unit ?size_record ?file_format
-?DOI ?URL ?end_time
+?DOI ?end_time
 (GROUP_CONCAT(DISTINCT CONCAT(?pub, " || ", ?publ, " || ", ?pubd); separator=" <|> ") AS ?publication)
 (COALESCE(?bot_binary, ?bot_text,    "") AS ?binary_or_text)
 (COALESCE(?prop_yes,   ?prop_no,     "") AS ?proprietary)
@@ -40,10 +40,6 @@ WHERE {{
         ?id wdt:P356 ?DOI.
     }}
 
-    OPTIONAL {{
-        ?id wdt:P2699 ?URL.
-    }}
-
     OPTIONAL {{ ?id wdt:P4424 wd:Q17051824. BIND("YesText" AS ?pub_raw) }}
     OPTIONAL {{ ?id wdt:P4424 wd:Q17155735. BIND("YesText" AS ?arc_raw) }}
 
@@ -74,5 +70,5 @@ WHERE {{
     }}
 }}
 
-GROUP BY ?id ?size_value ?size_unit ?size_record ?file_format ?DOI ?URL ?end_time
+GROUP BY ?id ?size_value ?size_unit ?size_record ?file_format ?DOI ?end_time
          ?bot_binary ?bot_text ?prop_yes ?prop_no ?pub_raw ?arc_raw

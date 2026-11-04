@@ -1,0 +1,29 @@
+# Part 5 of 10 of the MaRDI query formulation_mardi.sparql (see README.md).
+SELECT
+?id
+?is_dimensionless
+?is_dimensional
+?is_space_continuous
+?is_space_discrete
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{dimensionless equation}. BIND("True" AS ?is_dimensionless_raw) }}
+
+    BIND(COALESCE(?is_dimensionless_raw, "False") AS ?is_dimensionless)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{dimensional equation}. BIND("True" AS ?is_dimensional_raw) }}
+
+    BIND(COALESCE(?is_dimensional_raw, "False") AS ?is_dimensional)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{continuous-space equation}. BIND("True" AS ?is_space_continuous_raw) }}
+
+    BIND(COALESCE(?is_space_continuous_raw, "False") AS ?is_space_continuous)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{discrete-space equation}. BIND("True" AS ?is_space_discrete_raw) }}
+
+    BIND(COALESCE(?is_space_discrete_raw, "False") AS ?is_space_discrete)
+}}
+GROUP BY ?id ?is_dimensionless ?is_dimensional ?is_space_continuous ?is_space_discrete

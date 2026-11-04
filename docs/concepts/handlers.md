@@ -27,10 +27,82 @@ The sequence when a user picks a *Mathematical Model* from the portal:
 1. RDMO emits `value_created` / `value_updated` for the model ID field.
 2. The router dispatches to `Information.model(instance)`.
 3. `model()` calls `_entry()`, which collects the selected QID and calls `_fill_model_batch()`.
-4. `_fetch_by_source()` fires a **single SPARQL query** (against MaRDI Portal, and optionally Wikidata) to retrieve the model's metadata.
+4. `_fetch_by_source()` fires a SPARQL query (against MaRDI Portal, and optionally Wikidata) to retrieve the model's metadata; for the large MaRDI queries it runs the query in parts (see [Split Queries](#split-queries)).
 5. `_fill_model_batch()` writes labels, descriptions, aliases, properties, and relations into the appropriate questionnaire pages via `value_editor()`.
 6. For each related sub-entity type (Research Problems, Mathematical Formulations, Computational Tasks, …), `_fill_model_batch()` calls `_hydrate_relatants()`, which in turn calls the corresponding `_fill_*_batch()` method **directly** — no signal is emitted.
-7. Each `_fill_*_batch()` call batches its SPARQL query across **all** entities of that type at once.  For example, if the selected model contains ten Mathematical Formulations, all ten are fetched in a single query and then distributed across the ten questionnaire pages.  The same applies to linked Research Problems, Computational Tasks, and so on.
+7. Each `_fill_*_batch()` call batches its SPARQL query across **all** entities of that type at once.  For example, if the selected model contains ten Mathematical Formulations, all ten are fetched in a single query and then distributed across the ten questionnaire pages.  The same applies to linked Research Problems, Computational Tasks, and so on.  Linked publications are fetched the same way, with one query per source (MaRDI Portal, Wikidata) for up to 50 publications.
 8. A `visited` set is passed through the entire call tree to prevent infinite loops when entities reference each other cyclically.
 
 The batching principle ensures that the number of SPARQL queries scales with the number of distinct *entity types* in the cascade, not with the number of individual entities.
+
+## Split Queries
+
+The MaRDI Portal answers queries with many `OPTIONAL` blocks slowly: the cost grows faster than the
+number of blocks, and blocks with several values each (aliases, relations, publications) multiply
+each other's rows before they are grouped.  The MaRDI queries for models, formulations, tasks and
+quantities (and their basics variants) therefore exist only as parts, in `model/queries/split/`
+(`task_mardi_1.sparql`, `task_mardi_2.sparql`, …), each with about four blocks.  The handlers still
+name the query by its path (`model/queries/task_mardi.sparql`), and `_fetch_by_source()` runs its parts
+instead; every other query, including all Wikidata queries, is a single file as before.
+
+`query_sparql_parts()` runs the parts one after another and merges their rows:
+
+- the first part contains the required patterns and decides which items exist and how many rows each
+  has; if it finds nothing, the other parts are not run;
+- every further part returns one row per item with its own columns, which are added to that item's rows;
+- if any part fails, no item of the batch is filled.
+
+The merged rows have the shape of a single query's rows, so the parsing in `model/models.py` does not
+depend on the split.  Which part requests which column, and the rules for changing the parts, are
+listed in the [README of the split queries](https://github.com/MaRDI4NFDI/MaRDMO-Plugin/blob/main/MaRDMO/model/queries/split/README.md).
+
+## Database Writes and Network Requests
+
+Selecting a large item writes hundreds of values.  The router therefore runs every
+handler inside `helpers.batched_writes()`:
+
+- On PostgreSQL and MySQL, the writes of `value_editor()` are collected in one
+  transaction, which is committed before every request to an external service and
+  at the end.  The database is never locked while MaRDMO waits for the network.
+  If a handler fails, only the writes since the last commit are rolled back.
+- On SQLite, every value is still committed on its own.  SQLite locks the whole
+  database, and a longer transaction that reads before it writes fails with
+  *database is locked* when another user saves at the same time.
+- Attributes looked up by URI are remembered until the handler finishes.
+
+All requests to external services go through `queries.http_session()`, which
+commits the pending writes and reuses one HTTP session per thread, so repeated
+requests to the same service keep their connection open.
+
+A handler runs inside the request that saves the answer, so a struggling portal must not
+hold it for minutes:
+
+- A SPARQL query is given up after 30 seconds and retried once on a timeout, a
+  connection error, or the answers 429, 502, 503 and 504, after the portal's
+  `Retry-After` (at most 10 seconds) or 2 seconds.  If it fails again, the items of
+  that query are not filled and the failure is logged.
+- `wbgetentities` retries with backoff, caps every wait (including `Retry-After`) at
+  20 seconds and stops retrying after 45 seconds per batch.
+- The same rule (`queries.request_with_retry()`) retries the portal's TeX check
+  once; the checks before an export retry twice (see [Export](export.md)).
+
+The portal returns the values of a list column (relations, aliases, publications, …)
+in no fixed order.  `helpers.split_value()` sorts them, relatants thereby by ID, so
+adding the same item twice fills the same pages in the same order.
+
+## Pre-Save Validation
+
+In addition to the post-save handler dispatch, MaRDMO registers a `pre_save`
+receiver on the RDMO `Value` model.  Before an answer is written to the
+database, the router looks up the attribute URI in `PRESAVE_VALIDATOR_MAP`
+(assembled by `build_presave_validator_map()` in `builders.py`) and calls the
+matching validator.  A validator raises `rest_framework.exceptions.ValidationError`
+to reject the value; RDMO then shows the message below the question in the
+interview.
+
+Only answers saved through the interview are validated.  Writes made by the
+handlers themselves run inside `helpers.internal_write()` and skip these
+validators, so importing an item never fails because of a pre-save rule;
+imported data is checked before the export instead.  The rules, the
+places where they are applied, and the exceptions are described in
+[Validation](validation.md).

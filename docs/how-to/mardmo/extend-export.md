@@ -32,15 +32,20 @@ restructuring, this step can be skipped.
 
 ## 2. HTML Preview
 
-**File:** `<submodule>/templates/MaRDMO/<submodule>Template.html`
+**File:** `templates/MaRDMO/<catalog>Template.html` (e.g. `modelTemplate.html`,
+`workflowTemplate.html`), with shared blocks in `templates/MaRDMO/partials/`
 
 The answers dict (augmented by pre-processing if applicable) is passed to a Django
 template as context.  Add a new section to the relevant template to render the new
 entity's fields.
 
 !!! note
-    Errors (invalid URLs, missing required fields) are flagged with red text at
+    Errors (missing required fields, invalid values) are flagged with red text at
     this stage so the user can correct them before committing to the export.
+    Value formats are checked with the template filters in
+    `templatetags/mardmo_tags.py` (e.g. `url_problem`, `doi_problem`,
+    `count_problem`), which use the same rules as the checks and the export;
+    see [Validation](../../concepts/validation.md).
 
 ---
 
@@ -59,7 +64,9 @@ entry-point method:
 
 These methods validate the collected answers for completeness and consistency and
 return an error list that aborts the export if non-empty.  Add checks for any
-mandatory fields or cross-entity constraints introduced by the new entity.
+mandatory fields or cross-entity constraints introduced by the new entity.  For
+the format of individual values, reuse the shared rules in `validators.py` — see
+[How to Validate a New Field](validate-field.md).
 
 ---
 
@@ -102,8 +109,8 @@ object.
 
 **`add_multiple_relation(statement, optional_qualifier=None, reverse=False)`**  
 Add one statement per `(relation, relatant)` pair.  Supported optional qualifier
-types: `"series ordinal"`, `"assumes"`.  Forward/backward direction is read from
-the mapping data; set `reverse=True` to override.
+type: `"assumes"`.  Forward/backward direction is read from the mapping data; set
+`reverse=True` to override.
 
 ### Specialised helpers
 

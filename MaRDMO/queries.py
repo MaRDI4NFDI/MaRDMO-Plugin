@@ -4,22 +4,119 @@ Provides helpers for:
 
 * ``query_item`` / ``query_api`` – Wikibase ``wbsearchentities`` lookups
 * ``query_sparql`` / ``query_sparql_pool`` – SPARQL SELECT requests
+* ``query_sparql_parts`` – run the split parts of a query and merge their rows
+* ``sparql_string`` – escape text as a SPARQL string literal
 * ``query_sources`` / ``query_sources_with_user_additions`` – combined
   MaRDI + Wikidata search with optional user-defined entries
 * ``query_api_per_class`` – class-filtered full-text search on the MaRDI portal
+* ``http_session`` – shared HTTP session for all requests to external services
 '''
+import hashlib
+import json
 import logging
+import threading
+import time
 from multiprocessing.pool import ThreadPool
-from django.core.cache import cache
 
 import requests
+from django.core.cache import cache
+from rdmo.domain.models import Attribute
 
-from .getters import get_properties, get_url, get_user_entries
-from .helpers import extract_parts, rank_by_search_term
+from .constants import BASE_URI
+from .getters import get_properties, get_url
+from .helpers import commit_writes, extract_parts, rank_by_search_term
 
 logger = logging.getLogger(__name__)
 
-def query_item(label, description, api = get_url('mardi', 'api')):
+# Search results of the MaRDI Portal and Wikidata are reused for this long
+SEARCH_CACHE_TIMEOUT = 5 * 60
+
+# A SPARQL query is given up after this many seconds and retried once on a
+# timeout, a connection error or one of these answers, after the portal's
+# Retry-After (at most SPARQL_MAX_RETRY_WAIT seconds) or SPARQL_RETRY_WAIT;
+# request_with_retry() applies the same rule to other requests
+SPARQL_TIMEOUT = 30
+SPARQL_RETRY_STATUS = (429, 502, 503, 504)
+SPARQL_RETRY_WAIT = 2
+SPARQL_MAX_RETRY_WAIT = 10
+# A failed export check stops the export, so these requests are retried twice
+# (pauses in seconds), and all of a check's requests give up after
+# EXPORT_CHECK_DEADLINE seconds
+EXPORT_RETRY_WAITS = (2, 5)
+EXPORT_CHECK_DEADLINE = 120
+
+_SESSIONS = threading.local()
+
+
+def http_session():
+    '''Return this thread's HTTP session for requests to external services.
+
+    Reusing the session keeps connections open, so repeated requests to the
+    same service skip the connection setup.  MaRDMO's pending writes are
+    committed first (see :func:`~MaRDMO.helpers.batched_writes`), so no
+    transaction stays open while waiting for the answer.
+    '''
+    commit_writes()
+    session = getattr(_SESSIONS, 'session', None)
+    if session is None:
+        session = _SESSIONS.session = requests.Session()
+    return session
+
+
+def request_with_retry(method, url, waits=(SPARQL_RETRY_WAIT,), deadline=None, **kwargs):
+    '''Send a request with :func:`http_session` and retry it on transient failures.
+
+    A timeout, a connection error, or one of :data:`SPARQL_RETRY_STATUS` is
+    retried after the next pause in *waits*, or after the answer's
+    ``Retry-After`` (at most :data:`SPARQL_MAX_RETRY_WAIT` seconds).  Other
+    answers, including 400, are returned at once.
+
+    Args:
+        method:   HTTP method (``'get'`` or ``'post'``).
+        url:      Request URL.
+        waits:    Pauses (seconds) before the retries; ``()`` sends the
+                  request once.
+        deadline: :func:`time.monotonic` value after which no retry starts;
+                  the timeout of each attempt is shortened to end by then.
+        **kwargs: Passed on to :meth:`requests.Session.request`.
+
+    Returns:
+        The last :class:`requests.Response`, whatever its status code.
+
+    Raises:
+        requests.exceptions.RequestException: If the last attempt failed
+            without an answer.
+    '''
+    timeout = kwargs.pop('timeout', None)
+    for wait in (*waits, None):
+        if deadline is not None and timeout is not None:
+            kwargs['timeout'] = max(1, min(timeout, deadline - time.monotonic()))
+        else:
+            kwargs['timeout'] = timeout
+        error = None
+        try:
+            response = http_session().request(method, url, **kwargs)
+            if wait is None or response.status_code not in SPARQL_RETRY_STATUS:
+                return response
+            retry_after = response.headers.get('Retry-After')
+            if retry_after and str(retry_after).isdigit():
+                wait = min(float(retry_after), SPARQL_MAX_RETRY_WAIT)
+            reason = f"status {response.status_code}"
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+            if wait is None:
+                raise
+            error, reason = e, type(e).__name__
+        if deadline is not None and time.monotonic() + wait >= deadline:
+            logger.warning("Request to %s failed (%s); no time left for a retry.", url, reason)
+            if error is not None:
+                raise error
+            return response
+        logger.warning("Request to %s failed (%s); retrying in %s s.", url, reason, wait)
+        time.sleep(wait)
+    return response  # not reached: the last attempt returns or raises
+
+
+def query_item(label, description, api = get_url('mardi', 'api'), waits=(), deadline=None):
     '''Search a Wikibase API for an item matching *label* and *description* exactly.
 
     Skips the request if *description* is empty or the placeholder string
@@ -29,16 +126,20 @@ def query_item(label, description, api = get_url('mardi', 'api')):
         label:       Label (or alias) to search for (case-insensitive).
         description: Exact description the matched item must have.
         api:         Wikibase ``wbsearchentities`` API URL; defaults to MaRDI Portal.
+        waits:       Pauses before retries of the search (see
+                     :func:`request_with_retry`); ``()`` searches once.
+        deadline:    :func:`time.monotonic` value after which no retry starts.
 
     Returns:
-        The Wikibase QID string of the first match, or ``None`` if no match.
+        The Wikibase QID string of the first match, or ``None`` if no match
+        (also if the search failed).
     '''
     # Only check Items with description
     if not description or description == 'No Description Provided!':
         return None
 
     # Get data from API
-    data = query_api(api, label)
+    data = query_api(api, label, waits=waits, deadline=deadline)
 
     # Normalize input label for comparison (case insensitive)
     norm_label = label.strip().lower()
@@ -61,22 +162,31 @@ def query_item(label, description, api = get_url('mardi', 'api')):
 
     return None
 
-def query_api(api_url, search_term, timeout=5):
+def query_api(api_url, search_term, timeout=5, raise_errors=False, waits=(), deadline=None):
     '''Search a Wikibase API endpoint for items whose label matches *search_term*.
 
     Uses the ``wbsearchentities`` action with ``limit=10``.
 
     Args:
-        api_url:     Full URL of the Wikibase API endpoint.
-        search_term: Label string to search for.
-        timeout:     Request timeout in seconds (default 5).
+        api_url:      Full URL of the Wikibase API endpoint.
+        search_term:  Label string to search for.
+        timeout:      Request timeout in seconds (default 5).
+        raise_errors: Raise request and JSON errors instead of returning an
+                      empty list, so callers can tell a failure from no hits.
+        waits:        Pauses before retries (see :func:`request_with_retry`);
+                      ``()`` searches once.
+        deadline:     :func:`time.monotonic` value after which no retry starts.
 
     Returns:
-        List of raw Wikibase search-result dicts; empty list on any error.
+        List of raw Wikibase search-result dicts; empty list on any error
+        (unless *raise_errors*).
     '''
     try:
-        response = requests.get(
+        response = request_with_retry(
+            'get',
             api_url,
+            waits=waits,
+            deadline=deadline,
             params={
                 'action': 'wbsearchentities',
                 'format': 'json',
@@ -94,41 +204,75 @@ def query_api(api_url, search_term, timeout=5):
         except ValueError:
             # Malformed JSON
             logger.error("Failed to parse JSON.")
+            if raise_errors:
+                raise
     except requests.exceptions.RequestException as e:
         logger.error("Request failed due to %s", e)
+        if raise_errors:
+            raise
 
     return []
 
-def query_sparql(query, sparql_endpoint):
+def sparql_string(value):
+    '''Return *value* as a double-quoted SPARQL string literal.
+
+    Escapes backslashes, quotes, and line breaks so that arbitrary user text
+    (multi-line descriptions, Windows paths, LaTeX, apostrophes) yields a
+    valid query.
+    '''
+    escaped = (
+        str(value)
+        .replace('\\', '\\\\')
+        .replace('"', '\\"')
+        .replace('\n', '\\n')
+        .replace('\r', '\\r')
+        .replace('\t', '\\t')
+    )
+    return f'"{escaped}"'
+
+def query_sparql(query, sparql_endpoint, strict=False, waits=(SPARQL_RETRY_WAIT,), deadline=None):
     '''Execute a SPARQL SELECT query against *sparql_endpoint* and return bindings.
 
     Args:
         query:           SPARQL SELECT query string (UTF-8 encoded on the wire).
         sparql_endpoint: URL of the SPARQL endpoint (e.g. the MaRDI or Wikidata endpoint).
+        strict:          If ``True``, return ``None`` instead of ``[]`` when the
+                         query fails, so callers can tell "failed" from "no results".
+        waits:           Pauses before the retries (see :func:`request_with_retry`).
+        deadline:        :func:`time.monotonic` value after which no retry starts.
+
+    A query that times out (after :data:`SPARQL_TIMEOUT` seconds), cannot
+    connect, or is answered with one of :data:`SPARQL_RETRY_STATUS` is
+    retried once (or once per pause in *waits*).
 
     Returns:
-        List of result-binding dicts from ``results.bindings``; empty list on
-        any network error, HTTP error, or missing endpoint.
+        List of result-binding dicts from ``results.bindings``; on any network
+        error, HTTP error, invalid answer, or missing endpoint an empty list
+        (or ``None`` with *strict*).
     '''
+    failed = None if strict else []
+
     if not sparql_endpoint:
         logger.warning("SPARQL query attempted without a valid endpoint.")
-        return []
+        return failed
 
     try:
-        response = requests.post(
+        response = request_with_retry(
+            'post',
             sparql_endpoint,
+            waits=waits,
+            deadline=deadline,
             data=query.encode("utf-8"),
             headers={
                 "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
                 "Content-Type": "application/sparql-query; charset=UTF-8",
                 "Accept": "application/sparql-results+json"
             },
-            timeout = 60
+            timeout=SPARQL_TIMEOUT
         )
         # Check if request was successful
         if response.status_code == 200:
             return response.json().get('results', {}).get('bindings', [])
-
         logger.error(
             "SPARQL request to %s failed with status %s: %s",
             sparql_endpoint,
@@ -136,41 +280,117 @@ def query_sparql(query, sparql_endpoint):
             response.text,
         )
 
-        return []
-
-    except requests.exceptions.ConnectionError:
-        logger.error(
-            "SPARQL query failed: Unable to connect to the %s.",
-            sparql_endpoint
-        )
+    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+        logger.error("SPARQL query to %s failed: %s", sparql_endpoint, e)
 
     except requests.exceptions.RequestException as e:
         logger.exception("SPARQL request failed: %s", e)
 
-    return []
+    except ValueError as e:
+        logger.error("SPARQL answer from %s is not valid JSON: %s", sparql_endpoint, e)
+
+    return failed
+
+def query_sparql_parts(queries, sparql_endpoint):
+    '''Run the parts of a split query one after another and merge their rows.
+
+    The first part decides which items exist and how many rows each has,
+    exactly like the full query; every further part returns one row per item
+    with its own columns, which are added to that item's rows.
+
+    Args:
+        queries:         Part query strings, the deciding part first.
+        sparql_endpoint: URL of the SPARQL endpoint.
+
+    Returns:
+        List of result-binding dicts shaped like those of the full query; an
+        empty list if any part fails, so no item is filled half.
+    '''
+    results = []
+    for number, query in enumerate(queries, 1):
+        rows = query_sparql(query, sparql_endpoint, strict=True)
+        if rows is None:
+            logger.warning(
+                "Part %s of %s of a split SPARQL query failed; no items are filled from it.",
+                number, len(queries),
+            )
+            return []
+        if not rows and not results:
+            return []                 # no item exists, so the other parts have nothing to add
+        results.append(rows)
+
+    columns = {}
+    for rows in results[1:]:
+        for row in rows:
+            columns.setdefault(row['id']['value'], {}).update(row)
+    return [{**columns.get(row['id']['value'], {}), **row} for row in results[0]]
 
 def query_sparql_pool(query_input):
     '''Execute multiple SPARQL queries in parallel and return a keyed result dict.
 
     Args:
         query_input: Dict mapping a source key to a ``(query, endpoint)`` tuple,
-                     e.g. ``{"mardi": (query_str, url), "wikidata": ...}``.
+                     e.g. ``{"mardi": (query_str, url), "wikidata": ...}``;
+                     a third element ``True`` makes a failed query give
+                     ``None`` (see the *strict* argument of :func:`query_sparql`).
 
     Returns:
         Dict with the same keys as *query_input*, each mapping to the list of
         SPARQL result bindings returned by :func:`query_sparql`.
     '''
-    pool = ThreadPool(processes = len(query_input))
-    # Map each endpoint's query and store results in a dictionary
-    results = pool.map(lambda args: query_sparql(*args), query_input.values())
+    # Map each endpoint's query and store results in a dictionary; the pool
+    # is closed afterwards so its worker threads do not linger
+    commit_writes()
+    with ThreadPool(processes = len(query_input)) as pool:
+        results = pool.map(lambda args: query_sparql(*args), query_input.values())
     data = dict(zip(query_input.keys(), results))
     return data
+
+def _cached_search(source, search, item_class, func):
+    '''Return ``func(search)`` for *source*, reusing results from the last five minutes.
+
+    Repeated searches — while typing, or for the same entity type on another
+    page — then do not query the portal again.  The results do not depend on
+    the project, so they cannot become outdated by the user's own answers.
+    *func* must raise on request errors; a failed search returns no options
+    and is not cached, so the next search tries again.
+    '''
+    classes = [item_class] if isinstance(item_class, str) else list(item_class or [])
+    key = 'mardmo_search_' + hashlib.sha1(
+        json.dumps([source, search, classes]).encode('utf-8')
+    ).hexdigest()
+    results = cache.get(key)
+    if results is None:
+        try:
+            results = func(search)
+        except (requests.exceptions.RequestException, ValueError):
+            return []
+        cache.set(key, results, SEARCH_CACHE_TIMEOUT)
+    return results
+
+
+def _label_description(option):
+    '''Return ``(label, description)`` of an option as the export's duplicate check compares them.
+
+    The label is compared case-insensitively, the description exactly (see
+    :func:`query_item`).  Options without a description give ``None``:
+    a matching label alone does not make two items the same.
+    '''
+    label, description, _ = extract_parts(option['text'])
+    if not description or description == 'No Description Provided!':
+        return None
+    return label.strip().lower(), description.strip()
+
 
 def query_sources(search, item_class=[], sources=None, not_found=True):
     '''Query one or more knowledge-graph sources for items matching *search*.
 
-    Queries the requested sources in parallel, merges the results, and sorts
-    them by relevance to *search* using :func:`~.helpers.rank_by_search_term`.
+    Queries the requested sources in parallel (results are cached for five
+    minutes, see :func:`_cached_search`), merges the results, and sorts them by
+    relevance to *search* using :func:`~.helpers.rank_by_search_term`.
+    A Wikidata result with the same label and description as a MaRDI result
+    is left out: it is the same item, and the export would ask the user to
+    select the MaRDI one.
 
     Args:
         search:     Free-text search string.
@@ -190,12 +410,15 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
 
     source_functions = {}
     if 'mardi' in sources:
-        source_functions['mardi'] = lambda s: query_api_per_class(s, item_class)
+        source_functions['mardi'] = lambda s: _cached_search(
+            'mardi', s, item_class, lambda t: query_api_per_class(t, item_class, raise_errors=True))
     if 'wikidata' in sources:
-        source_functions['wikidata'] = lambda s: query_api(get_url('wikidata', 'api'), s)
+        source_functions['wikidata'] = lambda s: _cached_search(
+            'wikidata', s, None, lambda t: query_api(get_url('wikidata', 'api'), t, raise_errors=True))
 
-    pool = ThreadPool(processes=len(source_functions))
-    results = pool.map(lambda func: func(search), source_functions.values())
+    # Runs on every autocomplete search; close the pool so threads do not pile up
+    with ThreadPool(processes=len(source_functions)) as pool:
+        results = pool.map(lambda func: func(search), source_functions.values())
     results_dict = dict(zip(source_functions.keys(), results))
 
     options = []
@@ -218,6 +441,13 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
             ]
         options += raw
 
+    # A Wikidata item with the label and description of a MaRDI item is that
+    # item; offer only the MaRDI one, the export would ask to select it anyway
+    mardi_items = {_label_description(opt) for opt in options if opt['id'].startswith('mardi:')}
+    mardi_items.discard(None)
+    options = [opt for opt in options
+               if not (opt['id'].startswith('wikidata:') and _label_description(opt) in mardi_items)]
+
     options.sort(key=lambda opt: rank_by_search_term(opt, search))
 
     if not_found:
@@ -229,7 +459,8 @@ def query_sources_with_user_additions(search, project, setup):
     '''Fetch KG options, prepend matching user-defined entries, and optionally allow creation.
 
     Combines external source results (via :func:`query_sources`) with entries
-    the user has already added to the questionnaire (cached by project/attribute).
+    the user has already added to the questionnaire.  These are read from the
+    database on every call, so entries saved a moment ago are offered too.
     Optionally inserts a creation option for new entries.
 
     Args:
@@ -264,21 +495,11 @@ def query_sources_with_user_additions(search, project, setup):
         options = []
 
     if setup.get('query_attributes'):
-        # Get or build user entries dictionary
-        cache_key = f"user_entries_{project.id}_{','.join(setup['query_attributes'])}"
-        dic = cache.get(cache_key)
-
-        if dic is None:
-            logger.debug("Cache miss for %s, querying database", cache_key)
-            try:
-                dic = query_user_entries(project, setup)
-            except Exception as e:
-                logger.error("User entries query failed: %s", e)
-                dic = {}
-            cache.set(cache_key, dic, timeout=180)
-            logger.debug("Cached user entries for %s", cache_key)
-        else:
-            logger.debug("Cache hit for %s", cache_key)
+        try:
+            dic = query_user_entries(project, setup)
+        except Exception as e:
+            logger.error("User entries query failed: %s", e)
+            dic = {}
 
         # Filter and merge options
         options_user = [
@@ -299,8 +520,8 @@ def query_sources_with_user_additions(search, project, setup):
 def query_user_entries(project, setup):
     '''Build a label→ID dict from entries the user has already added to the questionnaire.
 
-    Reads ID, Name, and Description values from the RDMO database for each
-    attribute listed in ``setup["query_attributes"]``, aligns them by
+    Reads the ID, Name, and Description values of all attributes listed in
+    ``setup["query_attributes"]`` with two database queries, aligns them by
     ``set_index``/``set_prefix``, and returns only entries whose source is not
     in ``setup["sources"]`` (i.e. not already covered by KG results).
 
@@ -312,61 +533,48 @@ def query_user_entries(project, setup):
         Dict mapping display strings (``"Label (Description)"`` or
         ``"Label (Description) [source]"``) to ``{"id": item_id}`` dicts.
     '''
+    uris = {
+        f'{BASE_URI}domain/{query_attribute}/{question}': (query_attribute, question)
+        for query_attribute in setup['query_attributes']
+        for question in ('id', 'name', 'description')
+    }
+    attributes = {
+        attribute.id: uris[attribute.uri]
+        for attribute in Attribute.objects.filter(uri__in=uris)
+    }
+
+    # Align id/name/description per entity type and entity index
+    entries = {}
+    for value in project.values.filter(snapshot=None, attribute_id__in=attributes):
+        query_attribute, question = attributes[value.attribute_id]
+        idx = value.set_index if question == 'id' else int(value.set_prefix)
+        entries.setdefault((setup['query_attributes'].index(query_attribute), idx), {})[question] = value
+
     dic = {}
-
-    for query_attribute in setup['query_attributes']:
-
-        # Get entries from database
-        values = get_user_entries(
-            project=project,
-            query_attribute=query_attribute,
-            values={}
-        )
-
-        # Align id/name/description by numeric index
-        entries_by_idx = {}
-        for value_id in values['id']:
-            idx = value_id.set_index
-            entries_by_idx.setdefault(idx, {})['id'] = value_id
-
-        for value_name in values['name']:
-            idx = int(value_name.set_prefix)
-            entries_by_idx.setdefault(idx, {})['name'] = value_name
-
-        for value_desc in values['description']:
-            idx = int(value_desc.set_prefix)
-            entries_by_idx.setdefault(idx, {})['description'] = value_desc
-
-        # Process aligned entries
-        for idx in sorted(entries_by_idx.keys()):
-            entry = entries_by_idx[idx]
-
-            if not entry['id'].text:
-                continue
-
-            # Build item
-            if entry['id'].text == 'not found':
-                # User-defined item
-                label = entry['name'].text or "No Label Provided!"
-                description = entry['description'].text or "No Description Provided!"
-                item_id = 'not found'
-                source = 'user'
+    for _, entry in sorted(entries.items()):
+        if 'id' not in entry or not entry['id'].text:
+            continue
+        if entry['id'].text == 'not found':
+            # User-defined item
+            name, description = entry.get('name'), entry.get('description')
+            label = (name.text if name else '') or "No Label Provided!"
+            description = (description.text if description else '') or "No Description Provided!"
+            item_id = 'not found'
+            source = 'user'
+        else:
+            # External ID item
+            label, description, source = extract_parts(entry['id'].text)
+            _, item_id = entry['id'].external_id.split(':')
+            item_id = f"{source}:{item_id}"
+        # Add to dictionary if not from primary sources
+        if source not in setup['sources']:
+            if source == 'user':
+                dic[f"{label} ({description})"] = {'id': item_id}
             else:
-                # External ID item
-                label, description, source = extract_parts(entry['id'].text)
-                _, item_id = entry['id'].external_id.split(':')
-                item_id = f"{source}:{item_id}"
-
-            # Add to dictionary if not from primary sources
-            if source not in setup['sources']:
-                if source == 'user':
-                    dic[f"{label} ({description})"] = {'id': item_id}
-                else:
-                    dic[f"{label} ({description}) [{source}]"] = {'id': item_id}
-
+                dic[f"{label} ({description}) [{source}]"] = {'id': item_id}
     return dic
 
-def query_api_per_class(search_term: str, item_class) -> list[dict]:
+def query_api_per_class(search_term: str, item_class, raise_errors: bool = False) -> list[dict]:
     '''Search the MaRDI portal for items belonging to one or more Wikibase classes.
 
     Performs a MediaWiki full-text search filtered by
@@ -379,10 +587,12 @@ def query_api_per_class(search_term: str, item_class) -> list[dict]:
         search_term: Free-text search string (appended with ``*`` for prefix matching).
         item_class:  QID string or list of QID strings; e.g. ``"Q42"`` or
                      ``["Q42", "Q43"]``.
+        raise_errors: Raise request errors instead of returning an empty list,
+                     so callers can tell a failure from no hits.
 
     Returns:
         List of ``{"id": "mardi:<QID>", "text": "Label (Description) [mardi]"}``
-        dicts; empty list on any network error or no hits.
+        dicts; empty list on any network error (unless *raise_errors*) or no hits.
     '''
     if isinstance(item_class, str):
         item_class = [item_class]
@@ -392,7 +602,7 @@ def query_api_per_class(search_term: str, item_class) -> list[dict]:
     api_url      = get_url('mardi', 'api')
 
     try:
-        search_resp = requests.get(
+        search_resp = http_session().get(
             api_url,
             params={
                 'action':      'query',
@@ -410,6 +620,8 @@ def query_api_per_class(search_term: str, item_class) -> list[dict]:
         hits = search_resp.json().get('query', {}).get('search', [])
     except requests.exceptions.RequestException as e:
         logger.error("Class-based MaRDI search failed: %s", e)
+        if raise_errors:
+            raise
         return []
 
     if not hits:
@@ -418,7 +630,7 @@ def query_api_per_class(search_term: str, item_class) -> list[dict]:
     qids = [hit['title'].removeprefix('Item:') for hit in hits]
 
     try:
-        entity_resp = requests.get(
+        entity_resp = http_session().get(
             api_url,
             params={
                 'action':    'wbgetentities',
@@ -434,6 +646,8 @@ def query_api_per_class(search_term: str, item_class) -> list[dict]:
         entities = entity_resp.json().get('entities', {})
     except requests.exceptions.RequestException as e:
         logger.error("MaRDI entity fetch failed: %s", e)
+        if raise_errors:
+            raise
         return []
 
     results = []

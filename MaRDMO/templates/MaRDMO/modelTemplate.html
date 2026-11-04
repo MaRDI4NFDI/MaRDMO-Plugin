@@ -1,38 +1,5 @@
- <head>
- {% load static %}
- <script type="text/javascript" id="MathJax-script" async
-         src="{% static 'MaRDMO/js/mathjax/es5/tex-mml-chtml.js' %}">
- </script>
- <style>
-         table {
-           margin-left: 0;
-           margin-right: auto;
-           margin-bottom: 24px;
-           border-spacing: 0;
-           border-bottom: 2px solid black;
-           border-top: 2px solid black;
-         }
-         table th {
-           padding: 3px 10px;
-           background-color: white;
-           border-top: none;
-           border-left: 1px solid black;
-           border-right: 1px solid black;
-           border-bottom: 1px solid black;
-           text-align: center;
-         }
-         table td {
-           padding: 3px 10px;
-           border-top: 1px solid black;
-           border-left: 1px solid black;
-           border-bottom: 1px solid black;
-           border-right: 1px solid black;
-           text-align: center;
-         }
-</style>
+{% load mardmo_tags %}
 
-</head>
-<body>
 <h1 id="title"> {{ title }} </h1>
 
 <h1 id="MathematicalModel"> Mathematical Models </h1>
@@ -69,7 +36,7 @@
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MM2MM" title="Mathematical Models" relations=values.RelationMM class="MATHEMATICAL MODEL" empty_msg="False"%}
 
 {% empty %}
-    <strong style="color:black;">NO MODEL DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO MODEL DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="Task"> Computational Tasks </h1> 
@@ -103,7 +70,7 @@
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2CT" title="Computational Tasks" relations=values.RelationT class="COMPUTATIONAL TASK" empty_msg="False" %}
 
  {% empty %}
-    <strong style="color:black;">NO TASK DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO TASK DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="MathematicalFormulations"> Formulas </h1>
@@ -128,7 +95,7 @@
     {% include "MaRDMO/partials/_properties.html" with properties=values.Properties_Check %}
 
     {# Include Formulation Defining Formulas #}
-    {% include "MaRDMO/partials/_defining_formula.html" with formula=values.Formula definition="False" %}
+    {% include "MaRDMO/partials/_defining_formula.html" with formula=values.Formula formula_check=values.FormulaCheck definition="False" %}
 
     {# Include Formulation In Defining Formulas #}
     {% include "MaRDMO/partials/_in_defining_formula.html" with element=values.element %}
@@ -140,7 +107,7 @@
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_2" title="Formulas II" relations=values.RelationMF2 class="FORMULA" empty_msg="False" %}
 
 {% empty %}
-    <strong style="color:black;">NO FORMULA DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO FORMULA DOCUMENTED</strong>
 {% endfor %}
     
 <h1 id="Publication"> Publications </h1>
@@ -149,15 +116,8 @@
     {# Include Publication Name #}
     {% include "MaRDMO/partials/_name.html" with class="PUBLICATION" counter=forloop.counter name=values.Name prefix="P" %}
     
-    {% for reference in values.reference.values %}
-        {% if reference.0 == option.DOI %}
-            <b>DOI</b>: {{ reference.1 }} <br>
-	    {% endif %} 
-    {% empty %}
-        {% if 'not found' in values.ID %}
-            <strong style="color:red;">MISSING PUBLICATION DOI</strong>
-        {% endif %}
-    {% endfor %}
+    {# Include Publication DOI, Citation, Authors and Journal #}
+    {% include "MaRDMO/partials/_publication.html" with values=values %}
 
     {# Include Publication ID #}
     {% include "MaRDMO/partials/_id.html" with id=values.ID %}
@@ -166,7 +126,7 @@
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2E" title="Entities of the Mathematical Models" relations=values.RelationP class="MATHEMATICAL MODEL ENTITY" empty_msg="True" %}
 
 {% empty %}
-    <strong style="color:black;">NO PUBLICATION DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO PUBLICATION DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="ResearchField"> Academic Disciplines </h1>
@@ -191,7 +151,7 @@
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="AD2AD" title="other Academic Disciplines" relations=values.RelationRF class="ACADEMIC DISCIPLINE" empty_msg="False" %}
 
 {% empty %}
-    <strong style="color:black;">NO ACADEMIC DISCIPLINE DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO ACADEMIC DISCIPLINE DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="ResearchProblem"> Research Problems </h1>
@@ -210,7 +170,7 @@
     {% include "MaRDMO/partials/_detailed_description.html" with detailed_descriptions=values.descriptionLong %}
 
     {# Include Research Problem ID #}
-    {% include "MaRDMO/partials/_id.html" with class="RESERACH PROBLEM" id=values.ID %}
+    {% include "MaRDMO/partials/_id.html" with class="RESEARCH PROBLEM" id=values.ID %}
 
     {# Include Block for single Relation between Problem and Discipline #}
     {% include "MaRDMO/partials/_relation_block_single.html" with anchor="RP2AD" title="Academic Disciplines" relation="contained in Field" relatants=values.RelationRF class="ACADEMIC DISCIPLINE" empty_msg="True" %}
@@ -219,7 +179,7 @@
     {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="RP2RP" title="other Research Problems" relations=values.RelationRP class="RESEARCH PROBLEM" empty_msg="False"%}
 
 {% empty %}
-    <strong style="color:black;">NO RESEARCH PROBLEM DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO RESEARCH PROBLEM DOCUMENTED</strong>
 {% endfor %}
 
 <h1 id="QuantityQuantityKind"> Quantities / Quantity Kinds </h1>
@@ -241,7 +201,7 @@
     {% if values.QorQK %}
         {{ values.QorQK }}
     {% else %}
-        <strong style="color:red;">MISSING QUANTITY / QUANTITY KIND CLASS</strong>
+        <strong class="mardmo-error">MISSING QUANTITY / QUANTITY KIND CLASS</strong>
     {% endif %} <br>
 
     {% if values.reference %}
@@ -251,20 +211,20 @@
                     {% if reference.1 %}
                         <b>QUDT Quantity Kind ID</b>: {{ reference.1 }} <br>
                     {% else %}
-                        <b>QUDT Quantity Kind ID</b>: <strong style="color:red;">Missing QUDT Quantity Kind ID</strong> <br>
+                        <b>QUDT Quantity Kind ID</b>: <strong class="mardmo-error">Missing QUDT Quantity Kind ID</strong> <br>
                     {% endif %}
                 {% else %}
-                    <b>QUDT Quantity Kind ID</b>: <strong style="color:red;">{{ reference.1 }} Limited to Quantity Kinds</strong> <br>
+                    <b>QUDT Quantity Kind ID</b>: {{ reference.1 }} <strong class="mardmo-error">Limited to Quantity Kinds</strong> <br>
                 {% endif %}
             {% elif reference.0 == option.qudt_constant_id %}
                 {% if values.QorQK == "Quantity" %}
                     {% if reference.1 %}
                         <b>QUDT Constant ID</b>: {{ reference.1 }} <br>
                     {% else %}
-                        <b>QUDT Constant ID</b>: <strong style="color:red;">Missing QUDT Constant ID</strong> <br>
+                        <b>QUDT Constant ID</b>: <strong class="mardmo-error">Missing QUDT Constant ID</strong> <br>
                     {% endif %}
                 {% else %}
-                    <b>QUDT Constant ID</b>: <strong style="color:red;">{{ reference.1 }} Limited to Quantities</strong> <br>
+                    <b>QUDT Constant ID</b>: {{ reference.1 }} <strong class="mardmo-error">Limited to Quantities</strong> <br>
                 {% endif %}
             {% endif %} 
         {% endfor %}
@@ -281,7 +241,7 @@
         <h3 id="QuantityOrQuantityKindDefinition"> Definition of {{ values.QorQK }} </h3>
         
         {# Include Quantity / Quantity Kind Formulas #}
-        {% include "MaRDMO/partials/_defining_formula.html" with formula=values.Formula definition="True" %}
+        {% include "MaRDMO/partials/_defining_formula.html" with formula=values.Formula formula_check=values.FormulaCheck definition="True" %}
         
         {# Include Quantity / Quantity Kind In Defining Formulas #}
         {% include "MaRDMO/partials/_in_defining_formula.html" with element=values.element %}
@@ -306,7 +266,5 @@
 
      {% endif %}
 {% empty %}
-    <strong style="color:black;">NO QUANTITY / QUANTITY KIND DOCUMENTED</strong>
+    <strong class="mardmo-empty">NO QUANTITY / QUANTITY KIND DOCUMENTED</strong>
 {% endfor %}
-
-</body>

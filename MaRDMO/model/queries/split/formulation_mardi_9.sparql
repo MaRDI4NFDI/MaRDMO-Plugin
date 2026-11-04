@@ -1,0 +1,89 @@
+# Part 9 of 10 of the MaRDI query formulation_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?lbf, " || ", ?lbfl, " || ", ?lbfd); SEPARATOR=" <|> ") AS ?linearized_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?lf, " || ", ?lfl, " || ", ?lfd); SEPARATOR=" <|> ") AS ?linearizes)
+(GROUP_CONCAT(DISTINCT CONCAT(?hwff, " || ", ?hwffl, " || ", ?hwffd); SEPARATOR=" <|> ") AS ?has_weak_formulation)
+(GROUP_CONCAT(DISTINCT CONCAT(?iwff, " || ", ?iwffl, " || ", ?iwffd); SEPARATOR=" <|> ") AS ?is_weak_formulation_of)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?id wdt:{linearized by} ?lbfraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?lbfraw), STR(wd:))) AS ?lbf)
+        
+        ?lbfraw wdt:{instance of} wd:{formula}.
+        
+        OPTIONAL {{
+            ?lbfraw rdfs:label ?lbflraw.
+            FILTER (lang(?lbflraw) = 'en')
+        }}
+        BIND(COALESCE(?lbflraw, "No Label Provided!") AS ?lbfl)
+
+        OPTIONAL {{
+            ?lbfraw schema:description ?lbfdraw
+            FILTER (lang(?lbfdraw) = 'en')
+        }}
+        BIND(COALESCE(?lbfdraw, "No Description Provided!") AS ?lbfd)
+    }}
+
+    OPTIONAL {{
+        ?lfraw wdt:{linearized by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?lfraw), STR(wd:))) AS ?lf)
+        
+        ?lfraw wdt:{instance of} wd:{formula}.
+        
+        OPTIONAL {{
+            ?lfraw rdfs:label ?lflraw.
+            FILTER (lang(?lflraw) = 'en')
+        }}
+        BIND(COALESCE(?lflraw, "No Label Provided!") AS ?lfl)
+        
+        OPTIONAL {{
+            ?lfraw schema:description ?lfdraw
+            FILTER (lang(?lfdraw) = 'en')
+        }}
+        BIND(COALESCE(?lfdraw, "No Description Provided!") AS ?lfd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{has weak formulation} ?hwffraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?hwffraw), STR(wd:))) AS ?hwff)
+
+        ?hwffraw wdt:{instance of} wd:{formula}.
+
+        OPTIONAL {{
+            ?hwffraw rdfs:label ?hwfflraw.
+            FILTER (lang(?hwfflraw) = 'en')
+        }}
+        BIND(COALESCE(?hwfflraw, "No Label Provided!") AS ?hwffl)
+
+        OPTIONAL {{
+            ?hwffraw schema:description ?hwffdraw
+            FILTER (lang(?hwffdraw) = 'en')
+        }}
+        BIND(COALESCE(?hwffdraw, "No Description Provided!") AS ?hwffd)
+    }}
+
+    OPTIONAL {{
+        ?iwffraw wdt:{has weak formulation} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?iwffraw), STR(wd:))) AS ?iwff)
+
+        ?iwffraw wdt:{instance of} wd:{formula}.
+
+        OPTIONAL {{
+            ?iwffraw rdfs:label ?iwfflraw.
+            FILTER (lang(?iwfflraw) = 'en')
+        }}
+        BIND(COALESCE(?iwfflraw, "No Label Provided!") AS ?iwffl)
+
+        OPTIONAL {{
+            ?iwffraw schema:description ?iwffdraw
+            FILTER (lang(?iwffdraw) = 'en')
+        }}
+        BIND(COALESCE(?iwffdraw, "No Description Provided!") AS ?iwffd)
+    }}
+}}
+GROUP BY ?id

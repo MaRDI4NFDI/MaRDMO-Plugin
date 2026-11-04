@@ -1,0 +1,13 @@
+{# Neutralise TeX commands that put links, styles, classes or IDs into the page   #}
+{# (e.g. \href{javascript:...}{x}); their content is still rendered.              #}
+{# Include before the MathJax script; merges into an existing window.MathJax.     #}
+<script>
+window.MathJax = window.MathJax || {};
+window.MathJax.tex = window.MathJax.tex || {};
+window.MathJax.tex.macros = Object.assign(window.MathJax.tex.macros || {}, {
+    href:  ['{#2}', 2],
+    style: ['{#2}', 2],
+    'class': ['{#2}', 2],
+    cssId: ['{#2}', 2]
+});
+</script>

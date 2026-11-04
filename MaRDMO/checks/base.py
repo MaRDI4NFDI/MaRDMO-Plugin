@@ -10,7 +10,33 @@ from ..constants import (
     CATALOG_MODEL_BASICS, CATALOG_WORKFLOW,
 )
 from ..getters import get_mathmoddb, get_mathalgodb
-from ..helpers import is_valid_url
+from ..getters import get_options
+from ..helpers import find_reference
+from ..patterns import LINE_BREAK_RE
+from ..validators import doi_problem, short_description_problem, swmath_problem, url_problem, url_schemes
+
+# Reference answers to check: (option key, label in messages, noun for "no ... provided")
+SOFTWARE_REFERENCE_CHECKS = (
+    ('DOI',             'DOI',             'ID'),
+    ('SWMATH',          'swMath ID',       'ID'),
+    ('DESCRIPTION_URL', 'Description URL', 'URL'),
+    ('SOURCECODE_URL',  'Repository URL',  'URL'),
+)
+BENCHMARK_REFERENCE_CHECKS = (
+    ('DOI',             'DOI',             'ID'),
+    ('MORWIKI',         'MORwiki ID',      'ID'),
+    ('DESCRIPTION_URL', 'Description URL', 'URL'),
+    ('SOURCECODE_URL',  'Repository URL',  'URL'),
+)
+
+# Workflow textarea answers besides the procedure: answer key -> field label
+_WORKFLOW_SINGLE_LINE_FIELDS = {
+    'mathematical':     'Mathematical Reproducibility',
+    'runtime':          'Runtime Reproducibility',
+    'result':           'Reproducibility of Results',
+    'originalplatform': 'Reproducibility on original Hardware or Instrument',
+    'otherplatform':    'Reproducibility on other Hardware or Instrument',
+}
 
 
 class ChecksBase:
@@ -103,21 +129,46 @@ class ChecksBase:
                     parent_class, parent_page,
                     f'Missing {item_class} Name ({label})'
                 ))
-            if not desc:
-                self.err.append(self._error(
-                    parent_class, parent_page,
-                    f'Missing {item_class} Short Description ({label})'
-                ))
-            elif len(desc) > 250:
-                self.err.append(self._error(
-                    parent_class, parent_page,
-                    f'{item_class} Short Description Too Long ({label})'
-                ))
-            elif desc == name:
-                self.err.append(self._error(
-                    parent_class, parent_page,
-                    f'Equal {item_class} Name and Short Description Forbidden ({label})'
-                ))
+            problem = short_description_problem(desc, name)
+            if problem:
+                message = {
+                    'missing':      f'Missing {item_class} Short Description',
+                    'too_long':     f'{item_class} Short Description Too Long',
+                    'same_as_name': f'Equal {item_class} Name and Short Description Forbidden',
+                }[problem]
+                self.err.append(self._error(parent_class, parent_page, f'{message} ({label})'))
+
+    def _check_references(self, references, section, page_name, checks):
+        '''Check selected reference options: value present; DOI, swMATH ID and URLs valid.
+
+        References are looked up by option, not by position (see
+        :func:`~MaRDMO.helpers.find_reference`).
+
+        Args:
+            references: Reference answers ``{collection_index: [option_uri, text]}``.
+            section:    Section name for error messages (e.g. ``"Software"``).
+            page_name:  Human-readable page label for error messages.
+            checks:     Tuples ``(option key, label, noun)``, e.g.
+                        :data:`SOFTWARE_REFERENCE_CHECKS`.
+        '''
+        options = get_options()
+        for option_key, label, noun in checks:
+            entry = find_reference(references, options[option_key])
+            if not entry:
+                continue
+            if not entry[1]:
+                self.err.append(self._error(section, page_name, f'{label} selected, but no {noun} provided!'))
+            else:
+                if noun == 'URL':
+                    problem = url_problem(entry[1], url_schemes(options[option_key]))
+                elif option_key == 'DOI':
+                    problem = doi_problem(entry[1])
+                elif option_key == 'SWMATH':
+                    problem = swmath_problem(entry[1])
+                else:
+                    problem = None
+                if problem:
+                    self.err.append(self._error(section, page_name, f'Invalid {label}: {problem}'))
 
     def _check_doc_entries(self, doc, options, page_name, context_label):
         '''Validate that each selected doc entry has a non-empty text value.
@@ -140,10 +191,15 @@ class ChecksBase:
                     'Process Step', page_name,
                     f'Missing {context_label} {label}'
                 ))
-            elif entry[0] == options['URL'] and not is_valid_url(entry[1]):
+            elif entry[0] == options['URL'] and url_problem(entry[1]):
                 self.err.append(self._error(
                     'Process Step', page_name,
-                    f'Invalid {context_label} URL: must start with http:// or https://'
+                    f'Invalid {context_label} URL: {url_problem(entry[1])}'
+                ))
+            elif entry[0] == options['DOI'] and doi_problem(entry[1]):
+                self.err.append(self._error(
+                    'Process Step', page_name,
+                    f'Invalid {context_label} DOI: {doi_problem(entry[1])}'
                 ))
 
     def _check_flexible(
@@ -200,8 +256,9 @@ class ChecksBase:
     def id_name_description(self, project, data, catalog):
         '''Check that every entity page has a non-empty ID, Name, and Description.
 
-        Also flags equal Name/Description pairs and descriptions exceeding
-        250 characters.  Skips entity types not relevant to *catalog*.
+        Also flags equal Name/Description pairs and overlong descriptions
+        (rules from :func:`~MaRDMO.validators.short_description_problem`).
+        Skips entity types not relevant to *catalog*.
 
         Args:
             project: RDMO project instance (used to look up page labels).
@@ -251,28 +308,69 @@ class ChecksBase:
                             message = 'Missing Name'
                         )
                     )
-                if not ivalue.get('Description'):
+                problem = short_description_problem(ivalue.get('Description'), ivalue.get('Name'))
+                if problem:
                     self.err.append(
                         self._error(
                             section = section_map[okey],
                             page    = page_name,
-                            message = 'Missing Short Description'
+                            message = {
+                                'missing':      'Missing Short Description',
+                                'too_long':     'Short Description Too Long',
+                                'same_as_name': 'Equal Name and Short Description Forbidden',
+                            }[problem]
                         )
                     )
-                if ivalue.get('Name') == ivalue.get('Description'):
+
+    def single_line_text(self, project, data, catalog):
+        '''Flag textarea answers containing line breaks, which the MaRDI Portal rejects.
+
+        Covers the detailed descriptions (workflow: procedure), the formula
+        reference, and the workflow reproducibility comments.  Values saved
+        before the pre-save validator existed, imported projects, and API
+        writes are only caught here.
+
+        Args:
+            project: RDMO project instance (used to look up page labels).
+            data:    Top-level answers dict.
+            catalog: Active catalog URI suffix.
+        '''
+        if catalog in (CATALOG_MODEL, CATALOG_MODEL_BASICS):
+            section_map = SECTION_MAP_MODEL
+            okeys = ('field', 'problem', 'model', 'formulation', 'quantity', 'task')
+        elif catalog == CATALOG_WORKFLOW:
+            section_map = SECTION_MAP_WORKFLOW
+            okeys = ('workflow',)
+        else:
+            return
+        for okey in okeys:
+            if not data.get(okey):
+                continue
+            values = project.values.filter(
+                snapshot  = None,
+                attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/{okey}')
+            )
+            for ikey, ivalue in data[okey].items():
+                long_label = 'Procedure' if okey == 'workflow' else 'Detailed Description'
+                fields = [(long_label, text) for text in ivalue.get('descriptionLong', {}).values()]
+                if isinstance(ivalue.get('reference'), str):
+                    fields.append(('Reference', ivalue['reference']))
+                if okey == 'workflow':
+                    for key, label in _WORKFLOW_SINGLE_LINE_FIELDS.items():
+                        for answer in ivalue.get(key, {}).values():
+                            if answer and len(answer) > 1:
+                                fields.append((label, answer[1]))
+                flagged = set()
+                for label, text in fields:
+                    if label in flagged or not (isinstance(text, str) and LINE_BREAK_RE.search(text)):
+                        continue
+                    flagged.add(label)
+                    page = values.filter(set_index=ikey).first()
                     self.err.append(
                         self._error(
                             section = section_map[okey],
-                            page    = page_name,
-                            message = 'Equal Name and Short Description Forbidden'
-                        )
-                    )
-                if ivalue.get('Description') and len(ivalue['Description']) > 250:
-                    self.err.append(
-                        self._error(
-                            section = section_map[okey],
-                            page    = page_name,
-                            message = 'Short Description Too Long'
+                            page    = page.text if page else ikey,
+                            message = f'Line Breaks Not Allowed in {label}'
                         )
                     )
 
@@ -311,6 +409,15 @@ class ChecksBase:
                         section = 'Publication',
                         page    = page_name,
                         message = 'Missing Publication DOI'
+                    )
+                )
+            doi = find_reference(ivalue.get('reference'), get_options()['DOI'])
+            if doi and doi_problem(doi[1]):
+                self.err.append(
+                    self._error(
+                        section = 'Publication',
+                        page    = page_name,
+                        message = f'Invalid Publication DOI: {doi_problem(doi[1])}'
                     )
                 )
 

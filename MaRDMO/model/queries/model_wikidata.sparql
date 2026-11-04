@@ -4,7 +4,7 @@ SELECT
 ?is_linear ?is_not_linear
 (GROUP_CONCAT(DISTINCT ?alias; SEPARATOR=" <|> ") AS ?aliases)
 (GROUP_CONCAT(DISTINCT CONCAT(?ta, " || ", ?tal, " || ", ?tad); SEPARATOR=" <|> ") AS ?used_by)
-(GROUP_CONCAT(DISTINCT CONCAT(?conf, " || ", ?confl, " || ", ?confd, " || ", ?confq, " >|< ", ?confq2); SEPARATOR=" <|> ") AS ?contains_formulation)
+(GROUP_CONCAT(DISTINCT CONCAT(?conf, " || ", ?confl, " || ", ?confd, " || ", ?confq); SEPARATOR=" <|> ") AS ?contains_formulation)
 (GROUP_CONCAT(DISTINCT CONCAT(?conm, " || ", ?conml, " || ", ?conmd); SEPARATOR=" <|> ") AS ?contains_model)
 (GROUP_CONCAT(DISTINCT CONCAT(?conim, " || ", ?coniml, " || ", ?conimd); SEPARATOR=" <|> ") AS ?contained_in_model)
 (GROUP_CONCAT(DISTINCT CONCAT(?pub, " || ", ?publ, " || ", ?pubd); SEPARATOR=" <|> ") AS ?publication)
@@ -63,11 +63,6 @@ WHERE {{
             BIND(REPLACE(STR(?quaraw), "http://www.wikidata.org/entity/", "wikidata:") AS ?qua)
         }}
         BIND(COALESCE(?qua, "") AS ?confq)
-
-        OPTIONAL {{
-            ?statement_y pq:P1545 ?qua2raw.
-        }}
-        BIND(COALESCE(?qua2raw, "") AS ?confq2)
     }}
 
     OPTIONAL {{

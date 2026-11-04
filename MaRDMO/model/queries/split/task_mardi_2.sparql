@@ -1,0 +1,30 @@
+# Part 2 of 7 of the MaRDI query task_mardi.sparql (see README.md).
+SELECT
+?id
+?is_linear
+?is_not_linear
+(GROUP_CONCAT(DISTINCT ?alias; SEPARATOR=" <|> ") AS ?aliases)
+(GROUP_CONCAT(DISTINCT ?descriptionLong; SEPARATOR=" <|> ") AS ?description_long)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?id skos:altLabel ?alias .
+        FILTER (LANG(?alias) = "en")
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{description} ?descriptionLong
+    }}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{linear task}. BIND("True" AS ?is_linear_raw) }}
+
+    BIND(COALESCE(?is_linear_raw, "False") AS ?is_linear)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{nonlinear task}. BIND("True" AS ?is_not_linear_raw) }}
+
+    BIND(COALESCE(?is_not_linear_raw, "False") AS ?is_not_linear)
+}}
+GROUP BY ?id ?is_linear ?is_not_linear

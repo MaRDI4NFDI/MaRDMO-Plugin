@@ -1,0 +1,65 @@
+# Part 6 of 10 of the MaRDI query formulation_mardi.sparql (see README.md).
+SELECT
+?id
+?is_time_continuous
+?is_time_discrete
+(GROUP_CONCAT(DISTINCT CONCAT(?ass, " || ", ?assl, " || ", ?assd); SEPARATOR=" <|> ") AS ?assumes)
+(GROUP_CONCAT(DISTINCT CONCAT(?conf, " || ", ?confl, " || ", ?confd, " || ", ?confq); SEPARATOR=" <|> ") AS ?contains_formulation)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{continuous-time equation}. BIND("True" AS ?is_time_continuous_raw) }}
+
+    BIND(COALESCE(?is_time_continuous_raw, "False") AS ?is_time_continuous)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{discrete-time equation}. BIND("True" AS ?is_time_discrete_raw) }}
+
+    BIND(COALESCE(?is_time_discrete_raw, "False") AS ?is_time_discrete)
+
+    OPTIONAL {{
+        ?id wdt:{assumes} ?assraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?assraw), STR(wd:))) AS ?ass)
+                
+        ?assraw wdt:{instance of} wd:{formula}.
+
+        OPTIONAL {{
+            ?assraw rdfs:label ?asslraw.
+            FILTER (lang(?asslraw) = 'en')
+        }}
+        BIND(COALESCE(?asslraw, "No Label Provided!") AS ?assl)
+               
+        OPTIONAL {{
+            ?assraw schema:description ?assdraw
+            FILTER (lang(?assdraw) = 'en')
+        }}
+        BIND(COALESCE(?assdraw, "No Description Provided!") AS ?assd)
+    }}
+
+    OPTIONAL {{
+        ?id p:{contains} ?statement2.
+        ?statement2 ps:{contains} ?confraw.
+        ?confraw wdt:{instance of} wd:{formula}.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?confraw), STR(wd:))) AS ?conf)
+        
+        OPTIONAL {{
+            ?confraw rdfs:label ?conflraw.
+            FILTER (lang(?conflraw) = 'en')
+        }}
+        BIND(COALESCE(?conflraw, "No Label Provided!") AS ?confl)
+
+        OPTIONAL {{
+            ?confraw schema:description ?confdraw
+            FILTER (lang(?confdraw) = 'en')
+        }}
+       BIND(COALESCE(?confdraw, "No Description Provided!") AS ?confd)
+
+        OPTIONAL {{
+            ?statement2 pq:{object has role} ?quaraw.
+            BIND(CONCAT("mardi:", STRAFTER(STR(?quaraw), STR(wd:))) AS ?qua)
+        }}
+        BIND(COALESCE(?qua, "") AS ?confq)
+    }}
+}}
+GROUP BY ?id ?is_time_continuous ?is_time_discrete

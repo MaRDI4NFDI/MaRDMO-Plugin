@@ -1,0 +1,174 @@
+# Part 6 of 9 of the MaRDI query model_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?conf, " || ", ?confl, " || ", ?confd, " || ", ?confq); SEPARATOR=" <|> ") AS ?contains_formulation)
+(GROUP_CONCAT(DISTINCT CONCAT(?ta, " || ", ?tal, " || ", ?tad); SEPARATOR=" <|> ") AS ?used_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?sbm, " || ", ?sbml, " || ", ?sbmd, " || ", ?sbmq); SEPARATOR=" <|> ") AS ?specialized_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?sm, " || ", ?sml, " || ", ?smd, " || ", ?smq); SEPARATOR=" <|> ") AS ?specializes)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?id p:{contains} ?statement_y.
+        ?statement_y ps:{contains} ?confraw.
+        ?confraw wdt:{instance of} wd:{formula}.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?confraw), STR(wd:))) AS ?conf)
+         
+        OPTIONAL {{
+            ?confraw rdfs:label ?conflraw.
+            FILTER (lang(?conflraw) = 'en')
+        }}
+        BIND(COALESCE(?conflraw, "No Label Provided!") AS ?confl)
+        
+        OPTIONAL {{
+            ?confraw schema:description ?confdraw
+            FILTER (lang(?confdraw) = 'en')
+        }}
+        BIND(COALESCE(?confdraw, "No Description Provided!") AS ?confd)
+        
+        OPTIONAL {{
+            ?statement_y pq:{object has role} ?quaraw.
+            BIND(CONCAT("mardi:", STRAFTER(STR(?quaraw), STR(wd:))) AS ?qua)
+        }}
+        BIND(COALESCE(?qua, "") AS ?confq)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{used by} ?taraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?taraw), STR(wd:))) AS ?ta)
+         
+        ?taraw wdt:{instance of} wd:{computational task}.
+        
+        OPTIONAL {{
+            ?taraw rdfs:label ?talraw.
+            FILTER (lang(?talraw) = 'en')
+        }}
+        BIND(COALESCE(?talraw, "No Label Provided!") AS ?tal)
+        
+        OPTIONAL {{
+            ?taraw schema:description ?tadraw
+            FILTER (lang(?tadraw) = 'en')
+        }}
+        BIND(COALESCE(?tadraw, "No Description Provided!") AS ?tad)
+    }}
+
+    OPTIONAL {{   
+                                                    
+        OPTIONAL {{
+                                                          
+            {{
+                SELECT ?statement2 (GROUP_CONCAT(DISTINCT ?sbmq_entry; separator=" <<||>> ") AS ?sbmq)
+                WHERE {{
+                    ?id p:{specialized by} ?statement2.
+
+                    OPTIONAL {{
+                        ?statement2 pq:{assumes} ?qua2raw.
+                        BIND(CONCAT("mardi:", STRAFTER(STR(?qua2raw), STR(wd:))) AS ?qua2)
+
+                        OPTIONAL {{
+                            ?qua2raw rdfs:label ?sbmqlraw.
+                            FILTER (lang(?sbmqlraw) = "en")
+                        }}
+                        BIND(COALESCE(?sbmqlraw, "No Label Provided!") AS ?sbmql)
+
+                        OPTIONAL {{
+                            ?qua2raw schema:description ?sbmqdraw.
+                            FILTER (lang(?sbmqdraw) = "en")
+                        }}
+                        BIND(COALESCE(?sbmqdraw, "No Description Provided!") AS ?sbmqd)
+                    }}
+
+                    BIND(COALESCE(?qua2, "") AS ?qua2_final)
+                    BIND(COALESCE(?sbmql, "") AS ?sbmql_final)
+                    BIND(COALESCE(?sbmqd, "") AS ?sbmqd_final)
+
+                    BIND(IF((?qua2_final = "" && ?sbmql_final = "" && ?sbmqd_final = ""),"",CONCAT(?qua2_final, " || ", ?sbmql_final, " || ", ?sbmqd_final)) AS ?sbmq_entry)
+                   
+                }}
+                GROUP BY ?statement2
+            }}
+        }}
+                                                        
+        ?id p:{specialized by} ?statement2.
+        ?statement2 ps:{specialized by} ?sbmraw.
+        
+        BIND(CONCAT("mardi:", STRAFTER(STR(?sbmraw), STR(wd:))) AS ?sbm)
+        
+        ?sbmraw wdt:{instance of} wd:{mathematical model}.
+    
+        OPTIONAL {{
+            ?sbmraw rdfs:label ?sbmlraw
+            FILTER (lang(?sbmlraw) = 'en')
+        }}
+        BIND(COALESCE(?sbmlraw, "No Label Provided!") AS ?sbml)
+    
+        OPTIONAL {{
+            ?sbmraw schema:description ?sbmdraw
+            FILTER (lang(?sbmdraw) = 'en')
+        }}
+        BIND(COALESCE(?sbmdraw, "No Description Provided!") AS ?sbmd)
+
+    }}
+
+    OPTIONAL {{   
+                                                    
+        OPTIONAL {{
+                                                          
+            {{
+                SELECT ?statement3 (GROUP_CONCAT(DISTINCT ?smq_entry; separator=" <<||>> ") AS ?smq)
+                WHERE {{
+                    ?smraw wdt:{specialized by} ?id.
+                    ?smraw p:{specialized by} ?statement3.
+                
+                    OPTIONAL {{
+                        ?statement3 pq:{assumes} ?qua3raw.
+                        BIND(CONCAT("mardi:", STRAFTER(STR(?qua3raw), STR(wd:))) AS ?qua3)
+                   
+                        OPTIONAL {{
+                            ?qua3raw rdfs:label ?smqlraw.
+                            FILTER (lang(?smqlraw) = "en")
+                        }}
+                        BIND(COALESCE(?smqlraw, "No Label Provided!") AS ?smql)
+                   
+                        OPTIONAL {{
+                            ?qua3raw schema:description ?smqdraw.
+                            FILTER (lang(?smqdraw) = "en")
+                        }}
+                        BIND(COALESCE(?smqdraw, "No Description Provided!") AS ?smqd)
+                    }}
+                
+                    BIND(COALESCE(?qua3, "") AS ?qua3_final)
+                    BIND(COALESCE(?smql, "") AS ?smql_final)
+                    BIND(COALESCE(?smqd, "") AS ?smqd_final)
+                
+                    BIND(IF((?qua3_final = "" && ?smql_final = "" && ?smqd_final = ""),"",CONCAT(?qua3_final, " || ", ?smql_final, " || ", ?smqd_final)) AS ?smq_entry)
+                   
+                }}
+                GROUP BY ?statement3
+            }}
+        }}
+                                                        
+        ?smraw p:{specialized by} ?statement3.
+        ?statement3 ps:{specialized by} ?id.
+        
+        BIND(CONCAT("mardi:", STRAFTER(STR(?smraw), STR(wd:))) AS ?sm)
+        
+        ?smraw wdt:{instance of} wd:{mathematical model}.
+    
+        OPTIONAL {{
+            ?smraw rdfs:label ?smlraw
+            FILTER (lang(?smlraw) = 'en')
+        }}
+        BIND(COALESCE(?smlraw, "No Label Provided!") AS ?sml)
+    
+        OPTIONAL {{
+            ?smraw schema:description ?smdraw
+            FILTER (lang(?smdraw) = 'en')
+        }}
+        BIND(COALESCE(?smdraw, "No Description Provided!") AS ?smd)
+
+    }}
+}}
+GROUP BY ?id

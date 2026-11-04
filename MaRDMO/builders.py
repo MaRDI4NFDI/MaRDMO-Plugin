@@ -8,16 +8,36 @@ with the appropriate ``Information`` handler methods from each sub-package.
 Provides:
 
 - ``build_post_save_handler_set``   — post-save dispatch dict (all catalogs)
-- ``build_post_delete_handler_set`` — post-delete dispatch dict (workflow + publication catalogs)
+- ``build_post_delete_handler_set`` — post-delete dispatch dict (all catalogs)
+- ``build_presave_validator_map``   — pre-save validation dispatch dict
+  (model + algorithm + workflow + publication)
 '''
 
-from .constants import BASE_URI
+from .constants import (
+    BASE_URI,
+    CATALOG_MODEL_NAME,
+    CATALOG_MODEL_BASICS_NAME,
+    CATALOG_ALGORITHM_NAME,
+    CATALOG_WORKFLOW_NAME,
+)
 from .getters import get_questions
 from .model.handlers import Information as ModelInformation
 from .algorithm.handlers import Information as AlgorithmInformation
 from .workflow.handlers import Information as WorkflowInformation
 from .publication.handlers import Information as PublicationInformation
 from .handlers import Information as GeneralInformation
+from .validators import (
+    validate_archive_year,
+    validate_count,
+    validate_data_size,
+    validate_doi,
+    validate_value_format,
+    validate_properties,
+    validate_qudt_id,
+    validate_reference,
+    validate_short_description,
+    validate_single_line,
+)
 
 def build_post_save_handler_set():
     """Build and return the post-save attribute-URI-to-handler dispatch set.
@@ -53,7 +73,7 @@ def build_post_save_handler_set():
 
     # Model handlers
     handler_map.update({
-        'mardmo-model-catalog': {
+        CATALOG_MODEL_NAME: {
             f"{base}{questions_model['Research Field']['ID']['uri']}":
                 model.field,
             f"{base}{questions_model['Research Problem']['ID']['uri']}":
@@ -97,7 +117,7 @@ def build_post_save_handler_set():
 
     # Model handlers
     handler_map.update({
-        'mardmo-model-basics-catalog': {
+        CATALOG_MODEL_BASICS_NAME: {
             f"{base}{questions_model['Research Problem']['ID']['uri']}":
                 model.problem,
             f"{base}{questions_model['Task']['ID']['uri']}":
@@ -127,7 +147,7 @@ def build_post_save_handler_set():
 
     # Algorithm handlers
     handler_map.update({
-        'mardmo-algorithm-catalog': {
+        CATALOG_ALGORITHM_NAME: {
             f"{base}{questions_algorithm['Benchmark']['ID']['uri']}":
                 algorithm.benchmark,
             f"{base}{questions_algorithm['Software']['ID']['uri']}":
@@ -153,7 +173,7 @@ def build_post_save_handler_set():
 
     # Workflow handlers
     handler_map.update({
-        'mardmo-interdisciplinary-workflow-catalog': {
+        CATALOG_WORKFLOW_NAME: {
             f"{base}{questions_workflow['Workflow']['ID']['uri']}":
                 workflow.workflow,
             f"{base}{questions_workflow['Algorithm']['ID']['uri']}":
@@ -217,16 +237,265 @@ def build_post_delete_handler_set():
     pub_set_uri = f"{base}{questions_publication['Publication']['uri']}"
 
     return {
-        'mardmo-model-catalog': {
+        CATALOG_MODEL_NAME: {
             pub_set_uri: publication.publication_delete,
         },
-        'mardmo-model-basics-catalog': {
+        CATALOG_MODEL_BASICS_NAME: {
             pub_set_uri: publication.publication_delete,
         },
-        'mardmo-algorithm-catalog': {
+        CATALOG_ALGORITHM_NAME: {
             pub_set_uri: publication.publication_delete,
         },
-        'mardmo-interdisciplinary-workflow-catalog': {
+        CATALOG_WORKFLOW_NAME: {
             pub_set_uri: publication.publication_delete,
+        },
+    }
+
+
+def build_presave_validator_map():
+    """Build and return the pre-save attribute-URI-to-validator dispatch map.
+
+    Maps each attribute URI that requires pre-save validation to the appropriate
+    validator function from :mod:`MaRDMO.validators`.  Registered validators:
+
+    - :func:`~MaRDMO.validators.validate_short_description` — for all entity
+      ``Description`` question URIs across all catalogs (max
+      :data:`~MaRDMO.validators.SHORT_DESCRIPTION_MAX_LENGTH` characters).
+    - :func:`~MaRDMO.validators.validate_properties` — for the four data-property
+      question URIs (model, formulation, quantity, task) in the model catalogs.
+    - :func:`~MaRDMO.validators.validate_qudt_id` — for the Quantity reference
+      URI in the full model catalog only.
+    - :func:`~MaRDMO.validators.validate_doi` — for the publication reference
+      URIs in all catalogs and the data-set "to publish" DOI in the workflow
+      catalog.
+    - :func:`~MaRDMO.validators.validate_reference` — DOI, URL and swMATH ID
+      check for the software/benchmark references and the process-step
+      documentation.
+    - :func:`~MaRDMO.validators.validate_archive_year` — for the data-set
+      "to archive" year in the workflow catalog.
+    - :func:`~MaRDMO.validators.validate_data_size` and
+      :func:`~MaRDMO.validators.validate_count` — for the data-set size and
+      the hardware counts (nodes, CPUs, cores) in the workflow catalog.
+    - :func:`~MaRDMO.validators.validate_value_format` — for all
+      ``general.relation`` question URIs across model, algorithm, and workflow.
+    - :func:`~MaRDMO.validators.validate_single_line` — for all textarea
+      answers exported as text statements (long descriptions, formula
+      reference, workflow procedure, reproducibility comments).
+
+    Returns:
+        dict: Nested mapping of the form
+        ``{catalog_slug: {absolute_attribute_uri: validator_fn}}``.
+    """
+    base = BASE_URI
+    questions_model       = get_questions('model')
+    questions_algorithm   = get_questions('algorithm')
+    questions_workflow    = get_questions('workflow')
+    questions_publication = get_questions('publication')
+
+    return {
+        CATALOG_MODEL_NAME: {
+            # Short description (all 6 entity types)
+            f'{base}{questions_model["Research Field"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_model["Research Problem"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_model["Quantity"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_model["Mathematical Formulation"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_model["Task"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_model["Mathematical Model"]["Description"]["uri"]}':
+                validate_short_description,
+            # Single-line textarea answers
+            f'{base}{questions_model["Research Field"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Research Problem"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Quantity"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Mathematical Formulation"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Task"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Mathematical Model"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_model["Mathematical Formulation"]["Reference"]["uri"]}':
+                validate_single_line,
+            # Data properties (model, formulation, quantity, task)
+            f'{base}{questions_model["Mathematical Model"]["Properties"]["uri"]}':
+                validate_properties,
+            f'{base}{questions_model["Mathematical Formulation"]["Properties"]["uri"]}':
+                validate_properties,
+            f'{base}{questions_model["Quantity"]["Properties"]["uri"]}':
+                validate_properties,
+            f'{base}{questions_model["Task"]["Properties"]["uri"]}':
+                validate_properties,
+            # QUDT reference ID (quantity only)
+            f'{base}{questions_model["Quantity"]["Reference"]["uri"]}':
+                validate_qudt_id,
+            # DOI reference (publication)
+            f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
+                validate_doi,
+            # Relation label format
+            f'{base}{questions_model["Task"]["QRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Task"]["MFRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Formulation"]["Element Quantity"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Quantity"]["Element Quantity"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Model"]["MFRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Model"]["Assumption"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Task"]["Assumption"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Formulation"]["Assumption"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Formulation"]["MFRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Research Problem"]["RFRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Model"]["RPRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Model"]["TRelatant"]["uri"]}':
+                validate_value_format,
+        },
+        CATALOG_MODEL_BASICS_NAME: {
+            # Short description (Research Problem, Formulation, Task, Model only)
+            f'{base}{questions_model["Research Problem"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_model["Mathematical Formulation"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_model["Task"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_model["Mathematical Model"]["Description"]["uri"]}':
+                validate_short_description,
+            # Single-line textarea answers (no long descriptions in basics catalog)
+            f'{base}{questions_model["Mathematical Formulation"]["Reference"]["uri"]}':
+                validate_single_line,
+            # Data properties (no Quantity in basics catalog)
+            f'{base}{questions_model["Mathematical Model"]["Properties"]["uri"]}':
+                validate_properties,
+            f'{base}{questions_model["Mathematical Formulation"]["Properties"]["uri"]}':
+                validate_properties,
+            f'{base}{questions_model["Task"]["Properties"]["uri"]}':
+                validate_properties,
+            # DOI reference (publication)
+            f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
+                validate_doi,
+            # Relation label format
+            f'{base}{questions_model["Mathematical Model"]["RPRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Model"]["TRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Model"]["MFRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Model"]["Assumption"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Task"]["MFRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Task"]["Assumption"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_model["Mathematical Formulation"]["Assumption"]["uri"]}':
+                validate_value_format,
+        },
+        CATALOG_ALGORITHM_NAME: {
+            # Short description
+            f'{base}{questions_algorithm["Algorithm"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_algorithm["Problem"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_algorithm["Software"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_algorithm["Benchmark"]["Description"]["uri"]}':
+                validate_short_description,
+            # DOI reference (publication); DOI, URL or swMATH ID (software, benchmark)
+            f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
+                validate_doi,
+            f'{base}{questions_algorithm["Software"]["Reference"]["uri"]}':
+                validate_reference,
+            f'{base}{questions_algorithm["Benchmark"]["Reference"]["uri"]}':
+                validate_reference,
+            # Relation label format
+            f'{base}{questions_algorithm["Problem"]["BRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_algorithm["Software"]["BRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_algorithm["Algorithm"]["PRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_algorithm["Algorithm"]["SRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_algorithm["Software"]["Dependency"]["uri"]}':
+                validate_value_format,
+        },
+        CATALOG_WORKFLOW_NAME: {
+            # Short description
+            f'{base}{questions_workflow["Workflow"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_workflow["Algorithm"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_workflow["Software"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_workflow["Hardware"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_workflow["Data Set"]["Description"]["uri"]}':
+                validate_short_description,
+            f'{base}{questions_workflow["Process Step"]["Description"]["uri"]}':
+                validate_short_description,
+            # Single-line textarea answers (procedure, reproducibility comments)
+            f'{base}{questions_workflow["Workflow"]["Long Description"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Mathematical"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Runtime"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Result"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Original Platform"]["uri"]}':
+                validate_single_line,
+            f'{base}{questions_workflow["Workflow"]["Other Platform"]["uri"]}':
+                validate_single_line,
+            # DOI reference (publication, DS to-publish); DOI, URL or swMATH ID (software, PS documentation)
+            f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
+                validate_doi,
+            f'{base}{questions_workflow["Software"]["Reference"]["uri"]}':
+                validate_reference,
+            f'{base}{questions_workflow["Process Step"]["Software-Documentation"]["uri"]}':
+                validate_reference,
+            f'{base}{questions_workflow["Process Step"]["Method-Documentation"]["uri"]}':
+                validate_reference,
+            f'{base}{questions_workflow["Data Set"]["To Publish"]["uri"]}':
+                validate_doi,
+            f'{base}{questions_workflow["Data Set"]["To Archive"]["uri"]}':
+                validate_archive_year,
+            f'{base}{questions_workflow["Data Set"]["Size"]["uri"]}':
+                validate_data_size,
+            # Counts (hardware)
+            f'{base}{questions_workflow["Hardware"]["Nodes"]["uri"]}':
+                validate_count,
+            f'{base}{questions_workflow["Hardware"]["Number of CPU"]["uri"]}':
+                validate_count,
+            f'{base}{questions_workflow["Hardware"]["Cores"]["uri"]}':
+                validate_count,
+            # Relation label format
+            f'{base}{questions_workflow["Process Step"]["Algorithm"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_workflow["Process Step"]["Hardware"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_workflow["Process Step"]["Input"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_workflow["Process Step"]["Output"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_workflow["Workflow"]["PSRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_workflow["Process Step"]["Software"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_workflow["Algorithm"]["SRelatant"]["uri"]}':
+                validate_value_format,
+            f'{base}{questions_workflow["Software"]["Dependency"]["uri"]}':
+                validate_value_format,
         },
     }

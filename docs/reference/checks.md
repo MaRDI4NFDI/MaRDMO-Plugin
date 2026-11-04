@@ -15,3 +15,11 @@
 ## Workflow
 
 ::: MaRDMO.checks.workflow
+
+## TeX Check
+
+::: MaRDMO.tex_check
+
+## Patterns
+
+::: MaRDMO.patterns

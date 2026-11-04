@@ -3,7 +3,7 @@
 from rdmo.domain.models import Attribute
 
 from ..constants import BASE_URI, CATALOG_ALGORITHM
-from ..helpers import is_valid_url
+from .base import BENCHMARK_REFERENCE_CHECKS, SOFTWARE_REFERENCE_CHECKS
 
 
 class AlgorithmMixin:
@@ -119,29 +119,7 @@ class AlgorithmMixin:
             if not ivalue.get('reference'):
                 self.err.append(self._error('Software', page_name, 'Missing Reference'))
             else:
-                ref = ivalue['reference']
-                ref_list = [
-                    (0, 'DOI', 'ID'),
-                    (1, 'swMath ID', 'ID'),
-                    (2, 'Description URL', 'URL'),
-                    (3, 'Repository URL', 'URL')
-                ]
-                for idx, label, noun in ref_list:
-                    if ref.get(idx) and not ref[idx][1]:
-                        self.err.append(
-                            self._error(
-                                section = 'Software',
-                                page    = page_name,
-                                message = f'{label} selected, but no {noun} provided!'
-                            )
-                        )
-                    elif noun == 'URL' and ref.get(idx) and ref[idx][1]:
-                        if not is_valid_url(ref[idx][1]):
-                            self.err.append(self._error(
-                                section = 'Software',
-                                page    = page_name,
-                                message = f'Invalid {label}: must start with http:// or https://'
-                            ))
+                self._check_references(ivalue['reference'], 'Software', page_name, SOFTWARE_REFERENCE_CHECKS)
 
     def benchmark(self, project, data):
         '''Check Benchmark documentation completeness.
@@ -162,29 +140,7 @@ class AlgorithmMixin:
             if not ivalue.get('reference'):
                 self.err.append(self._error('Benchmark', page_name, 'Missing Reference'))
             else:
-                ref = ivalue['reference']
-                ref_list = [
-                    (0, 'DOI', 'ID'),
-                    (1, 'MORwiki ID', 'ID'),
-                    (2, 'Description URL', 'URL'),
-                    (3, 'Repository URL', 'URL')
-                ]
-                for idx, label, noun in ref_list:
-                    if ref.get(idx) and not ref[idx][1]:
-                        self.err.append(
-                            self._error(
-                                section = 'Benchmark',
-                                page    = page_name,
-                                message = f'{label} selected, but no {noun} provided!'
-                            )
-                        )
-                    elif noun == 'URL' and ref.get(idx) and ref[idx][1]:
-                        if not is_valid_url(ref[idx][1]):
-                            self.err.append(self._error(
-                                section = 'Benchmark',
-                                page    = page_name,
-                                message = f'Invalid {label}: must start with http:// or https://'
-                            ))
+                self._check_references(ivalue['reference'], 'Benchmark', page_name, BENCHMARK_REFERENCE_CHECKS)
 
     # -------------------------------------------------------------------------
     # Run method

@@ -5,7 +5,8 @@ Contains:
 - :class:`PropertyRegistry` — O(1) lookup for ontology properties by key, label, or URL.
 - Answer-routing utilities: :func:`extract_parts`, :func:`basic_dict`,
   :func:`basic_list`, :func:`split_value`, :func:`nested_set`.
-- Questionnaire write helpers: :func:`value_editor`.
+- Questionnaire write helpers: :func:`value_editor`, :func:`batched_writes`,
+  :func:`commit_writes`, :func:`get_attribute`.
 - Graph utilities: :func:`topological_order`, :func:`is_cyclic`.
 - Date helpers: :func:`date_format`, :func:`date_precision`.
 - Entity-relation processing: :func:`entity_relations`,
@@ -17,13 +18,139 @@ Contains:
   :func:`define_setup`, :func:`rank_by_search_term`.
 '''
 
+import re
+import sys
+
+from contextlib import contextmanager
+from contextvars import ContextVar
 from typing import Callable, Optional, Any
 from collections import defaultdict, deque
-from urllib.parse import urlparse
 
+from django.db import connection, transaction
 from rdmo.projects.models import Value
 from rdmo.domain.models import Attribute
 from rdmo.options.models import Option
+
+# Set while MaRDMO itself writes values (hydration, publication lookup, ID
+# write-back); the pre-save router skips validators then, since they are meant
+# for user input and imported data is checked by preview, checks and export
+_INTERNAL_WRITE = ContextVar('mardmo_internal_write', default=False)
+
+
+@contextmanager
+def internal_write():
+    '''Mark the values saved inside this block as written by MaRDMO itself.'''
+    token = _INTERNAL_WRITE.set(True)
+    try:
+        yield
+    finally:
+        _INTERNAL_WRITE.reset(token)
+
+
+def is_internal_write():
+    '''Return ``True`` while MaRDMO itself is writing values (see :func:`internal_write`).'''
+    return _INTERNAL_WRITE.get()
+
+
+# Set inside batched_writes(): the open transaction (or None) and the
+# attributes already looked up in this block
+_WRITE_BATCH = ContextVar('mardmo_write_batch', default=None)
+
+
+@contextmanager
+def batched_writes():
+    '''Commit MaRDMO's own writes in batches instead of one transaction per value.
+
+    Adding an entry from the MaRDI Portal writes hundreds of values, which
+    otherwise means hundreds of commits.  Inside this block, the writes of
+    :func:`value_editor` are collected in one transaction, which is committed
+    before every request to an external service (see :func:`commit_writes`)
+    and at the end of the block.  The database is therefore never locked
+    while MaRDMO waits for the network.  If the block raises, the writes
+    since the last commit are rolled back.
+
+    On SQLite every value is still committed on its own: SQLite locks the
+    whole database, and a transaction that reads before it writes fails
+    with "database is locked" when another user saves in between.
+
+    Attributes looked up by URI are also remembered until the block ends.
+    A nested block (e.g. a handler deleting further values) joins the
+    outer one.
+    '''
+    if _WRITE_BATCH.get() is not None:
+        yield
+        return
+    batch = {'atomic': None, 'attributes': {}}
+    token = _WRITE_BATCH.set(batch)
+    try:
+        yield
+    except BaseException:
+        _close_transaction(batch, sys.exc_info())
+        raise
+    else:
+        _close_transaction(batch)
+    finally:
+        _WRITE_BATCH.reset(token)
+
+
+def _close_transaction(batch, exc_info=(None, None, None)):
+    '''Commit (or, with *exc_info*, roll back) the open transaction of *batch*.'''
+    atomic = batch['atomic']
+    if atomic is not None:
+        batch['atomic'] = None
+        atomic.__exit__(*exc_info)
+
+
+def commit_writes():
+    '''Commit the writes collected by :func:`batched_writes` so far.
+
+    Called before every request to an external service.  Does nothing
+    outside :func:`batched_writes`.
+    '''
+    batch = _WRITE_BATCH.get()
+    if batch is not None:
+        _close_transaction(batch)
+
+
+def _begin_write():
+    '''Open the transaction of the current :func:`batched_writes` block, if needed.'''
+    batch = _WRITE_BATCH.get()
+    if batch is not None and batch['atomic'] is None and connection.vendor != 'sqlite':
+        atomic = transaction.atomic()
+        atomic.__enter__()
+        batch['atomic'] = atomic
+
+
+def get_attribute(uri):
+    '''Return the :class:`~rdmo.domain.models.Attribute` with *uri*.
+
+    Inside :func:`batched_writes` each attribute is looked up only once.
+
+    Raises:
+        Attribute.DoesNotExist: If there is no attribute with *uri*.
+    '''
+    batch = _WRITE_BATCH.get()
+    if batch is None:
+        return Attribute.objects.get(uri=uri)
+    attributes = batch['attributes']
+    if uri not in attributes:
+        attributes[uri] = Attribute.objects.get(uri=uri)
+    return attributes[uri]
+
+
+def find_reference(references, option_uri):
+    '''Return the ``[option_uri, text]`` entry for *option_uri* in a reference dict, or ``None``.
+
+    Reference and documentation answers are stored as
+    ``{collection_index: [option_uri, text]}``.  The collection index is the
+    option's position in the questionnaire, so entries are looked up by
+    option rather than by position.
+    '''
+    for entry in (references or {}).values():
+        if entry and entry[0] == option_uri:
+            return entry
+    return None
+
 
 class PropertyRegistry:
     """Registry class to look up MathModDB / MathAlgoDB properties by key, label, or URL.
@@ -95,22 +222,6 @@ def topological_order(direct_dependencies: dict[str, set[str]]) -> list[str]:
                 queue.append(dependent)
     return order
 
-def is_valid_url(url: str) -> bool:
-    '''Return ``True`` if *url* is a Wikibase-conformant HTTP/HTTPS URL.
-
-    Args:
-        url: String to validate.
-
-    Returns:
-        ``True`` when *url* has ``http`` or ``https`` scheme and a non-empty
-        netloc; ``False`` otherwise.
-    '''
-    try:
-        result = urlparse(url)
-        return bool(result.scheme in ('http', 'https') and result.netloc)
-    except Exception:
-        return False
-
 def is_cyclic(dependencies: dict[str, set[str]]) -> bool:
     '''Return ``True`` if the dependency graph contains a cycle (Kahn's algorithm).
 
@@ -140,15 +251,25 @@ def is_cyclic(dependencies: dict[str, set[str]]) -> bool:
     # If not all items were processed → cycle exists
     return processed != len(dependencies)
 
-def date_format(parts: list[int]) -> str | None:
-    """Return a date string as YYYY-MM-DDT00:00:00Z given a list of date parts."""
-    if not parts:
+def date_format(parts: list) -> str | None:
+    """Return a date string as YYYY-MM-DDT00:00:00Z given a list of date parts.
+
+    Tolerates the shapes external sources deliver: numbers or strings, a
+    missing (``None``) part, or a part with trailing text such as
+    ``"13T10:00:00Z"``.  The date ends at the first missing or unreadable
+    part, so ``[2020, None]`` gives a year-only date; ``None`` is returned
+    if not even the year is readable.
+    """
+    numbers = []
+    for part in (parts or [])[:3]:
+        match = re.match(r'\s*(\d+)', str(part)) if part is not None else None
+        if not match:
+            break
+        numbers.append(int(match.group(1)))
+    if not numbers:
         return None
-    if len(parts) == 1:
-        return f"{int(parts[0]):04d}-00-00T00:00:00Z"
-    if len(parts) == 2:
-        return f"{int(parts[0]):04d}-{int(parts[1]):02d}-00T00:00:00Z"
-    return f"{int(parts[0]):04d}-{int(parts[1]):02d}-{int(parts[2]):02d}T00:00:00Z"
+    year, month, day = (numbers + [0, 0])[:3]
+    return f"{year:04d}-{month:02d}-{day:02d}T00:00:00Z"
 
 def date_precision(date_str: str) -> int | None:
     """
@@ -182,13 +303,16 @@ def split_value(
     object_role: Optional[Callable[[Any], bool]] = None,
 ) -> list:
     """
-    Split data[key]['value'] on ' <|> '. Optionally apply a transform
-    to each element and filter the results with `object_role`.
+    Split ``data[key]['value']`` on ``' <|> '``. Optionally apply a transform
+    to each element and filter the results with ``object_role``.
+
+    The elements are sorted (relatants thereby by ID), as SPARQL's
+    ``GROUP_CONCAT`` returns them in no fixed order.
     """
     if key not in data:
         return []
 
-    raw = data.get(key, {}).get('value', '').split(" <|> ")
+    raw = sorted(data.get(key, {}).get('value', '').split(" <|> "))
 
     parts = [part for part in raw if part]
 
@@ -342,7 +466,7 @@ def value_editor(project, uri, info):
     Returns:
         Tuple ``(obj, created)`` as returned by ``update_or_create``.
     '''
-    attribute_object = Attribute.objects.get(uri=uri)
+    attribute_object = get_attribute(uri)
     # Prepare the defaults dictionary
     defaults = {
         'project': project,
@@ -361,6 +485,7 @@ def value_editor(project, uri, info):
     # Prepare the fields for update_or_create
     update_fields = {
         'project': project,
+        'snapshot': None,
         'attribute': attribute_object,
         'defaults': defaults
     }
@@ -375,7 +500,9 @@ def value_editor(project, uri, info):
         update_fields['set_prefix'] = info['set_prefix']
 
     # Update or create the value
-    obj, created = Value.objects.update_or_create(**update_fields)
+    _begin_write()
+    with internal_write():
+        obj, created = Value.objects.update_or_create(**update_fields)
 
     return obj, created
 
@@ -444,11 +571,11 @@ def resolve_target(name, description, id_, entity_enc, label_map):
         return f"{entity_enc}{label_map[label_description] + 1}"
     return id_
 
-def build_new_value(from_entry, entity, key, resolved, order, assumption, mapping):
+def build_new_value(from_entry, entity, key, resolved, assumption, mapping):
     """Assemble the processed relation dict for a single relatant.
 
     Combines the resolved relatant reference with the relation type and
-    optional order/assumption qualifiers into the dict format expected by
+    the optional assumption qualifier into the dict format expected by
     the preview templates.
 
     Args:
@@ -457,8 +584,6 @@ def build_new_value(from_entry, entity, key, resolved, order, assumption, mappin
                     ``new_name``, and ``encryption``.
         key:        Relation key within *from_entry*.
         resolved:   Resolved relatant reference (local index or external ID).
-        order:      Dict with boolean flags ``formulation`` and ``task``
-                    controlling which order qualifier is attached.
         assumption: Boolean; if ``True``, attach assumption qualifier.
         mapping:    :class:`~MaRDMO.helpers.PropertyRegistry` for relation lookup.
 
@@ -480,20 +605,6 @@ def build_new_value(from_entry, entity, key, resolved, order, assumption, mappin
             'relatant': resolved
         }
 
-    if order['formulation']:
-        new_value.update(
-            {
-                'order': from_entry.get('formulation_number', {}).get(key)
-            }
-        )
-
-    if order['task']:
-        new_value.update(
-            {
-                'order': from_entry.get('task_number', {}).get(key)
-            }
-        )
-
     if assumption:
         new_value.update(
             {
@@ -504,7 +615,7 @@ def build_new_value(from_entry, entity, key, resolved, order, assumption, mappin
     return new_value
 
 
-def entity_relations(data, idx, entity, order, assumption, mapping):
+def entity_relations(data, idx, entity, assumption, mapping):
     """Resolve cross-entity relations and write processed entries into *data*.
 
     For every source entity in ``data[idx['from']]``, iterates over its raw
@@ -519,7 +630,6 @@ def entity_relations(data, idx, entity, order, assumption, mapping):
                     target types used for label resolution).
         entity:     Dict with keys ``relation``, ``old_name``, ``new_name``,
                     and ``encryption``.
-        order:      Dict with boolean flags ``formulation`` and ``task``.
         assumption: Boolean controlling assumption qualifier attachment.
         mapping:    :class:`~MaRDMO.helpers.PropertyRegistry` for relation type lookup.
     """
@@ -562,7 +672,6 @@ def entity_relations(data, idx, entity, order, assumption, mapping):
                         entity,
                         key,
                         resolved,
-                        order,
                         assumption,
                         mapping
                     )
@@ -584,11 +693,11 @@ def entity_relations(data, idx, entity, order, assumption, mapping):
                     if resolved != values.get("ID"):
                         break
                 # Build new Item Value
-                new_value = build_new_value(from_entry, entity, key, resolved, order, assumption, mapping)
+                new_value = build_new_value(from_entry, entity, key, resolved, assumption, mapping)
                 if new_value not in entity_values.values():
                     entity_values[key] = new_value
 
-def entity_relations_grouped(data, idx, entity, order, assumption, mapping):
+def entity_relations_grouped(data, idx, entity, assumption, mapping):
     """Resolve cross-entity relations without value-level deduplication.
 
     Identical to :func:`entity_relations` except that every resolved entry is
@@ -602,7 +711,6 @@ def entity_relations_grouped(data, idx, entity, order, assumption, mapping):
         idx:        Dict with keys ``from`` and ``to``.
         entity:     Dict with keys ``relation``, ``old_name``, ``new_name``,
                     and ``encryption``.
-        order:      Dict with boolean flags ``formulation`` and ``task``.
         assumption: Boolean controlling assumption qualifier attachment.
         mapping:    :class:`~MaRDMO.helpers.PropertyRegistry` for relation type lookup.
     """
@@ -632,7 +740,7 @@ def entity_relations_grouped(data, idx, entity, order, assumption, mapping):
                             if resolved != value.get("ID"):
                                 break
                     new_value = build_new_value(
-                        from_entry, entity, key, resolved, order, assumption, mapping
+                        from_entry, entity, key, resolved, assumption, mapping
                     )
                     entity_values[f"{key}|{key2}"] = new_value
             else:
@@ -648,7 +756,7 @@ def entity_relations_grouped(data, idx, entity, order, assumption, mapping):
                     if resolved != values.get("ID"):
                         break
                 new_value = build_new_value(
-                    from_entry, entity, key, resolved, order, assumption, mapping
+                    from_entry, entity, key, resolved, assumption, mapping
                 )
                 entity_values[key] = new_value
 
@@ -809,7 +917,8 @@ def relevant_set_ids(info, set_prefix_red):
     '''
     relevant_set_ids_list = []
     for set_index, set_prefix in zip(info['set_index_ids'], info['set_prefix_ids']):
-        if set_prefix == set_prefix_red:
+        # Stored prefixes are strings ('3'), written ones integers
+        if set_prefix not in (None, '') and reduce_prefix(set_prefix) == set_prefix_red:
             relevant_set_ids_list.append(set_index)
     return relevant_set_ids_list
 
@@ -996,6 +1105,8 @@ def compare_items(old, new, wikidata_qid_prop=None):
     Compares the ``id`` field of every ``Item*`` key: entries that had no id
     before posting (``old[key]['id']`` is falsy) and have one afterwards are
     collected together with the original external ID and the new QID.
+    Items still without id (export aborted before they were posted) are
+    skipped.
 
     The original external ID is inferred from the item's statements: items
     that carry a Wikidata QID external-id statement are tagged as
@@ -1015,7 +1126,7 @@ def compare_items(old, new, wikidata_qid_prop=None):
 
     created = {}
     for key, value in old.items():
-        if key.startswith('Item') and not value['id']:
+        if key.startswith('Item') and not value['id'] and new[key].get('id'):
             item = new[key]
             label = item['payload']['item']['labels']['en']
             description = item['payload']['item'].get('descriptions', {}).get('en', '')
@@ -1041,8 +1152,9 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
 
     Covers two sources:
 
-    - ``RELATION<n>`` entries where ``exists != 'true'`` (statements posted to
-      existing items).
+    - ``RELATION<n>`` entries that were posted to existing items (the portal
+      returned a statement id; entries that already existed or were not
+      reached before an aborted export have none).
     - Statements embedded in newly created ``Item<n>`` entries (items that had
       no id before posting).
 
@@ -1058,9 +1170,12 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
 
     Returns:
         List of ``[subject_label, subject_qid, property_name, object_label,
-        object_qid, qualifiers]`` lists, JSON-serializable.  ``object_qid`` is
-        an empty string for non-item value types.  ``qualifiers`` is a list of
+        object_qid, qualifiers, unit_label, unit_qid, qualifiers_added]``
+        lists, JSON-serializable.  ``object_qid`` is an empty string for
+        non-item value types.  ``qualifiers`` is a list of
         ``{"prop": name, "obj": label, "obj_qid": qid}`` dicts.
+        ``qualifiers_added`` is ``True`` for a statement that was on the
+        portal already and only got the listed qualifiers.
     """
     pid_to_name = pid_to_name or {}
     qid_to_name = qid_to_name or {}
@@ -1135,7 +1250,7 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
     for key, entry in jsons.items():
         if not key.startswith('RELATION'):
             continue
-        if entry.get('exists') == 'true':
+        if entry.get('exists') == 'true' or not entry.get('id'):
             continue
         url = entry.get('url', '')
         parts = url.split('/items/')
@@ -1150,8 +1265,11 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
         prop_name          = pid_to_name.get(prop_id, prop_id)
         obj_label, obj_qid = _format_value(datatype, value)
         unit_label, unit_qid = _get_unit(datatype, value)
-        quals = _format_qualifiers(stmt.get('qualifiers', []))
-        statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid])
+        # A statement that was on the portal already only got the qualifiers it lacked
+        added = entry.get('exists') == 'partial'
+        quals = _format_qualifiers(entry['add_qualifiers'] if added else stmt.get('qualifiers', []))
+        statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid,
+                           added])
 
     # --- Statements embedded in newly created items
     for key, entry in jsons.items():
@@ -1172,7 +1290,8 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
             obj_label, obj_qid = _format_value(datatype, value)
             unit_label, unit_qid = _get_unit(datatype, value)
             quals = _format_qualifiers(quals_raw)
-            statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid])
+            statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid,
+                               False])
 
     return statements
 
@@ -1182,7 +1301,7 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
 _ID_ENTITY_URIS = [
     'field', 'problem', 'model', 'formulation', 'quantity', 'task',
     'algorithm', 'software', 'benchmark', 'workflow', 'hardware',
-    'dataset', 'processstep',
+    'dataset', 'processstep', 'publication',
 ]
 
 
@@ -1221,11 +1340,12 @@ def replace_ids(project, created, base_uri):
     }
     if wikidata_map:
         for v in Value.objects.filter(
-            project=project, external_id__in=wikidata_map
+            project=project, snapshot=None, external_id__in=wikidata_map
         ).select_related('attribute'):
             v.external_id = wikidata_map[v.external_id]
             v.text = v.text.replace('[wikidata]', '[mardi]')
-            v.save()
+            with internal_write():
+                v.save()
 
     # ------------------------------------------------------------------ #
     # Cases B1 + B2 — user-defined items ('not found')                   #
@@ -1239,7 +1359,7 @@ def replace_ids(project, created, base_uri):
         return
 
     for v in Value.objects.filter(
-        project=project, external_id='not found'
+        project=project, snapshot=None, external_id='not found'
     ).select_related('attribute'):
 
         if v.text == 'not found':
@@ -1251,24 +1371,30 @@ def replace_ids(project, created, base_uri):
             )
             if entity is None:
                 continue
-            # Name/Description questions use set_prefix = parent set chain
-            sibling_prefix = (
-                f'{v.set_prefix}|{v.set_index}' if v.set_prefix
-                else str(v.set_index)
-            )
+            if entity == 'publication':
+                # A publication's name and description are answers of its own tab
+                sibling = {'set_prefix': '', 'set_index': v.set_index}
+            else:
+                # Name/Description questions use set_prefix = parent set chain
+                sibling = {'set_prefix': (
+                    f'{v.set_prefix}|{v.set_index}' if v.set_prefix
+                    else str(v.set_index)
+                )}
             try:
                 v_label = Value.objects.get(
                     project=project,
+                    snapshot=None,
                     attribute__uri=base_uri + f'domain/{entity}/name',
-                    set_prefix=sibling_prefix,
+                    **sibling,
                 ).text
             except (Value.DoesNotExist, Value.MultipleObjectsReturned):
                 continue
             try:
                 v_desc = Value.objects.get(
                     project=project,
+                    snapshot=None,
                     attribute__uri=base_uri + f'domain/{entity}/description',
-                    set_prefix=sibling_prefix,
+                    **sibling,
                 ).text
             except (Value.DoesNotExist, Value.MultipleObjectsReturned):
                 v_desc = ''
@@ -1282,7 +1408,8 @@ def replace_ids(project, created, base_uri):
             label, desc = key
             v.external_id = nf_map[key]
             v.text = f'{label} ({desc}) [mardi]' if desc else f'{label} [mardi]'
-            v.save()
+            with internal_write():
+                v.save()
 
 def is_flat(d):
     """Return ``True`` if *d* is a dict whose values are all strings (or *d* is empty).

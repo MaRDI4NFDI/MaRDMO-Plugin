@@ -1,0 +1,29 @@
+# Part 4 of 9 of the MaRDI query model-basics_mardi.sparql (see README.md).
+SELECT
+?id
+?is_space_continuous
+?is_space_discrete
+?is_time_continuous
+?is_time_discrete
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{continuous-space model}. BIND("True" AS ?is_space_continuous_raw) }}
+
+    BIND(COALESCE(?is_space_continuous_raw, "False") AS ?is_space_continuous)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{discrete-space model}. BIND("True" AS ?is_space_discrete_raw) }}
+
+    BIND(COALESCE(?is_space_discrete_raw, "False") AS ?is_space_discrete)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{continuous-time model}. BIND("True" AS ?is_time_continuous_raw) }}
+
+    BIND(COALESCE(?is_time_continuous_raw, "False") AS ?is_time_continuous)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{discrete-time model}. BIND("True" AS ?is_time_discrete_raw) }}
+
+    BIND(COALESCE(?is_time_discrete_raw, "False") AS ?is_time_discrete)
+}}
+GROUP BY ?id ?is_space_continuous ?is_space_discrete ?is_time_continuous ?is_time_discrete

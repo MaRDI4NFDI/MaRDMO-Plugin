@@ -1,4 +1,4 @@
-SELECT ?doi ?label ?description
+SELECT ?publication ?doi ?label ?description
        (GROUP_CONCAT(DISTINCT CONCAT(?inv, " || ", ?invl, " || ", ?invd, " || ", ?inv_class); SEPARATOR=" <|> ") AS ?invents)
        (GROUP_CONCAT(DISTINCT CONCAT(?doc, " || ", ?docl, " || ", ?docd, " || ", ?doc_class); SEPARATOR=" <|> ") AS ?documents)
        (GROUP_CONCAT(DISTINCT CONCAT(?stu, " || ", ?stul, " || ", ?stud, " || ", ?stu_class); SEPARATOR=" <|> ") AS ?studies)
@@ -7,7 +7,7 @@ SELECT ?doi ?label ?description
        (GROUP_CONCAT(DISTINCT CONCAT(?ana, " || ", ?anal, " || ", ?anad, " || ", ?ana_class); SEPARATOR=" <|> ") AS ?analyzes)
        (GROUP_CONCAT(DISTINCT CONCAT(?app, " || ", ?appl, " || ", ?appd, " || ", ?app_class); SEPARATOR=" <|> ") AS ?applies)
 
-WHERE {{ VALUES ?publication {{ wd:{0} }}
+WHERE {{ VALUES ?publication {{ {0} }}
 
   OPTIONAL {{
     ?invraw p:{described by source} ?statement1.
@@ -184,4 +184,4 @@ WHERE {{ VALUES ?publication {{ wd:{0} }}
   BIND(COALESCE(?descriptionraw, "No Description Provided!") AS ?description)
 
 }}
-GROUP BY ?doi ?label ?description
+GROUP BY ?publication ?doi ?label ?description

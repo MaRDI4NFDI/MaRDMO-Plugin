@@ -25,7 +25,7 @@ LIMIT 10"""
 
 WF_RESEARCH_OBJ_SPARQL = (
     "  ?workflow wdt:{problem statement} ?obj_{idx} .\n"
-    "  FILTER(CONTAINS(lcase(str(?obj_{idx})), '{keyword}'))\n"
+    "  FILTER(CONTAINS(lcase(str(?obj_{idx})), {keyword}))\n"  # keyword: escaped literal
 )
 
 WF_DISCIPLINE_SPARQL = (

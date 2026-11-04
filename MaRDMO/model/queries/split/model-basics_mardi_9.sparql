@@ -1,0 +1,50 @@
+# Part 9 of 9 of the MaRDI query model-basics_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?stm, " || ", ?stml, " || ", ?stmd); SEPARATOR=" <|> ") AS ?similar_to)
+(GROUP_CONCAT(DISTINCT CONCAT(?pub, " || ", ?publ, " || ", ?pubd); SEPARATOR=" <|> ") AS ?publication)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+         ?id wdt:{similar to} ?stmraw.
+         BIND(CONCAT("mardi:", STRAFTER(STR(?stmraw), STR(wd:))) AS ?stm)
+         
+         ?stmraw wdt:{instance of} wd:{mathematical model}.
+
+         OPTIONAL {{
+            ?stmraw rdfs:label ?stmlraw.
+            FILTER (lang(?stmlraw) = 'en')
+        }}
+        BIND(COALESCE(?stmlraw, "No Label Provided!") AS ?stml)
+        
+        OPTIONAL {{
+            ?stmraw schema:description ?stmdraw
+            FILTER (lang(?stmdraw) = 'en')
+        }}
+        BIND(COALESCE(?stmdraw, "No Description Provided!") AS ?stmd)
+    }}
+
+    OPTIONAL {{
+        ?id p:{described by source} ?statement_p .
+        ?statement_p ps:{described by source} ?pubraw .
+        ?statement_p pq:{object has role} ?role .
+        VALUES ?role {{ wd:{documentation} wd:{invention} wd:{review} wd:{study} wd:{use} }}
+        BIND(CONCAT("mardi:", STRAFTER(STR(?pubraw), STR(wd:))) AS ?pub)
+         
+        OPTIONAL {{
+            ?pubraw rdfs:label ?publraw.
+            FILTER (lang(?publraw) = 'en')
+        }}
+        BIND(COALESCE(?publraw, "No Label Provided!") AS ?publ)
+        
+        OPTIONAL {{
+            ?pubraw schema:description ?pubdraw
+            FILTER (lang(?pubdraw) = 'en')
+        }}
+        BIND(COALESCE(?pubdraw, "No Description Provided!") AS ?pubd)
+    }}
+}}
+GROUP BY ?id

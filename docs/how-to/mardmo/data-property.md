@@ -22,9 +22,10 @@ of mathematical models.
 
 !!! note "Quantity and Quantity Kind"
     The entity classes *Quantity* and *Quantity Kind* are treated together in
-    the backend under the key `quantity`.  They share a single pair of SPARQL
-    query files (`quantity_mardi.sparql` and `quantity_wikidata.sparql`), where
-    both item types are covered via a UNION pattern.
+    the backend under the key `quantity`.  They share one MaRDI Portal query
+    (the parts `split/quantity_mardi_*.sparql`) and one Wikidata query
+    (`quantity_wikidata.sparql`), where both item types are covered via a UNION
+    pattern.
 
 ---
 
@@ -113,21 +114,25 @@ DEPENDENT_PROPERTIES = [
 
 ### Step 4 — SPARQL Queries
 
-For each entity class the property applies to, edit the corresponding files in
+For each entity class the property applies to, edit the corresponding queries in
 `model/queries/` — both the MaRDI and Wikidata variants, and both the full
-and `-basics` variants where they exist.
+and `-basics` variants where they exist.  The MaRDI queries of these classes
+exist only as parts in `model/queries/split/`; its `README.md` lists which part
+requests which column.
 
 Affected files for *is dimensional*:
 
 | Entity class | Files |
 |---|---|
-| Model | `model_mardi.sparql`, `model_wikidata.sparql`, `model-basics_mardi.sparql`, `model-basics_wikidata.sparql` |
-| Formula | `formulation_mardi.sparql`, `formulation_wikidata.sparql`, `formulation-basics_mardi.sparql`, `formulation-basics_wikidata.sparql` |
-| Quantity + Quantity Kind | `quantity_mardi.sparql`, `quantity_wikidata.sparql` |
+| Model | `split/model_mardi_*.sparql`, `model_wikidata.sparql`, `split/model-basics_mardi_*.sparql`, `model-basics_wikidata.sparql` |
+| Formula | `split/formulation_mardi_*.sparql`, `formulation_wikidata.sparql`, `split/formulation-basics_mardi_*.sparql`, `formulation-basics_wikidata.sparql` |
+| Quantity + Quantity Kind | `split/quantity_mardi_*.sparql`, `quantity_wikidata.sparql` |
 
-**MaRDI Portal queries** (`*_mardi.sparql`): add `?is_dimensional` to the
-`SELECT` and `GROUP BY` clauses.  For model and formula files, add a single
-`OPTIONAL` block with a trailing `BIND`:
+**MaRDI Portal queries** (`split/*_mardi_*.sparql`): in each split query, pick
+one part other than part 1 with fewer than four `OPTIONAL` blocks (or start a
+new part with the next number) and add `?is_dimensional` to its `SELECT` and
+`GROUP BY` clauses, then update the table in `split/README.md`.  For model and
+formula queries, add a single `OPTIONAL` block with a trailing `BIND`:
 
 ```sparql
 OPTIONAL {{ ?id wdt:{instance of} wd:{dimensional model}. BIND("True" AS ?is_dimensional_raw) }}
@@ -221,11 +226,11 @@ INDEPENDENT_PROPERTIES = [
 
 ### Step 4 — SPARQL Queries
 
-Only the quantity query files need updating:
-`quantity_mardi.sparql` and `quantity_wikidata.sparql`.
+Only the quantity queries need updating: one part of
+`split/quantity_mardi_*.sparql` (as in Case 1) and `quantity_wikidata.sparql`.
 
-Add `?is_physical_constant` to `SELECT` and `GROUP BY`, then add the `OPTIONAL`
-block in the `WHERE` clause.
+Add `?is_physical_constant` to `SELECT` and `GROUP BY` of that part and of the
+Wikidata query, then add the `OPTIONAL` block in the `WHERE` clause.
 
 **MaRDI Portal:**
 

@@ -1,9 +1,14 @@
-'''Module conaining functions writing retrieved metadata into an RDMO questionnaire.
+'''Functions that write retrieved metadata into an RDMO questionnaire.
 
 After a background worker has collected entity data from external knowledge
 graphs, the results must be stored as RDMO ``Value`` objects so that the
 questionnaire reflects the fetched information.  This module provides helpers
 that create or update those values for a given project and set of answers.
+
+Portal-fetched data is sanitized before writing: ``add_properties`` silently
+drops any pair of mutually exclusive data properties (neither can be judged
+correct), and ``add_references`` skips QUDT IDs that do not match the expected
+format.  The documentation checker surfaces any resulting gaps at export time.
 
 Provides:
 
@@ -12,14 +17,16 @@ Provides:
 - ``add_new_entities``       — write newly user-created entities into the questionnaire
 - ``add_relations_static``   — write relation values using a fixed property-to-question mapping
 - ``add_relations_flexible`` — write relation values using a dynamic property-to-question mapping
-- ``add_properties``         — write data-property values for an entity at a given URI
-- ``add_references``         — write external-reference values for an entity
+- ``add_properties``         — write data-property values; drops mutually exclusive pairs
+- ``add_references``         — write external-reference values; skips malformed QUDT IDs
 '''
+
+import itertools
 
 from rdmo.options.models import Option
 
 from .constants import BASE_URI
-from .getters import get_id
+from .getters import get_id, get_mathmoddb, get_options
 from .helpers import (
     extract_parts,
     initialize_counter,
@@ -29,6 +36,8 @@ from .helpers import (
     relevant_set_ids,
     value_editor,
 )
+from .model.constants import data_properties_check, qudt_reference_ids
+from .patterns import QUDT_ID_STRICT_RE
 from .workflow.models import ProcessStepUsage
 
 def add_basics(project, text, questions, item_type, index = (None, None)):
@@ -254,16 +263,23 @@ def add_relations_static(project, data, props, index, statement):
 
     # Get existing Set and Item Information
     info = {'set_prefix_ids': get_id(project, statement['relatant'], ['set_prefix']),
-            'set_index_ids': get_id(project, statement['relatant'], ['set_index']),
-            'collection_ids': get_id(project, statement['relatant'], ['collection_index']),
             'value_ids': get_id(project, statement['relatant'], ['external_id']),
             'texts': get_id(project, statement['relatant'], ['text'])}
 
     # Get reduced set_prefixes
     index.update({'set_prefix_reduced': reduce_prefix(index['set_prefix'])})
 
-    # Set initial value of counter
-    index.update({'idx': initialize_counter(info['collection_ids'])})
+    # Count only within the sets of this entity: without platform all relatants
+    # share set 0 and idx is the collection index, with platform each relatant
+    # gets a set of its own (numbered from 1) and idx is the set index
+    own = [(set_index, collection_index) for set_prefix, set_index, collection_index in get_id(
+        project, statement['relatant'], ['set_prefix', 'set_index', 'collection_index'])
+        if str(set_prefix) == str(index['set_prefix'])]
+    if statement.get('platform'):
+        index.update({'idx': max((set_index for set_index, _ in own), default=0)})
+    else:
+        index.update({'idx': initialize_counter(
+            [collection_index for set_index, collection_index in own if set_index == 0])})
 
     # Add Relations and Relatants
     for prop in props['keys']:
@@ -377,8 +393,8 @@ def add_relations_flexible(project, data, props, index, statement):
 
     For each relatant in ``data.<prop>`` (where *prop* ∈ ``props['keys']``),
     checks whether the (relation-type, relatant) pair already exists.  If not,
-    writes the relation-type option and the relatant text/ID, handling optional
-    order-number and assumption qualifiers.
+    writes the relation-type option and the relatant text/ID, handling the
+    optional assumption qualifier.
 
     Args:
         project:   RDMO project instance.
@@ -389,34 +405,50 @@ def add_relations_flexible(project, data, props, index, statement):
         index:     Dict containing ``'set_prefix'``; updated with
                    ``'set_prefix_reduced'`` and ``'idx'`` in place.
         statement: Dict with keys ``'relation'``, ``'relatant'``, and
-                   optionally ``'order'`` and ``'assumption'`` (attribute URIs).
+                   optionally ``'assumption'`` (attribute URIs).
     '''
 
-    # Get existing Set, Item and Relation Information
+    # Get existing Set, Item and Relation Information; 'rels' holds the
+    # relation of each relatant's set (a set has one relation, several relatants)
+    relation_of_set = {
+        (set_prefix, set_index): option_uri
+        for set_prefix, set_index, option_uri in get_id(
+            project, statement['relation'], ['set_prefix', 'set_index', 'option_uri'])
+    }
     info = {'set_prefix_ids': get_id(project, statement['relatant'], ['set_prefix']),
             'set_index_ids': get_id(project, statement['relatant'], ['set_index']),
             'collection_ids': get_id(project, statement['relatant'], ['collection_index']),
             'value_ids': get_id(project, statement['relatant'], ['external_id']),
             'texts': get_id(project, statement['relatant'], ['text']),
-            'rels': get_id(project, statement['relation'], ['option_uri'])}
+            'rels': [relation_of_set.get(tuple(key)) for key in get_id(
+                project, statement['relatant'], ['set_prefix', 'set_index'])]}
 
     # Get reduced set prefix ids
     index.update({'set_prefix_reduced': reduce_prefix(index['set_prefix'])})
 
-    # Get relevant set index ids
-    ids = relevant_set_ids(info, index['set_prefix_reduced'])
+    # Get relevant set index ids (also of sets with a relation but no relatant yet)
+    ids = relevant_set_ids(info, index['set_prefix_reduced']) + relevant_set_ids(
+        {'set_index_ids': [set_index for _, set_index in relation_of_set],
+         'set_prefix_ids': [set_prefix for set_prefix, _ in relation_of_set]},
+        index['set_prefix_reduced'])
 
     # Set initial value of counter
     index.update({'idx': initialize_counter(ids)})
 
-    # Add Relations and Relatants
+    # Relatants without an assumption share one set, each assumption gets a set
+    # of its own; group them first, as the portal returns them in no fixed order
+    def assumption_group(value):
+        qualifier = getattr(value, 'qualifier', None) if statement.get('assumption') else None
+        return (bool(qualifier), qualifier or '')
+
+    # Add Relations and Relatants; a set number is only used up once something
+    # is written into it, so the sets are numbered without gaps
     for prop in props['keys']:
         inner_idx = 0
         assumption_store = {}
-        order_number_store = {}
-        for value in getattr(data, prop):
+        used = False
+        for value in sorted(getattr(data, prop), key=assumption_group):
             assumption_index = None
-            order_number_index = None
             # Get Source and Label Description String
             source, _ = value.id.split(':')
 
@@ -432,28 +464,11 @@ def add_relations_flexible(project, data, props, index, statement):
                 # Continue if existing
                 continue
 
-            # Add Order Number
-            if statement.get('order') and hasattr(value, 'other') and value.other:
-                if value.other not in order_number_store:
-                    index['idx'] +=1
-                    inner_idx = 0
-                    order_number_store.update({value.other: index['idx']})
-                order_number_index = order_number_store.get(value.other)
-                # Add Order Number to Questionnaire
-                value_editor(
-                    project = project,
-                    uri = statement['order'],
-                    info = {
-                        'text': value.other,
-                        'set_index': order_number_index,
-                        'set_prefix': index['set_prefix']
-                    }
-                )
-
             # Add Assumption
             if statement.get('assumption') and hasattr(value, 'qualifier') and value.qualifier:
                 if value.qualifier not in assumption_store:
-                    index['idx'] +=1
+                    if used:
+                        index['idx'] += 1
                     inner_idx = 0
                     assumption_store.update({value.qualifier: index['idx']})
                 assumption_index = assumption_store.get(value.qualifier)
@@ -482,7 +497,7 @@ def add_relations_flexible(project, data, props, index, statement):
                 info = {
                     'option': Option.objects.get(uri=props['mapping'].get(key=prop)["url"]),
                     'collection_index': None,
-                    'set_index': order_number_index or assumption_index or index['idx'],
+                    'set_index': index['idx'] if assumption_index is None else assumption_index,
                     'set_prefix': index['set_prefix']
                 }
             )
@@ -495,7 +510,7 @@ def add_relations_flexible(project, data, props, index, statement):
                     'text': f"{value.label} ({value.description}) [{source}]",
                     'external_id': value.id,
                     'collection_index': inner_idx,
-                    'set_index': order_number_index or assumption_index or index['idx'],
+                    'set_index': index['idx'] if assumption_index is None else assumption_index,
                     'set_prefix': index['set_prefix']
                 }
             )
@@ -507,16 +522,24 @@ def add_relations_flexible(project, data, props, index, statement):
             info['rels'].append(props['mapping'].get(key=prop)["url"])
 
             inner_idx += 1
+            used = True
 
         # Update index
-        index['idx'] += 1
+        if used:
+            index['idx'] += 1
 
 def add_properties(project, data, uri, set_prefix):
     '''Write the data-property option values from *data.properties* into the questionnaire.
 
-    Iterates over the ``{collection_index: [option_uri, …]}`` mapping in
+    Iterates over the ``{index: [option_uri, …]}`` mapping in
     ``data.properties`` and calls :func:`~MaRDMO.helpers.value_editor` for
-    each entry at ``set_index=0``.
+    each entry at ``set_index=0``.  Properties already in the question keep
+    their line; the others fill the first free lines.
+
+    Entries whose option URI belongs to a mutually exclusive pair (as defined
+    by ``data_properties_check``) are silently skipped — the entire conflicting
+    pair is dropped because it cannot be determined which side is correct.  The
+    documentation checker will report the missing properties at export time.
 
     Args:
         project:    RDMO project instance.
@@ -524,14 +547,33 @@ def add_properties(project, data, uri, set_prefix):
         uri:        Attribute URI of the data-property collection question.
         set_prefix: Set-prefix of the parent entity page.
     '''
+    incoming_uris = {value[0] for value in data.properties.values()}
+    mathmoddb = get_mathmoddb()
+    conflict = set()
+    for key_a, key_b in data_properties_check:
+        entry_a = mathmoddb.get(key=key_a)
+        entry_b = mathmoddb.get(key=key_b)
+        if entry_a and entry_b:
+            if entry_a['url'] in incoming_uris and entry_b['url'] in incoming_uris:
+                conflict.add(entry_a['url'])
+                conflict.add(entry_b['url'])
 
-    for key, value in data.properties.items():
+    # The question is a list of dropdowns: properties already in the list
+    # (from the user or an earlier filling, maybe with empty lines) stay
+    # where they are, new ones take the first free lines
+    present = dict(project.values.filter(
+        snapshot=None, attribute__uri=uri, set_prefix=str(set_prefix), set_index=0,
+    ).values_list('option__uri', 'collection_index'))
+    free = (idx for idx in itertools.count() if idx not in present.values())
+    for _, value in sorted(data.properties.items()):
+        if value[0] in conflict or value[0] in present:
+            continue
         value_editor(
             project = project,
             uri  = uri,
             info = {
                 'option': Option.objects.get(uri=value[0]),
-                'collection_index': key,
+                'collection_index': next(free),
                 'set_index': 0,
                 'set_prefix': set_prefix
             }
@@ -544,6 +586,11 @@ def add_references(project, data, uri, set_index = 0, set_prefix = None):
     ``{collection_index: [option_uri, text]}`` mapping is stored as an option
     value at the given *set_index* / *set_prefix*.
 
+    For QUDT reference options (quantity kind ID or constant ID), the text is
+    validated against ``^[A-Z][a-zA-Z_\\-]+$`` and silently skipped when it
+    does not match.  The documentation checker will report the missing reference
+    at export time.
+
     Args:
         project:    RDMO project instance.
         data:       Dataclass instance with a ``reference`` attribute.
@@ -554,13 +601,19 @@ def add_references(project, data, uri, set_index = 0, set_prefix = None):
     if not data.reference:
         return
 
+    options = get_options()
+    qudt_option_uris = {options[k] for k in qudt_reference_ids if k in options}
+
     for key, value in data.reference.items():
+        option_uri, text = value[0], value[1]
+        if option_uri in qudt_option_uris and not QUDT_ID_STRICT_RE.match(text or ''):
+            continue
         value_editor(
             project = project,
             uri  = uri,
             info = {
-                'text': value[1],
-                'option': Option.objects.get(uri=value[0]),
+                'text': text,
+                'option': Option.objects.get(uri=option_uri),
                 'collection_index': key,
                 'set_index': set_index,
                 'set_prefix': set_prefix

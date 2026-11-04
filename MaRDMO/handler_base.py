@@ -11,8 +11,8 @@ Both handlers pass catalog through every call.  The algorithm handler
 simply uses the default catalog='' everywhere.
 '''
 
-from dataclasses import dataclass, field
-from typing import Any, Optional
+from dataclasses import dataclass
+from typing import Any
 
 from .constants import ALGORITHM_PROPS, SOFTWARE_PROPS
 from .models import Algorithm, Software
@@ -22,12 +22,13 @@ from .getters import (
     get_properties,
     get_sparql_query,
     get_sparql_query_optional,
+    get_sparql_query_parts,
     get_url,
 )
 from .helpers import process_qualifier, value_editor
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .workflow.models import ProcessStepUsage
-from .queries import query_sparql
+from .queries import query_sparql, query_sparql_parts
 
 # Lazy singleton – instantiated on first use so that the Django app registry
 # is guaranteed to be ready (publication.handlers imports rdmo ORM models).
@@ -54,13 +55,8 @@ class _RelatantSpec:
     visited           – mutable set of already-processed external IDs
     batch_fill_method – optional batch SPARQL hydrator; when set, mardi/wikidata
                         relatants are collected and dispatched in one query
-    section_indices   – deprecated / ignored. Was a shared {question_set_uri:
-                        next_idx} cache to skip the max-set_index DB query, but
-                        hydration recurses and creates sibling pages mid-loop,
-                        so a cached index went stale and caused entities to
-                        overwrite each other. The set_index is now always read
-                        fresh via _next_set_index. Kept in the signature so the
-                        existing call sites need not change.
+
+    The free set_index of a section is always read fresh via _next_set_index.
     '''
     question_id_uri: str
     question_set_uri: str
@@ -69,7 +65,6 @@ class _RelatantSpec:
     catalog: str
     visited: set
     batch_fill_method: Any = None
-    section_indices: Optional[dict] = field(default=None)
 
 
 def _values_clause(items):
@@ -104,7 +99,10 @@ def _fetch_by_source(items, mardi_file, wikidata_file, model_class):
     '''Run one SPARQL query per source and return a ``{external_id: instance}`` dict.
 
     Splits *items* by source prefix (``mardi:`` / ``wikidata:``), fires a
-    separate SPARQL request to each endpoint, and merges the results.
+    separate SPARQL request to each endpoint, and merges the results.  If the
+    MaRDI template exists as split parts (see
+    :func:`~MaRDMO.getters.get_sparql_query_parts`), the parts are run and
+    their rows merged.
 
     Uses :func:`~MaRDMO.getters.get_sparql_query` for the MaRDI template
     (always required) and :func:`~MaRDMO.getters.get_sparql_query_optional`
@@ -126,10 +124,16 @@ def _fetch_by_source(items, mardi_file, wikidata_file, model_class):
     wikidata_items = [(t, eid, si) for t, eid, si in items if eid.startswith('wikidata:')]
 
     if mardi_items:
-        query   = get_sparql_query(mardi_file).format(
-            _values_clause(mardi_items), **get_items(), **get_properties()
-        )
-        results = query_sparql(query, get_url('mardi', 'sparql'))
+        values = _values_clause(mardi_items)
+        parts  = get_sparql_query_parts(mardi_file)
+        if parts:
+            results = query_sparql_parts(
+                [part.format(values, **get_items(), **get_properties()) for part in parts],
+                get_url('mardi', 'sparql'),
+            )
+        else:
+            query   = get_sparql_query(mardi_file).format(values, **get_items(), **get_properties())
+            results = query_sparql(query, get_url('mardi', 'sparql'))
         if results:
             data_by_id.update(model_class.from_query_batch(results))
 
@@ -288,8 +292,8 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
             prop_keys: Sequence of attribute names on *data* to inspect for
                        qualifier values.
             spec:      :class:`_RelatantSpec` instance bundling the target
-                       question URIs, prefix, fill methods, ``catalog``,
-                       ``visited``, and optional ``section_indices``.
+                       question URIs, prefix, fill methods, ``catalog``
+                       and ``visited``.
         '''
         batch_items = []
 
@@ -358,6 +362,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         existing = get_id(project, pub_set_uri, ['set_index'])
         next_idx = max((e for e in existing if e is not None), default=-1) + 1
 
+        entries = []
         for pub in publications:
             if pub.id in visited:
                 continue
@@ -371,10 +376,11 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                          info={'text': text, 'external_id': pub.id,
                                'set_index': next_idx})
 
-            pub_info.fill_citation(project=project, text=text,
-                                   external_id=pub.id, set_index=next_idx,
-                                   catalog=catalog)
+            entries.append((text, pub.id, next_idx))
             next_idx += 1
+
+        # One citation query per source for all publications
+        pub_info.fill_citations(project=project, entries=entries, catalog=catalog)
 
     def _fill_algorithm_batch(self, project, items, catalog='', visited=None):
         '''Hydrate multiple Algorithm pages with a single SPARQL query per source.
@@ -406,7 +412,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -432,7 +437,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                                             batch_fill_method=self._fill_problem_batch),
                         catalog=catalog, visited=visited,
                         batch_fill_method=self._fill_problem_batch,
-                        section_indices=section_indices,
                     ))
 
             add_relations_static(
@@ -451,7 +455,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                                         batch_fill_method=self._fill_software_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_software_batch,
-                    section_indices=section_indices,
                 ))
 
             if self.mathalgodb is not None and 'IntraClassRelation' in algorithm:
@@ -497,7 +500,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         if not data_by_id:
             return
 
-        section_indices = {}
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -539,7 +541,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                                             batch_fill_method=self._fill_benchmark_batch),
                         catalog=catalog, visited=visited,
                         batch_fill_method=self._fill_benchmark_batch,
-                        section_indices=section_indices,
                     ))
 
             if 'Publication' in self.questions:

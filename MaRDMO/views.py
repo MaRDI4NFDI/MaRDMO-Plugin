@@ -42,9 +42,15 @@ from django.views.decorators.http import require_GET
 from .constants import (DOI_BASE_URL, ISSN_BASE_URL, MORWIKI_BASE_URL, ORCID_BASE_URL,
                         QUDT_CONSTANT_URL, QUDT_QUANTITYKIND_URL, SWMATH_BASE_URL,
                         WIKIDATA, ZBMATH_AUTHOR_BASE_URL)
+from . import VERSION
 from .getters import get_item_url
-from .oauth2 import _progress_store
-from .store import clear_progress, _unregister_job_for_session, _job_belongs_to_session
+from .validators import url_problem
+from .store import (
+    _progress_store,
+    clear_progress,
+    _unregister_job_for_session,
+    _job_belongs_to_session,
+)
 
 @login_required
 def get_progress(request, job_id):
@@ -78,12 +84,18 @@ def show_progress(request, job_id):
         job_id:  Unique job identifier string passed to the template.
 
     Returns:
-        Rendered ``MaRDMO/progress.html`` response with context ``{"job_id": job_id}``.
+        Rendered ``MaRDMO/progress.html`` response with context ``job_id`` and
+        ``mardmo_version`` (appended to the script URL so browsers load the
+        current script after an update).
     """
     if not _job_belongs_to_session(request, job_id):
         raise Http404()
 
-    return render(request, "MaRDMO/progress.html", {"job_id": job_id})
+    return render(
+        request,
+        "MaRDMO/progress.html",
+        {"job_id": job_id, "mardmo_version": VERSION},
+    )
 
 
 @login_required
@@ -153,7 +165,8 @@ def show_success(request, job_id):
         if prop == 'MORwiki ID':
             return f'{MORWIKI_BASE_URL}{obj}'
         if prop in ('described at URL', 'source code repository URL', 'URL'):
-            return obj
+            # User-entered URL: only http(s) may become a link (no javascript: etc.)
+            return obj if not url_problem(obj) else ''
         if prop == 'QUDT quantity kind ID':
             return f'{QUDT_QUANTITYKIND_URL}{obj}'
         if prop == 'QUDT constant ID':
@@ -173,6 +186,8 @@ def show_success(request, job_id):
         qualifiers  = stmt[5] if len(stmt) > 5 else []
         unit_label  = stmt[6] if len(stmt) > 6 else ''
         unit_qid    = stmt[7] if len(stmt) > 7 else ''
+        # True: the statement was on the portal already, only qualifiers were added
+        qualifiers_added = stmt[8] if len(stmt) > 8 else False
         obj_url = _obj_url(prop, obj, obj_qid)
         for q in qualifiers:
             q['obj_url'] = _obj_url(q['prop'], q['obj'], q.get('obj_qid', ''))
@@ -188,6 +203,7 @@ def show_success(request, job_id):
                 'subject': subj, 'subject_qid': subj_qid,
                 'prop': prop, 'obj': obj, 'obj_qid': obj_qid, 'obj_url': obj_url,
                 'qualifiers': qualifiers, 'unit_label': unit_label, 'unit_qid': unit_qid,
+                'qualifiers_added': qualifiers_added,
             })
 
     # Attach statements to each item and group by class
@@ -284,6 +300,11 @@ def show_success(request, job_id):
         {
             "grouped_ids": grouped_ids,
             "relation_stmts": relation_stmts,
+            # Set when the export failed after some entities were created
+            "export_error": job_data.get("error"),
+            # Items linked to existing portal items instead of being created
+            "export_notes": job_data.get("notes", []),
+            "counts": job_data.get("counts", {}),
             "mardi_uri": mardi_uri,
             "graph_data": graph_data,
         },
@@ -316,6 +337,8 @@ def render_preview(self, template, answers, option, submit_label):
             'submit_label': submit_label,
             'mardiURI': get_item_url('mardi'),
             'wikidataURI': get_item_url('wikidata'),
+            # Appended to the stylesheet URL so browsers reload it after an update
+            'mardmo_version': VERSION,
         },
         status=200
     )

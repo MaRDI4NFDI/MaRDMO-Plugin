@@ -1,0 +1,13 @@
+# Part 1 of 9 of the MaRDI query model_mardi.sparql (see README.md).
+# This part decides which items exist; the others add their columns to its rows.
+SELECT
+?id
+(CONCAT("mardi:", STRAFTER(STR(?id), STR(wd:))) AS ?qid)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+
+}}
+GROUP BY ?id

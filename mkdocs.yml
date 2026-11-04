@@ -9,6 +9,10 @@ plugins:
       handlers:
         python:
           paths: [.]
+          options:
+            docstring_options:
+              # MaRDMO's docstrings describe types in prose; most signatures have no annotations
+              warn_missing_types: false
 
 nav:
   - Home: index.md
@@ -18,6 +22,7 @@ nav:
       - Handlers: concepts/handlers.md
       - Publications: concepts/publication.md
       - Export Pipeline: concepts/export.md
+      - Validation: concepts/validation.md
   - How to:
       - RDMO:
           - Create a New Attribute: how-to/rdmo/add-attribute.md
@@ -33,6 +38,7 @@ nav:
           - Add a Data Property: how-to/mardmo/data-property.md
           - Add a Question: how-to/mardmo/register-question.md
           - Extend the Export: how-to/mardmo/extend-export.md
+          - Validate a New Field: how-to/mardmo/validate-field.md
   - Reference:
       - Core:
           - Entry Points: reference/mardmo.md

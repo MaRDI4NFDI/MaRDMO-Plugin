@@ -5,11 +5,10 @@ into a :class:`~MaRDMO.payload.GeneratePayload` ready for submission to the
 MaRDI Portal Wikibase instance.
 '''
 
-import logging
-import time
 
 from .constants import get_relations, preview_relations, REPRODUCIBILITY, IRREPRODUCIBILITY
 
+from ..constants import SOFTWARE_REFERENCES
 from ..getters import (
     get_items,
     get_mathalgodb,
@@ -21,10 +20,9 @@ from ..getters import (
 )
 from ..helpers import (
     collect_items_without_section, entity_relations, entity_relations_grouped,
-    is_valid_url, unique_items,
+    unique_items,
 )
-from ..queries import query_sparql
-from ..payload import GeneratePayload
+from ..payload import GeneratePayload, quantity_amount
 
 from ..publication.worker import PublicationExport
 
@@ -90,10 +88,6 @@ class PrepareWorkflow(PublicationExport):
                     'new_name': relation['new_name'],
                     'encryption': relation['encryption']
                 },
-                order = {
-                    'formulation': False,
-                    'task': False
-                },
                 assumption = False,
                 mapping = (
                     self.mathmoddb           if relation.get('mapping') == 'mathmoddb'
@@ -148,8 +142,10 @@ class PrepareWorkflow(PublicationExport):
 
             # Use raw MRelatant/IRelatant dicts so the template can display
             # Name (Description) for inline items that have no dedicated section.
+            # MRelatant is {set_index: {collection_index: item}}; list the
+            # methods of each set in collection order.
             meth_by_set = {
-                set_idx: [raw]
+                set_idx: [raw[c] for c in sorted(raw)]
                 for set_idx, raw in ps_data.get('MRelatant', {}).items()
             }
             instruments = ps_data.get('IRelatant', {})
@@ -182,20 +178,10 @@ class PrepareWorkflow(PublicationExport):
                     'name':        cpu_dict.get(idx, {}).get('Name'),
                     'description': cpu_dict.get(idx, {}).get('Description'),
                     'count':       count_dict.get(idx),
-                    'count_valid': (
-                        str(count_dict.get(idx, '')).strip().isdigit()
-                        if count_dict.get(idx) else False
-                    ),
                     'cores':       cores_dict.get(idx),
-                    'cores_valid': (
-                        str(cores_dict.get(idx, '')).strip().isdigit()
-                        if cores_dict.get(idx) else False
-                    ),
                 }
                 for idx in all_indices
             ]
-            nodes = hw_data.get('nodes')
-            hw_data['nodes_valid'] = str(nodes).strip().isdigit() if nodes else False
 
         answers['cpu'] = collect_items_without_section(answers, 'hardware', 'cpu')
         answers['programminglanguage'] = collect_items_without_section(
@@ -213,53 +199,6 @@ class PrepareWorkflow(PublicationExport):
         answers['instrument'] = collect_items_without_section(
             answers, 'processstep', 'IRelatant'
         )
-
-        options = get_options()
-
-        for ds_data in answers.get('dataset', {}).values():
-            size = ds_data.get('Size')
-            if size and size[0] and size[1]:
-                val = str(size[1]).strip()
-                if size[0] == options['items']:
-                    ds_data['size_value_valid'] = val.isdigit()
-                else:
-                    try:
-                        float(val)
-                        ds_data['size_value_valid'] = True
-                    except (ValueError, TypeError):
-                        ds_data['size_value_valid'] = False
-            archive = ds_data.get('ToArchive')
-            if archive and archive[0] and archive[1]:
-                val = str(archive[1]).strip()
-                ds_data['archive_year_valid'] = len(val) == 4 and val.isdigit()
-            publish = ds_data.get('ToPublish')
-            if publish and len(publish) > 1 and publish[1]:
-                val = str(publish[1]).strip()
-                if not val.startswith('10.'):
-                    ds_data['publish_url_valid'] = is_valid_url(val)
-
-        for sw_data in answers.get('software', {}).values():
-            ref = sw_data.get('reference', {})
-            if ref.get(2) and ref[2][1]:
-                sw_data['ref_desc_url_valid'] = is_valid_url(ref[2][1])
-            if ref.get(3) and ref[3][1]:
-                sw_data['ref_repo_url_valid'] = is_valid_url(ref[3][1])
-
-        for ps_data in answers.get('processstep', {}).values():
-            for pair in ps_data.get('algorithm_software_pairs', []):
-                pair['software_doc_url_invalid'] = {
-                    idx
-                    for idx, entry in pair.get('software_doc', {}).items()
-                    if entry and entry[0] == options['URL'] and entry[1]
-                    and not is_valid_url(entry[1])
-                }
-            for pair in ps_data.get('method_instrument_pairs', []):
-                pair['method_doc_url_invalid'] = {
-                    idx
-                    for idx, entry in pair.get('method_doc', {}).items()
-                    if entry and entry[0] == options['URL'] and entry[1]
-                    and not is_valid_url(entry[1])
-                }
 
         return answers
 
@@ -362,25 +301,11 @@ class PrepareWorkflow(PublicationExport):
 
         payload.add_item_payload()
 
-        if any(key.startswith('RELATION') for key in payload.get_dictionary()):
-            query = payload.build_relation_check_query()
-
-            check = None
-            for attempt in range(2):
-                try:
-                    check = query_sparql(
-                        query           = query,
-                        sparql_endpoint = get_url('mardi', 'sparql'),
-                    )
-                    break
-                except Exception as e:
-                    logging.warning("SPARQL query attempt %s failed: %s", attempt + 1, e)
-                    if attempt == 0:
-                        time.sleep(1)
-            if not check:
-                check = [{}]
-
-            payload.add_check_results(check=check)
+        payload.validate_identifiers()
+        payload.check_existing_relations(
+            sparql_endpoint = get_url('mardi', 'sparql'),
+            api_url         = get_url('mardi', 'api'),
+        )
 
         return payload.get_dictionary(), payload.dependency
 
@@ -556,14 +481,15 @@ class PrepareWorkflow(PublicationExport):
                         )
 
                 for doc in entry.get('software-documentation', {}).get(set_idx, {}).values():
-                    if doc and len(doc) > 1 and doc[1]:
+                    text = (doc[1] or '').strip() if doc and len(doc) > 1 else ''
+                    if text:
                         if doc[0] == options['DOI']:
                             qualifiers += payload.add_qualifier(
-                                self.properties["DOI"], "external-id", doc[1]
+                                self.properties["DOI"], "external-id", text
                             )
                         elif doc[0] == options['URL']:
                             qualifiers += payload.add_qualifier(
-                                self.properties["URL"], "url", doc[1]
+                                self.properties["URL"], "url", text
                             )
 
                 for algo_item in algo_items.values():
@@ -597,14 +523,15 @@ class PrepareWorkflow(PublicationExport):
                         )
 
                 for doc in entry.get('method-documentation', {}).get(set_idx, {}).values():
-                    if doc and len(doc) > 1 and doc[1]:
+                    text = (doc[1] or '').strip() if doc and len(doc) > 1 else ''
+                    if text:
                         if doc[0] == options['DOI']:
                             qualifiers += payload.add_qualifier(
-                                self.properties["DOI"], "external-id", doc[1]
+                                self.properties["DOI"], "external-id", text
                             )
                         elif doc[0] == options['URL']:
                             qualifiers += payload.add_qualifier(
-                                self.properties["URL"], "url", doc[1]
+                                self.properties["URL"], "url", text
                             )
 
                 for meth_item in meth_items.values():
@@ -705,27 +632,7 @@ class PrepareWorkflow(PublicationExport):
                 }
             )
 
-            if entry.get("reference"):
-                if entry['reference'].get(0):
-                    payload.add_answer(
-                        verb = self.properties["DOI"],
-                        object_and_type = [entry["reference"][0][1], "external-id"],
-                    )
-                if entry['reference'].get(1):
-                    payload.add_answer(
-                        verb = self.properties["swMath work ID"],
-                        object_and_type = [entry["reference"][1][1], "external-id"],
-                    )
-                if entry['reference'].get(2):
-                    payload.add_answer(
-                        verb = self.properties["source code repository URL"],
-                        object_and_type = [entry["reference"][2][1], "URL"],
-                    )
-                if entry['reference'].get(3):
-                    payload.add_answer(
-                        verb = self.properties["described at URL"],
-                        object_and_type = [entry["reference"][3][1], "URL"],
-                    )
+            self._add_references(payload, entry.get('reference'), SOFTWARE_REFERENCES)
 
     def _export_hardwares(self, payload, hardwares: dict):
         '''Export each hardware item.
@@ -746,12 +653,12 @@ class PrepareWorkflow(PublicationExport):
                 qclass  = self.items["computer hardware"],
             )
 
-            nodes = str(entry.get('nodes', '')).strip()
-            if nodes.isdigit():
+            nodes = str(entry.get('nodes') or '').strip()
+            if nodes:
                 payload.add_answer(
                     verb = self.properties["number of compute nodes"],
                     object_and_type = [
-                        {"amount": f"+{nodes}", "unit": "1"},
+                        {"amount": quantity_amount(nodes), "unit": "1"},
                         "quantity",
                     ],
                 )
@@ -761,13 +668,13 @@ class PrepareWorkflow(PublicationExport):
                     continue
 
                 # Add number of processor cores as a statement on the CPU item
-                cores = str(entry.get('cores', {}).get(idx, '')).strip()
-                if cores.isdigit():
+                cores = str(entry.get('cores', {}).get(idx) or '').strip()
+                if cores:
                     payload.get_item_key(cpu_entry)
                     payload.add_answer(
                         verb = self.properties["number of processor cores"],
                         object_and_type = [
-                            {"amount": f"+{cores}", "unit": "1"},
+                            {"amount": quantity_amount(cores), "unit": "1"},
                             "quantity",
                         ],
                     )
@@ -778,12 +685,12 @@ class PrepareWorkflow(PublicationExport):
                 if cpu_item not in payload.get_dictionary():
                     continue
                 qualifiers = []
-                count = str(entry.get('number-of-cpu', {}).get(idx, '')).strip()
-                if count.isdigit():
+                count = str(entry.get('number-of-cpu', {}).get(idx) or '').strip()
+                if count:
                     qualifiers += payload.add_qualifier(
                         self.properties["quantity_property"],
                         "quantity",
-                        {"amount": f"+{count}", "unit": "1"},
+                        {"amount": quantity_amount(count), "unit": "1"},
                     )
                 payload.add_answer(
                     verb = self.properties["CPU"],
@@ -823,13 +730,13 @@ class PrepareWorkflow(PublicationExport):
                     options["terabyte"]: self.items["terabyte"],
                 }
                 size_unit = entry["Size"][0]
-                size_val  = entry["Size"][1]
+                size_val  = quantity_amount(entry["Size"][1] if len(entry["Size"]) > 1 else '')
                 if size_unit in unit_map:
                     payload.add_answer(
                         verb = self.properties["data size"],
                         object_and_type = [
                             {
-                                "amount": f"+{size_val}",
+                                "amount": size_val,
                                 "unit": (
                                     f"{get_url('mardi', 'entity_uri')}"
                                     f"/entity/{unit_map[size_unit]}"
@@ -842,7 +749,7 @@ class PrepareWorkflow(PublicationExport):
                     payload.add_answer(
                         verb = self.properties["number of records"],
                         object_and_type = [
-                            {"amount": f"+{size_val}", "unit": "1"},
+                            {"amount": size_val, "unit": "1"},
                             "quantity",
                         ],
                     )
@@ -883,27 +790,23 @@ class PrepareWorkflow(PublicationExport):
                         verb = self.properties["mandates"],
                         object_and_type = [self.items["data publishing"], "wikibase-item"],
                     )
-                    val = entry["ToPublish"][1] if len(entry["ToPublish"]) > 1 else ""
-                    if val.startswith("10."):
+                    val = (entry["ToPublish"][1] or "").strip() if len(entry["ToPublish"]) > 1 else ""
+                    if val:
                         payload.add_answer(
                             verb = self.properties["DOI"],
                             object_and_type = [val, "external-id"],
-                        )
-                    elif val.startswith(("http://", "https://")):
-                        payload.add_answer(
-                            verb = self.properties["URL"],
-                            object_and_type = [val, "url"],
                         )
 
             if entry.get("ToArchive"):
                 if entry["ToArchive"][0] == options["YesText"]:
                     qualifier = []
-                    if entry["ToArchive"][1]:
+                    year = str(entry["ToArchive"][1] or "").strip()
+                    if year:
                         qualifier = payload.add_qualifier(
                             self.properties["end time"],
                             "time",
                             {
-                                "time": f"+{entry['ToArchive'][1]}-00-00T00:00:00Z",
+                                "time": f"+{year}-00-00T00:00:00Z",
                                 "precision": 9,
                                 "calendarmodel": "http://www.wikidata.org/entity/Q1985727",
                             },

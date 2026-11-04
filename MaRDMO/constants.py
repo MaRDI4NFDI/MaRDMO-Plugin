@@ -42,6 +42,10 @@ ORCID_BASE_URL           = 'https://orcid.org/'
 ZBMATH_AUTHOR_BASE_URL   = 'https://zbmath.org/authors/?q=ai:'
 ISSN_BASE_URL            = 'http://www.issn.cc/'
 
+# TeX check of the production MaRDI Portal (same texvc as the export); used for
+# all instances, since the check does not depend on the target portal's data
+TEX_CHECK_URL            = 'https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex'
+
 # Mapping from catalog slug to preview template
 CATALOG_TEMPLATE_MAP = {
     CATALOG_MODEL_NAME:        'MaRDMO/modelTemplate.html',
@@ -75,11 +79,28 @@ SOFTWARE_PROPS = {
     'S2B':  ['tested_by'],
 }
 
+# Export mapping of reference answers: (option key, portal property, datatype).
+# Looked up by option, not by position (see helpers.find_reference).
+SOFTWARE_REFERENCES = (
+    ('DOI',             'DOI',                        'external-id'),
+    ('SWMATH',          'swMath work ID',             'external-id'),
+    ('SOURCECODE_URL',  'source code repository URL', 'URL'),
+    ('DESCRIPTION_URL', 'described at URL',           'URL'),
+)
+BENCHMARK_REFERENCES = (
+    ('DOI',             'DOI',                        'external-id'),
+    ('MORWIKI',         'MORwiki ID',                 'external-id'),
+    ('SOURCECODE_URL',  'source code repository URL', 'URL'),
+    ('DESCRIPTION_URL', 'described at URL',           'URL'),
+)
+
+# Same order as the options in the questionnaire: the list position is
+# used as collection_index when imported references are stored
 software_reference_ids = [
     'DOI',
     'SWMATH',
-    'SOURCECODE_URL',
     'DESCRIPTION_URL',
+    'SOURCECODE_URL',
 ]
 
 # Tuple fields: (set_prefix, set_index, collection_index, external_id, option_text)

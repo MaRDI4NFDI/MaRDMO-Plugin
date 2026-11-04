@@ -1,0 +1,69 @@
+# Part 7 of 7 of the MaRDI query task_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?lt, " || ", ?ltl, " || ", ?ltd); SEPARATOR=" <|> ") AS ?linearizes)
+(GROUP_CONCAT(DISTINCT CONCAT(?stt, " || ", ?sttl, " || ", ?sttd); SEPARATOR=" <|> ") AS ?similar_to)
+(GROUP_CONCAT(DISTINCT CONCAT(?pub, " || ", ?publ, " || ", ?pubd); SEPARATOR=" <|> ") AS ?publication)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?ltraw wdt:{linearized by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?ltraw), STR(wd:))) AS ?lt)
+         
+        ?ltraw wdt:{instance of} wd:{computational task}.
+
+        OPTIONAL {{
+            ?ltraw rdfs:label ?ltlraw.
+            FILTER (lang(?ltlraw) = 'en')
+        }}
+        BIND(COALESCE(?ltlraw, "No Label Provided!") AS ?ltl)
+        
+        OPTIONAL {{
+            ?ltraw schema:description ?ltdraw
+            FILTER (lang(?ltdraw) = 'en')
+        }}
+        BIND(COALESCE(?ltdraw, "No Description Provided!") AS ?ltd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{similar to} ?sttraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?sttraw), STR(wd:))) AS ?stt)
+         
+        ?sttraw wdt:{instance of} wd:{computational task}.
+        OPTIONAL {{
+            ?sttraw rdfs:label ?sttlraw.
+            FILTER (lang(?sttlraw) = 'en')
+        }}
+        BIND(COALESCE(?sttlraw, "No Label Provided!") AS ?sttl)
+        
+        OPTIONAL {{
+            ?sttraw schema:description ?sttdraw
+            FILTER (lang(?sttdraw) = 'en')
+        }}
+        BIND(COALESCE(?sttdraw, "No Description Provided!") AS ?sttd)
+    }}
+
+    OPTIONAL {{
+        ?id p:{described by source} ?statement_p .
+        ?statement_p ps:{described by source} ?pubraw .
+        ?statement_p pq:{object has role} ?role .
+        VALUES ?role {{ wd:{documentation} wd:{invention} wd:{review} wd:{study} wd:{use} }}
+        BIND(CONCAT("mardi:", STRAFTER(STR(?pubraw), STR(wd:))) AS ?pub)
+
+        OPTIONAL {{
+            ?pubraw rdfs:label ?publraw.
+            FILTER (lang(?publraw) = 'en')
+        }}
+        BIND(COALESCE(?publraw, "No Label Provided!") AS ?publ)
+
+        OPTIONAL {{
+            ?pubraw schema:description ?pubdraw
+            FILTER (lang(?pubdraw) = 'en')
+        }}
+        BIND(COALESCE(?pubdraw, "No Description Provided!") AS ?pubd)
+    }}
+}}
+GROUP BY ?id

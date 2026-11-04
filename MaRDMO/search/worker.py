@@ -20,9 +20,10 @@ Provides:
 '''
 
 import html
+import re
 
 from ..getters import get_item_url, get_items, get_properties, get_url
-from ..queries import query_sparql
+from ..queries import query_sparql, sparql_string
 from .sparql import (
     QUERY_BASE_WORKFLOW_SEARCH,
     WF_RESEARCH_OBJ_SPARQL,
@@ -47,6 +48,39 @@ from .sparql import (
     ALG_SOFTWARE_SPARQL,
 )
 
+_QID_RE = re.compile(r'^Q\d+$')
+
+def _comment(text):
+    '''Return *text* on a single line, for use in a SPARQL comment.'''
+    return ' '.join(str(text or '').split())
+
+
+def _item_qid(item):
+    '''Return the QID of a selected portal item (``"mardi:Q42"`` → ``"Q42"``), or ``None``.'''
+    qid = str(item.get('ID', '')).split(':')[-1]
+    return qid if _QID_RE.match(qid) else None
+
+
+def _run_query(answers, query):
+    '''Run *query* on the MaRDI Portal and store query, result count, and links in *answers*.
+
+    A failed query (portal unreachable, query rejected) sets
+    ``answers["search_failed"]`` instead of reporting zero results.
+    '''
+    answers['query'] = html.escape(query).replace('\n', '<br>')
+    results = query_sparql(query, get_url('mardi', 'sparql'), strict=True)
+    if results is None:
+        answers['search_failed'] = True
+        answers['no_results'] = '0'
+        answers['links'] = []
+        return
+    answers['no_results'] = str(len(results))
+    answers['links'] = [
+        [result["label"]["value"], f"{get_item_url('mardi')}{result['qid']['value']}"]
+        for result in results
+    ]
+
+
 def search(answers, options):
     '''Build SPARQL queries from user search criteria, execute them, and store results.
 
@@ -65,6 +99,11 @@ def search(answers, options):
     Returns:
         The mutated *answers* dict.
     '''
+    answers.setdefault('query', '')
+    answers.setdefault('no_results', '0')
+    answers.setdefault('links', [])
+    answers.setdefault('search_failed', False)
+
     if answers['search'].get('options') == options['InterdisciplinaryWorkflow']:
 
         s = answers['search']
@@ -86,67 +125,88 @@ def search(answers, options):
         for idx, keyword in enumerate(s.get('research-objective', {}).values()):
             if keyword:
                 parts.append(
-                    f"  # research objective: {keyword}\n"
+                    f"  # research objective: {_comment(keyword)}\n"
                     + WF_RESEARCH_OBJ_SPARQL.format(
-                        idx=idx, keyword=keyword.lower(), **items, **props
+                        idx=idx, keyword=sparql_string(keyword.lower()), **items, **props
                     )
                 )
 
         for idx, item in enumerate(s.get('academic-discipline', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # academic discipline: {item['Name']}\n"
+                f"  # academic discipline: {_comment(item.get('Name'))}\n"
                 + WF_DISCIPLINE_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('mathematical-model', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # mathematical model: {item['Name']}\n"
+                f"  # mathematical model: {_comment(item.get('Name'))}\n"
                 + WF_MODEL_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('algorithm', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # algorithm: {item['Name']}\n"
+                f"  # algorithm: {_comment(item.get('Name'))}\n"
                 + WF_ALGORITHM_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('software', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # software: {item['Name']}\n"
+                f"  # software: {_comment(item.get('Name'))}\n"
                 + WF_SOFTWARE_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('hardware', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # hardware: {item['Name']}\n"
+                f"  # hardware: {_comment(item.get('Name'))}\n"
                 + WF_HARDWARE_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('method', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # method: {item['Name']}\n"
+                f"  # method: {_comment(item.get('Name'))}\n"
                 + WF_METHOD_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('instrument', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # instrument: {item['Name']}\n"
+                f"  # instrument: {_comment(item.get('Name'))}\n"
                 + WF_INSTRUMENT_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('data-set', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # data set: {item['Name']}\n"
+                f"  # data set: {_comment(item.get('Name'))}\n"
                 + WF_DATASET_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
+
+        if not parts:
+            # Only unusable selections (no valid QID): same as no parameters
+            answers['query'] = 'Search requested but no usable parameters defined.'
+            return answers
 
         query = "\n".join(
             line
@@ -158,18 +218,7 @@ def search(answers, options):
             if line.strip()
         )
 
-        answers['query'] = html.escape(query).replace('\n', '<br>')
-
-        results = query_sparql(query, get_url('mardi', 'sparql'))
-        answers['no_results'] = str(len(results))
-
-        links = []
-        for result in results:
-            links.append([
-                result["label"]["value"],
-                f"{get_item_url('mardi')}{result['qid']['value']}",
-            ])
-        answers['links'] = links
+        _run_query(answers, query)
 
     elif answers['search'].get('options') == options['MathematicalModel']:
 
@@ -202,39 +251,54 @@ def search(answers, options):
                 )
 
         for idx, item in enumerate(s.get('research-problem', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # research problem: {item['Name']}\n"
+                f"  # research problem: {_comment(item.get('Name'))}\n"
                 + MM_PROBLEM_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('academic-discipline', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # academic discipline: {item['Name']}\n"
+                f"  # academic discipline: {_comment(item.get('Name'))}\n"
                 + MM_DISCIPLINE_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('computational-task', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # computational task: {item['Name']}\n"
+                f"  # computational task: {_comment(item.get('Name'))}\n"
                 + MM_TASK_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('formula', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # formula: {item['Name']}\n"
+                f"  # formula: {_comment(item.get('Name'))}\n"
                 + MM_FORMULA_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('quantity', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # quantity: {item['Name']}\n"
+                f"  # quantity: {_comment(item.get('Name'))}\n"
                 + MM_QUANTITY_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
+
+        if not parts:
+            # Only unusable selections (no valid QID): same as no parameters
+            answers['query'] = 'Search requested but no usable parameters defined.'
+            return answers
 
         query = "\n".join(
             line
@@ -246,18 +310,7 @@ def search(answers, options):
             if line.strip()
         )
 
-        answers['query'] = html.escape(query).replace('\n', '<br>')
-
-        results = query_sparql(query, get_url('mardi', 'sparql'))
-        answers['no_results'] = str(len(results))
-
-        links = []
-        for result in results:
-            links.append([
-                result["label"]["value"],
-                f"{get_item_url('mardi')}{result['qid']['value']}",
-            ])
-        answers['links'] = links
+        _run_query(answers, query)
 
     elif answers['search'].get('options') == options['Algorithm']:
 
@@ -277,18 +330,27 @@ def search(answers, options):
         parts = []
 
         for idx, item in enumerate(s.get('algorithmic-task', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # algorithmic task: {item['Name']}\n"
+                f"  # algorithmic task: {_comment(item.get('Name'))}\n"
                 + ALG_TASK_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
 
         for idx, item in enumerate(s.get('software', {}).values()):
-            qid = item['ID'].split(':')[1]
+            qid = _item_qid(item)
+            if not qid:
+                continue
             parts.append(
-                f"  # software: {item['Name']}\n"
+                f"  # software: {_comment(item.get('Name'))}\n"
                 + ALG_SOFTWARE_SPARQL.format(idx=idx, qid=qid, **items, **props)
             )
+
+        if not parts:
+            # Only unusable selections (no valid QID): same as no parameters
+            answers['query'] = 'Search requested but no usable parameters defined.'
+            return answers
 
         query = "\n".join(
             line
@@ -300,17 +362,6 @@ def search(answers, options):
             if line.strip()
         )
 
-        answers['query'] = html.escape(query).replace('\n', '<br>')
-
-        results = query_sparql(query, get_url('mardi', 'sparql'))
-        answers['no_results'] = str(len(results))
-
-        links = []
-        for result in results:
-            links.append([
-                result["label"]["value"],
-                f"{get_item_url('mardi')}{result['qid']['value']}",
-            ])
-        answers['links'] = links
+        _run_query(answers, query)
 
     return answers

@@ -30,6 +30,7 @@ from .constants import data_properties_per_class, qudt_reference_ids
 from ..getters import get_items, get_mathmoddb, get_options, get_properties, get_url
 from ..helpers import split_value
 from ..models import Relatant, RelatantWithClass, RelatantWithQualifier
+from ..queries import http_session
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,8 @@ _USER_AGENT = 'MaRDMO (https://zib.de; reidelbach@zib.de)'
 _WB_CHUNK_SIZE   = 50     # QIDs per request
 _WB_MAX_ATTEMPTS = 4      # attempts per (sub-)chunk before splitting / giving up
 _WB_BACKOFF_BASE = 1.0    # seconds; delay is base * 2**(attempt-1) + jitter
-_WB_MAX_BACKOFF  = 20.0   # cap on a single retry delay
+_WB_MAX_BACKOFF  = 20.0   # cap on a single retry delay, also on the portal's Retry-After
+_WB_DEADLINE     = 45     # seconds per batch after which nothing is retried or bisected
 _WB_TIMEOUT      = 30     # per-request timeout (seconds)
 _WB_OUTAGE_TRIP  = 3      # consecutive dead chunks that open the circuit breaker
 _WB_COOLDOWN     = 120    # seconds to stay "open" (fail fast) after tripping
@@ -65,7 +67,9 @@ def _wbgetentities_batch(api_url, qids, props, extra_params=None):
     retried with exponential backoff on transient failures — HTTP 5xx, network
     errors, timeouts, and HTTP 200 bodies carrying a MediaWiki ``error``
     object. A chunk that keeps timing out is bisected to isolate a single
-    unresponsive entity. Once :data:`_WB_OUTAGE_TRIP` chunks die in a row the
+    unresponsive entity. After :data:`_WB_DEADLINE` seconds nothing is retried
+    or bisected any more, so a struggling portal cannot hold the request for
+    minutes. Once :data:`_WB_OUTAGE_TRIP` chunks die in a row the
     endpoint's circuit breaker opens for :data:`_WB_COOLDOWN` seconds and
     further calls short-circuit, returning only what resolved.
 
@@ -93,10 +97,11 @@ def _wbgetentities_batch(api_url, qids, props, extra_params=None):
         return {}
 
     result = {}
+    deadline = time.monotonic() + _WB_DEADLINE
     for i in range(0, len(qids), _WB_CHUNK_SIZE):
         chunk = qids[i:i + _WB_CHUNK_SIZE]
         try:
-            result.update(_wbget_chunk(api_url, params_base, chunk))
+            result.update(_wbget_chunk(api_url, params_base, chunk, deadline))
         except _WbOutage:
             _wb_record_failure(api_url)
             if _wb_circuit_open(api_url):
@@ -128,13 +133,15 @@ def _wb_reset(api_url):
         _wb_breakers[api_url] = {'fails': 0, 'open_until': 0}
 
 
-def _wbget_chunk(api_url, params_base, chunk):
+def _wbget_chunk(api_url, params_base, chunk, deadline):
     '''Fetch one chunk of QIDs, retrying transient failures with backoff.
 
     Args:
         api_url:     Wikibase API endpoint.
         params_base: Shared query params (without ``ids``).
         chunk:       List of QID strings for this (sub-)request.
+        deadline:    ``time.monotonic()`` value after which the chunk is not
+                     retried or bisected any more.
 
     Returns:
         Dict ``{qid: entity}`` for every QID that resolved (may be partial).
@@ -149,7 +156,7 @@ def _wbget_chunk(api_url, params_base, chunk):
     for attempt in range(1, _WB_MAX_ATTEMPTS + 1):
         retry_after = None
         try:
-            resp = requests.get(
+            resp = http_session().get(
                 api_url, params=params,
                 headers={'User-Agent': _USER_AGENT}, timeout=_WB_TIMEOUT,
             )
@@ -169,17 +176,19 @@ def _wbget_chunk(api_url, params_base, chunk):
         if attempt < _WB_MAX_ATTEMPTS:
             delay = min(_WB_BACKOFF_BASE * 2 ** (attempt - 1), _WB_MAX_BACKOFF)
             if retry_after and str(retry_after).isdigit():
-                delay = max(delay, float(retry_after))
+                delay = max(delay, min(float(retry_after), _WB_MAX_BACKOFF))
             delay += random.uniform(0, 0.5)
+            if time.monotonic() + delay >= deadline:
+                break
             time.sleep(delay)
 
     # Retries exhausted. A persistent timeout may be one oversized entity —
     # bisect to isolate it. An endpoint-wide error propagates to the breaker.
-    if outage is None and len(chunk) > 1:
+    if outage is None and len(chunk) > 1 and time.monotonic() < deadline:
         mid = len(chunk) // 2
         return {
-            **_wbget_chunk(api_url, params_base, chunk[:mid]),
-            **_wbget_chunk(api_url, params_base, chunk[mid:]),
+            **_wbget_chunk(api_url, params_base, chunk[:mid], deadline),
+            **_wbget_chunk(api_url, params_base, chunk[mid:], deadline),
         }
 
     logger.error("wbgetentities failed for %s..%s", chunk[0], chunk[-1])
@@ -562,10 +571,13 @@ class MathematicalModel:
                 key = 'description_long'
             ),
             # Get Properties
+            # One line per property of the item, without empty lines in between
             'properties': {
                 idx: [mathmoddb.get(key=prop)["url"]]
-                for idx, prop in enumerate(data_properties_per_class['model'])
-                if data.get(prop, {}).get('value') == 'True'
+                for idx, prop in enumerate(
+                    prop for prop in data_properties_per_class['model']
+                    if data.get(prop, {}).get('value') == 'True'
+                )
             },
             # Get Problem Relation(s)
             'models': split_value(
@@ -819,10 +831,13 @@ class QuantityOrQuantityKind:
             # Get Quantity or Quantity Kind Class
             'qclass': data.get('class', {}).get('value'),
             # Get Properties
+            # One line per property of the item, without empty lines in between
             'properties': {
                 idx: [mathmoddb.get(key=prop)["url"]]
-                for idx, prop in enumerate(data_properties_per_class['quantity'])
-                if data.get(prop, {}).get('value') == 'True'
+                for idx, prop in enumerate(
+                    prop for prop in data_properties_per_class['quantity']
+                    if data.get(prop, {}).get('value') == 'True'
+                )
             },
             # Get Specialized By Relation(s)
             'specialized_by': split_value(
@@ -969,10 +984,13 @@ class MathematicalFormulation:
                 key = 'description_long'
             ),
             # Get Properties
+            # One line per property of the item, without empty lines in between
             'properties': {
                 idx: [mathmoddb.get(key=prop)["url"]]
-                for idx, prop in enumerate(data_properties_per_class['formulation'])
-                if data.get(prop, {}).get('value') == 'True'
+                for idx, prop in enumerate(
+                    prop for prop in data_properties_per_class['formulation']
+                    if data.get(prop, {}).get('value') == 'True'
+                )
             },
             # Get Reference
             'reference': data.get('reference', {}).get('value'),
@@ -1183,10 +1201,13 @@ class Task:
                 key = 'description_long'
             ),
             # Get Properties
+            # One line per property of the item, without empty lines in between
             'properties': {
                 idx: [mathmoddb.get(key=prop)["url"]]
-                for idx, prop in enumerate(data_properties_per_class['task'])
-                if data.get(prop, {}).get('value') == 'True'
+                for idx, prop in enumerate(
+                    prop for prop in data_properties_per_class['task']
+                    if data.get(prop, {}).get('value') == 'True'
+                )
             },
             # Get Assumption Relation(s)
             'assumes': split_value(

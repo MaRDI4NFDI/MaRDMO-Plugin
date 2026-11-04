@@ -23,7 +23,13 @@ from django.utils.translation import gettext_lazy as _
 from rdmo.projects.exports import Export
 
 from .checks import Checks
-from .constants import CATALOG_TEMPLATE_MAP
+from .constants import (
+    CATALOG_TEMPLATE_MAP,
+    CATALOG_MODEL_NAME,
+    CATALOG_MODEL_BASICS_NAME,
+    CATALOG_ALGORITHM_NAME,
+    CATALOG_WORKFLOW_NAME,
+)
 from .getters import (
     get_answers,
     get_options,
@@ -31,6 +37,7 @@ from .getters import (
     get_url
 )
 from .helpers import (
+    batched_writes,
     is_cyclic,
     process_question_dict,
     topological_order
@@ -47,10 +54,10 @@ from .search.worker import search
 from .publication.worker import PublicationRetriever
 
 _CATALOG_PREPARE_MAP = {
-    'mardmo-model-catalog':                      ('model',     PrepareModel,     'run_model'),
-    'mardmo-model-basics-catalog':               ('model',     PrepareModel,     'run_model'),
-    'mardmo-algorithm-catalog':                  ('algorithm', PrepareAlgorithm, 'run_algorithm'),
-    'mardmo-interdisciplinary-workflow-catalog': ('workflow',  PrepareWorkflow,  'run_workflow'),
+    CATALOG_MODEL_NAME:        ('model',     PrepareModel,     'run_model'),
+    CATALOG_MODEL_BASICS_NAME: ('model',     PrepareModel,     'run_model'),
+    CATALOG_ALGORITHM_NAME:    ('algorithm', PrepareAlgorithm, 'run_algorithm'),
+    CATALOG_WORKFLOW_NAME:     ('workflow',  PrepareWorkflow,  'run_workflow'),
 }
 
 class BaseMaRDMOExportProvider(OauthProviderMixin, Export, ABC):
@@ -251,7 +258,8 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                 'core/error.html',
                 {
                     'title': _('Value Error'),
-                    'errors': [err]
+                    # One error line per argument (e.g. one per invalid URL)
+                    'errors': list(err.args) or [err]
                 },
                 status=200
             )
@@ -276,8 +284,9 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         (relation resolution, publication retrieval, etc.), and returns the
         structured answers dict alongside the global options dict.
 
-        Supports the model, algorithm, and workflow documentation catalogs.
-        The search catalog is handled by :class:`MaRDMOQueryProvider`.
+        Supports the model, algorithm, and workflow documentation catalogs;
+        callers check the catalog beforehand.  The search catalog is handled
+        by :class:`MaRDMOQueryProvider`.
 
         Args:
             mode: ``'preview'`` additionally fetches publication metadata and
@@ -292,20 +301,7 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         options = get_options()
 
         catalog_slug = str(self.project.catalog).rsplit('/', 1)[-1]
-        entry = _CATALOG_PREPARE_MAP.get(catalog_slug)
-
-        if not entry:
-            return render(
-                self.request,
-                'core/error.html',
-                {
-                    'title': _('Unknown catalog'),
-                    'errors': [_('Cannot handle this catalog type.')]
-                },
-                status=400
-            )
-
-        question_set, PrepareClass, _ = entry
+        question_set, prepare_class, _check_method = _CATALOG_PREPARE_MAP[catalog_slug]
         questions = get_questions(question_set) | get_questions('publication')
         answers = process_question_dict(
             project=self.project,
@@ -315,14 +311,24 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
 
         if mode == 'preview':
             publication = PublicationRetriever()
-            answers = publication.get_information(
+            # MaRDMO always works on the current values, also when the export
+            # was opened from a snapshot
+            with batched_writes():
+                answers = publication.get_information(
+                    project=self.project,
+                    snapshot=None,
+                    answers=answers,
+                    options=options
+                )
+            # The export reads the citation data (title, authors, journal, ...)
+            # from the project; read the answers again so the preview shows it too
+            answers = process_question_dict(
                 project=self.project,
-                snapshot=self.snapshot,
-                answers=answers,
-                options=options
+                questions=questions,
+                get_answer=get_answers
             )
 
-        prepare = PrepareClass()
+        prepare = prepare_class()
         answers = prepare.preview(answers)
 
         return answers, options
@@ -422,7 +428,8 @@ class MaRDMOQueryProvider(Export):
             {
                 'datatype': datatype,
                 'noResults': answers['no_results'],
-                'links': answers['links']
+                'links': answers['links'],
+                'searchFailed': answers.get('search_failed', False),
             },
             status=200
         )
@@ -432,7 +439,8 @@ class MaRDMOQueryProvider(Export):
 
         Reads the search configuration from RDMO project values and dispatches
         to the :func:`~MaRDMO.search.worker.search` function to retrieve
-        matching items from the MaRDI Portal, MathModDB KG, or MathAlgoDB KG.
+        matching items from the MaRDI Portal.  Callers check beforehand that
+        the project uses the search catalog.
 
         Returns:
             Tuple ``(answers, options)`` where *answers* contains the search
@@ -440,25 +448,10 @@ class MaRDMOQueryProvider(Export):
         '''
         options = get_options()
 
-        if str(self.project.catalog).endswith('mardmo-search-catalog'):
-            questions = get_questions('search')
-
-            answers = process_question_dict(
-                project = self.project,
-                questions = questions,
-                get_answer = get_answers
-            )
-
-            answers = search(answers, options)
-
-            return answers, options
-
-        return render(
-            self.request,
-            'core/error.html',
-            {
-                'title': _('Unknown catalog'),
-                'errors': [_('Cannot handle this catalog type.')]
-            },
-            status=400
+        answers = process_question_dict(
+            project = self.project,
+            questions = get_questions('search'),
+            get_answer = get_answers
         )
+
+        return search(answers, options), options

@@ -1,0 +1,29 @@
+# Part 3 of 9 of the MaRDI query formulation-basics_mardi.sparql (see README.md).
+SELECT
+?id
+?is_linear
+?is_not_linear
+?is_dynamic
+?is_static
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{linear equation}. BIND("True" AS ?is_linear_raw) }}
+
+    BIND(COALESCE(?is_linear_raw, "False") AS ?is_linear)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{nonlinear equation}. BIND("True" AS ?is_not_linear_raw) }}
+
+    BIND(COALESCE(?is_not_linear_raw, "False") AS ?is_not_linear)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{dynamic equation}. BIND("True" AS ?is_dynamic_raw) }}
+
+    BIND(COALESCE(?is_dynamic_raw, "False") AS ?is_dynamic)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{static equation}. BIND("True" AS ?is_static_raw) }}
+
+    BIND(COALESCE(?is_static_raw, "False") AS ?is_static)
+}}
+GROUP BY ?id ?is_linear ?is_not_linear ?is_dynamic ?is_static

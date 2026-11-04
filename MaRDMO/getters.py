@@ -20,13 +20,14 @@ Provides:
 - ``get_data``                   — load and cache JSON data from a package-relative file
 - ``get_sparql_query``           — load and cache a SPARQL query file
 - ``get_sparql_query_optional``  — load and cache a SPARQL query file, or ``None`` if absent
+- ``get_sparql_query_parts``     — load and cache the split parts of a SPARQL query file, if any
 - ``get_id``                     — retrieve attribute field(s) from all questionnaire values at a URI
 - ``get_answers``                — read questionnaire values for one attribute and merge into a dict
-- ``get_user_entries``           — fetch raw ID/name/description values for a domain attribute
 '''
 
 import json
 import os
+import re
 from functools import lru_cache
 
 from django.apps import apps
@@ -35,7 +36,7 @@ from rdmo.domain.models import Attribute
 
 from .constants import BASE_URI, WIKIDATA
 from .constants import flag_dict
-from .helpers import PropertyRegistry, nested_set
+from .helpers import PropertyRegistry, get_attribute, nested_set
 def get_mathmoddb():
     '''Return a :class:`~.helpers.PropertyRegistry` for the MathModDB ontology.
 
@@ -190,6 +191,43 @@ def get_sparql_query_optional(file_name):
     with open(path, "r", encoding="utf-8") as sparql_file:
         return sparql_file.read()
 
+@lru_cache(maxsize=None)
+def get_sparql_query_parts(file_name):
+    '''Load the split parts of a SPARQL query file, or return ``None`` if it has none.
+
+    The parts of ``model/queries/task_mardi.sparql`` are
+    ``model/queries/split/task_mardi_1.sparql``, ``..._2.sparql`` and so on;
+    the query itself exists only as these parts.  Each part has only a few
+    OPTIONAL blocks, which the portal answers much faster than one query
+    with all of them (see ``model/queries/split/README.md``).
+    Result is cached indefinitely after the first read.
+
+    Args:
+        file_name: Path of the query relative to the package directory.
+
+    Returns:
+        Tuple of query strings in part order, or ``None``.
+    '''
+    folder, name = os.path.split(file_name)
+    stem = os.path.splitext(name)[0]
+    split_dir = os.path.join(os.path.dirname(__file__), folder, 'split')
+    if not os.path.isdir(split_dir):
+        return None
+    pattern = re.compile(rf'{re.escape(stem)}_(\d+)\.sparql')
+    numbers = sorted(
+        int(match.group(1))
+        for match in map(pattern.fullmatch, os.listdir(split_dir))
+        if match
+    )
+    if not numbers:
+        return None
+    parts = []
+    for number in numbers:
+        path = os.path.join(split_dir, f'{stem}_{number}.sparql')
+        with open(path, "r", encoding="utf-8") as sparql_file:
+            parts.append(sparql_file.read())
+    return tuple(parts)
+
 def get_id(project, uri, keys):
     '''Retrieve one or more attribute fields from all questionnaire values at *uri*.
 
@@ -208,9 +246,7 @@ def get_id(project, uri, keys):
     '''
     values = project.values.filter(
         snapshot=None,
-        attribute=Attribute.objects.get(
-            uri=uri
-        )
+        attribute=get_attribute(uri)
     )
     identifiers = []
     if len(keys) == 1:
@@ -301,25 +337,3 @@ def get_answers(project, val, config):
                    entry=entry)
 
     return val
-
-def get_user_entries(project, query_attribute, values):
-    '''Fetch raw ID, Name, and Description questionnaire values for a domain attribute.
-
-    Args:
-        project:         RDMO project instance.
-        query_attribute: Attribute path fragment (e.g. ``"software"``); the
-                         three sub-attributes ``<fragment>/id``, ``/name``,
-                         and ``/description`` are queried.
-        values:          Dict to populate; mutated in place.
-
-    Returns:
-        The *values* dict with keys ``"id"``, ``"name"``, and ``"description"``
-        each holding a :class:`~django.db.models.QuerySet` of
-        :class:`~rdmo.projects.models.Value` instances.
-    '''
-    for question in ('id', 'name', 'description'):
-        attr = Attribute.objects.filter(
-            uri=f'{BASE_URI}domain/{query_attribute}/{question}'
-        ).first()
-        values[question] = project.values.filter(snapshot=None, attribute=attr) if attr else []
-    return values

@@ -1,0 +1,89 @@
+# Part 8 of 10 of the MaRDI query formulation_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?nbf, " || ", ?nbfl, " || ", ?nbfd); SEPARATOR=" <|> ") AS ?nondimensionalized_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?nf, " || ", ?nfl, " || ", ?nfd); SEPARATOR=" <|> ") AS ?nondimensionalizes)
+(GROUP_CONCAT(DISTINCT CONCAT(?dbf, " || ", ?dbfl, " || ", ?dbfd); SEPARATOR=" <|> ") AS ?discretized_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?df, " || ", ?dfl, " || ", ?dfd); SEPARATOR=" <|> ") AS ?discretizes)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?id wdt:{nondimensionalized by} ?nbfraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?nbfraw), STR(wd:))) AS ?nbf)
+        
+        ?nbfraw wdt:{instance of} wd:{formula}.
+        
+        OPTIONAL {{
+            ?nbfraw rdfs:label ?nbflraw.
+            FILTER (lang(?nbflraw) = 'en')
+        }}
+        BIND(COALESCE(?nbflraw, "No Label Provided!") AS ?nbfl)
+
+        OPTIONAL {{
+            ?nbfraw schema:description ?nbfdraw
+            FILTER (lang(?nbfdraw) = 'en')
+        }}
+        BIND(COALESCE(?nbfdraw, "No Description Provided!") AS ?nbfd)
+    }}
+
+    OPTIONAL {{
+        ?nfraw wdt:{nondimensionalized by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?nfraw), STR(wd:))) AS ?nf)
+        
+        ?nfraw wdt:{instance of} wd:{formula}.
+
+        OPTIONAL {{
+            ?nfraw rdfs:label ?nflraw.
+            FILTER (lang(?nflraw) = 'en')
+        }}
+        BIND(COALESCE(?nflraw, "No Label Provided!") AS ?nfl)
+
+        OPTIONAL {{
+            ?nfraw schema:description ?nfdraw
+            FILTER (lang(?nfdraw) = 'en')
+        }}
+        BIND(COALESCE(?nfdraw, "No Description Provided!") AS ?nfd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{discretized by} ?dbfraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?dbfraw), STR(wd:))) AS ?dbf)
+                  
+        ?dbfraw wdt:{instance of} wd:{formula}.
+        
+        OPTIONAL {{
+            ?dbfraw rdfs:label ?dbflraw.
+            FILTER (lang(?dbflraw) = 'en')
+        }}
+        BIND(COALESCE(?dbflraw, "No Label Provided!") AS ?dbfl)
+        
+        OPTIONAL {{
+            ?dbfraw schema:description ?dbfdraw
+            FILTER (lang(?dbfdraw) = 'en')
+        }}
+        BIND(COALESCE(?dbfdraw, "No Description Provided!") AS ?dbfd)
+    }}
+
+    OPTIONAL {{
+        ?dfraw wdt:{discretized by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?dfraw), STR(wd:))) AS ?df)
+                   
+        ?dfraw wdt:{instance of} wd:{formula}.
+        
+        OPTIONAL {{
+            ?dfraw rdfs:label ?dflraw.
+            FILTER (lang(?dflraw) = 'en')
+        }}
+        BIND(COALESCE(?dflraw, "No Label Provided!") AS ?dfl)
+
+        OPTIONAL {{
+            ?dfraw schema:description ?dfdraw
+            FILTER (lang(?dfdraw) = 'en')
+        }}
+        BIND(COALESCE(?dfdraw, "No Description Provided!") AS ?dfd)
+    }}
+}}
+GROUP BY ?id

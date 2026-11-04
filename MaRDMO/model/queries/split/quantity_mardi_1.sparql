@@ -1,0 +1,32 @@
+# Part 1 of 8 of the MaRDI query quantity_mardi.sparql (see README.md).
+# This part decides which items exist; the others add their columns to its rows.
+SELECT
+?id
+(CONCAT("mardi:", STRAFTER(STR(?id), STR(wd:))) AS ?qid)
+?class
+?qudt_quantitykind_id
+?qudt_constant_id
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    {{
+        ?id wdt:{instance of} wd:{quantity}.
+        BIND("Quantity" AS ?class)
+    }}
+    UNION
+    {{
+        ?id wdt:{instance of} wd:{kind of quantity}.
+        BIND("QuantityKind" AS ?class)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{QUDT quantity kind ID} ?qudt_quantitykind_id
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{QUDT constant ID} ?qudt_constant_id
+    }}
+}}
+GROUP BY ?id ?class ?qudt_quantitykind_id ?qudt_constant_id

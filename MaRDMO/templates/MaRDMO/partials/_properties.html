@@ -1,7 +1,7 @@
 <b>Properties</b>:
 {% for property in properties %}
     {% if property.error %}
-        <strong style="color:red;">{{ property.label }}</strong>
+        <strong class="mardmo-error">{{ property.label }}</strong>
     {% else %}
         {{ property.label }}
     {% endif %}

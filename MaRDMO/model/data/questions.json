@@ -209,13 +209,6 @@
             "set_index": true,
             "collection_index": true,
             "external_id": true
-        },
-        "Order Number": {
-            "key1": "model",
-            "key2": "formulation_number",
-            "uri": "domain/model/formulation-order-number",
-            "set_prefix": true,
-            "set_index": true
         }
     },
     "Mathematical Formulation": {
@@ -575,13 +568,6 @@
             "set_index": true,
             "collection_index": true,
             "external_id": true
-        },
-        "Order Number": {
-            "key1": "task",
-            "key2": "task_number",
-            "uri": "domain/task/task-order-number",
-            "set_prefix": true,
-            "set_index": true
         }
     }
 }

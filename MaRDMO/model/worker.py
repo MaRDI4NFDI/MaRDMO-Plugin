@@ -10,8 +10,6 @@ Provides:
   and portal export for a single model documentation project
 '''
 
-import logging
-import time
 
 from .constants import (
     data_properties_check,
@@ -27,9 +25,9 @@ from .utils import get_data_properties, map_entity_quantity
 from ..getters import get_items, get_mathmoddb, get_properties, get_publication_mapping, get_url
 from ..helpers import entity_relations, map_entity, unique_items
 from ..payload import GeneratePayload
-from ..queries import query_sparql
 
 from ..publication.worker import PublicationExport
+from ..tex_check import annotate_formulas
 
 class PrepareModel(PublicationExport):
     '''Prepare Mathematical Model answers for preview rendering and MaRDI Portal export.
@@ -88,10 +86,6 @@ class PrepareModel(PublicationExport):
                     'new_name': relation['new_name'],
                     'encryption': relation['encryption']
                 },
-                order = {
-                    'formulation': relation['formulation'],
-                    'task': relation['task']
-                },
                 assumption = relation['assumption'],
                 mapping = (
                     self.publication_mapping if relation.get('mapping') == 'publication'
@@ -128,13 +122,18 @@ class PrepareModel(PublicationExport):
                         present.discard(opt_a)
                         present.discard(opt_b)
 
-                all_prop_keys = {k for k, _ in DEPENDENT_PROPERTIES + INDEPENDENT_PROPERTIES}
+                all_prop_keys = [k for k, _ in DEPENDENT_PROPERTIES + INDEPENDENT_PROPERTIES]
                 correct = {key for key in all_prop_keys if self.mathmoddb.get(key=key)["url"] in present}
 
+                # Fixed order of the constants, so contradicting pairs stand together
                 class_item['Properties_Check'] = [
                     {'label': self.mathmoddb.get(key=k)['label'], 'error': k in wrong}
-                    for k in correct | wrong
+                    for k in all_prop_keys
+                    if k in correct or k in wrong
                 ]
+
+        # Portal verdict for every formula and symbol (shown next to each)
+        annotate_formulas(answers)
 
         return answers
 
@@ -214,45 +213,12 @@ class PrepareModel(PublicationExport):
         # Construct Item Payloads
         payload.add_item_payload()
 
-        # If Relations are added, check if they exist
-        if any(
-            key.startswith("RELATION")
-            for key in payload.get_dictionary()
-        ):
-            query = payload.build_relation_check_query()
-
-            check = None
-            for attempt in range(2):  # try twice
-                try:
-                    check = query_sparql(
-                        query = query,
-                        sparql_endpoint = get_url('mardi', 'sparql')
-                    )
-                    break
-                except Exception as e:
-                    logging.warning("SPARQL query attempt %s failed: %s", attempt + 1, e)
-                    if attempt == 0:
-                        time.sleep(1)  # short wait before retry
-            if not check:
-                # both attempts failed → pretend no results
-                check = [{}]
-
-            # SPARQL returns math values as MathML; check math statements via API
-            math_check = payload.check_math_relations_via_api(get_url('mardi', 'api'))
-            if math_check:
-                relation_keys = [
-                    k for k in payload.get_dictionary() if k.startswith('RELATION')
-                ]
-                for idx, key in enumerate(relation_keys):
-                    if key in math_check:
-                        check[0][f'RELATION{idx}'] = {
-                            'value': math_check[key],
-                            'type':  'literal',
-                        }
-
-            payload.add_check_results(
-                check = check
-            )
+        # Reject malformed DOIs (publications), then mark existing Relations
+        payload.validate_identifiers()
+        payload.check_existing_relations(
+            sparql_endpoint = get_url('mardi', 'sparql'),
+            api_url = get_url('mardi', 'api'),
+        )
         return payload.get_dictionary(), payload.dependency
 
     # ---------------------------
@@ -357,8 +323,7 @@ class PrepareModel(PublicationExport):
                 statement = {
                     'relation': "MM2MF",
                     'relatant': "MFRelatant"
-                },
-                optional_qualifier = ['series ordinal']
+                }
             )
 
             payload.add_single_relation(
@@ -429,7 +394,7 @@ class PrepareModel(PublicationExport):
                     'relation': "IntraClassRelation",
                     'relatant': "IntraClassElement"
                 },
-                optional_qualifier = ['assumes', 'series ordinal']
+                optional_qualifier = ['assumes']
             )
 
     def _export_formulations(self, payload, formulations: dict):
@@ -524,22 +489,18 @@ class PrepareModel(PublicationExport):
                 item_class = qtype
             )
 
-            if (
-                entry.get("reference")
-                and qtype == "quantity kind"
-            ):
+            reference = entry.get("reference") or {}
+
+            if qtype == "quantity kind" and reference.get(0):
                 payload.add_answer(
                     verb = self.properties["QUDT quantity kind ID"],
-                    object_and_type = [entry["reference"][0][1], "external-id"],
+                    object_and_type = [reference[0][1], "external-id"],
                 )
 
-            if (
-                entry.get("reference")
-                and qtype == "quantity"
-            ):
+            if qtype == "quantity" and reference.get(1):
                 payload.add_answer(
                     verb = self.properties["QUDT constant ID"],
-                    object_and_type = [entry["reference"][1][1], "external-id"],
+                    object_and_type = [reference[1][1], "external-id"],
                 )
 
             payload.add_answers(

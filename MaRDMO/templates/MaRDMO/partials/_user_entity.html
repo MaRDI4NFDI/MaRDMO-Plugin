@@ -1,0 +1,2 @@
+{# Rendered by the user_entity tag (templatetags/mardmo_tags.py) #}
+{% if identifier %}{{ identifier }}{% else %}{% if name %}{{ name }}{% else %}<strong class="mardmo-error">MISSING {{ entity_class }} NAME</strong>{% endif %}{% if description_missing %} — <strong class="mardmo-error">{{ error }}</strong>{% else %} ({{ description }}){% if error %} — <strong class="mardmo-error">{{ error }}</strong>{% endif %}{% endif %}{% endif %}

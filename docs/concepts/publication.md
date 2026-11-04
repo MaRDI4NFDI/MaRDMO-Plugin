@@ -24,8 +24,10 @@ The first source in that order that returns a valid response wins.
 Once the primary metadata has been retrieved, the **ORCiD public API** is queried to find researchers associated with the DOI:
 
 ```
-https://pub.orcid.org/v3.0/search/?q=doi-self:"{doi}"
+https://pub.orcid.org/v3.0/expanded-search/?q=doi-self:"{doi}"
 ```
+
+The expanded search returns the names together with the ORCiD iDs, so one request suffices however many researchers list the DOI.
 
 The results enrich author records with ORCiD identifiers regardless of which primary source was chosen.
 
@@ -37,6 +39,8 @@ After the primary publication metadata has been retrieved, MaRDMO attempts to re
 2. These identifiers are used to search **Wikidata** for the author's QID.
 3. The ORCiD, zbMath code, and Wikidata QID together are then used to search the **MaRDI Portal** for the author's portal QID.
 4. If the author cannot be matched to any MaRDI Portal or Wikidata item, they are stored as a plain string attached to the publication record.
+
+Each item is given to one author only.  Wikidata often lists an author both as item and as name string; the name string then stays a name string, so the export cites the authors as Wikidata does.
 
 ## Journal Resolution
 

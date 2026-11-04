@@ -36,6 +36,32 @@ from .constants import (
 from .utils import clean_background_data
 from .models import Publication
 
+# Publications per citation query
+CITATION_BATCH = 50
+
+
+def _query_citations(source, external_ids):
+    '''Return ``{external_id: row}`` with the citation query row of each publication.
+
+    Queries *source* (``mardi`` or ``wikidata``) for :data:`CITATION_BATCH`
+    publications at a time.  Publications of a failed query are missing.
+    '''
+    rows = {}
+    for start in range(0, len(external_ids), CITATION_BATCH):
+        chunk = external_ids[start:start + CITATION_BATCH]
+        query = get_sparql_query(
+            f'publication/queries/doi_from_{source}.sparql'
+        ).format(
+            ' '.join(f'wd:{external_id.split(":")[1]}' for external_id in chunk),
+            **get_items(),
+            **get_properties()
+        )
+        for row in query_sparql(query, get_url(source, 'sparql')):
+            identifier = row['publication']['value'].rsplit('/', 1)[-1]
+            # Several DOIs give several rows; the first one is used
+            rows.setdefault(f'{source}:{identifier}', row)
+    return rows
+
 
 def _filter_pub_by_class(data, class_set):
     '''Return a copy of *data* with every relation field filtered to entities in *class_set*.'''
@@ -78,11 +104,7 @@ class Information:
     def fill_citation(self, project, text, external_id, set_index, catalog='', snapshot=None):
         '''Populate publication citation metadata from the MaRDI Portal or Wikidata.
 
-        Cleans any previously stored background data, then (if *text* is set
-        and not ``"not found"``) adds basic label/description, fetches SPARQL
-        citation data, stores references, and writes catalog-specific
-        Publication–Entity / Publication–Algorithm / Publication–Benchmark/Software
-        relations.
+        Single-publication case of :meth:`fill_citations`.
 
         Args:
             project:     RDMO project instance.
@@ -92,49 +114,65 @@ class Information:
             catalog:     Active catalog URI string (used for relation dispatch).
             snapshot:    RDMO snapshot (``None`` for the current snapshot).
         '''
+        self.fill_citations(project, [(text, external_id, set_index)], catalog, snapshot)
+
+    def fill_citations(self, project, entries, catalog='', snapshot=None):
+        '''Populate citation metadata for several publications at once.
+
+        Cleans any previously stored background data of every entry, then (for
+        entries whose text is set and not ``"not found"``) adds basic
+        label/description, fetches the SPARQL citation data with one query per
+        source and :data:`CITATION_BATCH` publications, stores references, and
+        writes catalog-specific Publication–Entity / Publication–Algorithm /
+        Publication–Benchmark/Software relations.
+
+        Args:
+            project:  RDMO project instance.
+            entries:  Iterable of ``(text, external_id, set_index)`` tuples.
+            catalog:  Active catalog URI string (used for relation dispatch).
+            snapshot: RDMO snapshot (``None`` for the current snapshot).
+        '''
 
         publication = self.questions["Publication"]
 
-        clean_background_data(
-            key_dict  = ITEMINFOS | CITATIONINFOS | LANGUAGES | JOURNALS | AUTHORS,
-            questions = publication,
-            project   = project,
-            snapshot  = snapshot,
-            set_index = set_index
-        )
+        by_source = {}
+        for text, external_id, set_index in entries:
+            clean_background_data(
+                key_dict  = ITEMINFOS | CITATIONINFOS | LANGUAGES | JOURNALS | AUTHORS,
+                questions = publication,
+                project   = project,
+                snapshot  = snapshot,
+                set_index = set_index
+            )
 
-        # Stop if no Text or 'not found' in ID Field
-        if not text or text == 'not found':
-            return
+            # Skip if no Text or 'not found' in ID Field
+            if not text or text == 'not found':
+                continue
 
-        # Add basic Information
-        add_basics(
-            project   = project,
-            text      = text,
-            questions = self.questions,
-            item_type = 'Publication',
-            index     = (set_index, 0)
-        )
+            # Add basic Information
+            add_basics(
+                project   = project,
+                text      = text,
+                questions = self.questions,
+                item_type = 'Publication',
+                index     = (set_index, 0)
+            )
 
-        # Get Source and ID of selected Publication
-        source, identifier = external_id.split(':')
+            source = external_id.split(':')[0]
+            by_source.setdefault(source, []).append((external_id, set_index))
 
-        # Query the External Source
-        query = get_sparql_query(
-            f'publication/queries/doi_from_{source}.sparql'
-        ).format(
-            identifier,
-            **get_items(),
-            **get_properties()
-        )
+        for source, publications in by_source.items():
+            rows = _query_citations(source, [external_id for external_id, _ in publications])
+            for external_id, set_index in publications:
+                if external_id in rows:
+                    self._write_citation(project, rows[external_id], source, set_index, catalog)
 
-        results = query_sparql(query, get_url(source, 'sparql'))
-
-        if not results:
-            return
+    def _write_citation(self, project, row, source, set_index, catalog):
+        '''Write references and relations of one publication from its query *row*.'''
+        publication = self.questions["Publication"]
 
         # Structure the data
-        data = Publication.from_query(results)
+        data = Publication.from_query([row])
 
         add_references(
             project   = project,

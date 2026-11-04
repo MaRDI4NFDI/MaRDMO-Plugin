@@ -1,33 +1,33 @@
 PREFIX wd:  <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 
-SELECT DISTINCT ?doi ?label ?description
+SELECT DISTINCT ?publication ?doi ?label ?description
 
 WHERE {{
   SERVICE wdsubgraph:scholarly_articles {{
 
-    BIND(wd:{0} AS ?idraw) .
+    VALUES ?publication {{ {0} }}
 
     OPTIONAL {{
-      ?idraw wdt:P356 ?doi.
+      ?publication wdt:P356 ?doi.
     }}
 
     OPTIONAL {{
-      ?idraw rdfs:label ?labelraw_en.
+      ?publication rdfs:label ?labelraw_en.
       FILTER (lang(?labelraw_en) = 'en')
     }}
     OPTIONAL {{
-      ?idraw rdfs:label ?labelraw_mul.
+      ?publication rdfs:label ?labelraw_mul.
       FILTER (lang(?labelraw_mul) = 'mul')
     }}
     BIND(COALESCE(?labelraw_en, ?labelraw_mul, "No Label Provided!") As ?label)
 
     OPTIONAL {{
-      ?idraw schema:description ?descriptionraw_en.
+      ?publication schema:description ?descriptionraw_en.
       FILTER (lang(?descriptionraw_en) = 'en')
     }}
     OPTIONAL {{
-      ?idraw schema:description ?descriptionraw_mul.
+      ?publication schema:description ?descriptionraw_mul.
       FILTER (lang(?descriptionraw_mul) = 'mul')
     }}
     BIND(COALESCE(?descriptionraw_en, ?descriptionraw_mul, "No Description Provided!") As ?description)

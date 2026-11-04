@@ -1,0 +1,52 @@
+# Part 5 of 8 of the MaRDI query quantity_mardi.sparql (see README.md).
+SELECT
+?id
+?is_chemical_constant
+?is_mathematical_constant
+?is_physical_constant
+(GROUP_CONCAT(DISTINCT CONCAT(?sbq, " || ", ?sbql, " || ", ?sbqd, " || ", ?sbqc); SEPARATOR=" <|> ") AS ?specialized_by)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{chemical constant}. BIND("True" AS ?is_chemical_constant_raw) }}
+
+    BIND(COALESCE(?is_chemical_constant_raw, "False") AS ?is_chemical_constant)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{mathematical constant}. BIND("True" AS ?is_mathematical_constant_raw) }}
+
+    BIND(COALESCE(?is_mathematical_constant_raw, "False") AS ?is_mathematical_constant)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{physical constant}. BIND("True" AS ?is_physical_constant_raw) }}
+
+    BIND(COALESCE(?is_physical_constant_raw, "False") AS ?is_physical_constant)
+
+    OPTIONAL {{
+        ?id wdt:{specialized by} ?sbqraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?sbqraw), STR(wd:))) AS ?sbq)
+                                                               
+        {{
+            ?sbqraw wdt:{instance of} wd:{quantity}.
+            BIND("Quantity" AS ?sbqc)
+        }}
+        UNION
+        {{
+            ?sbqraw wdt:{instance of} wd:{kind of quantity}.
+            BIND("QuantityKind" AS ?sbqc)
+        }}
+
+        OPTIONAL {{
+            ?sbqraw rdfs:label ?sbqlraw.
+            FILTER (lang(?sbqlraw) = 'en')
+        }}
+        BIND(COALESCE(?sbqlraw, "No Label Provided!") AS ?sbql)
+
+        OPTIONAL {{
+            ?sbqraw schema:description ?sbqdraw
+            FILTER (lang(?sbqdraw) = 'en')
+        }}
+        BIND(COALESCE(?sbqdraw, "No Description Provided!") AS ?sbqd)
+    }}
+}}
+GROUP BY ?id ?is_chemical_constant ?is_mathematical_constant ?is_physical_constant

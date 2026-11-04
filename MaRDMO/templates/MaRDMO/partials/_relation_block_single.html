@@ -1,14 +1,14 @@
 <h3 id="{{ anchor }}">Relations to {{ title }}</h3>
 {% for models in relatants.values %}
     {% if models == 'not found' %}
-        {{ relation }}: <strong style="color:red;">SELECTED {{ class }} NOT FOUND IN {{ class }} SECTION</strong> <br>
+        {{ relation }}: <strong class="mardmo-error">SELECTED {{ class }} NOT FOUND IN {{ class }} SECTION</strong> <br>
     {% else %}
         {{ relation }}: {{ models }} <br>
     {% endif %}
 {% empty %}
      {% if empty_msg == "True" %}
-        <strong style="color:red;">MISSING {{ class }}</strong>
+        <strong class="mardmo-error">MISSING {{ class }}</strong>
     {% else %}
-        <strong style="color:black;">NOT DOCUMENTED</strong>
+        <strong class="mardmo-empty">NOT DOCUMENTED</strong>
     {% endif %}
 {% endfor %}

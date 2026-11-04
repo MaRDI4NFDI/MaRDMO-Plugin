@@ -10,6 +10,7 @@ window.MathJax = {
     svg: { fontCache: 'none' }
 };
 </script>
+{% include "MaRDMO/partials/_mathjax_safe_config.html" %}
 <script type="text/javascript" id="MathJax-script" async
         src="{% static 'MaRDMO/js/mathjax/es5/tex-svg.js' %}"></script>
 <div align='center'>
@@ -24,6 +25,28 @@ window.MathJax = {
         &ensp;&middot;&ensp;
         Mathematics rendered by <a href="https://www.mathjax.org/" target="_blank" style="color:grey;">MathJax</a> (Apache&nbsp;2.0).
     </div>
+
+    {% if export_error %}
+        <div style="width:90%;margin:0 auto 30px auto;padding:16px 20px;text-align:left;border:2px solid darkred;border-radius:6px;background:#fdecea;">
+            <p style="color:darkred;font-size:24px;font-weight:bold;margin:0 0 8px 0">Upload incomplete</p>
+            <p style="color:darkred;font-size:15px;margin:0 0 8px 0">{{ export_error }}</p>
+            <p style="color:#333;font-size:15px;margin:0">
+                Created {{ counts.items_created }} of {{ counts.items_planned }} new items
+                and {{ counts.relations_created }} of {{ counts.relations_planned }} statements on existing items
+                (listed below). The created items are linked in your project.
+                Fix the problem and export again to add the rest.
+            </p>
+        </div>
+    {% endif %}
+
+    {% if export_notes %}
+        <div style="width:90%;margin:0 auto 30px auto;padding:16px 20px;text-align:left;border:2px solid #b8860b;border-radius:6px;background:#fff8e1;">
+            <p style="color:#8a6d00;font-size:20px;font-weight:bold;margin:0 0 8px 0">Please note</p>
+            {% for note in export_notes %}
+                <p style="color:#333;font-size:15px;margin:0 0 4px 0">{{ note }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     {% if grouped_ids or relation_stmts %}
 
@@ -76,6 +99,7 @@ window.MathJax = {
                         {% if r.subject_qid %}<a href="{{mardi_uri}}{{r.subject_qid}}" style="color:dodgerblue;">{{r.subject}}</a>{% else %}{{r.subject}}{% endif %}
                         &nbsp;<em style="color:#888">{{r.prop}}</em>&nbsp;
                         {% if r.obj_url %}<a href="{{r.obj_url}}" target="_blank" style="color:dodgerblue;">{{r.obj}}</a>{% elif r.obj_qid %}<a href="{{mardi_uri}}{{r.obj_qid}}" style="color:dodgerblue;">{{r.obj}}</a>{% else %}{{r.obj}}{% endif %}{% if r.unit_qid %} <a href="{{mardi_uri}}{{r.unit_qid}}" style="color:dodgerblue;">{{r.unit_label}}</a>{% endif %}
+                        {% if r.qualifiers_added %}&nbsp;<em style="color:#888">(existing statement, qualifiers added:)</em>{% endif %}
                     </p>
                     {% for q in r.qualifiers %}
                         <p style="color:#999;font-size:13px;margin:0 0 0 40px">
@@ -387,24 +411,40 @@ window.MathJax = {
                 if (url) window.open(url, '_blank');
             });
 
-            // Edge click → show qualifier tooltip
+            // Edge click → show qualifier tooltip.  Qualifier values can be
+            // user text (parameters, comments), so the tooltip is built from
+            // DOM nodes with textContent, never from an HTML string.
             var tooltip = document.getElementById('cy-tooltip');
+            function _link(href, text) {
+                var a = document.createElement('a');
+                a.href = href;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.style.color = 'dodgerblue';
+                a.textContent = text;
+                return a;
+            }
             cy.on('tap', 'edge', function(evt) {
                 var quals = evt.target.data('qualifiers') || [];
                 if (!quals.length) { tooltip.style.display = 'none'; return; }
-                var html = '<strong style="font-size:13px;">Qualifiers</strong><br>';
+                tooltip.replaceChildren();
+                var heading = document.createElement('strong');
+                heading.style.fontSize = '13px';
+                heading.textContent = 'Qualifiers';
+                tooltip.append(heading, document.createElement('br'));
                 quals.forEach(function(q) {
-                    var objHtml;
+                    var prop = document.createElement('em');
+                    prop.textContent = q.prop || '';
+                    var obj;
                     if (q.obj_url) {
-                        objHtml = '<a href="' + q.obj_url + '" target="_blank" style="color:dodgerblue;">' + q.obj + '</a>';
+                        obj = _link(q.obj_url, q.obj || '');
                     } else if (q.obj_qid) {
-                        objHtml = '<a href="' + MARDI_URI + q.obj_qid + '" target="_blank" style="color:dodgerblue;">' + q.obj + '</a>';
+                        obj = _link(MARDI_URI + q.obj_qid, q.obj || '');
                     } else {
-                        objHtml = q.obj || '';
+                        obj = document.createTextNode(q.obj || '');
                     }
-                    html += '<em>' + q.prop + '</em> &rarr; ' + objHtml + '<br>';
+                    tooltip.append(prop, ' → ', obj, document.createElement('br'));
                 });
-                tooltip.innerHTML = html;
                 tooltip.style.display = 'block';
                 var e = evt.originalEvent;
                 tooltip.style.left = (e.clientX + 14) + 'px';
@@ -460,12 +500,19 @@ window.MathJax = {
             allProps.sort();
 
             // ── Build legend HTML (entries are click-to-toggle) ────────────
+            // Class and property names come from MaRDMO's configuration, but
+            // are escaped anyway before going into the HTML string
+            function _esc(text) {
+                return String(text).replace(/[&<>"']/g, function(c) {
+                    return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c];
+                });
+            }
             var lh = '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin-bottom:8px;">';
             Object.keys(presentClasses).forEach(function(cls) {
-                lh += '<span data-cls="' + cls + '" title="Click to toggle"'
+                lh += '<span data-cls="' + _esc(cls) + '" title="Click to toggle"'
                     + ' style="display:inline-flex;align-items:center;cursor:pointer;user-select:none;">'
                     + '<span style="display:inline-block;width:13px;height:13px;border-radius:50%;background:'
-                    + presentClasses[cls] + ';margin-right:5px;flex-shrink:0;"></span>New ' + cls + '</span>';
+                    + _esc(presentClasses[cls]) + ';margin-right:5px;flex-shrink:0;"></span>New ' + _esc(cls) + '</span>';
             });
             if (hasExisting) {
                 lh += '<span data-type="existing" title="Click to toggle"'
@@ -502,8 +549,8 @@ window.MathJax = {
                 allProps.forEach(function(p) {
                     var pid = 'flt-p-' + p.replace(/[^a-zA-Z0-9]/g, '_');
                     lh += '<label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer;">'
-                        + '<input type="checkbox" class="flt-prop" data-prop="' + p + '" id="' + pid + '" checked> '
-                        + p + '</label>';
+                        + '<input type="checkbox" class="flt-prop" data-prop="' + _esc(p) + '" id="' + pid + '" checked> '
+                        + _esc(p) + '</label>';
                 });
                 lh += '</div>';
             }

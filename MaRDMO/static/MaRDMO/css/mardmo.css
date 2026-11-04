@@ -1,0 +1,63 @@
+/* Styles for the MaRDMO documentation previews (mardmoPreview.html). */
+
+/* Tables (e.g. symbols of a defining formula), scoped to the preview so
+   that the rest of the RDMO page is not affected */
+.mardmo-preview table {
+    margin-left: 0;
+    margin-right: auto;
+    margin-bottom: 24px;
+    border-spacing: 0;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.mardmo-preview table th {
+    padding: 3px 10px;
+    background-color: white;
+    border-top: none;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    text-align: center;
+}
+
+.mardmo-preview table td {
+    padding: 3px 10px;
+    border: 1px solid black;
+    text-align: center;
+}
+
+/* Something is missing or invalid and blocks the export */
+.mardmo-error {
+    color: red;
+    font-weight: bold;
+}
+
+/* Optional information that was not documented */
+.mardmo-empty {
+    color: black;
+    font-weight: bold;
+}
+
+/* A formula shown as raw TeX because it cannot be rendered or was rejected */
+.mardmo-tex {
+    white-space: pre-wrap;
+}
+
+/* Information that does not block the export (e.g. formula not verified) */
+.mardmo-note {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Collapsed details, e.g. authors and journal of a publication */
+.mardmo-details {
+    margin: 0.3em 0 0.6em 0;
+}
+.mardmo-details summary {
+    cursor: pointer;
+    color: #6c757d;
+}
+.mardmo-details ul {
+    margin: 0.3em 0 0 1.5em;
+}

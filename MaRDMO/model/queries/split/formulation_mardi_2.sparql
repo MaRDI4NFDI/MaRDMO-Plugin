@@ -1,0 +1,30 @@
+# Part 2 of 10 of the MaRDI query formulation_mardi.sparql (see README.md).
+SELECT
+?id
+?is_ordinary_differential_equation
+?is_partial_differential_equation
+(GROUP_CONCAT(DISTINCT ?descriptionLong; SEPARATOR=" <|> ") AS ?description_long)
+(GROUP_CONCAT(DISTINCT ?alias; SEPARATOR=" <|> ") AS ?aliases)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?id wdt:{description} ?descriptionLong
+    }}
+
+    OPTIONAL {{
+        ?id skos:altLabel ?alias .
+        FILTER (LANG(?alias) = "en")
+    }}
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{ordinary differential equation}. BIND("True" AS ?is_ordinary_differential_equation_raw) }}
+
+    BIND(COALESCE(?is_ordinary_differential_equation_raw, "False") AS ?is_ordinary_differential_equation)
+
+    OPTIONAL {{ ?id wdt:{instance of} wd:{partial differential equation}. BIND("True" AS ?is_partial_differential_equation_raw) }}
+
+    BIND(COALESCE(?is_partial_differential_equation_raw, "False") AS ?is_partial_differential_equation)
+}}
+GROUP BY ?id ?is_ordinary_differential_equation ?is_partial_differential_equation

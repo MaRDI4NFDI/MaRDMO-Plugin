@@ -1,0 +1,89 @@
+# Part 7 of 9 of the MaRDI query model-basics_mardi.sparql (see README.md).
+SELECT
+?id
+(GROUP_CONCAT(DISTINCT CONCAT(?conm, " || ", ?conml, " || ", ?conmd); SEPARATOR=" <|> ") AS ?contains_model)
+(GROUP_CONCAT(DISTINCT CONCAT(?conim, " || ", ?coniml, " || ", ?conimd); SEPARATOR=" <|> ") AS ?contained_in_model)
+(GROUP_CONCAT(DISTINCT CONCAT(?dbm, " || ", ?dbml, " || ", ?dbmd); SEPARATOR=" <|> ") AS ?discretized_by)
+(GROUP_CONCAT(DISTINCT CONCAT(?dm, " || ", ?dml, " || ", ?dmd); SEPARATOR=" <|> ") AS ?discretizes)
+
+WHERE {{
+
+    VALUES ?id {{{0}}}
+
+    OPTIONAL {{
+        ?id wdt:{contains} ?conmraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?conmraw), STR(wd:))) AS ?conm)
+         
+        ?conmraw wdt:{instance of} wd:{mathematical model}.
+        
+        OPTIONAL {{
+            ?conmraw rdfs:label ?conmlraw.
+            FILTER (lang(?conmlraw) = 'en')
+        }}
+        BIND(COALESCE(?conmlraw, "No Label Provided!") AS ?conml)
+        
+        OPTIONAL {{
+            ?conmraw schema:description ?conmdraw
+            FILTER (lang(?conmdraw) = 'en')
+        }}
+        BIND(COALESCE(?conmdraw, "No Description Provided!") AS ?conmd)
+    }}
+
+    OPTIONAL {{
+        ?conimraw wdt:{contains} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?conimraw), STR(wd:))) AS ?conim)
+         
+        ?conimraw wdt:{instance of} wd:{mathematical model}.
+
+        OPTIONAL {{
+            ?conimraw rdfs:label ?conimlraw.
+            FILTER (lang(?conimlraw) = 'en')
+        }}
+        BIND(COALESCE(?conimlraw, "No Label Provided!") AS ?coniml)
+        
+        OPTIONAL {{
+            ?conimraw schema:description ?conimdraw
+            FILTER (lang(?conimdraw) = 'en')
+        }}
+        BIND(COALESCE(?conimdraw, "No Description Provided!") AS ?conimd)
+    }}
+
+    OPTIONAL {{
+        ?id wdt:{discretized by} ?dbmraw.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?dbmraw), STR(wd:))) AS ?dbm)
+                   
+        ?dbmraw wdt:{instance of} wd:{mathematical model}.
+
+        OPTIONAL {{
+            ?dbmraw rdfs:label ?dbmlraw.
+            FILTER (lang(?dbmlraw) = 'en')
+        }}
+        BIND(COALESCE(?dbmlraw, "No Label Provided!") AS ?dbml)
+        
+        OPTIONAL {{
+            ?dbmraw schema:description ?dbmdraw
+            FILTER (lang(?dbmdraw) = 'en')
+        }}
+        BIND(COALESCE(?dbmdraw, "No Description Provided!") AS ?dbmd)
+    }}
+
+    OPTIONAL {{
+        ?dmraw wdt:{discretized by} ?id.
+        BIND(CONCAT("mardi:", STRAFTER(STR(?dmraw), STR(wd:))) AS ?dm)
+         
+        ?dmraw wdt:{instance of} wd:{mathematical model}.
+
+        OPTIONAL {{
+            ?dmraw rdfs:label ?dmlraw.
+            FILTER (lang(?dmlraw) = 'en')
+        }}
+        BIND(COALESCE(?dmlraw, "No Label Provided!") AS ?dml)
+        
+        OPTIONAL {{
+            ?dmraw schema:description ?dmdraw
+            FILTER (lang(?dmdraw) = 'en')
+        }}
+        BIND(COALESCE(?dmdraw, "No Description Provided!") AS ?dmd)
+    }}
+}}
+GROUP BY ?id

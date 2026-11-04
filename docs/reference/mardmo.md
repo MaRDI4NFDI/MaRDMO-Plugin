@@ -20,9 +20,17 @@
 
 ::: MaRDMO.handler_base
 
+## Adders
+
+::: MaRDMO.adders
+
 ## Router
 
 ::: MaRDMO.router
+
+## Validators
+
+::: MaRDMO.validators
 
 ## Views
 
