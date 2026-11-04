@@ -20,6 +20,8 @@ Cases (expected after the qualifier merge):
   C2  F as initial condition on portal, user adds F as boundary cond.    new
   C3  F as initial condition on portal, user enters it again             exists
   C4  F as initial condition on portal, user adds plain "contains F"     new
+  C5  as C4, but no statement of the export has a role                   new
+      (a hand-built payload: a whole model brings its roles along)
   A1  specialization without assumption, user adds assumption q          partial
   A2  specialization with assumption q1, user adds q2                    partial
   A3  specialization with assumption q1, user enters q1 again            exists
@@ -39,7 +41,8 @@ from common import *  # noqa: F401,F403
 from preview_edits import answer, new_item, own, portal, TEXTS, MATHMODDB, MARDMO
 from preview_payload import preview_and_payload, out
 from preview_compare import parse_payload
-from MaRDMO.getters import get_properties
+from MaRDMO.getters import get_items, get_properties, get_url
+from MaRDMO.payload import GeneratePayload
 
 TITLE = 'TEMP qualifier merge'
 PROPS = get_properties()
@@ -142,6 +145,31 @@ LABELS = ['Q6674426', 'Q6674155', 'Q6675446', 'Q6675425', 'Q6775747', 'Q6775753'
           'Q6032636', 'Q6825400']
 
 
+def plain_contains_only():
+    """C5: only "Q6675425 contains Q6674426", which the portal holds as initial condition.
+
+    The export of a whole model also writes its other "contains" statements,
+    some with a role; here the payload holds nothing else.  Runs the real
+    existence check (one SPARQL query, one wbgetentities request).
+    """
+    payload = GeneratePayload(url=get_url('mardi', 'uri'), dependency={},
+                              wikibase={'items': get_items(), 'properties': PROPS, 'relations': {}})
+    payload.state.dictionary = {
+        'Item0000000001': {'id': 'Q6675425', 'label': TEXTS['Q6675425'], 'description': ''},
+        'Item0000000002': {'id': 'Q6674426', 'label': TEXTS['Q6674426'], 'description': ''},
+    }
+    payload.add_answer(PROPS['contains'], ['Item0000000002', 'wikibase-item'], subject='Item0000000001')
+    payload.check_existing_relations(get_url('mardi', 'sparql'), get_url('mardi', 'api'))
+    found = payload._claims.get('Q6675425', {}).get(PROPS['contains'], [])
+    on_portal = [sorted((q, s['datavalue']['value'].get('id')) for q, snaks in c.get('qualifiers', {}).items()
+                        for s in snaks if 'datavalue' in s and isinstance(s['datavalue']['value'], dict))
+                 for c in found if c['mainsnak'].get('datavalue', {}).get('value', {}).get('id') == 'Q6674426']
+    exists = payload.state.dictionary['RELATION0']['exists']
+    return {'case': 'C5', 'statement': 'Q6675425 contains Q6674426', 'qualifiers': [],
+            'result': {'true': 'exists', 'partial': 'partial'}.get(exists, 'new'), 'expected': 'new',
+            'on the portal (item qualifiers)': on_portal}
+
+
 def classify(payload, cases):
     """Find each case's statement in the payload and report its existence check result."""
     pname = {v: k for k, v in PROPS.items()}
@@ -193,6 +221,10 @@ if __name__ in ('__main__', 'django.core.management.commands.shell'):
                 print(qid, 'ERROR', traceback.format_exc())
             finally:
                 Project.objects.filter(title=TITLE).delete()
+        row = plain_contains_only()
+        report['cases'].append(row)
+        print(f"{row['case']:3} {row['statement']:44} {row['result']:15} expected {row['expected']:8}"
+              f"{'' if row['result'] == row['expected'] else '   <-- differs'}", flush=True)
     finally:
         Project.objects.filter(title=TITLE).delete()
         json.dump(report, open(os.path.join(out, 'report.json'), 'w'), indent=1, default=str)
