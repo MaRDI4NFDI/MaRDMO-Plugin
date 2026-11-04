@@ -26,6 +26,8 @@ DATABASES = {
 
 INSTALLED_APPS = ['MaRDMO'] + INSTALLED_APPS
 
+ROOT_URLCONF = 'tests.urls'
+
 MARDMO_PROVIDER = {
     'mardi': {
         'items': 'data/items.json',

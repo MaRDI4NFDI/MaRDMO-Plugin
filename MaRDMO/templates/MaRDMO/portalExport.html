@@ -109,6 +109,9 @@ window.MathJax = {
                     {% endfor %}
                 {% endfor %}
             {% endif %}
+            {% if standard_added %}
+                <p style="color:grey;font-size:16px;margin:16px 0 0 20px">{% include "MaRDMO/partials/_standard_added.html" %}</p>
+            {% endif %}
 
         </div><!-- end view-list -->
 
@@ -624,6 +627,9 @@ window.MathJax = {
 
     {% else %}
         <p style="color:Black;font-size:40px;font-weight:bold">Export complete — no new items or relations.</p>
+        {% if standard_added %}
+            <p style="color:Black;font-size:20px">{% include "MaRDMO/partials/_standard_added.html" %}</p>
+        {% endif %}
         <br>
         <p style="color:Black;font-size:20px;font-weight:bold">Checkout <a href="{{mardi_uri|cut:"wiki/Item:"}}" style="color:dodgerblue;">MaRDI Portal</a>&#x1F517;</p>
     {% endif %}
