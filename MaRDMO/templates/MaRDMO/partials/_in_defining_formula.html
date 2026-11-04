@@ -20,10 +20,11 @@
             </tr>
         </thead>
         <tbody>
-            {% for value in element.values %}
+            {% with problems=element|element_problems %}
+            {% for key, value in element.items %}
                 {% if value.Info.Type == "Quantity" %}
                     <tr>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} {% formula value.symbol value.symbol_check %} {% else %} <strong class="mardmo-error">MISSING SYMBOL</strong> {% endif %} </td>
+                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} {% formula value.symbol value.symbol_check %}{% with problem=problems|get_item:key %}{% if problem %} <strong class="mardmo-error">{{ problem }}</strong>{% endif %}{% endwith %} {% else %} <strong class="mardmo-error">MISSING SYMBOL</strong> {% endif %} </td>
                         <td style="text-align: center; vertical-align: middle;">{% if value.Info.Name %} {{ value.Info.Name }} {% else %} <strong class="mardmo-error">MISSING NAME</strong> {% endif %} </td>
                         <td style="text-align: center; vertical-align: middle;">{% if value.Info.ID != 'not found' %} {{ value.Info.ID }} {% else %} - {% endif %}</td>
                         <td style="text-align: center; vertical-align: middle;">{{ value.Info.QKName }}</td>
@@ -32,7 +33,7 @@
                     </tr>
                 {% elif value.Info.Type == "Quantity Kind" %}
                     <tr>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} {% formula value.symbol value.symbol_check %} {% else %} <strong class="mardmo-error">MISSING SYMBOL</strong> {% endif %} </td>
+                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} {% formula value.symbol value.symbol_check %}{% with problem=problems|get_item:key %}{% if problem %} <strong class="mardmo-error">{{ problem }}</strong>{% endif %}{% endwith %} {% else %} <strong class="mardmo-error">MISSING SYMBOL</strong> {% endif %} </td>
                         <td style="text-align: center; vertical-align: middle;"></td>
                         <td style="text-align: center; vertical-align: middle;"></td>
                         <td style="text-align: center; vertical-align: middle;">{% if value.Info.Name %} {{ value.Info.Name }} {% else %} <strong class="mardmo-error">MISSING NAME</strong> {% endif %}</td>
@@ -41,11 +42,12 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} {% formula value.symbol value.symbol_check %} {% else %} <strong class="mardmo-error">MISSING SYMBOL</strong> {% endif %} </td>
+                        <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} {% formula value.symbol value.symbol_check %}{% with problem=problems|get_item:key %}{% if problem %} <strong class="mardmo-error">{{ problem }}</strong>{% endif %}{% endwith %} {% else %} <strong class="mardmo-error">MISSING SYMBOL</strong> {% endif %} </td>
                         <td colspan="5" style="text-align: center; vertical-align: middle;"> <strong class="mardmo-error">MISSING QUANTITY OR QUANTITY KIND</strong> </td>
                     </tr>
                 {% endif %}
             {% endfor %}
+            {% endwith %}
         </tbody>
     </table>
 {% else %}

@@ -90,6 +90,10 @@ def map_entity_quantity(data, entity_type):
     for entity in data.get(entity_type, {}).values():
         for element in entity.get("element", {}).values():
             element_quantity_name = element.get("quantity", {}).get("Name", "").lower()
+            if not element_quantity_name:
+                # No quantity yet (e.g. a symbol without "symbol represents" on
+                # the portal): must not match a quantity page without a name
+                continue
 
             for quantity in data.get("quantity", {}).values():
                 quantity_name = quantity.get("Name", "").lower()

@@ -9,7 +9,9 @@ from ..model.constants import (
 from ..constants import BASE_URI, CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..patterns import QUDT_ID_STRICT_RE
 from ..tex_check import UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
-from ..validators import formula_comment_problem, has_equivalence_sign
+from ..validators import (
+    ELEMENT_SYMBOL_MESSAGES, element_symbol_problems, formula_comment_problem, has_equivalence_sign,
+)
 
 
 class ModelMixin:
@@ -47,6 +49,22 @@ class ModelMixin:
                     section, page_name,
                     f'Invalid Symbol "{symbol}": rejected by the MaRDI Portal ({problem})'
                 ))
+
+    def _check_element_symbols(self, ivalue, section, page_name):
+        '''Append an error for every symbol that does not stand for exactly one quantity.
+
+        The symbol table belongs to the item (one formula or one quantity
+        definition) and is shared by all of its formula fields.
+        '''
+        reported = set()
+        for key, problem in element_symbol_problems(ivalue.get('element')).items():
+            symbol = ivalue['element'][key].get('symbol')
+            if (symbol, problem) in reported:
+                continue
+            reported.add((symbol, problem))
+            self.err.append(self._error(
+                section, page_name, f'Symbol "{symbol}" {ELEMENT_SYMBOL_MESSAGES[problem]}'
+            ))
 
     def properties(self, project, data, catalog):
         '''Check for mutually exclusive (conflicting) data-property combinations.
@@ -348,6 +366,7 @@ class ModelMixin:
                             message = 'Missing Formula Quantity'
                         )
                     )
+                self._check_element_symbols(ivalue, 'Formula', page_name)
 
             self._check_flexible(
                 data       = ivalue,
@@ -475,6 +494,7 @@ class ModelMixin:
                                 message = 'Missing Quantity Definition Quantity'
                             )
                         )
+                    self._check_element_symbols(ivalue, 'Quantity [Kind]', page_name)
 
             if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["label"]:
                 self._check_flexible(

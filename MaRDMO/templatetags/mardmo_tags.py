@@ -40,6 +40,7 @@ from ..validators import doi_problem as _doi_problem
 from ..validators import swmath_problem as _swmath_problem
 from ..validators import url_problem as _url_problem
 from ..validators import url_schemes
+from ..validators import ELEMENT_SYMBOL_MESSAGES, element_symbol_problems
 from ..tex_check import UNAVAILABLE, environment_hint
 
 register = template.Library()
@@ -105,6 +106,13 @@ def count_problem(value):
 def size_problem(value, unit_uri):
     '''Return what is wrong with a data size for the unit option *unit_uri*, or ``''``.'''
     return _size_problem(value, integer=unit_uri == get_options().get('items')) or ''
+
+
+@register.filter
+def element_problems(elements):
+    '''``{element key: message}`` for symbols that do not stand for exactly one quantity (see the checks).'''
+    return {key: f'SYMBOL {ELEMENT_SYMBOL_MESSAGES[problem].split(" (")[0].upper()}'
+            for key, problem in element_symbol_problems(elements).items()}
 
 
 @register.filter

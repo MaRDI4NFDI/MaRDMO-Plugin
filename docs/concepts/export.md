@@ -45,6 +45,13 @@ is checked with the MaRDI Portal's TeX checker; rejected formulas are shown as r
 TeX with an explanation.  A second "Export to MaRDI Portal" button at the bottom
 of the preview page triggers the actual export.
 
+Publications are shown as the export writes them: a citation line built from the
+parts that are known (authors, year, title, journal, volume, issue, pages), what
+the export creates on the MaRDI Portal (the publication, its journal, new
+authors), and, in a collapsible *Authors and journal* section, every author and
+the journal with its status (on the MaRDI Portal, new, or name only) and its
+identifiers (ORCiD, zbMath, Wikidata, ISSN).
+
 ---
 
 ## Phase 2 — Export (second click)
@@ -97,14 +104,19 @@ and a dependency graph:
   anything is posted.
 - **Relation existence check**: `build_relation_check_queries()` generates SPARQL
   queries (in chunks of 50 relations) that check, for every `RELATION` entry
-  targeting an existing item, whether that exact statement already exists on the
-  MaRDI Portal.  Only genuinely new relations are posted during upload.  For
-  `math`-datatype statements a separate API-based check is used, because SPARQL
-  returns MathML while the MaRDI Portal stores LaTeX.  If a check cannot be
-  completed, the export is aborted, since posting without it could create
-  duplicate statements.
+  targeting an existing item, whether the statement with its qualifiers already
+  exists on the MaRDI Portal.  For `math`-datatype statements a separate
+  API-based check is used, because SPARQL returns MathML while the MaRDI Portal
+  stores LaTeX.  If a check cannot be completed, the export is aborted, since
+  posting without it could create duplicate statements.
+- **Qualifier merge**: `merge_qualifiers()` then decides, with the statements
+  of the existing items (fetched via `wbgetentities`, 50 items per request,
+  shared with the math check), what happens with each `RELATION` entry (see
+  [below](#qualifier-merge)): it exists already and is skipped, it is a new
+  statement, or it exists and only gets the qualifiers it lacks.
 
-All requests of these checks (duplicate search, relation and math check) are
+All requests of these checks (duplicate search, relation and math check,
+statements for the qualifier merge) are
 retried twice on a timeout, a connection error, or the answers 429, 502, 503 and
 504, after 2 and 5 seconds or the portal's `Retry-After` (at most 10 seconds);
 other answers, such as 400, are not retried.  Each check gives up after
@@ -114,6 +126,55 @@ which also retries SPARQL queries and the TeX check once (see
 - **Dependency graph**: whenever a new item's statement references another new item
   (identified by an `Item<n>` placeholder), that dependency is recorded so that items
   can be created in the correct order.
+
+#### Qualifier Merge
+
+Qualifiers are of two kinds:
+
+- **Meaning qualifiers** make a statement what it is: *object has role* (e.g. a
+  formula contained as initial condition), *symbol represents* (the quantity of a
+  symbol in a defining formula) and *platform* (the software and hardware of a
+  workflow usage).  The same subject, property and object with another value of
+  these, or without any, is a statement of its own.
+- **Additive qualifiers** add information to a statement: assumptions, comments,
+  documentation, parameters, years, numbers, and all others.
+
+A `RELATION` entry is the same as a statement on the MaRDI Portal if subject,
+property, object and meaning agree.  Then:
+
+| Portal statement | Result |
+|---|---|
+| has all qualifiers of the entry | skipped (`exists`) |
+| lacks some additive qualifiers | only these qualifiers are added to it (`partial`) |
+| has another meaning, or none exists | a new statement is written |
+
+Meaning is compared as follows:
+
+- No role matches no role only: a plain *contains F* is written next to *contains F
+  as initial condition*.
+- A role of the entry that is among the roles of a portal statement matches it: a
+  statement *as initial value and parameter* is also the one *as parameter*.
+  MaRDMO writes one role per statement and imports such a statement as one
+  relation for each role the questionnaire offers.
+- *Platform* and *symbol represents* must be the same: software and hardware
+  together describe one usage, and its parameters belong to that usage.
+
+Symbols of formulas (*in defining formula*) are compared with the statements of
+the same formula or quantity on the MaRDI Portal (`check_symbols()`), since a
+symbol stands for exactly one quantity:
+
+| Same symbol on the portal | Result |
+|---|---|
+| with the same quantity | skipped (`exists`) |
+| with another quantity | the export stops: MaRDMO cannot change what the symbol stands for (e.g. a symbol block of a fetched formula deleted and added again with another quantity) |
+| without a quantity (no *symbol represents*) | the quantity is added to it (`partial`) |
+| none | a new statement is written |
+
+The SPARQL check also finds a portal statement with a role for an entry without
+one, so entries of the properties MaRDMO writes with meaning qualifiers
+(*contains*, *described by source*, *uses*) are always compared with the portal
+statements again.  Several entries adding to the same statement share it; each
+qualifier is added once.
 
 ### 7. Cyclic Dependency Check
 
@@ -143,8 +204,10 @@ identifier.
 
 **Phase 2 — Relations**:
 `RELATION<n>` entries (statements targeting existing items) and `ALIAS<n>` entries
-are posted **individually**, one statement per request.  Relations already flagged as
-existing by the SPARQL check in step 6 are skipped.
+are posted **individually**, one statement per request.  Relations found existing
+in step 6 are skipped; for those that only lack qualifiers, the missing
+qualifiers are added to the existing statement (a `PATCH` of its qualifiers)
+instead of writing it again.
 
 #### Error Handling
 
@@ -177,6 +240,8 @@ matching RDMO project Values in place:
   label/description pair and updated to `mardi:<QID>`.  ID-question Values (where
   `text` is `"not found"`) are resolved via sibling Name/Description Values at the
   same set index.
+- **Publications created from a DOI**: their ID question gets the new item, as
+  for the other user-defined items.
 
 After the catalog update, a success page is rendered showing the exported data in
 two switchable views.  Items that were linked to an existing duplicate instead of
@@ -185,7 +250,7 @@ being created are listed in a *Please note* box above the views.
 #### List View
 
 All newly created MaRDI Portal items are shown grouped by class (Mathematical Model,
-Research Problem, Formula, …) in a fixed display order.  Each item is rendered as a
+Research Problem, Formula, …, Publication, Author, Journal) in a fixed display order.  Each item is rendered as a
 collapsible section showing every statement that was written to the portal as
 `property → value` lines.
 
@@ -202,6 +267,8 @@ collapsible section showing every statement that was written to the portal as
   [MathJax](https://www.mathjax.org/) (Apache 2.0).
 - **Qualifier statements** are shown indented below their parent statement.
 - **Relations to existing items** are shown in a separate section at the bottom.
+  A statement that was on the portal already and only got qualifiers is marked
+  *(existing statement, qualifiers added:)* and lists only the added qualifiers.
 
 #### Graph View
 

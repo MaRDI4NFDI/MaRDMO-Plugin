@@ -19,83 +19,23 @@ MaRDMO provides five catalogs:
 | **Mathematical Model (basic)** | Reduced-scope model documentation using the same MathModDB ontology. |
 | **Search** | Query existing entries across the MaRDI Portal, MathModDB, and MathAlgoDB knowledge graphs. Results are displayed directly in RDMO. |
 
+<!-- The sections below come from the README (pymdownx.snippets, see mkdocs.yml): edit them there. -->
+
 ## Prerequisites
 
-- RDMO ≥ 2.5.1 — see the [RDMO installation guide](https://rdmo.readthedocs.io/en/latest/installation) if an update is needed.
+--8<-- "README.md:requirements"
 
 ## Installation
 
-From the `rdmo-app` directory, install MaRDMO into the RDMO virtual environment:
-
-```bash
-pip install MaRDMO
-```
-
-Add the following to `config/settings/local.py`:
-
-```python
-from django.utils.translation import gettext_lazy as _
-```
-
-```python
-INSTALLED_APPS = ['MaRDMO'] + INSTALLED_APPS
-
-PROJECT_EXPORTS += [
-    ('wikibase',        _('Export to MaRDI Portal'), 'MaRDMO.main.MaRDMOExportProvider'),
-    ('wikibase-search', _('Query MaRDI Portal'),     'MaRDMO.main.MaRDMOQueryProvider'),
-]
-```
-
-The full `OPTIONSET_PROVIDERS` list required for all catalog features is available in the [README](https://github.com/MaRDI4NFDI/MaRDMO-Plugin#mardmo-plugin-installation).
-
-Add the following URL pattern to `config/urls.py`:
-
-```python
-path('services/', include("MaRDMO.urls")),
-```
+--8<-- "README.md:install"
 
 ## Portal Connection
 
-Add the following to `config/settings/local.py` to connect MaRDMO to the MaRDI Portal:
-
-```python
-MARDMO_PROVIDER = {
-    'mardi': {
-        'items':               'data/items.json',
-        'properties':          'data/properties.json',
-        'api':                 'https://portal.mardi4nfdi.de/w/api.php',
-        'sparql':              'https://query.portal.mardi4nfdi.de/sparql',
-        'uri':                 'https://portal.mardi4nfdi.de',
-        'entity_uri':          'http://portal.mardi4nfdi.de',
-        'oauth2_client_id':    '',
-        'oauth2_client_secret': '',
-    },
-}
-```
-
-Contact the MaRDI consortium for OAuth2 credentials.  Wikidata needs no
-configuration; its endpoints are built into MaRDMO.
-
-Formulas entered in the questionnaires are checked with the TeX checker of the
-MaRDI Portal before the export, so the RDMO server needs to be able to reach the
-MaRDI Portal.  No credentials are needed for this check.
+--8<-- "README.md:connection"
 
 ## Questionnaire Import
 
-MaRDMO requires the [MaRDMO-Questionnaire](https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire) — download the [![Latest Release](https://img.shields.io/github/v/release/MaRDI4NFDI/MaRDMO-Questionnaire)](https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire/releases/latest).
-
-Import via the RDMO management interface (`Management → Import`) or from the command line:
-
-```bash
-python manage.py import /path/to/MaRDMO-Questionnaire/catalog/attributes.xml
-python manage.py import /path/to/MaRDMO-Questionnaire/catalog/optionsets.xml
-python manage.py import /path/to/MaRDMO-Questionnaire/catalog/conditions.xml
-python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-search-catalog.xml
-python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-model-catalog.xml
-python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-model-basics-catalog.xml
-python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-interdisciplinary-workflow-catalog.xml
-python manage.py import /path/to/MaRDMO-Questionnaire/catalog/mardmo-algorithm-catalog.xml
-```
+--8<-- "README.md:questionnaire"
 
 ## Quick Start
 

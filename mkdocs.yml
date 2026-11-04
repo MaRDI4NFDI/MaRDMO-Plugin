@@ -53,3 +53,8 @@ nav:
           - Workflow: reference/workflow.md
           - Publication: reference/publication.md
           - Search: reference/search.md
+
+markdown_extensions:
+  # docs/index.md includes the installation sections of the README
+  - pymdownx.snippets:
+      check_paths: true

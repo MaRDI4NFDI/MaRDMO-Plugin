@@ -5,36 +5,51 @@ on:
     types: [published]
 
 jobs:
+  # Every supported Python and RDMO version must pass before anything is uploaded
+  tests:
+    uses: ./.github/workflows/tests.yml
+
   deploy:
+    needs: tests
     runs-on: ubuntu-latest
 
     steps:
       # Step 1: Check out the repository
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       # Step 2: Set up Python
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: '3.13'
 
-      # Step 3: Install dependencies
+      # Step 3: The release tag (v0.7.0) must name the version in MaRDMO/__init__.py
+      - name: Check the release tag against the package version
+        run: |
+          version=$(python -c "import ast; print(next(n.value.value for n in ast.parse(open('MaRDMO/__init__.py').read()).body if isinstance(n, ast.Assign) and n.targets[0].id == '__version__'))")
+          tag="${{ github.event.release.tag_name }}"
+          echo "release tag: $tag, package version: $version"
+          if [ "$tag" != "v$version" ]; then
+            echo "::error::Release tag $tag does not match the package version $version (expected v$version)"
+            exit 1
+          fi
+
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install build twine
 
-      # Step 4: Build the distribution files
+      # Step 5: Build the distribution files
       - name: Build package
         run: |
           python -m build
 
-      # Step 5: Publish to PyPI
+      # Step 6: Publish to PyPI
       - name: Publish package to PyPI
         env:
-          TWINE_USERNAME: __token__ 
+          TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           python -m twine upload dist/*
-

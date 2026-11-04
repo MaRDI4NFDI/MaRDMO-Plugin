@@ -46,6 +46,17 @@ rule serves all four places.
 | Counts (compute nodes, CPU occurrence, processor cores, data size in items) | Digits without a leading zero | Whole number of at least 1 |
 | Data size (kilobyte to terabyte) | Digits with at most one dot; a decimal comma is rejected with a hint | Positive decimal with a dot (`12`, `1.5`) |
 | Formulas and formula symbols | — | Accepted by the MaRDI Portal's TeX checker (see below); no `%` comment in multi-line formulas |
+| Symbol table of a formula or quantity definition | — | Every symbol has a quantity; a symbol stands for exactly one quantity, and no symbol appears twice with the same quantity (see below) |
+
+The symbol table belongs to the formula or quantity, not to one formula field:
+whether the formula fields hold an equation system (e.g. in an `align`
+environment) or several equivalent formulas, a symbol stands for the same
+quantity in all of them.  Several symbols may stand for one quantity (`k_1`,
+`k_2` for a reaction rate constant); different formulas may use the same
+symbol for different quantities.  Symbols are compared as they are exported
+(line breaks and outer whitespace removed).  A symbol fetched from the MaRDI
+Portal without *symbol represents* comes into the questionnaire without a
+quantity, so the checks and the preview ask for it.
 
 Allowed URL schemes are `http` and `https`; the *source code repository URL*
 additionally accepts `git`, `ssh`, `svn`, `cvs`, `bzr` and `ftp`.  Only `http`
@@ -63,6 +74,11 @@ statement and qualifier of the following kinds and lists all problems at once:
 - DOI and swMATH work ID values
 - time values (`+YYYY-MM-DDThh:mm:ssZ`)
 - quantity amounts (`+8`, `+1.5`)
+
+It also checks that every `Item<n>` placeholder in the payload belongs to an
+item of the export: a placeholder is replaced by the item's QID while posting,
+so one without an item would be rejected by the MaRDI Portal after other items
+were created already.
 
 This catches values that reached the payload without passing the other checks,
 for example data written before a rule existed.
