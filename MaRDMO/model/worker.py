@@ -465,6 +465,7 @@ class PrepareModel(PublicationExport):
             if entry.get("QorQK") == self.mathmoddb.get(key='Quantity')['label']:
                 self._add_common_metadata(
                     payload = payload,
+                    community = self.items["MathModDB"],
                     qclass = self.items["quantity"],
                     profile_type = "MaRDI quantity profile",
                 )
@@ -473,6 +474,7 @@ class PrepareModel(PublicationExport):
             elif entry.get("QorQK") == self.mathmoddb.get(key='QuantityKind')['label']:
                 self._add_common_metadata(
                     payload = payload,
+                    community = self.items["MathModDB"],
                     qclass = self.items["kind of quantity"],
                     profile_type = "MaRDI quantity profile",
                 )
