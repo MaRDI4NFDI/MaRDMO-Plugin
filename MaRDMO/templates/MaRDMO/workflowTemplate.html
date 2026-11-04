@@ -158,7 +158,7 @@
     {% if values.cpu_entries %}
         {% for cpu in values.cpu_entries %}
             {{ forloop.counter }}.
-            <strong>CPU:</strong> {% user_entity cpu.id cpu.name cpu.description "CPU" %} <br>
+            <strong>CPU:</strong> {% if cpu.id or cpu.name %}{% user_entity cpu.id cpu.name cpu.description "CPU" %}{% else %}<strong class="mardmo-error">MISSING CPU MODEL</strong>{% endif %} <br>
             &nbsp;&nbsp;&nbsp;&nbsp;-&gt; Occurrence in Hardware:
             {% if cpu.count %}
                 {{ cpu.count }}{% with problem=cpu.count|count_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
