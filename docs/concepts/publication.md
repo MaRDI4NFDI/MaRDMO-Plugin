@@ -19,7 +19,7 @@ CrossRef, DataCite, zbMath, and the DOI metadata service are queried simultaneou
 | zbMath | `https://api.zbmath.org/v1/document/_structured_search?DOI={doi}` |
 | DOI metadata | `https://citation.doi.org/metadata?doi={doi}` |
 
-The first source in that order that returns a valid response wins.
+The first source in that order that returns a valid response with a title wins.
 
 Once the primary metadata has been retrieved, the **ORCiD public API** is queried to find researchers associated with the DOI:
 
@@ -38,16 +38,24 @@ After the primary publication metadata has been retrieved, MaRDMO attempts to re
 1. Each author may carry an **ORCiD** (from CrossRef, DataCite, DOI API, or the ORCiD enrichment step) and/or a **zbMath author code** (from zbMath).
 2. These identifiers are used to search **Wikidata** for the author's QID.
 3. The ORCiD, zbMath code, and Wikidata QID together are then used to search the **MaRDI Portal** for the author's portal QID.
-4. If the author cannot be matched to any MaRDI Portal or Wikidata item, they are stored as a plain string attached to the publication record.
+4. If the author matches no MaRDI Portal or Wikidata item but has an ORCiD or zbMath code, the export creates a new author item with these identifiers (instance of *human*, MaRDI person profile).
+5. An author without any identifier is stored as a plain name string attached to the publication record.
 
-Each item is given to one author only.  Wikidata often lists an author both as item and as name string; the name string then stays a name string, so the export cites the authors as Wikidata does.
+Authors are matched by identifiers only, never by name: two authors with the same name are different people unless they share an identifier.  The rules are:
+
+- **Order of identifiers:** if the identifiers of an author point to different items, the ORCiD decides, then the zbMath code, then the Wikidata QID.
+- **MaRDI Portal first:** per author, an item on the MaRDI Portal is preferred over one on Wikidata.  An item found on Wikidata adds its QID to the author's identifiers, so the MaRDI Portal item holding that Wikidata QID matches as well.
+- **"None" is no identifier:** some MaRDI Portal items carry the text `None` as zbMath code; it does not match anything.
+- **One item, one author:** an item is given to one author only.  Wikidata often lists an author both as item and as name string; the name string then stays a name string, so the export cites the authors as Wikidata does.
 
 ## Journal Resolution
 
 1. The **ISSN** is extracted from whichever primary source provided the publication metadata.
 2. The ISSN is used to search **Wikidata** for the journal's QID.
 3. The ISSN and the Wikidata QID together are used to search the **MaRDI Portal** for the journal's portal QID.
-4. If a match is found anywhere the existing item is reused; if not, a new journal item is created during export with the ISSN as an identifier (and the Wikidata QID stored as a MaRDI Portal property if available).
+4. If a match is found anywhere the existing item is reused; if not, a new journal item is created during export with the ISSN as an identifier, as instance of *scientific journal* with the MaRDI journal profile.
+
+As for authors, journals are matched by identifiers only: the ISSN decides before the Wikidata QID, the MaRDI Portal comes before Wikidata, and a MaRDI Portal journal also matches through its Wikidata QID.
 
 ## Field Mapping
 
@@ -66,3 +74,5 @@ The table below shows which field each source provides and how it maps to the Ma
 | Language | `languagelabel` | `language` | `language` | `language.languages` | `language` |
 | Authors | `authorInfos` (SPARQL) | `author[].given` + `family` + ORCiD | `creators[].givenName` + `familyName` + `nameIdentifiers[ORCID]` | `contributors.authors[].name` + `codes[0]` | `author[].given` + `family` + ORCiD |
 | Journal | `journalInfo` (SPARQL) | `ISSN` + `container-title` | `relatedIdentifiers` + `relatedItems` | `source.series` | `ISSN` + `container-title` |
+
+Titles and names fetched from these sources are cleaned when they are stored, since users cannot edit this background data: line breaks become spaces, formatting tags such as `<i>` or `<sup>` are removed, and HTML entities such as `&amp;` are decoded.  Preprints (Crossref `posted-content`, CSL `article`) count as scholarly articles, as on the MaRDI Portal and Wikidata.
