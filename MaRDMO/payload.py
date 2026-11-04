@@ -62,6 +62,12 @@ _RELATION_CHECK_CHUNK = 50
 # object with another (or no) value of these is a statement of its own.  All
 # other qualifiers add information and are added to an existing statement.
 _MEANING_QUALIFIERS = ('object has role', 'symbol represents', 'platform')
+# Item-valued properties MaRDMO writes with a meaning qualifier ("contains"
+# and "described by source" with a role, "uses" with a platform).  The SPARQL
+# check also finds a portal statement with such a qualifier for one without,
+# so found statements of these are checked again.  Formulas ("in defining
+# formula") have their own check that compares the qualifiers.
+_MEANING_PROPERTIES = ('contains', 'described by source', 'uses')
 # Class of items created from publication data that the worker does not handle
 _NEW_ITEM_CLASS = {'no author found': 'Author', 'no journal found': 'Journal'}
 # Duplicate checks of new items running at the same time
@@ -903,9 +909,10 @@ class GeneratePayload:
         only once.
 
         Entries the SPARQL check found are checked again when their property
-        can carry a meaning qualifier: the portal statement it found may have
-        one the entry lacks (a plain "contains" against "contains" with a
-        role).  Without a statement of the same meaning they are new.
+        can carry a meaning qualifier (see :data:`_MEANING_PROPERTIES`): the
+        portal statement it found may have one the entry lacks (a plain
+        "contains" against "contains" with a role).  Without a statement of
+        the same meaning they are new.
 
         Raises:
             ValueError: If the claims of an existing item cannot be fetched.
@@ -913,8 +920,10 @@ class GeneratePayload:
         meaning = self._meaning_qualifiers()
         # Properties whose statements can carry a meaning qualifier: a statement
         # found by the SPARQL check may have one the payload statement lacks
-        # (e.g. "contains" with a role for a plain "contains")
-        with_meaning = {
+        # (e.g. "contains" with a role for a plain "contains"), also when no
+        # statement of this export has one
+        properties = self.wikibase['properties']
+        with_meaning = {properties[name] for name in _MEANING_PROPERTIES if name in properties} | {
             statement[0] for entry in self.state.dictionary.values()
             for statement in entry.get('statements') or []
             if len(statement) > 3 and any(q['property']['id'] in meaning for q in statement[3])
