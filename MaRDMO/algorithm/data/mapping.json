@@ -4,7 +4,7 @@
     {"key": "has_subclass",   "url": "https://rdmo.mardi4nfdi.de/terms/options/mathalgodb/has-subclass",  "label": "has subclass"},
     {"key": "subclass_of",    "url": "https://rdmo.mardi4nfdi.de/terms/options/mathalgodb/subclass-of",   "label": "subclass of"},
     {"key": "implemented_by", "url": "https://rdmo.mardi4nfdi.de/terms/options/mathalgodb/implemented-by","label": "implemented by"},
-    {"key": "manifests",      "url": "https://rdmo.mardi4nfdi.de/terms/options/mathalgodb/instantiates",  "label": "manifests"},
+    {"key": "manifests",      "url": "https://rdmo.mardi4nfdi.de/terms/options/mathalgodb/manifests",     "label": "manifests"},
     {"key": "related_to",     "url": "https://rdmo.mardi4nfdi.de/terms/options/mathalgodb/related-to",    "label": "related to"},
     {"key": "solves",         "url": "https://rdmo.mardi4nfdi.de/terms/options/mathalgodb/solves",        "label": "solves"},
     {"key": "specializes",    "url": "https://rdmo.mardi4nfdi.de/terms/options/mathalgodb/specializes",   "label": "specializes"},
