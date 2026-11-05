@@ -1,0 +1,11 @@
+# Weekly check of the actions used in the workflows; Dependabot opens one
+# pull request for all available updates (security alerts come regardless)
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']

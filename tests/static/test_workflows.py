@@ -70,3 +70,9 @@ def test_tests_take_the_inputs_of_the_release():
     assert all('!inputs.full_matrix' in matrix[key] for key in ('python', 'rdmo'))
     step = next(s for s in tests['jobs']['tests']['steps'] if s.get('id') == 'questionnaire')
     assert 'inputs.questionnaire_ref' in step['run']
+
+
+def test_actions_are_kept_up_to_date():
+    '''An outdated action (pypi-publish 1.12.4) once carried a critical security alert.'''
+    config = yaml.safe_load((WORKFLOWS.parent / 'dependabot.yml').read_text(encoding='utf-8'))
+    assert {'package-ecosystem': 'github-actions', 'directory': '/'}.items() <= config['updates'][0].items()
