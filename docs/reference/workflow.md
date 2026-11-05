@@ -8,9 +8,6 @@
 ## Models
 ::: MaRDMO.workflow.models
 
-## Providers
-::: MaRDMO.workflow.providers
-
 ## Workers
 ::: MaRDMO.workflow.worker
 
