@@ -136,6 +136,19 @@ def _normalize_time(value):
     year, month, day, rest = match.groups()
     return f"{year}-{month if month != '00' else '01'}-{day if day != '00' else '01'}{rest}"
 
+class DocumentationProblem(ValueError):
+    '''The documentation cannot be exported as it is; the user has to change it.
+
+    Raised during the export, after the checks, for problems that show only
+    in the payload or against the MaRDI Portal (e.g. an item that exists
+    already, a symbol that stands for another quantity there).
+    '''
+
+
+class PortalUnavailable(ValueError):
+    '''The MaRDI Portal did not answer a check the export needs; nothing was exported.'''
+
+
 @dataclass
 class PayloadState:
     '''Data Class to store the current state of the Payload.'''
@@ -539,12 +552,12 @@ class GeneratePayload:
             The ``"Item<n>"`` key string for *value*.
 
         Raises:
-            ValueError: If *value* is empty or missing ``Name``/``Description``.
+            DocumentationProblem: If *value* is empty or missing ``Name``/``Description``.
         """
         if not value:
-            raise ValueError("Missing Item in Statement!")
+            raise DocumentationProblem("Missing Item in Statement!")
         if not value.get('Name') or not value.get('Description'):
-            raise ValueError("All Items need to have a 'Name' and 'Description'!")
+            raise DocumentationProblem("All Items need to have a 'Name' and 'Description'!")
 
         item_key = self._find_key_by_values(
             value['ID'],
@@ -638,7 +651,8 @@ class GeneratePayload:
         and the checks, so an export never fails halfway because of them.
 
         Raises:
-            ValueError: One argument per invalid value, naming item and property.
+            DocumentationProblem: One argument per invalid value, naming item and property.
+            ValueError: One argument per placeholder without item (an internal error).
         '''
         properties = self.wikibase['properties']
         pid_to_name = {pid: name for name, pid in properties.items()}
@@ -701,9 +715,12 @@ class GeneratePayload:
                     statement['value']['content'], statement.get('qualifiers', []),
                 )
 
-        errors.extend(self._dangling_references())
         if errors:
-            raise ValueError(*errors)
+            raise DocumentationProblem(*errors)
+        dangling = self._dangling_references()
+        if dangling:
+            # an internal error, not the user's: a plain ValueError
+            raise ValueError(*dangling)
 
     def _dangling_references(self):
         '''Messages for ``Item<n>`` placeholders that refer to no item of the export.
@@ -748,7 +765,7 @@ class GeneratePayload:
             api_url:         Action API URL of the portal (for math statements).
 
         Raises:
-            ValueError: If a check cannot be completed.  Posting without the
+            PortalUnavailable: If a check cannot be completed.  Posting without the
                 check would duplicate statements on existing items.
         '''
         if not any(key.startswith('RELATION') for key in self.state.dictionary):
@@ -761,7 +778,7 @@ class GeneratePayload:
                                     waits=EXPORT_RETRY_WAITS, deadline=deadline)
             # A successful query always returns exactly one row
             if not bindings:
-                raise ValueError(
+                raise PortalUnavailable(
                     "Could not check which statements already exist on the MaRDI Portal "
                     "(query service not reachable or query rejected). "
                     "Nothing was exported; please try again later."
@@ -863,7 +880,7 @@ class GeneratePayload:
         answer (the math check and the qualifier merge often need the same).
 
         Raises:
-            ValueError: If the claims cannot be fetched; *what* names the
+            PortalUnavailable: If the claims cannot be fetched; *what* names the
                 checked statements in the message (e.g. ``'formulas'``).
         '''
         claims_by_item = self._claims
@@ -893,7 +910,7 @@ class GeneratePayload:
                 _logger.warning("Claims check via API failed: %s", body['error'])
                 body = None
             if body is None:
-                raise ValueError(
+                raise PortalUnavailable(
                     f"Could not check which {what} already exist on the MaRDI Portal "
                     "(API not reachable). Nothing was exported; please try again later."
                 )
@@ -1075,8 +1092,9 @@ class GeneratePayload:
         - none: a new statement.
 
         Raises:
-            ValueError: One argument per symbol that stands for another
-                quantity on the portal; also if the claims cannot be fetched.
+            DocumentationProblem: One argument per symbol that stands for another
+                quantity on the portal.
+            PortalUnavailable: If the claims cannot be fetched.
         '''
         properties = self.wikibase['properties']
         in_formula, represents = properties.get('in defining formula'), properties.get('symbol represents')
@@ -1131,7 +1149,7 @@ class GeneratePayload:
                 entry['statement_id'] = incomplete['id']
                 entry['add_qualifiers'] = [qualifier]
         if conflicts:
-            raise ValueError(*conflicts)
+            raise DocumentationProblem(*conflicts)
 
     def add_aliases(self, aliases_dict):
         '''Add aliases for the current subject to the payload.
@@ -1540,7 +1558,7 @@ class GeneratePayload:
         else:
             mardi_identifier = query_item(name, description)
         if mardi_identifier:
-            raise ValueError(
+            raise DocumentationProblem(
                 f"An item ({mardi_identifier}) with the label '{name}' "
                 f"and description '{description}' already exists on the MaRDI Portal. "
                 "If you intend to use this item, please select it in the questionnaire. "

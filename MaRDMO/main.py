@@ -43,6 +43,7 @@ from .helpers import (
     topological_order
 )
 from .oauth2 import OauthProviderMixin
+from .payload import DocumentationProblem, PortalUnavailable
 from .views import render_preview
 
 from .model.worker import PrepareModel
@@ -124,6 +125,19 @@ class BaseMaRDMOExportProvider(OauthProviderMixin, Export, ABC):
             'grant_type': 'authorization_code',
             'code': request.GET.get('code')
         }
+
+def export_error_title(err):
+    """Title of the error page for an exception of the export (after the checks).
+
+    Problems the user can fix look like the checks; an unreachable portal
+    asks to try again; anything else is MaRDMO's.
+    """
+    if isinstance(err, DocumentationProblem):
+        return _('Incomplete or Inconsistent Documentation')
+    if isinstance(err, PortalUnavailable):
+        return _('MaRDI Portal not reachable')
+    return _('Export not possible')
+
 
 class MaRDMOExportProvider(BaseMaRDMOExportProvider):
     '''Export provider for the "Export to MaRDI Portal" button.
@@ -257,7 +271,7 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                 self.request,
                 'core/error.html',
                 {
-                    'title': _('Value Error'),
+                    'title': export_error_title(err),
                     # One error line per argument (e.g. one per invalid URL)
                     'errors': list(err.args) or [err]
                 },
