@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: Check out MaRDMO
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       # The given questionnaire tag (release), else the questionnaire branch
       # with the same name as this branch, else main
@@ -53,14 +53,14 @@ jobs:
           fi
 
       - name: Check out the questionnaire (${{ steps.questionnaire.outputs.ref }})
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: MaRDI4NFDI/MaRDMO-Questionnaire
           ref: ${{ steps.questionnaire.outputs.ref }}
           path: questionnaire
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
 
@@ -91,10 +91,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out MaRDMO
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.14'
 
