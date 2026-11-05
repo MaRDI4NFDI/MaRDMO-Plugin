@@ -6,11 +6,13 @@ as answers that are silently missing.
 '''
 import json
 import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
 
 from MaRDMO.constants import BASE_URI
+from MaRDMO.optionsets import PROVIDERS
 
 PACKAGE = Path(__file__).parents[2] / 'MaRDMO'
 
@@ -73,3 +75,21 @@ def test_uris_in_code_and_templates_exist(questionnaire):
             found.setdefault(uri, str(path.relative_to(PACKAGE)))
     missing = {uri: path for uri, path in found.items() if uri not in known}
     assert missing == {}
+
+
+def provider_keys(questionnaire):
+    """The provider keys of the option sets of the questionnaire."""
+    keys = set()
+    for path in questionnaire.path.glob('*.xml'):
+        keys |= {element.text for element in ET.parse(path).iter('provider_key') if element.text}
+    return keys
+
+
+def test_every_option_set_has_a_provider(questionnaire):
+    """An option set without a row of MaRDMO.optionsets offers nothing in the interview."""
+    assert sorted(provider_keys(questionnaire) - PROVIDERS.keys()) == []
+
+
+def test_every_provider_is_used_by_an_option_set(questionnaire):
+    """A row no option set names is dead code (as the provider "Instrument" was)."""
+    assert sorted(PROVIDERS.keys() - provider_keys(questionnaire)) == []

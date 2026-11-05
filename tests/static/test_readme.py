@@ -6,7 +6,6 @@ metadata (pyproject.toml), which works without tomllib on Python 3.10.
 '''
 import importlib
 import re
-import xml.etree.ElementTree as ET
 from importlib.metadata import metadata, requires
 from pathlib import Path
 
@@ -54,12 +53,10 @@ def test_both_export_providers_are_listed():
     assert {key for key, _ in classes(section('install'))} >= {'wikibase', 'wikibase-search'}
 
 
-def test_providers_of_the_questionnaire_are_listed(questionnaire):
-    used = set()
-    for path in questionnaire.path.glob('*.xml'):
-        used |= {element.text for element in ET.parse(path).iter('provider_key') if element.text}
-    listed = {key for key, _ in classes(section('install'))}
-    assert sorted(used - listed) == []
+def test_option_set_providers_come_from_mardmo():
+    install = section('install')
+    assert 'from MaRDMO.optionsets import OPTIONSET_PROVIDERS as MARDMO_OPTIONSET_PROVIDERS' in install
+    assert 'OPTIONSET_PROVIDERS += MARDMO_OPTIONSET_PROVIDERS' in install
 
 
 def test_questionnaire_files_are_imported(questionnaire):

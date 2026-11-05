@@ -1,0 +1,1481 @@
+{
+ "Algorithm": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q127020",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Algorithms",
+  "refresh": true,
+  "search": true
+ },
+ "AlgorithmMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q127020"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Algorithms (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "AlgorithmicProblem": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q6775701",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Algorithmic Problems",
+  "refresh": true,
+  "search": true
+ },
+ "AlgorithmicProblemMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q6775701"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Algorithmic Problems (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "Benchmark": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q6825282",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Benchmarks",
+  "refresh": true,
+  "search": true
+ },
+ "ComputationalTaskMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q6534247"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Computational Tasks (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "DataSet": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q56885",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Data Sets",
+  "refresh": true,
+  "search": true
+ },
+ "DataSetMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q56885"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Data Sets (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "FormulaMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q96183"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Formulas (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "Hardware": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q56583",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Hardware",
+  "refresh": true,
+  "search": true
+ },
+ "HardwareMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q56583"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Hardware (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "InstrumentMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q77076"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Instruments (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "MathematicalFormulation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q96183",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Mathematical Formulation",
+  "refresh": true,
+  "search": true
+ },
+ "MathematicalModel": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q68663",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Mathematical Model",
+  "refresh": true,
+  "search": true
+ },
+ "MathematicalModelMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q68663"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Mathematical Models (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "MathematicalModelWorkflow": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q68663",
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Mathematical Model (Workflow)",
+  "refresh": true,
+  "search": true
+ },
+ "MethodMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q68669"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Methods (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "ProcessStep": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q6486603",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Process Step",
+  "refresh": true,
+  "search": true
+ },
+ "Publication": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q56751",
+     "Q56887"
+    ],
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Publication",
+  "refresh": true,
+  "search": true
+ },
+ "QuantityOrQuantityKind": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q6534237",
+     "Q6534245"
+    ],
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Quantities and Quantity Kinds",
+  "refresh": true,
+  "search": true
+ },
+ "QuantityOrQuantityKindMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q6534237",
+     "Q6534245"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Quantities and Quantity Kinds (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedAlgorithmWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": [
+      "Q127020"
+     ],
+     "query_attributes": [
+      "algorithm"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Algorithms with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedAlgorithmWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q127020",
+     "query_attributes": [
+      "algorithm"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Algorithms without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedAlgorithmicProblemWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": "Q6775701",
+     "query_attributes": [
+      "problem"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Algorithmic Problems with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedAlgorithmicProblemWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q6775701",
+     "query_attributes": [
+      "problem"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Algorithmic Problems without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedBenchmarkOrSoftwareWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": {
+    "function": "query_sources_with_user_additions",
+    "search": "a",
+    "setup": {
+     "creation": false,
+     "item_class": [
+      "Q6825282",
+      "Q56614"
+     ],
+     "query_attributes": [
+      "benchmark",
+      "software"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   },
+   "ab": {
+    "function": "query_sources_with_user_additions",
+    "search": "ab",
+    "setup": {
+     "creation": false,
+     "item_class": [
+      "Q6825282",
+      "Q56614"
+     ],
+     "query_attributes": [
+      "benchmark",
+      "software"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   },
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": [
+      "Q6825282",
+      "Q56614"
+     ],
+     "query_attributes": [
+      "benchmark",
+      "software"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Benchmarks or Software without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedBenchmarkWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": "Q6825282",
+     "query_attributes": [
+      "benchmark"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Benchmarks with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedCPUModelWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": [
+      "Q7171486"
+     ],
+     "query_attributes": null,
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related CPU Models with Creation",
+  "refresh": true,
+  "search": true
+ },
+ "RelatedDataSetWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": "Q56885",
+     "query_attributes": [
+      "dataset"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Data Sets with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedHardwareOrSoftwareWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": {
+    "function": "query_sources_with_user_additions",
+    "search": "a",
+    "setup": {
+     "creation": false,
+     "item_class": [
+      "Q56583",
+      "Q56614"
+     ],
+     "query_attributes": [
+      "hardware",
+      "software"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   },
+   "ab": {
+    "function": "query_sources_with_user_additions",
+    "search": "ab",
+    "setup": {
+     "creation": false,
+     "item_class": [
+      "Q56583",
+      "Q56614"
+     ],
+     "query_attributes": [
+      "hardware",
+      "software"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   },
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": [
+      "Q56583",
+      "Q56614"
+     ],
+     "query_attributes": [
+      "hardware",
+      "software"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Hardware or Software without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedHardwareWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": [
+      "Q56583"
+     ],
+     "query_attributes": [
+      "hardware"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Hardware with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedInstrumentWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": "Q77076",
+     "query_attributes": null,
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Instruments with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedMathematicalFormulationWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": "Q96183",
+     "query_attributes": [
+      "formulation"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Mathematical Formulations with Creation",
+  "refresh": true,
+  "search": true
+ },
+ "RelatedMathematicalFormulationWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q96183",
+     "query_attributes": [
+      "formulation"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Mathematical Formulations without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedMathematicalModelWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q68663",
+     "query_attributes": [
+      "model"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Mathematical Model without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedMethodWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": [
+      "Q68669"
+     ],
+     "query_attributes": null,
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Methods with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedModelEntityWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": [
+      "Q60231",
+      "Q6534292",
+      "Q68663",
+      "Q6534237",
+      "Q6534245",
+      "Q96183",
+      "Q6534247"
+     ],
+     "query_attributes": [
+      "field",
+      "problem",
+      "model",
+      "quantity",
+      "formulation",
+      "task"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Model Entities without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedProgrammingLanguageWithCreation": {
+  "calls": {
+   "": null,
+   "a": {
+    "function": "query_sources_with_user_additions",
+    "search": "a",
+    "setup": {
+     "creation": true,
+     "item_class": [
+      "Q56422"
+     ],
+     "query_attributes": null,
+     "query_id": "",
+     "sources": null
+    }
+   },
+   "ab": {
+    "function": "query_sources_with_user_additions",
+    "search": "ab",
+    "setup": {
+     "creation": true,
+     "item_class": [
+      "Q56422"
+     ],
+     "query_attributes": null,
+     "query_id": "",
+     "sources": null
+    }
+   },
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": [
+      "Q56422"
+     ],
+     "query_attributes": null,
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Programming Languages with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedQuantityKindWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q6534245",
+     "query_attributes": [
+      "quantity"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Quantity Kinds without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedQuantityOrQuantityKindWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": [
+      "Q6534237",
+      "Q6534245"
+     ],
+     "query_attributes": [
+      "quantity"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Quantities or Quantity Kinds with Creation",
+  "refresh": true,
+  "search": true
+ },
+ "RelatedQuantityWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q6534237",
+     "query_attributes": [
+      "quantity"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Quantities without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedResearchFieldWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": "Q60231",
+     "query_attributes": [
+      "field"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Research Fields with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedResearchFieldWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q60231",
+     "query_attributes": [
+      "field"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Research Fields without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedResearchProblemWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": "Q6534292",
+     "query_attributes": [
+      "problem"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Research Problems with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedResearchProblemWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q6534292",
+     "query_attributes": [
+      "problem"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Research Problems without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedSoftwareWithCreation": {
+  "calls": {
+   "": null,
+   "a": {
+    "function": "query_sources_with_user_additions",
+    "search": "a",
+    "setup": {
+     "creation": true,
+     "item_class": "Q56614",
+     "query_attributes": [
+      "software"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   },
+   "ab": {
+    "function": "query_sources_with_user_additions",
+    "search": "ab",
+    "setup": {
+     "creation": true,
+     "item_class": "Q56614",
+     "query_attributes": [
+      "software"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   },
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": "Q56614",
+     "query_attributes": [
+      "software"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Software with Creation",
+  "refresh": true,
+  "search": true
+ },
+ "RelatedStepWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": [
+      "Q6486603"
+     ],
+     "query_attributes": [
+      "processstep"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Process Steps with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedTaskWithCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": true,
+     "item_class": "Q6534247",
+     "query_attributes": [
+      "task"
+     ],
+     "query_id": "",
+     "sources": null
+    }
+   }
+  },
+  "label": "Options for related Tasks with Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedTaskWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q6534247",
+     "query_attributes": [
+      "task"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Tasks without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedWorkflowEntityWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": [
+      "Q68657",
+      "Q6486603",
+      "Q56885"
+     ],
+     "query_attributes": [
+      "workflow",
+      "processstep",
+      "dataset"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Workflow Entities without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "RelatedWorkflowWithoutCreation": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources_with_user_additions",
+    "search": "abc",
+    "setup": {
+     "creation": false,
+     "item_class": "Q68657",
+     "query_attributes": [
+      "workflow"
+     ],
+     "query_id": "",
+     "sources": [
+      "mardi"
+     ]
+    }
+   }
+  },
+  "label": "Options for related Workflows without Creation",
+  "refresh": false,
+  "search": true
+ },
+ "ResearchField": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q60231"
+    ],
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Research Fields",
+  "refresh": true,
+  "search": true
+ },
+ "ResearchFieldMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q60231"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Research Fields (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "ResearchProblem": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q6534292",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Research Problems",
+  "refresh": true,
+  "search": true
+ },
+ "ResearchProblemMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q6534292"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Research Problems (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "Software": {
+  "calls": {
+   "": null,
+   "a": {
+    "function": "query_sources",
+    "item_class": "Q56614",
+    "not_found": true,
+    "search": "a",
+    "sources": null
+   },
+   "ab": {
+    "function": "query_sources",
+    "item_class": "Q56614",
+    "not_found": true,
+    "search": "ab",
+    "sources": null
+   },
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q56614",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Software",
+  "refresh": true,
+  "search": true
+ },
+ "SoftwareMaRDIOnly": {
+  "calls": {
+   "": null,
+   "a": {
+    "function": "query_sources",
+    "item_class": [
+     "Q56614"
+    ],
+    "not_found": false,
+    "search": "a",
+    "sources": [
+     "mardi"
+    ]
+   },
+   "ab": {
+    "function": "query_sources",
+    "item_class": [
+     "Q56614"
+    ],
+    "not_found": false,
+    "search": "ab",
+    "sources": [
+     "mardi"
+    ]
+   },
+   "abc": {
+    "function": "query_sources",
+    "item_class": [
+     "Q56614"
+    ],
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Software (MaRDI Only)",
+  "refresh": false,
+  "search": true
+ },
+ "Task": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q6534247",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Task",
+  "refresh": true,
+  "search": true
+ },
+ "TaskWorkflow": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q6534247",
+    "not_found": false,
+    "search": "abc",
+    "sources": [
+     "mardi"
+    ]
+   }
+  },
+  "label": "Options for Task (Workflow)",
+  "refresh": false,
+  "search": true
+ },
+ "Workflow": {
+  "calls": {
+   "": null,
+   "a": null,
+   "ab": null,
+   "abc": {
+    "function": "query_sources",
+    "item_class": "Q68657",
+    "not_found": true,
+    "search": "abc",
+    "sources": null
+   }
+  },
+  "label": "Options for Workflows",
+  "refresh": true,
+  "search": true
+ }
+}

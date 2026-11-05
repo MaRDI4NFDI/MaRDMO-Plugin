@@ -53,76 +53,13 @@ PROJECT_EXPORTS += [
         ('wikibase-search', _('Query MaRDI Portal'), 'MaRDMO.main.MaRDMOQueryProvider'),
         ]
 
-OPTIONSET_PROVIDERS = [
-    # General
-    ('Software', _('Options for Software'), 'MaRDMO.providers.Software'),
-    ('RelatedSoftwareWithCreation', _('Options for related Software with Creation'), 'MaRDMO.providers.RelatedSoftwareWithCreation'),
-    # Search
-    ('ResearchFieldMaRDIOnly', _('Options for Research Fields (MaRDI Only)'), 'MaRDMO.search.providers.ResearchField'),
-    ('MathematicalModelMaRDIOnly', _('Options for Mathematical Models (MaRDI Only)'), 'MaRDMO.search.providers.MathematicalModel'),
-    ('AlgorithmMaRDIOnly', _('Options for Algorithms (MaRDI Only)'), 'MaRDMO.search.providers.Algorithm'),
-    ('SoftwareMaRDIOnly', _('Options for Software (MaRDI Only)'), 'MaRDMO.search.providers.Software'),
-    ('HardwareMaRDIOnly', _('Options for Hardware (MaRDI Only)'), 'MaRDMO.search.providers.Hardware'),
-    ('MethodMaRDIOnly', _('Options for Methods (MaRDI Only)'), 'MaRDMO.search.providers.Method'),
-    ('InstrumentMaRDIOnly', _('Options for Instruments (MaRDI Only)'), 'MaRDMO.search.providers.Instrument'),
-    ('DataSetMaRDIOnly', _('Options for Data Sets (MaRDI Only)'), 'MaRDMO.search.providers.DataSet'),
-    ('AlgorithmicProblemMaRDIOnly', _('Options for Algorithmic Problems (MaRDI Only)'), 'MaRDMO.search.providers.AlgorithmicProblem'),
-    ('ResearchProblemMaRDIOnly', _('Options for Research Problems (MaRDI Only)'), 'MaRDMO.search.providers.ResearchProblem'),
-    ('ComputationalTaskMaRDIOnly', _('Options for Computational Tasks (MaRDI Only)'), 'MaRDMO.search.providers.ComputationalTask'),
-    ('FormulaMaRDIOnly', _('Options for Formulas (MaRDI Only)'), 'MaRDMO.search.providers.Formula'),
-    ('QuantityOrQuantityKindMaRDIOnly', _('Options for Quantities and Quantity Kinds (MaRDI Only)'), 'MaRDMO.search.providers.QuantityOrQuantityKind'),
-    # Workflow
-    ('MathematicalModelWorkflow', _('Options for Mathematical Model (Workflow)'), 'MaRDMO.workflow.providers.MathematicalModel'),
-    ('TaskWorkflow', _('Options for Task (Workflow)'), 'MaRDMO.workflow.providers.Task'),
-    ('Hardware', _('Options for Hardware'), 'MaRDMO.workflow.providers.Hardware'),
-    ('RelatedHardwareWithCreation', _('Options for related Hardware with Creation'), 'MaRDMO.workflow.providers.RelatedHardwareWithCreation'),
-    ('DataSet', _('Options for Data Sets'), 'MaRDMO.workflow.providers.DataSet'),
-    ('RelatedDataSetWithCreation', _('Options for related Data Sets with Creation'), 'MaRDMO.workflow.providers.RelatedDataSetWithCreation'),
-    ('RelatedInstrumentWithCreation', _('Options for related Instruments with Creation'), 'MaRDMO.workflow.providers.RelatedInstrumentWithCreation'),
-    ('RelatedMethodWithCreation', _('Options for related Methods with Creation'), 'MaRDMO.workflow.providers.RelatedMethodWithCreation'),
-    ('RelatedAlgorithmWithCreation', _('Options for related Algorithms with Creation'), 'MaRDMO.workflow.providers.RelatedAlgorithmWithCreation'),
-    ('ProcessStep', _('Options for Process Step'), 'MaRDMO.workflow.providers.ProcessStep'),
-    ('Workflow', _('Options for Workflows'), 'MaRDMO.workflow.providers.Workflow'),
-    ('RelatedWorkflowWithoutCreation', _('Options for related Workflows without Creation'), 'MaRDMO.workflow.providers.RelatedWorkflowWithoutCreation'),
-    ('RelatedStepWithCreation', _('Options for related Process Steps with Creation'), 'MaRDMO.workflow.providers.RelatedStepWithCreation'),
-    ('RelatedProgrammingLanguageWithCreation', _('Options for related Programming Languages with Creation'), 'MaRDMO.workflow.providers.RelatedProgrammingLanguageWithCreation'),
-    ('RelatedCPUModelWithCreation', _('Options for related CPU Models with Creation'), 'MaRDMO.workflow.providers.RelatedCPUModelWithCreation'),
-    ('RelatedHardwareOrSoftwareWithoutCreation', _('Options for related Hardware or Software without Creation'), 'MaRDMO.workflow.providers.RelatedHardwareOrSoftwareWithoutCreation'),
-    ('RelatedWorkflowEntityWithoutCreation', _('Options for related Workflow Entities without Creation'), 'MaRDMO.workflow.providers.RelatedWorkflowEntityWithoutCreation'),
-    # Model
-    ('ResearchField', _('Options for Research Fields'), 'MaRDMO.model.providers.ResearchField'),
-    ('RelatedResearchFieldWithCreation', _('Options for related Research Fields with Creation'), 'MaRDMO.model.providers.RelatedResearchFieldWithCreation'),
-    ('RelatedResearchFieldWithoutCreation', _('Options for related Research Fields without Creation'), 'MaRDMO.model.providers.RelatedResearchFieldWithoutCreation'),
-    ('ResearchProblem', _('Options for Research Problems'), 'MaRDMO.model.providers.ResearchProblem'),
-    ('RelatedResearchProblemWithCreation', _('Options for related Research Problems with Creation'), 'MaRDMO.model.providers.RelatedResearchProblemWithCreation'),
-    ('RelatedResearchProblemWithoutCreation', _('Options for related Research Problems without Creation'), 'MaRDMO.model.providers.RelatedResearchProblemWithoutCreation'),
-    ('MathematicalModel', _('Options for Mathematical Model'), 'MaRDMO.model.providers.MathematicalModel'),
-    ('RelatedMathematicalModelWithoutCreation', _('Options for related Mathematical Model without Creation'), 'MaRDMO.model.providers.RelatedMathematicalModelWithoutCreation'),
-    ('QuantityOrQuantityKind', _('Options for Quantities and Quantity Kinds'), 'MaRDMO.model.providers.QuantityOrQuantityKind'),
-    ('RelatedQuantityWithoutCreation', _('Options for related Quantities without Creation'), 'MaRDMO.model.providers.RelatedQuantityWithoutCreation'),
-    ('RelatedQuantityKindWithoutCreation', _('Options for related Quantity Kinds without Creation'), 'MaRDMO.model.providers.RelatedQuantityKindWithoutCreation'),
-    ('RelatedQuantityOrQuantityKindWithCreation', _('Options for related Quantities or Quantity Kinds with Creation'), 'MaRDMO.model.providers.RelatedQuantityOrQuantityKindWithCreation'),
-    ('MathematicalFormulation', _('Options for Mathematical Formulation'), 'MaRDMO.model.providers.MathematicalFormulation'),
-    ('RelatedMathematicalFormulationWithCreation', _('Options for related Mathematical Formulations with Creation'), 'MaRDMO.model.providers.RelatedMathematicalFormulationWithCreation'),
-    ('RelatedMathematicalFormulationWithoutCreation', _('Options for related Mathematical Formulations without Creation'), 'MaRDMO.model.providers.RelatedMathematicalFormulationWithoutCreation'),
-    ('Task', _('Options for Task'), 'MaRDMO.model.providers.Task'),
-    ('RelatedTaskWithCreation', _('Options for related Tasks with Creation'), 'MaRDMO.model.providers.RelatedTaskWithCreation'),
-    ('RelatedTaskWithoutCreation', _('Options for related Tasks without Creation'), 'MaRDMO.model.providers.RelatedTaskWithoutCreation'),
-    ('RelatedModelEntityWithoutCreation', _('Options for related Model Entities without Creation'), 'MaRDMO.model.providers.RelatedModelEntityWithoutCreation'),
-    # Publication
-    ('Publication', _('Options for Publication'), 'MaRDMO.publication.providers.Publication'),
-    # Algorithm
-    ('Algorithm', _('Options for Algorithms'), 'MaRDMO.algorithm.providers.Algorithm'),
-    ('RelatedAlgorithmWithoutCreation', _('Options for related Algorithms without Creation'), 'MaRDMO.algorithm.providers.RelatedAlgorithmWithoutCreation'),
-    ('AlgorithmicProblem', _('Options for Algorithmic Problems'), 'MaRDMO.algorithm.providers.AlgorithmicProblem'),
-    ('RelatedAlgorithmicProblemWithCreation', _('Options for related Algorithmic Problems with Creation'), 'MaRDMO.algorithm.providers.RelatedAlgorithmicProblemWithCreation'),
-    ('RelatedAlgorithmicProblemWithoutCreation', _('Options for related Algorithmic Problems without Creation'), 'MaRDMO.algorithm.providers.RelatedAlgorithmicProblemWithoutCreation'),
-    ('Benchmark', _('Options for Benchmarks'), 'MaRDMO.algorithm.providers.Benchmark'),
-    ('RelatedBenchmarkWithCreation', _('Options for related Benchmarks with Creation'), 'MaRDMO.algorithm.providers.RelatedBenchmarkWithCreation'),
-    ('RelatedBenchmarkOrSoftwareWithoutCreation', _('Options for related Benchmarks or Software without Creation'), 'MaRDMO.algorithm.providers.RelatedBenchmarkOrSoftwareWithoutCreation'),
-    ]
+# All option set providers of MaRDMO (the questionnaire's option sets name them by key)
+from MaRDMO.optionsets import OPTIONSET_PROVIDERS as MARDMO_OPTIONSET_PROVIDERS
+OPTIONSET_PROVIDERS += MARDMO_OPTIONSET_PROVIDERS
 
 ```
+
+Up to MaRDMO 0.6 the settings listed the providers one by one (`MaRDMO.model.providers.MathematicalModel` and so on); these classes no longer exist, so replace such a list by the two lines above. Providers of later MaRDMO versions then need no change of the settings.
 
 In addition add the following urlpattern to `config/urls.py`:
 

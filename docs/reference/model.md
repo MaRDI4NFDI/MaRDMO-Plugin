@@ -8,9 +8,6 @@
 ## Models
 ::: MaRDMO.model.models
 
-## Providers
-::: MaRDMO.model.providers
-
 ## Workers
 ::: MaRDMO.model.worker
 

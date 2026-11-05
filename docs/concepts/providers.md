@@ -2,6 +2,19 @@
 
 Many questionnaire fields in MaRDMO require the user to reference an external entity — a piece of software, a mathematical model, an algorithm, a research problem, and so on.  These fields are backed by *dynamic optionset providers*: Python classes that the RDMO frontend calls whenever the user types into an autocomplete widget, returning a ranked list of matching items from external knowledge bases or from the current project.
 
+## One Provider, One Table
+
+Every option set of the questionnaire names its provider by a key (`provider_key`), and RDMO creates the provider from the setting `OPTIONSET_PROVIDERS` as `Class(key, label, class_name)`.  It asks the provider for options with the search text only — not with the question — so a provider cannot tell which question it serves; it knows its key.  MaRDMO therefore has one provider class, `MaRDMO.providers.MaRDMOProvider`, and a table in `MaRDMO.optionsets` with one row per key:
+
+```python
+'RelatedQuantityWithoutCreation': Search('Options for related Quantities without Creation',
+                                         'quantity', answers=['quantity'], sources=['mardi']),
+```
+
+A row names the item class (or classes) of the MaRDI Portal search, the questionnaire sections whose items of the user's own are offered too, whether a new item may be created, the sources, whether "not found" is offered, whether RDMO reloads the page after a selection (`refresh`), and from how many characters the search starts.  A new option set needs one row.
+
+`MaRDMO.optionsets.OPTIONSET_PROVIDERS` is the setting for all rows, so an RDMO installation adds it with one line (see the installation instructions).  Up to MaRDMO 0.6 every key had a class of its own (`MaRDMO.model.providers.MathematicalModel` and so on); settings that still list these must be replaced by that line.  Providers of programming languages and software search from the first character, since some of their names have only one (C, R); all others start at three, since a single letter matches hundreds of items and slows the search.
+
 ## Three Provider Tiers
 
 Providers are organised into three tiers of increasing capability.

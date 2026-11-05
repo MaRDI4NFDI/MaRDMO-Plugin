@@ -41,6 +41,10 @@ MARDMO_PROVIDER = {
     },
 }
 
+# As in the README
+from MaRDMO.optionsets import OPTIONSET_PROVIDERS as MARDMO_OPTIONSET_PROVIDERS  # noqa: E402
+OPTIONSET_PROVIDERS = MARDMO_OPTIONSET_PROVIDERS
+
 PROJECT_EXPORTS = PROJECT_EXPORTS + [
     ('wikibase', _('Export to MaRDI Portal'), 'MaRDMO.main.MaRDMOExportProvider'),
     ('wikibase-search', _('Query MaRDI Portal'), 'MaRDMO.main.MaRDMOQueryProvider'),

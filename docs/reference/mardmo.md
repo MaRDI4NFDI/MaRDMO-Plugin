@@ -12,6 +12,10 @@
 
 ::: MaRDMO.providers
 
+## Option Set Providers (table)
+
+::: MaRDMO.optionsets
+
 ## Handlers
 
 ::: MaRDMO.handlers
