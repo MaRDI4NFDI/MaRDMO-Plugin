@@ -42,8 +42,9 @@ pip install MaRDMO
 To connect the MaRDMO Plugin with the RDMO installation add the following lines to `config/settings/local.py` (if not already present):
 
 ```python
-from django.utils.translation import gettext_lazy as _ 
-``` 
+from django.utils.translation import gettext_lazy as _
+from MaRDMO.optionsets import OPTIONSET_PROVIDERS as MARDMO_OPTIONSET_PROVIDERS
+```
 
 ```python
 INSTALLED_APPS = ['MaRDMO'] + INSTALLED_APPS
@@ -54,12 +55,11 @@ PROJECT_EXPORTS += [
         ]
 
 # All option set providers of MaRDMO (the questionnaire's option sets name them by key)
-from MaRDMO.optionsets import OPTIONSET_PROVIDERS as MARDMO_OPTIONSET_PROVIDERS
 OPTIONSET_PROVIDERS += MARDMO_OPTIONSET_PROVIDERS
 
 ```
 
-Up to MaRDMO 0.6 the settings listed the providers one by one (`MaRDMO.model.providers.MathematicalModel` and so on); these classes no longer exist, so replace such a list by the two lines above. Providers of later MaRDMO versions then need no change of the settings.
+Up to MaRDMO 0.6 the settings listed the providers one by one (`MaRDMO.model.providers.MathematicalModel` and so on); these classes no longer exist, so replace such a list by the import and the line `OPTIONSET_PROVIDERS += MARDMO_OPTIONSET_PROVIDERS` above. Providers of later MaRDMO versions then need no change of the settings.
 
 In addition add the following urlpattern to `config/urls.py`:
 
