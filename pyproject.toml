@@ -59,10 +59,13 @@ testpaths = ["tests"]
 pythonpath = ["."]
 # No network in the tests: portal, Wikidata and citation services are
 # replaced by recorded answers (pytest-socket fails every other request)
-addopts = "--disable-socket --allow-unix-socket"
+# Tests that need the database create its tables without RDMO's migrations (faster)
+addopts = "--disable-socket --allow-unix-socket --no-migrations"
 filterwarnings = [
     # RDMO's URL fields ahead of Django 6; not MaRDMO's to fix
-    "ignore:The default scheme will be changed:DeprecationWarning",
+    "ignore:The default scheme will be changed",
+    # django-compressor, used by RDMO's templates
+    "ignore:codecs.open\\(\\) is deprecated:DeprecationWarning",
 ]
 
 [tool.coverage.run]

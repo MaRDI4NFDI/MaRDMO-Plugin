@@ -121,8 +121,10 @@ class PrepareWorkflow(PublicationExport):
             hardware = ps_data.get('RelationH', {})
             software_doc = ps_data.get('software-documentation', {})
             algo_params = ps_data.get('algorithm-parameter', {})
+            # Every part of a usage counts, so a block with only parameters is
+            # reported as missing its algorithm instead of being dropped
             all_indices = sorted(
-                set(algo_by_set) | set(software) | set(hardware) | set(software_doc)
+                set(algo_by_set) | set(software) | set(hardware) | set(software_doc) | set(algo_params)
             )
             ps_data['algorithm_software_pairs'] = [
                 {
@@ -151,7 +153,7 @@ class PrepareWorkflow(PublicationExport):
             instruments = ps_data.get('IRelatant', {})
             method_doc  = ps_data.get('method-documentation', {})
             meth_params = ps_data.get('method-parameter', {})
-            all_indices = sorted(set(meth_by_set) | set(instruments) | set(method_doc))
+            all_indices = sorted(set(meth_by_set) | set(instruments) | set(method_doc) | set(meth_params))
             ps_data['method_instrument_pairs'] = [
                 {
                     'primary':       meth_by_set.get(idx, []),

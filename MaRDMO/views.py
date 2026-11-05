@@ -181,6 +181,9 @@ def show_success(request, job_id):
 
     stmt_map = defaultdict(list)
     relation_stmts = []
+    # Standard statements (community, profile type) are not listed; those
+    # added to existing items are counted, so the page never says "nothing"
+    standard_added = 0
     for stmt in job_data.get("statements", []):
         subj, subj_qid, prop, obj, obj_qid = stmt[0], stmt[1], stmt[2], stmt[3], stmt[4]
         qualifiers  = stmt[5] if len(stmt) > 5 else []
@@ -192,6 +195,8 @@ def show_success(request, job_id):
         for q in qualifiers:
             q['obj_url'] = _obj_url(q['prop'], q['obj'], q.get('obj_qid', ''))
         if prop in _SKIP_PROPS:
+            if subj_qid not in created_qids:
+                standard_added += 1
             continue
         if subj_qid in created_qids:
             stmt_map[subj_qid].append(
@@ -300,6 +305,7 @@ def show_success(request, job_id):
         {
             "grouped_ids": grouped_ids,
             "relation_stmts": relation_stmts,
+            "standard_added": standard_added,
             # Set when the export failed after some entities were created
             "export_error": job_data.get("error"),
             # Items linked to existing portal items instead of being created

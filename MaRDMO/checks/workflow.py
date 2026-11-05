@@ -305,6 +305,9 @@ class WorkflowMixin:
                     item_class   = 'CPU'
                 )
                 for entry in cpu_entries:
+                    # Occurrence and cores are exported on the CPU model only
+                    if not entry.get('id') and not entry.get('name'):
+                        self.err.append(self._error('Hardware', page_name, 'Missing CPU Model'))
                     if not entry.get('count'):
                         self.err.append(self._error(
                             'Hardware', page_name,
