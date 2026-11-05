@@ -6,8 +6,10 @@ unchanged_export.py reports what an export would write -- it must be
 nothing.  Staging is unreliable, so an item counts only if its payload was
 built without a failed request: MaRDMO's warnings while filling (e.g.
 "wbgetentities failed") or an unreachable check make the attempt fail.
-Before every attempt the script waits until staging answers several times
-in a row; failed attempts are repeated with growing pauses.
+Before every attempt the script waits until staging answers twice in a
+row (MaRDMO's own retries cope with single failures; staging answered about
+half of all requests on 2026-11-05, and longer runs of answers were rare);
+failed attempts are repeated with growing pauses.
 
 Needs MaRDMO configured for staging and STAGING=1.  Environment: ROUND3_ITEMS
 (kind:QID,...), OUT (default results/staging-round3), ATTEMPTS (default 6).
@@ -43,7 +45,7 @@ class Warnings(logging.Handler):
             self.records.append(self.format(record))
 
 
-def stable(needed=8, limit=1800):
+def stable(needed=2, limit=1800):
     """Wait until staging answers *needed* times in a row; False after *limit* seconds."""
     end, ok = time.monotonic() + limit, 0
     while time.monotonic() < end:
