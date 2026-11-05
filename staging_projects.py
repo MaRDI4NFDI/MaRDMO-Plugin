@@ -13,7 +13,8 @@ test 041126"), so the labels differ.  Three projects:
              the model was exported: MODEL and TASK are their staging QIDs),
              process step with input and output data set and the algorithm on
              the software (ALGORITHM, SOFTWARE: staging QIDs from the algorithm
-             project; new items if not given) and new hardware, with a parameter
+             project; new items if not given) and new hardware with a new CPU
+             model, with a parameter
 
 MODE=CHECK (default): builds the projects as TEMP projects, runs MaRDMO's
 checks on them, prints the messages and deletes them; nothing is fetched from
@@ -146,13 +147,13 @@ def staging(name, variable):
     qid = os.environ.get(variable)
     if not qid:
         return None
-    for attempt in range(3):
+    for attempt in range(6):
         try:
             return {'text': labels('mardi', [qid])[qid], 'external_id': f'mardi:{qid}'}
         except ValueError:      # staging sometimes answers with an error page
-            if attempt == 2:
+            if attempt == 5:
                 raise
-            time.sleep(10)
+            time.sleep(20)
 
 
 def build_workflow(p):
@@ -167,8 +168,8 @@ def build_workflow(p):
     answer(p, 'workflow/model', signal=True, set_prefix=f'{w}|0', set_index=0, **model)
     answer(p, 'workflow/task', signal=True, set_prefix=f'{w}|0', set_index=0, **task)
     for path in ('mathematical', 'runtime', 'result', 'original-platform', 'other-platform'):
-        answer(p, f'workflow/reproducibility/{path}', option=f'{OPTIONS}yes_no/yes', set_prefix=f'{w}|0',
-               set_index=0)
+        answer(p, f'workflow/reproducibility/{path}', option=f'{OPTIONS}yes_no_not_relevant/yes',
+               set_prefix=f'{w}|0', set_index=0)
     answer(p, 'workflow/transferability', text='other test workflows', set_prefix=str(w), set_index=0,
            collection_index=0)
     answer(p, 'workflow/objective', text='test the export of MaRDMO to staging', set_prefix=str(w), set_index=0)
@@ -189,6 +190,7 @@ def build_workflow(p):
         new(p, 'software', 'S', 'workflow software')
     h = new(p, 'hardware', 'HW', 'workflow hardware')
     answer(p, 'hardware/nodes', text='1', set_prefix=str(h), set_index=0)
+    answer(p, 'hardware/cpu', signal=True, set_prefix=f'{h}|0', set_index=0, **ref('CPU'))
     answer(p, 'hardware/cores', text='4', set_prefix=f'{h}|0', set_index=0)
     answer(p, 'hardware/number-of-cpu', text='1', set_prefix=f'{h}|0', set_index=0)
 
