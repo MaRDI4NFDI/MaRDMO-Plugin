@@ -8,6 +8,17 @@ on:
   pull_request:
     branches: [main]
   workflow_call:
+    inputs:
+      # The release is started by a tag push; without this, it would get
+      # the one combination of a push
+      full_matrix:
+        type: boolean
+        default: false
+      # A questionnaire tag (the release tests against its latest release);
+      # empty: the branch with the same name as this branch, else main
+      questionnaire_ref:
+        type: string
+        default: ''
 
 concurrency:
   group: tests-${{ github.workflow }}-${{ github.ref }}
@@ -20,19 +31,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ${{ github.event_name == 'push' && fromJSON('["3.14"]') || fromJSON('["3.10", "3.13", "3.14"]') }}
-        rdmo: ${{ github.event_name == 'push' && fromJSON('["2.5.2"]') || fromJSON('["2.5.1", "2.5.2"]') }}
+        python: ${{ github.event_name == 'push' && !inputs.full_matrix && fromJSON('["3.14"]') || fromJSON('["3.10", "3.13", "3.14"]') }}
+        rdmo: ${{ github.event_name == 'push' && !inputs.full_matrix && fromJSON('["2.5.2"]') || fromJSON('["2.5.1", "2.5.2"]') }}
 
     steps:
       - name: Check out MaRDMO
         uses: actions/checkout@v5
 
-      # The questionnaire branch with the same name as this branch, else main
+      # The given questionnaire tag (release), else the questionnaire branch
+      # with the same name as this branch, else main
       - name: Find the questionnaire branch
         id: questionnaire
         run: |
           branch="${{ github.head_ref || github.ref_name }}"
-          if git ls-remote --exit-code --heads https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire "$branch" > /dev/null; then
+          if [ -n "${{ inputs.questionnaire_ref }}" ]; then
+            echo "ref=${{ inputs.questionnaire_ref }}" >> "$GITHUB_OUTPUT"
+          elif git ls-remote --exit-code --heads https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire "$branch" > /dev/null; then
             echo "ref=$branch" >> "$GITHUB_OUTPUT"
           else
             echo "ref=main" >> "$GITHUB_OUTPUT"

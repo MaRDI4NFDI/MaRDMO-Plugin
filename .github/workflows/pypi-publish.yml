@@ -1,55 +1,118 @@
 name: Publish to PyPI
 
+# A release starts with pushing the tag vX.Y.Z (see docs/how-to/mardmo/release.md):
+# the tag must name the package version, all tests must pass against the
+# questionnaire's latest release, the package goes to PyPI, and only then the
+# draft release is published -- Zenodo archives published releases, so it
+# never archives a version that is not on PyPI.
+# "Run workflow" (workflow_dispatch) is a dry run on any branch: version,
+# questionnaire and tests, no upload and no release.
 on:
-  release:
-    types: [published]
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  # Every supported Python and RDMO version must pass before anything is uploaded
-  tests:
-    uses: ./.github/workflows/tests.yml
-
-  deploy:
-    needs: tests
+  check:
+    name: Tag and version
     runs-on: ubuntu-latest
-
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
-      # Step 1: Check out the repository
-      - name: Check out code
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      # Step 2: Set up Python
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.13'
-
-      # Step 3: The release tag (v0.7.0) must name the version in MaRDMO/__init__.py
-      - name: Check the release tag against the package version
+      - name: Read the version from MaRDMO/__init__.py
+        id: version
         run: |
-          version=$(python -c "import ast; print(next(n.value.value for n in ast.parse(open('MaRDMO/__init__.py').read()).body if isinstance(n, ast.Assign) and n.targets[0].id == '__version__'))")
-          tag="${{ github.event.release.tag_name }}"
-          echo "release tag: $tag, package version: $version"
+          version=$(python3 -c "import ast; print(next(n.value.value for n in ast.parse(open('MaRDMO/__init__.py').read()).body if isinstance(n, ast.Assign) and n.targets[0].id == '__version__'))")
+          echo "package version: $version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: The tag must name the package version
+        if: github.event_name == 'push'
+        run: |
+          tag="${{ github.ref_name }}"
+          version="${{ steps.version.outputs.version }}"
           if [ "$tag" != "v$version" ]; then
-            echo "::error::Release tag $tag does not match the package version $version (expected v$version)"
+            echo "::error::Tag $tag does not match the package version $version (expected v$version)"
             exit 1
           fi
 
-      # Step 4: Install dependencies
-      - name: Install dependencies
+  questionnaire:
+    name: Latest questionnaire release
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.latest.outputs.tag }}
+    steps:
+      # Users download the latest release, so the package is tested against it
+      - id: latest
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          python -m pip install --upgrade pip
-          pip install build twine
+          tag=$(gh api repos/MaRDI4NFDI/MaRDMO-Questionnaire/releases/latest --jq .tag_name)
+          echo "questionnaire release: $tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
 
-      # Step 5: Build the distribution files
-      - name: Build package
+  tests:
+    needs: [check, questionnaire]
+    uses: ./.github/workflows/tests.yml
+    with:
+      full_matrix: true
+      questionnaire_ref: ${{ needs.questionnaire.outputs.tag }}
+
+  pypi:
+    name: Upload to PyPI
+    needs: [check, tests]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    # Trusted Publishing: PyPI trusts this workflow in the environment "pypi"
+    # (deployments only from tags v*), no token
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Build the package
         run: |
+          python -m pip install --upgrade pip build
           python -m build
 
-      # Step 6: Publish to PyPI
-      - name: Publish package to PyPI
+      - name: Upload
+        uses: pypa/gh-action-pypi-publish@v1.12.4
+
+  release:
+    name: Publish the release
+    needs: pypi
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # The draft written by hand; drafts are not found by tag, so by the list
+      - name: Publish the draft release (Zenodo archives it)
         env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
         run: |
-          python -m twine upload dist/*
+          found=$(gh api "repos/$REPO/releases" --paginate --jq ".[] | select(.tag_name == \"$TAG\") | \"\(.id) \(.draft)\"" | head -1)
+          if [ -z "$found" ]; then
+            echo "::warning::No draft release for $TAG: created one with generated notes"
+            gh release create "$TAG" --repo "$REPO" --verify-tag --title "MaRDMO $TAG" --generate-notes
+          elif [ "${found#* }" = "true" ]; then
+            gh api -X PATCH "repos/$REPO/releases/${found% *}" -F draft=false > /dev/null
+            echo "published the draft release $TAG"
+          else
+            echo "::warning::The release $TAG was published already (Zenodo was notified then)"
+          fi
