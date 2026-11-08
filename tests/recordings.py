@@ -57,15 +57,24 @@ def _response(entry):
     return response
 
 
-def replay(monkeypatch, name, missing):
-    '''Answer every request from tests/data/recorded/*name*.json.
+def load(names):
+    '''{request: answer} of the recordings *names*.'''
+    answers = {}
+    for name in names:
+        path = FOLDER / f'{name}.json'
+        assert path.exists(), f'{path.name} not recorded (see tests/recordings.py)'
+        answers.update({entry['key']: entry for entry in json.loads(path.read_text(encoding='utf-8'))})
+    return answers
+
+
+def replay(monkeypatch, names, missing):
+    '''Answer every request from the recordings tests/data/recorded/<name>.json of *names*.
 
     A request that is not recorded raises an error and is added to
     *missing*, so it is noticed where MaRDMO catches the error.
     '''
-    path = FOLDER / f'{name}.json'
-    assert path.exists(), f'{path.name} not recorded (see tests/recordings.py)'
-    answers = {entry['key']: entry for entry in json.loads(path.read_text(encoding='utf-8'))}
+    answers = load(names)
+    path = FOLDER / f'{names[-1]}.json'
 
     def request(session, method, url, params=None, data=None, **kwargs):
         entry = answers.get(key(method, url, params, data))
@@ -78,8 +87,13 @@ def replay(monkeypatch, name, missing):
     monkeypatch.setattr(requests.Session, 'request', request)
 
 
-def record(monkeypatch, name):
-    '''Send every request for real and collect it; :func:`save` writes the file.'''
+def record(monkeypatch, names):
+    '''Send every request for real and collect it; :func:`save` writes the file of the last name.
+
+    Requests already in the other recordings of *names* are not stored again.
+    '''
+    *others, name = names
+    known = load(others) if others else {}
     entries, lock = {}, threading.Lock()
 
     def request(session, method, url, params=None, data=None, **kwargs):
@@ -94,6 +108,8 @@ def record(monkeypatch, name):
     monkeypatch.setattr(requests.Session, 'request', request)
 
     def save():
+        for request_key in known:
+            entries.pop(request_key, None)
         path = FOLDER / f'{name}.json'
         if name in _WRITTEN:
             entries.update({entry['key']: entry for entry in json.loads(path.read_text(encoding='utf-8'))})

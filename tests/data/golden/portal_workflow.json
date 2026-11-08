@@ -1,0 +1,11 @@
+{
+ "messages": [
+  "Following aspects prevented the export:",
+  "Algorithm (Page A1): Missing Algorithmic Task",
+  "Algorithm (Page A1): Missing Software",
+  "Data Set (Page DS1): Missing Data Set Type",
+  "Data Set (Page DS1): Missing File Format",
+  "Interdisciplinary Workflow (Page Workflow 1): Missing Research Objective",
+  "Process Step (Page PS4): Missing Software Requirements"
+ ]
+}
