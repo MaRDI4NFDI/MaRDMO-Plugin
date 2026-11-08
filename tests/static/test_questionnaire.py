@@ -4,6 +4,7 @@ MaRDMO reads and writes answers by attribute URI and option URI; an URI
 that was renamed or removed in the questionnaire only shows up at runtime,
 as answers that are silently missing.
 '''
+import importlib
 import json
 import re
 import xml.etree.ElementTree as ET
@@ -13,6 +14,7 @@ import pytest
 
 from MaRDMO.constants import BASE_URI
 from MaRDMO.optionsets import PROVIDERS
+from tests.conftest import DC_URI
 
 PACKAGE = Path(__file__).parents[2] / 'MaRDMO'
 
@@ -93,3 +95,29 @@ def test_every_option_set_has_a_provider(questionnaire):
 def test_every_provider_is_used_by_an_option_set(questionnaire):
     """A row no option set names is dead code (as the provider "Instrument" was)."""
     assert sorted(PROVIDERS.keys() - provider_keys(questionnaire)) == []
+
+
+# Imported references are stored at the position of their option in the
+# option set, where RDMO's checkbox widget expects them (CheckboxInput.js)
+REFERENCE_ORDERS = {
+    'software-reference': ['MaRDMO.constants', 'MaRDMO.algorithm.constants', 'MaRDMO.workflow.constants'],
+    'benchmark-reference': ['MaRDMO.algorithm.constants'],
+    'quantity-reference': ['MaRDMO.model.constants'],
+}
+REFERENCE_LISTS = {
+    'software-reference': 'software_reference_ids',
+    'benchmark-reference': 'benchmark_reference_ids',
+    'quantity-reference': 'qudt_reference_ids',
+}
+
+
+@pytest.mark.parametrize('optionset, module', [(optionset, module) for optionset, modules in REFERENCE_ORDERS.items()
+                                               for module in modules])
+def test_reference_lists_have_the_order_of_their_options(optionset, module, questionnaire):
+    root = ET.parse(questionnaire.path / 'optionsets.xml').getroot()
+    element = next(e for e in root if e.tag == 'optionset' and e.get(DC_URI).endswith(f'/{optionset}'))
+    in_questionnaire = [option.get(DC_URI) for option in
+                        sorted(element.find('options'), key=lambda option: int(option.get('order') or 0))]
+    options = load(PACKAGE / 'data' / 'options.json')
+    in_code = [options[key] for key in getattr(importlib.import_module(module), REFERENCE_LISTS[optionset])]
+    assert in_code == in_questionnaire
