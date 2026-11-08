@@ -4,8 +4,11 @@ The questionnaire (QUESTIONNAIRE, see tests/conftest.py) is imported once per
 test session with RDMO's import, as an admin would import it; every test
 runs in a transaction that is rolled back.  Answers are saved without
 signals (bulk_create), so MaRDMO's handlers, which would ask the portal,
-only run where a test sends a signal itself.
+only run where a test sends a signal itself (:func:`select`, with the
+answers of the portal from a recording, :func:`portal`).
 '''
+import os
+
 import pytest
 from django.contrib.sites.models import Site
 from django.utils import timezone
@@ -14,9 +17,13 @@ from rdmo.domain.models import Attribute
 from rdmo.management.imports import import_elements
 from rdmo.options.models import Option
 from rdmo.projects.models import Project, Value
+from rdmo.projects.signals import value_created
 from rdmo.questions.models import Catalog
 
 from MaRDMO.constants import BASE_URI
+from MaRDMO.getters import get_questions
+from MaRDMO.helpers import value_editor
+from tests.recordings import record, replay
 
 # Referenced elements first; the catalogs use all of them
 ORDER = ['attributes.xml', 'optionsets.xml', 'conditions.xml']
@@ -56,3 +63,30 @@ def save(project, *answers):
     for value in answers:
         value.project, value.created, value.updated = project, now, now
     Value.objects.bulk_create(answers)
+
+
+@pytest.fixture
+def portal(monkeypatch):
+    '''Answers of the external services for the recording *name* (see tests/recordings.py).'''
+    saves, missing = [], []
+
+    def use(name):
+        if os.environ.get('RECORD') == '1':
+            saves.append(record(monkeypatch, name))
+        else:
+            replay(monkeypatch, name, missing)
+    yield use
+    for save_recording in saves:
+        save_recording()
+    assert not missing, f'requests not recorded: {missing}'
+
+
+def select(project, qkey, item_type, external_id, text, set_index=0):
+    '''Select an item on a page as the interview does: its page, its ID answer, then the signal.'''
+    questions = get_questions(qkey)[item_type]
+    value_editor(project=project, uri=f'{BASE_URI}{questions["uri"]}',
+                 info={'text': f'{item_type} {set_index + 1}', 'set_index': set_index})
+    value, _ = value_editor(project=project, uri=f'{BASE_URI}{questions["ID"]["uri"]}',
+                            info={'text': text, 'external_id': external_id, 'set_index': set_index})
+    value_created.send(sender=Value, instance=value)
+    return value
