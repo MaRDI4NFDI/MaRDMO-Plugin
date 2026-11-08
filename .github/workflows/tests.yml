@@ -1,12 +1,13 @@
 name: Tests
 
-# Every push: one quick combination.  Pull requests to main and releases
-# (pypi-publish.yml calls this workflow): every supported combination.
+# Every push: one quick combination.  Pull requests to main or the 0.8.0
+# integration branch and releases (pypi-publish.yml calls this workflow):
+# every supported combination.
 on:
   push:
     branches-ignore: [gh-pages, dev-tests]
   pull_request:
-    branches: [main]
+    branches: [main, '0.8.0']
   workflow_call:
     inputs:
       # The release is started by a tag push; without this, it would get
