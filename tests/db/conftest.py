@@ -67,14 +67,18 @@ def save(project, *answers):
 
 @pytest.fixture
 def portal(monkeypatch):
-    '''Answers of the external services for the recording *name* (see tests/recordings.py).'''
+    '''Answers of the external services from the recordings *names* (see tests/recordings.py).
+
+    Recording stores the requests that the earlier recordings do not have
+    in the last one.
+    '''
     saves, missing = [], []
 
-    def use(name):
+    def use(*names):
         if os.environ.get('RECORD') == '1':
-            saves.append(record(monkeypatch, name))
+            saves.append(record(monkeypatch, names))
         else:
-            replay(monkeypatch, name, missing)
+            replay(monkeypatch, names, missing)
     yield use
     for save_recording in saves:
         save_recording()

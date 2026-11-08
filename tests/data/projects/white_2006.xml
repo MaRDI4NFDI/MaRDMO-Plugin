@@ -1,0 +1,4445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/" created="2026-11-08T08:22:45.674720+01:00" required="2.1.0" version="2.5.2">
+	<title>white_2006</title>
+	<description/>
+	<catalog dc:uri="https://rdmo.mardi4nfdi.de/terms/questions/mardmo-model-catalog"/>
+	<tasks>
+		<task dc:uri="http://example.com/terms/tasks/contact_IT_or_data_management_expert"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/clarify_consequences_international_law"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/contact_data_security_officer"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/contact_IT_department"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/contact_rights_owner"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/determine_versioning_tool"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/finish-first-dmp"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/identify_rights_owner"/>
+	</tasks>
+	<values>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/field"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>AD1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:27:44.002797+01:00</created>
+			<updated>2026-11-07T21:27:44.002800+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/field/description"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>study of the patterns, causes, and effects of health and disease conditions</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:27:44.073065+01:00</created>
+			<updated>2026-11-07T21:27:44.297056+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/field/id"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>epidemiology (study of the patterns, causes, and effects of health and disease conditions) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6684705</external_id>
+			<created>2026-11-07T21:27:44.009729+01:00</created>
+			<updated>2026-11-07T21:27:44.009732+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/field/name"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>epidemiology</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:27:44.066169+01:00</created>
+			<updated>2026-11-07T21:27:44.288643+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>F1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:15:32.803179+01:00</created>
+			<updated>2026-11-07T16:15:32.803182+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation"/>
+			<set_prefix/>
+			<set_index>1</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>F2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:18.794352+01:00</created>
+			<updated>2026-11-07T16:26:18.794355+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation"/>
+			<set_prefix/>
+			<set_index>2</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>F3</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:34:50.617860+01:00</created>
+			<updated>2026-11-07T17:34:50.617863+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation"/>
+			<set_prefix/>
+			<set_index>3</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>F4</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:36:34.941301+01:00</created>
+			<updated>2026-11-07T17:36:34.941321+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation"/>
+			<set_prefix/>
+			<set_index>4</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>F5</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:37:02.993326+01:00</created>
+			<updated>2026-11-07T17:37:02.993329+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/description"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>system of ordinary differential equations describing the opiate-using career</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:15:32.832453+01:00</created>
+			<updated>2026-11-07T16:15:32.832456+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/description"/>
+			<set_prefix>1</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>total population is the sum of susceptibles and drug users not in and in treatment, and stays constant because recruitment balances all removals</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:18.825523+01:00</created>
+			<updated>2026-11-07T21:41:03.002388+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/description"/>
+			<set_prefix>2</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>ordinary differential equation describing the rate of change of susceptible individuals</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:34:50.641205+01:00</created>
+			<updated>2026-11-08T08:16:35.254780+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/description"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>ordinary differential equation describing the rate of change of drug-using individuals not in treatment</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:36:34.964202+01:00</created>
+			<updated>2026-11-08T08:17:01.933411+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/description"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>ordinary differential equation describing the rate of change of drug-using individuals in treatment</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:37:03.027772+01:00</created>
+			<updated>2026-11-08T08:17:08.722056+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of susceptible individuals (number) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673882</external_id>
+			<created>2026-11-07T16:47:44.270710+01:00</created>
+			<updated>2026-11-07T16:47:44.270713+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6534304</external_id>
+			<created>2026-11-07T16:48:21.610073+01:00</created>
+			<updated>2026-11-07T16:48:21.610076+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate (individuals of general entering susceptible population) (demographic process)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:50:48.360309+01:00</created>
+			<updated>2026-11-07T20:57:39.444317+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (becoming drug user) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:52:26.482761+01:00</created>
+			<updated>2026-11-07T21:01:05.706265+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of drug users not in treatment (initial and relapsed drug users)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:53:38.027892+01:00</created>
+			<updated>2026-11-07T16:56:48.169238+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673795</external_id>
+			<created>2026-11-07T16:58:08.065855+01:00</created>
+			<updated>2026-11-07T16:58:08.065858+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (natural death in general population) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:59:47.574804+01:00</created>
+			<updated>2026-11-07T21:03:51.396126+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>7</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug users entering treatment) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:02:49.098780+01:00</created>
+			<updated>2026-11-07T21:09:53.436348+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>8</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug user in treatment relapsing to untreated use) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:03:38.749412+01:00</created>
+			<updated>2026-11-07T21:13:09.967591+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>9</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of drug users in treatment (number)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:04:31.272097+01:00</created>
+			<updated>2026-11-07T17:04:31.272101+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>10</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:08:29.117767+01:00</created>
+			<updated>2026-11-07T21:16:25.045831+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>11</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug-related deaths of users in treatment and a rate of successful cure) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:10:07.320920+01:00</created>
+			<updated>2026-11-07T21:19:23.800809+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673795</external_id>
+			<created>2026-11-07T16:26:23.007129+01:00</created>
+			<updated>2026-11-07T16:26:23.007132+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>number of susceptible individuals (number) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673882</external_id>
+			<created>2026-11-07T16:26:23.022009+01:00</created>
+			<updated>2026-11-07T16:26:23.022012+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of drug users not in treatment (initial and relapsed drug users)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:45:50.944423+01:00</created>
+			<updated>2026-11-07T17:45:50.944427+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of drug users in treatment (number)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:46:09.540294+01:00</created>
+			<updated>2026-11-07T17:46:09.540298+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>7</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate (individuals of general entering susceptible population) (demographic process)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T21:44:44.138090+01:00</created>
+			<updated>2026-11-07T21:44:44.138095+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>8</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (natural death in general population) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T21:45:25.320064+01:00</created>
+			<updated>2026-11-07T21:45:25.320068+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>9</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-08T08:05:32.269409+01:00</created>
+			<updated>2026-11-08T08:05:32.269413+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>10</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug-related deaths of users in treatment and a rate of successful cure) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-08T08:06:17.814647+01:00</created>
+			<updated>2026-11-08T08:06:17.814650+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of susceptible individuals (number) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673882</external_id>
+			<created>2026-11-07T20:16:56.570302+01:00</created>
+			<updated>2026-11-07T20:16:56.570306+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6534304</external_id>
+			<created>2026-11-07T20:17:12.420417+01:00</created>
+			<updated>2026-11-07T20:17:12.420420+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate (individuals of general entering susceptible population) (demographic process)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:17:45.857966+01:00</created>
+			<updated>2026-11-07T20:58:44.288313+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (becoming drug user) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:18:27.126870+01:00</created>
+			<updated>2026-11-07T21:01:30.407011+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of drug users not in treatment (initial and relapsed drug users)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:18:56.494498+01:00</created>
+			<updated>2026-11-07T20:18:56.494501+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673795</external_id>
+			<created>2026-11-07T20:20:02.528159+01:00</created>
+			<updated>2026-11-07T20:20:02.528162+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (natural death in general population) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:20:22.905189+01:00</created>
+			<updated>2026-11-07T21:04:16.293686+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of drug users not in treatment (initial and relapsed drug users)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:22:10.636975+01:00</created>
+			<updated>2026-11-07T20:22:10.636978+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6534304</external_id>
+			<created>2026-11-07T20:22:23.716069+01:00</created>
+			<updated>2026-11-07T20:22:23.716073+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (becoming drug user) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:23:07.922731+01:00</created>
+			<updated>2026-11-07T21:01:53.201480+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of susceptible individuals (number) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673882</external_id>
+			<created>2026-11-07T20:23:47.067309+01:00</created>
+			<updated>2026-11-07T20:23:47.067312+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673795</external_id>
+			<created>2026-11-07T20:24:14.955368+01:00</created>
+			<updated>2026-11-07T20:24:14.955373+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug users entering treatment) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:24:58.562590+01:00</created>
+			<updated>2026-11-07T21:10:16.359897+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug user in treatment relapsing to untreated use) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:26:46.670569+01:00</created>
+			<updated>2026-11-07T21:13:35.174763+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>7</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of drug users in treatment (number)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:27:22.759577+01:00</created>
+			<updated>2026-11-07T20:27:22.759581+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>8</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (natural death in general population) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:33:02.176052+01:00</created>
+			<updated>2026-11-07T21:04:43.042987+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>9</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:33:56.831529+01:00</created>
+			<updated>2026-11-07T21:16:52.367144+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of drug users in treatment (number)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:35:49.021046+01:00</created>
+			<updated>2026-11-07T20:35:49.021051+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6534304</external_id>
+			<created>2026-11-07T20:36:14.796179+01:00</created>
+			<updated>2026-11-07T20:36:14.796183+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug users entering treatment) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:36:56.258498+01:00</created>
+			<updated>2026-11-07T21:10:37.812861+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>number of drug users not in treatment (initial and relapsed drug users)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:37:30.376590+01:00</created>
+			<updated>2026-11-07T20:37:30.376593+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug user in treatment relapsing to untreated use) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:38:10.244358+01:00</created>
+			<updated>2026-11-07T21:13:56.833876+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673795</external_id>
+			<created>2026-11-07T20:38:35.455663+01:00</created>
+			<updated>2026-11-07T20:38:35.455665+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (natural death in general population) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:39:03.772303+01:00</created>
+			<updated>2026-11-07T21:05:03.530251+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/quantity"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>7</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug-related deaths of users in treatment and a rate of successful cure) (rate constant)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T20:39:38.156356+01:00</created>
+			<updated>2026-11-07T21:19:53.305936+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>S</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:47:13.630558+01:00</created>
+			<updated>2026-11-07T16:47:13.630562+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>t</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:48:13.135842+01:00</created>
+			<updated>2026-11-07T16:48:13.135845+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\Lambda</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:48:53.006252+01:00</created>
+			<updated>2026-11-07T16:48:53.006257+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\beta_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:51:14.813903+01:00</created>
+			<updated>2026-11-07T16:51:15.846234+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>U_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:53:03.351787+01:00</created>
+			<updated>2026-11-07T16:53:04.295376+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>N</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:57:25.427416+01:00</created>
+			<updated>2026-11-07T16:57:25.427419+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\mu</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:58:47.470854+01:00</created>
+			<updated>2026-11-07T16:58:47.470857+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>7</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>p</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:00:59.990832+01:00</created>
+			<updated>2026-11-07T17:00:59.990836+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>8</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\beta_3</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:03:07.094391+01:00</created>
+			<updated>2026-11-07T17:03:08.240217+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>9</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>U_2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:04:21.572328+01:00</created>
+			<updated>2026-11-07T17:04:22.731435+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>10</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\delta_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:04:57.491790+01:00</created>
+			<updated>2026-11-07T17:04:58.531658+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>0|0|0</set_prefix>
+			<set_index>11</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\delta_2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:08:54.126268+01:00</created>
+			<updated>2026-11-07T17:08:55.989000+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>N</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:22.969103+01:00</created>
+			<updated>2026-11-07T16:26:22.969106+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>S</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:22.984271+01:00</created>
+			<updated>2026-11-07T16:26:22.984273+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>U_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:45:33.061875+01:00</created>
+			<updated>2026-11-07T17:45:33.932178+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>U_2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:45:56.531016+01:00</created>
+			<updated>2026-11-07T17:45:57.489244+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>7</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\Lambda</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:44:29.153379+01:00</created>
+			<updated>2026-11-07T21:44:31.002800+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>8</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\mu</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:45:17.136033+01:00</created>
+			<updated>2026-11-07T21:45:17.136037+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>9</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\delta_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-08T08:04:46.354854+01:00</created>
+			<updated>2026-11-08T08:04:48.474930+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>1|0|0</set_prefix>
+			<set_index>10</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\delta_2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-08T08:05:59.695564+01:00</created>
+			<updated>2026-11-08T08:06:00.771895+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>S</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:16:36.986062+01:00</created>
+			<updated>2026-11-07T20:16:36.986066+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>t</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:17:02.571149+01:00</created>
+			<updated>2026-11-07T20:17:02.571153+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\Lambda</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:17:35.165530+01:00</created>
+			<updated>2026-11-07T20:17:36.232695+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\beta_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:18:11.915171+01:00</created>
+			<updated>2026-11-07T20:18:14.102979+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>U_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:18:37.282424+01:00</created>
+			<updated>2026-11-07T20:18:38.408264+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>N</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:19:11.632589+01:00</created>
+			<updated>2026-11-07T20:19:11.632594+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>2|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\mu</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:20:07.010900+01:00</created>
+			<updated>2026-11-07T20:20:07.010904+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>U_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:21:50.937525+01:00</created>
+			<updated>2026-11-07T20:21:51.896876+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>t</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:22:16.928742+01:00</created>
+			<updated>2026-11-07T20:22:16.928746+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\beta_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:22:38.666882+01:00</created>
+			<updated>2026-11-07T20:22:39.768409+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>S</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:23:29.716410+01:00</created>
+			<updated>2026-11-07T20:23:29.716415+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>N</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:24:03.952246+01:00</created>
+			<updated>2026-11-07T20:24:03.952250+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>p</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:24:37.081236+01:00</created>
+			<updated>2026-11-07T20:24:37.081240+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\beta_3</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:25:22.737787+01:00</created>
+			<updated>2026-11-07T20:25:24.018137+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>7</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>U_2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:27:09.186530+01:00</created>
+			<updated>2026-11-07T20:27:10.142989+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>8</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\mu</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:32:39.197108+01:00</created>
+			<updated>2026-11-07T20:32:40.049337+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>3|0|0</set_prefix>
+			<set_index>9</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\delta_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:33:05.717264+01:00</created>
+			<updated>2026-11-07T20:33:09.154196+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>U_2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:35:33.008654+01:00</created>
+			<updated>2026-11-07T20:35:33.942975+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>t</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:35:54.198497+01:00</created>
+			<updated>2026-11-07T20:35:54.198501+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>p</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:36:24.395600+01:00</created>
+			<updated>2026-11-07T20:36:24.395605+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>U_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:37:16.360184+01:00</created>
+			<updated>2026-11-07T20:37:17.251069+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\beta_3</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:37:49.512194+01:00</created>
+			<updated>2026-11-07T20:37:52.176720+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>N</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:38:26.449233+01:00</created>
+			<updated>2026-11-07T20:38:26.449237+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\mu</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:38:48.407671+01:00</created>
+			<updated>2026-11-07T20:38:48.407676+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/element/symbol"/>
+			<set_prefix>4|0|0</set_prefix>
+			<set_index>7</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>\delta_2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:39:10.453989+01:00</created>
+			<updated>2026-11-07T20:39:15.913890+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formula"/>
+			<set_prefix>0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>\begin{align} \frac{dS}{dt} &amp;= \Lambda - \frac{\beta_1 U_1 S}{N} - \mu S \\ \frac{dU_1}{dt} &amp;= \frac{\beta_1 U_1 S}{N} - p U_1 + \frac{\beta_3 U_1 U_2}{N} - (\mu + \delta_1) U_1 \\ \frac{dU_2}{dt} &amp;= p U_1 - \frac{\beta_3 U_1 U_2}{N} - (\mu + \delta_2) U_2 \end{align}</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:40:02.057999+01:00</created>
+			<updated>2026-11-07T17:31:45.661022+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formula"/>
+			<set_prefix>1|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>\begin{align} N &amp;= S + U_1 + U_2 \\ \Lambda &amp;= \mu  S + (\mu + \delta_1) U_1 + (\mu + \delta_2) U_2 \end{align}</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:45:03.549979+01:00</created>
+			<updated>2026-11-08T08:08:31.681929+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formula"/>
+			<set_prefix>2|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>\frac{dS}{dt} = \Lambda - \frac{\beta_1 U_1 S}{N} - \mu S</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:15:53.222927+01:00</created>
+			<updated>2026-11-07T20:16:23.745226+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formula"/>
+			<set_prefix>3|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>\frac{dU_1}{dt} = \frac{\beta_1 U_1 S}{N} - p U_1 + \frac{\beta_3 U_1 U_2}{N} - (\mu + \delta_1) U_1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:21:23.568694+01:00</created>
+			<updated>2026-11-07T21:18:22.362031+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formula"/>
+			<set_prefix>4|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>\frac{dU_2}{dt} = p U_1 - \frac{\beta_3 U_1 U_2}{N} - (\mu + \delta_2) U_2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:34:56.085219+01:00</created>
+			<updated>2026-11-07T20:35:14.597436+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
+			<set_prefix>0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>susceptibles in opiate-using career ODE model (ordinary differential equation describing the rate of change of susceptible individuals)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:34:50.592486+01:00</created>
+			<updated>2026-11-08T08:21:37.512438+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
+			<set_prefix>0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>1</collection_index>
+			<text>drug users not in treatment in opiate-using career ODE model (ordinary differential equation describing the rate of change of drug-using individuals not in treatment)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:36:34.915984+01:00</created>
+			<updated>2026-11-08T08:21:59.879877+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
+			<set_prefix>0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>2</collection_index>
+			<text>drug users in treatment in opiate-using career ODE model (ordinary differential equation describing the rate of change of drug-using individuals in treatment)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:37:02.967878+01:00</created>
+			<updated>2026-11-08T08:22:09.448523+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-1"/>
+			<set_prefix>0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:32:06.451171+01:00</created>
+			<updated>2026-11-07T17:32:06.451174+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/id"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:15:32.817380+01:00</created>
+			<updated>2026-11-07T16:15:32.817383+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/id"/>
+			<set_prefix/>
+			<set_index>1</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:26:18.802055+01:00</created>
+			<updated>2026-11-07T17:39:30.379972+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/id"/>
+			<set_prefix/>
+			<set_index>2</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:34:50.626495+01:00</created>
+			<updated>2026-11-07T17:34:50.626498+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/id"/>
+			<set_prefix/>
+			<set_index>3</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:36:34.948821+01:00</created>
+			<updated>2026-11-07T17:36:34.948824+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/id"/>
+			<set_prefix/>
+			<set_index>4</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:37:03.000807+01:00</created>
+			<updated>2026-11-07T17:37:03.000810+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/name"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>opiate-using career ODE system</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:15:32.824415+01:00</created>
+			<updated>2026-11-07T16:15:32.824418+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/name"/>
+			<set_prefix>1</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>conservation law for the opiate-using career ODE model</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:18.817387+01:00</created>
+			<updated>2026-11-07T17:40:17.432037+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/name"/>
+			<set_prefix>2</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>susceptibles in opiate-using career ODE model</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:34:50.633802+01:00</created>
+			<updated>2026-11-07T17:46:48.406348+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/name"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>drug users not in treatment in opiate-using career ODE model</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:36:34.956848+01:00</created>
+			<updated>2026-11-07T17:46:56.774543+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/name"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>drug users in treatment in opiate-using career ODE model</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:37:03.012929+01:00</created>
+			<updated>2026-11-07T17:47:02.608033+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-deterministic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:39:21.488768+01:00</created>
+			<updated>2026-11-07T16:39:21.488772+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>1</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:39:24.262720+01:00</created>
+			<updated>2026-11-07T16:39:24.262725+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>2</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dynamic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:39:27.796097+01:00</created>
+			<updated>2026-11-07T16:39:27.796101+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>3</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-not-linear"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:39:31.530891+01:00</created>
+			<updated>2026-11-07T21:35:51.341029+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>4</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-time-continuous"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:39:39.197364+01:00</created>
+			<updated>2026-11-07T16:39:39.197370+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>5</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-ordinary-differential-equation"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:39:45.479275+01:00</created>
+			<updated>2026-11-07T16:39:45.479279+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>1</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>4</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-deterministic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:22.917316+01:00</created>
+			<updated>2026-11-07T16:26:22.917318+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>1</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>6</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:22.946720+01:00</created>
+			<updated>2026-11-07T21:43:11.921865+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>2</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-deterministic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:14:54.159085+01:00</created>
+			<updated>2026-11-07T20:14:54.159088+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>2</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>1</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:14:57.184107+01:00</created>
+			<updated>2026-11-07T20:14:57.184112+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>2</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>2</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dynamic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:15:00.353827+01:00</created>
+			<updated>2026-11-07T20:15:00.353830+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>2</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>3</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-not-linear"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:15:04.362869+01:00</created>
+			<updated>2026-11-07T21:36:05.947688+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>2</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>4</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-time-continuous"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:15:11.824012+01:00</created>
+			<updated>2026-11-07T20:15:11.824015+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>2</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>5</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-ordinary-differential-equation"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:15:19.181901+01:00</created>
+			<updated>2026-11-07T20:15:19.181904+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-deterministic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:20:51.011914+01:00</created>
+			<updated>2026-11-07T20:20:51.011918+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>1</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:20:55.829821+01:00</created>
+			<updated>2026-11-07T20:20:55.829825+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>2</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dynamic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:20:59.650277+01:00</created>
+			<updated>2026-11-07T20:20:59.650280+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>3</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-not-linear"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:21:03.495672+01:00</created>
+			<updated>2026-11-07T21:36:18.194949+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>4</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-time-continuous"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:21:11.839673+01:00</created>
+			<updated>2026-11-07T20:21:11.839677+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>5</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-ordinary-differential-equation"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:21:18.852159+01:00</created>
+			<updated>2026-11-07T20:21:18.852163+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-deterministic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:34:22.613554+01:00</created>
+			<updated>2026-11-07T20:34:22.613559+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>1</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:34:25.372012+01:00</created>
+			<updated>2026-11-07T20:34:25.372016+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>2</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dynamic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:34:29.047236+01:00</created>
+			<updated>2026-11-07T20:34:29.047240+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>3</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-not-linear"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:34:32.327634+01:00</created>
+			<updated>2026-11-07T21:36:29.025142+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>4</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-time-continuous"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:34:45.396415+01:00</created>
+			<updated>2026-11-07T20:34:45.396419+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/properties"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>5</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-ordinary-differential-equation"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:34:51.561696+01:00</created>
+			<updated>2026-11-07T20:34:51.561700+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:02:49.440461+01:00</created>
+			<updated>2026-11-07T16:02:49.440464+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/description"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>mathematical model describing the characteristics of the drug-using career</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:04:27.548019+01:00</created>
+			<updated>2026-11-07T16:35:12.901949+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/formulation-relatant"/>
+			<set_prefix>0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>opiate-using career ODE system (system of ordinary differential equations describing the opiate-using career)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:15:32.780263+01:00</created>
+			<updated>2026-11-07T16:15:32.780267+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/formulation-relatant"/>
+			<set_prefix>0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>conservation law for the opiate-using career ODE model (total population is the sum of susceptibles and drug users not in and in treatment, and stays constant because recruitment balances all removals)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:26:18.759897+01:00</created>
+			<updated>2026-11-08T08:21:04.764697+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/formulation-relation"/>
+			<set_prefix>0|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-governing-equation"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:14:24.755953+01:00</created>
+			<updated>2026-11-07T16:14:28.087362+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/formulation-relation"/>
+			<set_prefix>0|0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-constraint-condition"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:17:32.151183+01:00</created>
+			<updated>2026-11-07T16:17:32.151187+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/id"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:03:28.967646+01:00</created>
+			<updated>2026-11-07T16:03:28.967650+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/name"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>opiate-using career ODE model</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:03:34.852865+01:00</created>
+			<updated>2026-11-07T16:03:43.113293+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/problem-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>substance dependence (need for a drug, whose discontinuation results in withdrawal symptoms) [wikidata]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>wikidata:Q3378593</external_id>
+			<created>2026-11-07T16:10:07.506572+01:00</created>
+			<updated>2026-11-07T16:10:07.506575+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-deterministic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:05:26.308766+01:00</created>
+			<updated>2026-11-07T16:05:26.308769+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>1</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:05:29.717382+01:00</created>
+			<updated>2026-11-07T16:05:29.717386+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>2</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dynamic"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:05:59.276777+01:00</created>
+			<updated>2026-11-07T16:05:59.276781+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>3</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-not-linear"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:06:37.523051+01:00</created>
+			<updated>2026-11-07T21:35:29.984881+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/model/properties"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>4</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-time-continuous"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:06:48.148832+01:00</created>
+			<updated>2026-11-07T16:06:48.148835+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>RP1</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:10:07.569345+01:00</created>
+			<updated>2026-11-07T16:10:07.569348+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem/alias"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>drug addiction</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:10:09.047377+01:00</created>
+			<updated>2026-11-07T16:10:09.047380+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem/alias"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>1</collection_index>
+			<text>drug dependence</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:10:09.054492+01:00</created>
+			<updated>2026-11-07T16:10:09.054495+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem/alias"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>2</collection_index>
+			<text>narcomania</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:10:09.066400+01:00</created>
+			<updated>2026-11-07T16:10:09.066403+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem/alias"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>3</collection_index>
+			<text>psychoactive substance dependence</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:10:09.073377+01:00</created>
+			<updated>2026-11-07T16:10:09.073380+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem/alias"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>4</collection_index>
+			<text>substance addiction</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:10:09.080199+01:00</created>
+			<updated>2026-11-07T16:10:09.080202+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem/description"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>need for a drug, whose discontinuation results in withdrawal symptoms</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:10:07.598085+01:00</created>
+			<updated>2026-11-07T16:10:09.039134+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem/field-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>epidemiology (study of the patterns, causes, and effects of health and disease conditions) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6684705</external_id>
+			<created>2026-11-07T21:27:43.963498+01:00</created>
+			<updated>2026-11-07T21:27:43.963502+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem/id"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>substance dependence (need for a drug, whose discontinuation results in withdrawal symptoms) [wikidata]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>wikidata:Q3378593</external_id>
+			<created>2026-11-07T16:10:07.576135+01:00</created>
+			<updated>2026-11-07T16:10:07.576138+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/problem/name"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>substance dependence</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:10:07.591324+01:00</created>
+			<updated>2026-11-07T16:10:09.031645+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/publication"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:28:15.220371+01:00</created>
+			<updated>2026-11-07T21:28:15.220376+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/publication/description"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>scientific article; zbMATH DE number 5182347</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:28:22.963282+01:00</created>
+			<updated>2026-11-07T21:28:22.963285+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/publication/entity-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>opiate-using career ODE model (mathematical model describing the characteristics of the drug-using career)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T21:28:51.477196+01:00</created>
+			<updated>2026-11-07T21:28:51.477200+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/publication/entity-relation"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mardmo/invents"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:28:29.695073+01:00</created>
+			<updated>2026-11-07T21:28:29.695076+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/publication/id"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Heroin epidemics, treatment and ODE modelling (scientific article; zbMATH DE number 5182347) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q2643268</external_id>
+			<created>2026-11-07T21:28:22.860288+01:00</created>
+			<updated>2026-11-07T21:28:22.860292+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/publication/name"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>Heroin epidemics, treatment and ODE modelling</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:28:22.956309+01:00</created>
+			<updated>2026-11-07T21:28:22.956312+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/publication/reference"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>10.1016/J.MBS.2006.10.008</text>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/doi"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:28:23.436108+01:00</created>
+			<updated>2026-11-07T21:28:23.436112+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>1</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:23.061733+01:00</created>
+			<updated>2026-11-07T16:26:23.061736+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>3</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK4</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:23.102067+01:00</created>
+			<updated>2026-11-07T16:26:23.102070+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>4</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK5</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:23.121946+01:00</created>
+			<updated>2026-11-07T16:26:23.121949+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>5</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK6</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:50:48.385060+01:00</created>
+			<updated>2026-11-07T16:50:48.385063+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>6</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK7</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:52:26.507856+01:00</created>
+			<updated>2026-11-07T16:52:26.507859+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>7</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK8</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:53:38.054929+01:00</created>
+			<updated>2026-11-07T16:53:38.054932+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>8</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK9</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:59:47.604708+01:00</created>
+			<updated>2026-11-07T16:59:47.604711+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>9</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK10</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:02:49.125470+01:00</created>
+			<updated>2026-11-07T17:02:49.125473+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>10</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK11</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:03:38.796960+01:00</created>
+			<updated>2026-11-07T17:03:38.796965+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>11</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK12</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:04:31.298678+01:00</created>
+			<updated>2026-11-07T17:04:31.298682+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>12</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK13</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:08:29.144413+01:00</created>
+			<updated>2026-11-07T17:08:29.144417+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity"/>
+			<set_prefix/>
+			<set_index>13</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>QQK14</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:10:07.347111+01:00</created>
+			<updated>2026-11-07T17:10:07.347114+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>1</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>countable quantity representing the number of individuals</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:25.834112+01:00</created>
+			<updated>2026-11-07T20:38:37.887648+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>10</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:03:38.912709+01:00</created>
+			<updated>2026-11-07T21:11:27.933225+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>11</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>number</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:04:31.329301+01:00</created>
+			<updated>2026-11-07T17:04:31.329304+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>12</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:08:29.173548+01:00</created>
+			<updated>2026-11-07T21:15:02.774698+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>13</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:10:07.380239+01:00</created>
+			<updated>2026-11-07T21:17:34.933973+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>number</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.111298+01:00</created>
+			<updated>2026-11-07T21:24:28.468861+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>dimension in which events can be ordered from the past through the present into the future</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.270460+01:00</created>
+			<updated>2026-11-07T20:36:17.189831+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>5</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>demographic process</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:50:48.430768+01:00</created>
+			<updated>2026-11-07T20:56:59.616977+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>6</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:52:26.569250+01:00</created>
+			<updated>2026-11-07T21:00:12.219440+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>7</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>initial and relapsed drug users</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:53:38.095557+01:00</created>
+			<updated>2026-11-07T16:53:59.765377+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>8</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:59:47.628503+01:00</created>
+			<updated>2026-11-07T21:03:00.568734+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/description"/>
+			<set_prefix>9</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:02:49.153262+01:00</created>
+			<updated>2026-11-07T21:08:04.849966+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/formula"/>
+			<set_prefix>5|0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:21:12.707482+01:00</created>
+			<updated>2026-11-07T21:42:39.096339+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>1</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673795</external_id>
+			<created>2026-11-07T16:26:23.069261+01:00</created>
+			<updated>2026-11-07T16:26:23.069264+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>3</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>number of susceptible individuals (number) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673882</external_id>
+			<created>2026-11-07T16:26:23.109317+01:00</created>
+			<updated>2026-11-07T16:26:23.109320+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>4</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6534304</external_id>
+			<created>2026-11-07T16:26:23.129081+01:00</created>
+			<updated>2026-11-07T16:26:23.129083+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>5</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:50:48.393356+01:00</created>
+			<updated>2026-11-07T16:50:48.393359+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>6</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:52:26.553543+01:00</created>
+			<updated>2026-11-07T16:52:26.553546+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>7</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:53:38.076124+01:00</created>
+			<updated>2026-11-07T16:53:38.076127+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>8</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T16:59:47.612680+01:00</created>
+			<updated>2026-11-07T16:59:47.612683+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>9</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:02:49.135412+01:00</created>
+			<updated>2026-11-07T17:02:49.135414+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>10</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:03:38.889810+01:00</created>
+			<updated>2026-11-07T17:03:38.889816+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>11</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:04:31.312024+01:00</created>
+			<updated>2026-11-07T17:04:31.312027+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>12</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:08:29.152483+01:00</created>
+			<updated>2026-11-07T17:08:29.152486+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/id"/>
+			<set_prefix/>
+			<set_index>13</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>not found</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>not found</external_id>
+			<created>2026-11-07T17:10:07.363254+01:00</created>
+			<updated>2026-11-07T17:10:07.363256+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>1</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:25.863720+01:00</created>
+			<updated>2026-11-07T20:38:37.917896+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>3</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.148094+01:00</created>
+			<updated>2026-11-07T21:24:28.506100+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>4</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity-kind"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.300390+01:00</created>
+			<updated>2026-11-07T20:36:17.219663+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:41:20.678281+01:00</created>
+			<updated>2026-11-07T20:41:20.678285+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:42:06.317668+01:00</created>
+			<updated>2026-11-07T20:42:06.317672+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>7</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:54:44.226922+01:00</created>
+			<updated>2026-11-07T16:54:44.226926+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>8</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:48:14.264320+01:00</created>
+			<updated>2026-11-07T20:48:14.264324+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>9</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:25:39.794846+01:00</created>
+			<updated>2026-11-07T20:49:33.196799+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>10</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:50:33.167601+01:00</created>
+			<updated>2026-11-07T20:50:33.167604+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>11</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:51:11.819191+01:00</created>
+			<updated>2026-11-07T20:51:11.819194+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>12</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:51:39.291778+01:00</created>
+			<updated>2026-11-07T20:51:39.291781+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/is-quantity-or-quantity-kind"/>
+			<set_prefix/>
+			<set_index>13</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/quantity"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:52:24.911530+01:00</created>
+			<updated>2026-11-07T20:52:24.911533+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/long-description"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>The number of susceptible individuals. When a susceptible and an infectious individual come into infectious contact, the susceptible individual contracts the disease and transitions to the infectious compartment.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.118354+01:00</created>
+			<updated>2026-11-07T21:24:28.476046+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>1</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>total population size</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:25.826691+01:00</created>
+			<updated>2026-11-07T20:38:37.871351+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>10</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug user in treatment relapsing to untreated use)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:03:38.897691+01:00</created>
+			<updated>2026-11-07T21:11:24.459352+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>11</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>number of drug users in treatment</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:04:31.320193+01:00</created>
+			<updated>2026-11-07T17:04:31.320196+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>12</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:08:29.160885+01:00</created>
+			<updated>2026-11-07T21:14:53.774471+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>13</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug-related deaths of users in treatment and a rate of successful cure)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:10:07.371913+01:00</created>
+			<updated>2026-11-07T21:17:31.716435+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>number of susceptible individuals</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.103678+01:00</created>
+			<updated>2026-11-07T21:24:28.460537+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>time</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.262853+01:00</created>
+			<updated>2026-11-07T20:36:17.174644+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>5</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate (individuals of general entering susceptible population)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:50:48.400893+01:00</created>
+			<updated>2026-11-07T20:56:22.571729+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>6</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant (becoming drug user)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:52:26.561344+01:00</created>
+			<updated>2026-11-07T21:00:07.642327+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>7</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>number of drug users not in treatment</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:53:38.084241+01:00</created>
+			<updated>2026-11-07T16:53:38.084244+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>8</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant (natural death in general population)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:59:47.620678+01:00</created>
+			<updated>2026-11-07T21:02:57.021459+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/name"/>
+			<set_prefix>9</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>rate constant (drug users entering treatment)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T17:02:49.145405+01:00</created>
+			<updated>2026-11-07T21:08:01.001883+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>1</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>7</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensionless"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:25.892774+01:00</created>
+			<updated>2026-11-07T20:38:37.947442+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>10</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:50:41.395038+01:00</created>
+			<updated>2026-11-07T20:50:41.395042+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>11</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensionless"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:51:18.510983+01:00</created>
+			<updated>2026-11-07T20:51:18.510987+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>12</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:51:57.402212+01:00</created>
+			<updated>2026-11-07T20:51:57.402215+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>13</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:52:33.572945+01:00</created>
+			<updated>2026-11-07T20:52:33.572949+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>7</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensionless"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.177519+01:00</created>
+			<updated>2026-11-07T21:24:28.536499+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>8</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.329436+01:00</created>
+			<updated>2026-11-07T20:36:17.250859+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>5</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:41:33.622042+01:00</created>
+			<updated>2026-11-07T20:41:33.622046+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>6</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:42:12.730041+01:00</created>
+			<updated>2026-11-07T20:42:12.730045+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>7</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensionless"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:44:56.234860+01:00</created>
+			<updated>2026-11-07T20:44:56.234864+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>8</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:49:00.574516+01:00</created>
+			<updated>2026-11-07T21:37:04.660316+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/properties"/>
+			<set_prefix>9</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-dimensional"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:49:54.819235+01:00</created>
+			<updated>2026-11-07T20:49:54.819238+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relatant"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>point in time (position of a particular instant in time) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6674052</external_id>
+			<created>2026-11-07T16:26:26.395053+01:00</created>
+			<updated>2026-11-07T20:36:17.320639+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relatant"/>
+			<set_prefix>4</set_prefix>
+			<set_index>1</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>turn over time (time between two events) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6674046</external_id>
+			<created>2026-11-07T16:26:26.431283+01:00</created>
+			<updated>2026-11-07T20:36:17.360313+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relatant"/>
+			<set_prefix>4</set_prefix>
+			<set_index>2</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>period length (length of a period in time units) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6674045</external_id>
+			<created>2026-11-07T16:26:26.468848+01:00</created>
+			<updated>2026-11-07T20:36:17.399978+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relatant"/>
+			<set_prefix>4</set_prefix>
+			<set_index>3</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>free fall time (characteristic time that would take a body to collapse under its own gravitational attraction, if no other forces existed to oppose the collapse) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673995</external_id>
+			<created>2026-11-07T16:26:26.505910+01:00</created>
+			<updated>2026-11-07T20:36:17.437066+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relatant"/>
+			<set_prefix>4</set_prefix>
+			<set_index>4</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>exposure of an individual (exposure (time) of an individual at a certain age) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673969</external_id>
+			<created>2026-11-07T16:26:26.542272+01:00</created>
+			<updated>2026-11-07T20:36:17.475396+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relatant"/>
+			<set_prefix>4</set_prefix>
+			<set_index>5</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>duration (physical quantity for describing the temporal distance between events) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673931</external_id>
+			<created>2026-11-07T16:26:26.580108+01:00</created>
+			<updated>2026-11-07T20:36:17.514223+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relatant"/>
+			<set_prefix>4</set_prefix>
+			<set_index>6</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>time step (incremental time step) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673794</external_id>
+			<created>2026-11-07T16:26:26.617390+01:00</created>
+			<updated>2026-11-07T20:36:17.551613+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relatant"/>
+			<set_prefix>4</set_prefix>
+			<set_index>7</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>age of a person (time elapsed since a person (an individual) was born) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673735</external_id>
+			<created>2026-11-07T16:26:26.654537+01:00</created>
+			<updated>2026-11-07T20:36:17.590197+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relation"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specialized-by"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.387363+01:00</created>
+			<updated>2026-11-07T20:36:17.313048+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relation"/>
+			<set_prefix>4</set_prefix>
+			<set_index>1</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specialized-by"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.424016+01:00</created>
+			<updated>2026-11-07T20:36:17.352640+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relation"/>
+			<set_prefix>4</set_prefix>
+			<set_index>2</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specialized-by"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.461148+01:00</created>
+			<updated>2026-11-07T20:36:17.392756+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relation"/>
+			<set_prefix>4</set_prefix>
+			<set_index>3</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specialized-by"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.498023+01:00</created>
+			<updated>2026-11-07T20:36:17.429611+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relation"/>
+			<set_prefix>4</set_prefix>
+			<set_index>4</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specialized-by"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.535079+01:00</created>
+			<updated>2026-11-07T20:36:17.468069+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relation"/>
+			<set_prefix>4</set_prefix>
+			<set_index>5</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specialized-by"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.571850+01:00</created>
+			<updated>2026-11-07T20:36:17.506188+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relation"/>
+			<set_prefix>4</set_prefix>
+			<set_index>6</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specialized-by"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.610199+01:00</created>
+			<updated>2026-11-07T20:36:17.544130+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-kind-to-quantity/relation"/>
+			<set_prefix>4</set_prefix>
+			<set_index>7</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specialized-by"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.647277+01:00</created>
+			<updated>2026-11-07T20:36:17.582922+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relatant"/>
+			<set_prefix>1</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>integer (number that can be written without a fractional or decimal component) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673724</external_id>
+			<created>2026-11-07T16:26:25.929667+01:00</created>
+			<updated>2026-11-07T20:38:37.983463+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relatant"/>
+			<set_prefix>11</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>integer (number that can be written without a fractional or decimal component) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673724</external_id>
+			<created>2026-11-07T20:51:29.487956+01:00</created>
+			<updated>2026-11-07T20:51:29.487960+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relatant"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>integer (number that can be written without a fractional or decimal component) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673724</external_id>
+			<created>2026-11-07T16:26:26.214242+01:00</created>
+			<updated>2026-11-07T21:24:28.573837+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relatant"/>
+			<set_prefix>5</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate (quantity of process intensivity) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673694</external_id>
+			<created>2026-11-07T20:41:56.405725+01:00</created>
+			<updated>2026-11-07T20:41:56.405729+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relatant"/>
+			<set_prefix>7</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>integer (number that can be written without a fractional or decimal component) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673724</external_id>
+			<created>2026-11-07T20:45:09.488147+01:00</created>
+			<updated>2026-11-07T20:45:09.488151+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relation"/>
+			<set_prefix>1</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:25.922204+01:00</created>
+			<updated>2026-11-07T20:38:37.976345+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relation"/>
+			<set_prefix>11</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:51:24.457806+01:00</created>
+			<updated>2026-11-07T20:51:24.457809+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relation"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.206926+01:00</created>
+			<updated>2026-11-07T21:24:28.566050+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relation"/>
+			<set_prefix>5</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:41:41.996733+01:00</created>
+			<updated>2026-11-07T20:41:41.996738+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity-kind/relation"/>
+			<set_prefix>7</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:45:04.182298+01:00</created>
+			<updated>2026-11-07T20:45:04.182301+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relatant"/>
+			<set_prefix>10</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673803</external_id>
+			<created>2026-11-07T20:50:59.119136+01:00</created>
+			<updated>2026-11-07T20:50:59.119140+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relatant"/>
+			<set_prefix>12</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673803</external_id>
+			<created>2026-11-07T20:52:14.007739+01:00</created>
+			<updated>2026-11-07T20:52:14.007743+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relatant"/>
+			<set_prefix>13</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673803</external_id>
+			<created>2026-11-07T20:52:47.443885+01:00</created>
+			<updated>2026-11-07T20:52:47.443888+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relatant"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>susceptibles (general quantity for susceptible entities) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6674120</external_id>
+			<created>2026-11-07T16:26:26.250404+01:00</created>
+			<updated>2026-11-07T21:24:28.611243+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relatant"/>
+			<set_prefix>6</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673803</external_id>
+			<created>2026-11-07T21:06:09.363372+01:00</created>
+			<updated>2026-11-07T21:06:09.363377+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relatant"/>
+			<set_prefix>8</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673803</external_id>
+			<created>2026-11-07T20:49:23.302491+01:00</created>
+			<updated>2026-11-07T20:49:23.302494+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relatant"/>
+			<set_prefix>9</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6673803</external_id>
+			<created>2026-11-07T20:50:20.889981+01:00</created>
+			<updated>2026-11-07T20:50:20.889986+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relation"/>
+			<set_prefix>10</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:50:50.165327+01:00</created>
+			<updated>2026-11-07T20:50:50.165331+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relation"/>
+			<set_prefix>12</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:52:05.342260+01:00</created>
+			<updated>2026-11-07T20:52:05.342264+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relation"/>
+			<set_prefix>13</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:52:39.582997+01:00</created>
+			<updated>2026-11-07T20:52:39.583000+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relation"/>
+			<set_prefix>3</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.243243+01:00</created>
+			<updated>2026-11-07T21:24:28.603420+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relation"/>
+			<set_prefix>6</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T21:05:59.640131+01:00</created>
+			<updated>2026-11-07T21:05:59.640134+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relation"/>
+			<set_prefix>8</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:49:13.489935+01:00</created>
+			<updated>2026-11-07T20:49:13.489940+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/quantity-to-quantity/relation"/>
+			<set_prefix>9</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/specializes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T20:50:12.068328+01:00</created>
+			<updated>2026-11-07T20:50:12.068332+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/quantity/reference"/>
+			<set_prefix>4</set_prefix>
+			<set_index>0</set_index>
+			<set_collection/>
+			<collection_index>0</collection_index>
+			<text>Time</text>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/qudt-quantitykind-id"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-07T16:26:26.358149+01:00</created>
+			<updated>2026-11-07T20:36:17.282427+01:00</updated>
+		</value>
+	</values>
+	<created>2026-11-07T15:54:00.174888+01:00</created>
+	<updated>2026-11-08T08:08:41.899655+01:00</updated>
+</project>

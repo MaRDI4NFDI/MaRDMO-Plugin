@@ -1,0 +1,639 @@
+[
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"A Mathematical Model of the Glucose-tolerance test\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"A Mathematical Model of the Glucose-tolerance test\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"Mathematical Model of ingested glucose in Glucose-Insulin Regulation\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"Mathematical Model of ingested glucose in Glucose-Insulin Regulation\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"amplitude of the ingestion-driven blood glucose disturbance\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"amplitude of the ingestion-driven blood glucose disturbance\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood glucose and insulin level ODE system\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood glucose and insulin level ODE system\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood glucose concentration analytical solution\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood glucose concentration analytical solution\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood glucose concentration\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood glucose concentration\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood glucose excess\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood glucose excess\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood glucose increase rate assumption\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood glucose increase rate assumption\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood glucose increase rate\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood glucose increase rate\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood glucose level ODE\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood glucose level ODE\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood insulin concentration\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood insulin concentration\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood insulin excess\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood insulin excess\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"blood insulin level ODE\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"blood insulin level ODE\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"damped angular frequency of the glucose-hormone oscillator\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"damped angular frequency of the glucose-hormone oscillator\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"decay parameter of the glucose-hormone oscillator\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"decay parameter of the glucose-hormone oscillator\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"determine the pre-diabetic status of a person from glucose tolerance test data\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"determine the pre-diabetic status of a person from glucose tolerance test data\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"effective hormone level in blood ODE\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"effective hormone level in blood ODE\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"effective hormone level in blood\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"effective hormone level in blood\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"fasting blood glucose concentration\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"fasting blood glucose concentration\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"fasting blood hormone concentration\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"fasting blood hormone concentration\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"fasting blood insulin concentration\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"fasting blood insulin concentration\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"food uptake\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"food uptake\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose and hormone level in blood and digestive system ODE system\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose and hormone level in blood and digestive system ODE system\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose disturbance level in blood ODE\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose disturbance level in blood ODE\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose disturbance level in blood\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose disturbance level in blood\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose disturbance level in digestive system ODE\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose disturbance level in digestive system ODE\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose disturbance level in digestive system\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose disturbance level in digestive system\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose obtained in body from food\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose obtained in body from food\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose removal rate constant dependent of insulin\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose removal rate constant dependent of insulin\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose removal rate constant independent of insulin\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose removal rate constant independent of insulin\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose tolerance test\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose tolerance test\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose-hormone dynamics in blood and digestive system model\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose-hormone dynamics in blood and digestive system model\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"glucose-insulin dynamics in blood model\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"glucose-insulin dynamics in blood model\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"hormone level in blood\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"hormone level in blood\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"initial condition for the blood glucose disturbance\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"initial condition for the blood glucose disturbance\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"initial condition for the effective hormone level\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"initial condition for the effective hormone level\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"initial condition for the glucose disturbance\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"initial condition for the glucose disturbance\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"initial glucose disturbance level in digestive system\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"initial glucose disturbance level in digestive system\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"insulin release rate constant due to glucose\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"insulin release rate constant due to glucose\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"insulin removal rate constant independent of glucose\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"insulin removal rate constant independent of glucose\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"natural angular frequency of the glucose-hormone oscillator\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"natural angular frequency of the glucose-hormone oscillator\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"natural time period of the glucose-hormone oscillator\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"natural time period of the glucose-hormone oscillator\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant for the removal of the hormone due to disturbance of the blood hormone level\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"rate constant for the removal of the hormone due to disturbance of the blood hormone level\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant of release of the hormone due to blood glucose disturbance\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"rate constant of release of the hormone due to blood glucose disturbance\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant of the hormone dependent decrease of glucose level in the blood\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"rate constant of the hormone dependent decrease of glucose level in the blood\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant of the hormone independent decrease of glucose level in the blood\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"rate constant of the hormone independent decrease of glucose level in the blood\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"time constant of decreasing glucose level in digestive system\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"time constant of decreasing glucose level in digestive system\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"underdamped condition of the glucose-hormone oscillator\"], [\"type\", \"item\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"searchinfo\":{\"search\":\"underdamped condition of the glucose-hormone oscillator\"},\"search\":[],\"success\":1}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"A_G\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"A_{G}\",\"requiredPackages\":[],\"identifiers\":[\"A_{G}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"C_0 \\\\equiv \\\\frac{D_1(0) (b_2\\\\tau -1)}{(\\\\alpha \\\\tau -1)^2 + \\\\omega^2 \\\\tau^2}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"C_{0}\\\\equiv {\\\\frac {D_{1}(0)(b_{2}\\\\tau -1)}{(\\\\alpha \\\\tau -1)^{2}+\\\\omega ^{2}\\\\tau ^{2}}}\",\"requiredPackages\":[],\"identifiers\":[\"C_{0}\",\"D_{1}\",\"b_{2}\",\"\\\\tau\",\"\\\\alpha\",\"\\\\tau\",\"\\\\omega\",\"\\\\tau\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"C_0\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"C_{0}\",\"requiredPackages\":[],\"identifiers\":[\"C_{0}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"D\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"D\",\"requiredPackages\":[],\"identifiers\":[\"D\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"D_1\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"D_{1}\",\"requiredPackages\":[],\"identifiers\":[\"D_{1}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"D_1(0) = A_GD\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"D_{1}(0)=A_{G}D\",\"requiredPackages\":[],\"identifiers\":[\"D_{1}\",\"A_{G}\",\"D\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"D_1(0)\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"D_{1}(0)\",\"requiredPackages\":[],\"identifiers\":[\"D_{1}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"D_2\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"D_{2}\",\"requiredPackages\":[],\"identifiers\":[\"D_{2}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"D_2(0) = 0\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"D_{2}(0)=0\",\"requiredPackages\":[],\"identifiers\":[\"D_{2}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"D_2(t) \\\\equiv G(t)-G_b\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"D_{2}(t)\\\\equiv G(t)-G_{b}\",\"requiredPackages\":[],\"identifiers\":[\"D_{2}\",\"t\",\"G\",\"t\",\"G_{b}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"G\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"G\",\"requiredPackages\":[],\"identifiers\":[\"G\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"G(t) = G_b + e^{-\\\\alpha t} \\\\left ( -C_0 \\\\cos(\\\\omega t) + \\\\frac{D_1(0) + C_0 - \\\\alpha C_0 \\\\tau}{\\\\omega \\\\tau} \\\\sin(\\\\omega t) \\\\right ) + C_0 e^{\\\\frac{-t}{\\\\tau}}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"G(t)=G_{b}+e^{-\\\\alpha t}\\\\left(-C_{0}\\\\cos(\\\\omega t)+{\\\\frac {D_{1}(0)+C_{0}-\\\\alpha C_{0}\\\\tau }{\\\\omega \\\\tau }}\\\\sin(\\\\omega t)\\\\right)+C_{0}e^{\\\\frac {-t}{\\\\tau }}\",\"requiredPackages\":[],\"identifiers\":[\"G\",\"t\",\"G_{b}\",\"e\",\"\\\\alpha\",\"t\",\"C_{0}\",\"\\\\omega\",\"t\",\"D_{1}\",\"C_{0}\",\"\\\\alpha\",\"C_{0}\",\"\\\\tau\",\"\\\\omega\",\"\\\\tau\",\"\\\\omega\",\"t\",\"C_{0}\",\"e\",\"t\",\"\\\\tau\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"G_b\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"G_{b}\",\"requiredPackages\":[],\"identifiers\":[\"G_{b}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"H\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"H\",\"requiredPackages\":[],\"identifiers\":[\"H\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"H_b\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"H_{b}\",\"requiredPackages\":[],\"identifiers\":[\"H_{b}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"I\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"I\",\"requiredPackages\":[],\"identifiers\":[\"I\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"I(t) = \\\\frac{D_1}{\\\\tau}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"I(t)={\\\\frac {D_{1}}{\\\\tau }}\",\"requiredPackages\":[],\"identifiers\":[\"I\",\"t\",\"D_{1}\",\"\\\\tau\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"T_0 \\\\equiv \\\\frac{2\\\\pi}{\\\\omega_0}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"T_{0}\\\\equiv {\\\\frac {2\\\\pi }{\\\\omega _{0}}}\",\"requiredPackages\":[],\"identifiers\":[\"T_{0}\",\"\\\\pi\",\"\\\\omega_{0}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"T_0\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"T_{0}\",\"requiredPackages\":[],\"identifiers\":[\"T_{0}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\alpha \\\\equiv \\\\frac{a_1 + b_2}{2}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\alpha \\\\equiv {\\\\frac {a_{1}+b_{2}}{2}}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\alpha\",\"a_{1}\",\"b_{2}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\alpha\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\alpha \",\"requiredPackages\":[],\"identifiers\":[\"\\\\alpha\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\alpha^2 < \\\\omega_0^2\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\alpha ^{2}<\\\\omega _{0}^{2}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\alpha\",\"\\\\omega\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\begin{align} \\\\frac{dD_1}{dt} &= -\\\\frac{D_1}{\\\\tau} \\\\\\\\ \\\\frac{dD_2}{dt} &= \\\\frac{D_1}{\\\\tau}-a_1D_2-a_2h \\\\\\\\ \\\\frac{dh}{dt} &= b_1D_2-b_2h \\\\end{align}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\begin{aligned}{\\\\frac {dD_{1}}{dt}}&=-{\\\\frac {D_{1}}{\\\\tau }}\\\\\\\\{\\\\frac {dD_{2}}{dt}}&={\\\\frac {D_{1}}{\\\\tau }}-a_{1}D_{2}-a_{2}h\\\\\\\\{\\\\frac {dh}{dt}}&=b_{1}D_{2}-b_{2}h\\\\end{aligned}}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"D_{1}\",\"d\",\"t\",\"D_{1}\",\"\\\\tau\",\"d\",\"D_{2}\",\"d\",\"t\",\"D_{1}\",\"\\\\tau\",\"a_{1}\",\"D_{2}\",\"a_{2}\",\"h\",\"d\",\"h\",\"d\",\"t\",\"b_{1}\",\"D_{2}\",\"b_{2}\",\"h\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\begin{align} \\\\frac{dD_2}{dt} &= -a_1D_2-a_2h+I \\\\\\\\ \\\\frac{dh}{dt} &= b_1D_2-b_2h \\\\end{align}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\begin{aligned}{\\\\frac {dD_{2}}{dt}}&=-a_{1}D_{2}-a_{2}h+I\\\\\\\\{\\\\frac {dh}{dt}}&=b_{1}D_{2}-b_{2}h\\\\end{aligned}}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"D_{2}\",\"d\",\"t\",\"a_{1}\",\"D_{2}\",\"a_{2}\",\"h\",\"I\",\"d\",\"h\",\"d\",\"t\",\"b_{1}\",\"D_{2}\",\"b_{2}\",\"h\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{dD_1}{dt} = -\\\\frac{D_1}{\\\\tau}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dD_{1}}{dt}}=-{\\\\frac {D_{1}}{\\\\tau }}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"D_{1}\",\"d\",\"t\",\"D_{1}\",\"\\\\tau\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{dD_2}{dt} = -a_1D_2-a_2h+I\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dD_{2}}{dt}}=-a_{1}D_{2}-a_{2}h+I\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"D_{2}\",\"d\",\"t\",\"a_{1}\",\"D_{2}\",\"a_{2}\",\"h\",\"I\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{dD_2}{dt} = \\\\frac{D_1}{\\\\tau}-a_1D_2-a_2h\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dD_{2}}{dt}}={\\\\frac {D_{1}}{\\\\tau }}-a_{1}D_{2}-a_{2}h\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"D_{2}\",\"d\",\"t\",\"D_{1}\",\"\\\\tau\",\"a_{1}\",\"D_{2}\",\"a_{2}\",\"h\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{dh}{dt} = b_1D_2-b_2h\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dh}{dt}}=b_{1}D_{2}-b_{2}h\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"h\",\"d\",\"t\",\"b_{1}\",\"D_{2}\",\"b_{2}\",\"h\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\omega\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\omega \",\"requiredPackages\":[],\"identifiers\":[\"\\\\omega\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\omega^2 \\\\equiv \\\\omega_0^2 - \\\\alpha^2\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\omega ^{2}\\\\equiv \\\\omega _{0}^{2}-\\\\alpha ^{2}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\omega\",\"\\\\omega\",\"\\\\alpha\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\omega_0\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\omega _{0}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\omega_{0}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\omega_0^2 \\\\equiv a_1 b_2 + a_2 b_1\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\omega _{0}^{2}\\\\equiv a_{1}b_{2}+a_{2}b_{1}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\omega\",\"a_{1}\",\"b_{2}\",\"a_{2}\",\"b_{1}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\tau\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\tau \",\"requiredPackages\":[],\"identifiers\":[\"\\\\tau\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"a_1\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"a_{1}\",\"requiredPackages\":[],\"identifiers\":[\"a_{1}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"a_2\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"a_{2}\",\"requiredPackages\":[],\"identifiers\":[\"a_{2}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"b_1\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"b_{1}\",\"requiredPackages\":[],\"identifiers\":[\"b_{1}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"b_2\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"b_{2}\",\"requiredPackages\":[],\"identifiers\":[\"b_{2}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"h\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"h\",\"requiredPackages\":[],\"identifiers\":[\"h\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"h(0) = 0\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"h(0)=0\",\"requiredPackages\":[],\"identifiers\":[\"h\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"h(t) \\\\equiv H(t) - H_b\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"h(t)\\\\equiv H(t)-H_{b}\",\"requiredPackages\":[],\"identifiers\":[\"h\",\"t\",\"H\",\"t\",\"H_{b}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"h(t) \\\\equiv H(t)-H_b\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"h(t)\\\\equiv H(t)-H_{b}\",\"requiredPackages\":[],\"identifiers\":[\"h\",\"t\",\"H\",\"t\",\"H_{b}\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"t\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"t\",\"requiredPackages\":[],\"identifiers\":[\"t\"],\"endsWithDot\":false}"
+ },
+ {
+  "key": "[\"POST\", \"https://query.portal.mardi4nfdi.de/sparql\", [], \"SELECT ?RELATION0 ?RELATION1 ?RELATION2 ?RELATION15 ?RELATION16 ?RELATION17 ?RELATION18 ?RELATION19 ?RELATION20 ?RELATION21 ?RELATION22 ?RELATION23 ?RELATION24 ?RELATION25 ?RELATION26 ?RELATION27 WHERE { BIND(EXISTS { wd:Q106331 p:P31 ?statement0 . ?statement0 ps:P31 wd:Q60231 . } AS ?RELATION0) BIND(EXISTS { wd:Q106331 p:P1495 ?statement1 . ?statement1 ps:P1495 wd:Q6534265 . } AS ?RELATION1) BIND(EXISTS { wd:Q106331 p:P1460 ?statement2 . ?statement2 ps:P1460 wd:Q6534268 . } AS ?RELATION2) BIND(EXISTS { wd:Q6534304 p:P31 ?statement15 . ?statement15 ps:P31 wd:Q6534245 . } AS ?RELATION15) BIND(EXISTS { wd:Q6534304 p:P1495 ?statement16 . ?statement16 ps:P1495 wd:Q6534265 . } AS ?RELATION16) BIND(EXISTS { wd:Q6534304 p:P1460 ?statement17 . ?statement17 ps:P1460 wd:Q6534271 . } AS ?RELATION17) BIND(EXISTS { wd:Q6534304 p:P31 ?statement18 . ?statement18 ps:P31 wd:Q6775553 . } AS ?RELATION18) BIND(EXISTS { wd:Q6534304 p:P1654 ?statement19 . ?statement19 ps:P1654 \\\"Time\\\" . } AS ?RELATION19) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement20 . ?statement20 ps:P1684 wd:Q6674052 . } AS ?RELATION20) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement21 . ?statement21 ps:P1684 wd:Q6674046 . } AS ?RELATION21) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement22 . ?statement22 ps:P1684 wd:Q6674045 . } AS ?RELATION22) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement23 . ?statement23 ps:P1684 wd:Q6673995 . } AS ?RELATION23) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement24 . ?statement24 ps:P1684 wd:Q6673969 . } AS ?RELATION24) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement25 . ?statement25 ps:P1684 wd:Q6673931 . } AS ?RELATION25) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement26 . ?statement26 ps:P1684 wd:Q6673794 . } AS ?RELATION26) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement27 . ?statement27 ps:P1684 wd:Q6673735 . } AS ?RELATION27) }\"]",
+  "url": "https://query.portal.mardi4nfdi.de/sparql",
+  "status": 200,
+  "content_type": "application/sparql-results+json;charset=utf-8",
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"RELATION0\", \"RELATION1\", \"RELATION2\", \"RELATION15\", \"RELATION16\", \"RELATION17\", \"RELATION18\", \"RELATION19\", \"RELATION20\", \"RELATION21\", \"RELATION22\", \"RELATION23\", \"RELATION24\", \"RELATION25\", \"RELATION26\", \"RELATION27\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ {\n      \"RELATION0\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION1\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"false\"\n      },\n      \"RELATION2\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION15\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION16\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION17\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION18\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION19\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION20\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION21\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION22\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION23\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION24\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION25\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION26\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION27\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      }\n    } ]\n  }\n}"
+ }
+]

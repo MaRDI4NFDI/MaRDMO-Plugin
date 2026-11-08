@@ -1,0 +1,4934 @@
+{
+ "messages": [],
+ "payload": {
+  "Item0000000000": {
+   "class": "Academic Discipline",
+   "description": "study of the patterns, causes, and effects of health and disease conditions",
+   "id": "Q6684705",
+   "label": "epidemiology",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "study of the patterns, causes, and effects of health and disease conditions"
+     },
+     "labels": {
+      "en": "epidemiology"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000001": {
+   "aliases": [
+    "drug addiction",
+    "drug dependence",
+    "narcomania",
+    "psychoactive substance dependence",
+    "substance addiction"
+   ],
+   "class": "Research Problem",
+   "description": "need for a drug, whose discontinuation results in withdrawal symptoms",
+   "id": "",
+   "label": "substance dependence",
+   "payload": {
+    "item": {
+     "aliases": {
+      "en": [
+       "drug addiction",
+       "drug dependence",
+       "narcomania",
+       "psychoactive substance dependence",
+       "substance addiction"
+      ]
+     },
+     "descriptions": {
+      "en": "need for a drug, whose discontinuation results in withdrawal symptoms"
+     },
+     "labels": {
+      "en": "substance dependence"
+     },
+     "statements": {
+      "P12": [
+       {
+        "property": {
+         "data_type": "external-id",
+         "id": "P12"
+        },
+        "value": {
+         "content": "Q3378593",
+         "type": "value"
+        }
+       }
+      ],
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534269",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P1513": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1513"
+        },
+        "value": {
+         "content": "Item0000000002",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534292",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P12",
+     "external-id",
+     "Q3378593"
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534292",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534269",
+     []
+    ],
+    [
+     "P1513",
+     "wikibase-item",
+     "Item0000000002",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000002": {
+   "class": "Mathematical Model",
+   "description": "mathematical model describing the characteristics of the drug-using career",
+   "id": "",
+   "label": "opiate-using career ODE model",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "mathematical model describing the characteristics of the drug-using career"
+     },
+     "labels": {
+      "en": "opiate-using career ODE model"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534270",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P1560": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P560"
+          },
+          "value": {
+           "content": "Q7270342",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "Item0000000003",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P560"
+          },
+          "value": {
+           "content": "Q6534262",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "Item0000000004",
+         "type": "value"
+        }
+       }
+      ],
+      "P286": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P286"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P560"
+          },
+          "value": {
+           "content": "Q6672344",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "Item0000000032",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q68663",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672076",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775551",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672082",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672110",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672091",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q68663",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534270",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672076",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775551",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672082",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672110",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672091",
+     []
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000003",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q7270342",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000004",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6534262",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P286",
+     "wikibase-item",
+     "Item0000000032",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6672344",
+        "type": "value"
+       }
+      }
+     ]
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000003": {
+   "class": "Formula",
+   "description": "system of ordinary differential equations describing the opiate-using career",
+   "id": "",
+   "label": "opiate-using career ODE system",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "system of ordinary differential equations describing the opiate-using career"
+     },
+     "labels": {
+      "en": "opiate-using career ODE system"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q5981696",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P1560": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "value": {
+         "content": "Item0000000017",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "value": {
+         "content": "Item0000000018",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "value": {
+         "content": "Item0000000019",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q96183",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672075",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775550",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672081",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672086",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672090",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6481447",
+         "type": "value"
+        }
+       }
+      ],
+      "P983": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000005",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "S",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000006",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "t",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000007",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\Lambda",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000008",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\beta_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000009",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "U_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000010",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "N",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000011",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\mu",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000012",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "p",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000013",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\beta_3",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000014",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "U_2",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000015",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\delta_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000016",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\delta_2",
+         "type": "value"
+        }
+       }
+      ],
+      "P989": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P989"
+        },
+        "value": {
+         "content": "\\begin{align} \\frac{dS}{dt} &= \\Lambda - \\frac{\\beta_1 U_1 S}{N} - \\mu S \\\\ \\frac{dU_1}{dt} &= \\frac{\\beta_1 U_1 S}{N} - p U_1 + \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_1) U_1 \\\\ \\frac{dU_2}{dt} &= p U_1 - \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_2) U_2 \\end{align}",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q96183",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q5981696",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672075",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775550",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672081",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672086",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672090",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6481447",
+     []
+    ],
+    [
+     "P989",
+     "math",
+     "\\begin{align} \\frac{dS}{dt} &= \\Lambda - \\frac{\\beta_1 U_1 S}{N} - \\mu S \\\\ \\frac{dU_1}{dt} &= \\frac{\\beta_1 U_1 S}{N} - p U_1 + \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_1) U_1 \\\\ \\frac{dU_2}{dt} &= p U_1 - \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_2) U_2 \\end{align}",
+     []
+    ],
+    [
+     "P983",
+     "math",
+     "S",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000005",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "t",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000006",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\Lambda",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000007",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\beta_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000008",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "U_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000009",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "N",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000010",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\mu",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000011",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "p",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000012",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\beta_3",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000013",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "U_2",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000014",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\delta_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000015",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\delta_2",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000016",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000017",
+     []
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000018",
+     []
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000019",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000004": {
+   "class": "Formula",
+   "description": "total population is the sum of susceptibles and drug users not in and in treatment, and stays constant because recruitment balances all removals",
+   "id": "",
+   "label": "conservation law for the opiate-using career ODE model",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "total population is the sum of susceptibles and drug users not in and in treatment, and stays constant because recruitment balances all removals"
+     },
+     "labels": {
+      "en": "conservation law for the opiate-using career ODE model"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q5981696",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q96183",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672075",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775550",
+         "type": "value"
+        }
+       }
+      ],
+      "P983": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000010",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "N",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000005",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "S",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000009",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "U_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000014",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "U_2",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000007",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\Lambda",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000011",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\mu",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000015",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\delta_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000016",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\delta_2",
+         "type": "value"
+        }
+       }
+      ],
+      "P989": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P989"
+        },
+        "value": {
+         "content": "\\begin{align} N &= S + U_1 + U_2 \\\\ \\Lambda &= \\mu  S + (\\mu + \\delta_1) U_1 + (\\mu + \\delta_2) U_2 \\end{align}",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q96183",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q5981696",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672075",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775550",
+     []
+    ],
+    [
+     "P989",
+     "math",
+     "\\begin{align} N &= S + U_1 + U_2 \\\\ \\Lambda &= \\mu  S + (\\mu + \\delta_1) U_1 + (\\mu + \\delta_2) U_2 \\end{align}",
+     []
+    ],
+    [
+     "P983",
+     "math",
+     "N",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000010",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "S",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000005",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "U_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000009",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "U_2",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000014",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\Lambda",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000007",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\mu",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000011",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\delta_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000015",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\delta_2",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000016",
+        "type": "value"
+       }
+      }
+     ]
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000005": {
+   "class": "Quantity",
+   "description": "number",
+   "id": "Q6673882",
+   "label": "number of susceptible individuals",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "number"
+     },
+     "labels": {
+      "en": "number of susceptible individuals"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000006": {
+   "class": "Quantity",
+   "description": "dimension in which events can be ordered from the past through the present into the future",
+   "id": "Q6534304",
+   "label": "time",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "dimension in which events can be ordered from the past through the present into the future"
+     },
+     "labels": {
+      "en": "time"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000007": {
+   "class": "Quantity",
+   "description": "demographic process",
+   "id": "",
+   "label": "rate (individuals of general entering susceptible population)",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "demographic process"
+     },
+     "labels": {
+      "en": "rate (individuals of general entering susceptible population)"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534271",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534237",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775552",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534237",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534271",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775552",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000008": {
+   "class": "Quantity",
+   "description": "rate constant",
+   "id": "",
+   "label": "rate constant (becoming drug user)",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "rate constant"
+     },
+     "labels": {
+      "en": "rate constant (becoming drug user)"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534271",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534237",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775552",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534237",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534271",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775552",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000009": {
+   "class": "Quantity",
+   "description": "initial and relapsed drug users",
+   "id": "",
+   "label": "number of drug users not in treatment",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "initial and relapsed drug users"
+     },
+     "labels": {
+      "en": "number of drug users not in treatment"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534271",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534237",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6482820",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534237",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534271",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6482820",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000010": {
+   "class": "Quantity",
+   "description": "countable quantity representing the number of individuals",
+   "id": "Q6673795",
+   "label": "total population size",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "countable quantity representing the number of individuals"
+     },
+     "labels": {
+      "en": "total population size"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000011": {
+   "class": "Quantity",
+   "description": "rate constant",
+   "id": "",
+   "label": "rate constant (natural death in general population)",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "rate constant"
+     },
+     "labels": {
+      "en": "rate constant (natural death in general population)"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534271",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534237",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775552",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534237",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534271",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775552",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000012": {
+   "class": "Quantity",
+   "description": "rate constant",
+   "id": "",
+   "label": "rate constant (drug users entering treatment)",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "rate constant"
+     },
+     "labels": {
+      "en": "rate constant (drug users entering treatment)"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534271",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534237",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775552",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534237",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534271",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775552",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000013": {
+   "class": "Quantity",
+   "description": "rate constant",
+   "id": "",
+   "label": "rate constant (drug user in treatment relapsing to untreated use)",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "rate constant"
+     },
+     "labels": {
+      "en": "rate constant (drug user in treatment relapsing to untreated use)"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534271",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534237",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775552",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534237",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534271",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775552",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000014": {
+   "class": "Quantity",
+   "description": "number",
+   "id": "",
+   "label": "number of drug users in treatment",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "number"
+     },
+     "labels": {
+      "en": "number of drug users in treatment"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534271",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534237",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6482820",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534237",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534271",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6482820",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000015": {
+   "class": "Quantity",
+   "description": "rate constant",
+   "id": "",
+   "label": "rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "rate constant"
+     },
+     "labels": {
+      "en": "rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534271",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534237",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775552",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534237",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534271",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775552",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000016": {
+   "class": "Quantity",
+   "description": "rate constant",
+   "id": "",
+   "label": "rate constant (drug-related deaths of users in treatment and a rate of successful cure)",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "rate constant"
+     },
+     "labels": {
+      "en": "rate constant (drug-related deaths of users in treatment and a rate of successful cure)"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q6534271",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6534237",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775552",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q6534237",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q6534271",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775552",
+     []
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000017": {
+   "class": "Formula",
+   "description": "ordinary differential equation describing the rate of change of susceptible individuals",
+   "id": "",
+   "label": "susceptibles in opiate-using career ODE model",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "ordinary differential equation describing the rate of change of susceptible individuals"
+     },
+     "labels": {
+      "en": "susceptibles in opiate-using career ODE model"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q5981696",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q96183",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672075",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775550",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672081",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672086",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672090",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6481447",
+         "type": "value"
+        }
+       }
+      ],
+      "P983": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000005",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "S",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000006",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "t",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000007",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\Lambda",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000008",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\beta_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000009",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "U_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000010",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "N",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000011",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\mu",
+         "type": "value"
+        }
+       }
+      ],
+      "P989": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P989"
+        },
+        "value": {
+         "content": "\\frac{dS}{dt} = \\Lambda - \\frac{\\beta_1 U_1 S}{N} - \\mu S",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q96183",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q5981696",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672075",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775550",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672081",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672086",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672090",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6481447",
+     []
+    ],
+    [
+     "P989",
+     "math",
+     "\\frac{dS}{dt} = \\Lambda - \\frac{\\beta_1 U_1 S}{N} - \\mu S",
+     []
+    ],
+    [
+     "P983",
+     "math",
+     "S",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000005",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "t",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000006",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\Lambda",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000007",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\beta_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000008",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "U_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000009",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "N",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000010",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\mu",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000011",
+        "type": "value"
+       }
+      }
+     ]
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000018": {
+   "class": "Formula",
+   "description": "ordinary differential equation describing the rate of change of drug-using individuals not in treatment",
+   "id": "",
+   "label": "drug users not in treatment in opiate-using career ODE model",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "ordinary differential equation describing the rate of change of drug-using individuals not in treatment"
+     },
+     "labels": {
+      "en": "drug users not in treatment in opiate-using career ODE model"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q5981696",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q96183",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672075",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775550",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672081",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672086",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672090",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6481447",
+         "type": "value"
+        }
+       }
+      ],
+      "P983": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000009",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "U_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000006",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "t",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000008",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\beta_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000005",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "S",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000010",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "N",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000012",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "p",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000013",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\beta_3",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000014",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "U_2",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000011",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\mu",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000015",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\delta_1",
+         "type": "value"
+        }
+       }
+      ],
+      "P989": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P989"
+        },
+        "value": {
+         "content": "\\frac{dU_1}{dt} = \\frac{\\beta_1 U_1 S}{N} - p U_1 + \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_1) U_1",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q96183",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q5981696",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672075",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775550",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672081",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672086",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672090",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6481447",
+     []
+    ],
+    [
+     "P989",
+     "math",
+     "\\frac{dU_1}{dt} = \\frac{\\beta_1 U_1 S}{N} - p U_1 + \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_1) U_1",
+     []
+    ],
+    [
+     "P983",
+     "math",
+     "U_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000009",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "t",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000006",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\beta_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000008",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "S",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000005",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "N",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000010",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "p",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000012",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\beta_3",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000013",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "U_2",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000014",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\mu",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000011",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\delta_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000015",
+        "type": "value"
+       }
+      }
+     ]
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000019": {
+   "class": "Formula",
+   "description": "ordinary differential equation describing the rate of change of drug-using individuals in treatment",
+   "id": "",
+   "label": "drug users in treatment in opiate-using career ODE model",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "ordinary differential equation describing the rate of change of drug-using individuals in treatment"
+     },
+     "labels": {
+      "en": "drug users in treatment in opiate-using career ODE model"
+     },
+     "statements": {
+      "P1460": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1460"
+        },
+        "value": {
+         "content": "Q5981696",
+         "type": "value"
+        }
+       }
+      ],
+      "P1495": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1495"
+        },
+        "value": {
+         "content": "Q6534265",
+         "type": "value"
+        }
+       }
+      ],
+      "P31": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q96183",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672075",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6775550",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672081",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672086",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6672090",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P31"
+        },
+        "value": {
+         "content": "Q6481447",
+         "type": "value"
+        }
+       }
+      ],
+      "P983": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000014",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "U_2",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000006",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "t",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000012",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "p",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000009",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "U_1",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000013",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\beta_3",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000010",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "N",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000011",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\mu",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P983"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P984"
+          },
+          "value": {
+           "content": "Item0000000016",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "\\delta_2",
+         "type": "value"
+        }
+       }
+      ],
+      "P989": [
+       {
+        "property": {
+         "data_type": "math",
+         "id": "P989"
+        },
+        "value": {
+         "content": "\\frac{dU_2}{dt} = p U_1 - \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_2) U_2",
+         "type": "value"
+        }
+       }
+      ]
+     }
+    }
+   },
+   "statements": [
+    [
+     "P31",
+     "wikibase-item",
+     "Q96183",
+     []
+    ],
+    [
+     "P1495",
+     "wikibase-item",
+     "Q6534265",
+     []
+    ],
+    [
+     "P1460",
+     "wikibase-item",
+     "Q5981696",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672075",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6775550",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672081",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672086",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6672090",
+     []
+    ],
+    [
+     "P31",
+     "wikibase-item",
+     "Q6481447",
+     []
+    ],
+    [
+     "P989",
+     "math",
+     "\\frac{dU_2}{dt} = p U_1 - \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_2) U_2",
+     []
+    ],
+    [
+     "P983",
+     "math",
+     "U_2",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000014",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "t",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000006",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "p",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000012",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "U_1",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000009",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\beta_3",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000013",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "N",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000010",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\mu",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000011",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P983",
+     "math",
+     "\\delta_2",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P984"
+       },
+       "value": {
+        "content": "Item0000000016",
+        "type": "value"
+       }
+      }
+     ]
+    ]
+   ],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000020": {
+   "description": "number that can be written without a fractional or decimal component",
+   "id": "Q6673724",
+   "label": "integer",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "number that can be written without a fractional or decimal component"
+     },
+     "labels": {
+      "en": "integer"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000021": {
+   "description": "general quantity for susceptible entities",
+   "id": "Q6674120",
+   "label": "susceptibles",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "general quantity for susceptible entities"
+     },
+     "labels": {
+      "en": "susceptibles"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000022": {
+   "description": "position of a particular instant in time",
+   "id": "Q6674052",
+   "label": "point in time",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "position of a particular instant in time"
+     },
+     "labels": {
+      "en": "point in time"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000023": {
+   "description": "time between two events",
+   "id": "Q6674046",
+   "label": "turn over time",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "time between two events"
+     },
+     "labels": {
+      "en": "turn over time"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000024": {
+   "description": "length of a period in time units",
+   "id": "Q6674045",
+   "label": "period length",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "length of a period in time units"
+     },
+     "labels": {
+      "en": "period length"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000025": {
+   "description": "characteristic time that would take a body to collapse under its own gravitational attraction, if no other forces existed to oppose the collapse",
+   "id": "Q6673995",
+   "label": "free fall time",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "characteristic time that would take a body to collapse under its own gravitational attraction, if no other forces existed to oppose the collapse"
+     },
+     "labels": {
+      "en": "free fall time"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000026": {
+   "description": "exposure (time) of an individual at a certain age",
+   "id": "Q6673969",
+   "label": "exposure of an individual",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "exposure (time) of an individual at a certain age"
+     },
+     "labels": {
+      "en": "exposure of an individual"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000027": {
+   "description": "physical quantity for describing the temporal distance between events",
+   "id": "Q6673931",
+   "label": "duration",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "physical quantity for describing the temporal distance between events"
+     },
+     "labels": {
+      "en": "duration"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000028": {
+   "description": "incremental time step",
+   "id": "Q6673794",
+   "label": "time step",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "incremental time step"
+     },
+     "labels": {
+      "en": "time step"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000029": {
+   "description": "time elapsed since a person (an individual) was born",
+   "id": "Q6673735",
+   "label": "age of a person",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "time elapsed since a person (an individual) was born"
+     },
+     "labels": {
+      "en": "age of a person"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000030": {
+   "description": "quantity of process intensivity",
+   "id": "Q6673694",
+   "label": "rate",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "quantity of process intensivity"
+     },
+     "labels": {
+      "en": "rate"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000031": {
+   "description": "quantifies the rate of a chemical reaction",
+   "id": "Q6673803",
+   "label": "reaction rate constant",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "quantifies the rate of a chemical reaction"
+     },
+     "labels": {
+      "en": "reaction rate constant"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000032": {
+   "class": "Publication",
+   "description": "scientific article; zbMATH DE number 5182347",
+   "id": "Q2643268",
+   "label": "Heroin epidemics, treatment and ODE modelling",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "scientific article; zbMATH DE number 5182347"
+     },
+     "labels": {
+      "en": "Heroin epidemics, treatment and ODE modelling"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "RELATION0": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q60231",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION1": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534265",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION10": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534265",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000005/statements"
+  },
+  "RELATION11": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534271",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000005/statements"
+  },
+  "RELATION12": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6482820",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000005/statements"
+  },
+  "RELATION13": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000005",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000021/statements"
+  },
+  "RELATION14": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000005",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000020/statements"
+  },
+  "RELATION15": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534245",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION16": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534265",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION17": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534271",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION18": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6775553",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION19": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "external-id",
+      "id": "P1654"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Time",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION2": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534268",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION20": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000022",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION21": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000023",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION22": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000024",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION23": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000025",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION24": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000026",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION25": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000027",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION26": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000028",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION27": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000029",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
+  },
+  "RELATION28": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000007",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000030/statements"
+  },
+  "RELATION29": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000008",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000031/statements"
+  },
+  "RELATION3": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1560"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000001",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION30": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000009",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000020/statements"
+  },
+  "RELATION31": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000011",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000031/statements"
+  },
+  "RELATION32": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000031/statements"
+  },
+  "RELATION33": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000013",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000031/statements"
+  },
+  "RELATION34": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000014",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000020/statements"
+  },
+  "RELATION35": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000015",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000031/statements"
+  },
+  "RELATION36": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000016",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000031/statements"
+  },
+  "RELATION4": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534237",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000010/statements"
+  },
+  "RELATION5": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534265",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000010/statements"
+  },
+  "RELATION6": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534271",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000010/statements"
+  },
+  "RELATION7": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6482820",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000010/statements"
+  },
+  "RELATION8": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000010",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000020/statements"
+  },
+  "RELATION9": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534237",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000005/statements"
+  }
+ },
+ "written": [
+  "Item0000000000",
+  "Item0000000001",
+  "Item0000000002",
+  "Item0000000003",
+  "Item0000000004",
+  "Item0000000005",
+  "Item0000000006",
+  "Item0000000007",
+  "Item0000000008",
+  "Item0000000009",
+  "Item0000000010",
+  "Item0000000011",
+  "Item0000000012",
+  "Item0000000013",
+  "Item0000000014",
+  "Item0000000015",
+  "Item0000000016",
+  "Item0000000017",
+  "Item0000000018",
+  "Item0000000019",
+  "Item0000000020",
+  "Item0000000021",
+  "Item0000000022",
+  "Item0000000023",
+  "Item0000000024",
+  "Item0000000025",
+  "Item0000000026",
+  "Item0000000027",
+  "Item0000000028",
+  "Item0000000029",
+  "Item0000000030",
+  "Item0000000031",
+  "Item0000000032"
+ ]
+}

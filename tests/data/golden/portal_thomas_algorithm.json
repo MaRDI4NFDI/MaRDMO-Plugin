@@ -1,0 +1,9 @@
+{
+ "messages": [
+  "Following aspects prevented the export:",
+  "Publication (Page P3): Invalid Publication DOI: DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)",
+  "Publication (Page P4): Invalid Publication DOI: DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)",
+  "Software (Page S2): Missing Reference",
+  "Software (Page S3): Missing Reference"
+ ]
+}
