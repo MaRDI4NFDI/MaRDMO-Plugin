@@ -11,14 +11,18 @@ WHERE {{
 
     VALUES ?id {{{0}}}
 
-    {{
-        ?id wdt:P31 wd:Q309314.
-        BIND("Quantity" AS ?class)
-    }}
-    UNION
-    {{
-        ?id wdt:P31 wd:Q110653654.
-        BIND("QuantityKind" AS ?class)
+    # Many Wikidata quantities are no instance of either class; their class
+    # stays empty and is chosen by the user
+    OPTIONAL {{
+        {{
+            ?id wdt:P31 wd:Q309314.
+            BIND("Quantity" AS ?class)
+        }}
+        UNION
+        {{
+            ?id wdt:P31 wd:Q110653654.
+            BIND("QuantityKind" AS ?class)
+        }}
     }}
 
     OPTIONAL {{ ?id wdt:P31 wd:Q108920450. BIND("True" AS ?is_stochastic_raw) }}
