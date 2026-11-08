@@ -39,6 +39,7 @@ nav:
           - Add a Question: how-to/mardmo/register-question.md
           - Extend the Export: how-to/mardmo/extend-export.md
           - Validate a New Field: how-to/mardmo/validate-field.md
+          - Run and Update the Tests: how-to/mardmo/tests.md
           - Make a Release: how-to/mardmo/release.md
   - Reference:
       - Core:

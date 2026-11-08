@@ -56,8 +56,11 @@ first three jobs (without the tag check): nothing is uploaded or published.
 | Event | Tests | Documentation |
 |---|---|---|
 | Push to any branch | one combination (Python 3.14, RDMO 2.5.2) | built |
-| Pull request to `main` | every combination | built |
+| Pull request to `main` or the integration branch | every combination, also on PostgreSQL and MariaDB | built |
 | Merge into `main` | one combination | built and published |
+
+See [Run and Update the Tests](tests.md) for the combinations and for
+running the tests locally.
 | Release (tag push) | every combination, against the questionnaire release | built |
 
 ## Requirements
@@ -67,5 +70,5 @@ first three jobs (without the tag check): nothing is uploaded or published.
   the workflow needs the entry to be updated.
 - **GitHub environment `pypi`:** deployments only from tags `v*`.
 - **Zenodo:** the repository's webhook for releases (*Settings → Webhooks*).
-- **Rulesets:** `main` needs pull requests and the tests; tags `v*` may only be
+- **Rulesets:** `main` and the integration branch need pull requests and the tests; tags `v*` may only be
   created, moved or deleted by maintainers.
