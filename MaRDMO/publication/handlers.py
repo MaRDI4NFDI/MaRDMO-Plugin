@@ -149,13 +149,14 @@ class Information:
             if not text or text == 'not found':
                 continue
 
-            # Add basic Information
+            # Add basic Information, on the publication's tab (set_prefix
+            # '') as the preview stores it for publications found by DOI
             add_basics(
                 project   = project,
                 text      = text,
                 questions = self.questions,
                 item_type = 'Publication',
-                index     = (set_index, 0)
+                index     = (set_index, '')
             )
 
             source = external_id.split(':')[0]

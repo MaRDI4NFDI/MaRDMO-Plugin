@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from MaRDMO import main
 from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_item_url
+from rdmo.options.models import OptionSet
 from rdmo.projects.models import Value
 from rdmo.projects.signals import value_updated
 
@@ -116,7 +117,7 @@ def test_every_page_has_a_name(hydrated):
 
 
 def test_collections_have_no_gaps(hydrated):
-    '''References are left out: each kind keeps its line (software: DOI 0, swMATH 1, URLs 2 and 3).'''
+    '''References are checkboxes: see test_references_are_at_the_position_of_their_option.'''
     _, model = hydrated
     by_set = collections.defaultdict(list)
     for attribute, set_prefix, set_index, collection_index, *_ in dump(model):
@@ -124,6 +125,24 @@ def test_collections_have_no_gaps(hydrated):
             by_set[(attribute, set_prefix, set_index)].append(collection_index)
     assert {key: sorted(indices) for key, indices in by_set.items()
             if sorted(indices) != list(range(len(indices)))} == {}
+
+
+def test_references_are_at_the_position_of_their_option(hydrated):
+    '''RDMO's checkbox widget stores a checked option at its position in the option set.'''
+    _, model = hydrated
+    references = model.values.filter(attribute__uri__endswith='/reference').select_related('attribute', 'option')
+    for value in references:
+        section = value.attribute.uri.split('/')[-2]
+        optionset = OptionSet.objects.get(uri__endswith=f'/{section}-reference')
+        assert value.collection_index == optionset.elements.index(value.option), value.option.uri
+
+
+def test_publication_name_is_on_the_publication_tab(hydrated):
+    '''Like the name of a publication found by its DOI, not below tab 0 (set_prefix "0").'''
+    _, model = hydrated
+    names = model.values.filter(attribute__uri=f'{BASE_URI}domain/publication/name')
+    tabs = model.values.filter(attribute__uri=f'{BASE_URI}domain/publication')
+    assert sorted(names.values_list('set_prefix', 'set_index')) == [('', tab.set_index) for tab in tabs]
 
 
 def test_selecting_again_changes_nothing(hydrated):
