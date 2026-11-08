@@ -100,7 +100,7 @@ def test_every_provider_is_used_by_an_option_set(questionnaire):
 # Imported references are stored at the position of their option in the
 # option set, where RDMO's checkbox widget expects them (CheckboxInput.js)
 REFERENCE_ORDERS = {
-    'software-reference': ['MaRDMO.constants', 'MaRDMO.algorithm.constants', 'MaRDMO.workflow.constants'],
+    'software-reference': ['MaRDMO.constants'],
     'benchmark-reference': ['MaRDMO.algorithm.constants'],
     'quantity-reference': ['MaRDMO.model.constants'],
 }

@@ -26,15 +26,6 @@ SECTION_MAP = {
     'publication': 'Publication',
 }
 
-# Same order as the options in the questionnaire: the list position is
-# used as collection_index when imported references are stored
-software_reference_ids = [
-    'DOI',
-    'SWMATH',
-    'DESCRIPTION_URL',
-    'SOURCECODE_URL',
-]
-
 # URI PREFIX Map
 def get_uri_prefix_map():
     '''Build the attribute-URI → section config mapping for the Workflow Documentation.
