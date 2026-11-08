@@ -6,7 +6,9 @@ item class, sources, "not found", the user's own items, creation and
 refresh.  Since then providers of programming languages and software search
 from the first character (C, R), all others from three (six workflow
 providers searched from one before); the provider "Instrument", used by no
-option set, was removed.
+option set, was removed.  The providers of related quantities and related
+quantity kinds offer only the user's own quantities of their class
+(answer_class).
 '''
 import json
 import os

@@ -48,6 +48,7 @@ class MaRDMOProvider(Provider):
                     creation = config.creation,
                     sources = config.sources,
                     item_class = item_class,
+                    answer_class = config.answer_class,
                 ),
             )
         return query_sources(
