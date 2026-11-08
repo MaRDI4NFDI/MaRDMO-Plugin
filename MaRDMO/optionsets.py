@@ -30,6 +30,9 @@ class Search:
         item_class: Item name(s) of the class-restricted search on the MaRDI Portal.
         answers:    Questionnaire sections whose items of the user's own are
                     offered too (``None``: none).
+        answer_class: MathModDB class (``Quantity`` or ``QuantityKind``) the
+                    user's own quantities must have; quantities without a
+                    class yet are offered too (``None``: all).
         creation:   Offer to create a new item from the search text.
         sources:    Sources to search (``None``: MaRDI Portal and Wikidata).
         not_found:  Offer "not found" (searches without answers and creation).
@@ -41,6 +44,7 @@ class Search:
     label: str
     item_class: Union[str, list]
     answers: Optional[list] = None
+    answer_class: Optional[str] = None
     creation: bool = False
     sources: Optional[list] = None
     not_found: bool = True
@@ -76,8 +80,8 @@ PROVIDERS = {
     'MathematicalModel': Search('Options for Mathematical Model', 'mathematical model', refresh=True),
     'RelatedMathematicalModelWithoutCreation': Search('Options for related Mathematical Model without Creation', 'mathematical model', answers=['model'], sources=['mardi']),
     'QuantityOrQuantityKind': Search('Options for Quantities and Quantity Kinds', ['quantity', 'kind of quantity'], refresh=True),
-    'RelatedQuantityWithoutCreation': Search('Options for related Quantities without Creation', 'quantity', answers=['quantity'], sources=['mardi']),
-    'RelatedQuantityKindWithoutCreation': Search('Options for related Quantity Kinds without Creation', 'kind of quantity', answers=['quantity'], sources=['mardi']),
+    'RelatedQuantityWithoutCreation': Search('Options for related Quantities without Creation', 'quantity', answers=['quantity'], answer_class='Quantity', sources=['mardi']),
+    'RelatedQuantityKindWithoutCreation': Search('Options for related Quantity Kinds without Creation', 'kind of quantity', answers=['quantity'], answer_class='QuantityKind', sources=['mardi']),
     'RelatedQuantityOrQuantityKindWithCreation': Search('Options for related Quantities or Quantity Kinds with Creation', ['quantity', 'kind of quantity'], answers=['quantity'], creation=True, refresh=True),
     'MathematicalFormulation': Search('Options for Mathematical Formulation', 'formula', refresh=True),
     'RelatedMathematicalFormulationWithCreation': Search('Options for related Mathematical Formulations with Creation', 'formula', answers=['formulation'], creation=True, refresh=True),

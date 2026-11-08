@@ -23,7 +23,7 @@ from django.core.cache import cache
 from rdmo.domain.models import Attribute
 
 from .constants import BASE_URI
-from .getters import get_properties, get_url
+from .getters import get_mathmoddb, get_properties, get_url
 from .helpers import commit_writes, extract_parts, rank_by_search_term
 
 logger = logging.getLogger(__name__)
@@ -475,6 +475,9 @@ def query_sources_with_user_additions(search, project, setup):
                    query for user-defined entries
                  * ``creation``         – bool; if ``True``, prepend an option
                    that lets users create a new entry with the search text
+                 * ``answer_class``     – MathModDB class key (``Quantity`` or
+                   ``QuantityKind``) the user's own quantities must have;
+                   quantities without a class yet are offered too
 
     Returns:
         List of ``{"id": …, "text": …}`` option dicts.
@@ -523,7 +526,8 @@ def query_user_entries(project, setup):
     Reads the ID, Name, and Description values of all attributes listed in
     ``setup["query_attributes"]`` with two database queries, aligns them by
     ``set_index``/``set_prefix``, and returns only entries whose source is not
-    in ``setup["sources"]`` (i.e. not already covered by KG results).
+    in ``setup["sources"]`` (i.e. not already covered by KG results).  With
+    ``setup["answer_class"]``, quantities of the other class are left out.
 
     Args:
         project: RDMO project instance.
@@ -538,6 +542,10 @@ def query_user_entries(project, setup):
         for query_attribute in setup['query_attributes']
         for question in ('id', 'name', 'description')
     }
+    wanted_class = None
+    if setup.get('answer_class'):
+        uris[f'{BASE_URI}domain/quantity/is-quantity-or-quantity-kind'] = ('quantity', 'class')
+        wanted_class = get_mathmoddb().get(key=setup['answer_class'])['url']
     attributes = {
         attribute.id: uris[attribute.uri]
         for attribute in Attribute.objects.filter(uri__in=uris)
@@ -545,14 +553,17 @@ def query_user_entries(project, setup):
 
     # Align id/name/description per entity type and entity index
     entries = {}
-    for value in project.values.filter(snapshot=None, attribute_id__in=attributes):
+    for value in project.values.filter(snapshot=None, attribute_id__in=attributes).select_related('option'):
         query_attribute, question = attributes[value.attribute_id]
-        idx = value.set_index if question == 'id' else int(value.set_prefix)
+        idx = value.set_index if question in ('id', 'class') else int(value.set_prefix)
         entries.setdefault((setup['query_attributes'].index(query_attribute), idx), {})[question] = value
 
     dic = {}
     for _, entry in sorted(entries.items()):
         if 'id' not in entry or not entry['id'].text:
+            continue
+        # Quantity of the other class; without a class yet it is offered
+        if entry.get('class') and entry['class'].option and entry['class'].option.uri != wanted_class:
             continue
         if entry['id'].text == 'not found':
             # User-defined item

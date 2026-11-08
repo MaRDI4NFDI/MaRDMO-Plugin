@@ -362,7 +362,8 @@ def basic_list(value):
         value.text
     ]
 
-def define_setup(query_attributes, creation=False, query_id='', sources=None, item_class=None):
+def define_setup(query_attributes, creation=False, query_id='', sources=None, item_class=None,
+                 answer_class=None):
     """Build a query-setup dict used by provider ``get_options`` methods.
 
     Args:
@@ -376,6 +377,8 @@ def define_setup(query_attributes, creation=False, query_id='', sources=None, it
                           both sources inside the query helper.
         item_class:       Wikibase QID string or list of QID strings used to
                           restrict the MaRDI class-based search.
+        answer_class:     MathModDB class key (``Quantity`` or ``QuantityKind``)
+                          the user's own quantities must have (optional).
 
     Returns:
         Dict consumed by :func:`~MaRDMO.queries.query_sources_with_user_additions`.
@@ -386,6 +389,7 @@ def define_setup(query_attributes, creation=False, query_id='', sources=None, it
         'query_id': query_id,
         'sources': sources,
         'item_class': item_class,
+        'answer_class': answer_class,
     }
 
 def nested_set(data, path, entry):
