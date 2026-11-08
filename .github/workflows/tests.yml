@@ -27,13 +27,30 @@ concurrency:
 
 jobs:
   tests:
-    name: Python ${{ matrix.python }}, RDMO ${{ matrix.rdmo }}
+    name: Python ${{ matrix.python }}, RDMO ${{ matrix.rdmo }}${{ matrix.db_label }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python: ${{ github.event_name == 'push' && !inputs.full_matrix && fromJSON('["3.14"]') || fromJSON('["3.10", "3.13", "3.14"]') }}
         rdmo: ${{ github.event_name == 'push' && !inputs.full_matrix && fromJSON('["2.5.2"]') || fromJSON('["2.5.1", "2.5.2"]') }}
+        db: [sqlite]
+        # Besides: one combination each on the databases of production
+        # installations (RDMO's extras install their drivers)
+        include: ${{ github.event_name == 'push' && !inputs.full_matrix && fromJSON('[]') || fromJSON('[{"python":"3.14","rdmo":"2.5.2","db":"postgresql","db_label":", PostgreSQL 16","image":"postgres:16","port":"5432","user":"postgres","extra":"postgres","health":"pg_isready"},{"python":"3.14","rdmo":"2.5.2","db":"mysql","db_label":", MariaDB 11","image":"mariadb:11","port":"3306","user":"root","extra":"mysql","health":"healthcheck.sh --connect --innodb_initialized"}]') }}
+
+    # Not started for SQLite (empty image)
+    services:
+      database:
+        image: ${{ matrix.image || '' }}
+        env:
+          POSTGRES_PASSWORD: mardmo
+          MARIADB_ROOT_PASSWORD: mardmo
+        ports:
+          - ${{ matrix.port || '5432' }}:${{ matrix.port || '5432' }}
+        options: >-
+          --health-cmd "${{ matrix.health }}"
+          --health-interval 5s --health-timeout 5s --health-retries 20
 
     steps:
       - name: Check out MaRDMO
@@ -65,19 +82,30 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      # mysqlclient is built from source
+      - name: Install the MariaDB client library
+        if: matrix.db == 'mysql'
+        run: sudo apt-get update && sudo apt-get install -y libmariadb-dev pkg-config
+
       - name: Install RDMO ${{ matrix.rdmo }} and MaRDMO with the test tools
         run: |
           python -m pip install --upgrade pip
-          pip install "rdmo==${{ matrix.rdmo }}"
+          pip install "rdmo${{ matrix.extra && format('[{0}]', matrix.extra) || '' }}==${{ matrix.rdmo }}"
           pip install -e ".[test]"
 
       - name: Lint (ruff)
         run: ruff check MaRDMO tests
 
+      # The database container is the only host the tests may reach
       - name: Tests
         env:
           QUESTIONNAIRE: questionnaire/catalog
-        run: coverage run -m pytest
+          TEST_DB: ${{ matrix.db }}
+          TEST_DB_USER: ${{ matrix.user }}
+          TEST_DB_PASSWORD: mardmo
+          TEST_DB_HOST: 127.0.0.1
+          TEST_DB_PORT: ${{ matrix.port }}
+        run: coverage run -m pytest ${{ matrix.image && '--allow-hosts=127.0.0.1' || '' }}
 
       - name: Coverage
         run: coverage report --skip-covered --sort=cover | tail -25

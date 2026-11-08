@@ -5,6 +5,8 @@ items.json and properties.json as production; network requests are
 blocked by pytest-socket (see pyproject.toml), the tests use recorded
 answers instead.  The OAuth2 credentials are dummies.
 '''
+import getpass
+import os
 from pathlib import Path
 
 from rdmo.core.settings import *  # noqa: F401,F403  (RDMO's defaults)
@@ -17,12 +19,48 @@ STATIC_ROOT = BASE_DIR / 'static_root'
 SECRET_KEY = 'mardmo-tests'
 DEBUG = False
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
-    }
+# SQLite in memory; TEST_DB=postgresql or TEST_DB=mysql (MySQL or MariaDB)
+# runs the tests on a server as in production.  Locally it is reached by its
+# Unix socket as the user running the tests; in CI (service containers) by
+# TEST_DB_HOST and TEST_DB_PORT, which pytest must allow (--allow-hosts).
+# pytest-django creates and drops the test database.
+TEST_DB = os.environ.get('TEST_DB', 'sqlite')
+SERVER = {
+    'NAME': 'mardmo_tests',
+    'USER': os.environ.get('TEST_DB_USER', getpass.getuser()),
+    'PASSWORD': os.environ.get('TEST_DB_PASSWORD', ''),
+    'HOST': os.environ.get('TEST_DB_HOST', ''),
+    'PORT': os.environ.get('TEST_DB_PORT', ''),
 }
+if TEST_DB == 'sqlite':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+elif TEST_DB == 'postgresql':
+    DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql', **SERVER}}
+elif TEST_DB == 'mysql':
+    try:
+        import MySQLdb  # noqa: F401  (mysqlclient, as rdmo[mysql] installs it)
+    except ImportError:
+        # PyMySQL needs no compiler; Django asks for the version of mysqlclient
+        import pymysql
+        pymysql.version_info = (2, 2, 1, 'final', 0)
+        pymysql.install_as_MySQLdb()
+    options = {'charset': 'utf8mb4'}
+    if not SERVER['HOST']:
+        options['unix_socket'] = '/run/mysqld/mysqld.sock'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql', **SERVER,
+            'OPTIONS': options,
+            'TEST': {'CHARSET': 'utf8mb4', 'COLLATION': 'utf8mb4_unicode_ci'},
+        }
+    }
+else:
+    raise ValueError(f'TEST_DB={TEST_DB!r}: use sqlite, postgresql or mysql')
 
 INSTALLED_APPS = ['MaRDMO'] + INSTALLED_APPS
 
