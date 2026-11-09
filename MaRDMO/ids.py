@@ -9,11 +9,13 @@ label (relations) to add an own item; before the answer is saved,
 
 Answers that refer to an item hold its ID: a relation holds the ID of the
 item's page.  When the ID of a page changes (e.g. an own item is found on
-the portal), :func:`move_id` gives the answers the new one; when the page is
-deleted, :func:`remove_references` removes them.
+the portal), :func:`move_id` gives the answers the new one; when its name or
+description changes, :func:`sync_text` their text; when the page is deleted,
+:func:`remove_references` removes them.
 '''
 import uuid
 
+from django.db.models import Q
 from rdmo.projects.models import Value
 from rdmo.questions.models import Question, QuestionSet
 
@@ -209,3 +211,58 @@ def remove_references(value):
         row = Value.objects.filter(project=project, snapshot=None, set_prefix=set_prefix, set_index=set_index)
         if not row.filter(attribute__uri__in=relatants).exists():
             row.filter(attribute__uri__in=others).delete()
+
+
+def item_text(identifier, name, description):
+    '''Return the text of an answer that refers to the item *identifier*, as the dropdowns show it.
+
+    ``"Label (Description)"`` (``"Label"`` without description), with the
+    source tag (``[mardi]``, ``[wikidata]``) for an item of the MaRDI Portal
+    or Wikidata.
+    '''
+    text = f'{name} ({description})' if description else name
+    source = identifier.split(':', 1)[0]
+    return f'{text} [{source}]' if source in ('mardi', 'wikidata') else text
+
+
+def sync_text(value):
+    '''Give the answers that refer to a page's item the page's new name and description.
+
+    Called when the name or short description *value* of a page was saved
+    (or cleared) in the interview.  Every answer in the project with the
+    page's ID gets the text of :func:`item_text`, except the ID answers of
+    pages (the page's own shows "not found" for an own item).  Written with
+    ``update()``: the answers keep their ``updated`` time, so an interview
+    open on another page can still save them.
+
+    Args:
+        value: :class:`~rdmo.projects.models.Value` of a page's name or description.
+    '''
+    section, question = value.attribute.uri.rsplit('/', 1)
+    if question not in ('name', 'description') or f'{section}/id' not in id_attributes():
+        return
+    # A publication's name and description are answers of its own tab, the
+    # others' are answers of the page (set prefix = the page's set index)
+    if value.set_prefix == '':
+        index = value.set_index
+    elif value.set_prefix.isdigit():
+        index = int(value.set_prefix)
+    else:
+        return
+    # The page's ID, name and description in one query
+    page = {
+        uri: (external_id, text) for uri, external_id, text in Value.objects.filter(
+            Q(attribute__uri=f'{section}/id', set_prefix='', set_index=index)
+            | Q(attribute__uri__in=[f'{section}/name', f'{section}/description'],
+                set_prefix=value.set_prefix, set_index=value.set_index),
+            project=value.project_id, snapshot=None,
+        ).values_list('attribute__uri', 'external_id', 'text')
+    }
+    identifier = page.get(f'{section}/id', ('', ''))[0]
+    name = page.get(f'{section}/name', ('', ''))[1]
+    if not is_item_id(identifier) or not name:
+        return
+    texts = {uri: text for uri, (_, text) in page.items()}
+    Value.objects.filter(project=value.project_id, snapshot=None, external_id=identifier).exclude(
+        attribute__uri__in=id_attributes()
+    ).update(text=item_text(identifier, name, texts.get(f'{section}/description')))
