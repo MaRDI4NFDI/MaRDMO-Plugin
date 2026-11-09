@@ -2,7 +2,10 @@
 
 On every ``value_created`` or ``value_updated`` signal the post-save router checks
 whether the project's catalog is a MaRDMO catalog and, if so, looks up the
-saved attribute URI in ``HANDLER_MAP`` to call the matching handler method.
+saved attribute URI in ``HANDLER_MAP`` to call the matching handler method; a
+page's saved name or description also goes to the answers that refer to its
+item (:func:`~MaRDMO.ids.sync_text`).  Only the interview sends these signals,
+so hydration and imports are not synced (their texts come with them).
 
 On every Django ``post_delete`` signal on ``Value`` the post-delete router does the
 same lookup in ``DELETE_HANDLER_MAP``; a deleted page's ID answer also removes
@@ -54,7 +57,7 @@ from .constants import (
     CATALOG_WORKFLOW_NAME,
 )
 from .helpers import batched_writes, is_internal_write
-from .ids import assign_id, id_attributes, remove_references
+from .ids import assign_id, id_attributes, remove_references, sync_text
 from .builders import (
     build_post_save_handler_set,
     build_post_delete_handler_set,
@@ -165,6 +168,11 @@ def mardmo_router_post_save(sender, instance, update_fields=None, **kwargs):  # 
     attr_uri = getattr(instance.attribute, "uri", None)
     if not attr_uri:
         return
+
+    # Relations show the item's new name and description (the interview
+    # saves a cleared text too, so this also covers clearing)
+    if attr_uri.endswith(('/name', '/description')):
+        sync_text(instance)
 
     handler = HANDLER_MAP.get(catalog_name, {}).get(attr_uri)
     if handler:

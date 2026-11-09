@@ -45,6 +45,21 @@ item whose page is not there is reported ("Selected … not found in …
 Section"), as are two own pages of a section with the same name and
 description (the export would make one item of them).
 
+## When the name or description of a page changes
+
+Saving the name or short description of a page in the interview gives every
+answer that refers to its item the new text (`MaRDMO.ids.sync_text`):
+"Label (Description)", "Label" without description, with the source tag
+for portal and Wikidata items ("Label (Description) [mardi]"), as the
+dropdowns show it.  The answers are written with `update()`: they keep their
+`updated` time, so an interview open on another page can still save them;
+it shows the new text when the page is opened again.
+
+Not synced: the page's own ID answer (for an own item it says "not found"),
+a page without name, and saves outside the interview (hydration and imports
+bring their texts along).  Preview, checks and export use the page's name
+and description anyway.
+
 ## When the ID of a page changes
 
 Answers that hold the ID of a page follow it only if the page stays the same

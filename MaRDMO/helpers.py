@@ -32,7 +32,7 @@ from rdmo.projects.models import Value
 from rdmo.domain.models import Attribute
 from rdmo.options.models import Option
 
-from .ids import is_own_item, is_user_id, item_key
+from .ids import is_own_item, is_user_id, item_key, item_text
 
 # Set while MaRDMO itself writes values (hydration, publication lookup, ID
 # write-back); the pre-save router skips validators then, since they are meant
@@ -1426,7 +1426,7 @@ def replace_ids(project, created):
                 project=project, snapshot=None, external_id__in=info['user_ids']
             ).update(
                 external_id=f"mardi:{info['new_qid']}",
-                text=f'{label} ({desc}) [mardi]' if desc else f'{label} [mardi]',
+                text=item_text(f"mardi:{info['new_qid']}", label, desc),
             )
 
 
