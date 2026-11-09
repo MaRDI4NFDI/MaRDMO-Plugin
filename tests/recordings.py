@@ -81,7 +81,7 @@ def replay(monkeypatch, names, missing):
         if entry is None:
             missing.append(f'{method.upper()} {url}')
             raise AssertionError(f'request not recorded in {path.name}: {method.upper()} {url} {params or ""}'
-                                 f'{(data or "")[:300]!r}')
+                                 f'{str(data or "")[:300]!r}')
         return _response(entry)
 
     monkeypatch.setattr(requests.Session, 'request', request)
