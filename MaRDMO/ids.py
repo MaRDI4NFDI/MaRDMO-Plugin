@@ -9,12 +9,13 @@ label (relations) to add an own item; before the answer is saved,
 
 Answers that refer to an item hold its ID: a relation holds the ID of the
 item's page.  When the ID of a page changes (e.g. an own item is found on
-the portal), :func:`move_id` gives the answers the new one.
+the portal), :func:`move_id` gives the answers the new one; when the page is
+deleted, :func:`remove_references` removes them.
 '''
 import uuid
 
 from rdmo.projects.models import Value
-from rdmo.questions.models import Question
+from rdmo.questions.models import Question, QuestionSet
 
 from .optionsets import PROVIDERS
 
@@ -146,3 +147,65 @@ def item_key(identifier, name, description):
     the relations to it that still store "not found" (see :func:`is_own_item`).
     '''
     return ('user' if is_own_item(identifier) else identifier, name, description)
+
+
+# Relatant attribute URI -> (relatant URIs, other URIs) of its relation row (see relation_rows)
+_ROWS = {}
+
+
+def relation_rows():
+    '''Return ``{relatant URI: (relatant URIs, other URIs)}`` of the relation rows of the questionnaire.
+
+    A row is a block of the questionnaire with a relation type question
+    (``…/relation``, ``…-relation``, ``…-relation-<n>``): the relation type,
+    its targets (``…relatant…``) and, for specializations, assumptions, all
+    answered with the same set prefix and set index.  Read from the
+    questionnaire once it is there.
+    '''
+    if not _ROWS:
+        for questionset in QuestionSet.objects.prefetch_related('questions__attribute'):
+            uris = {question.attribute.uri for question in questionset.questions.all() if question.attribute}
+            names = {uri: uri.rsplit('/', 1)[-1] for uri in uris}
+            if not any('relation' in name and 'relatant' not in name for name in names.values()):
+                continue
+            relatants = frozenset(uri for uri, name in names.items() if 'relatant' in name)
+            others = frozenset(uris - relatants)
+            for uri in relatants:
+                _ROWS[uri] = (relatants, others)
+    return _ROWS
+
+
+def remove_references(value):
+    '''Remove the answers that refer to the item of a deleted page.
+
+    Called when the ID answer *value* of a page was deleted.  If the page's
+    tab is gone too (the tab was deleted, not only its ID cleared) and no
+    other page has the item's ID (e.g. a copied tab), every answer in the
+    project with this ID is deleted: relations, assumptions, publication
+    relations.  A relation row left without target loses its relation type
+    and assumptions too.
+
+    Args:
+        value: Deleted :class:`~rdmo.projects.models.Value` of a page's ID question.
+    '''
+    identifier = value.external_id
+    if not is_item_id(identifier) or not value.attribute.uri.endswith('/id'):
+        return
+    project = value.project_id
+    tab = Value.objects.filter(project=project, snapshot=None, attribute__uri=value.attribute.uri[:-len('/id')],
+                               set_prefix=value.set_prefix, set_index=value.set_index)
+    pages = Value.objects.filter(project=project, snapshot=None, external_id=identifier,
+                                 attribute__uri__in=id_attributes())
+    if tab.exists() or pages.exists():
+        return
+
+    references = Value.objects.filter(project=project, snapshot=None, external_id=identifier).select_related('attribute')
+    rows = {(reference.attribute.uri, reference.set_prefix, reference.set_index) for reference in references
+            if reference.attribute.uri in relation_rows()}
+    references.delete()
+
+    for uri, set_prefix, set_index in rows:
+        relatants, others = relation_rows()[uri]
+        row = Value.objects.filter(project=project, snapshot=None, set_prefix=set_prefix, set_index=set_index)
+        if not row.filter(attribute__uri__in=relatants).exists():
+            row.filter(attribute__uri__in=others).delete()

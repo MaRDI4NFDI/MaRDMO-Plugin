@@ -5,10 +5,11 @@ whether the project's catalog is a MaRDMO catalog and, if so, looks up the
 saved attribute URI in ``HANDLER_MAP`` to call the matching handler method.
 
 On every Django ``post_delete`` signal on ``Value`` the post-delete router does the
-same lookup in ``DELETE_HANDLER_MAP``.  Using ``post_delete`` (rather than RDMO's
-custom ``value_deleted``) ensures the handler fires for both individual REST
-deletions and set deletions via RDMO's ``delete_set``, which calls
-``value.delete()`` directly.
+same lookup in ``DELETE_HANDLER_MAP``; a deleted page's ID answer also removes
+the answers that refer to its item (:func:`~MaRDMO.ids.remove_references`).
+Using ``post_delete`` (rather than RDMO's custom ``value_deleted``) ensures the
+handler fires for both individual REST deletions and set deletions via RDMO's
+``delete_set``, which calls ``value.delete()`` directly.
 
 Both maps are assembled once at startup via
 :func:`~MaRDMO.builders.build_post_save_handler_set` and
@@ -53,7 +54,7 @@ from .constants import (
     CATALOG_WORKFLOW_NAME,
 )
 from .helpers import batched_writes, is_internal_write
-from .ids import assign_id
+from .ids import assign_id, id_attributes, remove_references
 from .builders import (
     build_post_save_handler_set,
     build_post_delete_handler_set,
@@ -197,6 +198,10 @@ def mardmo_router_post_delete(sender, instance, **kwargs):  # pylint: disable=un
     attr_uri = getattr(instance.attribute, "uri", None)
     if not attr_uri:
         return
+
+    # A deleted page takes the answers that refer to its item along
+    if attr_uri in id_attributes():
+        remove_references(instance)
 
     handler = DELETE_HANDLER_MAP.get(catalog_name, {}).get(attr_uri)
     if handler:
