@@ -4,7 +4,7 @@ from rdmo.domain.models import Attribute
 
 from ..constants import BASE_URI, CATALOG_WORKFLOW
 from ..getters import get_options
-from .base import SOFTWARE_REFERENCE_CHECKS
+from .base import SOFTWARE_REFERENCE_CHECKS, without_page
 from ..validators import archive_year_problem, count_problem, doi_problem, size_problem
 
 
@@ -128,7 +128,7 @@ class WorkflowMixin:
                         self.err.append(self._error(
                             'Process Step', page_name, 'Missing Algorithm'
                         ))
-                    elif 'not found' in pair['primary']:
+                    elif without_page(pair['primary']):
                         self.err.append(self._error(
                             'Process Step', page_name,
                             'Selected Algorithm not found in Algorithm Section'
@@ -138,7 +138,7 @@ class WorkflowMixin:
                             'Process Step', page_name,
                             'Missing Software (Algorithm Path)'
                         ))
-                    elif pair['qualifier'] == 'not found':
+                    elif without_page([pair['qualifier']]):
                         self.err.append(self._error(
                             'Process Step', page_name,
                             'Selected Software not found in Software Section'
@@ -148,7 +148,7 @@ class WorkflowMixin:
                             'Process Step', page_name,
                             'Missing Hardware (Algorithm Path)'
                         ))
-                    elif pair['hardware'] == 'not found':
+                    elif without_page([pair['hardware']]):
                         self.err.append(self._error(
                             'Process Step', page_name,
                             'Selected Hardware not found in Hardware Section'

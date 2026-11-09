@@ -236,11 +236,10 @@ matching RDMO project Values in place:
 
 - **Wikidata items**: the `external_id` is updated from `wikidata:<QID>` to
   `mardi:<QID>` and `[wikidata]` is replaced by `[mardi]` in the text field.
-- **User-defined items** (`user:<uuid>`, see [Item IDs](ids.md)): ID-question
-  Values (where `text` is `"not found"`) are resolved via sibling Name/Description
-  Values at the same set index and updated to `mardi:<QID>`; every other Value
-  with the item's `user:` ID gets the new ID with them.  Relation Values that
-  still store `not found` are matched by their label/description pair.
+- **User-defined items** (`user:<uuid>`, see [Item IDs](ids.md)): every Value
+  holding one of the item's `user:` IDs (pages, relations, inline items) gets
+  `mardi:<QID>` and the text "Label (Description) [mardi]".  The payload entry
+  of the item carries these IDs (`user_ids`); only its `payload` is sent.
 - **Publications created from a DOI**: their ID question gets the new item, as
   for the other user-defined items.
 

@@ -1,3 +1,4 @@
+{% load mardmo_tags %}
 <h3 id="{{ anchor }}">Relations to {{ title }}</h3>
 {% for relation in relations.values %}
     {# Add Relation - Relatant Statements #}
@@ -5,14 +6,14 @@
         <strong class="mardmo-error">MISSING RELATION TYPE</strong>:
         {% if relation.relatant == 'MISSING OBJECT ITEM' %}
             <strong class="mardmo-error">{{ relation.relatant }}</strong>
-        {% elif relation.relatant == 'not found' %}
+        {% elif relation.relatant|own_item %}
             <strong class="mardmo-error">SELECTED {{ class }} NOT FOUND IN {{ class }} SECTION</strong>
         {% else %}
             {{ relation.relatant }}
         {% endif %}
     {% elif relation.relatant == 'MISSING OBJECT ITEM' %}
         {{ relation.relation.label }}: <strong class="mardmo-error">{{ relation.relatant }}</strong>
-    {% elif relation.relatant == 'not found' %}
+    {% elif relation.relatant|own_item %}
         {{ relation.relation.label }}: <strong class="mardmo-error">SELECTED {{ class }} NOT FOUND IN {{ class }} SECTION</strong>
     {% else %}
         {{ relation.relation.label }}: {{ relation.relatant }}
@@ -22,7 +23,7 @@
         {% if anchor == 'MM2MM' or anchor == 'CT2CT' or anchor == 'MF2MF_2' %}
             - assumptions (general to special): 
             {% for val in relation.assumption.values %} 
-                {% if val == 'not found' %} 
+                {% if val|own_item %} 
                     <strong class="mardmo-error">SELECTED MATHEMATICAL EXPRESSION NOT FOUND IN MATHEMATICAL EXPRESSION SECTION</strong> 
                 {% else %} 
                     {{ val }} 

@@ -77,31 +77,27 @@ def build_quantity_info(quantity, qtype):
 def map_entity_quantity(data, entity_type):
     '''Attach Quantity/QuantityKind ``Info`` dicts to matching formula elements.
 
-    For each entity of *entity_type* in *data*, matches each element's
-    ``"quantity"`` name against the top-level ``"quantity"`` section and
-    writes a ``"Info"`` key (built by :func:`build_quantity_info`) when a
-    match is found.
+    For each entity of *entity_type* in *data*, links each element to the
+    quantity page with the ID of the element's ``"quantity"`` and writes a
+    ``"Info"`` key (built by :func:`build_quantity_info`) when there is one.
+    Quantities are not matched by name: two quantities may share it.
 
     Args:
         data:        Top-level answers dict (mutated in place).
         entity_type: Key of the entity section to process (e.g.
                      ``"formulation"`` or ``"task"``).
     '''
+    quantities = {quantity.get("ID"): quantity for quantity in data.get("quantity", {}).values()
+                  if quantity.get("ID")}
     for entity in data.get(entity_type, {}).values():
         for element in entity.get("element", {}).values():
-            element_quantity_name = element.get("quantity", {}).get("Name", "").lower()
-            if not element_quantity_name:
-                # No quantity yet (e.g. a symbol without "symbol represents" on
-                # the portal): must not match a quantity page without a name
+            # No quantity yet (e.g. a symbol without "symbol represents" on the
+            # portal) or one without page: no Info
+            quantity = quantities.get((element.get("quantity") or {}).get("ID"))
+            if quantity is None:
                 continue
 
-            for quantity in data.get("quantity", {}).values():
-                quantity_name = quantity.get("Name", "").lower()
+            qtype = quantity.get("QorQK")
 
-                if element_quantity_name != quantity_name:
-                    continue
-
-                qtype = quantity.get("QorQK")
-
-                if qtype in ('Quantity', 'Quantity Kind'):
-                    element["Info"] = build_quantity_info(quantity, qtype)
+            if qtype in ('Quantity', 'Quantity Kind'):
+                element["Info"] = build_quantity_info(quantity, qtype)

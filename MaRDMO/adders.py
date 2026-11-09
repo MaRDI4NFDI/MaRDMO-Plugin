@@ -36,7 +36,6 @@ from .helpers import (
     relevant_set_ids,
     value_editor,
 )
-from .ids import new_user_id
 from .model.constants import data_properties_check, qudt_reference_ids
 from .patterns import QUDT_ID_STRICT_RE
 from .workflow.models import ProcessStepUsage
@@ -156,16 +155,18 @@ def add_entities(project, question_set, datas, source, prefix):
             info['value_ids'].append(data.id)
 
 def add_new_entities(project, question_set, datas, prefix):
-    '''Ensure each user-defined item in *datas* has a page in *question_set*.
+    '''Ensure each new item of the user's own in *datas* has a page in *question_set*.
 
-    Like :func:`add_entities`, but for user-created items (no external ID).
-    Deduplicates by label/description only and gives new entries a new
-    ``user:`` ID.
+    Like :func:`add_entities`, but for items the user creates in a relation
+    ("new" option): the page gets the ``user:`` ID the relation holds, so the
+    relation refers to it.  A page with that ID already there is kept; pages
+    are never matched by name (another item may have the same name).
 
     Args:
         project:      RDMO project instance.
         question_set: Attribute URI of the set question.
-        datas:        Iterable of :class:`~MaRDMO.models.Relatant` instances.
+        datas:        Iterable of :class:`~MaRDMO.models.Relatant` instances
+                      (``id`` is the ``user:`` ID).
         prefix:       Label prefix for the set page.
     '''
 
@@ -176,61 +177,53 @@ def add_new_entities(project, question_set, datas, prefix):
 
     # Get existing Set and Item Information
     info = {'set_ids': get_id(project, question_set, ['set_index']),
-            'names': get_id(project, question['name'], ['text']),
-            'descs': get_id(project, question['description'], ['text'])}
+            'value_ids': get_id(project, question['id'], ['external_id'])}
 
-    # Add Publication to Questionnaire
     idx = max(info['set_ids'], default = -1) + 1
     for data in datas:
-        # Label Description String
-        name_desc = f'{data.label} ({data.description})'
-        # Check if Item already in Questionnaire via Name/Description Question
-        check_name_desc = any(
-            name_desc == f'{name} ({desc})'
-            for name, desc in zip(info['names'], info['descs'])
-            )
-        # If Item not already in Questionnaire
-        if not check_name_desc:
-            # Set up Page
-            value_editor(
-                project = project,
-                uri = question_set,
-                info = {
-                    'text': f"{prefix}{int(idx)+1}",
-                    'set_index': idx
-                }
-            )
-            # Add ID Values
-            value_editor(
-                project = project,
-                uri = question['id'],
-                info = {
-                    'text': 'not found',
-                    'external_id': new_user_id(),
-                    'set_index': idx
-                }
-            )
-            # Add Name Values
-            value_editor(
-                project = project,
-                uri = question['name'],
-                info = {
-                    'text': data.label,
-                    'set_prefix': idx
-                }
-            )
-            # Add Description Values
-            value_editor(
-                project = project,
-                uri = question['description'],
-                info = {
-                    'text': data.description,
-                    'set_prefix': idx
-                }
-            )
+        if data.id in info['value_ids']:
+            continue
+        # Set up Page
+        value_editor(
+            project = project,
+            uri = question_set,
+            info = {
+                'text': f"{prefix}{int(idx)+1}",
+                'set_index': idx
+            }
+        )
+        # Add ID Values
+        value_editor(
+            project = project,
+            uri = question['id'],
+            info = {
+                'text': 'not found',
+                'external_id': data.id,
+                'set_index': idx
+            }
+        )
+        # Add Name Values
+        value_editor(
+            project = project,
+            uri = question['name'],
+            info = {
+                'text': data.label,
+                'set_prefix': idx
+            }
+        )
+        # Add Description Values
+        value_editor(
+            project = project,
+            uri = question['description'],
+            info = {
+                'text': data.description,
+                'set_prefix': idx
+            }
+        )
 
-            # Update Index
-            idx += 1
+        # Update Index and existing Items
+        idx += 1
+        info['value_ids'].append(data.id)
 
 def add_relations_static(project, data, props, index, statement):
     '''Write static (fixed-type) relations from *data* into the questionnaire.

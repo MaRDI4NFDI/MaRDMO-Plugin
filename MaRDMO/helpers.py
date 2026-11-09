@@ -11,7 +11,8 @@ Contains:
 - Date helpers: :func:`date_format`, :func:`date_precision`.
 - Entity-relation processing: :func:`entity_relations`,
   :func:`entity_relations_grouped`, :func:`map_entity`,
-  :func:`build_new_value`, :func:`resolve_target`, :func:`label_index_map`.
+  :func:`build_new_value`, :func:`resolve_target`, :func:`id_index_map`,
+  :func:`link_to_pages`, :func:`mark_same_own_items`.
 - Export helpers: :func:`unique_items`, :func:`compare_items`,
   :func:`replace_in_dict`.
 - Questionnaire utilities: :func:`process_question_dict`,
@@ -27,12 +28,11 @@ from typing import Callable, Optional, Any
 from collections import defaultdict, deque
 
 from django.db import connection, transaction
-from django.db.models import Q
 from rdmo.projects.models import Value
 from rdmo.domain.models import Attribute
 from rdmo.options.models import Option
 
-from .ids import item_key
+from .ids import is_own_item, is_user_id, item_key
 
 # Set while MaRDMO itself writes values (hydration, publication lookup, ID
 # write-back); the pre-save router skips validators then, since they are meant
@@ -421,7 +421,9 @@ def extract_parts(string):
     Returns:
         Tuple ``(label, description, source)`` of extracted string components.
         *source* defaults to ``"user"`` when the bracket suffix is absent but
-        the string ends with ``)``.
+        the string ends with ``)``.  A string without description (e.g. the
+        label of a new item, ``"reaction rate"``) is all label:
+        ``("reaction rate", "", "")``.
     '''
     # Step 1: Split the string at the last occurrence of ') [' to isolate source
     parts = string.rsplit(') [', 1)
@@ -432,7 +434,7 @@ def extract_parts(string):
         if main_part.endswith(')'):
             main_part, c = main_part.rstrip(')'), "user"
         else:
-            c = ""
+            return main_part, "", ""
     # Step 2: Find the last whitespace outside brackets to split
     depth = 0
     split_index = -1
@@ -532,13 +534,83 @@ def check_list(list_var):
         list_var = [list_var]
     return list_var
 
-def label_index_map(data, data_type):
-    '''Build a list of label→index mappings for the given entity types.
+def pages_by_id(data):
+    '''Return ``{ID: page entry}`` of every item page in the answers *data*.
 
-    For each type key in *data_type*, constructs a dict mapping
-    ``"Name (Description)"`` strings to their 0-based position within
-    ``data[type_key]``.  Used by :func:`entity_relations` and
-    :func:`map_entity` to resolve cross-references by human-readable label.
+    A page is an entry of a section (``data[section][index]``) with an ``ID``.
+    '''
+    return {
+        entry['ID']: entry
+        for section in data.values() if isinstance(section, dict)
+        for entry in section.values() if isinstance(entry, dict) and entry.get('ID')
+    }
+
+
+def link_to_pages(data):
+    '''Give every answer that refers to an item page the page's name and description.
+
+    A relation holds the ID of its item and the text it was selected with;
+    the page is what the user edits.  So preview, checks and export show and
+    use the page's current name and description, also after it was renamed.
+    Answers that refer to no page (inline items, portal items without page)
+    keep theirs.
+
+    Args:
+        data: Top-level answers dict; mutated in place.
+
+    Returns:
+        *data*.
+    '''
+    pages = pages_by_id(data)
+
+    def link(entry):
+        for value in entry.values():
+            if not isinstance(value, dict):
+                continue
+            page = pages.get(value.get('ID'))
+            if page is not None and page is not value:
+                value['Name'] = page.get('Name', '')
+                value['Description'] = page.get('Description', '')
+            link(value)
+
+    for page in list(pages.values()):
+        link(page)
+    return data
+
+
+def mark_same_own_items(data):
+    '''Mark own item pages with the name and description of an earlier page of their section.
+
+    The export would make one item of them ("new" in a relation always makes
+    another page).  The later page gets ``SameAs``: the position (1-based,
+    as the preview counts) of the first one.  The checks report the same.
+
+    Args:
+        data: Top-level answers dict; mutated in place.
+
+    Returns:
+        *data*.
+    '''
+    for section in data.values():
+        if not isinstance(section, dict):
+            continue
+        first = {}
+        for position, entry in enumerate(section.values(), start=1):
+            if not isinstance(entry, dict) or not is_own_item(entry.get('ID')) or not entry.get('Name'):
+                continue
+            same = first.setdefault((entry['Name'], entry.get('Description') or ''), position)
+            if same != position:
+                entry['SameAs'] = same
+    return data
+
+
+def id_index_map(data, data_type):
+    '''Build a list of ID→index mappings of the pages of the given entity types.
+
+    For each type key in *data_type*, constructs a dict mapping the ``ID`` of
+    every page of ``data[type_key]`` to its 0-based position.  Used by
+    :func:`entity_relations` and :func:`map_entity` to resolve a relation to
+    the page of its item.
 
     Args:
         data:      Top-level answers dict.
@@ -547,35 +619,29 @@ def label_index_map(data, data_type):
     Returns:
         List of dicts, one per entry in *data_type*.
     '''
-    label_to_index_maps = []
-    for to_idx in data_type:
-        label_to_index_maps.append(
-            {
-                f"{data[to_idx][k].get('Name')} ({data[to_idx][k].get('Description')})": idx
-                for idx, k in enumerate(data.get(to_idx, {}))
-            }
-        )
-    return label_to_index_maps
+    return [
+        {entry.get('ID'): idx for idx, entry in enumerate(data.get(to_idx, {}).values()) if entry.get('ID')}
+        for to_idx in data_type
+    ]
 
-def resolve_target(name, description, id_, entity_enc, label_map):
-    """Resolve an entity reference to a local index string or fall back to its external ID.
 
-    Looks up ``"name (description)"`` in *label_map*.  If found, returns the
-    prefixed index (e.g. ``"MF3"``); otherwise returns *id_* unchanged.
+def resolve_target(id_, entity_enc, id_map):
+    """Resolve a relation to the local page of its item, or fall back to its ID.
+
+    Looks up the relation's item ID in *id_map*.  If found, returns the
+    prefixed index of the page (e.g. ``"MF3"``); otherwise returns *id_*
+    unchanged (an item without page in these sections).
 
     Args:
-        name:        Human-readable label of the target entity.
-        description: Short description of the target entity.
-        id_:         Fallback external ID string.
+        id_:         ID of the item the relation holds.
         entity_enc:  Prefix string for locally indexed entities (e.g. ``"MF"``).
-        label_map:   Dict mapping ``"Name (Description)"`` to 0-based index.
+        id_map:      Dict mapping page IDs to 0-based index (:func:`id_index_map`).
 
     Returns:
         Local index string or *id_*.
     """
-    label_description = f"{name} ({description})"
-    if label_description in label_map:
-        return f"{entity_enc}{label_map[label_description] + 1}"
+    if id_ in id_map:
+        return f"{entity_enc}{id_map[id_] + 1}"
     return id_
 
 def build_new_value(from_entry, entity, key, resolved, assumption, mapping):
@@ -626,15 +692,15 @@ def entity_relations(data, idx, entity, assumption, mapping):
     """Resolve cross-entity relations and write processed entries into *data*.
 
     For every source entity in ``data[idx['from']]``, iterates over its raw
-    relation and relatant keys, resolves each relatant against the label maps
-    built from ``data[idx['to']]``, and stores the result under
+    relation and relatant keys, resolves each relatant to the page with its
+    ID in ``data[idx['to']]``, and stores the result under
     ``entity['new_name']``.  Handles both flat (single relatant) and nested
     (multiple relatants per relation) structures.
 
     Args:
         data:       Top-level answers dict; mutated in place.
         idx:        Dict with keys ``from`` (source type) and ``to`` (list of
-                    target types used for label resolution).
+                    target types of the pages).
         entity:     Dict with keys ``relation``, ``old_name``, ``new_name``,
                     and ``encryption``.
         assumption: Boolean controlling assumption qualifier attachment.
@@ -642,7 +708,7 @@ def entity_relations(data, idx, entity, assumption, mapping):
     """
     idx['to'] = check_list(idx.get('to'))
     entity['encryption'] = check_list(entity['encryption'])
-    label_to_index_maps = label_index_map(data, idx['to'])
+    id_to_index_maps = id_index_map(data, idx['to'])
 
     for from_entry in data.get(idx.get('from'), {}).values():
         # Get and combine Relation and Relatant Keys
@@ -662,13 +728,11 @@ def entity_relations(data, idx, entity, assumption, mapping):
                     # Resolve Relatant
                     resolved = None
                     if value:
-                        for enc_entry, label_map in zip(entity['encryption'], label_to_index_maps):
+                        for enc_entry, id_map in zip(entity['encryption'], id_to_index_maps):
                             resolved = resolve_target(
-                                name=value.get("Name"),
-                                description=value.get("Description"),
                                 id_=value.get("ID"),
                                 entity_enc=enc_entry,
-                                label_map=label_map,
+                                id_map=id_map,
                             )
                             if resolved != value.get("ID"):
                                 break
@@ -689,13 +753,11 @@ def entity_relations(data, idx, entity, assumption, mapping):
             else:
                 #Handle flat dicts
                 resolved = None
-                for enc_entry, label_map in zip(entity['encryption'], label_to_index_maps):
+                for enc_entry, id_map in zip(entity['encryption'], id_to_index_maps):
                     resolved = resolve_target(
-                        name=values.get("Name"),
-                        description=values.get("Description"),
                         id_=values.get("ID"),
                         entity_enc=enc_entry,
-                        label_map=label_map,
+                        id_map=id_map,
                     )
                     if resolved != values.get("ID"):
                         break
@@ -723,7 +785,7 @@ def entity_relations_grouped(data, idx, entity, assumption, mapping):
     """
     idx['to'] = check_list(idx.get('to'))
     entity['encryption'] = check_list(entity['encryption'])
-    label_to_index_maps = label_index_map(data, idx['to'])
+    id_to_index_maps = id_index_map(data, idx['to'])
 
     for from_entry in data.get(idx.get('from'), {}).values():
         relation_keys = from_entry.get(entity['relation'], {}).keys()
@@ -736,13 +798,11 @@ def entity_relations_grouped(data, idx, entity, assumption, mapping):
                     value = from_entry[entity['old_name']][key][key2]
                     resolved = None
                     if value:
-                        for enc_entry, label_map in zip(entity['encryption'], label_to_index_maps):
+                        for enc_entry, id_map in zip(entity['encryption'], id_to_index_maps):
                             resolved = resolve_target(
-                                name=value.get("Name"),
-                                description=value.get("Description"),
                                 id_=value.get("ID"),
                                 entity_enc=enc_entry,
-                                label_map=label_map,
+                                id_map=id_map,
                             )
                             if resolved != value.get("ID"):
                                 break
@@ -752,13 +812,11 @@ def entity_relations_grouped(data, idx, entity, assumption, mapping):
                     entity_values[f"{key}|{key2}"] = new_value
             else:
                 resolved = None
-                for enc_entry, label_map in zip(entity['encryption'], label_to_index_maps):
+                for enc_entry, id_map in zip(entity['encryption'], id_to_index_maps):
                     resolved = resolve_target(
-                        name=values.get("Name"),
-                        description=values.get("Description"),
                         id_=values.get("ID"),
                         entity_enc=enc_entry,
-                        label_map=label_map,
+                        id_map=id_map,
                     )
                     if resolved != values.get("ID"):
                         break
@@ -779,16 +837,16 @@ def initialize_counter(counter):
     return int(max(counter, default=-1)) + 1
 
 def map_entity(data, idx, entity):
-    '''Resolve entity references by label and store the result under a new key.
+    '''Resolve entity references to their pages by ID and store the result under a new key.
 
-    Similar to :func:`entity_relations` but for simple label-to-index
+    Similar to :func:`entity_relations` but for simple ID-to-index
     mappings (without relation types).  Iterates nested ``old_name`` entries
     in every source entity and writes resolved references into ``new_name``.
 
     Args:
         data:   Top-level answers dict; mutated in place.
         idx:    Dict with keys ``from`` (source type) and ``to`` (target
-                types for label resolution).
+                types of the pages).
         entity: Dict with keys ``old_name``, ``new_name``, and ``encryption``.
     '''
     # Ensure idx['to'] and enc are lists
@@ -796,8 +854,7 @@ def map_entity(data, idx, entity):
     entity['encryption'] = check_list(entity['encryption'])
 
     # Create mappings for all idx['to'] lists
-    label_to_index_maps = label_index_map(data, idx['to'])
-    # Use Template or Ressource Label
+    id_to_index_maps = id_index_map(data, idx['to'])
     for from_entry in data.get(idx['from'], {}).values():
         for outer_key, relation in from_entry.get(entity['old_name'], {}).items():
             for inner_key, item in relation.items():
@@ -805,11 +862,10 @@ def map_entity(data, idx, entity):
                 # Create Dict Entry
                 outer = from_entry.setdefault(entity['new_name'], {})
                 inner = outer.setdefault(outer_key, {})
-                for enc_entry, label_to_index in zip(entity['encryption'], label_to_index_maps):
-                    if f"{item['Name']} ({item['Description']})" in label_to_index:
-                        label_idx = label_to_index[f"{item['Name']} ({item['Description']})"]
+                for enc_entry, id_to_index in zip(entity['encryption'], id_to_index_maps):
+                    if item.get('ID') in id_to_index:
                         match_found = True
-                        inner[inner_key] = f"{enc_entry}{label_idx+1}"
+                        inner[inner_key] = f"{enc_entry}{id_to_index[item['ID']]+1}"
                         break
 
                 if not match_found:
@@ -1011,7 +1067,7 @@ def unique_items(data, title = None):
     # Set up Item Dict and track seen Items
     items = {}
     dependency = {}
-    seen_items = set()
+    seen_items = {}
     # Add Workflow Item
     if title:
         triple = (
@@ -1023,7 +1079,7 @@ def unique_items(data, title = None):
             'Name': title,
             'Description': data.get('general', {}).get('objective', '')
         }
-        seen_items.add(triple)
+        seen_items[triple] = f'Item{str(0).zfill(10)}'
         dependency.update({f'Item{str(0).zfill(10)}': set()})
     # Add Workflow Component Items
     def search(subdict):
@@ -1045,8 +1101,13 @@ def unique_items(data, title = None):
                     'zbmath': triple[4],
                     'issn': triple[5]
                 }
-                seen_items.add(triple)
+                seen_items[triple] = item
                 dependency.update({item: set()})
+            # All user: IDs of the item, to give them its portal ID after the export
+            if is_user_id(subdict['ID']):
+                user_ids = items[seen_items[triple]].setdefault('user_ids', [])
+                if subdict['ID'] not in user_ids:
+                    user_ids.append(subdict['ID'])
         if isinstance(subdict, dict):
             for value in subdict.values():
                 if isinstance(value, dict):
@@ -1114,7 +1175,9 @@ def compare_items(old, new, wikidata_qid_prop=None):
 
     The original external ID is inferred from the item's statements: items
     that carry a Wikidata QID external-id statement are tagged as
-    ``wikidata:<QID>``; all others are tagged as ``not found``.
+    ``wikidata:<QID>``; all others are tagged as ``user``, with the
+    ``user:`` IDs the item had in the project (``user_ids`` of the payload
+    entry).
 
     Args:
         old:                Deep copy of the payload dict taken *before* posting.
@@ -1125,7 +1188,8 @@ def compare_items(old, new, wikidata_qid_prop=None):
 
     Returns:
         Dict mapping ``(label, description)`` tuples to
-        ``{'old_id': <original external id>, 'new_qid': <assigned QID>}``.
+        ``{'old_id': <original external id>, 'new_qid': <assigned QID>,
+        'class': <class>, 'user_ids': [<user: IDs>]}``.
     """
 
     created = {}
@@ -1136,7 +1200,7 @@ def compare_items(old, new, wikidata_qid_prop=None):
             description = item['payload']['item'].get('descriptions', {}).get('en', '')
 
             # Detect wikidata items by presence of the Wikidata QID statement.
-            old_id = 'not found'
+            old_id = 'user'
             if wikidata_qid_prop:
                 for stmt in value.get('statements', []):
                     if stmt[0] == wikidata_qid_prop and stmt[1] == 'external-id':
@@ -1144,9 +1208,10 @@ def compare_items(old, new, wikidata_qid_prop=None):
                         break
 
             created[(label, description)] = {
-                'old_id':  old_id,
-                'new_qid': item['id'],
-                'class':   old[key].get('class', ''),
+                'old_id':   old_id,
+                'new_qid':  item['id'],
+                'class':    old[key].get('class', ''),
+                'user_ids': old[key].get('user_ids', []),
             }
     return created
 
@@ -1300,46 +1365,26 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
     return statements
 
 
-# Entity types that have dedicated ID / Name / Description question pages.
-# Used by replace_ids to locate sibling Values for 'not found' ID questions.
-_ID_ENTITY_URIS = [
-    'field', 'problem', 'model', 'formulation', 'quantity', 'task',
-    'algorithm', 'software', 'benchmark', 'workflow', 'hardware',
-    'dataset', 'processstep', 'publication',
-]
-
-
-def replace_ids(project, created, base_uri):
+def replace_ids(project, created):
     """Update RDMO project Values after a successful portal export.
 
-    For every newly created MaRDI Portal item, finds all RDMO
-    :class:`~rdmo.projects.models.Value` objects in *project* that still
-    reference the old external ID and overwrites them with the new
-    ``mardi:<QID>`` identifier.  Three cases are handled:
+    For every newly created MaRDI Portal item, every
+    :class:`~rdmo.projects.models.Value` in *project* that holds its old ID
+    gets the new ``mardi:<QID>`` identifier:
 
-    - **Wikidata items**: matched by ``external_id`` directly; ``[wikidata]``
+    - **Wikidata items**: matched by their ``wikidata:<QID>``; ``[wikidata]``
       is replaced by ``[mardi]`` in the text field.
-    - **User-defined items in relation / inline questions** (``user:`` ID, or
-      ``"not found"`` in relations; text stores ``"label (description)"``):
-      matched by parsing label + description from ``value.text`` via
-      :func:`extract_parts`.
-    - **User-defined items in ID questions** (``user:`` ID, text is
-      ``"not found"``): matched by looking up sibling Name and Description
-      Values at the same set index.  Saving the new ID gives every other
-      answer with the item's ``user:`` ID the new one too
-      (:func:`~MaRDMO.ids.assign_id`).
+    - **Items of the user's own**: matched by their ``user:`` IDs (all of
+      them, if the export made one item of several, see :func:`unique_items`);
+      the text becomes ``"label (description) [mardi]"``, as for portal items.
 
     Args:
         project:  RDMO project instance whose Values should be updated.
         created:  Dict as returned by :func:`compare_items` —
-                  ``{(label, description): {'old_id': ..., 'new_qid': ...}}``.
-        base_uri: RDMO base URI prefix (``BASE_URI`` from
-                  :mod:`~MaRDMO.constants`).
+                  ``{(label, description): {'old_id': ..., 'new_qid': ..., 'user_ids': [...]}}``.
     """
 
-    # ------------------------------------------------------------------ #
-    # Case A — wikidata items: one bulk query per export, matched by QID  #
-    # ------------------------------------------------------------------ #
+    # Wikidata items: one bulk query per export, matched by QID
     wikidata_map = {
         info['old_id']: f"mardi:{info['new_qid']}"
         for (_, __), info in created.items()
@@ -1354,71 +1399,17 @@ def replace_ids(project, created, base_uri):
             with internal_write():
                 v.save()
 
-    # ------------------------------------------------------------------ #
-    # Cases B1 + B2 — user-defined items ('not found')                   #
-    # ------------------------------------------------------------------ #
-    nf_map = {
-        (label, desc): f"mardi:{info['new_qid']}"
-        for (label, desc), info in created.items()
-        if info['old_id'] == 'not found'
-    }
-    if not nf_map:
-        return
-
-    # Own items: user:<uuid> (pages, inline items) or "not found" (relations
-    # until they hold IDs, #100)
-    for v in Value.objects.filter(
-        Q(external_id='not found') | Q(external_id__startswith='user:'), project=project, snapshot=None
-    ).select_related('attribute'):
-
-        if v.text == 'not found':
-            # B2: ID question — resolve label+description via sibling Values
-            entity = next(
-                (e for e in _ID_ENTITY_URIS
-                 if v.attribute.uri == base_uri + f'domain/{e}/id'),
-                None
+    # Items of the user's own: matched by ID, written with update() so an
+    # interview open on another page can still save
+    for (label, desc), info in created.items():
+        if info.get('user_ids'):
+            Value.objects.filter(
+                project=project, snapshot=None, external_id__in=info['user_ids']
+            ).update(
+                external_id=f"mardi:{info['new_qid']}",
+                text=f'{label} ({desc}) [mardi]' if desc else f'{label} [mardi]',
             )
-            if entity is None:
-                continue
-            if entity == 'publication':
-                # A publication's name and description are answers of its own tab
-                sibling = {'set_prefix': '', 'set_index': v.set_index}
-            else:
-                # Name/Description questions use set_prefix = parent set chain
-                sibling = {'set_prefix': (
-                    f'{v.set_prefix}|{v.set_index}' if v.set_prefix
-                    else str(v.set_index)
-                )}
-            try:
-                v_label = Value.objects.get(
-                    project=project,
-                    snapshot=None,
-                    attribute__uri=base_uri + f'domain/{entity}/name',
-                    **sibling,
-                ).text
-            except (Value.DoesNotExist, Value.MultipleObjectsReturned):
-                continue
-            try:
-                v_desc = Value.objects.get(
-                    project=project,
-                    snapshot=None,
-                    attribute__uri=base_uri + f'domain/{entity}/description',
-                    **sibling,
-                ).text
-            except (Value.DoesNotExist, Value.MultipleObjectsReturned):
-                v_desc = ''
-            key = (v_label, v_desc)
-        else:
-            # B1: relation / inline question — parse label+description from text
-            v_label, v_desc, _ = extract_parts(v.text)
-            key = (v_label, v_desc)
 
-        if key in nf_map:
-            label, desc = key
-            v.external_id = nf_map[key]
-            v.text = f'{label} ({desc}) [mardi]' if desc else f'{label} [mardi]'
-            with internal_write():
-                v.save()
 
 def is_flat(d):
     """Return ``True`` if *d* is a dict whose values are all strings (or *d* is empty).

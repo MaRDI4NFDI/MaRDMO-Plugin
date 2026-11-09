@@ -8,6 +8,7 @@ from ..model.constants import (
 )
 from ..constants import BASE_URI, CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..ids import is_own_item
+from .base import without_page
 from ..patterns import QUDT_ID_STRICT_RE
 from ..tex_check import UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
 from ..validators import (
@@ -180,7 +181,7 @@ class ModelMixin:
                 mval['relation']['url'] in self._pairs(
                     self.mathmoddb, 'specializes', 'specialized_by'
                 )
-                and 'not found' in (mval.get('assumption') or {}).values()
+                and without_page((mval.get('assumption') or {}).values())
                 for mval in ivalue.get('RelationMM', {}).values()
             ):
                 self.err.append(
@@ -246,7 +247,7 @@ class ModelMixin:
                 tval['relation']['url'] in self._pairs(
                     self.mathmoddb, 'specializes', 'specialized_by'
                 )
-                and 'not found' in (tval.get('assumption') or {}).values()
+                and without_page((tval.get('assumption') or {}).values())
                 for tval in ivalue.get('RelationT', {}).values()
             ):
                 self.err.append(
@@ -319,7 +320,7 @@ class ModelMixin:
                 mval['relation']['url'] in self._pairs(
                     self.mathmoddb, 'specializes', 'specialized_by'
                 )
-                and 'not found' in (mval.get('assumption') or {}).values()
+                and without_page((mval.get('assumption') or {}).values())
                 for mval in ivalue.get('RelationMF2', {}).values()
             ):
                 self.err.append(

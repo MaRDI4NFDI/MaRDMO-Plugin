@@ -346,12 +346,14 @@ def validate_value_format(instance):
     '''Reject values whose text cannot be parsed as ``Label (Description)``.
 
     Accepts empty text (field cleared), ``Label (Description)`` (user entry),
-    and ``Label (Description) [source]`` (external entry).  Rejects anything
-    else — unclosed parentheses, plain text without parentheses, etc. — because
-    ``general.relation`` would silently ignore those anyway.
+    ``Label (Description) [source]`` (external entry), and a plain label for
+    an item of the user's own (the "new" option: the description is entered
+    on the item's page).  Rejects anything else — unclosed parentheses, plain
+    text for a portal item, etc.
 
     Args:
-        instance: RDMO ``Value`` instance about to be saved.
+        instance: RDMO ``Value`` instance about to be saved (its ID is already
+            a real one, see :func:`~MaRDMO.ids.assign_id`).
 
     Raises:
         ValidationError: when ``instance.text`` is non-empty and
@@ -360,7 +362,7 @@ def validate_value_format(instance):
     if not instance.text:
         return
     source = extract_parts(instance.text)[2]
-    if source == '':
+    if source == '' and not (is_own_item(instance.external_id) and '(' not in instance.text):
         raise ValidationError({
             'text': [_('Wrong format. Expected: Label (Description)')]
         })

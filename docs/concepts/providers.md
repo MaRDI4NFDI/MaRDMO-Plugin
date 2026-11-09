@@ -25,11 +25,11 @@ The simplest providers query the **MaRDI Portal**, or the **MaRDI Portal and Wik
 
 ### Tier 2 — Search + project items
 
-Tier 2 providers extend Tier 1 by also surfacing items the user has already defined or selected elsewhere in the **current RDMO project**.  This lets a user re-reference an entity they documented in an earlier section without having to look it up again.
+Tier 2 providers extend Tier 1 by also surfacing items the user has already defined or selected elsewhere in the **current RDMO project**.  This lets a user re-reference an entity they documented in an earlier section without having to look it up again.  An item of the project is offered with the ID of its page, so the relation refers to that page (see [Item IDs](ids.md)).
 
 ### Tier 3 — Search + project items + inline creation
 
-The most capable providers add the ability to **create a new item on the fly**.  The user types a plain-text label and a short description — the same two pieces of information that a result returned from an external source would carry — and the provider wraps this in a special option that later triggers item creation in the MaRDI Portal during export.  Items entered this way are visually distinguishable from portal or Wikidata results by the absence of a source tag: a portal result appears as `Euler method (numerical ODE solver) [mardi]`, a Wikidata result as `Euler method (numerical ODE solver) [wikidata]`, while an inline-created item appears as `My solver (custom ODE solver)` with no tag.
+The most capable providers add the ability to **create a new item on the fly**.  The user types a label, optionally with a short description in parentheses, and the provider offers it as a new item.  Selecting it gives the answer a new `user:` ID; where the catalog has a section for the item, MaRDMO creates its page with the same ID and the typed name (and description), and the item is created on the MaRDI Portal during export.  Items entered this way are visually distinguishable from portal or Wikidata results by the absence of a source tag: a portal result appears as `Euler method (numerical ODE solver) [mardi]`, a Wikidata result as `Euler method (numerical ODE solver) [wikidata]`, while an inline-created item appears as `My solver` or `My solver (custom ODE solver)` with no tag.
 
 ## MaRDI Portal vs Wikidata Search
 

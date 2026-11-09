@@ -55,10 +55,10 @@ def test_selecting_not_found_again_keeps_the_id(model):
     assert model.values.get(pk=value.pk).external_id == user_id
 
 
-def test_relation_answers_keep_not_found_until_they_hold_ids(model):
-    '''Relations store the ID of the page from #100 on.'''
+def test_a_new_item_in_a_relation_gets_a_user_id(model):
+    '''Its page gets the same ID (tests/db/test_relations.py).'''
     value = saved(model, 'formulation/element/quantity', 'not found', text='alpha (a quantity)', set_prefix='0')
-    assert model.values.get(pk=value.pk).external_id == 'not found'
+    assert is_user_id(model.values.get(pk=value.pk).external_id)
 
 
 def test_portal_ids_are_kept(model):
