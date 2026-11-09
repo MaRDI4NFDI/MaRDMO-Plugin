@@ -62,6 +62,28 @@ The answers are changed with `update()`, so they keep their `updated` time and
 an interview open on another page can still save them.  If another page still
 has the old ID, they stay with it.
 
+## Deleting a page
+
+Deleting the tab of an item removes every answer in the project that refers
+to it, matched by the exact ID: relations, assumptions, publication
+relations, for own and portal items alike (`MaRDMO.ids.remove_references`).
+A relation row (relation type, targets and assumptions of one block) whose
+last target is removed loses its relation type and assumptions too; a row
+with other targets keeps them.
+
+Nothing is removed
+
+- when only the ID of a page is cleared (the tab is still there, another
+  item may be selected next);
+- when another page still has the item's ID (a copied tab, see below): the
+  relations now refer to that page;
+- in the usage blocks of a process step (algorithm with software and
+  hardware, method with instrument): only the deleted item is removed, the
+  checks report the missing one.
+
+The interview shows the removed answers on other pages until they are
+opened again.
+
 ## Copied tabs
 
 "Copy tab" copies a page with its ID, so the copy is the same item as the
