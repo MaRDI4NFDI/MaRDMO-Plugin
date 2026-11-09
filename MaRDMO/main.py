@@ -39,6 +39,8 @@ from .getters import (
 from .helpers import (
     batched_writes,
     is_cyclic,
+    link_to_pages,
+    mark_same_own_items,
     process_question_dict,
     topological_order
 )
@@ -341,6 +343,10 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                 questions=questions,
                 get_answer=get_answers
             )
+
+        # Relations show their page's name and description (IDs, #100)
+        link_to_pages(answers)
+        mark_same_own_items(answers)
 
         prepare = prepare_class()
         answers = prepare.preview(answers)

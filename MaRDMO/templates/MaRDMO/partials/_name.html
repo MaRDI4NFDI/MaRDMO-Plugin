@@ -3,3 +3,6 @@
 {% else %}
     <h2 id="{{ prefix }}{{ counter }}"> {{ prefix }}{{ counter }}: <strong class="mardmo-error">MISSING {{ class }} NAME</strong> </h2>
 {% endif %}
+{% if values.SameAs %}
+    <strong class="mardmo-error">SAME NAME AND SHORT DESCRIPTION AS {{ prefix }}{{ values.SameAs }}</strong> <br>
+{% endif %}

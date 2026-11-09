@@ -36,3 +36,17 @@ def test_own_quantity_in_a_formula_has_no_id_shown():
                                             'QKName': 'speed', 'QKID': 'not found', 'Description': 'a velocity'}}}
     html = render_to_string('MaRDMO/partials/_in_defining_formula.html', {'element': elements})
     assert OWN not in html
+
+
+def test_own_page_with_the_name_and_description_of_an_earlier_one_is_marked():
+    '''The export would make one item of them; the checks report it too.'''
+    from MaRDMO.helpers import mark_same_own_items
+    answers = {'problem': {0: {'ID': 'user:1', 'Name': 'reaction rate', 'Description': 'a rate'},
+                           1: {'ID': 'user:2', 'Name': 'reaction rate', 'Description': 'another rate'},
+                           2: {'ID': 'user:3', 'Name': 'reaction rate', 'Description': 'a rate'},
+                           3: {'ID': 'mardi:Q1', 'Name': 'reaction rate', 'Description': 'a rate'}}}
+    mark_same_own_items(answers)
+    assert [entry.get('SameAs') for entry in answers['problem'].values()] == [None, None, 1, None]
+    html = render_to_string('MaRDMO/partials/_name.html', {
+        'values': answers['problem'][2], 'name': 'reaction rate', 'counter': 3, 'prefix': 'RP'})
+    assert 'SAME NAME AND SHORT DESCRIPTION AS RP1' in html

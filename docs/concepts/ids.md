@@ -16,16 +16,40 @@ MaRDMO itself.  The interview shows what the server returns, so the field has
 the real ID at once.  An answer that has a `user:` ID already keeps it:
 selecting **not found** again does not make a new item.
 
-This holds for the ID of every page (`<section>/id`) and for the items entered
-on a page without one of their own (programming languages, CPU models,
-instruments, methods).  These are the questions whose dropdown searches
-without the project's answers and offers "not found"; MaRDMO reads them from
-the questionnaire (`MaRDMO.ids.id_attributes`).
+This holds for every answer that holds an item: the ID of every page
+(`<section>/id`), the items entered on a page without one of their own
+(programming languages, CPU models, instruments, methods, and in the workflow
+catalog research fields and algorithmic tasks), and relations.
+
+## Relations
+
+A relation holds the ID of the item it refers to; its text is only what the
+dropdown showed.
+
+- **An item of the project** is offered with the ID of its page; selecting
+  it stores that ID.
+- **A new item**: the relation dropdowns offer the typed label as a new item
+  ("Label", or "Label (Description)").  Selecting it gives the relation a new
+  `user:` ID, and MaRDMO creates the item's page with the same ID, with the
+  typed name (and description).  This always makes a new page, also when an
+  item of the project has the same label: two items may share it.  A page
+  made by mistake is deleted, and the relation set to the right item.
+- In a catalog without a section for the item (research fields and
+  algorithmic tasks in the workflow catalog), the new item stays on the page
+  where it was entered.
+
+Preview, checks and export find the page of a relation by its ID and use the
+page's name and description (`MaRDMO.helpers.link_to_pages`), so a page
+renamed later is shown and exported with its new name.  A relation to an own
+item whose page is not there is reported ("Selected … not found in …
+Section"), as are two own pages of a section with the same name and
+description (the export would make one item of them).
 
 ## When the ID of a page changes
 
 Answers that hold the ID of a page follow it only if the page stays the same
-item and only its ID becomes known:
+item and only its ID becomes known (relations only refer to an item: one
+changed to another item moves nothing):
 
 | Change | Meaning | Answers with the old ID |
 |---|---|---|
@@ -41,10 +65,14 @@ has the old ID, they stay with it.
 ## In the export
 
 The user's own items with the same name and description are one item: the
-same new programming language on two software pages is created once.
+same new programming language on two software pages is created once.  The
+export item keeps the `user:` IDs it stands for (`user_ids`, not sent to the
+portal); afterwards every answer with one of them gets the new `mardi:` ID
+and the text "Label (Description) [mardi]" (`MaRDMO.helpers.replace_ids`).
 
 ## Projects made before MaRDMO 0.8.0
 
-Before 0.8.0, own items had `not found` as their ID.  Such projects are not
-supported: the checks report every item without a real ID ("Made with MaRDMO
-before 0.8.0, not supported"), so the export stops.
+Before 0.8.0, own items had `not found` as their ID, and relations to them
+only their text.  Such projects are not supported: the checks report every
+page with an answer without a real ID ("Made with MaRDMO before 0.8.0, not
+supported"), so the export stops.

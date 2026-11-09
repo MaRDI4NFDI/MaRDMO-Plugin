@@ -470,7 +470,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:a3d14d4b-ca6e-55d6-bf01-c5fc5c67c21e"
+   ]
   },
   "Item0000000003": {
    "class": "Formula",
@@ -1007,7 +1010,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:d7bedd04-b400-5f0e-95d8-4ca845c32b86"
+   ]
   },
   "Item0000000004": {
    "class": "Mathematical Model",
@@ -1436,7 +1442,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:6b932157-c761-5bbc-b33b-ac0de376e5c0"
+   ]
   },
   "Item0000000005": {
    "class": "Formula",
@@ -2028,7 +2037,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:71dbe632-52de-53a2-afee-a0768b05160a"
+   ]
   },
   "Item0000000006": {
    "class": "Formula",
@@ -2256,7 +2268,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:26f16464-3037-5583-ad04-6e2015fb7c95"
+   ]
   },
   "Item0000000007": {
    "class": "Formula",
@@ -2406,7 +2421,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:2d171b1e-1615-5772-9552-267eb4dc3476"
+   ]
   },
   "Item0000000008": {
    "class": "Formula",
@@ -2556,7 +2574,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:25487391-51a1-5f5c-9ba7-0aa62dd32b2e"
+   ]
   },
   "Item0000000009": {
    "class": "Formula",
@@ -3061,7 +3082,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:66a71493-11c0-54dc-b37d-0f51573aa89b"
+   ]
   },
   "Item0000000010": {
    "class": "Computational Task",
@@ -3658,7 +3682,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:39c3f8cc-9579-5539-8920-5b9a7c98833b"
+   ]
   },
   "Item0000000011": {
    "class": "Formula",
@@ -3989,7 +4016,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:be26034e-9236-5252-bcf8-9966173c205d"
+   ]
   },
   "Item0000000012": {
    "class": "Quantity",
@@ -4217,7 +4247,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:3358eb52-c41a-5518-927f-e01d181dd672"
+   ]
   },
   "Item0000000013": {
    "class": "Quantity",
@@ -4445,7 +4478,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:4e7773ff-7e16-56b4-8272-00739d3c7701"
+   ]
   },
   "Item0000000014": {
    "class": "Quantity",
@@ -4536,7 +4572,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:0092c187-63b1-5800-a142-118e6f3b86f5"
+   ]
   },
   "Item0000000015": {
    "class": "Quantity",
@@ -4627,7 +4666,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:e0639aae-3a36-5663-a6ce-bbaafc6de9b2"
+   ]
   },
   "Item0000000016": {
    "class": "Quantity",
@@ -4718,7 +4760,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:7e7ed2a6-d5db-5e57-9a76-8aad5885786e"
+   ]
   },
   "Item0000000017": {
    "class": "Quantity",
@@ -4809,7 +4854,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:a272526a-0e1f-5cc6-bcdc-5d8f455ffa3c"
+   ]
   },
   "Item0000000018": {
    "class": "Quantity",
@@ -4900,7 +4948,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:d5810b84-0be6-5041-80e5-a2e4ccad0d49"
+   ]
   },
   "Item0000000019": {
    "class": "Quantity",
@@ -5344,7 +5395,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:68ac6e83-2232-505e-bcc6-c595090d0c57"
+   ]
   },
   "Item0000000021": {
    "class": "Formula",
@@ -5730,7 +5784,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:3ab31b8e-c806-5a69-8d89-7ffa304bfb6e"
+   ]
   },
   "Item0000000022": {
    "class": "Quantity",
@@ -5839,7 +5896,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:06948236-fe09-5c0d-ba1e-4c99a964238c"
+   ]
   },
   "Item0000000023": {
    "class": "Quantity",
@@ -6067,7 +6127,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:328f6a65-d49e-58a2-9b6c-0f9822bae5ff"
+   ]
   },
   "Item0000000024": {
    "class": "Quantity",
@@ -6295,7 +6358,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:be438785-02d6-5dfa-8b72-9b38498c729c"
+   ]
   },
   "Item0000000025": {
    "class": "Quantity",
@@ -6386,7 +6452,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:0f492b2e-1ed3-59a5-a0a1-768f52cb5f60"
+   ]
   },
   "Item0000000026": {
    "class": "Quantity",
@@ -6477,7 +6546,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:662f67ea-ed9d-5bab-aba5-5d1ceacb677f"
+   ]
   },
   "Item0000000027": {
    "class": "Quantity",
@@ -6568,7 +6640,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:9acf462b-7641-5dd7-a31e-ac9a4a29cdb5"
+   ]
   },
   "Item0000000028": {
    "class": "Quantity",
@@ -6659,7 +6734,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:7af83e40-42f5-5e87-aaea-0e29d4cd6914"
+   ]
   },
   "Item0000000029": {
    "class": "Quantity",
@@ -6750,7 +6828,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:a136c3d4-cb99-5c4f-ad68-1f9fe67fceab"
+   ]
   },
   "Item0000000030": {
    "class": "Formula",
@@ -7058,7 +7139,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:aed77205-8b96-5567-80ef-030479ba17e4"
+   ]
   },
   "Item0000000031": {
    "class": "Formula",
@@ -7522,7 +7606,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:281e73df-3f18-5cef-a4a6-9d61eaf9c69b"
+   ]
   },
   "Item0000000032": {
    "class": "Formula",
@@ -7908,7 +7995,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:dd62cd72-2ad8-5682-a1aa-fad3a96fcef7"
+   ]
   },
   "Item0000000033": {
    "class": "Quantity",
@@ -7999,7 +8089,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:218c73c0-ba8e-5838-9fd8-1953be981eff"
+   ]
   },
   "Item0000000034": {
    "class": "Quantity",
@@ -8090,7 +8183,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:0835ef07-bd0a-51c1-9e4f-5da25ebc4cdf"
+   ]
   },
   "Item0000000035": {
    "class": "Quantity",
@@ -8181,7 +8277,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:95164513-1834-5bca-9fe3-63bb22d41063"
+   ]
   },
   "Item0000000036": {
    "class": "Quantity",
@@ -8272,7 +8371,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:cf0f1166-f8b7-5069-968b-790b1ce5f0b5"
+   ]
   },
   "Item0000000037": {
    "class": "Quantity",
@@ -8363,7 +8465,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:b427b6b9-e3eb-5f90-85c1-84740628b653"
+   ]
   },
   "Item0000000038": {
    "class": "Quantity",
@@ -8552,7 +8657,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:d5252a96-6903-5fda-b691-27dba221c856"
+   ]
   },
   "Item0000000039": {
    "class": "Quantity",
@@ -8858,7 +8966,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:16c3232b-c1be-524b-b5ea-b18aa4992589"
+   ]
   },
   "Item0000000040": {
    "class": "Quantity",
@@ -9047,7 +9158,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:1c9481ec-b29d-5d77-ada3-7c098eed906d"
+   ]
   },
   "Item0000000041": {
    "class": "Formula",
@@ -9268,7 +9382,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:f86e81b3-cf1f-59f1-a6f9-942d5963fd2a"
+   ]
   },
   "Item0000000042": {
    "class": "Quantity",
@@ -9535,7 +9652,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:fe7b09e1-a128-5b3b-a882-4ac5fe7822ad"
+   ]
   },
   "Item0000000043": {
    "description": "abundance of a constituent divided by the total volume of a mixture",
@@ -9644,7 +9764,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:6d3cb96f-66df-58d5-9dde-f2824d2fdcf2"
+   ]
   },
   "Item0000000045": {
    "class": "Quantity",
@@ -9735,7 +9858,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:b2d18e4c-0221-51ed-bad4-707c3ffd79f6"
+   ]
   },
   "Item0000000046": {
    "description": "quantifies the rate of a chemical reaction",
@@ -10006,7 +10132,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:dcc3480b-5a43-5a21-88ab-c88a2261a13c"
+   ]
   },
   "Item0000000057": {
    "class": "Quantity",
@@ -10097,7 +10226,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:b74ac42d-b970-5149-9310-fa998b4e22c3"
+   ]
   },
   "Item0000000058": {
    "class": "Quantity",
@@ -10424,7 +10556,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:c2323119-64d8-5817-98dc-aa5309740cf1"
+   ]
   },
   "Item0000000062": {
    "class": "Publication",
@@ -10707,7 +10842,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:ab4070a1-14e5-58dd-880c-534230caaf3c"
+   ]
   },
   "RELATION0": {
    "exists": "true",

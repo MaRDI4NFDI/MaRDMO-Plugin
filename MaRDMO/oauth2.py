@@ -37,7 +37,6 @@ from django.urls import reverse
 
 from rdmo.projects.models import Project
 
-from .constants import BASE_URI
 from .getters import get_items, get_properties
 from .helpers import replace_in_dict, compare_items, replace_ids, collect_statements
 from .store import _progress_store, _register_job_for_session
@@ -282,7 +281,7 @@ class OauthProviderMixin:
 
         created = compare_items(init, jsons, get_properties().get('Wikidata QID'))
         if created and project is not None:
-            replace_ids(project, created, BASE_URI)
+            replace_ids(project, created)
         ids = [
             [info.get('class', ''), f'{label} ({desc})' if desc else label, info['new_qid']]
             for (label, desc), info in created.items()

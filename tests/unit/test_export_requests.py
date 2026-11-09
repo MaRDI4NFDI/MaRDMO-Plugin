@@ -60,6 +60,15 @@ def test_new_statement_is_posted(provider):
     assert jsons['RELATION0']['id'] == 'Q1$new'
 
 
+def test_ids_of_the_project_are_not_sent_with_a_new_item(provider):
+    '''user_ids are for writing the new ID back into the project (helpers.replace_ids).'''
+    item = {'id': '', 'url': 'https://portal.example.org/w/rest.php/wikibase/v1/entities/items',
+            'payload': {'item': {'labels': {'en': 'alpha'}}}, 'user_ids': ['user:1']}
+    provider._post_data('Item0000000000', {'Item0000000000': item}, 'token')
+    [(_, _, body)] = provider._session.requests
+    assert body == {'item': {'labels': {'en': 'alpha'}}}
+
+
 def test_existing_statement_is_not_sent(provider):
     provider._post_data('RELATION0', {'RELATION0': relation('true')}, 'token')
     assert provider._session.requests == []

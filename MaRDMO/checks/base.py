@@ -20,6 +20,23 @@ from ..validators import doi_problem, short_description_problem, swmath_problem,
 # gives every item one (see ids.py); such projects are not supported
 OLD_PROJECT = 'Made with MaRDMO before 0.8.0, not supported (enter it in a new project)'
 
+
+def without_page(values):
+    '''Return ``True`` if one of the resolved relations *values* is an own item without page.
+
+    The preview resolves a relation to the page with its ID (e.g. ``"MF3"``);
+    one that keeps a ``user:`` ID refers to an own item whose page is not
+    there (deleted, or not in this section).
+    '''
+    return any(isinstance(value, str) and is_own_item(value) for value in values)
+
+
+def has_old_id(entry):
+    '''Return ``True`` if *entry* or an answer in it has "not found" as ID (made before 0.8.0).'''
+    if not isinstance(entry, dict):
+        return False
+    return entry.get('ID') == NOT_FOUND or any(has_old_id(value) for value in entry.values())
+
 # Reference answers to check: (option key, label in messages, noun for "no ... provided")
 SOFTWARE_REFERENCE_CHECKS = (
     ('DOI',             'DOI',             'ID'),
@@ -63,7 +80,7 @@ class ChecksBase:
         return f"{section} (Page {page}): {message}"
 
     def _check_static(self, data, page_name, relation, from_class, to_class):
-        '''Append an error if a mandatory single-value relation is missing or ``"not found"``.
+        '''Append an error if a mandatory single-value relation is missing or its item has no page.
 
         Args:
             data:       Entity answer dict.
@@ -80,7 +97,7 @@ class ChecksBase:
                     message = f'Missing {to_class}'
                 )
             )
-        elif 'not found' in data[relation].values():
+        elif without_page(data[relation].values()):
             self.err.append(
                 self._error(
                     section = from_class,
@@ -90,7 +107,7 @@ class ChecksBase:
             )
 
     def _check_optional_static(self, data, page_name, relation, from_class, to_class):
-        '''Append an error if an optional single-value relation is selected but ``"not found"``.
+        '''Append an error if an optional single-value relation is selected but its item has no page.
 
         Unlike :meth:`_check_static`, a missing relation is not an error.
 
@@ -101,7 +118,7 @@ class ChecksBase:
             from_class: Display name of the source entity.
             to_class:   Display name of the expected target entity.
         '''
-        if data.get(relation) and 'not found' in data[relation].values():
+        if data.get(relation) and without_page(data[relation].values()):
             self.err.append(
                 self._error(
                     section = from_class,
@@ -125,9 +142,6 @@ class ChecksBase:
         '''
         for item in items.values():
             if not is_own_item(item.get('ID')):
-                continue
-            if item['ID'] == NOT_FOUND:
-                self.err.append(self._error(parent_class, parent_page, f'{item_class}: {OLD_PROJECT}'))
                 continue
             name = item.get('Name', '')
             desc = item.get('Description', '')
@@ -217,7 +231,7 @@ class ChecksBase:
 
         Checks for: missing block (when *optional* is ``False``), entries
         with no relation type, entries pointing to ``"MISSING OBJECT ITEM"``,
-        and entries pointing to ``"not found"`` items.
+        and entries pointing to own items without page.
 
         Args:
             data:       Entity answer dict.
@@ -252,7 +266,7 @@ class ChecksBase:
                 )
             )
 
-        if any(v['relatant'] == 'not found' for v in entries.values()):
+        if without_page(v['relatant'] for v in entries.values()):
             self.err.append(
                 self._error(
                     section = from_class,
@@ -298,8 +312,21 @@ class ChecksBase:
                 snapshot  = None,
                 attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/{okey}')
             )
+            # Own items with the same name and description would be one item
+            # in the export ("new" in a relation always makes another page)
+            own = {}
             for ikey, ivalue in ovalue.items():
                 page_name = values.get(set_index=ikey).text
+                if is_own_item(ivalue.get('ID')) and ivalue.get('Name'):
+                    same = own.setdefault((ivalue['Name'], ivalue.get('Description') or ''), page_name)
+                    if same != page_name:
+                        self.err.append(
+                            self._error(
+                                section = section_map[okey],
+                                page    = page_name,
+                                message = f'Same Name and Short Description as Page {same}'
+                            )
+                        )
                 if not ivalue.get('ID'):
                     self.err.append(
                         self._error(
@@ -308,7 +335,7 @@ class ChecksBase:
                             message = 'Missing ID'
                         )
                     )
-                elif ivalue['ID'] == NOT_FOUND:
+                if has_old_id(ivalue):
                     self.err.append(
                         self._error(
                             section = section_map[okey],

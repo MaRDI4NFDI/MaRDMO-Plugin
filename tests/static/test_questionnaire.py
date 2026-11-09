@@ -97,6 +97,21 @@ def test_every_provider_is_used_by_an_option_set(questionnaire):
     assert sorted(PROVIDERS.keys() - provider_keys(questionnaire)) == []
 
 
+def test_no_question_uses_the_creatable_select(questionnaire):
+    '''React-select's own "Create" entry stores a text without an ID.
+
+    New items are created with MaRDMO's "new" option instead, which gives
+    them an ID (#100).
+    '''
+    creatable = sorted(
+        question.get(DC_URI)
+        for path in sorted(questionnaire.path.glob('*-catalog.xml'))
+        for question in ET.parse(path).getroot().iter('question')
+        if question.findtext('widget_type') == 'select_creatable'
+    )
+    assert creatable == []
+
+
 # Imported references are stored at the position of their option in the
 # option set, where RDMO's checkbox widget expects them (CheckboxInput.js)
 REFERENCE_ORDERS = {

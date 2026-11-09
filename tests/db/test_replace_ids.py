@@ -23,26 +23,23 @@ def exported(project):
          # quantity 1: from Wikidata, now a portal item; relations to quantities 0 and 2
          answer('quantity/id', 'concentration (amount per volume) [wikidata]',
                 external_id='wikidata:Q3686031', set_index=1),
-         answer('quantity/quantity-to-quantity/relatant', 'alpha (first quantity)',
-                external_id='not found', set_prefix='1', set_index=0),
-         answer('quantity/quantity-to-quantity/relatant', 'beta (other quantity)',
-                external_id='not found', set_prefix='1', set_index=1),
-         # an answer holding the ID of quantity 0, with an older text
          answer('quantity/quantity-to-quantity/relatant', 'alpha (older description)',
-                external_id='user:alpha', set_prefix='1', set_index=2),
+                external_id='user:alpha', set_prefix='1', set_index=0),
+         answer('quantity/quantity-to-quantity/relatant', 'beta (other quantity)',
+                external_id='user:beta', set_prefix='1', set_index=1),
          # quantity 2: user-defined, not exported
          answer('quantity/id', 'not found', external_id='user:beta', set_index=2),
          answer('quantity/name', 'beta', set_prefix='2'),
          answer('quantity/description', 'other quantity', set_prefix='2'),
-         # publication 0: name and description on its own tab (set_prefix '')
+         # publication 0: entered twice as the same item (merged by the export)
          answer('publication/id', 'not found', external_id='user:paper', set_index=0),
-         answer('publication/name', 'A paper', set_index=0),
-         answer('publication/description', 'scientific article', set_index=0))
+         answer('publication/id', 'not found', external_id='user:paper-again', set_index=1))
     replace_ids(model, {
-        ('alpha', 'first quantity'): {'old_id': 'not found', 'new_qid': 'Q1'},
+        ('alpha', 'first quantity'): {'old_id': 'user', 'new_qid': 'Q1', 'user_ids': ['user:alpha']},
         ('concentration', 'amount per volume'): {'old_id': 'wikidata:Q3686031', 'new_qid': 'Q2'},
-        ('A paper', 'scientific article'): {'old_id': 'not found', 'new_qid': 'Q3'},
-    }, BASE_URI)
+        ('A paper', 'scientific article'): {'old_id': 'user', 'new_qid': 'Q3',
+                                            'user_ids': ['user:paper', 'user:paper-again']},
+    })
     return model
 
 
@@ -51,14 +48,9 @@ def test_user_defined_item_gets_its_portal_id(exported):
 
 
 def test_relations_to_the_item_get_its_portal_id(exported):
+    '''Found by the ID; the text becomes the item's.'''
     assert get(exported, 'quantity/quantity-to-quantity/relatant', set_prefix='1', set_index=0) == (
         'mardi:Q1', 'alpha (first quantity) [mardi]')
-
-
-def test_answers_with_the_items_id_get_its_portal_id(exported):
-    '''Found by the ID, not by the text.'''
-    assert get(exported, 'quantity/quantity-to-quantity/relatant', set_prefix='1', set_index=2) == (
-        'mardi:Q1', 'alpha (older description)')
 
 
 def test_wikidata_item_gets_its_portal_id(exported):
@@ -66,11 +58,12 @@ def test_wikidata_item_gets_its_portal_id(exported):
         'mardi:Q2', 'concentration (amount per volume) [mardi]')
 
 
-def test_publication_gets_its_portal_id(exported):
+def test_every_id_of_a_merged_item_gets_its_portal_id(exported):
     assert get(exported, 'publication/id', set_index=0) == ('mardi:Q3', 'A paper (scientific article) [mardi]')
+    assert get(exported, 'publication/id', set_index=1) == ('mardi:Q3', 'A paper (scientific article) [mardi]')
 
 
 def test_items_not_exported_stay_user_defined(exported):
     assert get(exported, 'quantity/id', set_index=2) == ('user:beta', 'not found')
     assert get(exported, 'quantity/quantity-to-quantity/relatant', set_prefix='1', set_index=1) == (
-        'not found', 'beta (other quantity)')
+        'user:beta', 'beta (other quantity)')

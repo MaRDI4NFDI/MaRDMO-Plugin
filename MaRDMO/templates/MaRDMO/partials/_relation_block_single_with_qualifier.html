@@ -7,7 +7,7 @@
             {% if pair.has_primary %}
                 {% for item in pair.primary %}
                     {% if has_sections %}
-                        {% if item == 'not found' %}
+                        {% if item|own_item %}
                             {{ primary_label }}: <strong class="mardmo-error">SELECTED {{ primary_class }} NOT FOUND IN {{ primary_class }} SECTION</strong>{% if not forloop.last %}<br>{% endif %}
                         {% else %}
                             {{ primary_label }}: {{ item }}{% if not forloop.last %}<br>{% endif %}
@@ -26,7 +26,7 @@
                 <li>&#8594; {{ qualifier_env_label }}:
                     {% if pair.has_qualifier %}
                         {% if has_sections %}
-                            {% if pair.qualifier == 'not found' %}
+                            {% if pair.qualifier|own_item %}
                                 <strong class="mardmo-error">SELECTED {{ qualifier_class }} NOT FOUND IN {{ qualifier_class }} SECTION</strong>
                             {% else %}
                                 {{ pair.qualifier }}
@@ -48,7 +48,7 @@
                 {% if show_hardware %}
                 <li>&#8594; Hardware-Environment:
                     {% if pair.hardware %}
-                        {% if pair.hardware == 'not found' %}
+                        {% if pair.hardware|own_item %}
                             <strong class="mardmo-error">SELECTED HARDWARE NOT FOUND IN HARDWARE SECTION</strong>
                         {% else %}
                             {{ pair.hardware }}

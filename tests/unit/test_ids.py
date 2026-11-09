@@ -1,7 +1,7 @@
 '''IDs of the user's own items: one export item per name and description; when answers follow a page.'''
 import pytest
 
-from MaRDMO.helpers import collect_items_without_section, unique_items
+from MaRDMO.helpers import collect_items_without_section, extract_parts, unique_items
 from MaRDMO.ids import is_item_id, is_own_item, item_key, same_item
 
 
@@ -27,12 +27,13 @@ def test_the_same_new_language_on_two_software_pages_is_one_item():
         language('user:1')]
 
 
-def test_a_page_and_the_relations_to_it_are_one_item():
-    '''Relations store "not found" for an own item until they hold its ID (#100).'''
-    data = {'quantity': {0: language('user:1'), 1: {'relation': {0: language('not found')}}},
+def test_own_items_with_the_same_name_are_one_export_item_with_all_their_ids():
+    '''All IDs get the portal ID after the export (helpers.replace_ids).'''
+    data = {'quantity': {0: language('user:1'), 1: {'relation': {0: language('user:1')}}},
             'software': {0: {'programminglanguage': {0: language('user:2')}}}}
     items, _ = unique_items(data)
-    assert list(items.values()) == [{**language('user:1'), 'orcid': '', 'zbmath': '', 'issn': ''}]
+    assert list(items.values()) == [{**language('user:1'), 'orcid': '', 'zbmath': '', 'issn': '',
+                                     'user_ids': ['user:1', 'user:2']}]
 
 
 @pytest.mark.parametrize('old, new, same', [
@@ -49,3 +50,13 @@ def test_a_page_and_the_relations_to_it_are_one_item():
 ])
 def test_answers_move_only_when_the_page_stays_the_same_item(old, new, same):
     assert same_item(old, new) is same
+
+
+@pytest.mark.parametrize('text, parts', [
+    ('Euler method (numerical method) [mardi]', ('Euler method', 'numerical method', 'mardi')),
+    ('reaction rate (rate of a reaction)', ('reaction rate', 'rate of a reaction', 'user')),
+    ('reaction rate', ('reaction rate', '', '')),     # label of a new item
+    ('not found', ('not found', '', '')),
+])
+def test_text_parts(text, parts):
+    assert extract_parts(text) == parts

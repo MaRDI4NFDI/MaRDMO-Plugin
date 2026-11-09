@@ -2,13 +2,14 @@
 
 Every item in a project has an ID: ``mardi:<QID>`` or ``wikidata:<QID>`` for
 an item of the MaRDI Portal or Wikidata, ``user:<uuid>`` for an item of the
-user's own.  The dropdowns offer "not found" to add an own item; before the
-answer is saved, :func:`assign_id` replaces it by a new ``user:`` ID (see
+user's own.  The dropdowns offer "not found" (ID of a page) or the typed
+label (relations) to add an own item; before the answer is saved,
+:func:`assign_id` replaces "not found" by a new ``user:`` ID (see
 ``router.py``), so "not found" is never stored as an ID.
 
-Answers that refer to an item hold its ID.  When the ID of an item changes
-(e.g. an own item is found on the portal), :func:`move_id` gives them the
-new one.
+Answers that refer to an item hold its ID: a relation holds the ID of the
+item's page.  When the ID of a page changes (e.g. an own item is found on
+the portal), :func:`move_id` gives the answers the new one.
 '''
 import uuid
 
@@ -68,16 +69,23 @@ def id_attributes():
 
 
 def assign_id(value):
-    '''Give the ID answer *value*, before it is saved, a real ID.
+    '''Give the answer *value*, before it is saved, a real ID.
 
-    "not found" becomes a new ``user:`` ID; an answer that has a ``user:``
-    ID already keeps it, so selecting "not found" again does not make a new
-    item.  If the item becomes known on the portal (see :func:`same_item`),
-    the answers that refer to the old ID get the new one (:func:`move_id`).
+    "not found" becomes a new ``user:`` ID: a new item.  On the ID of a page
+    (:func:`id_attributes`) an answer that has a ``user:`` ID already keeps
+    it, so selecting "not found" again does not make a new item; and if the
+    item becomes known on the portal (see :func:`same_item`), the answers
+    that refer to the old ID get the new one (:func:`move_id`).  A relation
+    only refers to an item: choosing "new" again is another new item, and a
+    relation changed to another item moves nothing.
 
     Args:
-        value: Unsaved :class:`~rdmo.projects.models.Value` of an ID attribute.
+        value: Unsaved :class:`~rdmo.projects.models.Value` of a MaRDMO catalog.
     '''
+    if value.attribute.uri not in id_attributes():
+        if value.external_id == NOT_FOUND:
+            value.external_id = new_user_id()
+        return
     old = Value.objects.filter(pk=value.pk).values_list('external_id', flat=True).first() if value.pk else None
     if value.external_id == NOT_FOUND:
         value.external_id = old if is_user_id(old) else new_user_id()

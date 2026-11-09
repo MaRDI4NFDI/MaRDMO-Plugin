@@ -420,7 +420,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:d5953f06-0c6f-53d7-b8ff-9c6f4f665212"
+   ]
   },
   "Item0000000003": {
    "class": "Formula",
@@ -1129,7 +1132,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:05752fd0-e021-5707-b679-b60a1726ed32"
+   ]
   },
   "Item0000000004": {
    "class": "Formula",
@@ -1568,7 +1574,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:e1d289f1-8931-586f-a238-edf5f0497df8"
+   ]
   },
   "Item0000000005": {
    "class": "Quantity",
@@ -1697,7 +1706,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:247738a5-c28d-578a-9ea4-9c3425aeb217"
+   ]
   },
   "Item0000000008": {
    "class": "Quantity",
@@ -1788,7 +1800,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:52bc7310-0124-5324-9196-8cea8f87e0fe"
+   ]
   },
   "Item0000000009": {
    "class": "Quantity",
@@ -1879,7 +1894,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:e573efb7-c472-501a-85b8-90bf11109f8a"
+   ]
   },
   "Item0000000010": {
    "class": "Quantity",
@@ -1989,7 +2007,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:12602387-49b9-5553-a170-4ba449f5a403"
+   ]
   },
   "Item0000000012": {
    "class": "Quantity",
@@ -2080,7 +2101,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:a88fd564-683a-5d4a-bcee-81a8e1de367c"
+   ]
   },
   "Item0000000013": {
    "class": "Quantity",
@@ -2171,7 +2195,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:9035b26c-98cf-5a47-99aa-38c31729beb2"
+   ]
   },
   "Item0000000014": {
    "class": "Quantity",
@@ -2262,7 +2289,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:84dab8d5-5e18-568e-a7d0-2f1e13d6034b"
+   ]
   },
   "Item0000000015": {
    "class": "Quantity",
@@ -2353,7 +2383,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:067a6ffa-c484-582b-89ca-564cf484a854"
+   ]
   },
   "Item0000000016": {
    "class": "Quantity",
@@ -2444,7 +2477,10 @@
      []
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:dfdee386-ac84-5761-9306-eaff59f6bc0e"
+   ]
   },
   "Item0000000017": {
    "class": "Formula",
@@ -2908,7 +2944,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:9161c805-5eaa-5c56-8b77-e98679172bde"
+   ]
   },
   "Item0000000018": {
    "class": "Formula",
@@ -3489,7 +3528,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:a8214073-0056-5566-8ffe-622188fdb536"
+   ]
   },
   "Item0000000019": {
    "class": "Formula",
@@ -3992,7 +4034,10 @@
      ]
     ]
    ],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
+   "user_ids": [
+    "user:e70e5b3f-f99f-56c2-a9d0-55929a4ac1b1"
+   ]
   },
   "Item0000000020": {
    "description": "number that can be written without a fractional or decimal component",

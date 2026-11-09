@@ -25,6 +25,7 @@ from rdmo.domain.models import Attribute
 from .constants import BASE_URI
 from .getters import get_mathmoddb, get_properties, get_url
 from .helpers import commit_writes, extract_parts, rank_by_search_term
+from .ids import is_item_id, is_user_id
 
 logger = logging.getLogger(__name__)
 
@@ -565,13 +566,16 @@ def query_user_entries(project, setup):
         # Quantity of the other class; without a class yet it is offered
         if entry.get('class') and entry['class'].option and entry['class'].option.uri != wanted_class:
             continue
-        if entry['id'].text == 'not found':
-            # User-defined item
+        if is_user_id(entry['id'].external_id):
+            # User-defined item: offered with the ID of its page
             name, description = entry.get('name'), entry.get('description')
             label = (name.text if name else '') or "No Label Provided!"
             description = (description.text if description else '') or "No Description Provided!"
-            item_id = 'not found'
+            item_id = entry['id'].external_id
             source = 'user'
+        elif not is_item_id(entry['id'].external_id):
+            # No real ID (made before MaRDMO 0.8.0): reported by the checks
+            continue
         else:
             # External ID item
             label, description, source = extract_parts(entry['id'].text)

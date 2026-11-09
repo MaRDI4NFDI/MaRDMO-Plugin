@@ -10,6 +10,7 @@ entity in the questionnaire section.
 
 from .adders import add_entities, add_new_entities
 from .helpers import extract_parts
+from .ids import is_item_id
 from .models import Relatant
 
 from .algorithm.constants import get_uri_prefix_map as get_uri_prefix_map_algorithm
@@ -104,11 +105,15 @@ class Information:  # pylint: disable=too-few-public-methods
     def relation(self, instance):
         '''Handle a saved relation value by registering and hydrating the entity.
 
-        Dispatches on the project's catalog to the appropriate sub-handler, then:
+        Dispatches on the project's catalog to the appropriate sub-handler, then,
+        by the ID the relation holds:
 
-        1. Adds the related entity to the correct questionnaire section.
-        2. Hydrates the entity via ``fill_entity`` on the appropriate
-           :class:`~MaRDMO.handler_base.BaseInformation` subclass.
+        1. Adds the related entity to the correct questionnaire section: an
+           item of the MaRDI Portal or Wikidata as found there, a new item of
+           the user's own (``user:`` ID) with the label (and description)
+           typed in the relation.
+        2. Hydrates a portal or Wikidata entity via ``fill_entity`` on the
+           appropriate :class:`~MaRDMO.handler_base.BaseInformation` subclass.
 
         Args:
             instance: RDMO Value instance carrying ``project``, ``text``,
@@ -121,10 +126,11 @@ class Information:  # pylint: disable=too-few-public-methods
             return
         get_uri_prefix_map, prefix_map, get_info = dispatch
 
-        if not instance.text:
+        if not instance.text or not is_item_id(instance.external_id):
             return
 
-        label, description, source = extract_parts(instance.text)
+        label, description, _ = extract_parts(instance.text)
+        source = instance.external_id.split(':', 1)[0]
         config = get_uri_prefix_map()[instance.attribute.uri]
         datas  = [Relatant.from_triple(instance.external_id, label, description)]
 

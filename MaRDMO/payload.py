@@ -1762,6 +1762,9 @@ class GeneratePayload:
         )
         for id_type, handler, key, value in todo:
             handler(key, value)
+            # Not sent: the export gives these the new item's ID (helpers.replace_ids)
+            if value.get('user_ids'):
+                self.state.dictionary[key]['user_ids'] = value['user_ids']
             # New authors and journals get all their statements here and are
             # skipped by the publication worker, so their class is set here too
             # (it groups them on the success page)
