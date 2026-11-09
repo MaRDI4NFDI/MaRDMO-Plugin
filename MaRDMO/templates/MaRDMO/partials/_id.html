@@ -1,5 +1,6 @@
+{% load mardmo_tags %}
 {% if id %}
-    {% if 'not found' in id %} 
+    {% if id|own_item %}
         <b>ID</b>: - <br><br>
     {% elif 'mardi' in id %} 
         <b>MaRDI Portal ID</b>: {{ id|cut:"mardi:"}} <br><br>

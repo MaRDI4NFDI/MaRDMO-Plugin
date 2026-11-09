@@ -54,6 +54,15 @@ def has_line_break(value):
 
 
 @register.filter
+def own_item(identifier):
+    '''Return ``True`` if *identifier* is an item of the user's own (``user:`` ID, or "not found" in relations).
+
+    Usage: ``{% if values.ID|own_item %}``.
+    '''
+    return is_own_item(identifier)
+
+
+@register.filter
 def has_equivalence_sign(value):
     '''Return ``True`` if the defining formula *value* contains an equivalence sign.'''
     return _has_equivalence_sign(value)
