@@ -7,6 +7,7 @@ from ..model.constants import (
     SECTION_MAP as SECTION_MAP_MODEL,
 )
 from ..constants import BASE_URI, CATALOG_MODEL, CATALOG_MODEL_BASICS
+from ..ids import is_own_item
 from ..patterns import QUDT_ID_STRICT_RE
 from ..tex_check import UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
 from ..validators import (
@@ -291,7 +292,7 @@ class ModelMixin:
             )
 
             if catalog == CATALOG_MODEL_BASICS:
-                if ivalue.get('ID') == 'not found' and not ivalue.get('reference'):
+                if is_own_item(ivalue.get('ID')) and not ivalue.get('reference'):
                     self.err.append(
                         self._error(
                             section = 'Formula',

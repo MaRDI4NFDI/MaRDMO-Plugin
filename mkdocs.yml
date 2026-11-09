@@ -21,6 +21,7 @@ nav:
       - Dynamic Providers: concepts/providers.md
       - Handlers: concepts/handlers.md
       - Publications: concepts/publication.md
+      - Item IDs: concepts/ids.md
       - Export Pipeline: concepts/export.md
       - Validation: concepts/validation.md
   - How to:

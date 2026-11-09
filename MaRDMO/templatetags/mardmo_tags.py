@@ -29,6 +29,7 @@ from django import template
 from django.utils.html import format_html
 
 from ..getters import get_options
+from ..ids import is_own_item
 from ..patterns import LINE_BREAK_RE
 from ..validators import formula_comment_problem
 from ..validators import has_equivalence_sign as _has_equivalence_sign
@@ -188,13 +189,13 @@ def user_entity(identifier, name, description, entity_class):
     '''Render one entity for relation lists.
 
     Entities with a portal ID are shown by their ID.  User-defined entities
-    (ID ``'not found'`` or empty) are shown as ``Name (Description)`` with an
+    (``user:`` ID or empty) are shown as ``Name (Description)`` with an
     error marker for a missing name or a problematic short description.
 
     Usage: ``{% user_entity item.ID item.Name item.Description "SOFTWARE" %}``.
     '''
     return {
-        'identifier': identifier if identifier and identifier != 'not found' else '',
+        'identifier': identifier if identifier and not is_own_item(identifier) else '',
         'name': name,
         'description': description,
         'entity_class': entity_class,

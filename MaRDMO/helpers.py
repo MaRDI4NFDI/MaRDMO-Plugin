@@ -27,9 +27,12 @@ from typing import Callable, Optional, Any
 from collections import defaultdict, deque
 
 from django.db import connection, transaction
+from django.db.models import Q
 from rdmo.projects.models import Value
 from rdmo.domain.models import Attribute
 from rdmo.options.models import Option
+
+from .ids import item_key
 
 # Set while MaRDMO itself writes values (hydration, publication lookup, ID
 # write-back); the pre-save router skips validators then, since they are meant
@@ -980,7 +983,7 @@ def collect_items_without_section(data, parent_key, child_key, nested=False):
             for item in inner.values()
         ) if nested else col.values()
         for item in items:
-            key = (item.get('ID', ''), item.get('Name', ''), item.get('Description', ''))
+            key = item_key(item.get('ID', ''), item.get('Name', ''), item.get('Description', ''))
             if key not in seen:
                 seen.add(key)
                 result[len(result)] = item
@@ -1012,9 +1015,8 @@ def unique_items(data, title = None):
     # Add Workflow Item
     if title:
         triple = (
-            'not found',
-            title,
-            data.get('general', {}).get('objective', '')
+            *item_key('not found', title, data.get('general', {}).get('objective', '')),
+            '', '', ''
         )
         items[f'Item{str(0).zfill(10)}'] = {
             'ID': 'not found',
@@ -1028,17 +1030,15 @@ def unique_items(data, title = None):
         '''Search unique Items'''
         if isinstance(subdict, dict) and 'ID' in subdict:
             triple = (
-                subdict.get('ID', ''),
-                subdict.get('Name', ''),
-                subdict.get('Description', ''),
+                *item_key(subdict.get('ID', ''), subdict.get('Name', ''), subdict.get('Description', '')),
                 subdict.get('orcid', ''),
                 subdict.get('zbmath', ''),
                 subdict.get('issn', '')
             )
             if triple not in seen_items:
-                item_key = f'Item{str(len(items)).zfill(10)}'  # Create unique key
-                items[item_key] = {
-                    'ID': triple[0],
+                item = f'Item{str(len(items)).zfill(10)}'  # Create unique key
+                items[item] = {
+                    'ID': subdict.get('ID', ''),
                     'Name': triple[1],
                     'Description': triple[2],
                     'orcid': triple[3],
@@ -1046,7 +1046,7 @@ def unique_items(data, title = None):
                     'issn': triple[5]
                 }
                 seen_items.add(triple)
-                dependency.update({item_key: set()})
+                dependency.update({item: set()})
         if isinstance(subdict, dict):
             for value in subdict.values():
                 if isinstance(value, dict):
@@ -1319,12 +1319,15 @@ def replace_ids(project, created, base_uri):
 
     - **Wikidata items**: matched by ``external_id`` directly; ``[wikidata]``
       is replaced by ``[mardi]`` in the text field.
-    - **User-defined items in relation / inline questions** (text stores
-      ``"label (description)"``): matched by parsing label + description from
-      ``value.text`` via :func:`extract_parts`.
-    - **User-defined items in ID questions** (text is ``"not found"``):
-      matched by looking up sibling Name and Description Values at the same
-      set index.
+    - **User-defined items in relation / inline questions** (``user:`` ID, or
+      ``"not found"`` in relations; text stores ``"label (description)"``):
+      matched by parsing label + description from ``value.text`` via
+      :func:`extract_parts`.
+    - **User-defined items in ID questions** (``user:`` ID, text is
+      ``"not found"``): matched by looking up sibling Name and Description
+      Values at the same set index.  Saving the new ID gives every other
+      answer with the item's ``user:`` ID the new one too
+      (:func:`~MaRDMO.ids.assign_id`).
 
     Args:
         project:  RDMO project instance whose Values should be updated.
@@ -1362,8 +1365,10 @@ def replace_ids(project, created, base_uri):
     if not nf_map:
         return
 
+    # Own items: user:<uuid> (pages, inline items) or "not found" (relations
+    # until they hold IDs, #100)
     for v in Value.objects.filter(
-        project=project, snapshot=None, external_id='not found'
+        Q(external_id='not found') | Q(external_id__startswith='user:'), project=project, snapshot=None
     ).select_related('attribute'):
 
         if v.text == 'not found':

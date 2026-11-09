@@ -28,6 +28,7 @@ from multiprocessing.pool import ThreadPool
 import requests
 
 from .helpers import commit_writes
+from .ids import is_own_item, item_key
 from .patterns import QUANTITY_AMOUNT_RE
 from .queries import (
     EXPORT_CHECK_DEADLINE,
@@ -520,10 +521,9 @@ class GeneratePayload:
         Returns:
             Matching ``"Item<n>"`` key string, or ``None`` if not found.
         '''
+        wanted = item_key(id_value, name_value, description_value)
         for key, values in self.user_items.items():
-            if (values['ID'] == id_value and
-                values['Name'] == name_value and
-                values['Description'] == description_value):
+            if item_key(values['ID'], values['Name'], values['Description']) == wanted:
                 return key
         return None
 
@@ -1750,11 +1750,11 @@ class GeneratePayload:
         for key, value in self.user_items.items():
             if not value.get('ID'):
                 continue
-            for id_type, handler in handlers.items():
-                if id_type in value['ID']:
-                    if id_type != 'no author found' or value['zbmath'] or value['orcid']:
-                        todo.append((id_type, handler, key, value))
-                    break
+            # The user's own items (user:<uuid>, or "not found" in relations)
+            id_type = 'not found' if is_own_item(value['ID']) else next(
+                (id_type for id_type in handlers if id_type in value['ID']), None)
+            if id_type and (id_type != 'no author found' or value['zbmath'] or value['orcid']):
+                todo.append((id_type, handlers[id_type], key, value))
 
         self._check_duplicates(
             (value['Name'], value['Description'])

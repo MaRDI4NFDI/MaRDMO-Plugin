@@ -36,6 +36,7 @@ from .helpers import (
     relevant_set_ids,
     value_editor,
 )
+from .ids import new_user_id
 from .model.constants import data_properties_check, qudt_reference_ids
 from .patterns import QUDT_ID_STRICT_RE
 from .workflow.models import ProcessStepUsage
@@ -158,8 +159,8 @@ def add_new_entities(project, question_set, datas, prefix):
     '''Ensure each user-defined item in *datas* has a page in *question_set*.
 
     Like :func:`add_entities`, but for user-created items (no external ID).
-    Deduplicates by label/description only and marks new entries with
-    ``external_id = "not found"``.
+    Deduplicates by label/description only and gives new entries a new
+    ``user:`` ID.
 
     Args:
         project:      RDMO project instance.
@@ -205,7 +206,7 @@ def add_new_entities(project, question_set, datas, prefix):
                 uri = question['id'],
                 info = {
                     'text': 'not found',
-                    'external_id': 'not found',
+                    'external_id': new_user_id(),
                     'set_index': idx
                 }
             )

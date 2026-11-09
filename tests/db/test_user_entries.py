@@ -23,7 +23,7 @@ def quantity(index, label, qclass=None, external_id=None):
         answers = [answer('quantity/id', f'{label} (d) [{external_id.split(":")[0]}]',
                           external_id=external_id, set_index=index)]
     else:
-        answers = [answer('quantity/id', 'not found', external_id='not found', set_index=index),
+        answers = [answer('quantity/id', 'not found', external_id=f'user:{index}', set_index=index),
                    answer('quantity/name', label, set_prefix=str(index)),
                    answer('quantity/description', 'd', set_prefix=str(index))]
     if qclass:
@@ -61,6 +61,6 @@ def test_quantity_elements_offer_every_class_and_creation(quantities, options):
 
 def test_user_entry_without_name_and_description(project, options):
     model = project('mardmo-model-catalog')
-    save(model, answer('quantity/id', 'not found', external_id='not found', set_index=0))
+    save(model, answer('quantity/id', 'not found', external_id='user:0', set_index=0))
     assert options(model, 'RelatedQuantityWithoutCreation', 'provided') == [
         'No Label Provided! (No Description Provided!)']

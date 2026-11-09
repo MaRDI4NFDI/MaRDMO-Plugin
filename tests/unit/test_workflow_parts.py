@@ -37,7 +37,7 @@ def checks(monkeypatch):
 
 
 def hardware(cpu=None):
-    answers = {'hardware': {0: {'ID': 'not found', 'Name': 'machine', 'Description': 'a machine', 'nodes': '1',
+    answers = {'hardware': {0: {'ID': 'user:machine', 'Name': 'machine', 'Description': 'a machine', 'nodes': '1',
                                 'number-of-cpu': {0: '2'}, 'cores': {0: '8'}}}}
     if cpu:
         answers['hardware'][0]['cpu'] = {0: cpu}
@@ -50,7 +50,7 @@ def test_cpu_entry_without_model_is_reported(checks):
 
 
 def test_cpu_entry_with_model_passes(checks):
-    checks.hardware(Project(), hardware({'ID': 'not found', 'Name': 'CPU X', 'Description': 'a CPU'}))
+    checks.hardware(Project(), hardware({'ID': 'user:cpu', 'Name': 'CPU X', 'Description': 'a CPU'}))
     assert checks.err == []
 
 
@@ -66,7 +66,7 @@ def test_preview_shows_the_missing_cpu_model():
 ])
 def test_block_with_only_parameters_is_a_usage(parameter, pairs):
     '''The parameter of block 1 belongs to no algorithm (method): the block is shown and checked.'''
-    answers = {'processstep': {0: {'ID': 'not found', 'Name': 'step', 'Description': 'a step',
+    answers = {'processstep': {0: {'ID': 'user:step', 'Name': 'step', 'Description': 'a step',
                                    'RelationA': {'0|0': SOFTWARE}, 'RelationS': {0: SOFTWARE},
                                    parameter: {1: {0: 'tolerance = 0.1'}}}}}
     blocks = PrepareWorkflow().preview(answers)['processstep'][0][pairs]
