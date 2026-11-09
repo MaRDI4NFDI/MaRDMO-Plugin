@@ -85,7 +85,8 @@ it needs.
 ## Recordings: when the requests change
 
 A test that sends a request that is not recorded fails, also where MaRDMO
-catches the error.  Record again when a test is new, when MaRDMO sends other
+catches the error.  Every test starts with an empty cache, so it sends (and
+records) all its requests itself, whichever tests ran before.  Record again when a test is new, when MaRDMO sends other
 requests, or when the portal data changed.  Recording only reads, with a
 pause before every request:
 
