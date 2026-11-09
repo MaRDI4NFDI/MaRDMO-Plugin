@@ -87,8 +87,11 @@ def map_entity_quantity(data, entity_type):
         entity_type: Key of the entity section to process (e.g.
                      ``"formulation"`` or ``"task"``).
     '''
-    quantities = {quantity.get("ID"): quantity for quantity in data.get("quantity", {}).values()
-                  if quantity.get("ID")}
+    # Of two quantity pages with one ID (a copied tab) the first
+    quantities = {}
+    for quantity in data.get("quantity", {}).values():
+        if quantity.get("ID"):
+            quantities.setdefault(quantity["ID"], quantity)
     for entity in data.get(entity_type, {}).values():
         for element in entity.get("element", {}).values():
             # No quantity yet (e.g. a symbol without "symbol represents" on the
