@@ -2,8 +2,9 @@
 
 The questionnaire tests read the catalog XML files of MaRDMO-Questionnaire
 from the folder in the environment variable QUESTIONNAIRE (CI checks out
-the branch of the same name, else main).  Without it they are skipped
-locally, but fail in CI, so that they cannot be skipped there unnoticed.
+the branch of the same name, else the one of the integration branch, else
+main; see tests.yml).  Without it they are skipped locally, but fail in CI,
+so that they cannot be skipped there unnoticed.
 '''
 import os
 import xml.etree.ElementTree as ET
