@@ -53,7 +53,11 @@ to another server; a server reached by TCP must be allowed with
 
 ## What runs in CI
 
-`tests.yml` runs ruff, the tests with coverage, and builds the package.
+`tests.yml` runs ruff, the tests with coverage, and builds the package.  The
+tests use the MaRDMO-Questionnaire branch with the same name as the plugin
+branch; without one, the questionnaire branch of the integration branch the
+plugin branch is based on (e.g. `0.8.0`), else `main`.  A plugin change that
+needs a questionnaire change gets a questionnaire branch of the same name.
 
 | Event | Combinations |
 |---|---|

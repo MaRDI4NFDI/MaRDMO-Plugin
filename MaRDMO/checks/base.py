@@ -312,12 +312,21 @@ class ChecksBase:
                 snapshot  = None,
                 attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/{okey}')
             )
-            # Own items with the same name and description would be one item
-            # in the export ("new" in a relation always makes another page)
-            own = {}
+            # Pages with one ID (e.g. a copied tab) are one item, and so are own
+            # items with the same name and description ("new" in a relation
+            # always makes another page): the export would merge them
+            seen, own = {}, {}
             for ikey, ivalue in ovalue.items():
                 page_name = values.get(set_index=ikey).text
-                if is_own_item(ivalue.get('ID')) and ivalue.get('Name'):
+                if ivalue.get('ID') and seen.setdefault(ivalue['ID'], page_name) != page_name:
+                    self.err.append(
+                        self._error(
+                            section = section_map[okey],
+                            page    = page_name,
+                            message = f'Same Item as Page {seen[ivalue["ID"]]} (delete one of them)'
+                        )
+                    )
+                elif is_own_item(ivalue.get('ID')) and ivalue.get('Name'):
                     same = own.setdefault((ivalue['Name'], ivalue.get('Description') or ''), page_name)
                     if same != page_name:
                         self.err.append(

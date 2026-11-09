@@ -62,6 +62,17 @@ The answers are changed with `update()`, so they keep their `updated` time and
 an interview open on another page can still save them.  If another page still
 has the old ID, they stay with it.
 
+## Copied tabs
+
+"Copy tab" copies a page with its ID, so the copy is the same item as the
+original; MaRDMO does not change it (RDMO writes the copy without signals).
+Checks and preview report both pages as one item ("Same Item as Page …"),
+since the export would merge them.  Deleting either page leaves the
+relations with the other one, which has the item's ID.
+
+A copy of a portal or Wikidata item becomes a new item by choosing "not
+found" as its ID (a template, see above).
+
 ## In the export
 
 The user's own items with the same name and description are one item: the

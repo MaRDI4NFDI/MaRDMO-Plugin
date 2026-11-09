@@ -16,7 +16,7 @@ on:
         type: boolean
         default: false
       # A questionnaire tag (the release tests against its latest release);
-      # empty: the branch with the same name as this branch, else main
+      # empty: see "Find the questionnaire branch"
       questionnaire_ref:
         type: string
         default: ''
@@ -53,22 +53,36 @@ jobs:
           --health-interval 5s --health-timeout 5s --health-retries 20
 
     steps:
+      # The history, to find the integration branch this commit is based on
       - name: Check out MaRDMO
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       # The given questionnaire tag (release), else the questionnaire branch
-      # with the same name as this branch, else main
+      # with the same name as this branch, else the one of the integration
+      # branch (e.g. 0.8.0) this commit is based on, else main.  Delete the
+      # integration branches in both repositories after their release.
       - name: Find the questionnaire branch
         id: questionnaire
         run: |
+          questionnaire=https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire
           branch="${{ github.head_ref || github.ref_name }}"
+          ref=main
           if [ -n "${{ inputs.questionnaire_ref }}" ]; then
-            echo "ref=${{ inputs.questionnaire_ref }}" >> "$GITHUB_OUTPUT"
-          elif git ls-remote --exit-code --heads https://github.com/MaRDI4NFDI/MaRDMO-Questionnaire "$branch" > /dev/null; then
-            echo "ref=$branch" >> "$GITHUB_OUTPUT"
+            ref="${{ inputs.questionnaire_ref }}"
+          elif git ls-remote --exit-code --heads "$questionnaire" "$branch" > /dev/null; then
+            ref="$branch"
           else
-            echo "ref=main" >> "$GITHUB_OUTPUT"
+            for integration in $(git for-each-ref --format='%(refname:lstrip=3)' refs/remotes/origin \
+                                 | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$'); do
+              if git merge-base --is-ancestor "origin/$integration" HEAD \
+                 && git ls-remote --exit-code --heads "$questionnaire" "$integration" > /dev/null; then
+                ref="$integration"
+              fi
+            done
           fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
 
       - name: Check out the questionnaire (${{ steps.questionnaire.outputs.ref }})
         uses: actions/checkout@v7

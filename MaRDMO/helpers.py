@@ -537,13 +537,16 @@ def check_list(list_var):
 def pages_by_id(data):
     '''Return ``{ID: page entry}`` of every item page in the answers *data*.
 
-    A page is an entry of a section (``data[section][index]``) with an ``ID``.
+    A page is an entry of a section (``data[section][index]``) with an ``ID``;
+    of two pages with one ID (a copied tab) the first.
     '''
-    return {
-        entry['ID']: entry
-        for section in data.values() if isinstance(section, dict)
-        for entry in section.values() if isinstance(entry, dict) and entry.get('ID')
-    }
+    pages = {}
+    for section in data.values():
+        if isinstance(section, dict):
+            for entry in section.values():
+                if isinstance(entry, dict) and entry.get('ID'):
+                    pages.setdefault(entry['ID'], entry)
+    return pages
 
 
 def link_to_pages(data):
@@ -579,11 +582,16 @@ def link_to_pages(data):
 
 
 def mark_same_own_items(data):
-    '''Mark own item pages with the name and description of an earlier page of their section.
+    '''Mark item pages that are, or look like, an earlier page of their section.
 
-    The export would make one item of them ("new" in a relation always makes
-    another page).  The later page gets ``SameAs``: the position (1-based,
-    as the preview counts) of the first one.  The checks report the same.
+    - ``SameItemAs``: the page has the ID of an earlier page (e.g. a copied
+      tab): both are the same item, and the export would merge them.
+    - ``SameAs``: an own item with the name and description of an earlier
+      one: the export would make one item of them ("new" in a relation always
+      makes another page).
+
+    The value is the position (1-based, as the preview counts) of the first
+    page.  The checks report the same.
 
     Args:
         data: Top-level answers dict; mutated in place.
@@ -594,11 +602,17 @@ def mark_same_own_items(data):
     for section in data.values():
         if not isinstance(section, dict):
             continue
-        first = {}
+        first_id, first_name = {}, {}
         for position, entry in enumerate(section.values(), start=1):
-            if not isinstance(entry, dict) or not is_own_item(entry.get('ID')) or not entry.get('Name'):
+            if not isinstance(entry, dict) or not entry.get('ID'):
                 continue
-            same = first.setdefault((entry['Name'], entry.get('Description') or ''), position)
+            same = first_id.setdefault(entry['ID'], position)
+            if same != position:
+                entry['SameItemAs'] = same
+                continue
+            if not is_own_item(entry['ID']) or not entry.get('Name'):
+                continue
+            same = first_name.setdefault((entry['Name'], entry.get('Description') or ''), position)
             if same != position:
                 entry['SameAs'] = same
     return data
@@ -619,10 +633,15 @@ def id_index_map(data, data_type):
     Returns:
         List of dicts, one per entry in *data_type*.
     '''
-    return [
-        {entry.get('ID'): idx for idx, entry in enumerate(data.get(to_idx, {}).values()) if entry.get('ID')}
-        for to_idx in data_type
-    ]
+    maps = []
+    for to_idx in data_type:
+        # Two pages with one ID (a copied tab): the first, as the checks name it
+        id_map = {}
+        for idx, entry in enumerate(data.get(to_idx, {}).values()):
+            if entry.get('ID'):
+                id_map.setdefault(entry['ID'], idx)
+        maps.append(id_map)
+    return maps
 
 
 def resolve_target(id_, entity_enc, id_map):
