@@ -200,7 +200,7 @@ class WorkflowMixin:
         '''Check Algorithm documentation completeness for the workflow catalog.
 
         Verifies that each algorithm page has at least one Algorithmic Task
-        and one Software link.  For user-defined tasks (ID == "not found"),
+        and one Software link.  For user-defined tasks (``user:`` ID),
         also validates name and description.
 
         Args:

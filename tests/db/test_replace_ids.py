@@ -17,7 +17,7 @@ def exported(project):
     model = project('mardmo-model-catalog')
     save(model,
          # quantity 0: user-defined, now a portal item
-         answer('quantity/id', 'not found', external_id='not found', set_index=0),
+         answer('quantity/id', 'not found', external_id='user:alpha', set_index=0),
          answer('quantity/name', 'alpha', set_prefix='0'),
          answer('quantity/description', 'first quantity', set_prefix='0'),
          # quantity 1: from Wikidata, now a portal item; relations to quantities 0 and 2
@@ -27,12 +27,15 @@ def exported(project):
                 external_id='not found', set_prefix='1', set_index=0),
          answer('quantity/quantity-to-quantity/relatant', 'beta (other quantity)',
                 external_id='not found', set_prefix='1', set_index=1),
+         # an answer holding the ID of quantity 0, with an older text
+         answer('quantity/quantity-to-quantity/relatant', 'alpha (older description)',
+                external_id='user:alpha', set_prefix='1', set_index=2),
          # quantity 2: user-defined, not exported
-         answer('quantity/id', 'not found', external_id='not found', set_index=2),
+         answer('quantity/id', 'not found', external_id='user:beta', set_index=2),
          answer('quantity/name', 'beta', set_prefix='2'),
          answer('quantity/description', 'other quantity', set_prefix='2'),
          # publication 0: name and description on its own tab (set_prefix '')
-         answer('publication/id', 'not found', external_id='not found', set_index=0),
+         answer('publication/id', 'not found', external_id='user:paper', set_index=0),
          answer('publication/name', 'A paper', set_index=0),
          answer('publication/description', 'scientific article', set_index=0))
     replace_ids(model, {
@@ -52,6 +55,12 @@ def test_relations_to_the_item_get_its_portal_id(exported):
         'mardi:Q1', 'alpha (first quantity) [mardi]')
 
 
+def test_answers_with_the_items_id_get_its_portal_id(exported):
+    '''Found by the ID, not by the text.'''
+    assert get(exported, 'quantity/quantity-to-quantity/relatant', set_prefix='1', set_index=2) == (
+        'mardi:Q1', 'alpha (older description)')
+
+
 def test_wikidata_item_gets_its_portal_id(exported):
     assert get(exported, 'quantity/id', set_index=1) == (
         'mardi:Q2', 'concentration (amount per volume) [mardi]')
@@ -62,6 +71,6 @@ def test_publication_gets_its_portal_id(exported):
 
 
 def test_items_not_exported_stay_user_defined(exported):
-    assert get(exported, 'quantity/id', set_index=2) == ('not found', 'not found')
+    assert get(exported, 'quantity/id', set_index=2) == ('user:beta', 'not found')
     assert get(exported, 'quantity/quantity-to-quantity/relatant', set_prefix='1', set_index=1) == (
         'not found', 'beta (other quantity)')

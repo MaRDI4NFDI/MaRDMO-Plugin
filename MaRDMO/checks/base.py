@@ -12,8 +12,13 @@ from ..constants import (
 from ..getters import get_mathmoddb, get_mathalgodb
 from ..getters import get_options
 from ..helpers import find_reference
+from ..ids import NOT_FOUND, is_own_item
 from ..patterns import LINE_BREAK_RE
 from ..validators import doi_problem, short_description_problem, swmath_problem, url_problem, url_schemes
+
+# An item without a real ID: the project was made before MaRDMO 0.8.0, which
+# gives every item one (see ids.py); such projects are not supported
+OLD_PROJECT = 'Made with MaRDMO before 0.8.0, not supported (enter it in a new project)'
 
 # Reference answers to check: (option key, label in messages, noun for "no ... provided")
 SOFTWARE_REFERENCE_CHECKS = (
@@ -108,7 +113,7 @@ class ChecksBase:
     def _check_without_section_items(self, items, parent_page, parent_class, item_class):
         '''Validate name and description for inline items that have no dedicated section.
 
-        Only validates user-defined entries (``ID == "not found"``); portal-matched
+        Only validates user-defined entries (``user:`` ID); portal-matched
         items are skipped.  Mirrors the checks in ``_name.html`` and
         ``_short_description.html``.
 
@@ -119,7 +124,10 @@ class ChecksBase:
             item_class:   Display name of the inline item type (e.g. ``"Programming Language"``).
         '''
         for item in items.values():
-            if item.get('ID') != 'not found':
+            if not is_own_item(item.get('ID')):
+                continue
+            if item['ID'] == NOT_FOUND:
+                self.err.append(self._error(parent_class, parent_page, f'{item_class}: {OLD_PROJECT}'))
                 continue
             name = item.get('Name', '')
             desc = item.get('Description', '')
@@ -300,6 +308,14 @@ class ChecksBase:
                             message = 'Missing ID'
                         )
                     )
+                elif ivalue['ID'] == NOT_FOUND:
+                    self.err.append(
+                        self._error(
+                            section = section_map[okey],
+                            page    = page_name,
+                            message = OLD_PROJECT
+                        )
+                    )
                 if not ivalue.get('Name'):
                     self.err.append(
                         self._error(
@@ -403,7 +419,7 @@ class ChecksBase:
         )
         for ikey, ivalue in data.get('publication', {}).items():
             page_name = values.get(set_index=ikey).text
-            if ivalue.get('ID') == 'not found' and not ivalue.get('reference'):
+            if is_own_item(ivalue.get('ID')) and not ivalue.get('reference'):
                 self.err.append(
                     self._error(
                         section = 'Publication',

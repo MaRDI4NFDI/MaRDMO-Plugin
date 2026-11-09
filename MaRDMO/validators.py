@@ -45,6 +45,7 @@ from rest_framework.exceptions import ValidationError
 
 from .getters import get_mathmoddb, get_options
 from .helpers import extract_parts
+from .ids import is_own_item
 from .model.constants import data_properties_check
 from .patterns import (
     DOI_RE, DOI_STRICT_RE, LINE_BREAK_RE, QUDT_ID_RE, SWMATH_ID_RE,
@@ -258,7 +259,7 @@ def _quantity_key(quantity):
     if not isinstance(quantity, dict):
         return None
     identifier = quantity.get('ID') or ''
-    if identifier and identifier != 'not found':
+    if identifier and not is_own_item(identifier):
         return identifier
     if not quantity.get('Name'):
         return None

@@ -91,7 +91,7 @@ class PublicationRetriever:
             )
 
             #If User selected a Publication from Wikidata, MathAlgoDB or did not find it...
-            if answers['publication'][key]['ID'].startswith(('wikidata','not found')):
+            if answers['publication'][key]['ID'].startswith(('wikidata', 'user:', 'not found')):
 
                 #...check if DOI is available.
                 if not answers['publication'][key].get('reference', {}).get(0, ['',''])[1]:
@@ -185,7 +185,7 @@ class PublicationRetriever:
         '''Look up the citation data of all publications that need it, in parallel.
 
         These are the publications from Wikidata or entered by the user
-        (``not found``) that have a DOI.
+        (``user:`` ID) that have a DOI.
 
         Returns:
             Dict mapping the publication's set index to the result of
@@ -194,7 +194,7 @@ class PublicationRetriever:
         dois = {
             key: publication['reference'][0][1].upper()
             for key, publication in answers.get('publication', {}).items()
-            if (publication.get('ID') or '').startswith(('wikidata', 'not found'))
+            if (publication.get('ID') or '').startswith(('wikidata', 'user:', 'not found'))
             and publication.get('reference', {}).get(0, ['', ''])[1]
         }
         if not dois:

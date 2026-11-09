@@ -148,7 +148,7 @@ def test_research_field_relatant_prefix_is_ad():
 
 def test_publication_info_counts_what_the_export_creates():
     values = {
-        'ID': 'not found',
+        'ID': 'user:paper',
         'title': 'A Title',
         'date': '2020-05-01',
         'volume': '5', 'issue': '2', 'page': '1-10',

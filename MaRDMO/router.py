@@ -22,6 +22,9 @@ MaRDMO's own writes) are not validated there; preview, checks and export
 check all values.  ``PRESAVE_VALIDATOR_MAP`` is assembled explicitly by
 :func:`~MaRDMO.builders.build_presave_validator_map`.
 
+Before an ID answer is saved, from anywhere, the pre-save router gives the item
+a real ID (:func:`~MaRDMO.ids.assign_id`): "not found" becomes ``user:<uuid>``.
+
 All maps are assembled once at startup.
 
 Provides:
@@ -49,6 +52,7 @@ from .constants import (
     CATALOG_WORKFLOW_NAME,
 )
 from .helpers import batched_writes, is_internal_write
+from .ids import assign_id, id_attributes
 from .builders import (
     build_post_save_handler_set,
     build_post_delete_handler_set,
@@ -201,14 +205,17 @@ def mardmo_router_post_delete(sender, instance, **kwargs):  # pylint: disable=un
 
 @receiver(pre_save, sender=Value)
 def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=unused-argument
-    """Pre-save router: validate Value text before it is written to the database.
+    """Pre-save router: give items real IDs and validate Value text before it is written.
 
     Connected to Django's ``pre_save`` signal on ``Value``.
-    Only answers saved through the interview are validated; skips fixture
-    loads, snapshots, non-MaRDMO catalogs, attributes with no registered
-    validator, and every other save (see :func:`_is_interview_save`).  Calls
-    the matching validator from ``PRESAVE_VALIDATOR_MAP``, which raises
-    ``ValidationError`` to reject malformed input.
+    Every saved ID answer of a MaRDMO catalog gets a real ID
+    (:func:`~MaRDMO.ids.assign_id`): from the interview, imports and MaRDMO's
+    own writes alike.  Only answers saved through the interview are
+    validated; skips fixture loads, snapshots, non-MaRDMO catalogs,
+    attributes with no registered validator, and every other save (see
+    :func:`_is_interview_save`).  Calls the matching validator from
+    ``PRESAVE_VALIDATOR_MAP``, which raises ``ValidationError`` to reject
+    malformed input.
 
     Args:
         sender:   Signal sender class (``Value``).
@@ -216,8 +223,8 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
         **kwargs: Additional signal keyword arguments (includes ``raw`` for
                   fixture loads).
     """
-    # Fixture loads and MaRDMO's own writes are not validated (see below)
-    if kwargs.get('raw') or is_internal_write():
+    # Fixture loads are written as they are
+    if kwargs.get('raw'):
         return
 
     # Snapshot copies and rollbacks restore values that were valid when saved
@@ -230,6 +237,13 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
 
     attr_uri = getattr(instance.attribute, 'uri', None)
     if not attr_uri:
+        return
+
+    if attr_uri in id_attributes():
+        assign_id(instance)
+
+    # MaRDMO's own writes are not validated (see below)
+    if is_internal_write():
         return
 
     validator = PRESAVE_VALIDATOR_MAP.get(catalog_name, {}).get(attr_uri)
