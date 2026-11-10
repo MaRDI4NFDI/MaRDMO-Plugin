@@ -4,237 +4,657 @@
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"conservation law for the opiate-using career ODE model\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"conservation law for the opiate-using career ODE model\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "conservation law for the opiate-using career ODE model"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"drug users in treatment in opiate-using career ODE model\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"drug users in treatment in opiate-using career ODE model\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"drug users in treatment in opiate-using career ODE model\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "drug users in treatment in opiate-using career ODE model"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"drug users not in treatment in opiate-using career ODE model\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"drug users not in treatment in opiate-using career ODE model\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"drug users not in treatment in opiate-using career ODE model\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "drug users not in treatment in opiate-using career ODE model"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"number of drug users in treatment\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"number of drug users in treatment\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"number of drug users in treatment\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "number of drug users in treatment"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"number of drug users not in treatment\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"number of drug users not in treatment\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"number of drug users not in treatment\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "number of drug users not in treatment"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"opiate-using career ODE model\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"opiate-using career ODE model\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"opiate-using career ODE model\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "opiate-using career ODE model"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"opiate-using career ODE system\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"opiate-using career ODE system\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"opiate-using career ODE system\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "opiate-using career ODE system"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate (individuals of general entering susceptible population)\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate (individuals of general entering susceptible population)\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"rate (individuals of general entering susceptible population)\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "rate (individuals of general entering susceptible population)"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (becoming drug user)\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (becoming drug user)\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"rate constant (becoming drug user)\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "rate constant (becoming drug user)"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (drug user in treatment relapsing to untreated use)\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug user in treatment relapsing to untreated use)\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug user in treatment relapsing to untreated use)\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "rate constant (drug user in treatment relapsing to untreated use)"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (drug users entering treatment)\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug users entering treatment)\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug users entering treatment)\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "rate constant (drug users entering treatment)"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (drug-related deaths of users in treatment and a rate of successful cure)\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug-related deaths of users in treatment and a rate of successful cure)\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug-related deaths of users in treatment and a rate of successful cure)\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "rate constant (drug-related deaths of users in treatment and a rate of successful cure)"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (natural death in general population)\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (natural death in general population)\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"rate constant (natural death in general population)\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "rate constant (natural death in general population)"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"substance dependence\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"substance dependence\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"substance dependence\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "substance dependence"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"susceptibles in opiate-using career ODE model\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"susceptibles in opiate-using career ODE model\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"susceptibles in opiate-using career ODE model\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "susceptibles in opiate-using career ODE model"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"N\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"N\",\"requiredPackages\":[],\"identifiers\":[\"N\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"N\",\"requiredPackages\":[],\"identifiers\":[\"N\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "N"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"S\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"S\",\"requiredPackages\":[],\"identifiers\":[\"S\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"S\",\"requiredPackages\":[],\"identifiers\":[\"S\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "S"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"U_1\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"U_{1}\",\"requiredPackages\":[],\"identifiers\":[\"U_{1}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"U_{1}\",\"requiredPackages\":[],\"identifiers\":[\"U_{1}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "U_1"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"U_2\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"U_{2}\",\"requiredPackages\":[],\"identifiers\":[\"U_{2}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"U_{2}\",\"requiredPackages\":[],\"identifiers\":[\"U_{2}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "U_2"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\Lambda\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"\\\\Lambda \",\"requiredPackages\":[],\"identifiers\":[\"\\\\Lambda\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"\\\\Lambda \",\"requiredPackages\":[],\"identifiers\":[\"\\\\Lambda\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\Lambda"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\begin{align} N &= S + U_1 + U_2 \\\\\\\\ \\\\Lambda &= \\\\mu  S + (\\\\mu + \\\\delta_1) U_1 + (\\\\mu + \\\\delta_2) U_2 \\\\end{align}\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"{\\\\begin{aligned}N&=S+U_{1}+U_{2}\\\\\\\\\\\\Lambda &=\\\\mu S+(\\\\mu +\\\\delta _{1})U_{1}+(\\\\mu +\\\\delta _{2})U_{2}\\\\end{aligned}}\",\"requiredPackages\":[],\"identifiers\":[\"N\",\"S\",\"U_{1}\",\"U_{2}\",\"\\\\Lambda\",\"\\\\mu\",\"S\",\"\\\\mu\",\"\\\\delta_{1}\",\"U_{1}\",\"\\\\mu\",\"\\\\delta_{2}\",\"U_{2}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"{\\\\begin{aligned}N&=S+U_{1}+U_{2}\\\\\\\\\\\\Lambda &=\\\\mu S+(\\\\mu +\\\\delta _{1})U_{1}+(\\\\mu +\\\\delta _{2})U_{2}\\\\end{aligned}}\",\"requiredPackages\":[],\"identifiers\":[\"N\",\"S\",\"U_{1}\",\"U_{2}\",\"\\\\Lambda\",\"\\\\mu\",\"S\",\"\\\\mu\",\"\\\\delta_{1}\",\"U_{1}\",\"\\\\mu\",\"\\\\delta_{2}\",\"U_{2}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\begin{align} N &= S + U_1 + U_2 \\\\ \\Lambda &= \\mu  S + (\\mu + \\delta_1) U_1 + (\\mu + \\delta_2) U_2 \\end{align}"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\begin{align} \\\\frac{dS}{dt} &= \\\\Lambda - \\\\frac{\\\\beta_1 U_1 S}{N} - \\\\mu S \\\\\\\\ \\\\frac{dU_1}{dt} &= \\\\frac{\\\\beta_1 U_1 S}{N} - p U_1 + \\\\frac{\\\\beta_3 U_1 U_2}{N} - (\\\\mu + \\\\delta_1) U_1 \\\\\\\\ \\\\frac{dU_2}{dt} &= p U_1 - \\\\frac{\\\\beta_3 U_1 U_2}{N} - (\\\\mu + \\\\delta_2) U_2 \\\\end{align}\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"{\\\\begin{aligned}{\\\\frac {dS}{dt}}&=\\\\Lambda -{\\\\frac {\\\\beta _{1}U_{1}S}{N}}-\\\\mu S\\\\\\\\{\\\\frac {dU_{1}}{dt}}&={\\\\frac {\\\\beta _{1}U_{1}S}{N}}-pU_{1}+{\\\\frac {\\\\beta _{3}U_{1}U_{2}}{N}}-(\\\\mu +\\\\delta _{1})U_{1}\\\\\\\\{\\\\frac {dU_{2}}{dt}}&=pU_{1}-{\\\\frac {\\\\beta _{3}U_{1}U_{2}}{N}}-(\\\\mu +\\\\delta _{2})U_{2}\\\\end{aligned}}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"S\",\"d\",\"t\",\"\\\\Lambda\",\"\\\\beta_{1}\",\"U_{1}\",\"S\",\"N\",\"\\\\mu\",\"S\",\"d\",\"U_{1}\",\"d\",\"t\",\"\\\\beta_{1}\",\"U_{1}\",\"S\",\"N\",\"p\",\"U_{1}\",\"\\\\beta_{3}\",\"U_{1}\",\"U_{2}\",\"N\",\"\\\\mu\",\"\\\\delta_{1}\",\"U_{1}\",\"d\",\"U_{2}\",\"d\",\"t\",\"p\",\"U_{1}\",\"\\\\beta_{3}\",\"U_{1}\",\"U_{2}\",\"N\",\"\\\\mu\",\"\\\\delta_{2}\",\"U_{2}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"{\\\\begin{aligned}{\\\\frac {dS}{dt}}&=\\\\Lambda -{\\\\frac {\\\\beta _{1}U_{1}S}{N}}-\\\\mu S\\\\\\\\{\\\\frac {dU_{1}}{dt}}&={\\\\frac {\\\\beta _{1}U_{1}S}{N}}-pU_{1}+{\\\\frac {\\\\beta _{3}U_{1}U_{2}}{N}}-(\\\\mu +\\\\delta _{1})U_{1}\\\\\\\\{\\\\frac {dU_{2}}{dt}}&=pU_{1}-{\\\\frac {\\\\beta _{3}U_{1}U_{2}}{N}}-(\\\\mu +\\\\delta _{2})U_{2}\\\\end{aligned}}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"S\",\"d\",\"t\",\"\\\\Lambda\",\"\\\\beta_{1}\",\"U_{1}\",\"S\",\"N\",\"\\\\mu\",\"S\",\"d\",\"U_{1}\",\"d\",\"t\",\"\\\\beta_{1}\",\"U_{1}\",\"S\",\"N\",\"p\",\"U_{1}\",\"\\\\beta_{3}\",\"U_{1}\",\"U_{2}\",\"N\",\"\\\\mu\",\"\\\\delta_{1}\",\"U_{1}\",\"d\",\"U_{2}\",\"d\",\"t\",\"p\",\"U_{1}\",\"\\\\beta_{3}\",\"U_{1}\",\"U_{2}\",\"N\",\"\\\\mu\",\"\\\\delta_{2}\",\"U_{2}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\begin{align} \\frac{dS}{dt} &= \\Lambda - \\frac{\\beta_1 U_1 S}{N} - \\mu S \\\\ \\frac{dU_1}{dt} &= \\frac{\\beta_1 U_1 S}{N} - p U_1 + \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_1) U_1 \\\\ \\frac{dU_2}{dt} &= p U_1 - \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_2) U_2 \\end{align}"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\beta_1\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"\\\\beta _{1}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\beta_{1}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"\\\\beta _{1}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\beta_{1}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\beta_1"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\beta_3\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"\\\\beta _{3}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\beta_{3}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"\\\\beta _{3}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\beta_{3}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\beta_3"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\delta_1\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"\\\\delta _{1}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\delta_{1}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"\\\\delta _{1}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\delta_{1}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\delta_1"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\delta_2\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"\\\\delta _{2}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\delta_{2}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"\\\\delta _{2}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\delta_{2}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\delta_2"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{dS}{dt} = \\\\Lambda - \\\\frac{\\\\beta_1 U_1 S}{N} - \\\\mu S\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dS}{dt}}=\\\\Lambda -{\\\\frac {\\\\beta _{1}U_{1}S}{N}}-\\\\mu S\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"S\",\"d\",\"t\",\"\\\\Lambda\",\"\\\\beta_{1}\",\"U_{1}\",\"S\",\"N\",\"\\\\mu\",\"S\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dS}{dt}}=\\\\Lambda -{\\\\frac {\\\\beta _{1}U_{1}S}{N}}-\\\\mu S\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"S\",\"d\",\"t\",\"\\\\Lambda\",\"\\\\beta_{1}\",\"U_{1}\",\"S\",\"N\",\"\\\\mu\",\"S\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\frac{dS}{dt} = \\Lambda - \\frac{\\beta_1 U_1 S}{N} - \\mu S"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{dU_1}{dt} = \\\\frac{\\\\beta_1 U_1 S}{N} - p U_1 + \\\\frac{\\\\beta_3 U_1 U_2}{N} - (\\\\mu + \\\\delta_1) U_1\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dU_{1}}{dt}}={\\\\frac {\\\\beta _{1}U_{1}S}{N}}-pU_{1}+{\\\\frac {\\\\beta _{3}U_{1}U_{2}}{N}}-(\\\\mu +\\\\delta _{1})U_{1}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"U_{1}\",\"d\",\"t\",\"\\\\beta_{1}\",\"U_{1}\",\"S\",\"N\",\"p\",\"U_{1}\",\"\\\\beta_{3}\",\"U_{1}\",\"U_{2}\",\"N\",\"\\\\mu\",\"\\\\delta_{1}\",\"U_{1}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dU_{1}}{dt}}={\\\\frac {\\\\beta _{1}U_{1}S}{N}}-pU_{1}+{\\\\frac {\\\\beta _{3}U_{1}U_{2}}{N}}-(\\\\mu +\\\\delta _{1})U_{1}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"U_{1}\",\"d\",\"t\",\"\\\\beta_{1}\",\"U_{1}\",\"S\",\"N\",\"p\",\"U_{1}\",\"\\\\beta_{3}\",\"U_{1}\",\"U_{2}\",\"N\",\"\\\\mu\",\"\\\\delta_{1}\",\"U_{1}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\frac{dU_1}{dt} = \\frac{\\beta_1 U_1 S}{N} - p U_1 + \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_1) U_1"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{dU_2}{dt} = p U_1 - \\\\frac{\\\\beta_3 U_1 U_2}{N} - (\\\\mu + \\\\delta_2) U_2\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dU_{2}}{dt}}=pU_{1}-{\\\\frac {\\\\beta _{3}U_{1}U_{2}}{N}}-(\\\\mu +\\\\delta _{2})U_{2}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"U_{2}\",\"d\",\"t\",\"p\",\"U_{1}\",\"\\\\beta_{3}\",\"U_{1}\",\"U_{2}\",\"N\",\"\\\\mu\",\"\\\\delta_{2}\",\"U_{2}\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dU_{2}}{dt}}=pU_{1}-{\\\\frac {\\\\beta _{3}U_{1}U_{2}}{N}}-(\\\\mu +\\\\delta _{2})U_{2}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"U_{2}\",\"d\",\"t\",\"p\",\"U_{1}\",\"\\\\beta_{3}\",\"U_{1}\",\"U_{2}\",\"N\",\"\\\\mu\",\"\\\\delta_{2}\",\"U_{2}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\frac{dU_2}{dt} = p U_1 - \\frac{\\beta_3 U_1 U_2}{N} - (\\mu + \\delta_2) U_2"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\mu\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"\\\\mu \",\"requiredPackages\":[],\"identifiers\":[\"\\\\mu\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"\\\\mu \",\"requiredPackages\":[],\"identifiers\":[\"\\\\mu\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\mu"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"p\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"p\",\"requiredPackages\":[],\"identifiers\":[\"p\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"p\",\"requiredPackages\":[],\"identifiers\":[\"p\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "p"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"t\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
   "content_type": "application/json",
-  "body": "{\"success\":true,\"checked\":\"t\",\"requiredPackages\":[],\"identifiers\":[\"t\"],\"endsWithDot\":false}"
+  "body": "{\"success\":true,\"checked\":\"t\",\"requiredPackages\":[],\"identifiers\":[\"t\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "t"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"POST\", \"https://query.portal.mardi4nfdi.de/sparql\", [], \"SELECT ?RELATION0 ?RELATION1 ?RELATION2 ?RELATION4 ?RELATION5 ?RELATION6 ?RELATION7 ?RELATION8 ?RELATION9 ?RELATION10 ?RELATION11 ?RELATION12 ?RELATION13 ?RELATION14 ?RELATION15 ?RELATION16 ?RELATION17 ?RELATION18 ?RELATION19 ?RELATION20 ?RELATION21 ?RELATION22 ?RELATION23 ?RELATION24 ?RELATION25 ?RELATION26 ?RELATION27 WHERE { BIND(EXISTS { wd:Q6684705 p:P31 ?statement0 . ?statement0 ps:P31 wd:Q60231 . } AS ?RELATION0) BIND(EXISTS { wd:Q6684705 p:P1495 ?statement1 . ?statement1 ps:P1495 wd:Q6534265 . } AS ?RELATION1) BIND(EXISTS { wd:Q6684705 p:P1460 ?statement2 . ?statement2 ps:P1460 wd:Q6534268 . } AS ?RELATION2) BIND(EXISTS { wd:Q6673795 p:P31 ?statement4 . ?statement4 ps:P31 wd:Q6534237 . } AS ?RELATION4) BIND(EXISTS { wd:Q6673795 p:P1495 ?statement5 . ?statement5 ps:P1495 wd:Q6534265 . } AS ?RELATION5) BIND(EXISTS { wd:Q6673795 p:P1460 ?statement6 . ?statement6 ps:P1460 wd:Q6534271 . } AS ?RELATION6) BIND(EXISTS { wd:Q6673795 p:P31 ?statement7 . ?statement7 ps:P31 wd:Q6482820 . } AS ?RELATION7) BIND(EXISTS { wd:Q6673724 p:P1684 ?statement8 . ?statement8 ps:P1684 wd:Q6673795 . } AS ?RELATION8) BIND(EXISTS { wd:Q6673882 p:P31 ?statement9 . ?statement9 ps:P31 wd:Q6534237 . } AS ?RELATION9) BIND(EXISTS { wd:Q6673882 p:P1495 ?statement10 . ?statement10 ps:P1495 wd:Q6534265 . } AS ?RELATION10) BIND(EXISTS { wd:Q6673882 p:P1460 ?statement11 . ?statement11 ps:P1460 wd:Q6534271 . } AS ?RELATION11) BIND(EXISTS { wd:Q6673882 p:P31 ?statement12 . ?statement12 ps:P31 wd:Q6482820 . } AS ?RELATION12) BIND(EXISTS { wd:Q6674120 p:P1684 ?statement13 . ?statement13 ps:P1684 wd:Q6673882 . } AS ?RELATION13) BIND(EXISTS { wd:Q6673724 p:P1684 ?statement14 . ?statement14 ps:P1684 wd:Q6673882 . } AS ?RELATION14) BIND(EXISTS { wd:Q6534304 p:P31 ?statement15 . ?statement15 ps:P31 wd:Q6534245 . } AS ?RELATION15) BIND(EXISTS { wd:Q6534304 p:P1495 ?statement16 . ?statement16 ps:P1495 wd:Q6534265 . } AS ?RELATION16) BIND(EXISTS { wd:Q6534304 p:P1460 ?statement17 . ?statement17 ps:P1460 wd:Q6534271 . } AS ?RELATION17) BIND(EXISTS { wd:Q6534304 p:P31 ?statement18 . ?statement18 ps:P31 wd:Q6775553 . } AS ?RELATION18) BIND(EXISTS { wd:Q6534304 p:P1654 ?statement19 . ?statement19 ps:P1654 \\\"Time\\\" . } AS ?RELATION19) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement20 . ?statement20 ps:P1684 wd:Q6674052 . } AS ?RELATION20) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement21 . ?statement21 ps:P1684 wd:Q6674046 . } AS ?RELATION21) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement22 . ?statement22 ps:P1684 wd:Q6674045 . } AS ?RELATION22) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement23 . ?statement23 ps:P1684 wd:Q6673995 . } AS ?RELATION23) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement24 . ?statement24 ps:P1684 wd:Q6673969 . } AS ?RELATION24) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement25 . ?statement25 ps:P1684 wd:Q6673931 . } AS ?RELATION25) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement26 . ?statement26 ps:P1684 wd:Q6673794 . } AS ?RELATION26) BIND(EXISTS { wd:Q6534304 p:P1684 ?statement27 . ?statement27 ps:P1684 wd:Q6673735 . } AS ?RELATION27) }\"]",
   "url": "https://query.portal.mardi4nfdi.de/sparql",
   "status": 200,
   "content_type": "application/sparql-results+json;charset=utf-8",
-  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"RELATION0\", \"RELATION1\", \"RELATION2\", \"RELATION4\", \"RELATION5\", \"RELATION6\", \"RELATION7\", \"RELATION8\", \"RELATION9\", \"RELATION10\", \"RELATION11\", \"RELATION12\", \"RELATION13\", \"RELATION14\", \"RELATION15\", \"RELATION16\", \"RELATION17\", \"RELATION18\", \"RELATION19\", \"RELATION20\", \"RELATION21\", \"RELATION22\", \"RELATION23\", \"RELATION24\", \"RELATION25\", \"RELATION26\", \"RELATION27\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ {\n      \"RELATION0\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION1\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION2\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION4\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION5\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION6\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION7\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION8\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION9\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION10\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION11\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION12\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION13\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION14\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION15\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION16\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION17\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION18\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION19\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION20\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION21\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION22\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION23\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION24\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION25\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION26\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION27\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      }\n    } ]\n  }\n}"
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"RELATION0\", \"RELATION1\", \"RELATION2\", \"RELATION4\", \"RELATION5\", \"RELATION6\", \"RELATION7\", \"RELATION8\", \"RELATION9\", \"RELATION10\", \"RELATION11\", \"RELATION12\", \"RELATION13\", \"RELATION14\", \"RELATION15\", \"RELATION16\", \"RELATION17\", \"RELATION18\", \"RELATION19\", \"RELATION20\", \"RELATION21\", \"RELATION22\", \"RELATION23\", \"RELATION24\", \"RELATION25\", \"RELATION26\", \"RELATION27\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ {\n      \"RELATION0\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION1\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION2\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION4\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION5\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION6\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION7\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION8\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION9\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION10\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION11\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION12\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION13\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION14\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION15\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION16\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION17\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION18\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION19\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION20\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION21\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION22\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION23\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION24\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION25\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION26\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      },\n      \"RELATION27\" : {\n        \"datatype\" : \"http://www.w3.org/2001/XMLSchema#boolean\",\n        \"type\" : \"literal\",\n        \"value\" : \"true\"\n      }\n    } ]\n  }\n}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "SELECT ?RELATION0 ?RELATION1 ?RELATION2 ?RELATION4 ?RELATION5 ?RELATION6 ?RELATION7 ?RELATION8 ?RELATION9 ?RELATION10 ?RELATION11 ?RELATION12 ?RELATION13 ?RELATION14 ?RELATION15 ?RELATION16 ?RELATION17 ?RELATION18 ?RELATION19 ?RELATION20 ?RELATION21 ?RELATION22 ?RELATION23 ?RELATION24 ?RELATION25 ?RELATION26 ?RELATION27 WHERE {\nBIND(EXISTS {\n  wd:Q6684705 p:P31 ?statement0 .\n  ?statement0 ps:P31 wd:Q60231 .\n} AS ?RELATION0)\nBIND(EXISTS {\n  wd:Q6684705 p:P1495 ?statement1 .\n  ?statement1 ps:P1495 wd:Q6534265 .\n} AS ?RELATION1)\nBIND(EXISTS {\n  wd:Q6684705 p:P1460 ?statement2 .\n  ?statement2 ps:P1460 wd:Q6534268 .\n} AS ?RELATION2)\nBIND(EXISTS {\n  wd:Q6673795 p:P31 ?statement4 .\n  ?statement4 ps:P31 wd:Q6534237 .\n} AS ?RELATION4)\nBIND(EXISTS {\n  wd:Q6673795 p:P1495 ?statement5 .\n  ?statement5 ps:P1495 wd:Q6534265 .\n} AS ?RELATION5)\nBIND(EXISTS {\n  wd:Q6673795 p:P1460 ?statement6 .\n  ?statement6 ps:P1460 wd:Q6534271 .\n} AS ?RELATION6)\nBIND(EXISTS {\n  wd:Q6673795 p:P31 ?statement7 .\n  ?statement7 ps:P31 wd:Q6482820 .\n} AS ?RELATION7)\nBIND(EXISTS {\n  wd:Q6673724 p:P1684 ?statement8 .\n  ?statement8 ps:P1684 wd:Q6673795 .\n} AS ?RELATION8)\nBIND(EXISTS {\n  wd:Q6673882 p:P31 ?statement9 .\n  ?statement9 ps:P31 wd:Q6534237 .\n} AS ?RELATION9)\nBIND(EXISTS {\n  wd:Q6673882 p:P1495 ?statement10 .\n  ?statement10 ps:P1495 wd:Q6534265 .\n} AS ?RELATION10)\nBIND(EXISTS {\n  wd:Q6673882 p:P1460 ?statement11 .\n  ?statement11 ps:P1460 wd:Q6534271 .\n} AS ?RELATION11)\nBIND(EXISTS {\n  wd:Q6673882 p:P31 ?statement12 .\n  ?statement12 ps:P31 wd:Q6482820 .\n} AS ?RELATION12)\nBIND(EXISTS {\n  wd:Q6674120 p:P1684 ?statement13 .\n  ?statement13 ps:P1684 wd:Q6673882 .\n} AS ?RELATION13)\nBIND(EXISTS {\n  wd:Q6673724 p:P1684 ?statement14 .\n  ?statement14 ps:P1684 wd:Q6673882 .\n} AS ?RELATION14)\nBIND(EXISTS {\n  wd:Q6534304 p:P31 ?statement15 .\n  ?statement15 ps:P31 wd:Q6534245 .\n} AS ?RELATION15)\nBIND(EXISTS {\n  wd:Q6534304 p:P1495 ?statement16 .\n  ?statement16 ps:P1495 wd:Q6534265 .\n} AS ?RELATION16)\nBIND(EXISTS {\n  wd:Q6534304 p:P1460 ?statement17 .\n  ?statement17 ps:P1460 wd:Q6534271 .\n} AS ?RELATION17)\nBIND(EXISTS {\n  wd:Q6534304 p:P31 ?statement18 .\n  ?statement18 ps:P31 wd:Q6775553 .\n} AS ?RELATION18)\nBIND(EXISTS {\n  wd:Q6534304 p:P1654 ?statement19 .\n  ?statement19 ps:P1654 \"Time\" .\n} AS ?RELATION19)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement20 .\n  ?statement20 ps:P1684 wd:Q6674052 .\n} AS ?RELATION20)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement21 .\n  ?statement21 ps:P1684 wd:Q6674046 .\n} AS ?RELATION21)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement22 .\n  ?statement22 ps:P1684 wd:Q6674045 .\n} AS ?RELATION22)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement23 .\n  ?statement23 ps:P1684 wd:Q6673995 .\n} AS ?RELATION23)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement24 .\n  ?statement24 ps:P1684 wd:Q6673969 .\n} AS ?RELATION24)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement25 .\n  ?statement25 ps:P1684 wd:Q6673931 .\n} AS ?RELATION25)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement26 .\n  ?statement26 ps:P1684 wd:Q6673794 .\n} AS ?RELATION26)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement27 .\n  ?statement27 ps:P1684 wd:Q6673735 .\n} AS ?RELATION27)\n}",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
  }
 ]

@@ -76,3 +76,11 @@ def test_actions_are_kept_up_to_date():
     '''An outdated action (pypi-publish 1.12.4) once carried a critical security alert.'''
     config = yaml.safe_load((WORKFLOWS.parent / 'dependabot.yml').read_text(encoding='utf-8'))
     assert {'package-ecosystem': 'github-actions', 'directory': '/'}.items() <= config['updates'][0].items()
+
+
+def test_the_live_check_runs_at_night_or_by_hand_and_writes_only_issues():
+    '''It sends requests to the portal: never for pushes or pull requests (#93).'''
+    live = load('live-check.yml')
+    assert live['on'].keys() == {'schedule', 'workflow_dispatch'}
+    assert live['permissions'] == {'contents': 'read', 'issues': 'write'}
+    assert any('LIVE' in step.get('env', {}) for step in live['jobs']['live']['steps'])
