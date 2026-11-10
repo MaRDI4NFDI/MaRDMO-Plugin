@@ -24,8 +24,10 @@ from rdmo.projects.imports import RDMOXMLImport
 
 from MaRDMO import main
 from MaRDMO.checks import Checks
+from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_url
 from MaRDMO.helpers import is_cyclic, topological_order
+from MaRDMO.ids import is_user_id, part_id
 from tests.db.conftest import select
 from tests.db.test_hydration import CASES
 
@@ -103,3 +105,30 @@ def test_unchanged_portal_item_exports_as_stored(name, project, portal):
     selected = project(catalog)
     select(selected, qkey, page, external_id, f'{label} ({description}) [{external_id.split(":")[0]}]')
     compare(f'portal_{name}', export(selected))
+
+
+# New publication parts: an author with ORCID iD (Josiah Carberry's, ORCID's example) and a journal (#118)
+ORCID, ISSN = '0000-0002-1825-0097', '1234-5679'
+
+
+def test_new_authors_and_journals_export_as_stored(project, portal):
+    '''Authors with and without identifiers, and a journal, as the preview writes them.
+
+    The author without ORCID iD and zbMATH ID is not created.
+    '''
+    portal('export_chowdhury_2020', 'export_publication_parts')
+    documentation = imported(project, 'chowdhury_2020')
+
+    def write(part, field, text, index=0):
+        documentation.values.filter(attribute__uri=f'{BASE_URI}domain/publication/{part}/{field}',
+                                    collection_index=index).update(text=text)
+    write('author', 'id', part_id('author', ORCID))
+    write('author', 'orcid', ORCID)
+    write('author', 'description', f'scientist (ORCID iD {ORCID})')
+    write('journal', 'id', part_id('journal', ISSN))
+    write('journal', 'name', 'Journal of Reproducible Tests')
+    write('journal', 'issn', ISSN)
+    write('journal', 'description', f'scientific journal (ISSN {ISSN})')
+    authors = documentation.values.filter(attribute__uri=f'{BASE_URI}domain/publication/author/id')
+    assert authors.count() == 4 and all(is_user_id(author.text) for author in authors)
+    compare('chowdhury_2020_publication_parts', export(documentation))

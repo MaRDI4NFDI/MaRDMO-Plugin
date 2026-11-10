@@ -31,11 +31,16 @@ def without_page(values):
     return any(isinstance(value, str) and is_own_item(value) for value in values)
 
 
+# IDs of answers saved before 0.8.0: own items, and new authors and journals of
+# publications (#118)
+_OLD_IDS = (NOT_FOUND, 'no author found', 'no journal found')
+
+
 def has_old_id(entry):
-    '''Return ``True`` if *entry* or an answer in it has "not found" as ID (made before 0.8.0).'''
+    '''Return ``True`` if *entry* or an answer in it has an ID of before 0.8.0 ("not found").'''
     if not isinstance(entry, dict):
         return False
-    return entry.get('ID') == NOT_FOUND or any(has_old_id(value) for value in entry.values())
+    return entry.get('ID') in _OLD_IDS or any(has_old_id(value) for value in entry.values())
 
 # Reference answers to check: (option key, label in messages, noun for "no ... provided")
 SOFTWARE_REFERENCE_CHECKS = (

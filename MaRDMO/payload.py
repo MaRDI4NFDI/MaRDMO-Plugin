@@ -72,7 +72,8 @@ _MEANING_QUALIFIERS = ('object has role', 'symbol represents', 'platform')
 # formula") have their own check that compares the qualifiers.
 _MEANING_PROPERTIES = ('contains', 'described by source', 'uses')
 # Class of items created from publication data that the worker does not handle
-_NEW_ITEM_CLASS = {'no author found': 'Author', 'no journal found': 'Journal'}
+# Class of new authors and journals of publications (kind, see helpers.PART_KINDS)
+_NEW_ITEM_CLASS = {'author': 'Author', 'journal': 'Journal'}
 # Duplicate checks of new items running at the same time
 _DUPLICATE_CHECK_THREADS = 4
 
@@ -1575,8 +1576,8 @@ class GeneratePayload:
         Args:
             value:   Item dict with optional keys ``ID``, ``orcid``, ``zbmath``,
                      and ``issn``.
-            id_type: Source tag string (e.g. ``'wikidata'``,
-                     ``'no author found'``, ``'no journal found'``).
+            id_type: Source of the item (``'wikidata'``), or the kind of a new
+                     publication part (``'author'``, ``'journal'``).
 
         Returns:
             List of ``[property_id, datatype, value_str]`` statement triples.
@@ -1591,7 +1592,7 @@ class GeneratePayload:
                     value['ID'].split(':')[1]
                 ]
             )
-        if id_type == 'no author found':
+        if id_type == 'author':
             # Add ORCID ID Statement
             if value.get('orcid'):
                 statements.append(
@@ -1626,7 +1627,7 @@ class GeneratePayload:
                         self.wikibase['items']['MaRDI person profile']
                     ]
                 )
-        if id_type == 'no journal found':
+        if id_type == 'journal':
             # Add ISSN ID Statement
             if value.get('issn'):
                 statements.append(
@@ -1657,8 +1658,9 @@ class GeneratePayload:
         """Populate the payload dictionary with an entry for every item in ``user_items``.
 
         Dispatches each item to a source-specific handler based on the prefix
-        of its ``ID`` field (``mardi``, ``wikidata``, ``not found``,
-        ``no author found``, ``no journal found``).  Existing MaRDI items are
+        of its ``ID`` field (``mardi``, ``wikidata``, ``not found`` for the
+        user's own items), or for a new author or journal of a publication its
+        ``kind`` (``author``, ``journal``, #118).  Existing MaRDI items are
         registered with their real QID; new items get an empty id and a
         seed list of statements.  Raises :exc:`ValueError` for Wikidata or
         user-created items whose label/description combination already exists
@@ -1708,7 +1710,7 @@ class GeneratePayload:
                     )
                 )
             ),
-            'no author found': lambda key, value: (
+            'author': lambda key, value: (
                 self._check_mardi_and_raise(
                     value['Name'],
                     value['Description']
@@ -1721,12 +1723,12 @@ class GeneratePayload:
                         value['Description'],
                         self._statement_by_id_type(
                             value,
-                            'no author found'
+                            'author'
                         )
                     )
                 )
             ),
-            'no journal found': lambda key, value: (
+            'journal': lambda key, value: (
                 self._check_mardi_and_raise(
                     value['Name'],
                     value['Description']
@@ -1739,7 +1741,7 @@ class GeneratePayload:
                         value['Description'],
                         self._statement_by_id_type(
                             value,
-                            'no journal found'
+                            'journal'
                         )
                     )
                 )
@@ -1750,10 +1752,14 @@ class GeneratePayload:
         for key, value in self.user_items.items():
             if not value.get('ID'):
                 continue
-            # The user's own items (user:<uuid>, or "not found" in relations)
-            id_type = 'not found' if is_own_item(value['ID']) else next(
-                (id_type for id_type in handlers if id_type in value['ID']), None)
-            if id_type and (id_type != 'no author found' or value['zbmath'] or value['orcid']):
+            # The user's own items (user:<uuid>, or "not found" in relations);
+            # new authors and journals by where they are (#118)
+            if is_own_item(value['ID']):
+                id_type = value.get('kind') or 'not found'
+            else:
+                id_type = next((source for source in ('mardi', 'wikidata') if source in value['ID']), None)
+            # An author without ORCID iD and zbMATH ID is not created
+            if id_type and (id_type != 'author' or value['zbmath'] or value['orcid']):
                 todo.append((id_type, handlers[id_type], key, value))
 
         self._check_duplicates(

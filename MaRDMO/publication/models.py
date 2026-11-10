@@ -17,6 +17,7 @@ from typing import Optional, ClassVar
 
 from ..getters import get_items, get_options
 from ..helpers import date_format, split_value
+from ..ids import part_id
 
 
 def _first(values):
@@ -40,6 +41,11 @@ class Author:
     zbmath_id: Optional[str]
     wikidata_id: Optional[str]
 
+    def __post_init__(self):
+        '''A new author (a name, no item of the MaRDI Portal or Wikidata) gets its ``user:`` ID (#118).'''
+        if not self.id and self.label:
+            self.id = part_id('author', self.orcid_id, self.zbmath_id, self.wikidata_id, self.label)
+
     @classmethod
     def from_query(cls, raw: str) -> 'Author':
         '''Parse a ``<|>``-delimited SPARQL result string into an Author instance.
@@ -53,8 +59,6 @@ class Author:
         '''
         identifier, label, description, orcid_id, zbmath_id, wikidata_id = raw.split(" <|> ")
 
-        if label and not identifier:
-            identifier = 'no author found'
 
         if not description:
             if orcid_id:
@@ -82,7 +86,7 @@ class Author:
                  keys ``given``, ``family``, and ``ORCID``.
 
         Returns:
-            Author instance; ``id`` is ``'no author found'`` when a name is present
+            Author instance; ``id`` is a new ``user:`` ID when a name is present
             but no MaRDI Portal entry exists yet.
         '''
         # Get Label
@@ -92,8 +96,6 @@ class Author:
 
         # Get MaRDI Portal ID
         identifier = None
-        if label:
-            identifier = 'no author found'
 
         # Get ORCID ID
         orcid_id = None
@@ -133,7 +135,7 @@ class Author:
                  keys ``givenName``, ``familyName``, and ``nameIdentifiers``.
 
         Returns:
-            Author instance; ``id`` is ``'no author found'`` when a name is present
+            Author instance; ``id`` is a new ``user:`` ID when a name is present
             but no MaRDI Portal entry exists yet.
         '''
         # Get Label
@@ -143,8 +145,6 @@ class Author:
 
         # Get MaRDI Portal ID
         identifier = None
-        if label:
-            identifier = 'no author found'
 
         # Get ORCID ID
         orcid_id = None
@@ -186,7 +186,7 @@ class Author:
                  keys ``given``, ``family``, and ``ORCID``.
 
         Returns:
-            Author instance; ``id`` is ``'no author found'`` when a name is present
+            Author instance; ``id`` is a new ``user:`` ID when a name is present
             but no MaRDI Portal entry exists yet.
         '''
         # Get Label
@@ -196,8 +196,6 @@ class Author:
 
         # Get MaRDI Portal ID
         identifier = None
-        if label:
-            identifier = 'no author found'
 
         # Get ORCID ID
         orcid_id = None
@@ -236,7 +234,7 @@ class Author:
                  with optional keys ``name`` and ``codes``.
 
         Returns:
-            Author instance; ``id`` is ``'no author found'`` when a name is present
+            Author instance; ``id`` is a new ``user:`` ID when a name is present
             but no MaRDI Portal entry exists yet.
         '''
         # Get Label
@@ -246,8 +244,6 @@ class Author:
 
         # Get MaRDI Portal ID
         identifier = None
-        if label:
-            identifier = 'no author found'
 
         # Get ORCID ID
         orcid_id = None
@@ -286,7 +282,7 @@ class Author:
                  ``orcid-id``, ``given-names``, and ``family-names``.
 
         Returns:
-            Author instance; ``id`` is ``'no author found'`` when a name is present
+            Author instance; ``id`` is a new ``user:`` ID when a name is present
             but no MaRDI Portal entry exists yet.
         '''
 
@@ -302,8 +298,6 @@ class Author:
 
         # Get MaRDI Portal ID
         identifier = None
-        if label:
-            identifier = 'no author found'
 
         # Get Description
         description = None
@@ -331,6 +325,11 @@ class Journal:
     description: str
     # Wikidata QID of a MaRDI Portal journal (from journal.sparql)
     wikidata_id: Optional[str] = None
+
+    def __post_init__(self):
+        '''A new journal (a title, no item of the MaRDI Portal or Wikidata) gets its ``user:`` ID (#118).'''
+        if not self.id and self.label:
+            self.id = part_id('journal', self.issn, self.wikidata_id, self.label)
 
     @classmethod
     def from_query(cls, raw: str) -> 'Journal':
@@ -375,7 +374,7 @@ class Journal:
             item: List of container-title strings from the Crossref response (may be empty).
 
         Returns:
-            Journal instance; ``id`` is ``'no journal found'`` when a title is present
+            Journal instance; ``id`` is a new ``user:`` ID when a title is present
             but no MaRDI Portal entry exists yet.
         '''
         # Get Label
@@ -390,8 +389,6 @@ class Journal:
 
         # Get MaRDI Portal ID
         identifier = None
-        if label:
-            identifier = 'no journal found'
 
         # Get Description
         description = None
@@ -417,7 +414,7 @@ class Journal:
             item: List of relatedItem dicts from the DataCite response (may be empty).
 
         Returns:
-            Journal instance; ``id`` is ``'no journal found'`` when a title is present
+            Journal instance; ``id`` is a new ``user:`` ID when a title is present
             but no MaRDI Portal entry exists yet.
         '''
         # Get Label
@@ -433,8 +430,6 @@ class Journal:
 
         # Get MaRDI Portal ID
         identifier = None
-        if label:
-            identifier = 'no journal found'
 
         # Get Description
         description = None
@@ -460,7 +455,7 @@ class Journal:
             item: Container-title string from the DOI API response (may be None).
 
         Returns:
-            Journal instance; ``id`` is ``'no journal found'`` when a title is present
+            Journal instance; ``id`` is a new ``user:`` ID when a title is present
             but no MaRDI Portal entry exists yet.
         '''
         # Get Label
@@ -475,8 +470,6 @@ class Journal:
 
         # Get MaRDI Portal ID
         identifier = None
-        if label:
-            identifier = 'no journal found'
 
         # Get Description
         description = None
@@ -502,7 +495,7 @@ class Journal:
                  an optional ``series`` list with ``title`` and ``issn`` entries.
 
         Returns:
-            Journal instance; ``id`` is ``'no journal found'`` when a title is present
+            Journal instance; ``id`` is a new ``user:`` ID when a title is present
             but no MaRDI Portal entry exists yet.
         '''
         series = (raw.get('series') or [{}])[0]
@@ -519,8 +512,6 @@ class Journal:
 
         # Get MaRDI Portal ID
         identifier = None
-        if label:
-            identifier = 'no journal found'
 
         # Get Description
         description = None

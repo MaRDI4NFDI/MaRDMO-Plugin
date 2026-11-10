@@ -22,6 +22,7 @@ from .utils import clean_background_data, get_citation
 from ..constants import BASE_URI
 from ..getters import get_items, get_options, get_properties, get_questions
 from ..helpers import commit_writes, date_precision, find_reference, value_editor
+from ..ids import is_user_id, item_text
 
 # Publications whose citation data is looked up at the same time
 CITATION_LOOKUPS_IN_PARALLEL = 3
@@ -121,9 +122,7 @@ class PublicationRetriever:
                             project = project,
                             uri = f'{BASE_URI}{self.questions["Publication"]["ID"]["uri"]}',
                             info = {
-                                'text':
-                                    f"{_single_line(data.label)} ({_single_line(data.description)})"
-                                    f" [{data.id.split(':')[0]}]",
+                                'text': item_text(_single_line(data.label), _single_line(data.description)),
                                 'external_id': data.id,
                                 'set_index': key
                             }
@@ -280,7 +279,8 @@ class PublicationExport:
         '''
         for publication in publications.values():
             for entry in publication.get('journal', {}).values():
-                if not entry.get("ID") or entry.get("ID") == 'no journal found':
+                # New journals get all their statements in the payload (#118)
+                if not entry.get("ID") or is_user_id(entry["ID"]):
                     continue
 
                 payload.get_item_key(value=entry)
@@ -307,7 +307,8 @@ class PublicationExport:
         '''
         for publication in publications.values():
             for entry in publication.get('author', {}).values():
-                if not entry.get("ID") or entry.get("ID") == 'no author found':
+                # New authors get all their statements in the payload (#118)
+                if not entry.get("ID") or is_user_id(entry["ID"]):
                     continue
 
                 payload.get_item_key(value=entry)
