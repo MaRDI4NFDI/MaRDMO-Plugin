@@ -144,6 +144,18 @@ portal); afterwards every answer with one of them gets the new `mardi:` ID
 and the text "Label (Description)" (`MaRDMO.helpers.replace_ids`).
 Answers with the ID of an exported Wikidata item get its new `mardi:` ID too.
 
+## Authors and journals of publications
+
+The preview writes the authors and the journal of a publication from its
+citation each time again (background answers, no questions).  An author or
+journal that is neither on the MaRDI Portal nor on Wikidata gets a `user:`
+ID derived from its first identifier (`MaRDMO.ids.part_id`: ORCID iD,
+zbMATH author ID, Wikidata QID or name; ISSN, Wikidata QID or title), so it
+has the same ID in every preview and in every publication.  The export
+knows from where it is (author or journal of a publication) what to create:
+a person with ORCID iD / zbMATH author ID (not created without either), or
+a journal with its ISSN; afterwards `replace_ids` gives it its `mardi:` ID.
+
 ## Projects made before MaRDMO 0.8.0
 
 Before 0.8.0, own items had `not found` as their ID, and relations to them

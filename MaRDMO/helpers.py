@@ -1102,6 +1102,11 @@ def collect_items_without_section(data, parent_key, child_key, nested=False):
     return result
 
 
+# Answer keys of a publication's parts: an item under them is an author or a
+# journal (#118), which the export creates with their own statements
+PART_KINDS = {'author': 'author', 'journal': 'journal'}
+
+
 def unique_items(data, title = None):
     '''Collect all unique items referenced anywhere in *data*.
 
@@ -1116,7 +1121,9 @@ def unique_items(data, title = None):
 
     Returns:
         Tuple ``(items, dependency)`` where *items* maps ``"Item<n>"`` keys to
-        ``{ID, Name, Description, orcid, zbmath, issn}`` dicts and *dependency*
+        ``{ID, Name, Description, orcid, zbmath, issn}`` dicts (with ``kind``
+        ``author`` or ``journal`` for the authors and journals of
+        publications, see :data:`PART_KINDS`) and *dependency*
         maps the same keys to empty sets (populated later by
         :class:`~MaRDMO.payload.GeneratePayload`).
     '''
@@ -1128,7 +1135,7 @@ def unique_items(data, title = None):
     if title:
         triple = (
             *item_key('not found', title, data.get('general', {}).get('objective', '')),
-            '', '', ''
+            '', '', '', None
         )
         items[f'Item{str(0).zfill(10)}'] = {
             'ID': 'not found',
@@ -1138,14 +1145,15 @@ def unique_items(data, title = None):
         seen_items[triple] = f'Item{str(0).zfill(10)}'
         dependency.update({f'Item{str(0).zfill(10)}': set()})
     # Add Workflow Component Items
-    def search(subdict):
-        '''Search unique Items'''
+    def search(subdict, kind=None):
+        '''Search unique Items; *kind* is the kind of the publication part they are in.'''
         if isinstance(subdict, dict) and 'ID' in subdict:
             triple = (
                 *item_key(subdict.get('ID', ''), subdict.get('Name', ''), subdict.get('Description', '')),
                 subdict.get('orcid', ''),
                 subdict.get('zbmath', ''),
-                subdict.get('issn', '')
+                subdict.get('issn', ''),
+                kind
             )
             if triple not in seen_items:
                 item = f'Item{str(len(items)).zfill(10)}'  # Create unique key
@@ -1157,6 +1165,8 @@ def unique_items(data, title = None):
                     'zbmath': triple[4],
                     'issn': triple[5]
                 }
+                if kind:
+                    items[item]['kind'] = kind
                 seen_items[triple] = item
                 dependency.update({item: set()})
             # All user: IDs of the item, to give them its portal ID after the export
@@ -1165,9 +1175,9 @@ def unique_items(data, title = None):
                 if subdict['ID'] not in user_ids:
                     user_ids.append(subdict['ID'])
         if isinstance(subdict, dict):
-            for value in subdict.values():
+            for key, value in subdict.items():
                 if isinstance(value, dict):
-                    search(value)
+                    search(value, PART_KINDS.get(key, kind))
     search(data)
     return items, dependency
 

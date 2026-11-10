@@ -36,6 +36,19 @@ def new_user_id():
     return f'user:{uuid.uuid4()}'
 
 
+def part_id(kind, *keys):
+    '''Return the ``user:`` ID of a new author or journal (*kind*) of a publication.
+
+    The preview writes a publication's authors and journal again each time
+    from its citation, so their ID is derived from the first of *keys* that
+    is given (ORCID iD, zbMATH ID, Wikidata QID, name; ISSN, Wikidata QID,
+    title): the same each time, and the same for the same author in two
+    publications.
+    '''
+    key = next((key for key in keys if key and key != 'None'), '')
+    return f'user:{uuid.uuid5(uuid.NAMESPACE_URL, f"mardmo/{kind}/{key}")}'
+
+
 def is_user_id(identifier):
     '''Return ``True`` if *identifier* is the ID of an item of the user's own.'''
     return bool(identifier) and identifier.startswith('user:')

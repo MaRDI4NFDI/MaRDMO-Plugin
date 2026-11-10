@@ -68,10 +68,10 @@ def new_publication_items():
     payload = GeneratePayload(
         url='https://portal.example.org',
         user_items={
-            'Item0000000001': {'ID': 'no journal found', 'Name': 'New Journal', 'Description': 'scientific journal',
-                               'issn': '1234-5678'},
-            'Item0000000002': {'ID': 'no author found', 'Name': 'A. Author', 'Description': 'scientist',
-                               'orcid': '0000-0001-0000-0001', 'zbmath': ''},
+            'Item0000000001': {'ID': 'user:journal', 'Name': 'New Journal', 'Description': 'scientific journal',
+                               'issn': '1234-5678', 'kind': 'journal'},
+            'Item0000000002': {'ID': 'user:author', 'Name': 'A. Author', 'Description': 'scientist',
+                               'orcid': '0000-0001-0000-0001', 'zbmath': '', 'kind': 'author'},
         },
         wikibase={'items': get_items(), 'properties': get_properties(), 'relations': {}},
         dependency={'Item0000000001': set(), 'Item0000000002': set()},
@@ -154,11 +154,11 @@ def test_publication_info_counts_what_the_export_creates():
         'volume': '5', 'issue': '2', 'page': '1-10',
         'author': {
             0: {'Name': 'On Portal', 'ID': 'mardi:Q1'},
-            1: {'Name': 'With ORCID', 'ID': 'no author found', 'orcid': '0000-0001'},
-            2: {'Name': 'Name Only', 'ID': 'no author found'},
+            1: {'Name': 'With ORCID', 'ID': 'user:a1', 'orcid': '0000-0001'},
+            2: {'Name': 'Name Only', 'ID': 'user:a2'},
             3: {'Name': 'Fourth', 'ID': 'wikidata:Q5'},
         },
-        'journal': {0: {'Name': 'New Journal', 'ID': 'no journal found', 'issn': '1234-5678'}},
+        'journal': {0: {'Name': 'New Journal', 'ID': 'user:j', 'issn': '1234-5678'}},
     }
     info = publication_info(values)
     assert info['new'] == ['publication', 'journal', '2 authors']
