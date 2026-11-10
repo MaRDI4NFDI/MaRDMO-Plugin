@@ -26,7 +26,7 @@ from .getters import (
     get_url,
 )
 from .helpers import process_qualifier, value_editor
-from .ids import is_portal_item
+from .ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .workflow.models import ProcessStepUsage
 from .queries import query_sparql, query_sparql_parts
@@ -244,7 +244,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                 spec.visited.add(relatant.id)
 
                 source = relatant.id.split(':')[0]
-                text   = f'{relatant.label} ({relatant.description}) [{source}]'
+                text   = item_text(relatant.label, relatant.description)
 
                 # Re-read the free index every iteration: a preceding
                 # fill_method / batch_fill_method call may have created pages
@@ -321,7 +321,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                         continue
                     spec.visited.add(ext_id)
                     source = ext_id.split(':')[0]
-                    text   = f'{item["label"]} ({item["description"]}) [{source}]'
+                    text   = item_text(item["label"], item["description"])
 
                     # Re-read every iteration — see _hydrate_relatants / _next_set_index.
                     next_idx = _next_set_index(project, spec.question_set_uri)
@@ -369,8 +369,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                 continue
             visited.add(pub.id)
 
-            source = pub.id.split(':')[0]
-            text   = f'{pub.label} ({pub.description}) [{source}]'
+            text   = item_text(pub.label, pub.description)
             value_editor(project=project, uri=pub_set_uri,
                          info={'text': f'P{next_idx + 1}', 'set_index': next_idx})
             value_editor(project=project, uri=pub_id_uri,

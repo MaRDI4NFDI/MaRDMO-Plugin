@@ -109,7 +109,7 @@ class Information:
 
         Args:
             project:     RDMO project instance.
-            text:        Raw ID-field text (``"Label (Description) [source]"``).
+            text:        Raw ID-field text (``"Label (Description)"``).
             external_id: External ID string in ``"source:id"`` format.
             set_index:   Set-index of the publication page.
             catalog:     Active catalog URI string (used for relation dispatch).

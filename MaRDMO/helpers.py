@@ -332,7 +332,7 @@ def basic_dict(value):
 
     Extracts the label and description from the human-readable text of a
     relation answer and returns them together with the external ID.  The
-    text of a portal item is ``"Label (Description) [source]"``; the text of
+    text of a portal item is ``"Label (Description)"``; the text of
     an own item is its label as typed (#129): an item with a page gets its
     page's name and description (:func:`link_to_pages`), one without a
     generic description (:func:`describe_items_without_page`).
@@ -415,12 +415,13 @@ def nested_set(data, path, entry):
 def extract_parts(string):
     '''Extract the label, description, and source tag from an ID question text string.
 
-    Expected format: ``"Label (Description) [source]"``.  Falls back gracefully
-    when the format is incomplete.
+    Expected format: ``"Label (Description)"``; answers saved before 0.8.0
+    may end with a source tag (``"Euler method (algorithm) [mardi]"``), which
+    is stripped (#103).  Falls back gracefully when the format is incomplete.
+    The source of an item is its ID's, not the text's.
 
     Args:
-        string: ID question text value, typically produced by RDMO provider
-                ``get_options`` calls (e.g. ``"Euler method (algorithm) [mardi]"``).
+        string: Text of an answer that refers to an item.
 
     Returns:
         Tuple ``(label, description, source)`` of extracted string components.
@@ -994,12 +995,14 @@ def relation_exists(value, set_prefix_red, info, relation_id=None):
     Used by :func:`~MaRDMO.adders.add_relations_static` and
     :func:`~MaRDMO.adders.add_relations_flexible` to avoid duplicate entries.
 
+    A relation is the same when it has the item's ID (#103); another item
+    with the same label and description is another relation.
+
     Args:
-        value:           Relatant object with ``id``, ``label``, and
-                         ``description`` attributes.
+        value:           Relatant object with an ``id`` attribute.
         set_prefix_red:  Reduced integer set-prefix of the parent entity.
         info:            Dict of existing DB values keyed by ``value_ids``,
-                         ``set_prefix_ids``, ``texts``, and optionally ``rels``.
+                         ``set_prefix_ids``, and optionally ``rels``.
         relation_id:     Option URI of the relation type; when provided the
                          check also verifies that the relation type matches.
 
@@ -1010,30 +1013,14 @@ def relation_exists(value, set_prefix_red, info, relation_id=None):
     # Case: relation check required
     if relation_id and "rels" in info:
         return any(
-            (
-                (f"{value.label} ({value.description})" == text or vid == value.id)
-                and int(sid) == set_prefix_red
-                and rel == relation_id
-            )
-            for vid, sid, rel, text in zip(
-                info['value_ids'],
-                info['set_prefix_ids'],
-                info['rels'],
-                info['texts'],
-            )
+            vid == value.id and int(sid) == set_prefix_red and rel == relation_id
+            for vid, sid, rel in zip(info['value_ids'], info['set_prefix_ids'], info['rels'])
         )
 
     # Case: only value + set check
     return any(
-        (
-            (f"{value.label} ({value.description})" == text or vid == value.id)
-            and int(sid) == set_prefix_red
-        )
-        for vid, sid, text in zip(
-            info['value_ids'],
-            info['set_prefix_ids'],
-            info['texts']
-        )
+        vid == value.id and int(sid) == set_prefix_red
+        for vid, sid in zip(info['value_ids'], info['set_prefix_ids'])
     )
 
 def relevant_set_ids(info, set_prefix_red):
@@ -1441,11 +1428,12 @@ def replace_ids(project, created):
     :class:`~rdmo.projects.models.Value` in *project* that holds its old ID
     gets the new ``mardi:<QID>`` identifier:
 
-    - **Wikidata items**: matched by their ``wikidata:<QID>``; ``[wikidata]``
-      is replaced by ``[mardi]`` in the text field.
+    - **Wikidata items**: matched by their ``wikidata:<QID>``.
     - **Items of the user's own**: matched by their ``user:`` IDs (all of
-      them, if the export made one item of several, see :func:`unique_items`);
-      the text becomes ``"label (description) [mardi]"``, as for portal items.
+      them, if the export made one item of several, see :func:`unique_items`).
+
+    The text becomes the exported item's ``"Label (Description)"``
+    (:func:`~MaRDMO.ids.item_text`).
 
     Args:
         project:  RDMO project instance whose Values should be updated.
@@ -1455,16 +1443,15 @@ def replace_ids(project, created):
 
     # Wikidata items: one bulk query per export, matched by QID
     wikidata_map = {
-        info['old_id']: f"mardi:{info['new_qid']}"
-        for (_, __), info in created.items()
+        info['old_id']: (f"mardi:{info['new_qid']}", item_text(label, desc))
+        for (label, desc), info in created.items()
         if info['old_id'].startswith('wikidata:')
     }
     if wikidata_map:
         for v in Value.objects.filter(
             project=project, snapshot=None, external_id__in=wikidata_map
         ).select_related('attribute'):
-            v.external_id = wikidata_map[v.external_id]
-            v.text = v.text.replace('[wikidata]', '[mardi]')
+            v.external_id, v.text = wikidata_map[v.external_id]
             with internal_write():
                 v.save()
 
@@ -1476,7 +1463,7 @@ def replace_ids(project, created):
                 project=project, snapshot=None, external_id__in=info['user_ids']
             ).update(
                 external_id=f"mardi:{info['new_qid']}",
-                text=item_text(f"mardi:{info['new_qid']}", label, desc),
+                text=item_text(label, desc),
             )
 
 
@@ -1512,7 +1499,7 @@ def rank_by_search_term(option, term):
 
     Args:
         option: Option dict with a ``text`` field in
-                ``"Label (Description) [source]"`` format.
+                ``"Label (Description)"`` format.
         term:   Search string entered by the user.
 
     Returns:

@@ -14,6 +14,7 @@ from ..getters import (
     get_properties, get_questions, get_sparql_query, get_url,
 )
 from ..helpers import value_editor
+from ..ids import item_text
 from ..adders import add_basics, add_relations_flexible, add_relations_static
 from ..queries import query_sparql
 
@@ -140,7 +141,7 @@ class Information(BaseInformation):
                 uri = f'{self.base}{self.questions["Workflow"]["Task"]["uri"]}',
                 info = {
                     'external_id': identifier,
-                    'text': f'{label} ({description}) [mardi]',
+                    'text': item_text(label, description),
                     'collection_index': idx,
                     'set_prefix': instance.set_prefix,
                     'set_index': instance.set_index
@@ -250,30 +251,27 @@ class Information(BaseInformation):
                     model_tasks[model_id].append((task_id, task_label, task_desc))
 
             for model_idx, (model_id, model_label, model_desc) in enumerate(model_order):
-                source = model_id.split(':')[0]
                 value_editor(
                     project=project,
                     uri=f'{self.base}{workflow_q["Model"]["uri"]}',
-                    info={'text': f'{model_label} ({model_desc}) [{source}]',
+                    info={'text': item_text(model_label, model_desc),
                           'external_id': model_id,
                           'set_prefix': f"{set_index}|0", 'set_index': model_idx})
                 for task_idx, (task_id, task_label, task_desc) in enumerate(model_tasks[model_id]):
-                    source = task_id.split(':')[0]
                     value_editor(
                         project=project,
                         uri=f'{self.base}{workflow_q["Task"]["uri"]}',
-                        info={'text': f'{task_label} ({task_desc}) [{source}]',
+                        info={'text': item_text(task_label, task_desc),
                               'external_id': task_id,
                               'set_prefix': f"{set_index}|0", 'set_index': model_idx,
                               'collection_index': task_idx})
 
             for i, ps in enumerate(data.contains_process_step):
                 if ps.id:
-                    source = ps.id.split(':')[0]
                     value_editor(
                         project=project,
                         uri=f'{self.base}{workflow_q["PSRelatant"]["uri"]}',
-                        info={'text': f'{ps.label} ({ps.description}) [{source}]',
+                        info={'text': item_text(ps.label, ps.description),
                               'external_id': ps.id,
                               'set_prefix': set_index, 'collection_index': i})
 
@@ -367,11 +365,10 @@ class Information(BaseInformation):
                     info={'text': data.nodes, 'set_prefix': set_index})
 
             for i, cpu in enumerate(data.cpu):
-                source, _ = cpu.id.split(':')
                 cpu_value, _ = value_editor(
                     project=project,
                     uri=f'{self.base}{hardware["CPU"]["uri"]}',
-                    info={'text': f'{cpu.label} ({cpu.description}) [{source}]',
+                    info={'text': item_text(cpu.label, cpu.description),
                           'external_id': cpu.id,
                           'set_prefix': f"{set_index}|0", 'set_index': i})
                 if cpu.count:

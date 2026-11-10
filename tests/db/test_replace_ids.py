@@ -44,23 +44,23 @@ def exported(project):
 
 
 def test_user_defined_item_gets_its_portal_id(exported):
-    assert get(exported, 'quantity/id', set_index=0) == ('mardi:Q1', 'alpha (first quantity) [mardi]')
+    assert get(exported, 'quantity/id', set_index=0) == ('mardi:Q1', 'alpha (first quantity)')
 
 
 def test_relations_to_the_item_get_its_portal_id(exported):
     '''Found by the ID; the text becomes the item's.'''
     assert get(exported, 'quantity/quantity-to-quantity/relatant', set_prefix='1', set_index=0) == (
-        'mardi:Q1', 'alpha (first quantity) [mardi]')
+        'mardi:Q1', 'alpha (first quantity)')
 
 
 def test_wikidata_item_gets_its_portal_id(exported):
     assert get(exported, 'quantity/id', set_index=1) == (
-        'mardi:Q2', 'concentration (amount per volume) [mardi]')
+        'mardi:Q2', 'concentration (amount per volume)')
 
 
 def test_every_id_of_a_merged_item_gets_its_portal_id(exported):
-    assert get(exported, 'publication/id', set_index=0) == ('mardi:Q3', 'A paper (scientific article) [mardi]')
-    assert get(exported, 'publication/id', set_index=1) == ('mardi:Q3', 'A paper (scientific article) [mardi]')
+    assert get(exported, 'publication/id', set_index=0) == ('mardi:Q3', 'A paper (scientific article)')
+    assert get(exported, 'publication/id', set_index=1) == ('mardi:Q3', 'A paper (scientific article)')
 
 
 def test_items_not_exported_stay_user_defined(exported):
