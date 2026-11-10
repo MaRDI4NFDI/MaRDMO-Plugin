@@ -180,16 +180,37 @@ def remove_references(value):
             row.filter(attribute__uri__in=others).delete()
 
 
-def item_text(identifier, name, description):
-    '''Return the text of an answer that refers to the item *identifier*, as the dropdowns show it.
+def item_text(name, description):
+    '''Return the text of an answer that refers to an item, as the dropdowns show it.
 
-    ``"Label (Description)"`` (``"Label"`` without description), with the
-    source tag (``[mardi]``, ``[wikidata]``) for an item of the MaRDI Portal
-    or Wikidata.
+    ``"Label (Description)"``, ``"Label"`` without description.  The source
+    is not part of it (#103): the dropdowns show it in the option's help
+    (:func:`source_help`), the preview by the ID.
     '''
-    text = f'{name} ({description})' if description else name
-    source = identifier.split(':', 1)[0]
-    return f'{text} [{source}]' if source in ('mardi', 'wikidata') else text
+    return f'{name} ({description})' if description else name
+
+
+# Tag of an option's source, by the prefix of its ID
+_SOURCE_TAGS = {'mardi': 'mardi', 'wikidata': 'wikidata', 'user': 'project'}
+
+
+def source_tag(tag):
+    '''Return the grey markup of the source tag *tag* for an option's help.
+
+    RDMO shows the help of an option in the open dropdown only, and drops
+    CSS classes given to it, so the markup is MaRDMO's own.
+    '''
+    return f'<strong class="text-muted">[{tag}]</strong>'
+
+
+def source_help(identifier):
+    '''Return the help of a dropdown option for the item *identifier*: its source tag.
+
+    ``[mardi]``, ``[wikidata]``, or ``[project]`` for an item of the user's
+    own in the project; ``''`` for anything else.
+    '''
+    tag = _SOURCE_TAGS.get((identifier or '').split(':', 1)[0]) if is_item_id(identifier) else None
+    return source_tag(tag) if tag else ''
 
 
 def sync_text(value):
@@ -232,4 +253,4 @@ def sync_text(value):
     texts = {uri: text for uri, (_, text) in page.items()}
     Value.objects.filter(project=value.project_id, snapshot=None, external_id=identifier).exclude(
         attribute__uri__in=id_attributes()
-    ).update(text=item_text(identifier, name, texts.get(f'{section}/description')))
+    ).update(text=item_text(name, texts.get(f'{section}/description')))

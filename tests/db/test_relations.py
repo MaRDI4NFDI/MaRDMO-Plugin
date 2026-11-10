@@ -113,7 +113,8 @@ def test_dropdown_offers_own_items_with_the_id_of_their_page(project, monkeypatc
          answer('problem/description', 'rate of a reaction', set_prefix='0'))
     provider = MaRDMOProvider('RelatedResearchProblemWithCreation', '', 'MaRDMO.providers.MaRDMOProvider')
     options = provider.get_options(model, search='reaction')
-    assert {'id': 'user:1', 'text': 'reaction rate (rate of a reaction)'} in options
+    assert {'id': 'user:1', 'text': 'reaction rate (rate of a reaction)',
+            'help': '<strong class="text-muted">[project]</strong>'} in options
 
 
 def test_relation_without_id_is_reported_as_made_before_0_8_0(project, monkeypatch):

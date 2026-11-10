@@ -50,7 +50,7 @@ def test_quantity_relations_offer_quantities_and_those_without_class(quantities,
 
 def test_quantity_kind_relations_offer_quantity_kinds_and_those_without_class(quantities, options):
     assert options(quantities, 'RelatedQuantityKindWithoutCreation', 'alpha') == [
-        'alpha kind (d)', 'alpha unclassified (d)', 'alpha wikidata kind (d) [wikidata]']
+        'alpha kind (d)', 'alpha unclassified (d)', 'alpha wikidata kind (d)']
 
 
 def test_quantity_elements_offer_every_class_and_creation(quantities, options):

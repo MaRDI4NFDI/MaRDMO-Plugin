@@ -25,7 +25,7 @@ from rdmo.domain.models import Attribute
 from .constants import BASE_URI
 from .getters import get_mathmoddb, get_properties, get_url
 from .helpers import commit_writes, extract_parts, rank_by_search_term
-from .ids import NEW_ITEM, NOT_FOUND, is_item_id, is_user_id
+from .ids import NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, source_help, source_tag
 
 logger = logging.getLogger(__name__)
 
@@ -404,7 +404,8 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
                     "text": "new item"}`` to the option list.
 
     Returns:
-        List of ``{"id": …, "text": …}`` option dicts, sorted by relevance.
+        List of ``{"id": …, "text": "Label (Description)", "help": source tag}``
+        option dicts, sorted by relevance; "new item" has no help.
     '''
     if sources is None:
         sources = ['mardi', 'wikidata']
@@ -434,8 +435,7 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
                 {
                     'id':   f"wikidata:{r['id']}",
                     'text': (f"{r[display_key].get('label', {}).get('value', 'No Label Provided!')}"
-                             f" ({r[display_key].get('description', {}).get('value', 'No Description Provided!')})"
-                             f" [wikidata]"),
+                             f" ({r[display_key].get('description', {}).get('value', 'No Description Provided!')})"),
                 }
                 for r in raw
                 if display_key in r
@@ -450,6 +450,8 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
                if not (opt['id'].startswith('wikidata:') and _label_description(opt) in mardi_items)]
 
     options.sort(key=lambda opt: rank_by_search_term(opt, search))
+    # The source is shown grey in the open dropdown, not stored (#103)
+    options = [{**option, 'help': source_help(option['id'])} for option in options]
 
     if not_found:
         options = [{'id': NOT_FOUND, 'text': NEW_ITEM}] + options
@@ -500,29 +502,23 @@ def query_sources_with_user_additions(search, project, setup):
 
     if setup.get('query_attributes'):
         try:
-            dic = query_user_entries(project, setup)
+            options_user = query_user_entries(project, setup)
         except Exception as e:
             logger.error("User entries query failed: %s", e)
-            dic = {}
+            options_user = []
 
         # Filter and merge options
-        options_user = [
-            {'id': value['id'], 'text': key}
-            for key, value in dic.items()
-            if search.lower() in key.lower()
-        ]
-        options = options_user + options
+        options = [option for option in options_user if search.lower() in option['text'].lower()] + options
 
     # Add creation option if needed
     if setup['creation']:
-        creation_option = {'id': 'not found', 'text': search}
-        if creation_option not in options:
-            options.insert(0, creation_option)
+        if not any(option['id'] == NOT_FOUND and option['text'] == search for option in options):
+            options.insert(0, {'id': NOT_FOUND, 'text': search, 'help': source_tag('new')})
 
     return options
 
 def query_user_entries(project, setup):
-    '''Build a label→ID dict from entries the user has already added to the questionnaire.
+    '''Return the options of the items the user has already added to the questionnaire.
 
     Reads the ID, Name, and Description values of all attributes listed in
     ``setup["query_attributes"]`` with two database queries, aligns them by
@@ -535,8 +531,8 @@ def query_user_entries(project, setup):
         setup:   Configuration dict (see :func:`query_sources_with_user_additions`).
 
     Returns:
-        Dict mapping display strings (``"Label (Description)"`` or
-        ``"Label (Description) [source]"``) to ``{"id": item_id}`` dicts.
+        List of ``{"id": …, "text": "Label (Description)", "help": source tag}``
+        options (:func:`~MaRDMO.ids.source_help`).
     '''
     uris = {
         f'{BASE_URI}domain/{query_attribute}/{question}': (query_attribute, question)
@@ -559,7 +555,7 @@ def query_user_entries(project, setup):
         idx = value.set_index if question in ('id', 'class') else int(value.set_prefix)
         entries.setdefault((setup['query_attributes'].index(query_attribute), idx), {})[question] = value
 
-    dic = {}
+    options = []
     for _, entry in sorted(entries.items()):
         if 'id' not in entry or not entry['id'].text:
             continue
@@ -571,23 +567,17 @@ def query_user_entries(project, setup):
             name, description = entry.get('name'), entry.get('description')
             label = (name.text if name else '') or "No Label Provided!"
             description = (description.text if description else '') or "No Description Provided!"
-            item_id = entry['id'].external_id
-            source = 'user'
         elif not is_item_id(entry['id'].external_id):
             # No real ID (made before MaRDMO 0.8.0): reported by the checks
             continue
         else:
-            # External ID item
-            label, description, source = extract_parts(entry['id'].text)
-            _, item_id = entry['id'].external_id.split(':')
-            item_id = f"{source}:{item_id}"
-        # Add to dictionary if not from primary sources
-        if source not in setup['sources']:
-            if source == 'user':
-                dic[f"{label} ({description})"] = {'id': item_id}
-            else:
-                dic[f"{label} ({description}) [{source}]"] = {'id': item_id}
-    return dic
+            # Portal or Wikidata item: the source is its ID's, not the text's (#103)
+            label, description, _ = extract_parts(entry['id'].text)
+        item_id = entry['id'].external_id
+        # Only the sources the dropdown does not search
+        if item_id.split(':', 1)[0] not in setup['sources']:
+            options.append({'id': item_id, 'text': item_text(label, description), 'help': source_help(item_id)})
+    return options
 
 def query_api_per_class(search_term: str, item_class, raise_errors: bool = False) -> list[dict]:
     '''Search the MaRDI portal for items belonging to one or more Wikibase classes.
@@ -606,7 +596,7 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
                      so callers can tell a failure from no hits.
 
     Returns:
-        List of ``{"id": "mardi:<QID>", "text": "Label (Description) [mardi]"}``
+        List of ``{"id": "mardi:<QID>", "text": "Label (Description)"}``
         dicts; empty list on any network error (unless *raise_errors*) or no hits.
     '''
     if isinstance(item_class, str):
@@ -673,7 +663,7 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
                                                                         'No Description Provided!')
         results.append({
             'id':   f'mardi:{qid}',
-            'text': f'{label} ({description}) [mardi]',
+            'text': item_text(label, description),
         })
 
     return results

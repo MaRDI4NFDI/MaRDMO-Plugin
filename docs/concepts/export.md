@@ -235,10 +235,10 @@ QIDs) to identify every newly created item.  `replace_ids()` then updates all
 matching RDMO project Values in place:
 
 - **Wikidata items**: the `external_id` is updated from `wikidata:<QID>` to
-  `mardi:<QID>` and `[wikidata]` is replaced by `[mardi]` in the text field.
+  `mardi:<QID>`, and the text becomes the exported item's "Label (Description)".
 - **User-defined items** (`user:<uuid>`, see [Item IDs](ids.md)): every Value
   holding one of the item's `user:` IDs (pages, relations, inline items) gets
-  `mardi:<QID>` and the text "Label (Description) [mardi]".  The payload entry
+  `mardi:<QID>` and the text "Label (Description)".  The payload entry
   of the item carries these IDs (`user_ids`); only its `payload` is sent.
 - **Publications created from a DOI**: their ID question gets the new item, as
   for the other user-defined items.

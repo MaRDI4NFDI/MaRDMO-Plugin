@@ -57,10 +57,11 @@ def test_a_cleared_description_leaves_the_label(interview):
     assert text(model, 'task/quantity-relatant') == 'alpha'
 
 
-def test_a_portal_item_keeps_its_tag(interview):
+def test_a_portal_item_loses_its_old_tag(interview):
+    '''The source is shown by the dropdown and the preview, not in the text (#103).'''
     model, edit = interview('mardi:Q1', 'alpha (first) [mardi]')
     edit('quantity/name', 'Alpha', set_prefix='0')
-    assert text(model, 'task/quantity-relatant') == 'Alpha (first) [mardi]'
+    assert text(model, 'task/quantity-relatant') == 'Alpha (first)'
 
 
 def test_the_pages_own_id_keeps_its_text(interview):

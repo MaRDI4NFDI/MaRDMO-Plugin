@@ -22,6 +22,7 @@ from ..getters import (
     get_questions,
 )
 from ..helpers import value_editor
+from ..ids import item_text
 from ..adders import (
     add_basics,
     add_properties,
@@ -70,9 +71,8 @@ def write_defining_formula(project, page, data, set_index):
             # A symbol without "symbol represents" on the portal: the quantity
             # stays empty, so the checks and the preview ask the user for it
             continue
-        src_q = qty.id.split(':')[0]
         value_editor(project=project, uri=f'{BASE_URI}{page["Element Quantity"]["uri"]}',
-                     info={'text': f'{qty.label} ({qty.description}) [{src_q}]',
+                     info={'text': item_text(qty.label, qty.description),
                            'external_id': qty.id, 'set_index': idx, 'set_prefix': f'{set_index}|0|0'})
 
 

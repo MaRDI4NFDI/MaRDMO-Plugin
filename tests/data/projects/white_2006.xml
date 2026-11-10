@@ -50,7 +50,7 @@
 			<set_index>0</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>epidemiology (study of the patterns, causes, and effects of health and disease conditions) [mardi]</text>
+			<text>epidemiology (study of the patterns, causes, and effects of health and disease conditions)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -230,7 +230,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>number of susceptible individuals (number) [mardi]</text>
+			<text>number of susceptible individuals (number)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -245,7 +245,7 @@
 			<set_index>1</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<text>time (dimension in which events can be ordered from the past through the present into the future)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -305,7 +305,7 @@
 			<set_index>5</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<text>total population size (countable quantity representing the number of individuals)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -410,7 +410,7 @@
 			<set_index>1</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<text>total population size (countable quantity representing the number of individuals)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -425,7 +425,7 @@
 			<set_index>3</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>number of susceptible individuals (number) [mardi]</text>
+			<text>number of susceptible individuals (number)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -530,7 +530,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>number of susceptible individuals (number) [mardi]</text>
+			<text>number of susceptible individuals (number)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -545,7 +545,7 @@
 			<set_index>1</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<text>time (dimension in which events can be ordered from the past through the present into the future)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -605,7 +605,7 @@
 			<set_index>5</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<text>total population size (countable quantity representing the number of individuals)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -650,7 +650,7 @@
 			<set_index>1</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<text>time (dimension in which events can be ordered from the past through the present into the future)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -680,7 +680,7 @@
 			<set_index>3</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>number of susceptible individuals (number) [mardi]</text>
+			<text>number of susceptible individuals (number)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -695,7 +695,7 @@
 			<set_index>4</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<text>total population size (countable quantity representing the number of individuals)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -800,7 +800,7 @@
 			<set_index>1</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<text>time (dimension in which events can be ordered from the past through the present into the future)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -860,7 +860,7 @@
 			<set_index>5</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<text>total population size (countable quantity representing the number of individuals)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -2375,7 +2375,7 @@
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>0</collection_index>
-			<text>substance dependence (need for a drug, whose discontinuation results in withdrawal symptoms) [wikidata]</text>
+			<text>substance dependence (need for a drug, whose discontinuation results in withdrawal symptoms)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -2570,7 +2570,7 @@
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>0</collection_index>
-			<text>epidemiology (study of the patterns, causes, and effects of health and disease conditions) [mardi]</text>
+			<text>epidemiology (study of the patterns, causes, and effects of health and disease conditions)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -2585,7 +2585,7 @@
 			<set_index>0</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>substance dependence (need for a drug, whose discontinuation results in withdrawal symptoms) [wikidata]</text>
+			<text>substance dependence (need for a drug, whose discontinuation results in withdrawal symptoms)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -2675,7 +2675,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>Heroin epidemics, treatment and ODE modelling (scientific article; zbMATH DE number 5182347) [mardi]</text>
+			<text>Heroin epidemics, treatment and ODE modelling (scientific article; zbMATH DE number 5182347)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3095,7 +3095,7 @@
 			<set_index>1</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>total population size (countable quantity representing the number of individuals) [mardi]</text>
+			<text>total population size (countable quantity representing the number of individuals)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3110,7 +3110,7 @@
 			<set_index>3</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>number of susceptible individuals (number) [mardi]</text>
+			<text>number of susceptible individuals (number)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3125,7 +3125,7 @@
 			<set_index>4</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>time (dimension in which events can be ordered from the past through the present into the future) [mardi]</text>
+			<text>time (dimension in which events can be ordered from the past through the present into the future)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3830,7 +3830,7 @@
 			<set_index>0</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>point in time (position of a particular instant in time) [mardi]</text>
+			<text>point in time (position of a particular instant in time)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3845,7 +3845,7 @@
 			<set_index>1</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>turn over time (time between two events) [mardi]</text>
+			<text>turn over time (time between two events)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3860,7 +3860,7 @@
 			<set_index>2</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>period length (length of a period in time units) [mardi]</text>
+			<text>period length (length of a period in time units)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3875,7 +3875,7 @@
 			<set_index>3</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>free fall time (characteristic time that would take a body to collapse under its own gravitational attraction, if no other forces existed to oppose the collapse) [mardi]</text>
+			<text>free fall time (characteristic time that would take a body to collapse under its own gravitational attraction, if no other forces existed to oppose the collapse)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3890,7 +3890,7 @@
 			<set_index>4</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>exposure of an individual (exposure (time) of an individual at a certain age) [mardi]</text>
+			<text>exposure of an individual (exposure (time) of an individual at a certain age)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3905,7 +3905,7 @@
 			<set_index>5</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>duration (physical quantity for describing the temporal distance between events) [mardi]</text>
+			<text>duration (physical quantity for describing the temporal distance between events)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3920,7 +3920,7 @@
 			<set_index>6</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>time step (incremental time step) [mardi]</text>
+			<text>time step (incremental time step)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -3935,7 +3935,7 @@
 			<set_index>7</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>age of a person (time elapsed since a person (an individual) was born) [mardi]</text>
+			<text>age of a person (time elapsed since a person (an individual) was born)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4070,7 +4070,7 @@
 			<set_index>0</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>integer (number that can be written without a fractional or decimal component) [mardi]</text>
+			<text>integer (number that can be written without a fractional or decimal component)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4085,7 +4085,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>integer (number that can be written without a fractional or decimal component) [mardi]</text>
+			<text>integer (number that can be written without a fractional or decimal component)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4100,7 +4100,7 @@
 			<set_index>0</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>integer (number that can be written without a fractional or decimal component) [mardi]</text>
+			<text>integer (number that can be written without a fractional or decimal component)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4115,7 +4115,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>rate (quantity of process intensivity) [mardi]</text>
+			<text>rate (quantity of process intensivity)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4130,7 +4130,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>integer (number that can be written without a fractional or decimal component) [mardi]</text>
+			<text>integer (number that can be written without a fractional or decimal component)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4220,7 +4220,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4235,7 +4235,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4250,7 +4250,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4265,7 +4265,7 @@
 			<set_index>0</set_index>
 			<set_collection/>
 			<collection_index>0</collection_index>
-			<text>susceptibles (general quantity for susceptible entities) [mardi]</text>
+			<text>susceptibles (general quantity for susceptible entities)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4280,7 +4280,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4295,7 +4295,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -4310,7 +4310,7 @@
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text>reaction rate constant (quantifies the rate of a chemical reaction) [mardi]</text>
+			<text>reaction rate constant (quantifies the rate of a chemical reaction)</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>

@@ -68,9 +68,10 @@ description (the export would make one item of them).
 
 Saving the name or short description of a page in the interview gives every
 answer that refers to its item the new text (`MaRDMO.ids.sync_text`):
-"Label (Description)", "Label" without description, with the source tag
-for portal and Wikidata items ("Label (Description) [mardi]"), as the
-dropdowns show it.  The answers are written with `update()`: they keep their
+"Label (Description)", "Label" without description, as the dropdowns
+show it.  The source is not part of a text: the dropdowns show it as a grey
+tag (**[mardi]**, **[wikidata]**, **[project]**, **[new]**), the preview by
+the ID; a text with a tag from an older project is read without it.  The answers are written with `update()`: they keep their
 `updated` time, so an interview open on another page can still save them;
 it shows the new text when the page is opened again.
 
@@ -140,7 +141,7 @@ The user's own items with the same name and description are one item: the
 same new programming language on two software pages is created once.  The
 export item keeps the `user:` IDs it stands for (`user_ids`, not sent to the
 portal); afterwards every answer with one of them gets the new `mardi:` ID
-and the text "Label (Description) [mardi]" (`MaRDMO.helpers.replace_ids`).
+and the text "Label (Description)" (`MaRDMO.helpers.replace_ids`).
 Answers with the ID of an exported Wikidata item get its new `mardi:` ID too.
 
 ## Projects made before MaRDMO 0.8.0

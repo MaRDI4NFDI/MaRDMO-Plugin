@@ -36,7 +36,7 @@ from .helpers import (
     relevant_set_ids,
     value_editor,
 )
-from .ids import NEW_ITEM
+from .ids import NEW_ITEM, item_text
 from .model.constants import data_properties_check, qudt_reference_ids
 from .patterns import QUDT_ID_STRICT_RE
 from .workflow.models import ProcessStepUsage
@@ -44,13 +44,13 @@ from .workflow.models import ProcessStepUsage
 def add_basics(project, text, questions, item_type, index = (None, None)):
     '''Parse the ID-question text and write label/description into the questionnaire.
 
-    Splits *text* (format ``"Label (Description) [source]"``) and stores the
+    Splits *text* (format ``"Label (Description)"``) and stores the
     label and description in the Name and Description answer fields of the
     entity page identified by *item_type*.
 
     Args:
         project:   RDMO project instance.
-        text:      Human-readable ID string ``"Label (Description) [source]"``.
+        text:      Human-readable ID string ``"Label (Description)"``.
         questions: Questions dict for the relevant catalog.
         item_type: Entity type key in *questions* (e.g. ``"Research Field"``).
         index:     ``(set_index, set_prefix)`` tuple for the target page.
@@ -127,7 +127,7 @@ def add_entities(project, question_set, datas, source, prefix):
                 project = project,
                 uri = question['id'],
                 info = {
-                    'text': f'{data.label} ({data.description}) [{source}]',
+                    'text': item_text(data.label, data.description),
                     'external_id': f"{data.id}",
                     'set_index': idx
                 }
@@ -240,8 +240,7 @@ def add_relations_static(project, data, props, index, statement):
 
     # Get existing Set and Item Information
     info = {'set_prefix_ids': get_id(project, statement['relatant'], ['set_prefix']),
-            'value_ids': get_id(project, statement['relatant'], ['external_id']),
-            'texts': get_id(project, statement['relatant'], ['text'])}
+            'value_ids': get_id(project, statement['relatant'], ['external_id'])}
 
     # Get reduced set_prefixes
     index.update({'set_prefix_reduced': reduce_prefix(index['set_prefix'])})
@@ -264,9 +263,6 @@ def add_relations_static(project, data, props, index, statement):
         for value in getattr(data, prop):
             assumption_index = None
 
-            # Get Source and Label Description String
-            source, _ = value.id.split(':')
-
             # Check if Relatant exists
             matches = relation_exists(
                 value = value,
@@ -284,12 +280,11 @@ def add_relations_static(project, data, props, index, statement):
                 assumption_index = index['idx']
 
                 if value.qualifier:
-                    qual_source, _ = value.qualifier.split(':')
                     value_editor(
                         project = project,
                         uri = statement['platform'],
                         info = {
-                            'text': f"{value.qualifier_label} ({value.qualifier_description}) [{qual_source}]",
+                            'text': item_text(value.qualifier_label, value.qualifier_description),
                             'external_id': value.qualifier,
                             'collection_index': 0,
                             'set_index': assumption_index,
@@ -298,12 +293,11 @@ def add_relations_static(project, data, props, index, statement):
                     )
 
                 if statement.get('hardware') and value.hardware:
-                    hw_source, _ = value.hardware.split(':')
                     value_editor(
                         project = project,
                         uri = statement['hardware'],
                         info = {
-                            'text': f"{value.hardware_label} ({value.hardware_description}) [{hw_source}]",
+                            'text': item_text(value.hardware_label, value.hardware_description),
                             'external_id': value.hardware,
                             'collection_index': 0,
                             'set_index': assumption_index,
@@ -346,7 +340,7 @@ def add_relations_static(project, data, props, index, statement):
                 project = project,
                 uri = statement['relatant'],
                 info = {
-                    'text': f"{value.label} ({value.description}) [{source}]",
+                    'text': item_text(value.label, value.description),
                     'external_id': value.id,
                     'collection_index': inner_idx if assumption_index is not None else index['idx'],
                     'set_index': assumption_index or 0,
@@ -363,7 +357,6 @@ def add_relations_static(project, data, props, index, statement):
             # Update existing IDs, Texts, and Relations
             info['value_ids'].append(value.id)
             info['set_prefix_ids'].append(index['set_prefix_reduced'])
-            info['texts'].append(f"{value.label} ({value.description}) [{source}]")
 
 def add_relations_flexible(project, data, props, index, statement):
     '''Write flexible (typed) relations from *data* into the questionnaire.
@@ -396,7 +389,6 @@ def add_relations_flexible(project, data, props, index, statement):
             'set_index_ids': get_id(project, statement['relatant'], ['set_index']),
             'collection_ids': get_id(project, statement['relatant'], ['collection_index']),
             'value_ids': get_id(project, statement['relatant'], ['external_id']),
-            'texts': get_id(project, statement['relatant'], ['text']),
             'rels': [relation_of_set.get(tuple(key)) for key in get_id(
                 project, statement['relatant'], ['set_prefix', 'set_index'])]}
 
@@ -426,8 +418,6 @@ def add_relations_flexible(project, data, props, index, statement):
         used = False
         for value in sorted(getattr(data, prop), key=assumption_group):
             assumption_index = None
-            # Get Source and Label Description String
-            source, _ = value.id.split(':')
 
             # Check if Relation / Relatant Combination exists (flexible relation)
             matches = relation_exists(
@@ -457,9 +447,7 @@ def add_relations_flexible(project, data, props, index, statement):
                         project = project,
                         uri = statement['assumption'],
                         info = {
-                            'text': "{label} ({description}) [{source}]".format_map(
-                                assumption_value
-                            ),
+                            'text': item_text(assumption_value['label'], assumption_value['description']),
                             'external_id': assumption_value['id'],
                             'collection_index': assumption_key,
                             'set_index': assumption_index,
@@ -484,7 +472,7 @@ def add_relations_flexible(project, data, props, index, statement):
                 project = project,
                 uri = statement['relatant'],
                 info = {
-                    'text': f"{value.label} ({value.description}) [{source}]",
+                    'text': item_text(value.label, value.description),
                     'external_id': value.id,
                     'collection_index': inner_idx,
                     'set_index': index['idx'] if assumption_index is None else assumption_index,
@@ -495,7 +483,6 @@ def add_relations_flexible(project, data, props, index, statement):
             # Update existing IDs, Texts, and Relations
             info['value_ids'].append(value.id)
             info['set_prefix_ids'].append(index['set_prefix_reduced'])
-            info['texts'].append(f"{value.label} ({value.description}) [{source}]")
             info['rels'].append(props['mapping'].get(key=prop)["url"])
 
             inner_idx += 1
