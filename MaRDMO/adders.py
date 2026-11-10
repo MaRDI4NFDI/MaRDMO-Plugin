@@ -36,6 +36,7 @@ from .helpers import (
     relevant_set_ids,
     value_editor,
 )
+from .ids import NEW_ITEM
 from .model.constants import data_properties_check, qudt_reference_ids
 from .patterns import QUDT_ID_STRICT_RE
 from .workflow.models import ProcessStepUsage
@@ -88,9 +89,8 @@ def add_basics(project, text, questions, item_type, index = (None, None)):
 def add_entities(project, question_set, datas, source, prefix):
     '''Ensure each item in *datas* has a page in *question_set*, creating one if absent.
 
-    Checks the existing questionnaire values (by external ID and by
-    label/description) before adding a new set entry.  Skips items that are
-    already present under any of those checks.
+    An item has a page when a page has its ID; an own page with the same
+    label and description is another item.
 
     Args:
         project:      RDMO project instance.
@@ -100,36 +100,19 @@ def add_entities(project, question_set, datas, source, prefix):
         prefix:       Label prefix for the set page (e.g. ``"AD"``).
     '''
 
-    # Generate ID, Name and Description URL from Set URL
-    question = {'id': f'{question_set}/id',
-                'name': f'{question_set}/name',
-                'description': f'{question_set}/description'}
+    # Generate ID URL from Set URL
+    question = {'id': f'{question_set}/id'}
 
     # Get existing Set and Item Information
     info = {'set_ids': get_id(project, question_set, ['set_index']),
-            'value_ids': get_id(project, question['id'], ['external_id']),
-            'texts': get_id(project, question['id'], ['text']),
-            'names': get_id(project, question['name'], ['text']),
-            'descs': get_id(project, question['description'], ['text'])}
+            'value_ids': get_id(project, question['id'], ['external_id'])}
 
     # Add Item to Questionnaire
     idx = max(info['set_ids'], default = -1) + 1
 
     for data in datas:
-        # Label Description String
-        name_desc = f'{data.label} ({data.description})'
-        # Check if Item already in Questionnaire via ID Question
-        check_id = any(
-            name_desc in text
-            for text in info['texts']
-            )
-        # Check if Item already in Questionnaire via Name/Description Question
-        check_name_desc = any(
-            name_desc in f'{name} ({desc})'
-            for name, desc in zip(info['names'], info['descs'])
-            )
         # If Item not already in Questionnaire
-        if data.id not in info['value_ids'] and not check_id and not check_name_desc:
+        if data.id not in info['value_ids']:
             # Set up Page in Questionnaire
             value_editor(
                 project = project,
@@ -197,7 +180,7 @@ def add_new_entities(project, question_set, datas, prefix):
             project = project,
             uri = question['id'],
             info = {
-                'text': 'not found',
+                'text': NEW_ITEM,
                 'external_id': data.id,
                 'set_index': idx
             }

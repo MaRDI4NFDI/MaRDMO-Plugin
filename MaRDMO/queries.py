@@ -25,7 +25,7 @@ from rdmo.domain.models import Attribute
 from .constants import BASE_URI
 from .getters import get_mathmoddb, get_properties, get_url
 from .helpers import commit_writes, extract_parts, rank_by_search_term
-from .ids import is_item_id, is_user_id
+from .ids import NEW_ITEM, NOT_FOUND, is_item_id, is_user_id
 
 logger = logging.getLogger(__name__)
 
@@ -400,8 +400,8 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
                     Wikidata is always searched by label/description only.
         sources:    List of source keys to query; defaults to
                     ``["mardi", "wikidata"]``.
-        not_found:  If ``True`` (default), prepends a ``{"id": "not found",
-                    "text": "not found"}`` sentinel to the option list.
+        not_found:  If ``True`` (default), prepends the option ``{"id": "not found",
+                    "text": "new item"}`` to the option list.
 
     Returns:
         List of ``{"id": …, "text": …}`` option dicts, sorted by relevance.
@@ -452,7 +452,7 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
     options.sort(key=lambda opt: rank_by_search_term(opt, search))
 
     if not_found:
-        options = [{'id': 'not found', 'text': 'not found'}] + options
+        options = [{'id': NOT_FOUND, 'text': NEW_ITEM}] + options
 
     return options
 

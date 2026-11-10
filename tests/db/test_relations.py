@@ -55,6 +55,7 @@ def test_new_item_in_a_relation_gets_a_page_with_its_id(interview):
     user_id = response.json()['external_id']
     assert is_user_id(user_id)
     assert page(model, 'problem', user_id) == ('reaction rate', '')
+    assert model.values.get(attribute__uri=f'{BASE_URI}domain/problem/id').text == 'new item'
 
 
 def test_new_item_typed_with_description(interview):

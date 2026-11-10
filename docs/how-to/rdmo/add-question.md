@@ -23,17 +23,17 @@ question.  The numbered fields are explained in the sections that follow.
 **English:**
 
 ```html
-<p>For all models <em>label (description) [source]</em> is provided. If a model is chosen, <strong>WAIT</strong> until further information are added to the interview. If no appropriate model is present in the MaRDI Portal or Wikidata, choose <em>not found</em>.</p>
+<p>For all models <em>label (description) [source]</em> is provided. If a model is chosen, <strong>WAIT</strong> until further information are added to the interview. If no appropriate model is present in the MaRDI Portal or Wikidata, choose <em>new item</em>.</p>
 
-<p><strong>Note:</strong> To use an existing model as a template, first select the model, wait for the information to load, and then change the answer to <em>not found</em> to remove the external reference.</p>
+<p><strong>Note:</strong> To use an existing model as a template, first select the model, wait for the information to load, and then change the answer to <em>new item</em> to remove the external reference.</p>
 ```
 
 **German:**
 
 ```html
-<p>Für alle Modelle wird <em>Name (Beschreibung) [Quelle]</em> angegeben. Wenn ein Modell ausgewählt wird, <strong>WARTEN</strong> Sie, bis weitere Informationen zum Interview hinzugefügt werden. Falls kein passendes Modell im MaRDI Portal oder Wikidata vorhanden ist, wählen Sie <em>not found</em>.</p>
+<p>Für alle Modelle wird <em>Name (Beschreibung) [Quelle]</em> angegeben. Wenn ein Modell ausgewählt wird, <strong>WARTEN</strong> Sie, bis weitere Informationen zum Interview hinzugefügt werden. Falls kein passendes Modell im MaRDI Portal oder Wikidata vorhanden ist, wählen Sie <em>new item</em>.</p>
 
-<p><strong>Hinweis:</strong> Um ein bestehendes Modell als Vorlage zu verwenden, wählen Sie zunächst das Modell aus, warten Sie, bis alle Informationen geladen wurden, und setzen Sie anschließend die Antwort auf <em>not found</em>, um den Bezug zur externen Quelle zu entfernen.</p>
+<p><strong>Hinweis:</strong> Um ein bestehendes Modell als Vorlage zu verwenden, wählen Sie zunächst das Modell aus, warten Sie, bis alle Informationen geladen wurden, und setzen Sie anschließend die Antwort auf <em>new item</em>, um den Bezug zur externen Quelle zu entfernen.</p>
 ```
 
 **⑦ Attribute** — The attribute this question is linked to. An existing attribute can be selected or a new one created (see [How to Create a New Attribute](add-attribute.md)). Here: `https://rdmo.mardi4nfdi.de/terms/domain/model/id`

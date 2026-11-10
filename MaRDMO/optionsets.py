@@ -35,7 +35,7 @@ class Search:
                     class yet are offered too (``None``: all).
         creation:   Offer to create a new item from the search text.
         sources:    Sources to search (``None``: MaRDI Portal and Wikidata).
-        not_found:  Offer "not found" (searches without answers and creation).
+        not_found:  Offer "new item" (searches without answers and creation).
         refresh:    RDMO reloads the page after a selection (handlers fill it).
         min_search: Characters needed before searching: 1 where one-letter names
                     exist (programming languages and software: C, R), else 3 (a

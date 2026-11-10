@@ -27,8 +27,8 @@ check all values.  ``PRESAVE_VALIDATOR_MAP`` is assembled explicitly by
 :func:`~MaRDMO.builders.build_presave_validator_map`.
 
 Before an answer is saved, from anywhere, the pre-save router gives the item
-it holds a real ID (:func:`~MaRDMO.ids.assign_id`): "not found" becomes
-``user:<uuid>``.
+it holds a real ID (:func:`~MaRDMO.ids.assign_id`): "not found" (the option
+"new item") becomes ``user:<uuid>``.
 
 All maps are assembled once at startup.
 

@@ -11,7 +11,7 @@ Every option set of the questionnaire names its provider by a key (`provider_key
                                          'quantity', answers=['quantity'], sources=['mardi']),
 ```
 
-A row names the item class (or classes) of the MaRDI Portal search, the questionnaire sections whose items of the user's own are offered too, whether a new item may be created, the sources, whether "not found" is offered, whether RDMO reloads the page after a selection (`refresh`), and from how many characters the search starts.  A new option set needs one row.
+A row names the item class (or classes) of the MaRDI Portal search, the questionnaire sections whose items of the user's own are offered too, whether a new item may be created, the sources, whether "new item" is offered, whether RDMO reloads the page after a selection (`refresh`), and from how many characters the search starts.  A new option set needs one row.
 
 `MaRDMO.optionsets.OPTIONSET_PROVIDERS` is the setting for all rows, so an RDMO installation adds it with one line (see the installation instructions).  Up to MaRDMO 0.6 every key had a class of its own (`MaRDMO.model.providers.MathematicalModel` and so on); settings that still list these must be replaced by that line.  Providers of programming languages and software search from the first character, since some of their names have only one (C, R); all others start at three, since a single letter matches hundreds of items and slows the search.
 
@@ -21,7 +21,7 @@ Providers are organised into three tiers of increasing capability.
 
 ### Tier 1 — Pure search
 
-The simplest providers query the **MaRDI Portal**, or the **MaRDI Portal and Wikidata**, and return whatever matches.  A "not found" option is sometimes included so the user can explicitly signal that no appropriate item exists.
+The simplest providers query the **MaRDI Portal**, or the **MaRDI Portal and Wikidata**, and return whatever matches.  A "new item" option is included in the ID dropdowns of pages, so the user can add an own item when no appropriate one exists.
 
 ### Tier 2 — Search + project items
 
