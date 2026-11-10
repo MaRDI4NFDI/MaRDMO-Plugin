@@ -9,12 +9,15 @@ ID answer:
 | `wikidata:<QID>` | an item of Wikidata |
 | `user:<uuid>` | an item of the user's own, not on the portal yet |
 
-The dropdowns offer **not found** to add an own item.  Before the answer is
-saved, MaRDMO replaces it by a new `user:` ID (`MaRDMO.ids.assign_id`, called
+The ID dropdown of a page offers **new item** to add an own item (its option
+ID is `not found`).  Before the answer is saved, MaRDMO replaces it by a new
+`user:` ID (`MaRDMO.ids.assign_id`, called
 by the pre-save router), whoever saves it: the interview, a project import or
 MaRDMO itself.  The interview shows what the server returns, so the field has
 the real ID at once.  An answer that has a `user:` ID already keeps it:
-selecting **not found** again does not make a new item.
+selecting **new item** again does not make a new item.  Name and short
+description are typed in their own questions on the page; changing them
+renames the item, the ID dropdown only says which item the page is.
 
 This holds for every answer that holds an item: the ID of every page
 (`<section>/id`), the items entered on a page without one of their own
@@ -55,27 +58,31 @@ dropdowns show it.  The answers are written with `update()`: they keep their
 `updated` time, so an interview open on another page can still save them;
 it shows the new text when the page is opened again.
 
-Not synced: the page's own ID answer (for an own item it says "not found"),
+Changing the name renames the item everywhere: MaRDMO cannot tell a typo fix
+from another item.  To document another item, add a new page (and delete the
+old one if it is not needed).
+
+Not synced: the page's own ID answer (for an own item it says "new item"),
 a page without name, and saves outside the interview (hydration and imports
 bring their texts along).  Preview, checks and export use the page's name
 and description anyway.
 
 ## When the ID of a page changes
 
-Answers that hold the ID of a page follow it only if the page stays the same
-item and only its ID becomes known (relations only refer to an item: one
-changed to another item moves nothing):
+Switching a page to another item changes no other answer: relations stay
+with the old item, and the checks report those whose item has no page left.
+The user decides once whether an item is on the portal or Wikidata; only the
+export changes IDs afterwards (see below).
 
-| Change | Meaning | Answers with the old ID |
+| Change | Meaning | ID of the page |
 |---|---|---|
-| `user:` → `mardi:` / `wikidata:` | own item found on the portal or Wikidata, or exported | get the new ID |
-| `wikidata:` → `mardi:` | Wikidata item on the portal now | get the new ID |
-| `mardi:` / `wikidata:` → not found | the page is the template of a new item | stay with the old item |
-| `mardi:Q1` → `mardi:Q2` | a correction, or another item | stay with the old item |
+| `user:` → new item | selected again | keeps its `user:` ID |
+| `mardi:` / `wikidata:` → new item | the page is the template of a new item | a new `user:` ID |
+| any other change | another item | the selected item's ID |
 
-The answers are changed with `update()`, so they keep their `updated` time and
-an interview open on another page can still save them.  If another page still
-has the old ID, they stay with it.
+Publications are no templates: a publication is either on the portal or
+Wikidata, or the user's own and entered with its DOI.  Saving the ID of a
+publication page clears the data of the previous one.
 
 ## Deleting a page
 
@@ -107,8 +114,9 @@ Checks and preview report both pages as one item ("Same Item as Page …"),
 since the export would merge them.  Deleting either page leaves the
 relations with the other one, which has the item's ID.
 
-A copy of a portal or Wikidata item becomes a new item by choosing "not
-found" as its ID (a template, see above).
+A copy of a portal or Wikidata item becomes a new item by choosing "new
+item" as its ID (a template, see above).  A copy of an own item stays the
+same item; delete one of them.
 
 ## In the export
 
@@ -117,6 +125,7 @@ same new programming language on two software pages is created once.  The
 export item keeps the `user:` IDs it stands for (`user_ids`, not sent to the
 portal); afterwards every answer with one of them gets the new `mardi:` ID
 and the text "Label (Description) [mardi]" (`MaRDMO.helpers.replace_ids`).
+Answers with the ID of an exported Wikidata item get its new `mardi:` ID too.
 
 ## Projects made before MaRDMO 0.8.0
 

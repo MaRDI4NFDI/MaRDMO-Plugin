@@ -1,4 +1,4 @@
-'''Every item in a project has a real ID; "not found" becomes ``user:<uuid>`` (ids.py, router).'''
+'''Every item in a project has a real ID; "new item" (``not found``) becomes ``user:<uuid>`` (ids.py, router).'''
 import pytest
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership
@@ -17,7 +17,7 @@ INLINE = ['hardware/cpu', 'processstep/instrument-relatant', 'processstep/method
           'software/programming-language-relatant']
 
 
-def saved(model, path, external_id, text='not found', **fields):
+def saved(model, path, external_id, text='new item', **fields):
     '''Save an answer as an import does (``save()``, no request) and return it.'''
     value = answer(path, text, external_id=external_id, **fields)
     value.project = model
@@ -38,7 +38,7 @@ def test_id_questions_are_the_pages_and_the_inline_items(db):
 def test_not_found_becomes_a_user_id(model, path):
     value = saved(model, path, 'not found', set_prefix='0')
     assert is_user_id(model.values.get(pk=value.pk).external_id)
-    assert value.text == 'not found'
+    assert value.text == 'new item'
 
 
 def test_two_new_items_get_different_ids(model):
@@ -47,7 +47,7 @@ def test_two_new_items_get_different_ids(model):
     assert first.external_id != second.external_id
 
 
-def test_selecting_not_found_again_keeps_the_id(model):
+def test_selecting_new_item_again_keeps_the_id(model):
     value = saved(model, 'quantity/id', 'not found')
     user_id = value.external_id
     value.external_id = 'not found'
@@ -66,45 +66,51 @@ def test_portal_ids_are_kept(model):
     assert model.values.get(pk=value.pk).external_id == 'mardi:Q1'
 
 
-def test_answers_follow_the_item_when_its_id_changes(model):
+@pytest.mark.parametrize('new, text', [('mardi:Q1', 'alpha (a quantity) [mardi]'),
+                                       ('wikidata:Q1', 'alpha (a quantity) [wikidata]')])
+def test_a_page_switched_to_a_portal_item_moves_nothing(model, new, text):
+    '''The user decides once whether an item is on the portal; relations stay with the own item.'''
     page = saved(model, 'quantity/id', 'not found')
     user_id = page.external_id
     save(model, answer('formulation/element/quantity', 'alpha (a quantity)', external_id=user_id, set_prefix='0'))
-    relation = model.values.get(external_id=user_id, attribute__uri__endswith='element/quantity')
-    updated = relation.updated
+
+    page.external_id, page.text = new, text
+    page.save()
+
+    assert model.values.get(attribute__uri__endswith='element/quantity').external_id == user_id
+
+
+def test_a_wikidata_page_switched_to_the_portal_moves_nothing(model):
+    page = saved(model, 'quantity/id', 'wikidata:Q1', text='alpha (a quantity) [wikidata]')
+    save(model, answer('formulation/element/quantity', 'alpha (a quantity) [wikidata]', external_id='wikidata:Q1',
+                       set_prefix='0'))
 
     page.external_id, page.text = 'mardi:Q1', 'alpha (a quantity) [mardi]'
     page.save()
 
-    relation.refresh_from_db()
-    assert relation.external_id == 'mardi:Q1'
-    # Not saved: an interview open with the relation can still save it
-    assert relation.updated == updated
+    assert model.values.get(attribute__uri__endswith='element/quantity').external_id == 'wikidata:Q1'
 
 
 def test_a_portal_item_used_as_template_keeps_its_references(model):
-    '''The page becomes a new item ("not found"); the model may still contain the old one.'''
+    '''The page becomes a new item ("new item"); the model may still contain the old one.'''
     page = saved(model, 'formulation/id', 'mardi:Q1', text='old formula (a formula) [mardi]')
     save(model, answer('model/formulation-relatant', 'old formula (a formula) [mardi]', external_id='mardi:Q1',
                        set_prefix='0'))
 
-    page.external_id = 'not found'
+    page.external_id, page.text = 'not found', 'new item'
     page.save()
 
     assert is_user_id(model.values.get(pk=page.pk).external_id)
     assert model.values.get(attribute__uri__endswith='model/formulation-relatant').external_id == 'mardi:Q1'
 
 
-def test_answers_stay_with_the_item_on_another_page(model):
-    '''Two pages of the same portal item: changing one does not take the references.'''
-    first = saved(model, 'quantity/id', 'mardi:Q1', text='alpha [mardi]', set_index=0)
-    saved(model, 'quantity/id', 'mardi:Q1', text='alpha [mardi]', set_index=1)
-    save(model, answer('formulation/element/quantity', 'alpha [mardi]', external_id='mardi:Q1', set_prefix='0'))
-
-    first.external_id = 'mardi:Q2'
-    first.save()
-
-    assert model.values.filter(external_id='mardi:Q1').count() == 2
+def test_a_relation_switched_to_new_item_from_an_own_item_gets_a_new_id(model):
+    '''Only the ID of a page keeps its ``user:`` ID; a relation choosing "new" is another item.'''
+    value = saved(model, 'formulation/element/quantity', 'not found', text='alpha', set_prefix='0')
+    first = value.external_id
+    value.external_id = 'not found'
+    value.save()
+    assert is_user_id(value.external_id) and value.external_id != first
 
 
 def test_the_interview_gets_the_user_id_back(model, client, django_user_model):
@@ -115,7 +121,7 @@ def test_the_interview_gets_the_user_id_back(model, client, django_user_model):
     attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/quantity/id')
     response = client.post(f'/api/v1/projects/projects/{model.pk}/values/', {
         'attribute': attribute.pk, 'set_prefix': '', 'set_index': 0, 'collection_index': 0,
-        'text': 'not found', 'external_id': 'not found', 'value_type': 'text'}, content_type='application/json')
+        'text': 'new item', 'external_id': 'not found', 'value_type': 'text'}, content_type='application/json')
     assert response.status_code == 201
     assert is_user_id(response.json()['external_id'])
 

@@ -26,6 +26,7 @@ from .getters import (
     get_url,
 )
 from .helpers import process_qualifier, value_editor
+from .ids import is_portal_item
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .workflow.models import ProcessStepUsage
 from .queries import query_sparql, query_sparql_parts
@@ -585,9 +586,11 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
     ):
         '''Write basic questionnaire fields and delegate SPARQL hydration.
 
-        Skips empty or ``'not found'`` entries, calls :func:`~MaRDMO.adders.add_basics`
-        for all entities, then delegates to *batch_fill_method* for MaRDI and
-        Wikidata entities.
+        Only for items of the MaRDI Portal and Wikidata: calls
+        :func:`~MaRDMO.adders.add_basics`, then delegates to
+        *batch_fill_method*.  An own item (its page's ID shows "new item")
+        keeps the name and description of its page: a portal page switched
+        to "new item" is the template of a new item.
 
         Args:
             project:           RDMO project instance.
@@ -600,14 +603,12 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
             visited:           Mutable set of already-processed external IDs
                                (default ``None``; a new set is created if omitted).
         '''
-        if not text or text == 'not found':
+        if not text or not is_portal_item(external_id):
             return
         if visited is None:
             visited = set()
         visited.add(external_id)
         add_basics(project=project, text=text, questions=self.questions,
                    item_type=item_type, index=(0, set_index))
-        if external_id.split(':')[0] not in ('mardi', 'wikidata'):
-            return
         batch_fill_method(project=project, items=[(text, external_id, set_index)],
                           catalog=catalog, visited=visited)

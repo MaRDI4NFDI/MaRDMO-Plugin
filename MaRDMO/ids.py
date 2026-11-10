@@ -2,16 +2,17 @@
 
 Every item in a project has an ID: ``mardi:<QID>`` or ``wikidata:<QID>`` for
 an item of the MaRDI Portal or Wikidata, ``user:<uuid>`` for an item of the
-user's own.  The dropdowns offer "not found" (ID of a page) or the typed
-label (relations) to add an own item; before the answer is saved,
-:func:`assign_id` replaces "not found" by a new ``user:`` ID (see
-``router.py``), so "not found" is never stored as an ID.
+user's own.  The dropdowns offer "new item" (ID of a page) or the typed
+label (relations) to add an own item, both with the option ID "not found";
+before the answer is saved, :func:`assign_id` replaces it by a new ``user:``
+ID (see ``router.py``), so "not found" is never stored as an ID.
 
 Answers that refer to an item hold its ID: a relation holds the ID of the
-item's page.  When the ID of a page changes (e.g. an own item is found on
-the portal), :func:`move_id` gives the answers the new one; when its name or
-description changes, :func:`sync_text` their text; when the page is deleted,
-:func:`remove_references` removes them.
+item's page.  When the page's name or description changes, :func:`sync_text`
+changes their text; when the page is deleted, :func:`remove_references`
+removes them.  When the user switches a page to another item, they stay
+with the old one (see :func:`assign_id`); after an export,
+:func:`~MaRDMO.helpers.replace_ids` gives them the item's new portal ID.
 '''
 import uuid
 
@@ -22,6 +23,8 @@ from rdmo.questions.models import Question, QuestionSet
 from .optionsets import PROVIDERS
 
 NOT_FOUND = 'not found'
+# Text of the option NOT_FOUND in the ID dropdown of a page
+NEW_ITEM = 'new item'
 SOURCES = ('user', 'mardi', 'wikidata')
 
 # Attribute URIs of the answers that hold an item's ID (see id_attributes)
@@ -43,6 +46,11 @@ def is_item_id(identifier):
     return bool(identifier) and identifier.split(':', 1)[0] in SOURCES and ':' in identifier
 
 
+def is_portal_item(identifier):
+    '''Return ``True`` if *identifier* is the ID of an item of the MaRDI Portal or Wikidata.'''
+    return bool(identifier) and identifier.split(':', 1)[0] in ('mardi', 'wikidata') and ':' in identifier
+
+
 def is_own_item(identifier):
     '''Return ``True`` for an item of the user's own: a ``user:`` ID or "not found".
 
@@ -57,7 +65,7 @@ def id_attributes():
     '''Return the attribute URIs of the answers that hold an item's ID.
 
     These are the questions whose dropdown searches without the project's
-    answers and offers "not found": the ID of every page (``<section>/id``)
+    answers and offers "new item": the ID of every page (``<section>/id``)
     and the items entered on a page without one of their own (programming
     languages, CPU models, instruments, methods).  Read from the
     questionnaire once it is there.
@@ -74,71 +82,30 @@ def id_attributes():
 def assign_id(value):
     '''Give the answer *value*, before it is saved, a real ID.
 
-    "not found" becomes a new ``user:`` ID: a new item.  On the ID of a page
+    "not found" (the option "new item", or the typed label of a relation)
+    becomes a new ``user:`` ID: a new item.  On the ID of a page
     (:func:`id_attributes`) an answer that has a ``user:`` ID already keeps
-    it, so selecting "not found" again does not make a new item; and if the
-    item becomes known on the portal (see :func:`same_item`), the answers
-    that refer to the old ID get the new one (:func:`move_id`).  A relation
-    only refers to an item: choosing "new" again is another new item, and a
-    relation changed to another item moves nothing.
+    it, so selecting "new item" again does not make a new item; a portal
+    item switched to "new item" is the template of a new one.  A relation
+    only refers to an item: choosing "new" again is another new item.
+
+    No other answer changes: a page switched to another item (own, portal
+    or Wikidata) leaves the relations with the old one, and the checks
+    report those without page.  The user decides once whether an item is
+    on the portal; afterwards only the export changes IDs (see
+    :func:`~MaRDMO.helpers.replace_ids`).
 
     Args:
         value: Unsaved :class:`~rdmo.projects.models.Value` of a MaRDMO catalog.
     '''
-    if value.attribute.uri not in id_attributes():
-        if value.external_id == NOT_FOUND:
-            value.external_id = new_user_id()
+    if value.external_id != NOT_FOUND:
         return
-    old = Value.objects.filter(pk=value.pk).values_list('external_id', flat=True).first() if value.pk else None
-    if value.external_id == NOT_FOUND:
-        value.external_id = old if is_user_id(old) else new_user_id()
-    if same_item(old, value.external_id):
-        # Another answer with the old ID is the same item on another page (or
-        # entered again); the references stay with it
-        keeps_old = Value.objects.filter(
-            project=value.project, snapshot=None, external_id=old, attribute__uri__in=id_attributes()
-        ).exclude(pk=value.pk).exists()
-        if not keeps_old:
-            move_id(value.project, old, value.external_id, exclude=value.pk)
-
-
-def same_item(old, new):
-    '''Return ``True`` if a page whose ID changes from *old* to *new* stays the same item.
-
-    That is when only its ID becomes known: an own item is found on the
-    portal or Wikidata (or exported), or a Wikidata item is on the portal
-    now.  Otherwise the page becomes another item and the answers stay with
-    the old one: a portal item switched to "not found" is the template of a
-    new item, and one portal item changed to another may be a correction or
-    another item.
-    '''
-    if not (is_item_id(old) and is_item_id(new)) or old == new:
-        return False
-    source = new.split(':', 1)[0]
-    return (is_user_id(old) and source in ('mardi', 'wikidata')) or (
-        old.startswith('wikidata:') and source == 'mardi')
-
-
-def move_id(project, old, new, exclude=None):
-    '''Give every answer in *project* that holds the ID *old* the ID *new*.
-
-    Saved with ``update()``: the answers keep their ``updated`` time, so an
-    interview open on another page can still save them.
-
-    Args:
-        project: RDMO project instance.
-        old:     ID the answers hold now.
-        new:     ID they get.
-        exclude: Primary key of an answer to leave alone (the one being saved).
-
-    Returns:
-        Number of answers changed.
-    '''
-    return (
-        Value.objects.filter(project=project, snapshot=None, external_id=old)
-        .exclude(pk=exclude)
-        .update(external_id=new)
-    )
+    if value.attribute.uri in id_attributes() and value.pk:
+        old = Value.objects.filter(pk=value.pk).values_list('external_id', flat=True).first()
+        if is_user_id(old):
+            value.external_id = old
+            return
+    value.external_id = new_user_id()
 
 
 def item_key(identifier, name, description):
@@ -231,7 +198,7 @@ def sync_text(value):
     Called when the name or short description *value* of a page was saved
     (or cleared) in the interview.  Every answer in the project with the
     page's ID gets the text of :func:`item_text`, except the ID answers of
-    pages (the page's own shows "not found" for an own item).  Written with
+    pages (the page's own shows "new item" for an own item).  Written with
     ``update()``: the answers keep their ``updated`` time, so an interview
     open on another page can still save them.
 

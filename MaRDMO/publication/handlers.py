@@ -23,6 +23,7 @@ from ..getters import (
 )
 from ..queries import query_sparql
 from ..adders import add_basics, add_references, add_relations_flexible
+from ..ids import is_portal_item
 
 from .constants import (
     PROPS,
@@ -120,7 +121,7 @@ class Information:
         '''Populate citation metadata for several publications at once.
 
         Cleans any previously stored background data of every entry, then (for
-        entries whose text is set and not ``"not found"``) adds basic
+        publications of the MaRDI Portal and Wikidata) adds basic
         label/description, fetches the SPARQL citation data with one query per
         source and :data:`CITATION_BATCH` publications, stores references, and
         writes catalog-specific Publication–Entity / Publication–Algorithm /
@@ -145,8 +146,8 @@ class Information:
                 set_index = set_index
             )
 
-            # Skip if no Text or 'not found' in ID Field
-            if not text or text == 'not found':
+            # Own publications have no citation to query
+            if not text or not is_portal_item(external_id):
                 continue
 
             # Add basic Information, on the publication's tab (set_prefix

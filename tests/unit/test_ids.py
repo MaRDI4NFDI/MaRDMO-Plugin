@@ -1,8 +1,8 @@
-'''IDs of the user's own items: one export item per name and description; when answers follow a page.'''
+'''IDs of the user's own items: one export item per name and description.'''
 import pytest
 
 from MaRDMO.helpers import collect_items_without_section, extract_parts, unique_items
-from MaRDMO.ids import is_item_id, is_own_item, item_key, same_item
+from MaRDMO.ids import is_item_id, is_own_item, is_portal_item, item_key
 
 
 def language(identifier):
@@ -36,20 +36,9 @@ def test_own_items_with_the_same_name_are_one_export_item_with_all_their_ids():
                                      'user_ids': ['user:1', 'user:2']}]
 
 
-@pytest.mark.parametrize('old, new, same', [
-    ('user:1', 'mardi:Q1', True),        # own item found on the portal, or exported
-    ('user:1', 'wikidata:Q1', True),     # own item found on Wikidata
-    ('wikidata:Q1', 'mardi:Q2', True),   # Wikidata item on the portal now
-    ('mardi:Q1', 'user:1', False),       # portal item as template of a new item
-    ('wikidata:Q1', 'user:1', False),
-    ('mardi:Q1', 'mardi:Q2', False),     # correction or another item: nothing moves silently
-    ('mardi:Q1', 'wikidata:Q1', False),
-    ('user:1', 'user:2', False),
-    ('mardi:Q1', 'mardi:Q1', False),
-    ('not found', 'user:1', False),      # a new item
-])
-def test_answers_move_only_when_the_page_stays_the_same_item(old, new, same):
-    assert same_item(old, new) is same
+def test_portal_items_are_mardi_and_wikidata_ids():
+    assert is_portal_item('mardi:Q1') and is_portal_item('wikidata:Q1')
+    assert not any(is_portal_item(identifier) for identifier in ('user:1', 'not found', '', None, 'mardi'))
 
 
 @pytest.mark.parametrize('text, parts', [
