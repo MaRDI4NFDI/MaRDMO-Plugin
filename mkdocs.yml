@@ -17,6 +17,8 @@ plugins:
 nav:
   - Home: index.md
   - Vocabulary: vocabulary.md
+  - Using MaRDMO:
+      - Documenting Items: usage/items.md
   - Concepts:
       - Dynamic Providers: concepts/providers.md
       - Handlers: concepts/handlers.md

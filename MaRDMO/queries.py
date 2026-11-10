@@ -562,17 +562,17 @@ def query_user_entries(project, setup):
         # Quantity of the other class; without a class yet it is offered
         if entry.get('class') and entry['class'].option and entry['class'].option.uri != wanted_class:
             continue
-        if is_user_id(entry['id'].external_id):
-            # User-defined item: offered with the ID of its page
-            name, description = entry.get('name'), entry.get('description')
-            label = (name.text if name else '') or "No Label Provided!"
-            description = (description.text if description else '') or "No Description Provided!"
-        elif not is_item_id(entry['id'].external_id):
+        if not is_item_id(entry['id'].external_id):
             # No real ID (made before MaRDMO 0.8.0): reported by the checks
             continue
-        else:
-            # Portal or Wikidata item: the source is its ID's, not the text's (#103)
-            label, description, _ = extract_parts(entry['id'].text)
+        # Offered with the ID, name and description of its page (as preview
+        # and export show it); a portal page not filled yet by its ID's text
+        name, description = entry.get('name'), entry.get('description')
+        name, description = (name.text if name else ''), (description.text if description else '')
+        if not name and not is_user_id(entry['id'].external_id):
+            name, description, _ = extract_parts(entry['id'].text)
+        label = name or "No Label Provided!"
+        description = description or "No Description Provided!"
         item_id = entry['id'].external_id
         # Only the sources the dropdown does not search
         if item_id.split(':', 1)[0] not in setup['sources']:

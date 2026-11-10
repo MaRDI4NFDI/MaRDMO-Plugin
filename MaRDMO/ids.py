@@ -67,9 +67,9 @@ def is_portal_item(identifier):
 def is_own_item(identifier):
     '''Return ``True`` for an item of the user's own: a ``user:`` ID or "not found".
 
-    Relation answers store "not found" for an own item until they hold the
-    ID of its page (#100); until then both mean the same own item, which is
-    known by its name and description.
+    Answers never store "not found" (:func:`assign_id`); it is the ID of the
+    workflow itself in the export (:func:`~MaRDMO.helpers.unique_items`), and
+    of the items of projects made before 0.8.0, which the checks report.
     '''
     return identifier == NOT_FOUND or is_user_id(identifier)
 
@@ -125,8 +125,8 @@ def item_key(identifier, name, description):
     '''Return what makes an item in an export the same item: ``(ID, name, description)``.
 
     The user's own items are the same item when name and description are:
-    the same new programming language on two software pages, or a page and
-    the relations to it that still store "not found" (see :func:`is_own_item`).
+    the same new programming language on two software pages, or the same
+    new author in two publications.
     '''
     return ('user' if is_own_item(identifier) else identifier, name, description)
 

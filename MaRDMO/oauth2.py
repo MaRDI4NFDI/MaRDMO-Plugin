@@ -39,6 +39,7 @@ from rdmo.projects.models import Project
 
 from .getters import get_items, get_properties
 from .helpers import replace_in_dict, compare_items, replace_ids, collect_statements
+from .ids import item_text
 from .store import _progress_store, _register_job_for_session
 
 logger = logging.getLogger(__name__)
@@ -277,15 +278,14 @@ class OauthProviderMixin:
             f"added to it."
             for k in linked_keys
         ]
-        linked_qids = {jsons[k]['id'] for k in linked_keys}
-
         created = compare_items(init, jsons, get_properties().get('Wikidata QID'))
         if created and project is not None:
             replace_ids(project, created)
+        # By key: an item linked to one created in the same export has its QID
         ids = [
-            [info.get('class', ''), f'{label} ({desc})' if desc else label, info['new_qid']]
-            for (label, desc), info in created.items()
-            if info['new_qid'] not in linked_qids
+            [info.get('class', ''), item_text(info['label'], info['description']), info['new_qid']]
+            for key, info in created.items()
+            if key not in linked_keys
         ]
         pid_to_name = {qid: name for name, qid in get_properties().items()}
         qid_to_name = {qid: name for name, qid in get_items().items()}

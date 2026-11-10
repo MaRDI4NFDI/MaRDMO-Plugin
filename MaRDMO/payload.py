@@ -1752,8 +1752,8 @@ class GeneratePayload:
         for key, value in self.user_items.items():
             if not value.get('ID'):
                 continue
-            # The user's own items (user:<uuid>, or "not found" in relations);
-            # new authors and journals by where they are (#118)
+            # The user's own items (user:<uuid>, "not found" for the workflow
+            # itself); new authors and journals by where they are (#118)
             if is_own_item(value['ID']):
                 id_type = value.get('kind') or 'not found'
             else:

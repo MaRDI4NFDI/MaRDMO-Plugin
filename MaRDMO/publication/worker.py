@@ -91,8 +91,8 @@ class PublicationRetriever:
                 set_index = key
             )
 
-            #If User selected a Publication from Wikidata, MathAlgoDB or did not find it...
-            if answers['publication'][key]['ID'].startswith(('wikidata', 'user:', 'not found')):
+            #If User selected a Publication from Wikidata or entered an own one...
+            if answers['publication'][key]['ID'].startswith(('wikidata', 'user:')):
 
                 #...check if DOI is available.
                 if not answers['publication'][key].get('reference', {}).get(0, ['',''])[1]:
@@ -193,7 +193,7 @@ class PublicationRetriever:
         dois = {
             key: publication['reference'][0][1].upper()
             for key, publication in answers.get('publication', {}).items()
-            if (publication.get('ID') or '').startswith(('wikidata', 'user:', 'not found'))
+            if (publication.get('ID') or '').startswith(('wikidata', 'user:'))
             and publication.get('reference', {}).get(0, ['', ''])[1]
         }
         if not dois:
