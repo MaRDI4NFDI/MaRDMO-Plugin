@@ -129,8 +129,9 @@ class Information:  # pylint: disable=too-few-public-methods
         if not instance.text or not is_item_id(instance.external_id):
             return
 
-        label, description, _ = extract_parts(instance.text)
         source = instance.external_id.split(':', 1)[0]
+        # A new item's text is its label as typed (#129)
+        label, description, _ = (instance.text, '', '') if source == 'user' else extract_parts(instance.text)
         config = get_uri_prefix_map()[instance.attribute.uri]
         datas  = [Relatant.from_triple(instance.external_id, label, description)]
 

@@ -38,6 +38,7 @@ from .getters import (
 )
 from .helpers import (
     batched_writes,
+    describe_items_without_page,
     is_cyclic,
     link_to_pages,
     mark_same_own_items,
@@ -344,8 +345,10 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                 get_answer=get_answers
             )
 
-        # Relations show their page's name and description (IDs, #100)
+        # Relations show their page's name and description (IDs, #100), own
+        # items without page a generic one (#129)
         link_to_pages(answers)
+        describe_items_without_page(answers)
         mark_same_own_items(answers)
 
         prepare = prepare_class()

@@ -31,15 +31,31 @@ dropdown showed.
 
 - **An item of the project** is offered with the ID of its page; selecting
   it stores that ID.
-- **A new item**: the relation dropdowns offer the typed label as a new item
-  ("Label", or "Label (Description)").  Selecting it gives the relation a new
-  `user:` ID, and MaRDMO creates the item's page with the same ID, with the
-  typed name (and description).  This always makes a new page, also when an
-  item of the project has the same label: two items may share it.  A page
-  made by mistake is deleted, and the relation set to the right item.
-- In a catalog without a section for the item (research fields and
-  algorithmic tasks in the workflow catalog), the new item stays on the page
-  where it was entered.
+- **A new item**: the relation dropdowns offer the typed text as a new item.
+  It is the item's label, as typed: "Navier-Stokes (incompressible)" is not
+  split into label and description.  Selecting it gives the relation a new
+  `user:` ID, and MaRDMO creates the item's page with the same ID and the
+  typed name; the short description is entered on the page.  This always
+  makes a new page, also when an item of the project has the same label: two
+  items may share it.  A page made by mistake is deleted, and the relation
+  set to the right item.
+- **A new item without a page** stays on the page where it was entered:
+  programming languages, CPU models, methods and instruments, and in the
+  workflow catalog research fields and algorithmic tasks.  Preview, checks
+  and export give it the generic description of its kind
+  (`MaRDMO.helpers.describe_items_without_page`; not stored in the project):
+
+    | Item | Description |
+    |---|---|
+    | programming language | programming language |
+    | CPU model | cpu model |
+    | method | experimental method |
+    | instrument | instrument |
+    | research field (workflow catalog) | academic discipline |
+    | algorithmic task (workflow catalog) | algorithmic task |
+
+    The same label is the same item: the export creates it once, and finds it
+    on the MaRDI Portal if it is there already (the user then selects it).
 
 Preview, checks and export find the page of a relation by its ID and use the
 page's name and description (`MaRDMO.helpers.link_to_pages`), so a page

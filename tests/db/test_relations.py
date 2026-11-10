@@ -58,10 +58,13 @@ def test_new_item_in_a_relation_gets_a_page_with_its_id(interview):
     assert model.values.get(attribute__uri=f'{BASE_URI}domain/problem/id').text == 'new item'
 
 
-def test_new_item_typed_with_description(interview):
+@pytest.mark.parametrize('typed', ['Navier-Stokes (incompressible)', 'reaction rate (rate'])
+def test_the_typed_text_is_the_label(interview, typed):
+    '''No splitting into label and description (#129): the description is entered on the page.'''
     model, post = interview()
-    user_id = post('model/problem-relatant', 'reaction rate (rate of a reaction)', 'not found').json()['external_id']
-    assert page(model, 'problem', user_id) == ('reaction rate', 'rate of a reaction')
+    response = post('model/problem-relatant', typed, 'not found')
+    assert response.status_code == 201
+    assert page(model, 'problem', response.json()['external_id']) == (typed, '')
 
 
 def test_new_again_is_another_item(interview):
@@ -94,20 +97,10 @@ def test_a_relation_changed_to_another_item_moves_nothing(interview):
     assert model.values.filter(external_id=first).count() == 2   # its page and the first relation
 
 
-def test_a_portal_item_needs_a_description(interview):
-    _, post = interview()
-    assert post('model/problem-relatant', 'reaction rate', 'mardi:Q1').status_code == 400
-
-
-def test_unclosed_parenthesis_is_rejected(interview):
-    _, post = interview()
-    assert post('model/problem-relatant', 'reaction rate (rate', 'not found').status_code == 400
-
-
 def test_new_item_without_page_in_the_workflow_catalog(interview, monkeypatch):
     '''The workflow catalog has no section for research fields: the field stays on the process step.'''
     workflow, post = interview('mardmo-interdisciplinary-workflow-catalog')
-    response = post('processstep/field-relatant', 'fluid dynamics (study of fluid flow)', 'not found')
+    response = post('processstep/field-relatant', 'fluid dynamics', 'not found')
     assert is_user_id(response.json()['external_id'])
     assert pages(workflow, 'field') == 0
 
@@ -187,7 +180,7 @@ def test_new_field_of_a_process_step_is_not_an_old_project(interview):
     from MaRDMO import main
     workflow, post = interview('mardmo-interdisciplinary-workflow-catalog')
     post('processstep', 'PS1', set_prefix='', set_index=0)
-    post('processstep/field-relatant', 'fluid dynamics (study of fluid flow)', 'not found')
+    post('processstep/field-relatant', 'fluid dynamics', 'not found')
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = workflow, None
     answers, _ = provider.get_post_data()
