@@ -64,7 +64,7 @@ The following steps happen each time the user types in an autocomplete field:
       &format=json
     ```
 
-4. **Cache** — the results of each source (MaRDI Portal, Wikidata) are kept in Django's cache for five minutes, keyed by search text and item class.  Repeated searches — while typing, or for the same entity type on another page — are then answered without querying the portal again.  Failed requests are not cached, so the next search tries again.  The results do not depend on the project, so the user's own answers cannot make them outdated.
+4. **Cache** — the results of each source (MaRDI Portal, Wikidata) are kept in Django's cache for five minutes, keyed by search text and item class.  Repeated searches — while typing, or for the same entity type on another page — are then answered without querying the portal again.  Each request is given up after five seconds (`SEARCH_TIMEOUT`); a quick failure (a connection error, or the answer 429, 502, 503 or 504) is retried once after half a second, a timeout is not, so a search never keeps an RDMO worker much longer than one request.  Failed requests are not cached, so the next search tries again.  The results do not depend on the project, so the user's own answers cannot make them outdated.
 
 5. **Duplicates** — a Wikidata result with the same label (ignoring case) and the same description as a MaRDI Portal result is left out: it is the same item, and the export would ask the user to select the MaRDI Portal one.  Results without a description are never merged, since a label alone does not make two items the same.
 

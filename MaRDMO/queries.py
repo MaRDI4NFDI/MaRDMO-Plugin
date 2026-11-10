@@ -31,6 +31,12 @@ logger = logging.getLogger(__name__)
 
 # Search results of the MaRDI Portal and Wikidata are reused for this long
 SEARCH_CACHE_TIMEOUT = 5 * 60
+# A dropdown search request is given up after SEARCH_TIMEOUT seconds and
+# retried once after SEARCH_RETRY_WAIT seconds on a quick failure (#94): a
+# connection error or one of SPARQL_RETRY_STATUS.  A timeout is not retried
+# (search_deadline): the request occupies an RDMO worker all the while
+SEARCH_TIMEOUT = 5
+SEARCH_RETRY_WAIT = 0.5
 
 # A SPARQL query is given up after this many seconds and retried once on a
 # timeout, a connection error or one of these answers, after the portal's
@@ -62,6 +68,16 @@ def http_session():
     if session is None:
         session = _SESSIONS.session = requests.Session()
     return session
+
+
+def search_deadline():
+    '''Return the deadline of a dropdown search request sent now (:func:`request_with_retry`).
+
+    A failure before :data:`SEARCH_TIMEOUT` seconds leaves time for the
+    retry; a timeout does not, so a request never takes much longer than
+    without a retry.
+    '''
+    return time.monotonic() + SEARCH_TIMEOUT + SEARCH_RETRY_WAIT
 
 
 def request_with_retry(method, url, waits=(SPARQL_RETRY_WAIT,), deadline=None, **kwargs):
@@ -163,7 +179,7 @@ def query_item(label, description, api = get_url('mardi', 'api'), waits=(), dead
 
     return None
 
-def query_api(api_url, search_term, timeout=5, raise_errors=False, waits=(), deadline=None):
+def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, waits=(), deadline=None):
     '''Search a Wikibase API endpoint for items whose label matches *search_term*.
 
     Uses the ``wbsearchentities`` action with ``limit=10``.
@@ -171,7 +187,7 @@ def query_api(api_url, search_term, timeout=5, raise_errors=False, waits=(), dea
     Args:
         api_url:      Full URL of the Wikibase API endpoint.
         search_term:  Label string to search for.
-        timeout:      Request timeout in seconds (default 5).
+        timeout:      Request timeout in seconds (default :data:`SEARCH_TIMEOUT`).
         raise_errors: Raise request and JSON errors instead of returning an
                       empty list, so callers can tell a failure from no hits.
         waits:        Pauses before retries (see :func:`request_with_retry`);
@@ -208,7 +224,7 @@ def query_api(api_url, search_term, timeout=5, raise_errors=False, waits=(), dea
             if raise_errors:
                 raise
     except requests.exceptions.RequestException as e:
-        logger.error("Request failed due to %s", e)
+        logger.error("Search of %s failed: %s", api_url, e)
         if raise_errors:
             raise
 
@@ -416,7 +432,8 @@ def query_sources(search, item_class=[], sources=None, not_found=True):
             'mardi', s, item_class, lambda t: query_api_per_class(t, item_class, raise_errors=True))
     if 'wikidata' in sources:
         source_functions['wikidata'] = lambda s: _cached_search(
-            'wikidata', s, None, lambda t: query_api(get_url('wikidata', 'api'), t, raise_errors=True))
+            'wikidata', s, None, lambda t: query_api(get_url('wikidata', 'api'), t, raise_errors=True,
+                                                     waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline()))
 
     # Runs on every autocomplete search; close the pool so threads do not pile up
     with ThreadPool(processes=len(source_functions)) as pool:
@@ -607,8 +624,11 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
     api_url      = get_url('mardi', 'api')
 
     try:
-        search_resp = http_session().get(
+        search_resp = request_with_retry(
+            'get',
             api_url,
+            waits=(SEARCH_RETRY_WAIT,),
+            deadline=search_deadline(),
             params={
                 'action':      'query',
                 'list':        'search',
@@ -619,7 +639,7 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
                 'format':      'json',
             },
             headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
-            timeout=5,
+            timeout=SEARCH_TIMEOUT,
         )
         search_resp.raise_for_status()
         hits = search_resp.json().get('query', {}).get('search', [])
@@ -635,8 +655,11 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
     qids = [hit['title'].removeprefix('Item:') for hit in hits]
 
     try:
-        entity_resp = http_session().get(
+        entity_resp = request_with_retry(
+            'get',
             api_url,
+            waits=(SEARCH_RETRY_WAIT,),
+            deadline=search_deadline(),
             params={
                 'action':    'wbgetentities',
                 'ids':       '|'.join(qids),
@@ -645,7 +668,7 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
                 'format':    'json',
             },
             headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
-            timeout=5,
+            timeout=SEARCH_TIMEOUT,
         )
         entity_resp.raise_for_status()
         entities = entity_resp.json().get('entities', {})
