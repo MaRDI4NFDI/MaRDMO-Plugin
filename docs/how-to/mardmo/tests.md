@@ -67,6 +67,9 @@ needs a questionnaire change gets a questionnaire branch of the same name.
 A test of the database jobs fails if the tests did not run on the database
 asked for, so a database job cannot pass on SQLite unnoticed.
 
+Besides, `live-check.yml` checks the MaRDI Portal and Wikidata every night
+(see [Live check](#live-check-does-the-portal-still-answer-as-recorded)).
+
 ## Golden files: when the export changes
 
 `tests/db/test_export.py` builds the export of fixed projects, as it would be
@@ -107,6 +110,32 @@ A test can combine recordings, e.g. `portal('si_model', 'export_portal_si_model'
 it is answered from all of them, and recording stores only the requests the
 earlier ones do not have, in the last one.  So the export of a portal item
 reuses the requests of its hydration.
+
+## Live check: does the portal still answer as recorded?
+
+Every night, `.github/workflows/live-check.yml` sends every recorded request
+again to the MaRDI Portal and Wikidata (one per second, about four minutes)
+and runs the dropdown searches live (`tests/live/test_portal.py`).  It
+compares the answers by structure, not by value, so ordinary edits on the
+portal do not count: the same status code, the keys of every recorded
+object, lists with entries (search hits, SPARQL rows) that still have
+entries, the same SPARQL result variables and the same TeX check results.
+Only reading requests are sent (searches, SPARQL queries, TeX checks); a
+recording keeps each request as sent for this.
+
+The live check is not required for pull requests.  A failure opens an issue
+"Live check failed" with what changed, or comments on the open one; a
+recorded error that now succeeds (the portal fixed it) is a note in the
+run's summary.  When the data changed, record again (above); when the API
+changed, adapt MaRDMO.  To run it locally:
+
+```bash
+LIVE=1 pytest tests/live --force-enable-socket
+```
+
+Scheduled workflows run on the default branch only; GitHub turns the
+schedule off after 60 days without commits (it says so by email), and a run
+started by hand ("Run workflow") turns it on again.
 
 ## Add a documentation as a test project
 

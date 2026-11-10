@@ -12,7 +12,8 @@ Recording only reads; it is for new tests or when the portal data changed.
 A request is found again by method, URL, parameters and body; the order of
 the items in a SPARQL ``VALUES`` block and in ``ids=Q1|Q2`` does not count,
 because MaRDMO collects them in sets.  A recording holds the requests of all
-tests that use it; recording again replaces it.
+tests that use it; recording again replaces it.  Each entry keeps the request
+as sent (``request``), so the live check (tests/live) can send it again.
 '''
 import json
 import re
@@ -45,6 +46,13 @@ def key(method, url, params=None, data=None):
     elif data is not None:
         data = sorted(data.items()) if isinstance(data, dict) else data
     return json.dumps([method.upper(), url, sorted(params.items()), data], ensure_ascii=False)
+
+
+def sent(method, params=None, data=None, headers=None):
+    '''The request as MaRDMO sent it (the key leaves out line breaks, headers and the order of items).'''
+    if isinstance(data, bytes):
+        data = data.decode('utf-8')
+    return {'method': method.upper(), 'params': dict(params or {}), 'data': data, 'headers': dict(headers or {})}
 
 
 def _response(entry):
@@ -102,7 +110,8 @@ def record(monkeypatch, names):
         with lock:
             entries[key(method, url, params, data)] = {
                 'key': key(method, url, params, data), 'url': url, 'status': response.status_code,
-                'content_type': response.headers.get('Content-Type', ''), 'body': response.text}
+                'content_type': response.headers.get('Content-Type', ''), 'body': response.text,
+                'request': sent(method, params, data, kwargs.get('headers'))}
         return response
 
     monkeypatch.setattr(requests.Session, 'request', request)

@@ -4,13 +4,43 @@
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"Journal of Reproducible Tests\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"Journal of Reproducible Tests\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "Journal of Reproducible Tests"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  },
  {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"Sourav Chowdhury\"], [\"type\", \"item\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,
   "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"Sourav Chowdhury\"},\"search\":[],\"success\":1}"
+  "body": "{\"searchinfo\":{\"search\":\"Sourav Chowdhury\"},\"search\":[],\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbsearchentities",
+    "format": "json",
+    "language": "en",
+    "type": "item",
+    "limit": 10,
+    "search": "Sourav Chowdhury"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
  }
 ]
