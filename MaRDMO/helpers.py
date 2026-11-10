@@ -842,7 +842,7 @@ def entity_relations_grouped(data, idx, entity, assumption, mapping):
     Identical to :func:`entity_relations` except that every resolved entry is
     always written, even when its value already appears under a different key.
     This is required for grouped structures where the same external ID (e.g.
-    ``'not found'``) or the same platform software legitimately occurs at
+    the same own item) or the same platform software legitimately occurs at
     multiple set-indices.
 
     Args:
@@ -1231,7 +1231,7 @@ def process_question_dict(project, questions, get_answer):
     return answers
 
 def compare_items(old, new, wikidata_qid_prop=None):
-    """Return a mapping of newly created items indexed by (label, description).
+    """Return the items that got a QID by the export, by their payload key (``Item<n>``).
 
     Compares the ``id`` field of every ``Item*`` key: entries that had no id
     before posting (``old[key]['id']`` is falsy) and have one afterwards are
@@ -1253,9 +1253,11 @@ def compare_items(old, new, wikidata_qid_prop=None):
                             items.  Pass ``get_properties().get('Wikidata QID')``.
 
     Returns:
-        Dict mapping ``(label, description)`` tuples to
-        ``{'old_id': <original external id>, 'new_qid': <assigned QID>,
-        'class': <class>, 'user_ids': [<user: IDs>]}``.
+        Dict mapping payload keys to ``{'label': …, 'description': …,
+        'old_id': <original external id>, 'new_qid': <assigned QID>,
+        'class': <class>, 'user_ids': [<user: IDs>]}``; two items with the
+        same label and description (one linked to the other) are two
+        entries.
     """
 
     created = {}
@@ -1273,7 +1275,9 @@ def compare_items(old, new, wikidata_qid_prop=None):
                         old_id = f'wikidata:{stmt[2]}'
                         break
 
-            created[(label, description)] = {
+            created[key] = {
+                'label':    label,
+                'description': description,
                 'old_id':   old_id,
                 'new_qid':  item['id'],
                 'class':    old[key].get('class', ''),
@@ -1448,13 +1452,14 @@ def replace_ids(project, created):
     Args:
         project:  RDMO project instance whose Values should be updated.
         created:  Dict as returned by :func:`compare_items` —
-                  ``{(label, description): {'old_id': ..., 'new_qid': ..., 'user_ids': [...]}}``.
+                  ``{key: {'label': ..., 'description': ..., 'old_id': ..., 'new_qid': ...,
+                  'user_ids': [...]}}``.
     """
 
     # Wikidata items: one bulk query per export, matched by QID
     wikidata_map = {
-        info['old_id']: (f"mardi:{info['new_qid']}", item_text(label, desc))
-        for (label, desc), info in created.items()
+        info['old_id']: (f"mardi:{info['new_qid']}", item_text(info['label'], info['description']))
+        for info in created.values()
         if info['old_id'].startswith('wikidata:')
     }
     if wikidata_map:
@@ -1467,13 +1472,13 @@ def replace_ids(project, created):
 
     # Items of the user's own: matched by ID, written with update() so an
     # interview open on another page can still save
-    for (label, desc), info in created.items():
+    for info in created.values():
         if info.get('user_ids'):
             Value.objects.filter(
                 project=project, snapshot=None, external_id__in=info['user_ids']
             ).update(
                 external_id=f"mardi:{info['new_qid']}",
-                text=item_text(label, desc),
+                text=item_text(info['label'], info['description']),
             )
 
 

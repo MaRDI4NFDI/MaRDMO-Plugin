@@ -105,3 +105,20 @@ def test_a_publication_on_its_own_tab(interview):
                 set_prefix='1'))
     edit('publication/name', 'The paper', set_index=0, set_prefix='')
     assert model.values.get(external_id='user:paper', set_prefix='1').text == 'The paper (scientific article)'
+
+
+def test_the_sync_is_one_read_and_one_write(project, django_assert_num_queries):
+    '''However many answers refer to the item (#105): no query per answer, no signals.'''
+    from MaRDMO.ids import id_attributes, sync_text
+    model = project('mardmo-model-catalog')
+    save(model, answer('quantity/id', 'new item', external_id='user:aaa', set_index=0),
+         answer('quantity/name', 'reaction rate', set_prefix='0'),
+         *[answer('task/quantity-relatant', 'alpha', external_id='user:aaa', set_prefix=str(index))
+           for index in range(20)])
+    id_attributes()
+    # The router has the attribute of the saved answer already
+    name = model.values.select_related('attribute').get(attribute__uri=f'{BASE_URI}domain/quantity/name')
+    with django_assert_num_queries(2):
+        sync_text(name)
+    assert set(model.values.filter(attribute__uri=f'{BASE_URI}domain/task/quantity-relatant')
+               .values_list('text', flat=True)) == {'reaction rate'}

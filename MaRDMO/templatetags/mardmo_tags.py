@@ -55,7 +55,7 @@ def has_line_break(value):
 
 @register.filter
 def own_item(identifier):
-    '''Return ``True`` if *identifier* is an item of the user's own (``user:`` ID, or "not found" in relations).
+    '''Return ``True`` if *identifier* is an item of the user's own (``user:`` ID, see :func:`~MaRDMO.ids.is_own_item`).
 
     Usage: ``{% if values.ID|own_item %}``.
     '''

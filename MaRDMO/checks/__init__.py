@@ -9,7 +9,7 @@ from .base import ChecksBase
 class Checks(WorkflowMixin, AlgorithmMixin, ModelMixin, ChecksBase):
     '''Validate user answers before transferring documentation to the MaRDI Portal.
 
-    Runs catalog-specific consistency checks (mandatory fields, "not found"
-    placeholders, conflicting data properties) and collects human-readable
-    error messages for display.
+    Runs catalog-specific consistency checks (mandatory fields, relations
+    to own items without page, projects made before 0.8.0, conflicting data
+    properties) and collects human-readable error messages for display.
     '''
