@@ -36,7 +36,6 @@ rule serves all four places.
 |---|---|---|
 | Short descriptions | At most 2000 characters | Additionally: present, and not identical to the name |
 | Long descriptions and other answers exported as text | No line breaks | No line breaks |
-| Relations (`Label (Description)`) | Format `Label (Description)` or `Label (Description) [source]` | — |
 | Data properties | No mutually exclusive pair (e.g. *linear* and *nonlinear*) | Same |
 | QUDT IDs | Starts with an uppercase letter, then letters, `_` or `-` | At least two characters |
 | DOIs (publications, references, documentation, data set publication) | A beginning of `10.NNNN/suffix`; links (`https://doi.org/…`) are rejected | Complete `10.NNNN/suffix` (sub-prefixes such as `10.1000.10/` allowed) |

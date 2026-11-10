@@ -6,7 +6,6 @@ Validators are registered in ``builders.py`` via ``build_presave_validator_map``
 
 Provides:
 
-- :func:`validate_value_format`      — rejects entries not matching ``Label (Description)``
 - :func:`validate_short_description` — rejects descriptions longer than the maximum length
 - :func:`validate_qudt_id`           — rejects QUDT IDs not matching the expected format
 - :func:`validate_doi`               — rejects DOI text not matching the expected format
@@ -44,7 +43,6 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import ValidationError
 
 from .getters import get_mathmoddb, get_options
-from .helpers import extract_parts
 from .ids import is_own_item
 from .model.constants import data_properties_check
 from .patterns import (
@@ -339,32 +337,6 @@ def validate_single_line(instance):
                 'Line breaks are not allowed here: the MaRDI Portal stores'
                 ' this answer as single-line text.'
             )]
-        })
-
-
-def validate_value_format(instance):
-    '''Reject values whose text cannot be parsed as ``Label (Description)``.
-
-    Accepts empty text (field cleared), ``Label (Description)`` (user entry),
-    ``Label (Description) [source]`` (external entry), and a plain label for
-    an item of the user's own (the "new" option: the description is entered
-    on the item's page).  Rejects anything else — unclosed parentheses, plain
-    text for a portal item, etc.
-
-    Args:
-        instance: RDMO ``Value`` instance about to be saved (its ID is already
-            a real one, see :func:`~MaRDMO.ids.assign_id`).
-
-    Raises:
-        ValidationError: when ``instance.text`` is non-empty and
-            ``extract_parts`` cannot identify a source (``source == ""``).
-    '''
-    if not instance.text:
-        return
-    source = extract_parts(instance.text)[2]
-    if source == '' and not (is_own_item(instance.external_id) and '(' not in instance.text):
-        raise ValidationError({
-            'text': [_('Wrong format. Expected: Label (Description)')]
         })
 
 

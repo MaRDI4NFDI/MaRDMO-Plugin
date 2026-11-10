@@ -330,19 +330,23 @@ def split_value(
 def basic_dict(value):
     '''Build a basic entity dict from an RDMO ``Value`` object.
 
-    Extracts the label and description from the human-readable text of an
-    ID question answer and returns them together with the external ID.
+    Extracts the label and description from the human-readable text of a
+    relation answer and returns them together with the external ID.  The
+    text of a portal item is ``"Label (Description) [source]"``; the text of
+    an own item is its label as typed (#129): an item with a page gets its
+    page's name and description (:func:`link_to_pages`), one without a
+    generic description (:func:`describe_items_without_page`).
 
     Args:
-        value: An RDMO :class:`~rdmo.projects.models.Value` instance whose
-               ``text`` field follows the ``"Label (Description) [source]"``
-               convention.
+        value: An RDMO :class:`~rdmo.projects.models.Value` instance.
 
     Returns:
         Dict with keys ``ID``, ``Name``, and ``Description``.
     '''
-    # Extract Label and Description from ID Question
-    label, description, _ = extract_parts(value.text)
+    if is_own_item(value.external_id):
+        label, description = value.text, ''
+    else:
+        label, description, _ = extract_parts(value.text)
     # Return Basic Dict
     return {
         'ID': value.external_id,
@@ -578,6 +582,52 @@ def link_to_pages(data):
 
     for page in list(pages.values()):
         link(page)
+    return data
+
+
+# Own items entered on a page without a page of their own, and their generic
+# description: {(section, answer key): description}.  Answers of these keys
+# that refer to a page (e.g. tasks in the algorithm catalog) are not changed.
+GENERIC_DESCRIPTIONS = {
+    ('software', 'programminglanguage'): 'programming language',
+    ('hardware', 'cpu'): 'cpu model',
+    ('processstep', 'MRelatant'): 'experimental method',
+    ('processstep', 'IRelatant'): 'instrument',
+    ('processstep', 'RFRelatant'): 'academic discipline',
+    ('algorithm', 'PRelatant'): 'algorithmic task',
+}
+
+
+def describe_items_without_page(data):
+    '''Give the user's own items without page the generic description of their kind.
+
+    The user types only the label of a new programming language, CPU model,
+    method, instrument, research field or algorithmic task where it has no
+    page (#129); the description comes from :data:`GENERIC_DESCRIPTIONS`, so
+    preview, checks and export show and send "Label (programming language)".
+    Not stored in the project.
+
+    Args:
+        data: Top-level answers dict; mutated in place.
+
+    Returns:
+        *data*.
+    '''
+    pages = pages_by_id(data)
+
+    def describe(answers, description):
+        for value in answers.values():
+            if not isinstance(value, dict):
+                continue
+            if 'ID' not in value:
+                describe(value, description)    # several per row (methods)
+            elif is_own_item(value['ID']) and value['ID'] not in pages:
+                value['Description'] = description
+
+    for (section, key), description in GENERIC_DESCRIPTIONS.items():
+        for entry in data.get(section, {}).values():
+            if isinstance(entry, dict) and isinstance(entry.get(key), dict):
+                describe(entry[key], description)
     return data
 
 

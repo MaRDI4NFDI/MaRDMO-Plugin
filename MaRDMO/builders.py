@@ -31,7 +31,6 @@ from .validators import (
     validate_count,
     validate_data_size,
     validate_doi,
-    validate_value_format,
     validate_properties,
     validate_qudt_id,
     validate_reference,
@@ -276,8 +275,6 @@ def build_presave_validator_map():
     - :func:`~MaRDMO.validators.validate_data_size` and
       :func:`~MaRDMO.validators.validate_count` — for the data-set size and
       the hardware counts (nodes, CPUs, cores) in the workflow catalog.
-    - :func:`~MaRDMO.validators.validate_value_format` — for all
-      ``general.relation`` question URIs across model, algorithm, and workflow.
     - :func:`~MaRDMO.validators.validate_single_line` — for all textarea
       answers exported as text statements (long descriptions, formula
       reference, workflow procedure, reproducibility comments).
@@ -337,31 +334,6 @@ def build_presave_validator_map():
             # DOI reference (publication)
             f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
                 validate_doi,
-            # Relation label format
-            f'{base}{questions_model["Task"]["QRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Task"]["MFRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Formulation"]["Element Quantity"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Quantity"]["Element Quantity"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Model"]["MFRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Model"]["Assumption"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Task"]["Assumption"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Formulation"]["Assumption"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Formulation"]["MFRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Research Problem"]["RFRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Model"]["RPRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Model"]["TRelatant"]["uri"]}':
-                validate_value_format,
         },
         CATALOG_MODEL_BASICS_NAME: {
             # Short description (Research Problem, Formulation, Task, Model only)
@@ -386,21 +358,6 @@ def build_presave_validator_map():
             # DOI reference (publication)
             f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
                 validate_doi,
-            # Relation label format
-            f'{base}{questions_model["Mathematical Model"]["RPRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Model"]["TRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Model"]["MFRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Model"]["Assumption"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Task"]["MFRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Task"]["Assumption"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_model["Mathematical Formulation"]["Assumption"]["uri"]}':
-                validate_value_format,
         },
         CATALOG_ALGORITHM_NAME: {
             # Short description
@@ -419,17 +376,6 @@ def build_presave_validator_map():
                 validate_reference,
             f'{base}{questions_algorithm["Benchmark"]["Reference"]["uri"]}':
                 validate_reference,
-            # Relation label format
-            f'{base}{questions_algorithm["Problem"]["BRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_algorithm["Software"]["BRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_algorithm["Algorithm"]["PRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_algorithm["Algorithm"]["SRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_algorithm["Software"]["Dependency"]["uri"]}':
-                validate_value_format,
         },
         CATALOG_WORKFLOW_NAME: {
             # Short description
@@ -480,22 +426,5 @@ def build_presave_validator_map():
                 validate_count,
             f'{base}{questions_workflow["Hardware"]["Cores"]["uri"]}':
                 validate_count,
-            # Relation label format
-            f'{base}{questions_workflow["Process Step"]["Algorithm"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_workflow["Process Step"]["Hardware"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_workflow["Process Step"]["Input"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_workflow["Process Step"]["Output"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_workflow["Workflow"]["PSRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_workflow["Process Step"]["Software"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_workflow["Algorithm"]["SRelatant"]["uri"]}':
-                validate_value_format,
-            f'{base}{questions_workflow["Software"]["Dependency"]["uri"]}':
-                validate_value_format,
         },
     }
