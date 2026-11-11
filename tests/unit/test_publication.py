@@ -3,7 +3,7 @@ import pytest
 
 from MaRDMO.ids import is_user_id, part_id
 from MaRDMO.publication.models import Author, Journal, Publication
-from MaRDMO.publication.utils import _identifiers, assign_id
+from MaRDMO.publication.utils import _identifiers, match_portal_items
 from MaRDMO.publication.worker import _single_line
 
 
@@ -35,17 +35,17 @@ def test_issn_is_compared_in_upper_case():
     assert _identifiers(journal(issn='1234-567x')) == {('issn', '1234-567X')}
 
 
-# --- assign_id
+# --- match_portal_items
 
 def test_author_gets_the_portal_item_with_the_same_orcid():
     entity = author(orcid='0000-0001')
-    assign_id([entity], {'0': author(id='Q1', label='Portal Name', orcid='0000-0001')}, {})
+    match_portal_items([entity], {'0': author(id='Q1', label='Portal Name', orcid='0000-0001')}, {})
     assert (entity.id, entity.label) == ('mardi:Q1', 'Portal Name')
 
 
 def test_portal_is_preferred_over_wikidata():
     entity = author(orcid='0000-0001')
-    assign_id([entity],
+    match_portal_items([entity],
               {'0': author(id='Q1', orcid='0000-0001')},
               {'0': author(id='Q100', orcid='0000-0001')})
     assert entity.id == 'mardi:Q1'
@@ -54,7 +54,7 @@ def test_portal_is_preferred_over_wikidata():
 def test_wikidata_item_leads_to_the_portal_item_holding_its_qid():
     '''ORCID -> Wikidata item Q100 -> portal item with Wikidata QID Q100 (P12).'''
     entity = author(orcid='0000-0001')
-    assign_id([entity],
+    match_portal_items([entity],
               {'0': author(id='Q1', wikidata='Q100')},
               {'0': author(id='Q100', orcid='0000-0001')})
     assert entity.id == 'mardi:Q1'
@@ -62,26 +62,26 @@ def test_wikidata_item_leads_to_the_portal_item_holding_its_qid():
 
 def test_wikidata_item_when_the_portal_has_none():
     entity = author(orcid='0000-0001')
-    assign_id([entity], {}, {'0': author(id='Q100', label='Wikidata Name', orcid='0000-0001')})
+    match_portal_items([entity], {}, {'0': author(id='Q100', label='Wikidata Name', orcid='0000-0001')})
     assert (entity.id, entity.label) == ('wikidata:Q100', 'Wikidata Name')
 
 
 def test_author_without_identifier_stays_a_name():
     '''Names are never compared: "A. Author" does not become the portal's "A. Author".'''
     entity = author()
-    assign_id([entity], {'0': author(id='Q1')}, {'0': author(id='Q100')})
+    match_portal_items([entity], {'0': author(id='Q1')}, {'0': author(id='Q100')})
     assert (entity.id, entity.label) == (part_id('author', 'A. Author'), 'A. Author')
 
 
 def test_none_zbmath_ids_do_not_match():
     entity = author(zbmath='None')
-    assign_id([entity], {'0': author(id='Q1', zbmath='None')}, {})
+    match_portal_items([entity], {'0': author(id='Q1', zbmath='None')}, {})
     assert entity.id == part_id('author', 'A. Author')
 
 
 def test_orcid_decides_over_zbmath():
     entity = author(orcid='0000-0001', zbmath='doe.john')
-    assign_id([entity],
+    match_portal_items([entity],
               {'0': author(id='Q1', zbmath='doe.john'), '1': author(id='Q2', orcid='0000-0001')},
               {})
     assert entity.id == 'mardi:Q2'
@@ -89,26 +89,26 @@ def test_orcid_decides_over_zbmath():
 
 def test_an_item_is_not_given_to_two_authors():
     first, second = author(label='First', orcid='0000-0001'), author(label='Second', zbmath='doe.john')
-    assign_id([first, second], {'0': author(id='Q1', orcid='0000-0001', zbmath='doe.john')}, {})
+    match_portal_items([first, second], {'0': author(id='Q1', orcid='0000-0001', zbmath='doe.john')}, {})
     assert (first.id, second.id) == ('mardi:Q1', part_id('author', 'doe.john'))
 
 
 def test_portal_entities_are_left_alone():
     entity = author(id='mardi:Q9', orcid='0000-0001')
-    assign_id([entity], {'0': author(id='Q1', orcid='0000-0001')}, {})
+    match_portal_items([entity], {'0': author(id='Q1', orcid='0000-0001')}, {})
     assert entity.id == 'mardi:Q9'
 
 
 def test_journal_by_issn():
     entity = journal(issn='1234-567x')
-    assign_id([entity], {'0': journal(id='Q3', label='Portal Journal', issn='1234-567X')}, {})
+    match_portal_items([entity], {'0': journal(id='Q3', label='Portal Journal', issn='1234-567X')}, {})
     assert (entity.id, entity.label) == ('mardi:Q3', 'Portal Journal')
 
 
 def test_journal_by_the_wikidata_qid_of_the_portal_journal():
     '''journal.sparql returns the Wikidata QID of portal journals.'''
     entity = journal(issn='1234-5678')
-    assign_id([entity],
+    match_portal_items([entity],
               {'0': journal(id='Q3', wikidata='Q300')},
               {'0': journal(id='Q300', issn='1234-5678')})
     assert entity.id == 'mardi:Q3'

@@ -29,7 +29,7 @@ from .constants import data_properties_per_class, qudt_reference_ids
 
 from ..getters import get_items, get_mathmoddb, get_options, get_properties, get_url
 from ..helpers import split_value
-from ..models import Relatant, RelatantWithClass, RelatantWithQualifier
+from ..models import QueryBatch, Relatant, RelatantWithClass, RelatantWithQualifier
 from ..queries import http_session
 
 logger = logging.getLogger(__name__)
@@ -359,7 +359,7 @@ def fetch_formula_data_wikidata(qids: list) -> dict:
     }
 
 @dataclass
-class ResearchField:
+class ResearchField(QueryBatch):
     '''Data Class For Research Field Item'''
     aliases: list[str] = field(default_factory=list)
     description_long: list[str] = field(default_factory=list)
@@ -367,20 +367,6 @@ class ResearchField:
     specializes: list[Relatant] = field(default_factory=list)
     similar_to: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'ResearchField':
-        '''Generate Class Item From Query (single-item, backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, ResearchField]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'ResearchField':
@@ -428,7 +414,7 @@ class ResearchField:
         )
 
 @dataclass
-class ResearchProblem:
+class ResearchProblem(QueryBatch):
     '''Data Class For Research Problem Item'''
     aliases: list[str] = field(default_factory=list)
     description_long: list[str] = field(default_factory=list)
@@ -437,20 +423,6 @@ class ResearchProblem:
     specializes: list[Relatant] = field(default_factory=list)
     similar_to: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'ResearchProblem':
-        '''Generate Class Item From Query (single-item, backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, ResearchProblem]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'ResearchProblem':
@@ -504,7 +476,7 @@ class ResearchProblem:
         )
 
 @dataclass  # pylint: disable=too-many-instance-attributes
-class MathematicalModel:
+class MathematicalModel(QueryBatch):
     '''Data Class For Mathematical Model Item'''
     aliases: list[str] = field(default_factory=list)
     description_long: list[str] = field(default_factory=list)
@@ -537,20 +509,6 @@ class MathematicalModel:
     is_weak_formulation_of: list[Relatant] = field(default_factory=list)
     similar_to: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'MathematicalModel':
-        '''Generate Class Item From Query (single-item, backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, MathematicalModel]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'MathematicalModel':
@@ -767,7 +725,7 @@ class MathematicalModel:
         )
 
 @dataclass  # pylint: disable=too-many-instance-attributes
-class QuantityOrQuantityKind:
+class QuantityOrQuantityKind(QueryBatch):
     '''Data Class For Quantity [Kind] Item'''
     aliases: list[str] = field(default_factory=list)
     description_long: list[str] = field(default_factory=list)
@@ -789,20 +747,6 @@ class QuantityOrQuantityKind:
     nondimensionalizes: list[Relatant] = field(default_factory=list)
     similar_to: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'QuantityOrQuantityKind':
-        '''Generate Class Item From Query (single-item, backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, QuantityOrQuantityKind]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'QuantityOrQuantityKind':
@@ -918,7 +862,7 @@ class QuantityOrQuantityKind:
         )
 
 @dataclass  # pylint: disable=too-many-instance-attributes
-class MathematicalFormulation:
+class MathematicalFormulation(QueryBatch):
     '''Data Class For Formulation Item'''
     reference: Optional[str] = None
     aliases: list[str] = field(default_factory=list)
@@ -950,20 +894,6 @@ class MathematicalFormulation:
     similar_to: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
 
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'MathematicalFormulation':
-        '''Generate Class Item From Query (single-item, backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, MathematicalFormulation]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'MathematicalFormulation':
@@ -1133,7 +1063,7 @@ class MathematicalFormulation:
         )
 
 @dataclass  # pylint: disable=too-many-instance-attributes
-class Task:
+class Task(QueryBatch):
     '''Data Class For Task Item'''
     aliases: list[str] = field(default_factory=list)
     description_long: list[str] = field(default_factory=list)
@@ -1167,20 +1097,6 @@ class Task:
     linearizes: list[Relatant] = field(default_factory=list)
     similar_to: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'Task':
-        '''Generate Class Item From Query (single-item, backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, Task]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'Task':

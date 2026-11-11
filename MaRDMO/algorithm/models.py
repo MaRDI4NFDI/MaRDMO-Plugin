@@ -18,27 +18,13 @@ from .constants import benchmark_reference_ids
 
 from ..getters import get_options
 from ..helpers import split_value
-from ..models import Relatant
+from ..models import QueryBatch, Relatant
 
 @dataclass
-class Benchmark:
+class Benchmark(QueryBatch):
     '''Data Class For Benchmark Item'''
     reference: dict[int, list[str]] = field(default_factory=dict)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'Benchmark':
-        '''Generate Class Item From Query (single-item, backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, Benchmark]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'Benchmark':
@@ -65,25 +51,11 @@ class Benchmark:
         )
 
 @dataclass
-class Problem:
+class Problem(QueryBatch):
     '''Data Class for Problem Item'''
     specializes: list[Relatant] = field(default_factory=list)
     specialized_by: list[Relatant] = field(default_factory=list)
     manifests: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'Problem':
-        '''Generate Class Item From Query (single-item, backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, Problem]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'Problem':

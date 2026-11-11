@@ -298,18 +298,3 @@ class PrepareAlgorithm(PublicationExport):
             )
 
             self._add_references(payload, entry.get('reference'), BENCHMARK_REFERENCES)
-
-    def _export_programming_languages(self, payload, programminglanguages: dict):
-        for entry in programminglanguages.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Programming Language')
-
-            payload.add_answer(
-                verb = self.properties["instance of"],
-                object_and_type = [self.items["programming language"], "wikibase-item"],
-            )

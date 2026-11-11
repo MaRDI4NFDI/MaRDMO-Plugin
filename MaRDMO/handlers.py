@@ -141,7 +141,6 @@ class Information:  # pylint: disable=too-few-public-methods
                 project      = instance.project,
                 question_set = config["question_set"],
                 datas        = datas,
-                source       = source,
                 prefix       = config["prefix"],
             )
         elif source == 'user':
