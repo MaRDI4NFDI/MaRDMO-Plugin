@@ -745,19 +745,6 @@ class OauthProviderMixin:
         '''
         return request.session.pop(self.get_session_key(key), None)
 
-    def get_from_session(self, request, key):
-        '''Read (without removing) a value from the Django session.
-
-        Args:
-            request: Django HTTP request.
-            key:     Logical key name passed through :meth:`get_session_key`.
-
-        Returns:
-            The stored value, or ``None`` if the key is absent.
-        '''
-        session_key = self.get_session_key(key)
-        return request.session.get(session_key)
-
     def get_authorization_headers(self, access_token):
         '''Build the ``Authorization: Bearer …`` header dict.
 

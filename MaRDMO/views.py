@@ -52,6 +52,16 @@ from .store import (
     _job_belongs_to_session,
 )
 
+# Classes of the items on the success page, in this order; others follow
+CLASS_ORDER = [
+    'Mathematical Model', 'Research Problem', 'Formula', 'Computational Task',
+    'Quantity', 'Algorithm', 'Algorithmic Task', 'Software', 'Benchmark',
+    'Workflow', 'Process Step', 'Hardware', 'CPU Model', 'Dataset',
+    'Experimental Method', 'Experimental Equipment', 'Academic Discipline',
+    'Programming Language', 'Publication', 'Author', 'Journal',
+]
+
+
 @login_required
 def get_progress(request, job_id):
     """Return the current progress data for *job_id* as a JSON response.
@@ -132,13 +142,6 @@ def show_success(request, job_id):
     _unregister_job_for_session(request, job_id)
 
     # Group ids by class in a fixed display order
-    _CLASS_ORDER = [
-        'Mathematical Model', 'Research Problem', 'Formula', 'Computational Task',
-        'Quantity', 'Algorithm', 'Algorithmic Task', 'Software', 'Benchmark',
-        'Workflow', 'Process Step', 'Hardware', 'CPU Model', 'Dataset',
-        'Experimental Method', 'Experimental Equipment', 'Academic Discipline',
-        'Programming Language', 'Publication', 'Author', 'Journal',
-    ]
     grouped = defaultdict(list)
     for cls, name, qid in job_data["ids"]:
         grouped[cls].append({'name': name, 'qid': qid})
@@ -217,9 +220,9 @@ def show_success(request, job_id):
         items_by_class[cls].append({'name': name, 'qid': qid, 'stmts': stmt_map.get(qid, [])})
 
     grouped_ids = [
-        (cls, items_by_class[cls]) for cls in _CLASS_ORDER if cls in items_by_class
+        (cls, items_by_class[cls]) for cls in CLASS_ORDER if cls in items_by_class
     ] + [
-        (cls, items) for cls, items in items_by_class.items() if cls not in _CLASS_ORDER
+        (cls, items) for cls, items in items_by_class.items() if cls not in CLASS_ORDER
     ]
 
     mardi_uri = get_item_url('mardi')

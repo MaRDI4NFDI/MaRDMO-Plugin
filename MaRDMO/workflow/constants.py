@@ -8,12 +8,11 @@ and then referenced by handlers, providers, and workers.
 Provides:
 
 - ``get_uri_prefix_map()`` — returns the ``{prefix: URI}`` map used to expand compact IDs
-- ``order_to_publish()``   — returns the ordered list of workflow attributes for portal export
 - Module-level constants built from the above
 '''
 
 from ..constants import BASE_URI
-from ..getters import get_mathmoddb, get_options, get_properties, get_questions
+from ..getters import get_mathmoddb, get_properties, get_questions
 from ..publication.constants import get_publication_relations
 
 SECTION_MAP = {
@@ -113,23 +112,6 @@ PROPS = {
     'PS2F':   ['field_of_work'],
     'IW2IW':  ['contains_workflow', 'contained_in_workflow'],
 }
-
-# Order of toPublish Answers
-def order_to_publish():
-    '''Build an ordered mapping of publishing option keys to ``(rank, option_value)`` tuples.
-
-    Returns:
-        Dict ``{"Yes": (0, …), "doi": (1, …), "url": (2, …), "No": (3, …)}``
-        where values are resolved RDMO option strings.
-    '''
-    options = get_options()
-    order = {
-        'Yes': (0, options['Yes']),
-        'doi': (1, options['DOI']),
-        'url': (2, options['URL']),
-        'No': (3, options['No'])
-        }
-    return order
 
 #Dictionary For Reproducibility
 REPRODUCIBILITY = {

@@ -835,22 +835,6 @@ class PrepareWorkflow(PublicationExport):
                 object_and_type = [self.items["CPU model"], "wikibase-item"],
             )
 
-    def _export_programming_languages(self, payload, programminglanguages: dict):
-        '''Export each programming language item collected from software sections.'''
-        for entry in programminglanguages.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Programming Language')
-
-            payload.add_answer(
-                verb = self.properties["instance of"],
-                object_and_type = [self.items["programming language"], "wikibase-item"],
-            )
-
     def _export_methods(self, payload, methods: dict):
         '''Export each experimental method item collected from process-step sections.'''
         for entry in methods.values():

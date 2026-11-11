@@ -21,7 +21,7 @@ from .utils import get_option_text_pair, get_size
 
 from ..getters import get_options
 from ..helpers import split_value
-from ..models import Relatant
+from ..models import QueryBatch, Relatant
 
 
 @dataclass
@@ -74,7 +74,7 @@ class ProcessStepUsage:
 
 
 @dataclass
-class ProcessStep:
+class ProcessStep(QueryBatch):
     '''Relations of a Process Step entity from MaRDI/Wikidata.'''
 
     input_data_set: list[Relatant] = field(default_factory=list)
@@ -83,20 +83,6 @@ class ProcessStep:
     uses_method: list[ProcessStepUsage] = field(default_factory=list)
     field_of_work: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: list) -> 'ProcessStep':
-        '''Parse a single-item SPARQL result (backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, ProcessStep]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'ProcessStep':
@@ -163,26 +149,12 @@ class Cpu:
 
 
 @dataclass
-class Hardware:
+class Hardware(QueryBatch):
     '''Node/core counts and CPU relations of a Hardware entity.'''
 
     nodes: Optional[str] = None
     cpu: list[CpuEntry] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'Hardware':
-        '''Parse a single-item SPARQL result (backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, Hardware]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'Hardware':
@@ -197,7 +169,7 @@ class Hardware:
 
 
 @dataclass
-class Workflow:
+class Workflow(QueryBatch):
     '''Top-level metadata of an Interdisciplinary Workflow entity from MaRDI Portal.'''
 
     research_objective: list[str] = field(default_factory=list)
@@ -219,15 +191,6 @@ class Workflow:
     contains_workflow: list[Relatant] = field(default_factory=list)
     contained_in_workflow: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, Workflow]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'Workflow':
@@ -271,7 +234,7 @@ class Workflow:
 
 
 @dataclass
-class DataSet:
+class DataSet(QueryBatch):
     '''Metadata and relations of a Data Set entity from MaRDI/Wikidata.'''
 
     size: list = field(default_factory=list)
@@ -281,20 +244,6 @@ class DataSet:
     to_publish: list = field(default_factory=list)
     to_archive: list = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'DataSet':
-        '''Parse a single-item SPARQL result (backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, DataSet]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'DataSet':

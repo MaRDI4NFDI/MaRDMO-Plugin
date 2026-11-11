@@ -14,8 +14,11 @@ from different data sources.
 
 - :class:`RelatantWithQualifier` — entity triple extended with a qualifier
   value and an optional free-form ``other`` field (e.g. parameters).
+- :class:`QueryBatch` — base of the entities filled from the MaRDI Portal
+  and Wikidata: parses the rows of a batch SPARQL query.
 - :class:`Algorithm` — algorithm entity with relation lists populated from
   SPARQL results (problems solved, implementations, intra-class relations).
+- :class:`Software` — software entity with references and relations.
 
 '''
 
@@ -135,8 +138,24 @@ class RelatantWithQualifier:
             qualifier = qualifier,
         )
 
+class QueryBatch:
+    '''Base of the entities filled from a batch SPARQL query (one row per item).
+
+    A subclass parses one row with ``from_query_single``.
+    '''
+
+    @classmethod
+    def from_query_batch(cls, raw_data: list) -> dict:
+        '''Parse a batch SPARQL result into ``{external_id: instance}``.'''
+        return {
+            row['qid']['value']: cls.from_query_single(row)
+            for row in raw_data
+            if row.get('qid', {}).get('value')
+        }
+
+
 @dataclass
-class Algorithm:
+class Algorithm(QueryBatch):
     '''Algorithm entity with relation lists populated from SPARQL results.'''
     component_of: list[Relatant] = field(default_factory=list)
     has_component: list[Relatant] = field(default_factory=list)
@@ -146,20 +165,6 @@ class Algorithm:
     solves: list[Relatant] = field(default_factory=list)
     implemented_by: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query(cls, raw_data: dict) -> 'Algorithm':
-        '''Generate Class Item From Query (single-item, backward-compatible).'''
-        return cls.from_query_single(raw_data[0])
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, Algorithm]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'Algorithm':
@@ -177,22 +182,13 @@ class Algorithm:
 
 
 @dataclass
-class Software:
+class Software(QueryBatch):
     '''Software entity with references and relations populated from SPARQL results.'''
     reference: dict[int, list[str]] = field(default_factory=dict)
     programmed_in: list[Relatant] = field(default_factory=list)
     depends_on_software: list[Relatant] = field(default_factory=list)
     tested_by: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
-    @classmethod
-    def from_query_batch(cls, raw_data: list) -> 'dict[str, Software]':
-        '''Parse a batch SPARQL result into {external_id: instance} dict.'''
-        return {
-            row['qid']['value']: cls.from_query_single(row)
-            for row in raw_data
-            if row.get('qid', {}).get('value')
-        }
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'Software':

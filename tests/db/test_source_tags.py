@@ -72,7 +72,7 @@ def test_a_new_item_in_a_relation_is_tagged_new(model, monkeypatch):
 def test_a_page_made_for_a_portal_item_has_no_tag(project):
     model = project('mardmo-model-catalog')
     add_entities(model, f'{BASE_URI}domain/quantity', [Relatant.from_triple('mardi:Q1', 'alpha', 'first')],
-                 'mardi', 'QQK')
+                 'QQK')
     assert model.values.get(attribute__uri=f'{BASE_URI}domain/quantity/id').text == 'alpha (first)'
 
 

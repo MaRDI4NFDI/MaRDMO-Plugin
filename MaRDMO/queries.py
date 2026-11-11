@@ -133,7 +133,7 @@ def request_with_retry(method, url, waits=(SPARQL_RETRY_WAIT,), deadline=None, *
     return response  # not reached: the last attempt returns or raises
 
 
-def query_item(label, description, api = get_url('mardi', 'api'), waits=(), deadline=None):
+def query_item(label, description, api=None, waits=(), deadline=None):
     '''Search a Wikibase API for an item matching *label* and *description* exactly.
 
     Skips the request if *description* is empty or the placeholder string
@@ -142,7 +142,7 @@ def query_item(label, description, api = get_url('mardi', 'api'), waits=(), dead
     Args:
         label:       Label (or alias) to search for (case-insensitive).
         description: Exact description the matched item must have.
-        api:         Wikibase ``wbsearchentities`` API URL; defaults to MaRDI Portal.
+        api:         Wikibase ``wbsearchentities`` API URL; ``None`` for the MaRDI Portal.
         waits:       Pauses before retries of the search (see
                      :func:`request_with_retry`); ``()`` searches once.
         deadline:    :func:`time.monotonic` value after which no retry starts.
@@ -156,7 +156,7 @@ def query_item(label, description, api = get_url('mardi', 'api'), waits=(), dead
         return None
 
     # Get data from API
-    data = query_api(api, label, waits=waits, deadline=deadline)
+    data = query_api(api or get_url('mardi', 'api'), label, waits=waits, deadline=deadline)
 
     # Normalize input label for comparison (case insensitive)
     norm_label = label.strip().lower()
@@ -399,7 +399,7 @@ def _label_description(option):
     return label.strip().lower(), description.strip()
 
 
-def query_sources(search, item_class=[], sources=None, not_found=True):
+def query_sources(search, item_class=None, sources=None, not_found=True):
     '''Query one or more knowledge-graph sources for items matching *search*.
 
     Queries the requested sources in parallel (results are cached for five

@@ -15,7 +15,7 @@ Provides:
 - ``get_orcids``              — look up the ORCID records of publication authors
 - ``extract_authors``         — parse author list from API response
 - ``extract_journals``        — parse journal info from API response
-- ``assign_id``               — attach portal / ZbMATH IDs to entity dicts
+- ``match_portal_items``      — give authors and journals the ID of the portal or Wikidata item with their identifier
 - ``assign_orcid``            — attach ORCID identifiers to author dicts
 - ``clean_background_data``   — remove stale pre-existing answers before filling new ones
 - ``additional_queries``      — run supplementary SPARQL queries for linked entities
@@ -53,7 +53,7 @@ def additional_queries(publication, choice, key, parameter, function):
 
     Queries first Wikidata, then MaRDI Portal, using the results of the first
     to refine the second.  Calls *function* to parse raw SPARQL results into
-    model instances, then calls :func:`assign_id` to back-fill any missing IDs
+    model instances, then calls :func:`match_portal_items` to back-fill any missing IDs
     on ``publication[choice].<key>``.
 
     Args:
@@ -101,7 +101,7 @@ def additional_queries(publication, choice, key, parameter, function):
     mardi_info = function(mardi_results)
 
     # Add (missing) MaRDI Portal / Wikidata IDs, per entity the portal first
-    assign_id(getattr(publication[choice], key), mardi_info, wikidata_info)
+    match_portal_items(getattr(publication[choice], key), mardi_info, wikidata_info)
 
 # Identifiers that make two authors or journals the same, in the order they
 # decide when they point to different items
@@ -130,7 +130,7 @@ def _identifiers(entity, own_qid=None):
     return found
 
 
-def assign_id(entities, mardi_info, wikidata_info):
+def match_portal_items(entities, mardi_info, wikidata_info):
     '''Give authors or journals the ID of the MaRDI Portal or Wikidata item with the same identifier.
 
     Two entities are the same if they share an identifier (ORCID, zbMATH

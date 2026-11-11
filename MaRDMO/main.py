@@ -17,7 +17,7 @@ from abc import ABC
 from django import forms
 from django.conf import settings
 from django.http import HttpRequest
-from django.shortcuts import redirect, render, reverse
+from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 
 from rdmo.projects.exports import Export
@@ -90,11 +90,6 @@ class BaseMaRDMOExportProvider(OauthProviderMixin, Export, ABC):
     def token_url(self):
         '''MaRDI Portal OAuth2 token exchange endpoint URL.'''
         return f"{get_url('mardi', 'uri')}/w/rest.php/oauth2/access_token"
-
-    @property
-    def redirect_path(self):
-        '''Callback path registered with the MaRDI Portal OAuth2 application.'''
-        return reverse('oauth_callback', args=['wikibase'])
 
     def get_authorize_params(self, request, state):
         '''Return OAuth2 authorization query parameters for the MaRDI Portal.
@@ -335,7 +330,6 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                     project=self.project,
                     snapshot=None,
                     answers=answers,
-                    options=options
                 )
             # The export reads the citation data (title, authors, journal, ...)
             # from the project; read the answers again so the preview shows it too

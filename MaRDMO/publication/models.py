@@ -186,44 +186,10 @@ class Author:
                  keys ``given``, ``family``, and ``ORCID``.
 
         Returns:
-            Author instance; ``id`` is a new ``user:`` ID when a name is present
-            but no MaRDI Portal entry exists yet.
+            Author instance, as :meth:`from_crossref`.
         '''
-        # Get Label
-        label = None
-        if raw.get('given') and raw.get('family'):
-            label = f"{raw['given']} {raw['family']}"
-
-        # Get MaRDI Portal ID
-        identifier = None
-
-        # Get ORCID ID
-        orcid_id = None
-        if raw.get('ORCID'):
-            orcid_id = raw.get('ORCID').split('/')[-1]
-
-        # Get ZBMath ID
-        zbmath_id = None
-
-        # Get Wikidata ID
-        wikidata_id = None
-
-        # Get Description
-        description = None
-        if label:
-            if orcid_id:
-                description = f'scientist (ORCID iD {orcid_id})'
-            else:
-                description = 'scientist'
-
-        return cls(
-            id = identifier,
-            label = label,
-            description = description,
-            orcid_id = orcid_id,
-            zbmath_id = zbmath_id,
-            wikidata_id = wikidata_id
-        )
+        # DOI.org answers with the same CSL contributors as Crossref
+        return cls.from_crossref(raw)
 
     @classmethod
     def from_zbmath(cls, raw: str) -> 'Author':

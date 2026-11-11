@@ -73,8 +73,8 @@ def test_a_portal_item_gets_its_page_also_with_an_own_page_of_the_same_name(proj
          answer('quantity/name', 'alpha', set_prefix='0'),
          answer('quantity/description', 'first', set_prefix='0'))
     add_entities(model, f'{BASE_URI}domain/quantity', [Relatant.from_triple('mardi:Q1', 'alpha', 'first')],
-                 'mardi', 'QQK')
+                 'QQK')
     add_entities(model, f'{BASE_URI}domain/quantity', [Relatant.from_triple('mardi:Q1', 'alpha', 'first')],
-                 'mardi', 'QQK')
+                 'QQK')
     ids = model.values.filter(attribute__uri=f'{BASE_URI}domain/quantity/id').order_by('set_index')
     assert list(ids.values_list('external_id', flat=True)) == ['user:aaa', 'mardi:Q1']

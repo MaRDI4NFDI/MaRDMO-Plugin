@@ -55,12 +55,10 @@ def add_basics(project, text, questions, item_type, index = (None, None)):
         item_type: Entity type key in *questions* (e.g. ``"Research Field"``).
         index:     ``(set_index, set_prefix)`` tuple for the target page.
 
-    Returns:
-        Tuple ``(label, description, source)`` extracted from *text*.
     '''
 
-    # Extract Label, Description, Source from ID Question
-    label, description, source = extract_parts(text)
+    # Extract Label and Description from ID Question
+    label, description, _ = extract_parts(text)
 
     # Add Label to Questionnaire
     value_editor(
@@ -84,9 +82,12 @@ def add_basics(project, text, questions, item_type, index = (None, None)):
         }
     )
 
-    return label, description, source
+def _first_part(text):
+    '''*text* up to its first ``|`` (as :func:`~MaRDMO.getters.get_id` reads a single field).'''
+    return text.split('|')[0] if isinstance(text, str) and '|' in text else text
 
-def add_entities(project, question_set, datas, source, prefix):
+
+def add_entities(project, question_set, datas, prefix):
     '''Ensure each item in *datas* has a page in *question_set*, creating one if absent.
 
     An item has a page when a page has its ID; an own page with the same
@@ -96,7 +97,6 @@ def add_entities(project, question_set, datas, source, prefix):
         project:      RDMO project instance.
         question_set: Attribute URI of the set question (e.g. the section root).
         datas:        Iterable of :class:`~MaRDMO.models.Relatant` instances.
-        source:       Source tag written into the ID field (e.g. ``"mardi"``).
         prefix:       Label prefix for the set page (e.g. ``"AD"``).
     '''
 
@@ -238,9 +238,10 @@ def add_relations_static(project, data, props, index, statement):
                    ``'parameter'`` (attribute URI of the parameter question).
     '''
 
-    # Get existing Set and Item Information
-    info = {'set_prefix_ids': get_id(project, statement['relatant'], ['set_prefix']),
-            'value_ids': get_id(project, statement['relatant'], ['external_id'])}
+    # Get existing Set and Item Information (one query)
+    relatants = get_id(project, statement['relatant'], ['set_prefix', 'set_index', 'collection_index', 'external_id'])
+    info = {'set_prefix_ids': [_first_part(set_prefix) for set_prefix, _, _, _ in relatants],
+            'value_ids': [_first_part(external_id) for _, _, _, external_id in relatants]}
 
     # Get reduced set_prefixes
     index.update({'set_prefix_reduced': reduce_prefix(index['set_prefix'])})
@@ -248,9 +249,8 @@ def add_relations_static(project, data, props, index, statement):
     # Count only within the sets of this entity: without platform all relatants
     # share set 0 and idx is the collection index, with platform each relatant
     # gets a set of its own (numbered from 1) and idx is the set index
-    own = [(set_index, collection_index) for set_prefix, set_index, collection_index in get_id(
-        project, statement['relatant'], ['set_prefix', 'set_index', 'collection_index'])
-        if str(set_prefix) == str(index['set_prefix'])]
+    own = [(set_index, collection_index) for set_prefix, set_index, collection_index, _ in relatants
+           if str(set_prefix) == str(index['set_prefix'])]
     if statement.get('platform'):
         index.update({'idx': max((set_index for set_index, _ in own), default=0)})
     else:
@@ -385,12 +385,11 @@ def add_relations_flexible(project, data, props, index, statement):
         for set_prefix, set_index, option_uri in get_id(
             project, statement['relation'], ['set_prefix', 'set_index', 'option_uri'])
     }
-    info = {'set_prefix_ids': get_id(project, statement['relatant'], ['set_prefix']),
-            'set_index_ids': get_id(project, statement['relatant'], ['set_index']),
-            'collection_ids': get_id(project, statement['relatant'], ['collection_index']),
-            'value_ids': get_id(project, statement['relatant'], ['external_id']),
-            'rels': [relation_of_set.get(tuple(key)) for key in get_id(
-                project, statement['relatant'], ['set_prefix', 'set_index'])]}
+    relatants = get_id(project, statement['relatant'], ['set_prefix', 'set_index', 'external_id'])
+    info = {'set_prefix_ids': [_first_part(set_prefix) for set_prefix, _, _ in relatants],
+            'set_index_ids': [set_index for _, set_index, _ in relatants],
+            'value_ids': [_first_part(external_id) for _, _, external_id in relatants],
+            'rels': [relation_of_set.get((set_prefix, set_index)) for set_prefix, set_index, _ in relatants]}
 
     # Get reduced set prefix ids
     index.update({'set_prefix_reduced': reduce_prefix(index['set_prefix'])})

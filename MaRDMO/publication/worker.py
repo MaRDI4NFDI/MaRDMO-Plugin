@@ -58,11 +58,11 @@ class PublicationRetriever:
     # Get Publication-related Questions
     questions = get_questions('publication')
 
-    def get_information(self, project, snapshot, answers, options):
+    def get_information(self, project, snapshot, answers):
         '''Fetch and store citation metadata for all publications in *answers*.
 
-        Iterates over ``answers["publication"]``, skips entries without an ID
-        or (for workflow catalogs) entries not flagged for export, then resolves
+        Iterates over ``answers["publication"]``, skips entries without an ID,
+        then resolves
         each publication via :func:`~.utils.get_citation` and writes the
         resulting metadata fields (title, year, language, journal, authors,
         etc.) back into the questionnaire.
@@ -71,7 +71,6 @@ class PublicationRetriever:
             project:  RDMO project instance.
             snapshot: RDMO snapshot (``None`` for the current snapshot).
             answers:  Top-level answers dict (mutated in place with citation data).
-            options:  Global RDMO options dict (used for the ``"Yes"`` option check).
         '''
 
         citations = self._lookup_citations(answers)
@@ -206,16 +205,34 @@ class PublicationRetriever:
 class PublicationExport:
     '''Base class providing author, journal, and publication export helpers.
 
-    Subclassed by :class:`~MaRDMO.model.worker.PrepareModel` and
-    :class:`~MaRDMO.algorithm.worker.PrepareAlgorithm`.  Holds the shared
+    Subclassed by :class:`~MaRDMO.model.worker.PrepareModel`,
+    :class:`~MaRDMO.algorithm.worker.PrepareAlgorithm` and
+    :class:`~MaRDMO.workflow.worker.PrepareWorkflow`.  Holds the shared
     Wikibase vocabulary and the private ``_export_*`` helpers that build
-    publication-related payload entries.
+    publication-related payload entries, and the export of programming
+    languages (algorithm and workflow catalogs).
     '''
 
     def __init__(self):
         '''Initialise with Wikibase properties and items from MaRDMOConfig.'''
         self.properties = get_properties()
         self.items = get_items()
+
+    def _export_programming_languages(self, payload, programminglanguages: dict):
+        '''Export each programming language item collected from software sections.'''
+        for entry in programminglanguages.values():
+            if not entry.get("ID"):
+                continue
+
+            payload.get_item_key(
+                value = entry
+            )
+            payload.set_class('Programming Language')
+
+            payload.add_answer(
+                verb = self.properties["instance of"],
+                object_and_type = [self.items["programming language"], "wikibase-item"],
+            )
 
     def _add_common_metadata(self, payload, qclass, profile_type=None, community=None, description_long=False):
         '''Add instance-of and optional community, MaRDI-profile-type, and description statements.
