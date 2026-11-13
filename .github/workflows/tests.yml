@@ -108,7 +108,7 @@ jobs:
           pip install -e ".[test]"
 
       - name: Lint (ruff)
-        run: ruff check MaRDMO tests
+        run: ruff check MaRDMO tests docs_hooks
 
       # The database container is the only host the tests may reach
       - name: Tests

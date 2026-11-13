@@ -1,5 +1,9 @@
 site_name: MaRDMO Documentation
 
+# Builds the tables of docs/vocabulary.md from the data files
+hooks:
+  - docs_hooks/vocabulary.py
+
 theme:
   name: material
 
