@@ -38,6 +38,7 @@ MaRDMO communicates with the MaRDI Portal using a defined set of items and prope
 | CPU model | [Q7171486](https://portal.mardi4nfdi.de/wiki/Item:Q7171486) |
 | data publishing | [Q6480291](https://portal.mardi4nfdi.de/wiki/Item:Q6480291) |
 | data set | [Q56885](https://portal.mardi4nfdi.de/wiki/Item:Q56885) |
+| definition | [Q7268735](https://portal.mardi4nfdi.de/wiki/Item:Q7268735) |
 | deterministic equation | [Q6672075](https://portal.mardi4nfdi.de/wiki/Item:Q6672075) |
 | deterministic model | [Q6672076](https://portal.mardi4nfdi.de/wiki/Item:Q6672076) |
 | deterministic quantity | [Q6775543](https://portal.mardi4nfdi.de/wiki/Item:Q6775543) |

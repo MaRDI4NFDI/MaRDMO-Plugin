@@ -109,6 +109,7 @@ props = {
         'contains_boundary_condition',
         'contains_constraint_condition',
         'contains_coupling_condition',
+        'contains_definition',
         'contains_initial_condition',
         'contains_final_condition'
     ],
@@ -139,6 +140,7 @@ props = {
         'contains_boundary_condition',
         'contains_constraint_condition',
         'contains_coupling_condition',
+        'contains_definition',
         'contains_initial_condition',
         'contains_final_condition'
     ],
@@ -267,6 +269,10 @@ def get_relations():
         mathmoddb.get(key='contains_coupling_condition')['url']: [
             properties['contains'],
             items['coupling condition']
+        ],
+        mathmoddb.get(key='contains_definition')['url']: [
+            properties['contains'],
+            items['definition']
         ],
         mathmoddb.get(key='contains_initial_condition')['url']: [
             properties['contains'],
