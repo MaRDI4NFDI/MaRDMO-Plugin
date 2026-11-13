@@ -10,6 +10,7 @@
     {"key": "contains_constant",               "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-constant",               "label": "contains constant"},
     {"key": "contains_constraint_condition",   "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-constraint-condition",   "label": "contains constraint condition"},
     {"key": "contains_coupling_condition",     "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-coupling-condition",     "label": "contains coupling condition"},
+    {"key": "contains_definition",             "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-definition",             "label": "contains definition"},
     {"key": "contains_final_condition",        "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-final-condition",        "label": "contains final condition"},
     {"key": "contains_formulation",            "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains",                        "label": "contains"},
     {"key": "contains_governing_equation",     "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-governing-equation",     "label": "contains governing equation"},

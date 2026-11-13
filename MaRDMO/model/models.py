@@ -487,6 +487,7 @@ class MathematicalModel(QueryBatch):
     contains_boundary_condition: list[Relatant] = field(default_factory=list)
     contains_constraint_condition: list[Relatant] = field(default_factory=list)
     contains_coupling_condition: list[Relatant] = field(default_factory=list)
+    contains_definition: list[Relatant] = field(default_factory=list)
     contains_initial_condition: list[Relatant] = field(default_factory=list)
     contains_final_condition: list[Relatant] = field(default_factory=list)
     contains_analytical_solution: list[Relatant] = field(default_factory=list)
@@ -576,6 +577,13 @@ class MathematicalModel(QueryBatch):
                 key = 'contains_formulation',
                 transform = RelatantWithQualifier.from_query,
                 object_role = lambda item: item.qualifier == f'mardi:{items["coupling condition"]}'
+            ),
+            # Get Contains Definition Relation(s)
+            'contains_definition': split_value(
+                data = data,
+                key = 'contains_formulation',
+                transform = RelatantWithQualifier.from_query,
+                object_role = lambda item: item.qualifier == f'mardi:{items["definition"]}'
             ),
             # Get Contains Initial Condition Relation(s)
             'contains_initial_condition': split_value(
@@ -1075,6 +1083,7 @@ class Task(QueryBatch):
     contains_initial_condition: list[Relatant] = field(default_factory=list)
     contains_constraint_condition: list[Relatant] = field(default_factory=list)
     contains_coupling_condition: list[Relatant] = field(default_factory=list)
+    contains_definition: list[Relatant] = field(default_factory=list)
     contains_analytical_solution: list[Relatant] = field(default_factory=list)
     contains_governing_equation: list[Relatant] = field(default_factory=list)
     contains_computational_domain: list[Relatant] = field(default_factory=list)
@@ -1158,6 +1167,13 @@ class Task(QueryBatch):
                 key = 'contains_formulation',
                 transform = RelatantWithQualifier.from_query,
                 object_role = lambda item: item.qualifier == f'mardi:{items["coupling condition"]}'
+            ),
+            # Get Contains Definition Relation(s)
+            'contains_definition': split_value(
+                data = data,
+                key = 'contains_formulation',
+                transform = RelatantWithQualifier.from_query,
+                object_role = lambda item: item.qualifier == f'mardi:{items["definition"]}'
             ),
             # Get Contains Initial Condition Relation(s)
             'contains_initial_condition': split_value(
