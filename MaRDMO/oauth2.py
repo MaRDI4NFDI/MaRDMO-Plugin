@@ -274,7 +274,9 @@ class OauthProviderMixin:
                 "progress": int((completed / total) * 100) if total else 0,
                 "done": True,
                 "phase": "error",
-                "error": error or f"Unexpected error: {err}",
+                # Whether something was created is not known here
+                "error": (error.message(sent=True) if isinstance(error, DuplicateOnPortal) else error)
+                         or f"Unexpected error: {err}",
             }
         finally:
             # The thread opened its own DB connection; Django only closes

@@ -341,3 +341,21 @@ def test_the_job_stores_the_message(monkeypatch):
     OauthProviderMixin()._finish_job(None, 'job', None, jsons, jsons,
                                      DuplicateOnPortal('mass', 'physical quantity', 'Q77'), 0, 1)
     assert stored['job']['phase'] == 'error' and 'Nothing was sent' in stored['job']['error']
+
+
+def test_a_failed_finish_still_stores_a_message(monkeypatch):
+    """If writing the result fails, the progress page still gets text, not the exception."""
+    stored = {}
+    monkeypatch.setattr('MaRDMO.oauth2._progress_store', stored)
+    monkeypatch.setattr('MaRDMO.oauth2.connection', type('Connection', (), {'close': staticmethod(lambda: None)}))
+    mixin = OauthProviderMixin()
+
+    def refuse(key, jsons, token):
+        raise DuplicateOnPortal('mass', 'physical quantity', 'Q77')
+
+    def broken(*args, **kwargs):
+        raise RuntimeError('finishing failed')
+    monkeypatch.setattr(mixin, '_post_data', refuse)
+    monkeypatch.setattr(mixin, '_finish_job', broken)
+    mixin._background_post(None, 'token', {'Item1': {'id': ''}}, ['Item1'], 'job', None)
+    assert isinstance(stored['job']['error'], str) and 'Q77' in stored['job']['error']

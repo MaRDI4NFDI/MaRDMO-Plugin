@@ -137,6 +137,20 @@ Scheduled workflows run on the default branch only; GitHub turns the
 schedule off after 60 days without commits (it says so by email), and a run
 started by hand ("Run workflow") turns it on again.
 
+## Browser tests: pages in a real browser
+
+`tests/browser` opens MaRDMO's pages in Chromium (Playwright), e.g. the
+preview's section "Already on the MaRDI Portal" with its button "Use portal
+item".  The pages come from a live server on the test database, the portal
+is faked.  They are opt-in and not part of CI yet:
+
+```bash
+pip install playwright && playwright install chromium
+BROWSER=1 pytest tests/browser --force-enable-socket
+```
+
+`SCREENSHOTS=<folder>` saves pictures of what the tests look at.
+
 ## Add a documentation as a test project
 
 An RDMO project export (XML) of a documentation made with MaRDMO becomes a

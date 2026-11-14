@@ -47,8 +47,7 @@
                     <a href="{{ wikidataURI }}{{ row.duplicate.other.ID|slice:'9:' }}" target="_blank" rel="noopener">{{ row.duplicate.other.ID|slice:'9:' }}</a>
                     {% trans "of this documentation has the same label and description" %}
                     {% else %}
-                    <a href="{{ mardiURI }}{{ row.duplicate.qid }}" target="_blank" rel="noopener">{{ row.duplicate.qid }}</a>
-                    {% if row.portal_label %}: {{ row.portal_label }}{% if row.portal_description %} ({{ row.portal_description }}){% endif %}{% endif %}
+                    <a href="{{ mardiURI }}{{ row.duplicate.qid }}" target="_blank" rel="noopener">{{ row.duplicate.qid }}</a>{% if row.portal_label %}: {{ row.portal_label }}{% if row.portal_description %} ({{ row.portal_description }}){% endif %}{% endif %}
                     <br>
                     <span class="mardmo-note">
                         {% if row.duplicate.rule == 'wikidata' %}{% trans "the same Wikidata item" %}{% else %}{% trans "the same label and description" %}{% endif %}{% if row.portal_markers.class %};
