@@ -1,6 +1,6 @@
 '''Meaning qualifiers are only written on the properties the qualifier merge rechecks.
 
-The SPARQL existence check also finds a portal statement with a role or
+The existence check also finds a portal statement with a role or
 platform for one without; merge_qualifiers checks found statements of
 _MEANING_PROPERTIES again.  A relation with a role on another property
 would slip through, so it has to be added there.

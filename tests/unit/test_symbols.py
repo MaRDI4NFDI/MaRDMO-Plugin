@@ -155,7 +155,7 @@ def symbol(payload, value='a', quantity=QUANTITY):
     payload.add_answer(IN_FORMULA, [value, 'math'], subject=FORMULA,
                        qualifier=payload.add_qualifier(REPRESENTS, 'wikibase-item', quantity))
     key = f'RELATION{payload.state.counter - 1}'
-    payload.state.dictionary[key]['exists'] = 'false'    # as the math check finds it
+    payload.state.dictionary[key]['exists'] = 'false'    # as the existence check finds it
     return key
 
 
