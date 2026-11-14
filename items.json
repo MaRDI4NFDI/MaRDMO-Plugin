@@ -1970,5 +1970,207 @@
     "Q6675169",
     "Q6775639",
     "Q6822206"
+  ],
+  "publication_duplicates": [
+    {
+      "doi": "10.1090/s0025-5718-1983-0717689-8",
+      "group": "wikidata authors with ORCID"
+    },
+    {
+      "doi": "10.52460/issc.2021.015",
+      "group": "proceedings without ISSN"
+    },
+    {
+      "doi": "10.67563/asesconf2026004m",
+      "group": "proceedings without ISSN"
+    },
+    {
+      "doi": "10.3390/engproc2021007030",
+      "group": "proceedings without ISSN"
+    },
+    {
+      "doi": "10.1145/3677404.3677419",
+      "group": "proceedings without ISSN"
+    },
+    {
+      "doi": "10.1145/3632314.3632317",
+      "group": "proceedings without ISSN"
+    },
+    {
+      "doi": "10.1145/3796731.3796936",
+      "group": "proceedings without ISSN"
+    },
+    {
+      "doi": "10.1016/j.padiff.2026.101362",
+      "group": "crossref recent"
+    },
+    {
+      "doi": "10.3390/math14214077",
+      "group": "crossref recent"
+    },
+    {
+      "doi": "10.1002/num.70153",
+      "group": "crossref recent"
+    },
+    {
+      "doi": "10.1007/978-981-19-3363-9_2",
+      "group": "book"
+    },
+    {
+      "doi": "10.1142/9789811236761_0002",
+      "group": "book"
+    },
+    {
+      "doi": "10.1115/1.862fin_ch4",
+      "group": "book"
+    },
+    {
+      "doi": "10.1051/978-2-7598-2939-2.c011",
+      "group": "book"
+    },
+    {
+      "doi": "10.1201/9781003382812-4",
+      "group": "book"
+    },
+    {
+      "doi": "10.48550/arxiv.2610.15586",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.48550/arxiv.2409.02810",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.48550/arxiv.2610.13878",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.48550/arxiv.2604.03086",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.48550/arxiv.2611.12721",
+      "group": "preprint"
+    },
+    {
+      "doi": "10.5281/zenodo.20283662",
+      "group": "software"
+    },
+    {
+      "doi": "10.5281/zenodo.21482924",
+      "group": "software"
+    },
+    {
+      "doi": "10.5281/zenodo.24206136",
+      "group": "software"
+    },
+    {
+      "doi": "10.1038/s41586-020-2405-7",
+      "group": "many authors"
+    },
+    {
+      "doi": "10.1126/science.aba9757",
+      "group": "many authors"
+    },
+    {
+      "doi": "10.1016/s1473-3099(20)30144-4",
+      "group": "many authors"
+    },
+    {
+      "doi": "10.1371/journal.pone.0026358",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0029797",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0020619",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0044083",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0058451",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0042292",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0099438",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0006024",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0023392",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0020734",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0081394",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0061485",
+      "group": "wikidata authors without ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0088329",
+      "group": "wikidata authors with ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0099529",
+      "group": "wikidata authors with ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0019881",
+      "group": "wikidata authors with ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0069119",
+      "group": "wikidata authors with ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0053871",
+      "group": "wikidata authors with ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0050798",
+      "group": "wikidata authors with ORCID"
+    },
+    {
+      "doi": "10.1371/journal.pone.0024720",
+      "group": "wikidata authors with ORCID"
+    },
+    {
+      "doi": "10.1016/j.apm.2026.117229",
+      "group": "crossref recent"
+    },
+    {
+      "doi": "10.33187/jmsm.1931851",
+      "group": "crossref recent"
+    },
+    {
+      "doi": "10.1016/j.apm.2026.117183",
+      "group": "crossref recent"
+    },
+    {
+      "doi": "10.11648/j.sdmath.20260102.12",
+      "group": "crossref recent"
+    },
+    {
+      "doi": "10.1016/j.simpat.2026.103341",
+      "group": "crossref recent"
+    }
   ]
 }
