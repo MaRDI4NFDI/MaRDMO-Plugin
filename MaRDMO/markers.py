@@ -74,13 +74,15 @@ _SOFTWARE = {
     'implementing software': Markers('software', 'MathAlgoDB', 'MaRDI software profile'),
     'programminglanguage': Markers('programming language'),
 }
+# Research fields of the model catalogs and academic disciplines of the workflow catalog (#147)
+_DISCIPLINE = Markers('academic discipline', 'MathModDB', 'MaRDI research field profile')
 
 # The markers the export gives the items of each section: {catalog: {section: Markers}}.
 # The workers read them from here (PublicationExport._add_common_metadata), the
 # preview decides with them whether a portal item may be reused (duplicates.py).
 SECTION_MARKERS = {
     'model': {
-        'field': Markers('academic discipline', 'MathModDB', 'MaRDI research field profile'),
+        'field': _DISCIPLINE,
         'problem': Markers('research problem', 'MathModDB', 'MaRDI research problem profile'),
         'model': Markers('mathematical model', 'MathModDB', 'MaRDI model profile'),
         'task': Markers('computational task', 'MathModDB', 'MaRDI task profile'),
@@ -106,7 +108,7 @@ SECTION_MARKERS = {
         'dataset': Markers('data set', None, 'MaRDI data set profile'),
         'method': Markers('method'),
         'instrument': Markers('research tool'),
-        'academicdiscipline': Markers('academic discipline'),
+        'academicdiscipline': _DISCIPLINE,
         **_SOFTWARE,
         **PUBLICATION_MARKERS,
     },
