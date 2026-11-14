@@ -438,6 +438,15 @@ class ChecksBase:
             mapping.get(key = url_1)["url"],
         }
 
+    def _specializations(self, relations):
+        '''The rows of *relations* whose relation type is "specializes" or "specialized by".
+
+        A row without relation type is none of them; ``_check_flexible``
+        reports it as "Missing Relation Type".
+        '''
+        pair = self._pairs(self.mathmoddb, 'specializes', 'specialized_by')
+        return [row for row in relations.values() if (row.get('relation') or {}).get('url') in pair]
+
     # -------------------------------------------------------------------------
     # Publication Check (shared, behaviour differs by mode)
     # -------------------------------------------------------------------------
