@@ -27,6 +27,8 @@ class PrepareAlgorithm(PublicationExport):
     :class:`~MaRDMO.publication.worker.PublicationExport` and extends them
     with algorithm-specific relation mapping and Wikibase payload generation.
     '''
+    catalog = 'algorithm'
+
     def __init__(self):
         '''Initialise with Wikibase vocabulary and the MathAlgoDB ontology registry.'''
         super().__init__()
@@ -115,11 +117,7 @@ class PrepareAlgorithm(PublicationExport):
             payload = payload,
             problems = data.get("problem", {})
         )
-        algo_software_keys = {
-            (item.get('ID', ''), item.get('Name', ''), item.get('Description', ''))
-            for algo in data.get('algorithm', {}).values()
-            for item in algo.get('SRelatant', {}).values()
-        }
+        algo_software_keys = self._implementing_software(data)
         self._export_softwares(
             payload = payload,
             softwares = data.get("software", {}),
@@ -161,6 +159,13 @@ class PrepareAlgorithm(PublicationExport):
     # ---------------------------
     # Entity export helpers
     # ---------------------------
+    def _marked_entries(self, data):
+        for section in ('algorithm', 'problem', 'benchmark'):
+            for entry in data.get(section, {}).values():
+                yield section, entry
+        yield from self._software_entries(data)
+        yield from self._publication_entries(data)
+
     def _export_algorithms(self, payload, algorithms: dict):
         for entry in algorithms.values():
             if not entry.get("ID"):
@@ -171,12 +176,7 @@ class PrepareAlgorithm(PublicationExport):
             )
             payload.set_class('Algorithm')
 
-            self._add_common_metadata(
-                payload = payload,
-                community = self.items["MathAlgoDB"],
-                qclass =self.items["algorithm"],
-                profile_type = "MaRDI algorithm profile",
-            )
+            self._add_common_metadata(payload, 'algorithm')
 
             payload.add_single_relation(
                 statement = {
@@ -210,12 +210,7 @@ class PrepareAlgorithm(PublicationExport):
             )
             payload.set_class('Algorithmic Task')
 
-            self._add_common_metadata(
-                payload = payload,
-                community = self.items["MathAlgoDB"],
-                qclass =self.items["algorithmic task"],
-                profile_type = "MaRDI task profile",
-            )
+            self._add_common_metadata(payload, 'problem')
 
             payload.add_single_relation(
                 statement = {
@@ -242,20 +237,7 @@ class PrepareAlgorithm(PublicationExport):
             )
             payload.set_class('Software')
 
-            entry_key = (entry.get('ID', ''), entry.get('Name', ''), entry.get('Description', ''))
-            if entry_key in algo_software_keys:
-                self._add_common_metadata(
-                    payload = payload,
-                    community = self.items["MathAlgoDB"],
-                    qclass = self.items["software"],
-                    profile_type = "MaRDI software profile",
-                )
-            else:
-                self._add_common_metadata(
-                    payload = payload,
-                    qclass = self.items["software"],
-                    profile_type = "MaRDI software profile",
-                )
+            self._add_common_metadata(payload, self._software_section(entry, algo_software_keys))
 
             payload.add_single_relation(
                 statement = {
@@ -291,10 +273,6 @@ class PrepareAlgorithm(PublicationExport):
             )
             payload.set_class('Benchmark')
 
-            self._add_common_metadata(
-                payload = payload,
-                community = self.items["MathAlgoDB"],
-                qclass = self.items["benchmark"],
-            )
+            self._add_common_metadata(payload, 'benchmark')
 
             self._add_references(payload, entry.get('reference'), BENCHMARK_REFERENCES)

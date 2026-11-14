@@ -23,6 +23,7 @@ from django.utils.translation import gettext_lazy as _
 from rdmo.projects.exports import Export
 
 from .checks import Checks
+from .duplicates import preview_duplicates
 from .constants import (
     CATALOG_TEMPLATE_MAP,
     CATALOG_MODEL_NAME,
@@ -169,12 +170,15 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
 
         if template:
             answers, options = self.get_post_data('preview')
+            # Items that are on the MaRDI Portal already, at the top (#141)
+            prepare = _CATALOG_PREPARE_MAP[catalog_slug][1]()
             return render_preview(
                 self=self,
                 template=template,
                 answers=answers,
                 option=options,
                 submit_label=_('Export to MaRDI Portal'),
+                duplicates=preview_duplicates(self.project, answers, prepare),
         )
 
         return render(

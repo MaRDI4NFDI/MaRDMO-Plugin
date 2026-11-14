@@ -7,3 +7,11 @@
 ## Queries
 
 ::: MaRDMO.queries
+
+## Duplicates
+
+::: MaRDMO.duplicates
+
+## Markers
+
+::: MaRDMO.markers

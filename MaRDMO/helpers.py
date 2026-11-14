@@ -1255,9 +1255,7 @@ def compare_items(old, new, wikidata_qid_prop=None):
     Returns:
         Dict mapping payload keys to ``{'label': …, 'description': …,
         'old_id': <original external id>, 'new_qid': <assigned QID>,
-        'class': <class>, 'user_ids': [<user: IDs>]}``; two items with the
-        same label and description (one linked to the other) are two
-        entries.
+        'class': <class>, 'user_ids': [<user: IDs>]}``.
     """
 
     created = {}

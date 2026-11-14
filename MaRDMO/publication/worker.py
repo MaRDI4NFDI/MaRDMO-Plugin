@@ -22,7 +22,7 @@ from .utils import clean_background_data, get_citation
 from ..constants import BASE_URI
 from ..getters import get_items, get_options, get_properties, get_questions
 from ..helpers import commit_writes, date_precision, find_reference, value_editor
-from ..markers import class_contradicts
+from ..markers import MARKER_PROPERTIES, SECTION_MARKERS, allowed
 from ..ids import is_user_id, item_text
 
 # Publications whose citation data is looked up at the same time
@@ -214,6 +214,9 @@ class PublicationExport:
     languages (algorithm and workflow catalogs).
     '''
 
+    # The worker's key in markers.SECTION_MARKERS
+    catalog = None
+
     def __init__(self):
         '''Initialise with Wikibase properties and items from MaRDMOConfig.'''
         self.properties = get_properties()
@@ -230,65 +233,94 @@ class PublicationExport:
             )
             payload.set_class('Programming Language')
 
-            self._add_class(payload, self.items["programming language"])
+            self._add_common_metadata(payload, 'programminglanguage')
 
-    @staticmethod
-    def _marker_allowed(payload, kind, value):
-        '''Whether the marker *kind* (``class``, ``community``, ``profile``) *value* may be added (#141).
+    def _add_common_metadata(self, payload, section, description_long=False):
+        '''Add the markers of *section* to the current subject, and optionally its long description.
 
-        Always for a new item.  An existing portal item gets only a marker it
-        lacks and that does not contradict its own (see :mod:`MaRDMO.markers`);
-        if its markers could not be looked up, none.
-        '''
-        markers = payload.subject_markers()
-        if markers is None:
-            return True
-        if markers is False:
-            return False
-        if kind == 'class':
-            return not class_contradicts(value, markers['class'])
-        return not markers[kind] or value in markers[kind]
-
-    def _add_class(self, payload, qclass):
-        '''Add ``instance of`` *qclass* to the current subject, if allowed (:meth:`_marker_allowed`).'''
-        if self._marker_allowed(payload, 'class', qclass):
-            payload.add_answer(
-                verb = self.properties["instance of"],
-                object_and_type = [qclass, "wikibase-item"],
-            )
-
-    def _add_common_metadata(self, payload, qclass, profile_type=None, community=None, description_long=False):
-        '''Add instance-of and optional community, MaRDI-profile-type, and description statements.
-
-        Class, community and profile type only if allowed (:meth:`_marker_allowed`).
+        The markers (class, community, profile type) are those of
+        :data:`~MaRDMO.markers.SECTION_MARKERS` for the worker's catalog.  A new
+        item gets all; an existing portal item only those it lacks and that do
+        not contradict its own (:func:`~MaRDMO.markers.allowed`, #141); if its
+        markers could not be looked up, none.
 
         Args:
             payload:          :class:`~MaRDMO.payload.GeneratePayload` instance.
-            qclass:           Wikibase QID for the ``instance of`` target class.
-            profile_type:     Label key for the MaRDI profile type item; skipped when ``None``.
-            community:        Wikibase QID for the community item; skipped when ``None``.
+            section:          Key of the section in ``SECTION_MARKERS[catalog]``.
             description_long: When ``True``, add a ``description`` statement from the item's
                               ``descriptionLong`` field.
         '''
-        self._add_class(payload, qclass)
-
-        if community is not None and self._marker_allowed(payload, 'community', community):
-            payload.add_answer(
-                verb = self.properties["community"],
-                object_and_type = [community, "wikibase-item"],
-            )
-
-        if profile_type is not None and self._marker_allowed(payload, 'profile', self.items[profile_type]):
-            payload.add_answer(
-                verb = self.properties["MaRDI profile type"],
-                object_and_type = [self.items[profile_type], "wikibase-item"],
-            )
+        payload.marked.setdefault(payload.state.subject.get('ID'), set()).add(section)
+        portal = payload.subject_markers()
+        for kind, qid in SECTION_MARKERS[self.catalog][section].qids().items():
+            if qid and (portal is None or (portal is not False and allowed(kind, qid, portal))):
+                payload.add_answer(
+                    verb = self.properties[MARKER_PROPERTIES[kind]],
+                    object_and_type = [qid, "wikibase-item"],
+                )
 
         if description_long:
             payload.add_answers(
                 mardmo_property = "descriptionLong",
                 wikibase_property = "description",
             )
+
+    def marker_sections(self, data):
+        '''The sections whose markers the export gives the items of *data* (preview, #141).
+
+        Returns:
+            ``{item ID: set of sections}``, the same as the export's calls of
+            :meth:`_add_common_metadata` (``payload.marked``).
+        '''
+        sections = {}
+        for section, entry in self._marked_entries(data):
+            if entry.get('ID'):
+                sections.setdefault(entry['ID'], set()).add(section)
+        return sections
+
+    def _marked_entries(self, data):
+        '''``(section, entry)`` of every entry of *data* the export gives markers; per catalog.'''
+        raise NotImplementedError
+
+    def _publication_entries(self, data):
+        '''``(section, entry)`` of the authors, journals and publications the export gives markers.'''
+        for publication in data.get('publication', {}).values():
+            for kind in ('author', 'journal'):
+                for entry in publication.get(kind, {}).values():
+                    # New ones get theirs in the payload, authors only with ORCID iD or zbMATH ID (#118)
+                    if kind == 'author' and is_user_id(entry.get('ID')) and not (entry.get('orcid') or entry.get('zbmath')):
+                        continue
+                    yield kind, entry
+            if publication.get('ID') and 'mardi' not in publication['ID']:
+                yield self._publication_section(publication), publication
+
+    @staticmethod
+    def _implementing_software(data):
+        '''Keys (ID, name, description) of the software that implements an algorithm of *data*.'''
+        return {
+            (item.get('ID', ''), item.get('Name', ''), item.get('Description', ''))
+            for algo in data.get('algorithm', {}).values()
+            for item in algo.get('SRelatant', {}).values()
+        }
+
+    @staticmethod
+    def _software_section(entry, implementing):
+        '''The section of the markers of the software *entry*; *implementing*: :meth:`_implementing_software`.'''
+        key = (entry.get('ID', ''), entry.get('Name', ''), entry.get('Description', ''))
+        return 'implementing software' if key in implementing else 'software'
+
+    def _software_entries(self, data):
+        '''``(section, entry)`` of the software and programming languages the export gives markers.'''
+        implementing = self._implementing_software(data)
+        for entry in data.get('software', {}).values():
+            yield self._software_section(entry, implementing), entry
+        for entry in data.get('programminglanguage', {}).values():
+            yield 'programminglanguage', entry
+
+    @staticmethod
+    def _publication_section(entry):
+        '''The section of the markers of the publication *entry*.'''
+        return 'scholarly article' if entry.get('entrytype') == 'scholarly article' else 'publication'
 
     def _add_references(self, payload, references, mapping):
         '''Add one statement per reference answer (DOI, IDs, URLs) of the current subject.
@@ -309,6 +341,21 @@ class PublicationExport:
                     object_and_type = [text, datatype],
                 )
 
+    @staticmethod
+    def _part_exported(payload, entry):
+        '''Whether the author or journal *entry* gets its statements here.
+
+        New ones get all of theirs in the payload (#118); those MaRDMO left out
+        (:func:`~MaRDMO.duplicates._resolve_parts`) none.  Portal items get
+        theirs here, also a new one the export found on the portal.
+        '''
+        if not entry.get("ID"):
+            return False
+        key = payload.get_item_key(value=entry, role='object')
+        if key not in payload.get_dictionary():
+            return False
+        return not is_user_id(entry["ID"]) or bool(payload.get_dictionary()[key]['id'])
+
     def _export_journals(self, payload, publications: dict):
         '''Add journal item entries (instance-of + ISSN) for all publications.
 
@@ -318,18 +365,13 @@ class PublicationExport:
         '''
         for publication in publications.values():
             for entry in publication.get('journal', {}).values():
-                # New journals get all their statements in the payload (#118)
-                if not entry.get("ID") or is_user_id(entry["ID"]):
+                if not self._part_exported(payload, entry):
                     continue
 
                 payload.get_item_key(value=entry)
                 payload.set_class('Journal')
 
-                self._add_common_metadata(
-                    payload=payload,
-                    qclass=self.items["scientific journal"],
-                    profile_type="MaRDI journal profile",
-                )
+                self._add_common_metadata(payload, 'journal')
 
                 if entry.get('issn'):
                     payload.add_answer(
@@ -346,18 +388,13 @@ class PublicationExport:
         '''
         for publication in publications.values():
             for entry in publication.get('author', {}).values():
-                # New authors get all their statements in the payload (#118)
-                if not entry.get("ID") or is_user_id(entry["ID"]):
+                if not self._part_exported(payload, entry):
                     continue
 
                 payload.get_item_key(value=entry)
                 payload.set_class('Author')
 
-                self._add_common_metadata(
-                    payload=payload,
-                    qclass=self.items["human"],
-                    profile_type="MaRDI person profile",
-                )
+                self._add_common_metadata(payload, 'author')
 
                 if entry.get('orcid'):
                     payload.add_answer(
@@ -398,17 +435,7 @@ class PublicationExport:
             # Only add class, profile, and DOI for non-MaRDI items
             if "mardi" not in entry["ID"]:
 
-                pclass = (
-                    self.items["scholarly article"]
-                    if entry.get("entrytype") == "scholarly article"
-                    else self.items["publication"]
-                )
-
-                self._add_common_metadata(
-                    payload=payload,
-                    qclass=pclass,
-                    profile_type="MaRDI publication profile",
-                )
+                self._add_common_metadata(payload, self._publication_section(entry))
 
                 # Add DOI
                 if entry.get("reference", {}).get(0):

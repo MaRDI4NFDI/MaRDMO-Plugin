@@ -9,6 +9,7 @@ Provides:
 - ``get_progress``   — JSON endpoint that returns current task progress for polling
 - ``show_progress``  — HTML view that renders a live progress page for a running task
 - ``show_success``   — HTML view that renders the completed-task result page
+- ``reuse_portal_item`` — POST endpoint of the preview's "use portal item" (#141)
 - ``render_preview`` — helper that renders a Jinja2 template with questionnaire answers
 
 Success page (``show_success``)
@@ -36,8 +37,12 @@ from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
-from django.shortcuts import render
-from django.views.decorators.http import require_GET
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.translation import gettext as _
+from django.views.decorators.http import require_GET, require_POST
+
+from rdmo.core.plugins import get_plugin
+from rdmo.projects.models import Project
 
 from .constants import (DOI_BASE_URL, ISSN_BASE_URL, MORWIKI_BASE_URL, ORCID_BASE_URL,
                         QUDT_CONSTANT_URL, QUDT_QUANTITYKIND_URL, SWMATH_BASE_URL,
@@ -311,30 +316,31 @@ def show_success(request, job_id):
             "standard_added": standard_added,
             # Set when the export failed after some entities were created
             "export_error": job_data.get("error"),
-            # Items linked to existing portal items instead of being created
-            "export_notes": job_data.get("notes", []),
             "counts": job_data.get("counts", {}),
             "mardi_uri": mardi_uri,
             "graph_data": graph_data,
         },
     )
 
-def render_preview(self, template, answers, option, submit_label):
+def render_preview(self, template, answers, option, submit_label, duplicates=None):
     """Render the documentation preview page.
 
     Args:
-        self:     Export provider instance with ``request``, ``ExportForm``,
-                  and ``project`` attributes.
-        template: Template name (relative path) to include in the preview.
-        answers:  Prepared answers dict passed to the template context.
-        option:   Option string controlling template behaviour (passed to context).
+        self:       Export provider instance with ``request``, ``ExportForm``,
+                    ``project`` and ``key`` attributes.
+        template:   Template name (relative path) to include in the preview.
+        answers:    Prepared answers dict passed to the template context.
+        option:     Option string controlling template behaviour (passed to context).
+        duplicates: :class:`~MaRDMO.duplicates.Report` of the items that are on
+                    the MaRDI Portal already; shown at the top, and while it has
+                    rows there is no export button (#141).
 
     Returns:
         HTTP 200 response rendering ``MaRDMO/mardmoPreview.html``.
     """
     return render(
         self.request,
-        'MaRDMO/mardmoPreview.html', 
+        'MaRDMO/mardmoPreview.html',
         {
             'form': self.ExportForm(),
             'include_file': template,
@@ -344,6 +350,9 @@ def render_preview(self, template, answers, option, submit_label):
             'answers': answers,
             'option': option,
             'submit_label': submit_label,
+            'duplicates': duplicates,
+            'project': self.project,
+            'export_format': getattr(self, 'key', ''),
             'mardiURI': get_item_url('mardi'),
             'wikidataURI': get_item_url('wikidata'),
             # Appended to the stylesheet URL so browsers reload it after an update
@@ -351,3 +360,53 @@ def render_preview(self, template, answers, option, submit_label):
         },
         status=200
     )
+
+
+def _refuse(request, error):
+    return render(request, 'core/error.html',
+                  {'title': _('The portal item cannot be used'), 'errors': [error]}, status=400)
+
+
+@login_required
+@require_POST
+def reuse_portal_item(request, project_id):
+    """Make an item of the documentation the MaRDI Portal item it duplicates (#141).
+
+    The preview's "use portal item" posts ``format`` (the export's key),
+    ``item`` (the item's ID) and ``qid`` (the portal item).  Nothing of the
+    request is trusted: the duplicate is looked up again and must allow the
+    reuse (:func:`~MaRDMO.duplicates.decide`).  The user needs RDMO's
+    permission to change the project's answers; Django checks the CSRF token.
+
+    Returns:
+        A redirect to the preview, or an error page.
+    """
+    from .duplicates import preview_duplicates, reuse, same_duplicate
+    from .main import _CATALOG_PREPARE_MAP, MaRDMOExportProvider
+
+    project = get_object_or_404(Project, pk=project_id)
+    if not request.user.has_perm('projects.change_value_object', project):
+        return render(request, 'core/error.html',
+                      {'title': _('Permission denied'),
+                       'errors': [_('You may not change the answers of this project.')]}, status=403)
+
+    export_format = request.POST.get('format', '')
+    provider = get_plugin('PROJECT_EXPORTS', export_format)
+    catalog = str(project.catalog).rsplit('/', 1)[-1]
+    if not isinstance(provider, MaRDMOExportProvider) or catalog not in _CATALOG_PREPARE_MAP:
+        return _refuse(request, _('This export cannot use portal items.'))
+
+    provider.request, provider.project, provider.snapshot = request, project, None
+    answers, _options = provider.get_post_data()
+    prepare = _CATALOG_PREPARE_MAP[catalog][1]()
+    row = same_duplicate(preview_duplicates(project, answers, prepare).rows,
+                         request.POST.get('item', ''), request.POST.get('qid', ''))
+    if row is None:
+        return _refuse(request, _('The item is not, or no longer, a duplicate of this portal item.'))
+    if row.action != 'reuse':
+        return _refuse(request, ' '.join(row.reasons) or _('This item cannot become the portal item.'))
+    if not row.portal_label:
+        return _refuse(request, _('The label of the portal item could not be looked up; please try again.'))
+
+    reuse(project, row.duplicate, row.portal_label, row.portal_description)
+    return redirect('project_export', project.pk, export_format)

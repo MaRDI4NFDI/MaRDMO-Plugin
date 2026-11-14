@@ -78,7 +78,7 @@ def new_publication_items(monkeypatch):
         dependency={'Item0000000001': set(), 'Item0000000002': set()},
     )
     # Neither item exists on the portal
-    monkeypatch.setattr('MaRDMO.payload.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
     payload.process_items()
     return payload.state.dictionary
 

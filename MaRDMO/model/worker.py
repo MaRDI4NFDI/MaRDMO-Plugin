@@ -37,6 +37,8 @@ class PrepareModel(PublicationExport):
     with model-specific relation mapping, property conflict detection, and
     Wikibase payload generation.
     '''
+    catalog = 'model'
+
     def __init__(self):
         '''Initialise with Wikibase vocabulary and the MathModDB ontology registry.'''
         super().__init__()
@@ -227,6 +229,20 @@ class PrepareModel(PublicationExport):
     # ---------------------------
     # Entity export helpers
     # ---------------------------
+    def _marked_entries(self, data):
+        for section in ('field', 'problem', 'model', 'task', 'formulation'):
+            for entry in data.get(section, {}).values():
+                yield section, entry
+        for entry in data.get('quantity', {}).values():
+            if self._quantity_section(entry):
+                yield self._quantity_section(entry), entry
+        yield from self._publication_entries(data)
+
+    def _quantity_section(self, entry):
+        '''``quantity`` or ``quantity kind`` (the section of the markers), or ``None``.'''
+        return {self.mathmoddb.get(key='Quantity')['label']: 'quantity',
+                self.mathmoddb.get(key='QuantityKind')['label']: 'quantity kind'}.get(entry.get('QorQK'))
+
     def _export_fields(self, payload, fields: dict):
         for entry in fields.values():
             if not entry.get("ID"):
@@ -237,13 +253,7 @@ class PrepareModel(PublicationExport):
             )
             payload.set_class('Academic Discipline')
 
-            self._add_common_metadata(
-                payload = payload,
-                community = self.items["MathModDB"],
-                description_long = True,
-                qclass =self.items["academic discipline"],
-                profile_type = "MaRDI research field profile",
-            )
+            self._add_common_metadata(payload, 'field', description_long=True)
 
             payload.add_aliases(
                 aliases_dict = entry.get('Alias')
@@ -266,13 +276,7 @@ class PrepareModel(PublicationExport):
             )
             payload.set_class('Research Problem')
 
-            self._add_common_metadata(
-                payload = payload,
-                community = self.items["MathModDB"],
-                description_long = True,
-                qclass =self.items["research problem"],
-                profile_type = "MaRDI research problem profile",
-            )
+            self._add_common_metadata(payload, 'problem', description_long=True)
 
             payload.add_aliases(
                 aliases_dict = entry.get('Alias')
@@ -303,13 +307,7 @@ class PrepareModel(PublicationExport):
             )
             payload.set_class('Mathematical Model')
 
-            self._add_common_metadata(
-                payload = payload,
-                community = self.items["MathModDB"],
-                description_long = True,
-                qclass =self.items["mathematical model"],
-                profile_type = "MaRDI model profile",
-            )
+            self._add_common_metadata(payload, 'model', description_long=True)
 
             payload.add_aliases(
                 aliases_dict = entry.get('Alias')
@@ -359,13 +357,7 @@ class PrepareModel(PublicationExport):
             )
             payload.set_class('Computational Task')
 
-            self._add_common_metadata(
-                payload = payload,
-                community = self.items["MathModDB"],
-                description_long = True,
-                qclass =self.items["computational task"],
-                profile_type = "MaRDI task profile",
-            )
+            self._add_common_metadata(payload, 'task', description_long=True)
 
             payload.add_aliases(
                 aliases_dict = entry.get('Alias')
@@ -407,13 +399,7 @@ class PrepareModel(PublicationExport):
             )
             payload.set_class('Formula')
 
-            self._add_common_metadata(
-                payload = payload,
-                community = self.items["MathModDB"],
-                description_long = True,
-                qclass =self.items["formula"],
-                profile_type = "MaRDI formula profile",
-            )
+            self._add_common_metadata(payload, 'formulation', description_long=True)
 
             payload.add_aliases(
                 aliases_dict = entry.get('Alias')
@@ -462,26 +448,10 @@ class PrepareModel(PublicationExport):
             )
             payload.set_class('Quantity')
 
-            if entry.get("QorQK") == self.mathmoddb.get(key='Quantity')['label']:
-                self._add_common_metadata(
-                    payload = payload,
-                    community = self.items["MathModDB"],
-                    qclass = self.items["quantity"],
-                    profile_type = "MaRDI quantity profile",
-                )
-                qtype = "quantity"
-
-            elif entry.get("QorQK") == self.mathmoddb.get(key='QuantityKind')['label']:
-                self._add_common_metadata(
-                    payload = payload,
-                    community = self.items["MathModDB"],
-                    qclass = self.items["kind of quantity"],
-                    profile_type = "MaRDI quantity profile",
-                )
-                qtype = "quantity kind"
-
-            else:
+            qtype = self._quantity_section(entry)
+            if not qtype:
                 continue
+            self._add_common_metadata(payload, qtype)
 
             payload.add_aliases(
                 aliases_dict = entry.get('Alias')

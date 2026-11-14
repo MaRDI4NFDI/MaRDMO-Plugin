@@ -17,6 +17,7 @@ review their diff:
 import json
 import os
 from pathlib import Path
+from unittest import mock
 
 import pytest
 from rdmo.core.xml import get_ns_map, get_uri, read_xml_file
@@ -28,6 +29,7 @@ from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_url
 from MaRDMO.helpers import is_cyclic, topological_order
 from MaRDMO.ids import is_user_id, part_id
+from MaRDMO.payload import GeneratePayload
 from tests.db.conftest import select
 from tests.db.test_hydration import CASES
 
@@ -63,7 +65,15 @@ def export(project):
     messages = getattr(Checks(), check_method)(project=project, data=answers, catalog=catalog)
     if messages:
         return {'messages': [str(message) for message in messages]}
-    payload, dependency = prepare_class().export(answers, get_url('mardi', 'uri'))
+    prepare, made, init = prepare_class(), [], GeneratePayload.__init__
+
+    def remember(self, *args, **kwargs):
+        init(self, *args, **kwargs)
+        made.append(self)
+    with mock.patch.object(GeneratePayload, '__init__', remember):
+        payload, dependency = prepare.export(answers, get_url('mardi', 'uri'))
+    # The preview decides on reusing portal items with the markers the export gives (#141)
+    assert prepare.marker_sections(answers) == made[0].marked
     assert not is_cyclic(dependency)
     order = topological_order(dependency)
     position = {item: index for index, item in enumerate(order)}

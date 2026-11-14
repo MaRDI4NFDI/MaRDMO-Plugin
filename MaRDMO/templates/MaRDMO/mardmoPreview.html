@@ -19,11 +19,20 @@
 {% block page %}
 
     <div class="mardmo-preview">
+        {% include "MaRDMO/partials/_portal_duplicates.html" %}
         {% include include_file with title=include_params.title %}
     </div>
     <br>
     <br>
     <br>
-    {% bootstrap_form submit=submit_label %}
+    {% if duplicates.rows %}
+        {# No export while items are on the portal already (#141) #}
+        <p class="mardmo-error" id="export-blocked">
+            {% trans "Decide on the items at the top (Already on the MaRDI Portal) first; then the export is possible." %}
+        </p>
+        <a href="{% url 'project' project.pk %}" class="btn btn-default">{% trans "Back to project" %}</a>
+    {% else %}
+        {% bootstrap_form submit=submit_label %}
+    {% endif %}
 
 {% endblock %}
