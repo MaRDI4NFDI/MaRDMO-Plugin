@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 
 import MaRDMO.queries as queries
+from MaRDMO.queries import PortalItems
 from MaRDMO.getters import get_items, get_mathmoddb, get_properties
 from MaRDMO.model.models import MathematicalModel
 from MaRDMO.payload import GeneratePayload
@@ -64,7 +65,7 @@ def test_model_properties_are_numbered_from_zero():
 # --- Export: new authors and journals
 
 @pytest.fixture
-def new_publication_items():
+def new_publication_items(monkeypatch):
     payload = GeneratePayload(
         url='https://portal.example.org',
         user_items={
@@ -76,9 +77,8 @@ def new_publication_items():
         wikibase={'items': get_items(), 'properties': get_properties(), 'relations': {}},
         dependency={'Item0000000001': set(), 'Item0000000002': set()},
     )
-    # No duplicate search on the portal: neither item exists there
-    payload._check_duplicates = lambda items: None
-    payload._duplicates = {('New Journal', 'scientific journal'): None, ('A. Author', 'scientist'): None}
+    # Neither item exists on the portal
+    monkeypatch.setattr('MaRDMO.payload.find_portal_items', lambda **kwargs: PortalItems())
     payload.process_items()
     return payload.state.dictionary
 

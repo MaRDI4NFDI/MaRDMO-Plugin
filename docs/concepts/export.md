@@ -68,10 +68,8 @@ data processing happens.
 retrieval).  `Checks.run_X()` then validates the collected answers for completeness
 and consistency, including the value formats described in
 [Validation](validation.md) and, for the detailed model catalog, the formula check
-against the MaRDI Portal's TeX checker.  In addition, for every entity that would
-be newly created on the MaRDI Portal, a request is sent to check whether an item
-with the same label and description combination already exists.  If any check
-fails, a readable error list is returned and the export is aborted.
+against the MaRDI Portal's TeX checker.  If any check fails, a readable error
+list is returned and the export is aborted.
 
 ### 6. Payload Construction
 
@@ -82,13 +80,29 @@ and a dependency graph:
 - **`process_items()`** assigns each unique item to one of two tracks:
     - Items already on the MaRDI Portal (`mardi:` prefix) are registered with their
       real QID.
-    - All other items (from Wikidata, or newly defined) are again checked against the
-      MaRDI Portal for duplicates (`_check_mardi_and_raise`), then registered as new
+    - All other items (from Wikidata, or newly defined) are registered as new
       with an empty QID and a seed list of statements (Wikidata QID, ORCiD, zbMath
-      code, or ISSN as appropriate).  The searches for all new items run first,
-      four at a time; a search that still fails after its retries finds nothing,
-      and the MaRDI Portal itself rejects an item whose label and description
-      exist already (see below).
+      code, or ISSN as appropriate).
+
+    Before, all items are looked up on the MaRDI Portal at once
+    (`MaRDMO.queries.find_portal_items`, a few batched SPARQL queries; results are
+    reused for 15 minutes):
+
+    | Rule | Items | Stops the export | If the lookup fails |
+    |---|---|---|---|
+    | exactly the same English label and description (the portal's own rule: no case variants, no aliases) | new and Wikidata items with a description | yes | continue: the portal rejects exact duplicates itself, and the export links those (see below) |
+    | the same Wikidata QID (P12): the portal item is that Wikidata item, whatever its label | Wikidata items | yes | stop (`PortalUnavailable`): the portal would accept a second item with the same Wikidata QID |
+
+    All items that exist on the portal are listed at once.
+
+- **Markers of existing items** (`MaRDMO.markers`): every section sets its
+  items' class (`instance of`), and some their `community` and `MaRDI profile
+  type`.  An item that exists on the portal gets only the markers it lacks and
+  that do not contradict its own: never a second MaRDMO class (of another
+  family: a section's main class with its data-property classes, e.g. *linear
+  model* for *mathematical model*), community or profile type.  Classes MaRDMO
+  does not use (e.g. *open source software*) do not count.  If the markers
+  could not be looked up, an existing item gets none.
 - **`add_answer()` calls** accumulate statements:
     - For **new items**: statements are appended to the item's payload and will be
       created together with the item in a single API call.

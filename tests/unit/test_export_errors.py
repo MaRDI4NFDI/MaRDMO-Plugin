@@ -64,9 +64,3 @@ def test_unreachable_api_is_portal_unavailable(payload, monkeypatch):
     monkeypatch.setattr(payload_module, 'request_with_retry', unreachable)
     with pytest.raises(PortalUnavailable):
         payload._fetch_claims(['Q1'], 'https://portal.example.org/w/api.php', None, 'formulas')
-
-
-def test_existing_item_is_a_documentation_problem(payload):
-    payload._duplicates = {('formula', 'a formula'): 'Q7'}
-    with pytest.raises(DocumentationProblem, match='already exists'):
-        payload._check_mardi_and_raise('formula', 'a formula')

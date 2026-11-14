@@ -22,6 +22,7 @@ from .utils import clean_background_data, get_citation
 from ..constants import BASE_URI
 from ..getters import get_items, get_options, get_properties, get_questions
 from ..helpers import commit_writes, date_precision, find_reference, value_editor
+from ..markers import class_contradicts
 from ..ids import is_user_id, item_text
 
 # Publications whose citation data is looked up at the same time
@@ -229,13 +230,37 @@ class PublicationExport:
             )
             payload.set_class('Programming Language')
 
+            self._add_class(payload, self.items["programming language"])
+
+    @staticmethod
+    def _marker_allowed(payload, kind, value):
+        '''Whether the marker *kind* (``class``, ``community``, ``profile``) *value* may be added (#141).
+
+        Always for a new item.  An existing portal item gets only a marker it
+        lacks and that does not contradict its own (see :mod:`MaRDMO.markers`);
+        if its markers could not be looked up, none.
+        '''
+        markers = payload.subject_markers()
+        if markers is None:
+            return True
+        if markers is False:
+            return False
+        if kind == 'class':
+            return not class_contradicts(value, markers['class'])
+        return not markers[kind] or value in markers[kind]
+
+    def _add_class(self, payload, qclass):
+        '''Add ``instance of`` *qclass* to the current subject, if allowed (:meth:`_marker_allowed`).'''
+        if self._marker_allowed(payload, 'class', qclass):
             payload.add_answer(
                 verb = self.properties["instance of"],
-                object_and_type = [self.items["programming language"], "wikibase-item"],
+                object_and_type = [qclass, "wikibase-item"],
             )
 
     def _add_common_metadata(self, payload, qclass, profile_type=None, community=None, description_long=False):
         '''Add instance-of and optional community, MaRDI-profile-type, and description statements.
+
+        Class, community and profile type only if allowed (:meth:`_marker_allowed`).
 
         Args:
             payload:          :class:`~MaRDMO.payload.GeneratePayload` instance.
@@ -245,18 +270,15 @@ class PublicationExport:
             description_long: When ``True``, add a ``description`` statement from the item's
                               ``descriptionLong`` field.
         '''
-        payload.add_answer(
-            verb = self.properties["instance of"],
-            object_and_type = [qclass, "wikibase-item"],
-        )
+        self._add_class(payload, qclass)
 
-        if community is not None:
+        if community is not None and self._marker_allowed(payload, 'community', community):
             payload.add_answer(
                 verb = self.properties["community"],
                 object_and_type = [community, "wikibase-item"],
             )
 
-        if profile_type is not None:
+        if profile_type is not None and self._marker_allowed(payload, 'profile', self.items[profile_type]):
             payload.add_answer(
                 verb = self.properties["MaRDI profile type"],
                 object_and_type = [self.items[profile_type], "wikibase-item"],
