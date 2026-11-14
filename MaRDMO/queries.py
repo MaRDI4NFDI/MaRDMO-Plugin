@@ -2,7 +2,8 @@
 
 Provides helpers for:
 
-* ``query_item`` / ``query_api`` – Wikibase ``wbsearchentities`` lookups
+* ``query_api`` – Wikibase ``wbsearchentities`` lookups
+* ``find_portal_items`` – duplicates, Wikidata twins and markers on the MaRDI Portal (#141)
 * ``query_sparql`` / ``query_sparql_pool`` – SPARQL SELECT requests
 * ``query_sparql_parts`` – run the split parts of a query and merge their rows
 * ``sparql_string`` – escape text as a SPARQL string literal
@@ -16,6 +17,7 @@ import json
 import logging
 import threading
 import time
+from dataclasses import dataclass, field
 from multiprocessing.pool import ThreadPool
 
 import requests
@@ -133,51 +135,143 @@ def request_with_retry(method, url, waits=(SPARQL_RETRY_WAIT,), deadline=None, *
     return response  # not reached: the last attempt returns or raises
 
 
-def query_item(label, description, api=None, waits=(), deadline=None):
-    '''Search a Wikibase API for an item matching *label* and *description* exactly.
+# Results of find_portal_items are reused for this long: the preview looks
+# them up, the export takes them from there (#141)
+PORTAL_LOOKUP_TIMEOUT = 15 * 60
+# Pairs and IDs per SPARQL query of find_portal_items
+PORTAL_LOOKUP_CHUNK = 50
 
-    Skips the request if *description* is empty or the placeholder string
-    ``"No Description Provided!"``.
 
-    Args:
-        label:       Label (or alias) to search for (case-insensitive).
-        description: Exact description the matched item must have.
-        api:         Wikibase ``wbsearchentities`` API URL; ``None`` for the MaRDI Portal.
-        waits:       Pauses before retries of the search (see
-                     :func:`request_with_retry`); ``()`` searches once.
-        deadline:    :func:`time.monotonic` value after which no retry starts.
+@dataclass
+class PortalItems:
+    '''What :func:`find_portal_items` found on the MaRDI Portal.
+
+    ``by_label``: ``{(label, description): QID or None}``; ``by_wikidata``:
+    ``{Wikidata QID: QID or None}``; ``markers``: ``{QID: {'class': set,
+    'community': set, 'profile': set}}``.  A lookup that could not be
+    completed leaves its keys out and sets its flag (``label_failed`` ...).
+    '''
+    by_label: dict = field(default_factory=dict)
+    by_wikidata: dict = field(default_factory=dict)
+    markers: dict = field(default_factory=dict)
+    label_failed: bool = False
+    wikidata_failed: bool = False
+    markers_failed: bool = False
+
+
+def _sparql_literal(text):
+    '''*text* as an English SPARQL string literal.'''
+    return json.dumps(text, ensure_ascii=False) + '@en'
+
+
+def _cached_lookup(kind, keys, query, waits, deadline):
+    '''Look up *keys* (see :func:`find_portal_items`), reusing results of the last minutes.
+
+    *query* builds the SPARQL query for a chunk of keys and returns
+    ``(query, rows → {key: QID})``.  Returns ``({key: QID or None}, failed)``.
+    '''
+    cache_key = lambda key: f'mardmo_portal_{kind}_' + hashlib.sha1(json.dumps(key).encode('utf-8')).hexdigest()
+    found, missing = {}, []
+    for key in keys:
+        cached = cache.get(cache_key(key))
+        if cached is None:
+            missing.append(key)
+        else:
+            found[key] = cached or None
+    failed = False
+    for start in range(0, len(missing), PORTAL_LOOKUP_CHUNK):
+        chunk = missing[start:start + PORTAL_LOOKUP_CHUNK]
+        sparql, parse = query(chunk)
+        rows = query_sparql(sparql, get_url('mardi', 'sparql'), strict=True, waits=waits, deadline=deadline)
+        if rows is None:
+            failed = True
+            continue
+        matches = parse(rows)
+        for key in chunk:
+            # Several portal items: the lowest QID, the same each time
+            qids = sorted(matches.get(key, ()), key=lambda qid: int(qid[1:]))
+            found[key] = qids[0] if qids else None
+            cache.set(cache_key(key), found[key] or '', PORTAL_LOOKUP_TIMEOUT)
+    return found, failed
+
+
+def find_portal_items(pairs=(), wikidata_qids=(), marker_qids=(), waits=(), deadline=None):
+    '''Look up items on the MaRDI Portal: duplicates, Wikidata twins, and their markers (#141).
+
+    - *pairs* ``(label, description)``: the portal item with exactly this
+      English label and description, the rule the portal itself enforces
+      (no case variants, no aliases).  Pairs without description are left
+      out (new items need one anyway).
+    - *wikidata_qids*: the portal item with this Wikidata QID (P12).
+    - *marker_qids*: the ``instance of``, ``community`` and ``MaRDI profile
+      type`` of these portal items (and of the items found).
+
+    One read-only SPARQL query per :data:`PORTAL_LOOKUP_CHUNK` keys; the
+    first two are cached for :data:`PORTAL_LOOKUP_TIMEOUT` seconds, also
+    when nothing was found.
 
     Returns:
-        The Wikibase QID string of the first match, or ``None`` if no match
-        (also if the search failed).
+        :class:`PortalItems`.
     '''
-    # Only check Items with description
-    if not description or description == 'No Description Provided!':
-        return None
+    properties = get_properties()
+    result = PortalItems()
+    pairs = sorted({pair for pair in pairs
+                    if pair[0] and pair[1] and pair[1] != 'No Description Provided!'})
 
-    # Get data from API
-    data = query_api(api or get_url('mardi', 'api'), label, waits=waits, deadline=deadline)
+    def by_label(chunk):
+        values = ' '.join(f'({_sparql_literal(label)} {_sparql_literal(description)})'
+                          for label, description in chunk)
+        sparql = (f'SELECT ?item ?label ?description WHERE {{ VALUES (?label ?description) {{ {values} }} '
+                  f'?item rdfs:label ?label ; schema:description ?description . }}')
+        def parse(rows):
+            matches = {}
+            for row in rows:
+                key = (row['label']['value'], row['description']['value'])
+                matches.setdefault(key, []).append(row['item']['value'].rsplit('/', 1)[1])
+            return matches
+        return sparql, parse
 
-    # Normalize input label for comparison (case insensitive)
-    norm_label = label.strip().lower()
+    def by_wikidata(chunk):
+        values = ' '.join(json.dumps(qid) for qid in chunk)
+        sparql = (f'SELECT ?item ?wikidata WHERE {{ VALUES ?wikidata {{ {values} }} '
+                  f'?item wdt:{properties["Wikidata QID"]} ?wikidata . }}')
+        def parse(rows):
+            matches = {}
+            for row in rows:
+                matches.setdefault(row['wikidata']['value'], []).append(row['item']['value'].rsplit('/', 1)[1])
+            return matches
+        return sparql, parse
 
-    matched_items = []
-    for item in data:
-        item_label = item.get('label', '').strip().lower()
-        item_description = item.get('description', '').strip()
-        item_aliases = [alias.strip().lower() for alias in item.get('aliases', [])]
+    if pairs:
+        result.by_label, result.label_failed = _cached_lookup('label', pairs, by_label, waits, deadline)
+    qids = sorted({qid.split(':', 1)[-1] for qid in wikidata_qids})
+    if qids:
+        result.by_wikidata, result.wikidata_failed = _cached_lookup('wikidata', qids, by_wikidata, waits, deadline)
 
-        # Check label or alias match AND description match
-        if (
-            (item_label == norm_label or norm_label in item_aliases)
-            and item_description == description
-        ):
-            matched_items.append(item)
+    # Markers of the given items and of the items found
+    wanted = sorted({qid.split(':', 1)[-1] for qid in marker_qids}
+                    | {qid for qid in (*result.by_label.values(), *result.by_wikidata.values()) if qid},
+                    key=lambda qid: int(qid[1:]))
+    for start in range(0, len(wanted), PORTAL_LOOKUP_CHUNK):
+        chunk = wanted[start:start + PORTAL_LOOKUP_CHUNK]
+        values = ' '.join(f'wd:{qid}' for qid in chunk)
+        sparql = (f'SELECT ?item ?class ?community ?profile WHERE {{ VALUES ?item {{ {values} }} '
+                  f'OPTIONAL {{ ?item wdt:{properties["instance of"]} ?class . }} '
+                  f'OPTIONAL {{ ?item wdt:{properties["community"]} ?community . }} '
+                  f'OPTIONAL {{ ?item wdt:{properties["MaRDI profile type"]} ?profile . }} }}')
+        rows = query_sparql(sparql, get_url('mardi', 'sparql'), strict=True, waits=waits, deadline=deadline)
+        if rows is None:
+            result.markers_failed = True
+            continue
+        for qid in chunk:
+            result.markers[qid] = {'class': set(), 'community': set(), 'profile': set()}
+        for row in rows:
+            markers = result.markers[row['item']['value'].rsplit('/', 1)[1]]
+            for kind in ('class', 'community', 'profile'):
+                if kind in row:
+                    markers[kind].add(row[kind]['value'].rsplit('/', 1)[1])
+    return result
 
-    if matched_items:
-        return matched_items[0]['id']
-
-    return None
 
 def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, waits=(), deadline=None):
     '''Search a Wikibase API endpoint for items whose label matches *search_term*.
@@ -387,11 +481,11 @@ def _cached_search(source, search, item_class, func):
 
 
 def _label_description(option):
-    '''Return ``(label, description)`` of an option as the export's duplicate check compares them.
+    '''Return ``(label, description)`` of an option, to offer a Wikidata hit only once.
 
-    The label is compared case-insensitively, the description exactly (see
-    :func:`query_item`).  Options without a description give ``None``:
-    a matching label alone does not make two items the same.
+    The label is compared case-insensitively, the description exactly.
+    Options without a description give ``None``: a matching label alone
+    does not make two items the same.
     '''
     label, description, _ = extract_parts(option['text'])
     if not description or description == 'No Description Provided!':

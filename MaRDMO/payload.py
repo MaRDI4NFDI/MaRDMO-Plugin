@@ -23,7 +23,6 @@ from typing import Optional
 
 import re
 import time
-from multiprocessing.pool import ThreadPool
 
 import requests
 
@@ -33,7 +32,7 @@ from .patterns import QUANTITY_AMOUNT_RE
 from .queries import (
     EXPORT_CHECK_DEADLINE,
     EXPORT_RETRY_WAITS,
-    query_item,
+    find_portal_items,
     query_sparql,
     request_with_retry,
     sparql_string,
@@ -71,11 +70,8 @@ _MEANING_QUALIFIERS = ('object has role', 'symbol represents', 'platform')
 # so found statements of these are checked again.  Formulas ("in defining
 # formula") have their own check that compares the qualifiers.
 _MEANING_PROPERTIES = ('contains', 'described by source', 'uses')
-# Class of items created from publication data that the worker does not handle
 # Class of new authors and journals of publications (kind, see helpers.PART_KINDS)
 _NEW_ITEM_CLASS = {'author': 'Author', 'journal': 'Journal'}
-# Duplicate checks of new items running at the same time
-_DUPLICATE_CHECK_THREADS = 4
 
 
 def _text_of(value):
@@ -192,7 +188,9 @@ class GeneratePayload:
         # Working Attributes
         self.state: PayloadState = PayloadState()
         # (name, description) → QID of an existing portal item, or None
-        self._duplicates: dict = {}
+        # Markers of the existing items on the portal (_find_on_portal)
+        self.portal_markers: dict = {}
+        self.markers_known = False
         # QID → claims of portal items fetched during this export
         self._claims: dict = {}
 
@@ -539,6 +537,20 @@ class GeneratePayload:
         # Get Target Dictionary
         target_dictionary = self.state.dictionary
         return target_dictionary
+
+    def subject_markers(self):
+        """The portal markers of the current subject (#141, see :meth:`_find_on_portal`).
+
+        Returns:
+            ``None`` for a new item; for an existing one ``{'class': set,
+            'community': set, 'profile': set}`` of QIDs, or ``False`` if its
+            markers could not be looked up.
+        """
+        qid = self.state.dictionary.get(self.state.subject_item, {}).get('id')
+        if not qid:
+            return None
+        markers = self.portal_markers.get(qid) if self.markers_known else None
+        return markers if markers is not None else False
 
     def get_item_key(self, value, role='subject'):
         """Look up the ``"Item<n>"`` key for *value* and optionally set it as the current subject.
@@ -1549,24 +1561,6 @@ class GeneratePayload:
             # Attach to original dict
             item_data["payload"] = payload
 
-    def _check_mardi_and_raise(self, name: str, description: str):
-        """Check if item exists in MaRDI Portal and raise error if it does.
-
-        Uses the result of :meth:`_check_duplicates` if it has one.
-        """
-        if (name, description) in self._duplicates:
-            mardi_identifier = self._duplicates[(name, description)]
-        else:
-            mardi_identifier = query_item(name, description)
-        if mardi_identifier:
-            raise DocumentationProblem(
-                f"An item ({mardi_identifier}) with the label '{name}' "
-                f"and description '{description}' already exists on the MaRDI Portal. "
-                "If you intend to use this item, please select it in the questionnaire. "
-                "Otherwise, redefine it."
-            )
-        return mardi_identifier
-
     def _statement_by_id_type(self, value: dict, id_type: str):
         """Build the external-identifier statements for a user-defined item.
 
@@ -1662,90 +1656,36 @@ class GeneratePayload:
         user's own items), or for a new author or journal of a publication its
         ``kind`` (``author``, ``journal``, #118).  Existing MaRDI items are
         registered with their real QID; new items get an empty id and a
-        seed list of statements.  Raises :exc:`ValueError` for Wikidata or
-        user-created items whose label/description combination already exists
-        on the MaRDI Portal.
+        seed list of statements.
+
+        Before, the items are looked up on the MaRDI Portal (#141, see
+        :meth:`_find_on_portal`); items that exist there stop the export, all
+        of them in one :exc:`DocumentationProblem`.
         """
+        def new_item(id_type):
+            return lambda key, value: self._add_entry(
+                key,
+                self._build_item(
+                    '',
+                    value['Name'],
+                    value['Description'],
+                    self._statement_by_id_type(value, id_type)
+                )
+            )
+
         handlers = {
-            'mardi': lambda key, value: 
-                self._add_entry(
-                    key,
-                    self._build_item(
-                        value['ID'].split(':')[1],
-                        value['Name'],
-                        value['Description'],
-                    )
-                ),
-            'wikidata': lambda key, value: (
-                self._check_mardi_and_raise(
+            'mardi': lambda key, value: self._add_entry(
+                key,
+                self._build_item(
+                    value['ID'].split(':')[1],
                     value['Name'],
-                    value['Description']
-                ),
-                self._add_entry(
-                    key,
-                    self._build_item(
-                        '',
-                        value['Name'],
-                        value['Description'],
-                        self._statement_by_id_type(
-                            value,
-                            'wikidata'))
+                    value['Description'],
                 )
             ),
-            'not found': lambda key, value: (
-                self._check_mardi_and_raise(
-                    value['Name'],
-                    value['Description']
-                ),
-                self._add_entry(
-                    key,
-                    self._build_item(
-                        '',
-                        value['Name'],
-                        value['Description'],
-                        self._statement_by_id_type(
-                            value,
-                            'not found'
-                        )
-                    )
-                )
-            ),
-            'author': lambda key, value: (
-                self._check_mardi_and_raise(
-                    value['Name'],
-                    value['Description']
-                ),
-                self._add_entry(
-                    key,
-                    self._build_item(
-                        '',
-                        value['Name'],
-                        value['Description'],
-                        self._statement_by_id_type(
-                            value,
-                            'author'
-                        )
-                    )
-                )
-            ),
-            'journal': lambda key, value: (
-                self._check_mardi_and_raise(
-                    value['Name'],
-                    value['Description']
-                ),
-                self._add_entry(
-                    key,
-                    self._build_item(
-                        '',
-                        value['Name'],
-                        value['Description'],
-                        self._statement_by_id_type(
-                            value,
-                            'journal'
-                        )
-                    )
-                )
-            ),
+            'wikidata': new_item('wikidata'),
+            'not found': new_item('not found'),
+            'author': new_item('author'),
+            'journal': new_item('journal'),
         }
 
         todo = []
@@ -1762,10 +1702,7 @@ class GeneratePayload:
             if id_type and (id_type != 'author' or value['zbmath'] or value['orcid']):
                 todo.append((id_type, handlers[id_type], key, value))
 
-        self._check_duplicates(
-            (value['Name'], value['Description'])
-            for id_type, _, _, value in todo if id_type != 'mardi'
-        )
+        self._find_on_portal(todo)
         for id_type, handler, key, value in todo:
             handler(key, value)
             # Not sent: the export gives these the new item's ID (helpers.replace_ids)
@@ -1777,25 +1714,54 @@ class GeneratePayload:
             if id_type in _NEW_ITEM_CLASS:
                 self.state.dictionary[key]['class'] = _NEW_ITEM_CLASS[id_type]
 
-    def _check_duplicates(self, items):
-        """Look up on the MaRDI Portal which new items exist already.
+    def _find_on_portal(self, todo):
+        """Look up the items of *todo* on the MaRDI Portal before anything is created (#141).
 
-        Runs the searches of :meth:`_check_mardi_and_raise` for all
-        ``(name, description)`` pairs in *items*, :data:`_DUPLICATE_CHECK_THREADS`
-        at a time, and stores the results in ``self._duplicates``.  Failed
-        searches are retried after :data:`~MaRDMO.queries.EXPORT_RETRY_WAITS`
-        and give up after :data:`~MaRDMO.queries.EXPORT_CHECK_DEADLINE` seconds;
-        a search that still fails finds nothing, and the portal itself rejects
-        an item whose label and description exist already.
+        New and Wikidata items are duplicates if the portal holds an item with
+        exactly their label and description (the portal's own rule), Wikidata
+        items also if a portal item has their Wikidata QID (P12).  The markers
+        of the existing items are kept for :meth:`marker_conflict`.
+
+        Raises:
+            DocumentationProblem: All duplicates, one line each.
+            PortalUnavailable: If the Wikidata QIDs could not be looked up; a
+                failed label lookup is only logged (the portal rejects exact
+                duplicates itself, and the export links those).
         """
-        pairs = sorted(set(items))
-        if not pairs:
-            return
-        deadline = time.monotonic() + EXPORT_CHECK_DEADLINE
+        created = [(id_type, value) for id_type, _, _, value in todo if id_type != 'mardi']
         commit_writes()
-        with ThreadPool(min(_DUPLICATE_CHECK_THREADS, len(pairs))) as pool:
-            results = pool.map(
-                lambda pair: query_item(*pair, waits=EXPORT_RETRY_WAITS, deadline=deadline),
-                pairs,
+        found = find_portal_items(
+            pairs=[(value['Name'], value['Description']) for _, value in created],
+            wikidata_qids=[value['ID'] for id_type, value in created if id_type == 'wikidata'],
+            marker_qids=[value['ID'] for id_type, _, _, value in todo if id_type == 'mardi'],
+            waits=EXPORT_RETRY_WAITS,
+            deadline=time.monotonic() + EXPORT_CHECK_DEADLINE,
+        )
+        if found.wikidata_failed:
+            raise PortalUnavailable(
+                "Could not check which Wikidata items already exist on the MaRDI Portal "
+                "(the portal did not answer). Nothing was exported; please try again later."
             )
-        self._duplicates.update(zip(pairs, results))
+        if found.label_failed:
+            _logger.warning("Duplicate check by label and description failed; the portal rejects exact duplicates.")
+        self.portal_markers = found.markers
+        self.markers_known = not found.markers_failed
+
+        duplicates = []
+        for id_type, value in created:
+            twin = found.by_wikidata.get(value['ID'].split(':', 1)[-1]) if id_type == 'wikidata' else None
+            same = found.by_label.get((value['Name'], value['Description']))
+            if twin:
+                duplicates.append(
+                    f"'{value['Name']}' ({value['Description']}) is the Wikidata item "
+                    f"{value['ID'].split(':', 1)[-1]}, which exists on the MaRDI Portal as {twin}. "
+                    "Use the portal item, or choose another item or make it a new item."
+                )
+            elif same:
+                duplicates.append(
+                    f"An item ({same}) with the label '{value['Name']}' and description "
+                    f"'{value['Description']}' already exists on the MaRDI Portal. "
+                    "Use the portal item, or rename yours."
+                )
+        if duplicates:
+            raise DocumentationProblem(*duplicates)

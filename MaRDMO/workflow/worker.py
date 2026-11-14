@@ -440,10 +440,7 @@ class PrepareWorkflow(PublicationExport):
             payload.get_item_key(value=entry)
             payload.set_class('Process Step')
 
-            payload.add_answer(
-                verb = self.properties["instance of"],
-                object_and_type = [self.items["process step"], "wikibase-item"],
-            )
+            self._add_class(payload, self.items["process step"])
 
             payload.add_single_relation(
                 statement = {
@@ -830,10 +827,7 @@ class PrepareWorkflow(PublicationExport):
             )
             payload.set_class('CPU Model')
 
-            payload.add_answer(
-                verb = self.properties["instance of"],
-                object_and_type = [self.items["CPU model"], "wikibase-item"],
-            )
+            self._add_class(payload, self.items["CPU model"])
 
     def _export_methods(self, payload, methods: dict):
         '''Export each experimental method item collected from process-step sections.'''
@@ -846,10 +840,7 @@ class PrepareWorkflow(PublicationExport):
             )
             payload.set_class('Experimental Method')
 
-            payload.add_answer(
-                verb = self.properties["instance of"],
-                object_and_type = [self.items["method"], "wikibase-item"],
-            )
+            self._add_class(payload, self.items["method"])
 
     def _export_instruments(self, payload, instruments: dict):
         '''Export each instrument item collected from process-step sections.'''
@@ -862,10 +853,7 @@ class PrepareWorkflow(PublicationExport):
             )
             payload.set_class('Experimental Equipment')
 
-            payload.add_answer(
-                verb = self.properties["instance of"],
-                object_and_type = [self.items["research tool"], "wikibase-item"],
-            )
+            self._add_class(payload, self.items["research tool"])
 
     def _export_algorithmic_tasks(self, payload, algorithmic_tasks: dict):
         '''Export each algorithmic task item collected from algorithm sections.'''
@@ -896,7 +884,4 @@ class PrepareWorkflow(PublicationExport):
             )
             payload.set_class('Academic Discipline')
 
-            payload.add_answer(
-                verb = self.properties["instance of"],
-                object_and_type = [self.items["academic discipline"], "wikibase-item"],
-            )
+            self._add_class(payload, self.items["academic discipline"])

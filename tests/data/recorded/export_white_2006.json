@@ -1,357 +1,5 @@
 [
  {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"conservation law for the opiate-using career ODE model\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"conservation law for the opiate-using career ODE model\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "conservation law for the opiate-using career ODE model"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"drug users in treatment in opiate-using career ODE model\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"drug users in treatment in opiate-using career ODE model\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "drug users in treatment in opiate-using career ODE model"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"drug users not in treatment in opiate-using career ODE model\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"drug users not in treatment in opiate-using career ODE model\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "drug users not in treatment in opiate-using career ODE model"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"number of drug users in treatment\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"number of drug users in treatment\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "number of drug users in treatment"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"number of drug users not in treatment\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"number of drug users not in treatment\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "number of drug users not in treatment"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"opiate-using career ODE model\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"opiate-using career ODE model\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "opiate-using career ODE model"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"opiate-using career ODE system\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"opiate-using career ODE system\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "opiate-using career ODE system"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate (individuals of general entering susceptible population)\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate (individuals of general entering susceptible population)\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "rate (individuals of general entering susceptible population)"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (becoming drug user)\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (becoming drug user)\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "rate constant (becoming drug user)"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (drug user in treatment relapsing to untreated use)\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug user in treatment relapsing to untreated use)\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "rate constant (drug user in treatment relapsing to untreated use)"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (drug users entering treatment)\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug users entering treatment)\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "rate constant (drug users entering treatment)"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (drug-related deaths of users in treatment and a rate of successful cure)\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug-related deaths of users in treatment and a rate of successful cure)\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "rate constant (drug-related deaths of users in treatment and a rate of successful cure)"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"rate constant (natural death in general population)\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"rate constant (natural death in general population)\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "rate constant (natural death in general population)"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"substance dependence\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"substance dependence\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "substance dependence"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
-  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbsearchentities\"], [\"format\", \"json\"], [\"language\", \"en\"], [\"limit\", \"10\"], [\"search\", \"susceptibles in opiate-using career ODE model\"], [\"type\", \"item\"]], null]",
-  "url": "https://portal.mardi4nfdi.de/w/api.php",
-  "status": 200,
-  "content_type": "application/json; charset=utf-8",
-  "body": "{\"searchinfo\":{\"search\":\"susceptibles in opiate-using career ODE model\"},\"search\":[],\"success\":1}",
-  "request": {
-   "method": "GET",
-   "params": {
-    "action": "wbsearchentities",
-    "format": "json",
-    "language": "en",
-    "type": "item",
-    "limit": 10,
-    "search": "susceptibles in opiate-using career ODE model"
-   },
-   "data": null,
-   "headers": {
-    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
-   }
-  }
- },
- {
   "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"N\"]]]",
   "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
   "status": 200,
@@ -650,6 +298,57 @@
    "method": "POST",
    "params": {},
    "data": "SELECT ?RELATION0 ?RELATION1 ?RELATION2 ?RELATION4 ?RELATION5 ?RELATION6 ?RELATION7 ?RELATION8 ?RELATION9 ?RELATION10 ?RELATION11 ?RELATION12 ?RELATION13 ?RELATION14 ?RELATION15 ?RELATION16 ?RELATION17 ?RELATION18 ?RELATION19 ?RELATION20 ?RELATION21 ?RELATION22 ?RELATION23 ?RELATION24 ?RELATION25 ?RELATION26 ?RELATION27 WHERE {\nBIND(EXISTS {\n  wd:Q6684705 p:P31 ?statement0 .\n  ?statement0 ps:P31 wd:Q60231 .\n} AS ?RELATION0)\nBIND(EXISTS {\n  wd:Q6684705 p:P1495 ?statement1 .\n  ?statement1 ps:P1495 wd:Q6534265 .\n} AS ?RELATION1)\nBIND(EXISTS {\n  wd:Q6684705 p:P1460 ?statement2 .\n  ?statement2 ps:P1460 wd:Q6534268 .\n} AS ?RELATION2)\nBIND(EXISTS {\n  wd:Q6673795 p:P31 ?statement4 .\n  ?statement4 ps:P31 wd:Q6534237 .\n} AS ?RELATION4)\nBIND(EXISTS {\n  wd:Q6673795 p:P1495 ?statement5 .\n  ?statement5 ps:P1495 wd:Q6534265 .\n} AS ?RELATION5)\nBIND(EXISTS {\n  wd:Q6673795 p:P1460 ?statement6 .\n  ?statement6 ps:P1460 wd:Q6534271 .\n} AS ?RELATION6)\nBIND(EXISTS {\n  wd:Q6673795 p:P31 ?statement7 .\n  ?statement7 ps:P31 wd:Q6482820 .\n} AS ?RELATION7)\nBIND(EXISTS {\n  wd:Q6673724 p:P1684 ?statement8 .\n  ?statement8 ps:P1684 wd:Q6673795 .\n} AS ?RELATION8)\nBIND(EXISTS {\n  wd:Q6673882 p:P31 ?statement9 .\n  ?statement9 ps:P31 wd:Q6534237 .\n} AS ?RELATION9)\nBIND(EXISTS {\n  wd:Q6673882 p:P1495 ?statement10 .\n  ?statement10 ps:P1495 wd:Q6534265 .\n} AS ?RELATION10)\nBIND(EXISTS {\n  wd:Q6673882 p:P1460 ?statement11 .\n  ?statement11 ps:P1460 wd:Q6534271 .\n} AS ?RELATION11)\nBIND(EXISTS {\n  wd:Q6673882 p:P31 ?statement12 .\n  ?statement12 ps:P31 wd:Q6482820 .\n} AS ?RELATION12)\nBIND(EXISTS {\n  wd:Q6674120 p:P1684 ?statement13 .\n  ?statement13 ps:P1684 wd:Q6673882 .\n} AS ?RELATION13)\nBIND(EXISTS {\n  wd:Q6673724 p:P1684 ?statement14 .\n  ?statement14 ps:P1684 wd:Q6673882 .\n} AS ?RELATION14)\nBIND(EXISTS {\n  wd:Q6534304 p:P31 ?statement15 .\n  ?statement15 ps:P31 wd:Q6534245 .\n} AS ?RELATION15)\nBIND(EXISTS {\n  wd:Q6534304 p:P1495 ?statement16 .\n  ?statement16 ps:P1495 wd:Q6534265 .\n} AS ?RELATION16)\nBIND(EXISTS {\n  wd:Q6534304 p:P1460 ?statement17 .\n  ?statement17 ps:P1460 wd:Q6534271 .\n} AS ?RELATION17)\nBIND(EXISTS {\n  wd:Q6534304 p:P31 ?statement18 .\n  ?statement18 ps:P31 wd:Q6775553 .\n} AS ?RELATION18)\nBIND(EXISTS {\n  wd:Q6534304 p:P1654 ?statement19 .\n  ?statement19 ps:P1654 \"Time\" .\n} AS ?RELATION19)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement20 .\n  ?statement20 ps:P1684 wd:Q6674052 .\n} AS ?RELATION20)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement21 .\n  ?statement21 ps:P1684 wd:Q6674046 .\n} AS ?RELATION21)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement22 .\n  ?statement22 ps:P1684 wd:Q6674045 .\n} AS ?RELATION22)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement23 .\n  ?statement23 ps:P1684 wd:Q6673995 .\n} AS ?RELATION23)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement24 .\n  ?statement24 ps:P1684 wd:Q6673969 .\n} AS ?RELATION24)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement25 .\n  ?statement25 ps:P1684 wd:Q6673931 .\n} AS ?RELATION25)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement26 .\n  ?statement26 ps:P1684 wd:Q6673794 .\n} AS ?RELATION26)\nBIND(EXISTS {\n  wd:Q6534304 p:P1684 ?statement27 .\n  ?statement27 ps:P1684 wd:Q6673735 .\n} AS ?RELATION27)\n}",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://query.portal.mardi4nfdi.de/sparql\", [], \"SELECT ?item ?class ?community ?profile WHERE { VALUES ?item { wd:Q2643268 wd:Q6534304 wd:Q6673694 wd:Q6673724 wd:Q6673735 wd:Q6673794 wd:Q6673795 wd:Q6673803 wd:Q6673882 wd:Q6673931 wd:Q6673969 wd:Q6673995 wd:Q6674045 wd:Q6674046 wd:Q6674052 wd:Q6674120 wd:Q6684705 } OPTIONAL { ?item wdt:P31 ?class . } OPTIONAL { ?item wdt:P1495 ?community . } OPTIONAL { ?item wdt:P1460 ?profile . } }\"]",
+  "url": "https://query.portal.mardi4nfdi.de/sparql",
+  "status": 200,
+  "content_type": "application/sparql-results+json;charset=utf-8",
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"item\", \"class\", \"community\", \"profile\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q2643268\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q56887\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q5976449\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534304\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534245\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534304\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6775553\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673735\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673735\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6775552\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673794\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673931\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673931\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6775552\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673969\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673995\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674045\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674046\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674052\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6482820\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674052\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673694\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534245\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673724\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6482820\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673724\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534245\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673724\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q7271705\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673795\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6482820\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673795\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673803\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673803\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6672074\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673882\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6482820\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673882\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674120\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6482820\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674120\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6684705\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q60231\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534268\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    } ]\n  }\n}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "SELECT ?item ?class ?community ?profile WHERE { VALUES ?item { wd:Q2643268 wd:Q6534304 wd:Q6673694 wd:Q6673724 wd:Q6673735 wd:Q6673794 wd:Q6673795 wd:Q6673803 wd:Q6673882 wd:Q6673931 wd:Q6673969 wd:Q6673995 wd:Q6674045 wd:Q6674046 wd:Q6674052 wd:Q6674120 wd:Q6684705 } OPTIONAL { ?item wdt:P31 ?class . } OPTIONAL { ?item wdt:P1495 ?community . } OPTIONAL { ?item wdt:P1460 ?profile . } }",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://query.portal.mardi4nfdi.de/sparql\", [], \"SELECT ?item ?label ?description WHERE { VALUES (?label ?description) { (\\\"conservation law for the opiate-using career ODE model\\\"@en \\\"total population is the sum of susceptibles and drug users not in and in treatment, and stays constant because recruitment balances all removals\\\"@en) (\\\"drug users in treatment in opiate-using career ODE model\\\"@en \\\"ordinary differential equation describing the rate of change of drug-using individuals in treatment\\\"@en) (\\\"drug users not in treatment in opiate-using career ODE model\\\"@en \\\"ordinary differential equation describing the rate of change of drug-using individuals not in treatment\\\"@en) (\\\"number of drug users in treatment\\\"@en \\\"number\\\"@en) (\\\"number of drug users not in treatment\\\"@en \\\"initial and relapsed drug users\\\"@en) (\\\"opiate-using career ODE model\\\"@en \\\"mathematical model describing the characteristics of the drug-using career\\\"@en) (\\\"opiate-using career ODE system\\\"@en \\\"system of ordinary differential equations describing the opiate-using career\\\"@en) (\\\"rate (individuals of general entering susceptible population)\\\"@en \\\"demographic process\\\"@en) (\\\"rate constant (becoming drug user)\\\"@en \\\"rate constant\\\"@en) (\\\"rate constant (drug user in treatment relapsing to untreated use)\\\"@en \\\"rate constant\\\"@en) (\\\"rate constant (drug users entering treatment)\\\"@en \\\"rate constant\\\"@en) (\\\"rate constant (drug-related deaths of users in treatment and a rate of successful cure)\\\"@en \\\"rate constant\\\"@en) (\\\"rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)\\\"@en \\\"rate constant\\\"@en) (\\\"rate constant (natural death in general population)\\\"@en \\\"rate constant\\\"@en) (\\\"substance dependence\\\"@en \\\"need for a drug, whose discontinuation results in withdrawal symptoms\\\"@en) (\\\"susceptibles in opiate-using career ODE model\\\"@en \\\"ordinary differential equation describing the rate of change of susceptible individuals\\\"@en) } ?item rdfs:label ?label ; schema:description ?description . }\"]",
+  "url": "https://query.portal.mardi4nfdi.de/sparql",
+  "status": 200,
+  "content_type": "application/sparql-results+json;charset=utf-8",
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"item\", \"label\", \"description\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ ]\n  }\n}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "SELECT ?item ?label ?description WHERE { VALUES (?label ?description) { (\"conservation law for the opiate-using career ODE model\"@en \"total population is the sum of susceptibles and drug users not in and in treatment, and stays constant because recruitment balances all removals\"@en) (\"drug users in treatment in opiate-using career ODE model\"@en \"ordinary differential equation describing the rate of change of drug-using individuals in treatment\"@en) (\"drug users not in treatment in opiate-using career ODE model\"@en \"ordinary differential equation describing the rate of change of drug-using individuals not in treatment\"@en) (\"number of drug users in treatment\"@en \"number\"@en) (\"number of drug users not in treatment\"@en \"initial and relapsed drug users\"@en) (\"opiate-using career ODE model\"@en \"mathematical model describing the characteristics of the drug-using career\"@en) (\"opiate-using career ODE system\"@en \"system of ordinary differential equations describing the opiate-using career\"@en) (\"rate (individuals of general entering susceptible population)\"@en \"demographic process\"@en) (\"rate constant (becoming drug user)\"@en \"rate constant\"@en) (\"rate constant (drug user in treatment relapsing to untreated use)\"@en \"rate constant\"@en) (\"rate constant (drug users entering treatment)\"@en \"rate constant\"@en) (\"rate constant (drug-related deaths of users in treatment and a rate of successful cure)\"@en \"rate constant\"@en) (\"rate constant (drug-related deaths of users not in treatment and a spontaneous recovery rate)\"@en \"rate constant\"@en) (\"rate constant (natural death in general population)\"@en \"rate constant\"@en) (\"substance dependence\"@en \"need for a drug, whose discontinuation results in withdrawal symptoms\"@en) (\"susceptibles in opiate-using career ODE model\"@en \"ordinary differential equation describing the rate of change of susceptible individuals\"@en) } ?item rdfs:label ?label ; schema:description ?description . }",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://query.portal.mardi4nfdi.de/sparql\", [], \"SELECT ?item ?wikidata WHERE { VALUES ?wikidata { \\\"Q3378593\\\" } ?item wdt:P12 ?wikidata . }\"]",
+  "url": "https://query.portal.mardi4nfdi.de/sparql",
+  "status": 200,
+  "content_type": "application/sparql-results+json;charset=utf-8",
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"item\", \"wikidata\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ ]\n  }\n}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "SELECT ?item ?wikidata WHERE { VALUES ?wikidata { \"Q3378593\" } ?item wdt:P12 ?wikidata . }",
    "headers": {
     "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
     "Content-Type": "application/sparql-query; charset=UTF-8",
