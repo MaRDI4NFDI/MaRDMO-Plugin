@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 
 import MaRDMO.model.handlers as handlers
 from MaRDMO.checks import Checks
+from MaRDMO.pages import PageRef
 from MaRDMO.models import Relatant
 from MaRDMO.model.utils import map_entity_quantity
 from MaRDMO.payload import GeneratePayload
@@ -62,7 +63,7 @@ def test_missing_symbol_or_quantity_is_left_to_the_other_checks():
 
 def checks_for(page):
     checks = Checks()
-    checks._check_element_symbols(page, 'Formula', 'F1')
+    checks._check_element_symbols(page, 'Formula', PageRef('formulation', 0, 'f', 'F1'))
     return checks.err
 
 

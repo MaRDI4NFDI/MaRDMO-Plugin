@@ -17,6 +17,8 @@ import json
 import logging
 import threading
 import time
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass, field
 from multiprocessing.pool import ThreadPool
 
@@ -53,6 +55,29 @@ SPARQL_MAX_RETRY_WAIT = 10
 # EXPORT_CHECK_DEADLINE seconds
 EXPORT_RETRY_WAITS = (2, 5)
 EXPORT_CHECK_DEADLINE = 120
+# The preview runs the export's checks too (#152), with its own shorter
+# limits: check_limits() sets them for the checks in its block
+_CHECK_LIMITS = ContextVar('mardmo_check_limits', default=(EXPORT_RETRY_WAITS, EXPORT_CHECK_DEADLINE))
+
+
+@contextmanager
+def check_limits(waits, seconds):
+    '''Retry the export's check requests after *waits* and give each check *seconds* in this block.'''
+    token = _CHECK_LIMITS.set((waits, seconds))
+    try:
+        yield
+    finally:
+        _CHECK_LIMITS.reset(token)
+
+
+def check_waits():
+    '''Pauses before the retries of an export check request (:func:`check_limits`).'''
+    return _CHECK_LIMITS.get()[0]
+
+
+def check_deadline():
+    '''The time (``time.monotonic()``) at which an export check starting now gives up.'''
+    return time.monotonic() + _CHECK_LIMITS.get()[1]
 
 _SESSIONS = threading.local()
 

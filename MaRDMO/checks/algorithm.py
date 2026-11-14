@@ -1,8 +1,7 @@
 '''Algorithm Documentation check mixin.'''
 
-from rdmo.domain.models import Attribute
 
-from ..constants import BASE_URI, CATALOG_ALGORITHM
+from ..constants import CATALOG_ALGORITHM
 from .base import BENCHMARK_REFERENCE_CHECKS, SOFTWARE_REFERENCE_CHECKS
 
 
@@ -23,12 +22,8 @@ class AlgorithmMixin:
             project: RDMO project instance.
             data:    Top-level answers dict.
         '''
-        values = project.values.filter(
-            snapshot=None,
-            attribute=Attribute.objects.get(uri=f'{BASE_URI}domain/algorithm')
-        )
         for ikey, ivalue in data.get('algorithm', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('algorithm', ikey, ivalue)
             self._check_static(
                 data       = ivalue,
                 page_name  = page_name,
@@ -59,12 +54,8 @@ class AlgorithmMixin:
             project: RDMO project instance.
             data:    Top-level answers dict.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/problem')
-        )
         for ikey, ivalue in data.get('problem', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('problem', ikey, ivalue)
             self._check_optional_static(
                 data       = ivalue,
                 page_name  = page_name,
@@ -90,12 +81,8 @@ class AlgorithmMixin:
             project: RDMO project instance.
             data:    Top-level answers dict.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/software')
-        )
         for ikey, ivalue in data.get('software', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('software', ikey, ivalue)
             self._check_optional_static(
                 data       = ivalue,
                 page_name  = page_name,
@@ -131,12 +118,8 @@ class AlgorithmMixin:
             project: RDMO project instance.
             data:    Top-level answers dict.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/benchmark')
-        )
         for ikey, ivalue in data.get('benchmark', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('benchmark', ikey, ivalue)
             if not ivalue.get('reference'):
                 self.err.append(self._error('Benchmark', page_name, 'Missing Reference'))
             else:
@@ -157,9 +140,10 @@ class AlgorithmMixin:
             data:    Top-level answers dict.
 
         Returns:
-            List of human-readable error strings, or an empty list when all
-            checks pass.
+            Sorted list of :class:`~MaRDMO.problems.Problem`, empty when
+            all checks pass.
         '''
+        self._tab_names(project, data)
         catalog = CATALOG_ALGORITHM
         self.id_name_description(project, data, catalog)
         self.algorithm(project, data)

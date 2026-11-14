@@ -2,24 +2,14 @@
 
 Problems found during the export, after the checks, were all shown as
 "Value Error".  Those the user can fix now look like the checks, an
-unreachable portal asks to try again, and an internal error says so.
+unreachable portal asks to try again, and an internal error says so (the
+pages: tests/unit/test_pipeline.py).
 '''
 import pytest
 import requests
 
 import MaRDMO.payload as payload_module
-from MaRDMO.main import export_error_title
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
-
-
-@pytest.mark.parametrize('error, title', [
-    (DocumentationProblem('symbol a already stands for Q1'), 'Incomplete or Inconsistent Documentation'),
-    (PortalUnavailable('not reachable'), 'MaRDI Portal not reachable'),
-    (ValueError('placeholder without item'), 'Export not possible'),
-    (KeyError('community'), 'Export not possible'),
-])
-def test_title(error, title):
-    assert str(export_error_title(error)) == title
 
 
 @pytest.fixture
@@ -64,3 +54,26 @@ def test_unreachable_api_is_portal_unavailable(payload, monkeypatch):
     monkeypatch.setattr(payload_module, 'request_with_retry', unreachable)
     with pytest.raises(PortalUnavailable):
         payload._fetch_claims(['Q1'], 'https://portal.example.org/w/api.php', None, 'formulas')
+
+
+def test_final_checks_report_invalid_values_and_symbols_together(payload, monkeypatch):
+    '''The preview lists all of them, not only those of the first check (#152).'''
+    def invalid(self):
+        raise DocumentationProblem('"formula", DOI: invalid')
+
+    def symbol(self, api_url):
+        raise DocumentationProblem('symbol a already stands for Q1')
+    monkeypatch.setattr(GeneratePayload, 'validate_identifiers', invalid)
+    monkeypatch.setattr(GeneratePayload, 'check_existing_relations', symbol)
+    with pytest.raises(DocumentationProblem) as problem:
+        payload.final_checks('https://portal.example.org/w/api.php')
+    assert problem.value.args == ('"formula", DOI: invalid', 'symbol a already stands for Q1')
+
+
+def test_final_checks_stop_on_an_unreachable_portal(payload, monkeypatch):
+    def unreachable(self, api_url):
+        raise PortalUnavailable('not reachable')
+    monkeypatch.setattr(GeneratePayload, 'validate_identifiers', lambda self: None)
+    monkeypatch.setattr(GeneratePayload, 'check_existing_relations', unreachable)
+    with pytest.raises(PortalUnavailable):
+        payload.final_checks('https://portal.example.org/w/api.php')

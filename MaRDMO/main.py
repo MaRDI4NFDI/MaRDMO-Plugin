@@ -22,7 +22,6 @@ from django.utils.translation import gettext_lazy as _
 
 from rdmo.projects.exports import Export
 
-from .checks import Checks
 from .duplicates import preview_duplicates
 from .constants import (
     CATALOG_TEMPLATE_MAP,
@@ -40,15 +39,15 @@ from .getters import (
 from .helpers import (
     batched_writes,
     describe_items_without_page,
-    is_cyclic,
     link_to_pages,
     mark_same_own_items,
     process_question_dict,
     topological_order
 )
 from .oauth2 import OauthProviderMixin
-from .payload import DocumentationProblem, PortalUnavailable
 from .pages import add_tab_names
+from .problems import report_lines
+from . import pipeline
 from .views import render_preview
 
 from .model.worker import PrepareModel
@@ -126,17 +125,12 @@ class BaseMaRDMOExportProvider(OauthProviderMixin, Export, ABC):
             'code': request.GET.get('code')
         }
 
-def export_error_title(err):
-    """Title of the error page for an exception of the export (after the checks).
-
-    Problems the user can fix look like the checks; an unreachable portal
-    asks to try again; anything else is MaRDMO's.
-    """
-    if isinstance(err, DocumentationProblem):
-        return _('Incomplete or Inconsistent Documentation')
-    if isinstance(err, PortalUnavailable):
-        return _('MaRDI Portal not reachable')
-    return _('Export not possible')
+# The export page names what the export finds; the preview offered the export,
+# so it found nothing then (#152)
+CHANGED_HINT = _('Something changed since the preview. Open the preview again, fix the points it lists, '
+                 'then export.')
+UNREACHABLE_HINT = _('The MaRDI Portal is not reachable at the moment, so the documentation could not be '
+                     'checked completely. Nothing was exported; please try again shortly.')
 
 
 class MaRDMOExportProvider(BaseMaRDMOExportProvider):
@@ -171,16 +165,21 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
 
         if template:
             answers, options = self.get_post_data('preview')
+            __, prepare_class, check_method = _CATALOG_PREPARE_MAP[catalog_slug]
             # Items that are on the MaRDI Portal already, at the top (#141)
-            prepare = _CATALOG_PREPARE_MAP[catalog_slug][1]()
+            duplicates = preview_duplicates(self.project, answers, prepare_class())
+            # Everything the export checks, so a clean preview exports (#152)
+            gate = pipeline.run(self.project, answers, prepare_class, check_method,
+                                preview=True, duplicates=duplicates)
             return render_preview(
                 self=self,
                 template=template,
                 answers=answers,
                 option=options,
                 submit_label=_('Export to MaRDI Portal'),
-                duplicates=preview_duplicates(self.project, answers, prepare),
-        )
+                duplicates=duplicates,
+                gate=gate,
+            )
 
         return render(
             self.request,
@@ -231,68 +230,40 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         return self._submit_catalog(catalog_slug)
 
     def _submit_catalog(self, catalog_slug):
-        '''Validate and submit documentation for any supported catalog.
+        '''Check the documentation once more and submit it for any supported catalog.
 
-        Runs the catalog-appropriate consistency checks, assembles the Wikibase
-        payload, and delegates to :meth:`~.oauth2.OauthProviderMixin.post` for
-        the authenticated upload.
+        Runs what the preview ran (:func:`~MaRDMO.pipeline.run`): the
+        preview offers the export only when it found nothing, so whatever is
+        found now changed since the preview (in the documentation or on the
+        MaRDI Portal).  Then delegates to :meth:`~.oauth2.OauthProviderMixin.post`
+        for the authenticated upload.
 
         Args:
             catalog_slug: Trailing slug of the active catalog URI.
 
         Returns:
-            HTTP response — either an error page (failed checks) or a redirect
-            to the OAuth authorization flow.
+            HTTP response — either an error page or a redirect to the OAuth
+            authorization flow.
         '''
         answers, __ = self.get_post_data()
-
         __, prepare_class, check_method = _CATALOG_PREPARE_MAP[catalog_slug]
-
-        err = getattr(Checks(), check_method)(
-            project = self.project,
-            data    = answers,
-            catalog = str(self.project.catalog),
-        )
-        if err:
-            return render(
-                self.request,
-                'core/error.html',
-                {
-                    'title': _('Incomplete or Inconsistent Documentation'),
-                    'errors': err
-                },
-                status=200
-            )
-
-        try:
-            payload, dependency = prepare_class().export(
-                answers,
-                get_url('mardi', 'uri'),
-            )
-        except (ValueError, KeyError) as err:
-            return render(
-                self.request,
-                'core/error.html',
-                {
-                    'title': export_error_title(err),
-                    # One error line per argument (e.g. one per invalid URL)
-                    'errors': list(err.args) or [err]
-                },
-                status=200
-            )
-
-        if is_cyclic(dependency):
-            return render(
-                self.request,
-                'core/error.html',
-                {
-                    'title': _('Inconsistent Documentation'),
-                    'errors': ['Cyclic Dependency Graph']
-                },
-                status=200
-            )
-
-        return self.post(self.request, payload, topological_order(dependency))
+        gate = pipeline.run(self.project, answers, prepare_class, check_method)
+        if gate.unreachable:
+            return render(self.request, 'core/error.html', {
+                'title': _('MaRDI Portal not reachable'),
+                'errors': [gate.unreachable, UNREACHABLE_HINT],
+            }, status=200)
+        if gate.internal:
+            # MaRDMO's error, not the documentation's: nothing changed
+            return render(self.request, 'core/error.html', {
+                'title': _('Export not possible'), 'errors': [str(problem.message) for problem in gate.problems],
+            }, status=200)
+        if gate.problems:
+            return render(self.request, 'core/error.html', {
+                'title': _('Incomplete or Inconsistent Documentation'),
+                'errors': [CHANGED_HINT, *report_lines(gate.problems)],
+            }, status=200)
+        return self.post(self.request, gate.payload, topological_order(gate.dependency))
 
     def get_post_data(self, mode = 'submit'):
         '''Collect and pre-process user answers for the documentation catalogs.

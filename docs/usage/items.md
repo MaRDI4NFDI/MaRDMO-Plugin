@@ -98,7 +98,7 @@ The dropdowns offer only MaRDI Portal items of the kind a question asks for.
 An item may exist on the portal anyway: with another class or none (e.g.
 imported from Wikidata), or not among the results.  The export would create
 it a second time, so the preview lists such items at the top, under
-**Already on the MaRDI Portal**, and the export button appears only once
+**Already on the MaRDI Portal**, and the export button stays disabled until
 none is left.  Each row says where you entered the item (page and tab) and
 what you can do:
 
@@ -135,3 +135,17 @@ made with earlier versions are not supported: the checks report
 "Made with MaRDMO before 0.8.0, not supported (enter it in a new
 project)", and the export stops.  Ask the administrators of your RDMO
 instance whether they can convert it.
+
+## Before you can export
+
+The preview checks everything the export checks, also against the MaRDI
+Portal (for example a symbol that stands for another quantity there).  What
+it finds is listed at the top, under **Before you can export**, by tab, each
+linked to the tab's place in the preview.  The export button is disabled
+until the list is empty: fix the points in the interview and open the
+preview again.  If the MaRDI Portal does not answer, the preview says so;
+try again shortly with **Check again**.
+
+The export checks once more.  If something changed since the preview (in
+your documentation, or on the MaRDI Portal), it stops before anything is
+exported and lists what changed.
