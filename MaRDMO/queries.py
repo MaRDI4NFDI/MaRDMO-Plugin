@@ -273,6 +273,28 @@ def find_portal_items(pairs=(), wikidata_qids=(), marker_qids=(), waits=(), dead
     return result
 
 
+def portal_labels(qids, waits=(), deadline=None):
+    '''``{QID: (label, description)}`` (English) of the portal items *qids*; ``None`` if the query failed.
+
+    For the preview of duplicates (#141): a Wikidata item found by its QID
+    may have another label or description on the portal.
+    '''
+    labels = {}
+    qids = sorted(set(qids), key=lambda qid: int(qid[1:]))
+    for start in range(0, len(qids), PORTAL_LOOKUP_CHUNK):
+        values = ' '.join(f'wd:{qid}' for qid in qids[start:start + PORTAL_LOOKUP_CHUNK])
+        sparql = (f'SELECT ?item ?label ?description WHERE {{ VALUES ?item {{ {values} }} '
+                  'OPTIONAL { ?item rdfs:label ?label . FILTER(LANG(?label) = "en") } '
+                  'OPTIONAL { ?item schema:description ?description . FILTER(LANG(?description) = "en") } }')
+        rows = query_sparql(sparql, get_url('mardi', 'sparql'), strict=True, waits=waits, deadline=deadline)
+        if rows is None:
+            return None
+        for row in rows:
+            labels[row['item']['value'].rsplit('/', 1)[1]] = (row.get('label', {}).get('value', ''),
+                                                              row.get('description', {}).get('value', ''))
+    return labels
+
+
 def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, waits=(), deadline=None):
     '''Search a Wikibase API endpoint for items whose label matches *search_term*.
 

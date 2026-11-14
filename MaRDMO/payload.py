@@ -27,12 +27,13 @@ import time
 import requests
 
 from .helpers import commit_writes
-from .ids import is_own_item, item_key
+from .duplicates import item_source, look_up
+from .ids import item_key
+from .markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
 from .patterns import QUANTITY_AMOUNT_RE
 from .queries import (
     EXPORT_CHECK_DEADLINE,
     EXPORT_RETRY_WAITS,
-    find_portal_items,
     query_sparql,
     request_with_retry,
     sparql_string,
@@ -191,6 +192,8 @@ class GeneratePayload:
         # Markers of the existing items on the portal (_find_on_portal)
         self.portal_markers: dict = {}
         self.markers_known = False
+        # Item ID → the sections whose markers it got (markers.SECTION_MARKERS)
+        self.marked: dict = {}
         # QID → claims of portal items fetched during this export
         self._claims: dict = {}
 
@@ -1274,7 +1277,8 @@ class GeneratePayload:
 
         If the relatant item exists in the payload dictionary, uses
         ``statement['relation']`` as the property; otherwise falls back to
-        *alt_statement* with a string value.
+        *alt_statement* with a string value, or adds nothing without one
+        (e.g. a journal the export left out).
 
         Args:
             statement:     Dict with ``relation`` (property ID) and
@@ -1307,7 +1311,7 @@ class GeneratePayload:
                     qualifier = qualifier,
                     subject = subject_item
                 )
-            else:
+            elif alt_statement:
                 # Add to Payload
                 self.add_answer(
                     verb = alt_statement['relation'],
@@ -1607,20 +1611,7 @@ class GeneratePayload:
                 )
             # If Authors has ID, add further Statements
             if statements:
-                statements.append(
-                    [
-                        self.wikibase['properties']['instance of'],
-                        'wikibase-item',
-                        self.wikibase['items']['human']
-                    ]
-                )
-                statements.append(
-                    [
-                        self.wikibase['properties']['MaRDI profile type'],
-                        'wikibase-item',
-                        self.wikibase['items']['MaRDI person profile']
-                    ]
-                )
+                statements += self._marker_statements(value, 'author')
         if id_type == 'journal':
             # Add ISSN ID Statement
             if value.get('issn'):
@@ -1632,21 +1623,14 @@ class GeneratePayload:
                     ]
                 )
             # Add further Statements (as for journals from Wikidata)
-            statements.append(
-                [
-                    self.wikibase['properties']['instance of'],
-                    'wikibase-item',
-                    self.wikibase['items']['scientific journal']
-                ]
-            )
-            statements.append(
-                [
-                    self.wikibase['properties']['MaRDI profile type'],
-                    'wikibase-item',
-                    self.wikibase['items']['MaRDI journal profile']
-                ]
-            )
+            statements += self._marker_statements(value, 'journal')
         return statements
+
+    def _marker_statements(self, value, section):
+        """The marker statements of the new author or journal *value* (*section*, see :mod:`MaRDMO.markers`)."""
+        self.marked.setdefault(value['ID'], set()).add(section)
+        return [[self.wikibase['properties'][MARKER_PROPERTIES[kind]], 'wikibase-item', qid]
+                for kind, qid in PUBLICATION_MARKERS[section].qids().items() if qid]
 
     def process_items(self):
         """Populate the payload dictionary with an entry for every item in ``user_items``.
@@ -1668,7 +1652,8 @@ class GeneratePayload:
                 self._build_item(
                     '',
                     value['Name'],
-                    value['Description'],
+                    # An author or journal named by its identifier (duplicates._resolve_parts)
+                    value.get('create_as') or value['Description'],
                     self._statement_by_id_type(value, id_type)
                 )
             )
@@ -1690,21 +1675,19 @@ class GeneratePayload:
 
         todo = []
         for key, value in self.user_items.items():
-            if not value.get('ID'):
-                continue
-            # The user's own items (user:<uuid>, "not found" for the workflow
-            # itself); new authors and journals by where they are (#118)
-            if is_own_item(value['ID']):
-                id_type = value.get('kind') or 'not found'
-            else:
-                id_type = next((source for source in ('mardi', 'wikidata') if source in value['ID']), None)
-            # An author without ORCID iD and zbMATH ID is not created
-            if id_type and (id_type != 'author' or value['zbmath'] or value['orcid']):
+            id_type = item_source(value)
+            if id_type:
                 todo.append((id_type, handlers[id_type], key, value))
 
         self._find_on_portal(todo)
         for id_type, handler, key, value in todo:
-            handler(key, value)
+            # Authors and journals: left out, or the portal item (duplicates._resolve_parts)
+            if value.get('omit'):
+                continue
+            if value.get('use'):
+                self._add_entry(key, self._build_item(value['use'], value['Name'], value['Description']))
+            else:
+                handler(key, value)
             # Not sent: the export gives these the new item's ID (helpers.replace_ids)
             if value.get('user_ids'):
                 self.state.dictionary[key]['user_ids'] = value['user_ids']
@@ -1719,8 +1702,9 @@ class GeneratePayload:
 
         New and Wikidata items are duplicates if the portal holds an item with
         exactly their label and description (the portal's own rule), Wikidata
-        items also if a portal item has their Wikidata QID (P12).  The markers
-        of the existing items are kept for :meth:`marker_conflict`.
+        items also if a portal item has their Wikidata QID (P12), see
+        :func:`~MaRDMO.duplicates.look_up` (the preview lists the same).  The
+        markers of the existing items are kept for :meth:`subject_markers`.
 
         Raises:
             DocumentationProblem: All duplicates, one line each.
@@ -1728,15 +1712,9 @@ class GeneratePayload:
                 failed label lookup is only logged (the portal rejects exact
                 duplicates itself, and the export links those).
         """
-        created = [(id_type, value) for id_type, _, _, value in todo if id_type != 'mardi']
         commit_writes()
-        found = find_portal_items(
-            pairs=[(value['Name'], value['Description']) for _, value in created],
-            wikidata_qids=[value['ID'] for id_type, value in created if id_type == 'wikidata'],
-            marker_qids=[value['ID'] for id_type, _, _, value in todo if id_type == 'mardi'],
-            waits=EXPORT_RETRY_WAITS,
-            deadline=time.monotonic() + EXPORT_CHECK_DEADLINE,
-        )
+        found, duplicates = look_up([(id_type, value) for id_type, _, _, value in todo],
+                                    EXPORT_RETRY_WAITS, time.monotonic() + EXPORT_CHECK_DEADLINE)
         if found.wikidata_failed:
             raise PortalUnavailable(
                 "Could not check which Wikidata items already exist on the MaRDI Portal "
@@ -1747,21 +1725,26 @@ class GeneratePayload:
         self.portal_markers = found.markers
         self.markers_known = not found.markers_failed
 
-        duplicates = []
-        for id_type, value in created:
-            twin = found.by_wikidata.get(value['ID'].split(':', 1)[-1]) if id_type == 'wikidata' else None
-            same = found.by_label.get((value['Name'], value['Description']))
-            if twin:
-                duplicates.append(
-                    f"'{value['Name']}' ({value['Description']}) is the Wikidata item "
-                    f"{value['ID'].split(':', 1)[-1]}, which exists on the MaRDI Portal as {twin}. "
+        messages = []
+        for duplicate in duplicates:
+            name, description = duplicate.item['Name'], duplicate.item['Description']
+            if duplicate.rule == 'documentation':
+                messages.append(
+                    f"'{name}' ({description}) has the label and description of the Wikidata item "
+                    f"{duplicate.other['ID'].split(':', 1)[-1]} of this documentation; the MaRDI Portal takes "
+                    "only one item per label and description. Rename yours, or select the Wikidata item."
+                )
+            elif duplicate.rule == 'wikidata':
+                messages.append(
+                    f"'{name}' ({description}) is the Wikidata item "
+                    f"{duplicate.item['ID'].split(':', 1)[-1]}, which exists on the MaRDI Portal as {duplicate.qid}. "
                     "Use the portal item, or choose another item or make it a new item."
                 )
-            elif same:
-                duplicates.append(
-                    f"An item ({same}) with the label '{value['Name']}' and description "
-                    f"'{value['Description']}' already exists on the MaRDI Portal. "
+            else:
+                messages.append(
+                    f"An item ({duplicate.qid}) with the label '{name}' and description "
+                    f"'{description}' already exists on the MaRDI Portal. "
                     "Use the portal item, or rename yours."
                 )
-        if duplicates:
-            raise DocumentationProblem(*duplicates)
+        if messages:
+            raise DocumentationProblem(*messages)

@@ -7,8 +7,9 @@ Provides :class:`OauthProviderMixin`, the abstract base class that handles:
 - Background export job execution with progress reported via
   :mod:`~MaRDMO.store` and streamed to the browser.
 - Wikibase REST API posting: :meth:`~OauthProviderMixin._post_data` retries
-  failed requests, handles duplicate-item policy violations, and substitutes
-  temporary ``Item<n>`` placeholders with the real Wikibase QIDs.
+  failed requests, stops at items the portal has already
+  (:class:`DuplicateOnPortal`), and substitutes temporary ``Item<n>``
+  placeholders with the real Wikibase QIDs.
 
 Subclasses must implement :meth:`~OauthProviderMixin.get_authorize_params`
 and :meth:`~OauthProviderMixin.post_success` to supply catalog-specific
@@ -56,6 +57,37 @@ _POLICY_VIOLATIONS = {
     'property-label-duplicate': 'a property with the same label already exists',
     'sitelink-conflict': 'the sitelink is already used by another item',
 }
+
+
+class DuplicateOnPortal(RuntimeError):
+    '''The portal did not create an item: one with its label and description exists (#141).
+
+    The export looked its items up before (:func:`~MaRDMO.duplicates.look_up`),
+    so the item was probably created in the meantime.  MaRDMO does not link
+    it silently: the user decides in the preview (or, for an author or
+    journal of a publication, the next export does).
+    '''
+    def __init__(self, label, description, qid, part=None):
+        super().__init__(f"'{label}' ({description}) exists on the MaRDI Portal as {qid}")
+        self.label, self.description, self.qid, self.part = label, description, qid, part
+
+    def message(self, sent):
+        '''The message for the user; *sent*: whether something was created before.'''
+        if self.part:
+            parts = [f'The MaRDI Portal did not create the {self.part} "{self.label}" ({self.description}): '
+                     f'an item with this name and description now exists there ({self.qid}), '
+                     'probably created in the meantime.']
+            last = f'Please export again: MaRDMO then handles the {self.part} itself.'
+        else:
+            parts = [f'The MaRDI Portal did not create "{self.label}" ({self.description}): an item with this '
+                     f'label and description now exists there ({self.qid}). It was not there when MaRDMO '
+                     'checked before the export, so it was probably created in the meantime.']
+            last = (f'Open the preview again: under "Already on the MaRDI Portal" you can use {self.qid} '
+                    'or rename your item. Then export again; the export adds the rest.')
+        # The result page of an incomplete export says what was created
+        if not sent:
+            parts.append('Nothing was sent to the MaRDI Portal.')
+        return ' '.join([*parts, last])
 
 
 class OauthProviderMixin:
@@ -219,6 +251,10 @@ class OauthProviderMixin:
                     self._set_progress(job_id, completed, total, phase)
                     time.sleep(0.1)
             current_key = None
+        except DuplicateOnPortal as err:
+            logger.warning("[%s] Stopped at %s: %s", job_id, current_key, err)
+            error = err
+            current_key = None
         except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception("[%s] Failed posting %s: %s", job_id, current_key, err)
             error = f"Unexpected error: {err}"
@@ -263,41 +299,28 @@ class OauthProviderMixin:
           result page, which shows the error and what was created
         - ``error``   — failed before anything was created
 
-        Items linked to an existing portal item instead of being created
-        (duplicate label and description) are written back to the project,
-        but reported as notes rather than as created items.
+        *error* is a message, or a :class:`DuplicateOnPortal` whose message
+        depends on whether something was created.
         '''
-        # Linked duplicates: their IDs go to the project, but neither the item
-        # nor its (never posted) creation statements count as created
-        linked_keys = sorted(
-            k for k, v in jsons.items() if k.startswith('Item') and v.get('linked_existing')
-        )
-        notes = [
-            f"'{jsons[k].get('label', k)}' already existed on the MaRDI Portal ({jsons[k]['id']}) "
-            f"and was linked instead of created. Its details from the questionnaire were not "
-            f"added to it."
-            for k in linked_keys
-        ]
         created = compare_items(init, jsons, get_properties().get('Wikidata QID'))
         if created and project is not None:
             replace_ids(project, created)
-        # By key: an item linked to one created in the same export has its QID
         ids = [
             [info.get('class', ''), item_text(info['label'], info['description']), info['new_qid']]
-            for key, info in created.items()
-            if key not in linked_keys
+            for info in created.values()
         ]
         pid_to_name = {qid: name for name, qid in get_properties().items()}
         qid_to_name = {qid: name for name, qid in get_items().items()}
-        init_existing = {**init, **{k: {**init[k], 'id': jsons[k]['id']} for k in linked_keys}}
-        statements = collect_statements(init_existing, jsons, pid_to_name, qid_to_name)
+        statements = collect_statements(init, jsons, pid_to_name, qid_to_name)
+        if isinstance(error, DuplicateOnPortal):
+            error = error.message(sent=bool(ids or statements))
 
         if error and not (ids or statements):
             _progress_store[job_id] = {
                 "progress": int((completed / total) * 100) if total else 0,
                 "done": True,
                 "phase": "error",
-                "error": ' '.join([error] + notes),
+                "error": error,
             }
             return
 
@@ -309,7 +332,6 @@ class OauthProviderMixin:
             "done": True,
             "phase": "partial" if error else "done",
             "error": error,
-            "notes": notes,
             "ids": ids,
             "statements": statements,
             "counts": {
@@ -650,25 +672,19 @@ class OauthProviderMixin:
     def _handle_policy_violation(self, response, key, jsons):
         """Handle an HTTP 422 (``data-policy-violation``) error from the Wikibase API.
 
-        When the violation is ``item-label-description-duplicate``, the
-        conflicting existing item's ID is used as the resolved QID so the
-        export can proceed without creating a duplicate.  The entry is marked
-        with ``linked_existing`` so the result page can tell the user that
-        the item was linked, not created, and its statements were not added.
-
-        Every other violation stops the export: silently continuing would
-        leave the item uncreated and break later references to it.
+        Every violation stops the export: silently continuing would leave the
+        item uncreated and break later references to it.  An item that exists
+        already (``item-label-description-duplicate``) is not linked either
+        (#141): :class:`DuplicateOnPortal` tells the user what to do.
 
         Args:
             response: :class:`requests.Response` object with a 422 status.
             key:      Payload key that caused the violation.
-            jsons:    Full payload dict; mutated in place when a duplicate is resolved.
-
-        Returns:
-            Updated payload dict with the conflicting item's QID substituted.
+            jsons:    Full payload dict.
 
         Raises:
-            RuntimeError: For any violation other than a resolvable duplicate.
+            DuplicateOnPortal: For an item with the label and description of a portal item.
+            RuntimeError: For any other violation.
         """
         try:
             error_json = response.json()
@@ -678,11 +694,12 @@ class OauthProviderMixin:
         violation = context.get("violation", "")
 
         if violation == 'item-label-description-duplicate' and key.startswith('Item'):
-            conflict_id = context.get("violation_context", {}).get("conflicting_item_id")
-            if conflict_id:
-                jsons[key]['id'] = conflict_id
-                jsons[key]['linked_existing'] = True
-                return replace_in_dict(jsons, key, conflict_id)
+            entry = jsons[key]
+            raise DuplicateOnPortal(
+                entry.get('label', key), entry.get('description', ''),
+                context.get("violation_context", {}).get("conflicting_item_id", ''),
+                {'Author': 'author', 'Journal': 'journal'}.get(entry.get('class')),
+            )
 
         reason = _POLICY_VIOLATIONS.get(violation) or self._extract_error_message(response)
         raise RuntimeError(

@@ -2,41 +2,26 @@
 
 Quantities lost "community: MathModDB" in 0.3.4, when the community became an
 optional argument of _add_common_metadata and the quantity calls were not
-given it.  Software gets MathAlgoDB only if it implements the documented
-algorithm, so the algorithm export is checked per class.
+given it.  The workers read their markers from markers.SECTION_MARKERS
+(#141); software gets MathAlgoDB only if it implements the documented
+algorithm ("implementing software").
 '''
-import ast
-from pathlib import Path
-
 import pytest
 
-PACKAGE = Path(__file__).parents[2] / 'MaRDMO'
-
-
-def calls(path):
-    '''(line, class, community) of every _add_common_metadata call in *path*.'''
-    found = []
-    for node in ast.walk(ast.parse((PACKAGE / path).read_text(encoding='utf-8'))):
-        if isinstance(node, ast.Call) and getattr(node.func, 'attr', '') == '_add_common_metadata':
-            keywords = {k.arg: k.value for k in node.keywords}
-
-            def item(key):
-                value = keywords.get(key)
-                if isinstance(value, ast.Subscript) and isinstance(value.slice, ast.Constant):
-                    return value.slice.value
-                return None
-
-            found.append((node.lineno, item('qclass'), item('community')))
-    return found
+from MaRDMO.markers import PUBLICATION_MARKERS, SECTION_MARKERS
 
 
 def test_every_model_item_belongs_to_mathmoddb():
-    found = calls('model/worker.py')
-    assert found
-    assert [(line, qclass) for line, qclass, community in found if community != 'MathModDB'] == []
+    assert [section for section, markers in SECTION_MARKERS['model'].items()
+            if section not in PUBLICATION_MARKERS and markers.community != 'MathModDB'] == []
 
 
-@pytest.mark.parametrize('qclass', ['algorithm', 'algorithmic task', 'benchmark'])
-def test_algorithm_items_belong_to_mathalgodb(qclass):
-    found = [community for _, cls, community in calls('algorithm/worker.py') if cls == qclass]
-    assert found and set(found) == {'MathAlgoDB'}
+@pytest.mark.parametrize('catalog, classes', [
+    ('algorithm', ['algorithm', 'algorithmic task', 'benchmark', 'software']),
+    ('workflow', ['algorithm', 'algorithmic task', 'software']),
+])
+def test_algorithm_items_belong_to_mathalgodb(catalog, classes):
+    for cls in classes:
+        communities = {markers.community for section, markers in SECTION_MARKERS[catalog].items()
+                       if markers.cls == cls and section != 'software'}
+        assert communities == {'MathAlgoDB'}, cls

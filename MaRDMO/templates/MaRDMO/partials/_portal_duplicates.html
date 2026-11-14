@@ -1,0 +1,92 @@
+{% load i18n %}
+{# Items the export would create that are on the MaRDI Portal already (#141, see duplicates.py) #}
+{% if duplicates.rows or duplicates.failed %}
+<div class="mardmo-duplicates" id="portal-duplicates">
+    <h1>{% trans "Already on the MaRDI Portal" %}</h1>
+
+    {% if duplicates.failed %}
+    <p class="mardmo-note">
+        {% trans "MaRDMO could not check which items are on the MaRDI Portal already (the portal did not answer). The export checks again." %}
+    </p>
+    {% endif %}
+
+    {% if duplicates.rows %}
+    <p>
+        {% blocktrans trimmed %}
+        The export would create these items, but the MaRDI Portal has them already. The dropdowns offer
+        only portal items of the kind a question asks for; these have another class or none, or were not
+        among the results. Decide for each, then export.
+        {% endblocktrans %}
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Item" %}</th>
+                <th>{% trans "Entered on" %}</th>
+                <th>{% trans "On the MaRDI Portal" %}</th>
+                <th>{% trans "What to do" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in duplicates.rows %}
+            <tr class="mardmo-duplicate" data-action="{{ row.action }}">
+                <td>
+                    <span class="mardmo-note">[{% if row.duplicate.source == 'wikidata' %}wikidata{% else %}new{% endif %}]</span>
+                    <strong>{{ row.duplicate.item.Name }}</strong> ({{ row.duplicate.item.Description }})
+                </td>
+                <td>
+                    {% for place in row.locations %}
+                        <a href="{{ place.url }}" target="_blank" rel="noopener">{{ place.page }}</a>, {{ place.tab }}<br>
+                    {% empty %}
+                        {% trans "relations only" %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if row.duplicate.rule == 'documentation' %}
+                    {% trans "not yet; the Wikidata item" %}
+                    <a href="{{ wikidataURI }}{{ row.duplicate.other.ID|slice:'9:' }}" target="_blank" rel="noopener">{{ row.duplicate.other.ID|slice:'9:' }}</a>
+                    {% trans "of this documentation has the same label and description" %}
+                    {% else %}
+                    <a href="{{ mardiURI }}{{ row.duplicate.qid }}" target="_blank" rel="noopener">{{ row.duplicate.qid }}</a>
+                    {% if row.portal_label %}: {{ row.portal_label }}{% if row.portal_description %} ({{ row.portal_description }}){% endif %}{% endif %}
+                    <br>
+                    <span class="mardmo-note">
+                        {% if row.duplicate.rule == 'wikidata' %}{% trans "the same Wikidata item" %}{% else %}{% trans "the same label and description" %}{% endif %}{% if row.portal_markers.class %};
+                        {% trans "class" %}: {{ row.portal_markers.class|join:", " }}{% endif %}{% if row.portal_markers.community %};
+                        {% trans "community" %}: {{ row.portal_markers.community|join:", " }}{% endif %}{% if row.portal_markers.profile %};
+                        {% trans "profile type" %}: {{ row.portal_markers.profile|join:", " }}{% endif %}
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if row.action == 'reuse' %}
+                        <form method="post" action="{% url 'reuse_portal_item' project.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="format" value="{{ export_format }}">
+                            <input type="hidden" name="item" value="{{ row.duplicate.item.ID }}">
+                            <input type="hidden" name="qid" value="{{ row.duplicate.qid }}">
+                            <button type="submit" class="btn btn-primary btn-sm">{% trans "Use portal item" %}</button>
+                        </form>
+                        <span class="mardmo-note">
+                            {% trans "Every answer with this item then refers to the portal item; its page gets the portal item's label and description. Or rename yours on its page." %}
+                        </span>
+                    {% elif row.action == 'rename' and row.duplicate.rule == 'documentation' %}
+                        {% trans "Rename it on its page, or select the Wikidata item there." %}
+                    {% elif row.action == 'rename' %}
+                        {% trans "Rename it on its page: the portal item is another kind of item." %}
+                    {% elif row.action == 'replace' %}
+                        {% trans "Choose another item or make it a new item on its page: the portal item is another kind of item, and a new name would not change its Wikidata QID." %}
+                    {% else %}
+                        {% trans "Please open the preview again later." %}
+                    {% endif %}
+                    {% for reason in row.reasons %}
+                        <br><span class="mardmo-note">{{ reason }}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endif %}

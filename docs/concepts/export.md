@@ -45,6 +45,42 @@ is checked with the MaRDI Portal's TeX checker; rejected formulas are shown as r
 TeX with an explanation.  A second "Export to MaRDI Portal" button at the bottom
 of the preview page triggers the actual export.
 
+#### Items already on the MaRDI Portal
+
+Before the template, `MaRDMO.duplicates.preview_duplicates` looks up the items
+the export would create, with the same rules as the export (see
+[Payload Construction](#6-payload-construction); the results are cached, so the
+export reuses them).  If any exist on the portal, the section **Already on the
+MaRDI Portal** at the top lists them: the item, where it is entered (page and
+tab, linked to the interview; RDMO cannot open a tab), the portal item with its
+class, community and profile type, and what the user can do:
+
+| Case | Action |
+|---|---|
+| none of the markers the export would give the item (`SECTION_MARKERS`, see below) contradicts the portal item's | **Use portal item** |
+| an own item, the portal item is another kind of item | rename it on its page |
+| a Wikidata item, its portal twin is another kind of item | choose another item or make it a new item (a new name would not change its Wikidata QID) |
+| an own item with the label and description of a Wikidata item of the same documentation (the portal takes only one) | rename it, or select the Wikidata item |
+| the portal item's markers could not be looked up | open the preview again later |
+
+Authors and journals of publications are not listed: MaRDMO takes them from
+the citation, the user cannot change them, and the export decides for them
+(see [Payload Construction](#6-payload-construction)).
+
+While the section has rows, the preview has no export button.  If the lookup
+failed, the section only says so; the export checks again.
+
+**Use portal item** posts to `services/reuse/<project>/`
+(`MaRDMO.views.reuse_portal_item`, POST with Django's CSRF token, RDMO's
+permission `projects.change_value_object`).  The view trusts nothing of the
+request: it looks the duplicate up again and refuses unless the preview would
+offer this action for exactly this item and portal item.  Then
+`MaRDMO.duplicates.reuse` gives every answer with the item's ID(s) the portal
+item's `mardi:` ID and text, and its page the portal item's label and
+description (see [Item IDs](ids.md#using-a-portal-item-instead)), and the
+preview opens again.  The export then adds what the documentation says to
+the portal item, with the markers it lacks.
+
 Publications are shown as the export writes them: a citation line built from the
 parts that are known (authors, year, title, journal, volume, issue, pages), what
 the export creates on the MaRDI Portal (the publication, its journal, new
@@ -93,11 +129,36 @@ and a dependency graph:
     | exactly the same English label and description (the portal's own rule: no case variants, no aliases) | new and Wikidata items with a description | yes | continue: the portal rejects exact duplicates itself, and the export links those (see below) |
     | the same Wikidata QID (P12): the portal item is that Wikidata item, whatever its label | Wikidata items | yes | stop (`PortalUnavailable`): the portal would accept a second item with the same Wikidata QID |
 
-    All items that exist on the portal are listed at once.
+    The same label and description as a Wikidata item of the same documentation
+    stops the export too (the portal takes only one).  All of them are listed at once.
+
+    Authors and journals of publications never stop the export; the user
+    cannot change them (`MaRDMO.duplicates._resolve_parts`, in this order):
+
+    1. a portal item with their Wikidata QID is theirs;
+    2. so is one with their label and MaRDMO's description with their own
+       identifier ("scientist (ORCID iD …)", "scientific journal (ISSN …)");
+    3. a portal item with only the same label and description does not say
+       who it is ("Max Müller (researcher)"): the export creates the author or
+       journal with its first identifier in the description ("researcher
+       (Wikidata QID Q1)"; ORCID iD, zbMATH author ID or ISSN first), or uses
+       exactly that item if it exists;
+    4. a journal without any identifier uses the portal item with its title
+       and description, unless that is another kind of item (another MaRDMO
+       class, community or profile type): then the publication is exported
+       without it.
+
+    A portal item used for them gets the identifiers and markers it lacks.  The preview runs the
+    same lookup (`MaRDMO.duplicates.look_up`) and lists them before the export
+    (see [Items already on the MaRDI Portal](#items-already-on-the-mardi-portal)).
 
 - **Markers of existing items** (`MaRDMO.markers`): every section sets its
   items' class (`instance of`), and some their `community` and `MaRDI profile
-  type`.  An item that exists on the portal gets only the markers it lacks and
+  type`, as the table `SECTION_MARKERS` says per catalog and section; the
+  workers read them from there (`_add_common_metadata(payload, section)`), and
+  the preview decides with the same table whether a portal item may be used
+  instead (each worker's `marker_sections`; the golden tests check that it
+  names the sections the export uses).  An item that exists on the portal gets only the markers it lacks and
   that do not contradict its own: never a second MaRDMO class (of another
   family: a section's main class with its data-property classes, e.g. *linear
   model* for *mathematical model*), community or profile type.  Classes MaRDMO
@@ -232,7 +293,7 @@ The upload layer handles MaRDI Portal communication errors gracefully:
 | Timeout / connection error | Retry with exponential back-off (5 attempts in total) |
 | HTTP 429 (rate limit) | Wait for the `Retry-After` duration (seconds or HTTP date, at most 60 seconds), then retry |
 | HTTP 403 / 5xx | Retry with exponential back-off (5 attempts in total); the portal sometimes answers 403 when it is merely unstable |
-| HTTP 422 `item-label-description-duplicate` | Link the conflicting existing item instead of creating a new one and continue; the result page notes that the item's details from the questionnaire were not added to it |
+| HTTP 422 `item-label-description-duplicate` | Stop the upload (`DuplicateOnPortal`): the item was probably created on the portal after the check.  The message names it and the portal item and says what to do: use the portal item or rename it in the preview, then export again; for an author or journal only export again (the next export decides for it).  The item is never linked silently |
 | Any other HTTP 422 | Stop the upload with a plain-language reason (e.g. label and description are identical) |
 | Any other HTTP error | Stop the upload with the item or relation concerned and the portal's message |
 
@@ -258,8 +319,7 @@ matching RDMO project Values in place:
   for the other user-defined items.
 
 After the catalog update, a success page is rendered showing the exported data in
-two switchable views.  Items that were linked to an existing duplicate instead of
-being created are listed in a *Please note* box above the views.
+two switchable views.
 
 #### List View
 

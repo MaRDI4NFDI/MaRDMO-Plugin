@@ -34,6 +34,8 @@ class PrepareWorkflow(PublicationExport):
     :class:`~MaRDMO.publication.worker.PublicationExport` and extends them
     with workflow-specific relation mapping and Wikibase payload generation.
     '''
+    catalog = 'workflow'
+
 
     def __init__(self):
         '''Initialise with Wikibase vocabulary and ontology registries.'''
@@ -243,11 +245,7 @@ class PrepareWorkflow(PublicationExport):
             payload    = payload,
             algorithms = data.get('algorithm', {}),
         )
-        algo_software_keys = {
-            (item.get('ID', ''), item.get('Name', ''), item.get('Description', ''))
-            for algo in data.get('algorithm', {}).values()
-            for item in algo.get('SRelatant', {}).values()
-        }
+        algo_software_keys = self._implementing_software(data)
         self._export_softwares(
             payload           = payload,
             softwares         = data.get('software', {}),
@@ -314,6 +312,14 @@ class PrepareWorkflow(PublicationExport):
     # ------------------------------------------------------------------
     # Entity export helpers
     # ------------------------------------------------------------------
+    def _marked_entries(self, data):
+        for section in ('workflow', 'processstep', 'algorithm', 'hardware', 'dataset', 'cpu',
+                        'method', 'instrument', 'algorithmictask', 'academicdiscipline'):
+            for entry in data.get(section, {}).values():
+                yield section, entry
+        yield from self._software_entries(data)
+        yield from self._publication_entries(data)
+
 
     def _export_workflows(self, payload, data: dict):
         '''Export the top-level research workflow item.
@@ -334,12 +340,7 @@ class PrepareWorkflow(PublicationExport):
             payload.get_item_key(value=entry)
             payload.set_class('Workflow')
 
-            self._add_common_metadata(
-                payload      = payload,
-                qclass       = self.items["research workflow"],
-                profile_type = "MaRDI workflow profile",
-                description_long = True,
-            )
+            self._add_common_metadata(payload, 'workflow', description_long=True)
 
             # Research objective
             if entry.get('objective'):
@@ -440,7 +441,7 @@ class PrepareWorkflow(PublicationExport):
             payload.get_item_key(value=entry)
             payload.set_class('Process Step')
 
-            self._add_class(payload, self.items["process step"])
+            self._add_common_metadata(payload, 'processstep')
 
             payload.add_single_relation(
                 statement = {
@@ -565,12 +566,7 @@ class PrepareWorkflow(PublicationExport):
             payload.get_item_key(value=entry)
             payload.set_class('Algorithm')
 
-            self._add_common_metadata(
-                payload      = payload,
-                community    = self.items["MathAlgoDB"],
-                qclass       = self.items["algorithm"],
-                profile_type = "MaRDI algorithm profile",
-            )
+            self._add_common_metadata(payload, 'algorithm')
 
             payload.add_single_relation(
                 statement = {
@@ -602,20 +598,7 @@ class PrepareWorkflow(PublicationExport):
             payload.get_item_key(value=entry)
             payload.set_class('Software')
 
-            entry_key = (entry.get('ID', ''), entry.get('Name', ''), entry.get('Description', ''))
-            if entry_key in algo_software_keys:
-                self._add_common_metadata(
-                    payload      = payload,
-                    community    = self.items["MathAlgoDB"],
-                    qclass       = self.items["software"],
-                    profile_type = "MaRDI software profile",
-                )
-            else:
-                self._add_common_metadata(
-                    payload      = payload,
-                    qclass       = self.items["software"],
-                    profile_type = "MaRDI software profile",
-                )
+            self._add_common_metadata(payload, self._software_section(entry, algo_software_keys))
 
             payload.add_single_relation(
                 statement = {
@@ -647,10 +630,7 @@ class PrepareWorkflow(PublicationExport):
             payload.get_item_key(value=entry)
             payload.set_class('Hardware')
 
-            self._add_common_metadata(
-                payload = payload,
-                qclass  = self.items["computer hardware"],
-            )
+            self._add_common_metadata(payload, 'hardware')
 
             nodes = str(entry.get('nodes') or '').strip()
             if nodes:
@@ -715,11 +695,7 @@ class PrepareWorkflow(PublicationExport):
             payload.get_item_key(value=entry)
             payload.set_class('Dataset')
 
-            self._add_common_metadata(
-                payload      = payload,
-                qclass       = self.items["data set"],
-                profile_type = "MaRDI data set profile",
-            )
+            self._add_common_metadata(payload, 'dataset')
 
             if entry.get("Size"):
                 unit_map = {
@@ -827,7 +803,7 @@ class PrepareWorkflow(PublicationExport):
             )
             payload.set_class('CPU Model')
 
-            self._add_class(payload, self.items["CPU model"])
+            self._add_common_metadata(payload, 'cpu')
 
     def _export_methods(self, payload, methods: dict):
         '''Export each experimental method item collected from process-step sections.'''
@@ -840,7 +816,7 @@ class PrepareWorkflow(PublicationExport):
             )
             payload.set_class('Experimental Method')
 
-            self._add_class(payload, self.items["method"])
+            self._add_common_metadata(payload, 'method')
 
     def _export_instruments(self, payload, instruments: dict):
         '''Export each instrument item collected from process-step sections.'''
@@ -853,7 +829,7 @@ class PrepareWorkflow(PublicationExport):
             )
             payload.set_class('Experimental Equipment')
 
-            self._add_class(payload, self.items["research tool"])
+            self._add_common_metadata(payload, 'instrument')
 
     def _export_algorithmic_tasks(self, payload, algorithmic_tasks: dict):
         '''Export each algorithmic task item collected from algorithm sections.'''
@@ -866,12 +842,7 @@ class PrepareWorkflow(PublicationExport):
             )
             payload.set_class('Algorithmic Task')
 
-            self._add_common_metadata(
-                payload = payload,
-                community = self.items["MathAlgoDB"],
-                qclass =self.items["algorithmic task"],
-                profile_type = "MaRDI task profile",
-            )
+            self._add_common_metadata(payload, 'algorithmictask')
 
     def _export_academic_disciplines(self, payload, academic_disciplines: dict):
         '''Export each academic discipline item collected from process-step sections.'''
@@ -884,4 +855,4 @@ class PrepareWorkflow(PublicationExport):
             )
             payload.set_class('Academic Discipline')
 
-            self._add_class(payload, self.items["academic discipline"])
+            self._add_common_metadata(payload, 'academicdiscipline')

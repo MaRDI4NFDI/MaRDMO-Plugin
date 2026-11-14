@@ -69,22 +69,3 @@ def test_items_not_exported_stay_user_defined(exported):
     assert get(exported, 'quantity/id', set_index=2) == ('user:beta', 'not found')
     assert get(exported, 'quantity/quantity-to-quantity/relatant', set_prefix='1', set_index=1) == (
         'user:beta', 'beta (other quantity)')
-
-
-def test_two_items_with_the_same_label_and_description_both_get_their_portal_id(project):
-    '''A Wikidata item and an own item "alpha (first quantity)": the portal links the second to the first.'''
-    from MaRDMO.helpers import compare_items
-    model = project('mardmo-model-catalog')
-    save(model,
-         answer('quantity/id', 'alpha (first quantity)', external_id='wikidata:Q9', set_index=0),
-         answer('quantity/id', 'new item', external_id='user:alpha', set_index=1))
-    payload = {'item': {'labels': {'en': 'alpha'}, 'descriptions': {'en': 'first quantity'}}}
-    before = {'Item0000000001': {'id': '', 'statements': [['P1', 'external-id', 'Q9']], 'payload': payload},
-              'Item0000000002': {'id': '', 'statements': [], 'user_ids': ['user:alpha'], 'payload': payload}}
-    after = {'Item0000000001': {**before['Item0000000001'], 'id': 'Q5'},
-             'Item0000000002': {**before['Item0000000002'], 'id': 'Q5', 'linked_existing': True}}
-    created = compare_items(before, after, 'P1')
-    assert sorted(created) == ['Item0000000001', 'Item0000000002']
-    replace_ids(model, created)
-    assert get(model, 'quantity/id', set_index=0) == get(model, 'quantity/id', set_index=1) == (
-        'mardi:Q5', 'alpha (first quantity)')

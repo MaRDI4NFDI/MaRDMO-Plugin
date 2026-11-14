@@ -144,6 +144,18 @@ portal); afterwards every answer with one of them gets the new `mardi:` ID
 and the text "Label (Description)" (`MaRDMO.helpers.replace_ids`).
 Answers with the ID of an exported Wikidata item get its new `mardi:` ID too.
 
+## Using a portal item instead
+
+An item the export would create may exist on the MaRDI Portal already (the
+same label and description, or for a Wikidata item the same Wikidata QID).
+The preview lists these; **Use portal item** (`MaRDMO.duplicates.reuse`) makes
+the item the portal item: every answer with one of its IDs (all `user:` IDs
+the export would merge, or its `wikidata:` ID) gets `mardi:<QID>` and the
+text "Label (Description)" of the portal item, and its page the portal item's
+name and description.  Like `replace_ids`, it writes with `update()`, without
+MaRDMO's handlers.  Items without a page of their own (e.g. a programming
+language) change only in the answers that refer to them.
+
 ## Authors and journals of publications
 
 The preview writes the authors and the journal of a publication from its
@@ -155,6 +167,10 @@ has the same ID in every preview and in every publication.  The export
 knows from where it is (author or journal of a publication) what to create:
 a person with ORCID iD / zbMATH author ID (not created without either), or
 a journal with its ISSN; afterwards `replace_ids` gives it its `mardi:` ID.
+If the MaRDI Portal has it already, the export uses that item instead or
+creates it with its identifier in the description (see
+[Export Pipeline](export.md#6-payload-construction)); the user never decides
+for authors and journals.
 
 ## Projects made before MaRDMO 0.8.0
 

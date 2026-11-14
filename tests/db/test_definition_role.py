@@ -41,7 +41,7 @@ def model(project):
 
 
 def test_the_export_writes_contains_with_the_role_definition(model, monkeypatch):
-    monkeypatch.setattr('MaRDMO.payload.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
     monkeypatch.setattr('MaRDMO.model.worker.annotate_formulas', lambda answers: None)
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = model, None

@@ -61,3 +61,9 @@
 .mardmo-details ul {
     margin: 0.3em 0 0 1.5em;
 }
+
+/* Items that are on the MaRDI Portal already (#141); the reuse form stays in its cell */
+.mardmo-duplicates form {
+    display: inline;
+    margin-right: 0.5em;
+}

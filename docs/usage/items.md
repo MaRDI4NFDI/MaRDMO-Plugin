@@ -92,6 +92,37 @@ export creates.  Authors and journals that are not on the MaRDI Portal are
 created by the export; an author is created only with an ORCID iD or a
 zbMATH author ID.
 
+## Items that are already on the MaRDI Portal
+
+The dropdowns offer only MaRDI Portal items of the kind a question asks for.
+An item may exist on the portal anyway: with another class or none (e.g.
+imported from Wikidata), or not among the results.  The export would create
+it a second time, so the preview lists such items at the top, under
+**Already on the MaRDI Portal**, and the export button appears only once
+none is left.  Each row says where you entered the item (page and tab) and
+what you can do:
+
+- **Use portal item**: your item becomes the portal item.  Every answer that
+  refers to it then refers to the portal item, and its tab gets the portal
+  item's name and short description.  The export adds what you documented to
+  the portal item.  This is offered if the portal item is not another kind
+  of item (another class, community or profile type than MaRDMO would give it).
+- **Rename it**: the portal item is another kind of item; give yours another
+  name or short description on its tab.
+- **Choose another item or make it a new item**: the same for an item you
+  selected from Wikidata; a new name would not change the Wikidata item.
+- **Same as another item of your documentation**: an item of your own with
+  the name and short description of a Wikidata item you selected elsewhere;
+  the MaRDI Portal takes only one.  Rename yours, or select the Wikidata item.
+
+Authors and journals of publications are not listed: MaRDMO takes them from
+the citation and decides for them itself.
+
+If the MaRDI Portal gets such an item between the preview and the export,
+the export stops at it and says what to do: open the preview again, decide,
+and export again.  What was created until then stays on the MaRDI Portal and
+in your documentation.
+
 ## After the export
 
 Every new item is created on the MaRDI Portal, and the documentation now
