@@ -163,11 +163,8 @@ class ModelMixin:
                 continue
 
             if any(
-                mval['relation']['url'] in self._pairs(
-                    self.mathmoddb, 'specializes', 'specialized_by'
-                )
-                and not mval.get('assumption')
-                for mval in ivalue.get('RelationMM', {}).values()
+                not mval.get('assumption')
+                for mval in self._specializations(ivalue.get('RelationMM', {}))
             ):
                 self.err.append(
                     self._error(
@@ -178,11 +175,8 @@ class ModelMixin:
                 )
 
             if any(
-                mval['relation']['url'] in self._pairs(
-                    self.mathmoddb, 'specializes', 'specialized_by'
-                )
-                and without_page((mval.get('assumption') or {}).values())
-                for mval in ivalue.get('RelationMM', {}).values()
+                without_page((mval.get('assumption') or {}).values())
+                for mval in self._specializations(ivalue.get('RelationMM', {}))
             ):
                 self.err.append(
                     self._error(
@@ -229,11 +223,8 @@ class ModelMixin:
                 continue
 
             if any(
-                tval['relation']['url'] in self._pairs(
-                    self.mathmoddb, 'specializes', 'specialized_by'
-                )
-                and not tval.get('assumption')
-                for tval in ivalue.get('RelationT', {}).values()
+                not tval.get('assumption')
+                for tval in self._specializations(ivalue.get('RelationT', {}))
             ):
                 self.err.append(
                     self._error(
@@ -244,11 +235,8 @@ class ModelMixin:
                 )
 
             if any(
-                tval['relation']['url'] in self._pairs(
-                    self.mathmoddb, 'specializes', 'specialized_by'
-                )
-                and without_page((tval.get('assumption') or {}).values())
-                for tval in ivalue.get('RelationT', {}).values()
+                without_page((tval.get('assumption') or {}).values())
+                for tval in self._specializations(ivalue.get('RelationT', {}))
             ):
                 self.err.append(
                     self._error(
@@ -304,11 +292,8 @@ class ModelMixin:
                 continue
 
             if any(
-                mval['relation']['url'] in self._pairs(
-                    self.mathmoddb, 'specializes', 'specialized_by'
-                )
-                and not mval.get('assumption')
-                for mval in ivalue.get('RelationMF2', {}).values()
+                not mval.get('assumption')
+                for mval in self._specializations(ivalue.get('RelationMF2', {}))
             ):
                 self.err.append(
                     self._error(
@@ -317,11 +302,8 @@ class ModelMixin:
                         message = 'Missing Assumption (Formula Specialization)'))
 
             if any(
-                mval['relation']['url'] in self._pairs(
-                    self.mathmoddb, 'specializes', 'specialized_by'
-                )
-                and without_page((mval.get('assumption') or {}).values())
-                for mval in ivalue.get('RelationMF2', {}).values()
+                without_page((mval.get('assumption') or {}).values())
+                for mval in self._specializations(ivalue.get('RelationMF2', {}))
             ):
                 self.err.append(
                     self._error(
