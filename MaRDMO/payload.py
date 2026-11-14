@@ -21,7 +21,6 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import re
-import time
 
 import requests
 
@@ -31,8 +30,8 @@ from .ids import item_key
 from .markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
 from .patterns import QUANTITY_AMOUNT_RE
 from .queries import (
-    EXPORT_CHECK_DEADLINE,
-    EXPORT_RETRY_WAITS,
+    check_deadline,
+    check_waits,
     request_with_retry,
 )
 from .validators import (
@@ -427,6 +426,31 @@ class GeneratePayload:
                 ]
             )
 
+    def final_checks(self, api_url):
+        '''Check the finished payload against the portal's rules and the portal itself.
+
+        Runs :meth:`validate_identifiers` and :meth:`check_existing_relations`
+        and reports the problems of both at once (#152), so the preview lists
+        all of them, not only those of the first check.
+
+        Raises:
+            DocumentationProblem: Every invalid value and every symbol that
+                stands for another quantity on the portal, one argument each.
+            PortalUnavailable: If the portal does not answer.
+            ValueError: A placeholder without item (an internal error).
+        '''
+        problems = []
+        try:
+            self.validate_identifiers()
+        except DocumentationProblem as problem:
+            problems += problem.args
+        try:
+            self.check_existing_relations(api_url)
+        except DocumentationProblem as problem:
+            problems += problem.args
+        if problems:
+            raise DocumentationProblem(*problems)
+
     def validate_identifiers(self):
         '''Reject malformed URLs, DOIs, swMATH IDs, dates and amounts before anything is posted.
 
@@ -547,7 +571,8 @@ class GeneratePayload:
         :meth:`exists_in_claims`.  The qualifier merge and the symbol check
         use the same claims.  Failed requests are retried after
         :data:`~MaRDMO.queries.EXPORT_RETRY_WAITS`; all of them together give
-        up after :data:`~MaRDMO.queries.EXPORT_CHECK_DEADLINE` seconds.
+        up after :data:`~MaRDMO.queries.EXPORT_CHECK_DEADLINE` seconds (in the
+        preview its shorter limits, :func:`~MaRDMO.queries.check_limits`).
 
         Args:
             api_url: Action API URL of the portal.
@@ -560,7 +585,7 @@ class GeneratePayload:
         if not relations:
             return
 
-        deadline = time.monotonic() + EXPORT_CHECK_DEADLINE
+        deadline = check_deadline()
         subjects = {self._resolve_item_reference(entry['url'].split('/')[-2]) for entry in relations.values()}
         claims = self._fetch_claims(
             sorted(s for s in subjects if isinstance(s, str) and _QID_RE.match(s)), api_url, deadline, 'statements',
@@ -625,7 +650,7 @@ class GeneratePayload:
                 resp = request_with_retry(
                     'get',
                     api_url,
-                    waits=EXPORT_RETRY_WAITS,
+                    waits=check_waits(),
                     deadline=deadline,
                     params={
                         'action': 'wbgetentities',
@@ -1432,7 +1457,7 @@ class GeneratePayload:
         """
         commit_writes()
         found, duplicates = look_up([(id_type, value) for id_type, _, _, value in todo],
-                                    EXPORT_RETRY_WAITS, time.monotonic() + EXPORT_CHECK_DEADLINE)
+                                    check_waits(), check_deadline())
         if found.wikidata_failed:
             raise PortalUnavailable(
                 "Could not check which Wikidata items already exist on the MaRDI Portal "

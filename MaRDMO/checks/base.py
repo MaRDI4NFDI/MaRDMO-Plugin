@@ -1,19 +1,20 @@
 '''Base validation helpers shared across all catalog check modules.'''
 
-from rdmo.domain.models import Attribute
 
 from ..model.constants import SECTION_MAP as SECTION_MAP_MODEL
 from ..algorithm.constants import SECTION_MAP as SECTION_MAP_ALGO
 from ..workflow.constants import SECTION_MAP as SECTION_MAP_WORKFLOW
 from ..constants import (
-    BASE_URI, CATALOG_ALGORITHM, CATALOG_MODEL,
+    CATALOG_ALGORITHM, CATALOG_MODEL,
     CATALOG_MODEL_BASICS, CATALOG_WORKFLOW,
 )
 from ..getters import get_mathmoddb, get_mathalgodb
 from ..getters import get_options
 from ..helpers import find_reference
 from ..ids import NOT_FOUND, is_own_item
+from ..pages import add_tab_names, page_ref
 from ..patterns import LINE_BREAK_RE
+from ..problems import Problem
 from ..validators import doi_problem, short_description_problem, swmath_problem, url_problem, url_schemes
 
 # An item without a real ID: the project was made before MaRDMO 0.8.0, which
@@ -74,15 +75,36 @@ class ChecksBase:
         self.mathmoddb = get_mathmoddb()
         self.mathalgodb = get_mathalgodb()
         self.err = []
+        # Set when the MaRDI Portal did not answer a check (the TeX check): what it is
+        self.unreachable = None
 
     # -------------------------------------------------------------------------
     # Helpers
     # -------------------------------------------------------------------------
 
     @staticmethod
-    def _error(section, page, message):
-        '''Format an error string ``"Section (Page X): message"``.'''
-        return f"{section} (Page {page}): {message}"
+    def _error(section, page, message, field=None):
+        '''The :class:`~MaRDMO.problems.Problem` *message* of *page* in *section*.
+
+        As text it reads ``"Section (Page <tab>): message"``.
+        '''
+        return Problem(section, page, message, field)
+
+    @staticmethod
+    def _tab_names(project, data):
+        '''Give the pages of *data* their tab names, if the answers do not have them yet.
+
+        ``get_post_data`` writes them (:func:`~MaRDMO.pages.add_tab_names`);
+        the checks name the pages by them.
+        '''
+        if any(isinstance(entry, dict) and 'Tab' not in entry
+               for pages in data.values() if isinstance(pages, dict) for entry in pages.values()):
+            add_tab_names(project, data)
+
+    @staticmethod
+    def _page(section, index, entry):
+        '''The :class:`~MaRDMO.pages.PageRef` of page *index* of *section* (answers *entry*).'''
+        return page_ref(section, index, entry)
 
     def _check_static(self, data, page_name, relation, from_class, to_class):
         '''Append an error if a mandatory single-value relation is missing or its item has no page.
@@ -313,22 +335,18 @@ class ChecksBase:
         for okey, ovalue in data.items():
             if okey not in okeys:
                 continue
-            values = project.values.filter(
-                snapshot  = None,
-                attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/{okey}')
-            )
             # Pages with one ID (e.g. a copied tab) are one item, and so are own
             # items with the same name and description ("new" in a relation
             # always makes another page): the export would merge them
             seen, own = {}, {}
             for ikey, ivalue in ovalue.items():
-                page_name = values.get(set_index=ikey).text
+                page_name = self._page(okey, ikey, ivalue)
                 if ivalue.get('ID') and seen.setdefault(ivalue['ID'], page_name) != page_name:
                     self.err.append(
                         self._error(
                             section = section_map[okey],
                             page    = page_name,
-                            message = f'Same Item as Page {seen[ivalue["ID"]]} (delete one of them)'
+                            message = f'Same Item as Page {seen[ivalue["ID"]].tab} (delete one of them)'
                         )
                     )
                 elif is_own_item(ivalue.get('ID')) and ivalue.get('Name'):
@@ -338,7 +356,7 @@ class ChecksBase:
                             self._error(
                                 section = section_map[okey],
                                 page    = page_name,
-                                message = f'Same Name and Short Description as Page {same}'
+                                message = f'Same Name and Short Description as Page {same.tab}'
                             )
                         )
                 if not ivalue.get('ID'):
@@ -403,10 +421,6 @@ class ChecksBase:
         for okey in okeys:
             if not data.get(okey):
                 continue
-            values = project.values.filter(
-                snapshot  = None,
-                attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/{okey}')
-            )
             for ikey, ivalue in data[okey].items():
                 long_label = 'Procedure' if okey == 'workflow' else 'Detailed Description'
                 fields = [(long_label, text) for text in ivalue.get('descriptionLong', {}).values()]
@@ -422,11 +436,10 @@ class ChecksBase:
                     if label in flagged or not (isinstance(text, str) and LINE_BREAK_RE.search(text)):
                         continue
                     flagged.add(label)
-                    page = values.filter(set_index=ikey).first()
                     self.err.append(
                         self._error(
                             section = section_map[okey],
-                            page    = page.text if page else ikey,
+                            page    = self._page(okey, ikey, ivalue),
                             message = f'Line Breaks Not Allowed in {label}'
                         )
                     )
@@ -463,12 +476,8 @@ class ChecksBase:
             data:    Top-level answers dict.
             catalog: Active catalog URI suffix.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/publication')
-        )
         for ikey, ivalue in data.get('publication', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('publication', ikey, ivalue)
             if is_own_item(ivalue.get('ID')) and not ivalue.get('reference'):
                 self.err.append(
                     self._error(
@@ -561,13 +570,12 @@ class ChecksBase:
                 )
 
     def _finalise(self):
-        '''Sort errors, prepend a header, and return the list.
+        '''Return the problems, sorted by their text (the order of the error page).
 
         Returns:
-            ``self.err`` — sorted and with a leading header string when errors
-            are present, or an empty list when no issues were found.
+            ``self.err``: a list of :class:`~MaRDMO.problems.Problem`, empty when
+            no issues were found.  :func:`~MaRDMO.problems.report_lines` gives
+            the error page's lines.
         '''
-        if self.err:
-            self.err.sort()
-            self.err.insert(0, "Following aspects prevented the export:")
+        self.err.sort(key=str)
         return self.err

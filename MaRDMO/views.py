@@ -322,7 +322,7 @@ def show_success(request, job_id):
         },
     )
 
-def render_preview(self, template, answers, option, submit_label, duplicates=None):
+def render_preview(self, template, answers, option, submit_label, duplicates=None, gate=None):
     """Render the documentation preview page.
 
     Args:
@@ -333,7 +333,9 @@ def render_preview(self, template, answers, option, submit_label, duplicates=Non
         option:     Option string controlling template behaviour (passed to context).
         duplicates: :class:`~MaRDMO.duplicates.Report` of the items that are on
                     the MaRDI Portal already; shown at the top, and while it has
-                    rows there is no export button (#141).
+                    rows the export button is disabled (#141).
+        gate:       :class:`~MaRDMO.pipeline.Gate` of the checks; while it is
+                    not clear the export button is disabled (#152).
 
     Returns:
         HTTP 200 response rendering ``MaRDMO/mardmoPreview.html``.
@@ -351,6 +353,7 @@ def render_preview(self, template, answers, option, submit_label, duplicates=Non
             'option': option,
             'submit_label': submit_label,
             'duplicates': duplicates,
+            'gate': gate,
             'project': self.project,
             'export_format': getattr(self, 'key', ''),
             'mardiURI': get_item_url('mardi'),

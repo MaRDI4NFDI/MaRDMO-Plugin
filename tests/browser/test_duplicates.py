@@ -59,7 +59,7 @@ def test_use_portal_item_in_the_browser(documentation, page_as):
     rows = section.locator('tr.mardmo-duplicate')
     assert rows.count() == 2
     assert page.locator('#export-blocked').is_visible()
-    assert page.locator('input[type=submit][value="Export to MaRDI Portal"]').count() == 0
+    assert page.locator('input[type=submit][value="Export to MaRDI Portal"]').is_disabled()
 
     # The page of the item: the interview, in a new window
     link = rows.filter(has_text='mass').locator('a', has_text='Quantity')

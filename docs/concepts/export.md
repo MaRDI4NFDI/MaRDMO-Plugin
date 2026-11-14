@@ -45,6 +45,32 @@ is checked with the MaRDI Portal's TeX checker; rejected formulas are shown as r
 TeX with an explanation.  A second "Export to MaRDI Portal" button at the bottom
 of the preview page triggers the actual export.
 
+#### Before you can export
+
+The preview runs everything the export checks (`MaRDMO.pipeline.run`): the
+[validation checks](#5-validation-checks) and, when they find nothing, the
+export itself on a copy of the answers, without posting
+([payload construction](#6-payload-construction) with its checks against the
+MaRDI Portal, and the [cyclic dependency check](#7-cyclic-dependency-check)).
+What they find (`MaRDMO.problems.Problem`) is listed at the top, in the section
+**Before you can export**, by section and page; each page is linked to its
+place in the preview.  The export's own problems have no page and are listed
+under *Export*.
+
+The export button stays on the page, but is disabled until nothing is left;
+the text next to it says why:
+
+| Case | The preview says |
+|---|---|
+| problems | fix the points under *Before you can export*, then open the preview again |
+| items on the MaRDI Portal already (see below) | decide on them first |
+| the MaRDI Portal did not answer (duplicate lookup, TeX check, statements of existing items) | the portal is not reachable at the moment, please try again shortly; **Check again** opens the preview again |
+
+The portal requests of the preview give up sooner than those of the export:
+one retry after 2 seconds, 30 seconds per check
+(`MaRDMO.queries.check_limits`).  A clean preview takes about 1.5 to 2.5
+seconds for the largest documentations of the portal.
+
 #### Items already on the MaRDI Portal
 
 Before the template, `MaRDMO.duplicates.preview_duplicates` looks up the items
@@ -67,8 +93,8 @@ Authors and journals of publications are not listed: MaRDMO takes them from
 the citation, the user cannot change them, and the export decides for them
 (see [Payload Construction](#6-payload-construction)).
 
-While the section has rows, the preview has no export button.  If the lookup
-failed, the section only says so; the export checks again.
+While the section has rows, the export button is disabled.  If the lookup
+failed, the section says so, and the export waits until the portal answers.
 
 **Use portal item** posts to `services/reuse/<project>/`
 (`MaRDMO.views.reuse_portal_item`, POST with Django's CSRF token, RDMO's
@@ -101,11 +127,18 @@ data processing happens.
 ### 5. Validation Checks
 
 `get_post_data()` re-collects the answers dict (submit mode — without publication
-retrieval).  `Checks.run_X()` then validates the collected answers for completeness
-and consistency, including the value formats described in
-[Validation](validation.md) and, for the detailed model catalog, the formula check
-against the MaRDI Portal's TeX checker.  If any check fails, a readable error
-list is returned and the export is aborted.
+retrieval), and `MaRDMO.pipeline.run` runs what the preview ran.
+`Checks.run_X()` validates the collected answers for completeness and
+consistency, including the value formats described in
+[Validation](validation.md) and, for the detailed model catalog, the formula
+check against the MaRDI Portal's TeX checker.  A formula the TeX checker does
+not answer stops the export too: the portal is not reachable, and the user
+tries again shortly.
+
+The preview offered the export only when it found nothing, so whatever the
+export finds now changed in between, in the documentation or on the MaRDI
+Portal: the error page says "Something changed since the preview" and lists
+it, and nothing is exported.
 
 ### 6. Payload Construction
 
@@ -174,10 +207,12 @@ and a dependency graph:
     Values are normalised on the way: tabs and outer whitespace are removed from
     text, formulas are put on one line, and quantity amounts lose leading zeros
     (see [Validation](validation.md#normalisation-on-export)).
-- **Final check**: `validate_identifiers()` checks every URL, DOI, swMATH ID, date
-  and quantity amount in the payload.  If any of them would be rejected by the
-  MaRDI Portal, the export is aborted with a list of the affected values before
-  anything is posted.
+- **Final check**: `final_checks()` runs `validate_identifiers()`, which checks
+  every URL, DOI, swMATH ID, date and quantity amount in the payload, and the
+  checks against the portal below, and reports the problems of all of them at
+  once.  If any value would be rejected by the MaRDI Portal, the export is
+  aborted with a list of the affected values before anything is posted (the
+  preview lists them too).
 - **Relation existence check**: `check_existing_relations()` fetches the
   statements of the existing items the `RELATION` entries belong to
   (`wbgetentities`, 50 items per request) and marks every entry whose

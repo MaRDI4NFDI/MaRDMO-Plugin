@@ -66,7 +66,10 @@ entry-point method:
 | `Checks.run_workflow(project, data, catalog)` | Workflow catalog |
 
 These methods validate the collected answers for completeness and consistency and
-return an error list that aborts the export if non-empty.  Add checks for any
+return a list of `MaRDMO.problems.Problem` (section, page, message), made with
+`self._error(section, self._page(section_key, index, entry), message)`; the
+preview lists them under *Before you can export*, and the export stops if the
+list is not empty.  Add checks for any
 mandatory fields or cross-entity constraints introduced by the new entity.  For
 the format of individual values, reuse the shared rules in `validators.py` — see
 [How to Validate a New Field](validate-field.md).

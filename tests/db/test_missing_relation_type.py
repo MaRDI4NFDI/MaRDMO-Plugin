@@ -30,5 +30,6 @@ def test_a_missing_relation_type_is_reported(project, monkeypatch, section, rela
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = documentation, None
     answers, _ = provider.get_post_data()
-    messages = Checks().run_model(project=documentation, data=answers, catalog=str(documentation.catalog))
+    messages = [str(m) for m in Checks().run_model(project=documentation, data=answers,
+                                                   catalog=str(documentation.catalog))]
     assert f'{name} (Page {section} 1): Missing Relation Type ({name})' in messages, messages

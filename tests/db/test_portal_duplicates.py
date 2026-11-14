@@ -59,17 +59,20 @@ def preview(client, model):
     return response.content.decode()
 
 
-def test_without_duplicates_the_preview_has_no_section_and_exports(model, client, portal):
+def test_without_duplicates_the_preview_has_no_section(model, client, portal):
+    '''The documentation is incomplete, so the button is disabled for that reason, not for duplicates.'''
     portal()
     html = preview(client, model)
-    assert 'Already on the MaRDI Portal' not in html
-    assert 'Export to MaRDI Portal' in html and 'export-blocked' not in html
+    assert 'Already on the MaRDI Portal' not in html and 'Decide on the items at the top' not in html
+    assert 'Before you can export' in html
 
 
-def test_a_failed_lookup_is_noted_and_the_export_checks_again(model, client, portal):
+def test_a_failed_lookup_asks_to_try_again(model, client, portal):
     portal(label_failed=True)
     html = preview(client, model)
-    assert 'could not check' in html and 'Export to MaRDI Portal' in html
+    assert 'could not check' in html and 'Please try again shortly.' in html
+    assert 'id="check-again"' in html
+    assert '<input type="submit" value="Export to MaRDI Portal" class="btn btn-primary" disabled' in html
 
 
 def test_duplicates_are_listed_and_block_the_export(model, client, portal):
@@ -78,7 +81,8 @@ def test_duplicates_are_listed_and_block_the_export(model, client, portal):
            markers={'Q5': markers(), 'Q6': markers(ITEMS['software']), 'Q60093': markers(ITEMS['software'])})
     html = preview(client, model)
     assert 'Already on the MaRDI Portal' in html
-    assert 'id="export-blocked"' in html and 'type="submit" value="Export to MaRDI Portal"' not in html
+    assert 'id="export-blocked"' in html and 'Decide on the items at the top' in html
+    assert '<input type="submit" value="Export to MaRDI Portal" class="btn btn-primary" disabled' in html
     # The quantity may become Q5: a form with the CSRF token
     assert html.count('data-action="reuse"') == 1 and 'csrfmiddlewaretoken' in html
     assert 'name="item" value="user:mass"' in html and 'name="qid" value="Q5"' in html

@@ -1,12 +1,11 @@
 '''Model Documentation check mixin.'''
 
-from rdmo.domain.models import Attribute
 
 from ..model.constants import (
     data_properties_check,
     SECTION_MAP as SECTION_MAP_MODEL,
 )
-from ..constants import BASE_URI, CATALOG_MODEL, CATALOG_MODEL_BASICS
+from ..constants import CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..ids import is_own_item
 from .base import without_page
 from ..patterns import QUDT_ID_STRICT_RE
@@ -27,7 +26,8 @@ class ModelMixin:
         '''Append an error for every formula or symbol the portal's TeX checker rejects.
 
         Uses the verdicts collected in :meth:`run_model`; formulas the checker
-        could not answer are not reported (the portal checks them at upload).
+        could not answer are not reported here: ``run_model`` sets
+        ``unreachable``, and the export waits until the checker answers.
         '''
         verdicts = getattr(self, '_tex_verdicts', {})
         for number, tex in enumerate((ivalue.get('Formula') or {}).values(), start=1):
@@ -91,12 +91,8 @@ class ModelMixin:
         for okey, ovalue in data.items():
             if okey not in okeys:
                 continue
-            values = project.values.filter(
-                snapshot  = None,
-                attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/{okey}')
-            )
             for ikey, ivalue in ovalue.items():
-                page_name = values.get(set_index=ikey).text
+                page_name = self._page(okey, ikey, ivalue)
                 if not ivalue.get('Properties'):
                     continue
                 properties = ivalue['Properties'].values()
@@ -124,12 +120,8 @@ class ModelMixin:
             data:    Top-level answers dict.
             catalog: Active catalog URI suffix.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/model')
-        )
         for ikey, ivalue in data.get('model', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('model', ikey, ivalue)
             self._check_static(
                 data       = ivalue,
                 page_name  = page_name,
@@ -198,12 +190,8 @@ class ModelMixin:
             data:    Top-level answers dict.
             catalog: Active catalog URI suffix.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/task')
-        )
         for ikey, ivalue in data.get('task', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('task', ikey, ivalue)
             self._check_flexible(
                 data       = ivalue,
                 page_name  = page_name,
@@ -267,12 +255,8 @@ class ModelMixin:
             data:    Top-level answers dict.
             catalog: Active catalog URI suffix.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/formulation')
-        )
         for ikey, ivalue in data.get('formulation', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('formulation', ikey, ivalue)
             self._check_flexible(
                 data       = ivalue,
                 page_name  = page_name,
@@ -373,12 +357,8 @@ class ModelMixin:
         '''
         if catalog == CATALOG_MODEL_BASICS:
             return
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/quantity')
-        )
         for ikey, ivalue in data.get('quantity', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('quantity', ikey, ivalue)
             if not ivalue.get('QorQK'):
                 self.err.append(
                     self._error(
@@ -518,12 +498,8 @@ class ModelMixin:
             data:    Top-level answers dict.
             catalog: Active catalog URI suffix.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/problem')
-        )
         for ikey, ivalue in data.get('problem', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('problem', ikey, ivalue)
             self._check_flexible(
                 data       = ivalue,
                 page_name  = page_name,
@@ -553,12 +529,8 @@ class ModelMixin:
         '''
         if catalog == CATALOG_MODEL_BASICS:
             return
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/field')
-        )
         for ikey, ivalue in data.get('field', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('field', ikey, ivalue)
             self._check_flexible(
                 data       = ivalue,
                 page_name  = page_name,
@@ -583,13 +555,16 @@ class ModelMixin:
             catalog: Active catalog URI suffix.
 
         Returns:
-            List of human-readable error strings, or an empty list when all
-            checks pass.
+            Sorted list of :class:`~MaRDMO.problems.Problem`, empty when
+            all checks pass.
         '''
+        self._tab_names(project, data)
         # Portal verdicts for all formulas and symbols (only the full catalog has them)
         self._tex_verdicts = (
             check_formulas(collect_formulas(data)) if catalog == CATALOG_MODEL else {}
         )
+        if UNAVAILABLE in self._tex_verdicts.values():
+            self.unreachable = 'The TeX check of the MaRDI Portal did not answer for some formulas.'
         self.id_name_description(project, data, catalog)
         self.single_line_text(project, data, catalog)
         self.properties(project, data, catalog)

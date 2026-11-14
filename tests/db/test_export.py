@@ -30,6 +30,7 @@ from MaRDMO.getters import get_url
 from MaRDMO.helpers import is_cyclic, topological_order
 from MaRDMO.ids import is_user_id, part_id
 from MaRDMO.payload import GeneratePayload
+from MaRDMO.problems import report_lines
 from tests.db.conftest import select
 from tests.db.test_hydration import CASES
 
@@ -64,7 +65,7 @@ def export(project):
     _, prepare_class, check_method = main._CATALOG_PREPARE_MAP[catalog.rsplit('/', 1)[1]]
     messages = getattr(Checks(), check_method)(project=project, data=answers, catalog=catalog)
     if messages:
-        return {'messages': [str(message) for message in messages]}
+        return {'messages': report_lines(messages)}
     prepare, made, init = prepare_class(), [], GeneratePayload.__init__
 
     def remember(self, *args, **kwargs):

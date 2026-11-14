@@ -300,8 +300,7 @@ class PrepareWorkflow(PublicationExport):
 
         payload.add_item_payload()
 
-        payload.validate_identifiers()
-        payload.check_existing_relations(get_url('mardi', 'api'))
+        payload.final_checks(get_url('mardi', 'api'))
 
         return payload.get_dictionary(), payload.dependency
 

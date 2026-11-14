@@ -7,37 +7,20 @@ and without a message.
 import pytest
 from django.template.loader import render_to_string
 
-import MaRDMO.checks.workflow as workflow_checks
 from MaRDMO.checks import Checks
 from MaRDMO.workflow.worker import PrepareWorkflow
 
 SOFTWARE = {'ID': 'mardi:Q1', 'Name': 'solver', 'Description': 'a solver'}
 
 
-class Page:
-    text = 'HW1'
-
-
-class Values:
-    def filter(self, **kwargs):
-        return self
-
-    def get(self, **kwargs):
-        return Page()
-
-
-class Project:
-    values = Values()
-
-
 @pytest.fixture
-def checks(monkeypatch):
-    monkeypatch.setattr(workflow_checks.Attribute.objects, 'get', lambda **kwargs: None)
+def checks():
     return Checks()
 
 
 def hardware(cpu=None):
     answers = {'hardware': {0: {'ID': 'user:machine', 'Name': 'machine', 'Description': 'a machine', 'nodes': '1',
+                                'Tab': 'HW1',
                                 'number-of-cpu': {0: '2'}, 'cores': {0: '8'}}}}
     if cpu:
         answers['hardware'][0]['cpu'] = {0: cpu}
@@ -45,12 +28,12 @@ def hardware(cpu=None):
 
 
 def test_cpu_entry_without_model_is_reported(checks):
-    checks.hardware(Project(), hardware())
+    checks.hardware(None, hardware())
     assert ['Missing CPU Model' in str(e) for e in checks.err] == [True]
 
 
 def test_cpu_entry_with_model_passes(checks):
-    checks.hardware(Project(), hardware({'ID': 'user:cpu', 'Name': 'CPU X', 'Description': 'a CPU'}))
+    checks.hardware(None, hardware({'ID': 'user:cpu', 'Name': 'CPU X', 'Description': 'a CPU'}))
     assert checks.err == []
 
 

@@ -1,8 +1,7 @@
 '''Workflow Documentation check mixin.'''
 
-from rdmo.domain.models import Attribute
 
-from ..constants import BASE_URI, CATALOG_WORKFLOW
+from ..constants import CATALOG_WORKFLOW
 from ..getters import get_options
 from .base import SOFTWARE_REFERENCE_CHECKS, without_page
 from ..validators import archive_year_problem, count_problem, doi_problem, size_problem
@@ -25,12 +24,8 @@ class WorkflowMixin:
             project: RDMO project instance.
             data:    Top-level answers dict.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/workflow')
-        )
         for ikey, ivalue in data.get('workflow', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('workflow', ikey, ivalue)
 
             if not ivalue.get('objective'):
                 self.err.append(self._error(
@@ -90,12 +85,8 @@ class WorkflowMixin:
             data:    Top-level answers dict.
         '''
         options = get_options()
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/processstep')
-        )
         for ikey, ivalue in data.get('processstep', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('processstep', ikey, ivalue)
             self._check_static(
                 data       = ivalue,
                 page_name  = page_name,
@@ -207,12 +198,8 @@ class WorkflowMixin:
             project: RDMO project instance.
             data:    Top-level answers dict.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/algorithm')
-        )
         for ikey, ivalue in data.get('algorithm', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('algorithm', ikey, ivalue)
             if not ivalue.get('PRelatant'):
                 self.err.append(self._error(
                     'Algorithm', page_name, 'Missing Algorithmic Task'
@@ -242,12 +229,8 @@ class WorkflowMixin:
             project: RDMO project instance.
             data:    Top-level answers dict.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/software')
-        )
         for ikey, ivalue in data.get('software', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('software', ikey, ivalue)
             self._check_without_section_items(
                 items        = ivalue.get('programminglanguage', {}),
                 parent_page  = page_name,
@@ -277,12 +260,8 @@ class WorkflowMixin:
             project: RDMO project instance.
             data:    Top-level answers dict.
         '''
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/hardware')
-        )
         for ikey, ivalue in data.get('hardware', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('hardware', ikey, ivalue)
 
             nodes = ivalue.get('nodes')
             if not nodes:
@@ -339,12 +318,8 @@ class WorkflowMixin:
             data:    Top-level answers dict.
         '''
         options = get_options()
-        values = project.values.filter(
-            snapshot  = None,
-            attribute = Attribute.objects.get(uri=f'{BASE_URI}domain/dataset')
-        )
         for ikey, ivalue in data.get('dataset', {}).items():
-            page_name = values.get(set_index=ikey).text
+            page_name = self._page('dataset', ikey, ivalue)
 
             if not ivalue.get('BinaryText'):
                 self.err.append(self._error('Data Set', page_name, 'Missing Data Set Type'))
@@ -411,9 +386,10 @@ class WorkflowMixin:
             data:    Top-level answers dict.
 
         Returns:
-            List of human-readable error strings, or an empty list when all
-            checks pass.
+            Sorted list of :class:`~MaRDMO.problems.Problem`, empty when
+            all checks pass.
         '''
+        self._tab_names(project, data)
         self.id_name_description(project, data, CATALOG_WORKFLOW)
         self.single_line_text(project, data, CATALOG_WORKFLOW)
         self.workflow(project, data)

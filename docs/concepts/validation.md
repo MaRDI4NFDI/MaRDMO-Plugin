@@ -65,8 +65,9 @@ and `https` URLs are turned into links on the export result page.
 
 ## Final export check
 
-`GeneratePayload.validate_identifiers()` runs on the finished payload, before
-the relation existence check and before anything is posted.  It checks every
+`GeneratePayload.validate_identifiers()` runs on the finished payload, with
+the relation existence check (`final_checks()`, which reports the problems of
+both at once) and before anything is posted; the preview runs it too.  It checks every
 statement and qualifier of the following kinds and lists all problems at once:
 
 - URL values (`url` datatype)

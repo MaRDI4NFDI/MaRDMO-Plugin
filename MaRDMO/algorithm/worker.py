@@ -147,9 +147,8 @@ class PrepareAlgorithm(PublicationExport):
         # Construct Item Payloads
         payload.add_item_payload()
 
-        # Reject malformed URLs/DOIs/swMATH IDs, then mark existing Relations
-        payload.validate_identifiers()
-        payload.check_existing_relations(get_url('mardi', 'api'))
+        # Invalid values, existing statements and symbols: all problems at once
+        payload.final_checks(get_url('mardi', 'api'))
         return payload.get_dictionary(), payload.dependency
 
     # ---------------------------
