@@ -10,9 +10,8 @@ into a fully structured payload dict ready for posting to the MaRDI Portal:
 - Builds ``ALIAS_*`` entries for alias additions to existing portal items.
 
 Key methods: :meth:`~GeneratePayload.add_data_properties`,
-:meth:`~GeneratePayload.add_check_results`,
 :meth:`~GeneratePayload.add_aliases`,
-:meth:`~GeneratePayload.build_relation_check_query`.
+:meth:`~GeneratePayload.check_existing_relations`.
 '''
 
 import json
@@ -34,9 +33,7 @@ from .patterns import QUANTITY_AMOUNT_RE
 from .queries import (
     EXPORT_CHECK_DEADLINE,
     EXPORT_RETRY_WAITS,
-    query_sparql,
     request_with_retry,
-    sparql_string,
 )
 from .validators import (
     REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, doi_problem, normalize_formula, swmath_problem, url_problem,
@@ -47,26 +44,19 @@ _logger = logging.getLogger(__name__)
 # Datatypes whose values the portal stores as single-line text
 _TEXT_TYPES = ('string', 'external-id', 'url', 'URL', 'monolingualtext')
 
-_XSD = 'http://www.w3.org/2001/XMLSchema#'
-# How the query service stores the unit of unitless quantities (unit "1")
-_UNITLESS_IRI = 'http://www.wikidata.org/entity/Q199'
 _QID_RE = re.compile(r'^Q\d+$')
 # Placeholder of an item of the export, replaced by its QID while posting
 _ITEM_KEY_RE = re.compile(r'^Item\d{10}$')
-_LANG_TAG_RE = re.compile(r'^[a-zA-Z]+(-[a-zA-Z0-9]+)*$')
-_IRI_INVALID_RE = re.compile(r'[\x00-\x20<>"{}|^`\\]')
 _TIME_RE = re.compile(r'^\+?(-?\d+)-(\d{2})-(\d{2})(T.*)$')
 # Invisible whitespace the portal rejects; replaced by spaces on export
 _INVISIBLE_WHITESPACE_RE = re.compile(r'[\t\v\f]')
 
-# Relations per existence-check query; keeps single queries small and fast
-_RELATION_CHECK_CHUNK = 50
 # Qualifiers that give a statement its meaning: the same subject, property and
 # object with another (or no) value of these is a statement of its own.  All
 # other qualifiers add information and are added to an existing statement.
 _MEANING_QUALIFIERS = ('object has role', 'symbol represents', 'platform')
 # Item-valued properties MaRDMO writes with a meaning qualifier ("contains"
-# and "described by source" with a role, "uses" with a platform).  The SPARQL
+# and "described by source" with a role, "uses" with a platform).  The existence
 # check also finds a portal statement with such a qualifier for one without,
 # so found statements of these are checked again.  Formulas ("in defining
 # formula") have their own check that compares the qualifiers.
@@ -121,19 +111,6 @@ def quantity_amount(text):
         return f"+{integer}{dot}{fraction}"
     return f"+{text}"
 
-
-def _normalize_time(value):
-    '''Convert a Wikibase time string to the form stored by the query service.
-
-    The query service drops the leading ``+`` and turns month/day ``00`` into
-    ``01`` (``+2020-00-00T00:00:00Z`` → ``2020-01-01T00:00:00Z``).  Returns
-    ``None`` if *value* is not a recognisable time string.
-    '''
-    match = _TIME_RE.match(str(value))
-    if not match:
-        return None
-    year, month, day, rest = match.groups()
-    return f"{year}-{month if month != '00' else '01'}-{day if day != '00' else '01'}{rest}"
 
 class DocumentationProblem(ValueError):
     '''The documentation cannot be exported as it is; the user has to change it.
@@ -302,111 +279,6 @@ class GeneratePayload:
             if isinstance(a, str) and a.strip()
         ]
 
-    def build_relation_check_queries(self):
-        '''Build SPARQL queries that check which RELATION entries already exist.
-
-        Each relation becomes one ``BIND(EXISTS {…} AS ?RELATION<n>)`` clause,
-        so every query returns exactly one row of booleans regardless of how
-        many matching statements the portal holds.  Relations are split into
-        chunks of :data:`_RELATION_CHECK_CHUNK` to keep queries small.
-        Relations that cannot be expressed in SPARQL (see
-        :meth:`_build_relation_block`) are left out and count as new.
-
-        Returns:
-            List of SPARQL query strings (empty when nothing can be checked).
-        '''
-        relation_keys = [k for k in self.state.dictionary if k.startswith('RELATION')]
-        blocks = []
-        for idx, key in enumerate(relation_keys):
-            block = self._build_relation_block(idx, self.state.dictionary[key])
-            if block is not None:
-                blocks.append((idx, block))
-
-        queries = []
-        for start in range(0, len(blocks), _RELATION_CHECK_CHUNK):
-            chunk = blocks[start:start + _RELATION_CHECK_CHUNK]
-            selectors = ' '.join(f'?RELATION{idx}' for idx, _ in chunk)
-            body = '\n'.join(block for _, block in chunk)
-            queries.append(f'SELECT {selectors} WHERE {{\n{body}\n}}')
-        return queries
-
-    def _sparql_value(self, value, data_type):
-        '''Format a simple statement value as a SPARQL term.
-
-        Args:
-            value:     Raw value (string, QID, or monolingual-text dict).
-            data_type: Wikibase datatype string.
-
-        Returns:
-            SPARQL term string, or ``None`` when the value cannot be matched
-            reliably via SPARQL (math, invalid IRIs, unknown structures).
-        '''
-        if data_type == 'wikibase-item':
-            if isinstance(value, str) and _QID_RE.match(value):
-                return f'wd:{value}'
-            return None
-        if data_type == 'math':
-            # The query service returns math as MathML; checked via the API instead
-            return None
-        if data_type in ('url', 'URL'):
-            if isinstance(value, str) and value and not _IRI_INVALID_RE.search(value):
-                return f'<{value}>'
-            return None
-        if data_type == 'monolingualtext':
-            if isinstance(value, dict):
-                text, language = value.get('text'), value.get('language', 'en')
-            else:
-                text, language = value, 'en'
-            if text and _LANG_TAG_RE.match(str(language)):
-                return f'{sparql_string(text)}@{language}'
-            return None
-        if value is None or isinstance(value, (dict, list)):
-            return None
-        return sparql_string(value)
-
-    def _value_node_triples(self, statement_var, predicate, node_var, value, data_type):
-        '''Build triples matching a quantity or time value node.
-
-        Args:
-            statement_var: SPARQL variable of the statement (e.g. ``?statement3``).
-            predicate:     Value-node predicate (``psv:P1`` or ``pqv:P2``).
-            node_var:      SPARQL variable for the value node.
-            value:         Value dict with ``amount`` or ``time``.
-            data_type:     ``"quantity"`` or ``"time"``.
-
-        Returns:
-            Triple-pattern string, or ``None`` for unsupported values.
-        '''
-        if data_type == 'quantity' and value.get('amount'):
-            literal = f'{sparql_string(value["amount"])}^^<{_XSD}decimal>'
-            unit = str(value.get('unit', '1'))
-            if unit == '1':
-                unit_triples = f'  {node_var} wikibase:quantityUnit <{_UNITLESS_IRI}> .\n'
-            else:
-                # Compare the unit by QID: the portal stores whatever entity
-                # URI was posted (http/https, internal host names)
-                unit_qid = unit.rsplit('/', 1)[-1]
-                if not _QID_RE.match(unit_qid):
-                    return None
-                unit_triples = (
-                    f'  {node_var} wikibase:quantityUnit {node_var}_unit .\n'
-                    f'  FILTER(STRENDS(STR({node_var}_unit), "/entity/{unit_qid}"))\n'
-                )
-            return (
-                f'  {statement_var} {predicate} {node_var} .\n'
-                f'  {node_var} wikibase:quantityAmount {literal} .\n'
-                f'{unit_triples}'
-            )
-        if data_type == 'time':
-            time_str = _normalize_time(value.get('time', ''))
-            if time_str:
-                literal = f'{sparql_string(time_str)}^^<{_XSD}dateTime>'
-                return (
-                    f'  {statement_var} {predicate} {node_var} .\n'
-                    f'  {node_var} wikibase:timeValue {literal} .\n'
-                )
-        return None
-
     def _resolve_item_reference(self, value):
         '''Replace an ``Item<n>`` placeholder by its QID.
 
@@ -416,96 +288,6 @@ class GeneratePayload:
         if isinstance(value, str) and value in self.state.dictionary:
             return self.state.dictionary[value].get('id', '')
         return value
-
-    def _build_qualifier_triples(self, qualifiers, idx):
-        '''Build SPARQL triple patterns for a list of qualifier dicts.
-
-        Args:
-            qualifiers: List of qualifier dicts (each with ``property`` and
-                        ``value`` sub-dicts).
-            idx:        Statement index used to name the ``?statement<idx>``
-                        SPARQL variable.
-
-        Returns:
-            SPARQL triple-pattern string (empty when *qualifiers* is empty), or
-            ``None`` when a qualifier cannot be matched — either it refers to a
-            not-yet-created item (so the statement cannot exist yet) or its
-            value cannot be expressed in SPARQL.
-        '''
-        triples = ''
-        for q_idx, q in enumerate(qualifiers):
-            q_prop = q['property']['id']
-            q_data_type = q['property']['data_type']
-            q_value = self._resolve_item_reference(q['value']['content'])
-            if q_value == '':
-                return None
-            if isinstance(q_value, dict) and q_data_type in ('quantity', 'time'):
-                value_triples = self._value_node_triples(
-                    f'?statement{idx}', f'pqv:{q_prop}', f'?qval{idx}_{q_idx}',
-                    q_value, q_data_type,
-                )
-                if value_triples is None:
-                    return None
-                triples += value_triples
-            else:
-                value_str = self._sparql_value(q_value, q_data_type)
-                if value_str is None:
-                    return None
-                triples += f'  ?statement{idx} pq:{q_prop} {value_str} .\n'
-        return triples
-
-    def _build_relation_block(self, idx, entry):
-        '''Build the ``BIND(EXISTS …)`` clause for one RELATION entry.
-
-        Args:
-            idx:   Relation index used to name SPARQL variables.
-            entry: RELATION payload dict from ``self.state.dictionary``.
-
-        Returns:
-            SPARQL clause string, or ``None`` when the relation cannot be
-            checked via SPARQL (target item not on the portal yet, value or
-            qualifier not expressible, math values).
-        '''
-        target_item_key = entry['url'].split('/')[-2]
-        target_item_id = self._resolve_item_reference(target_item_key)
-        if not (isinstance(target_item_id, str) and _QID_RE.match(target_item_id)):
-            return None
-
-        statement = entry['payload']['statement']
-        prop_id = statement['property']['id']
-        data_type = statement['property']['data_type']
-        value = self._resolve_item_reference(statement['value']['content'])
-        if value == '':
-            return None
-
-        if isinstance(value, dict) and data_type in ('quantity', 'time'):
-            value_triples = self._value_node_triples(
-                f'?statement{idx}', f'psv:{prop_id}', f'?sval{idx}', value, data_type,
-            )
-        else:
-            value_str = self._sparql_value(value, data_type)
-            value_triples = (
-                f'  ?statement{idx} ps:{prop_id} {value_str} .\n'
-                if value_str is not None else None
-            )
-        if value_triples is None:
-            return None
-
-        qual_triples = self._build_qualifier_triples(statement.get('qualifiers', []), idx)
-        if qual_triples is None:
-            return None
-        # A portal statement with more qualifiers matches too; whether it has
-        # another meaning (e.g. a role) is checked in merge_qualifiers.  A
-        # FILTER NOT EXISTS here makes the query service answer false for
-        # every relation of the query.
-
-        return (
-            f'BIND(EXISTS {{\n'
-            f'  wd:{target_item_id} p:{prop_id} ?statement{idx} .\n'
-            f'{value_triples}'
-            f'{qual_triples}'
-            f'}} AS ?RELATION{idx})'
-        )
 
     def _meaning_qualifiers(self):
         '''Property IDs of the qualifiers that give a statement its meaning.'''
@@ -645,17 +427,6 @@ class GeneratePayload:
                 ]
             )
 
-    def add_check_results(self, check):
-        '''Update each RELATION entry with its existence check result.
-
-        Args:
-            check: Dict mapping ``"RELATION<n>"`` to ``'true'``/``'false'``;
-                   relations missing from *check* are treated as new.
-        '''
-        relation_keys = [k for k in self.state.dictionary if k.startswith('RELATION')]
-        for idx, key in enumerate(relation_keys):
-            self.state.dictionary[key]['exists'] = check.get(f'RELATION{idx}', 'false')
-
     def validate_identifiers(self):
         '''Reject malformed URLs, DOIs, swMATH IDs, dates and amounts before anything is posted.
 
@@ -768,53 +539,35 @@ class GeneratePayload:
                 walk([item_key, entry.get('payload', {})], owner)
         return list(dict.fromkeys(found))
 
-    def check_existing_relations(self, sparql_endpoint, api_url):
+    def check_existing_relations(self, api_url):
         '''Mark every RELATION entry that already exists on the portal.
 
-        Runs the SPARQL existence checks from :meth:`build_relation_check_queries`
-        and checks math statements via the API.  Failed requests are retried
-        after :data:`~MaRDMO.queries.EXPORT_RETRY_WAITS`; all of them together
-        give up after :data:`~MaRDMO.queries.EXPORT_CHECK_DEADLINE` seconds.
+        Fetches the claims of the existing items the RELATION entries belong
+        to (wbgetentities, 50 items per request) and decides each entry with
+        :meth:`exists_in_claims`.  The qualifier merge and the symbol check
+        use the same claims.  Failed requests are retried after
+        :data:`~MaRDMO.queries.EXPORT_RETRY_WAITS`; all of them together give
+        up after :data:`~MaRDMO.queries.EXPORT_CHECK_DEADLINE` seconds.
 
         Args:
-            sparql_endpoint: SPARQL endpoint URL of the portal.
-            api_url:         Action API URL of the portal (for math statements).
+            api_url: Action API URL of the portal.
 
         Raises:
-            PortalUnavailable: If a check cannot be completed.  Posting without the
-                check would duplicate statements on existing items.
+            PortalUnavailable: If the claims cannot be fetched.  Posting without
+                the check would duplicate statements on existing items.
         '''
-        if not any(key.startswith('RELATION') for key in self.state.dictionary):
+        relations = {key: entry for key, entry in self.state.dictionary.items() if key.startswith('RELATION')}
+        if not relations:
             return
 
         deadline = time.monotonic() + EXPORT_CHECK_DEADLINE
-        check = {}
-        for query in self.build_relation_check_queries():
-            bindings = query_sparql(query, sparql_endpoint, strict=True,
-                                    waits=EXPORT_RETRY_WAITS, deadline=deadline)
-            # A successful query always returns exactly one row
-            if not bindings:
-                raise PortalUnavailable(
-                    "Could not check which statements already exist on the MaRDI Portal "
-                    "(query service not reachable or query rejected). "
-                    "Nothing was exported; please try again later."
-                )
-            check.update({
-                key: binding.get('value', 'false')
-                for key, binding in bindings[0].items()
-            })
+        subjects = {self._resolve_item_reference(entry['url'].split('/')[-2]) for entry in relations.values()}
+        claims = self._fetch_claims(
+            sorted(s for s in subjects if isinstance(s, str) and _QID_RE.match(s)), api_url, deadline, 'statements',
+        )
+        for entry in relations.values():
+            entry['exists'] = self.exists_in_claims(entry, claims)
 
-        # SPARQL returns math values as MathML; check math statements via API.
-        # Its results are keyed by dictionary key, the SPARQL results by index.
-        relation_index = {
-            key: idx for idx, key in enumerate(
-                k for k in self.state.dictionary if k.startswith('RELATION')
-            )
-        }
-        for key, exists in self.check_math_relations_via_api(api_url, deadline).items():
-            check[f'RELATION{relation_index[key]}'] = exists
-
-        self.add_check_results(check)
         # Statements that only add qualifiers (e.g. another assumption) extend
         # the portal statement instead of duplicating it
         self.merge_qualifiers(api_url, deadline)
@@ -822,78 +575,43 @@ class GeneratePayload:
         # stands for another quantity
         self.check_symbols(api_url, deadline)
 
-    def check_math_relations_via_api(self, api_url, deadline=None):
-        '''Check existence of math-datatype RELATION statements via wbgetentities.
+    def exists_in_claims(self, entry, claims):
+        '''``'true'`` if the portal item of the RELATION *entry* holds its statement, else ``'false'``.
 
-        SPARQL returns math values as MathML, but portal stores LaTeX.  This
-        method queries the Wikibase API directly to compare raw LaTeX values.
+        The statement is there if a claim of the item has the property, the
+        value and every qualifier of *entry* (:meth:`_snak_matches`).  A claim
+        with more qualifiers matches too; :meth:`merge_qualifiers` decides
+        afterwards on the qualifiers that give a statement its meaning.  A
+        statement of a new item, or with a value or qualifier that is a new
+        item, is new.
 
-        Returns {relation_key: 'true'/'false'}.
-
-        Raises:
-            ValueError: If the claims of an existing item cannot be fetched.
+        Args:
+            entry:  RELATION entry of ``self.state.dictionary``.
+            claims: ``{qid: claims}`` of the portal items (:meth:`_fetch_claims`).
         '''
-        relation_keys = [k for k in self.state.dictionary if k.startswith('RELATION')]
-        math_entries  = {}  # key → (item_qid, prop_id, latex, qualifiers)
-
-        for key in relation_keys:
-            entry     = self.state.dictionary[key]
-            statement = entry['payload']['statement']
-            if statement['property']['data_type'] != 'math':
+        statement = entry['payload']['statement']
+        subject = self._resolve_item_reference(entry['url'].split('/')[-2])
+        if not (isinstance(subject, str) and _QID_RE.match(subject)):
+            return 'false'
+        value = self._resolve_item_reference(statement['value']['content'])
+        data_type = statement['property']['data_type']
+        wanted = [(q['property']['id'], self._resolve_item_reference(q['value']['content']),
+                   q['property']['data_type']) for q in statement.get('qualifiers', [])]
+        if value == '' or any(q_value == '' for _, q_value, _ in wanted):
+            return 'false'
+        for claim in claims.get(subject, {}).get(statement['property']['id'], []):
+            if not self._snak_matches(claim.get('mainsnak', {}), value, data_type):
                 continue
-            item_qid = self._resolve_item_reference(entry['url'].split('/')[-2])
-            if not item_qid:
-                continue  # new item → statement cannot exist yet
-            math_entries[key] = (
-                item_qid,
-                statement['property']['id'],
-                statement['value']['content'],
-                statement.get('qualifiers', []),
-            )
-
-        if not math_entries:
-            return {}
-
-        claims_by_item = self._fetch_claims(
-            sorted({v[0] for v in math_entries.values()}), api_url, deadline, 'formulas',
-        )
-
-        result = {}
-        for key, (item_qid, prop_id, latex, qualifiers) in math_entries.items():
-            exists = 'false'
-            for claim in claims_by_item.get(item_qid, {}).get(prop_id, []):
-                claim_val = claim.get('mainsnak', {}).get('datavalue', {}).get('value', '')
-                if claim_val != latex:
-                    continue
-                if not qualifiers:
-                    exists = 'true'
-                    break
-                # Check that all qualifiers match
-                qual_match = True
-                for q in qualifiers:
-                    q_prop = q['property']['id']
-                    q_val  = self._resolve_item_reference(q['value']['content'])
-                    api_qual_vals = []
-                    for c in claim.get('qualifiers', {}).get(q_prop, []):
-                        api_val = c.get('datavalue', {}).get('value')
-                        if isinstance(api_val, dict) and 'id' in api_val:
-                            api_val = api_val['id']
-                        api_qual_vals.append(api_val)
-                    if not q_val or q_val not in api_qual_vals:
-                        qual_match = False
-                        break
-                if qual_match:
-                    exists = 'true'
-                    break
-            result[key] = exists
-
-        return result
+            if all(any(self._snak_matches(snak, q_value, q_type) for snak in claim.get('qualifiers', {}).get(q_prop, []))
+                   for q_prop, q_value, q_type in wanted):
+                return 'true'
+        return 'false'
 
     def _fetch_claims(self, qids, api_url, deadline, what):
         '''Return ``{qid: claims}`` of portal items, fetched with wbgetentities in chunks of 50.
 
         Items fetched before during this export are taken from the earlier
-        answer (the math check and the qualifier merge often need the same).
+        answer (the existence check, the qualifier merge and the symbol check need the same).
 
         Raises:
             PortalUnavailable: If the claims cannot be fetched; *what* names the
@@ -996,7 +714,7 @@ class GeneratePayload:
         entries adding to the same statement share it; a qualifier is planned
         only once.
 
-        Entries the SPARQL check found are checked again when their property
+        Entries the existence check found are checked again when their property
         can carry a meaning qualifier (see :data:`_MEANING_PROPERTIES`): the
         portal statement it found may have one the entry lacks (a plain
         "contains" against "contains" with a role).  Without a statement of
@@ -1008,7 +726,7 @@ class GeneratePayload:
         meaning = self._meaning_qualifiers()
         role = self.wikibase['properties'].get('object has role')
         # Properties whose statements can carry a meaning qualifier: a statement
-        # found by the SPARQL check may have one the payload statement lacks
+        # found by the existence check may have one the payload statement lacks
         # (e.g. "contains" with a role for a plain "contains"), also when no
         # statement of this export has one
         properties = self.wikibase['properties']
@@ -1081,7 +799,7 @@ class GeneratePayload:
             entry = self.state.dictionary[key]
             if best is None:
                 # no statement with this meaning on the portal: a new one (also
-                # when the SPARQL check found one with another meaning)
+                # when the existence check found one with another meaning)
                 entry['exists'] = 'false'
                 continue
             if not best[1]:

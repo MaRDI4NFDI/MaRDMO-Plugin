@@ -217,10 +217,7 @@ class PrepareModel(PublicationExport):
 
         # Reject malformed DOIs (publications), then mark existing Relations
         payload.validate_identifiers()
-        payload.check_existing_relations(
-            sparql_endpoint = get_url('mardi', 'sparql'),
-            api_url = get_url('mardi', 'api'),
-        )
+        payload.check_existing_relations(get_url('mardi', 'api'))
         return payload.get_dictionary(), payload.dependency
 
     # ---------------------------

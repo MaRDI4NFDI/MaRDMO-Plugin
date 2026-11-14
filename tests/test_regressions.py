@@ -112,7 +112,7 @@ def test_statements_with_several_roles_are_not_written_again():
                                 'Item0000000002': {'id': 'Q7395013', 'label': 'initial number of susceptibles'}}
     payload.add_answer(contains, ['Item0000000002', 'wikibase-item'], subject='Item0000000001',
                        qualifier=payload.add_qualifier(role, 'wikibase-item', 'Q6480341'))
-    payload.state.dictionary['RELATION0']['exists'] = 'true'    # the SPARQL check finds the role
+    payload.state.dictionary['RELATION0']['exists'] = 'true'    # the existence check finds the role
     payload._claims = {'Q7395018': {contains: [{
         'id': 'Q7395018$x',
         'mainsnak': {'datavalue': {'value': {'id': 'Q7395013'}}},

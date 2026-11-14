@@ -178,21 +178,22 @@ and a dependency graph:
   and quantity amount in the payload.  If any of them would be rejected by the
   MaRDI Portal, the export is aborted with a list of the affected values before
   anything is posted.
-- **Relation existence check**: `build_relation_check_queries()` generates SPARQL
-  queries (in chunks of 50 relations) that check, for every `RELATION` entry
-  targeting an existing item, whether the statement with its qualifiers already
-  exists on the MaRDI Portal.  For `math`-datatype statements a separate
-  API-based check is used, because SPARQL returns MathML while the MaRDI Portal
-  stores LaTeX.  If a check cannot be completed, the export is aborted, since
-  posting without it could create duplicate statements.
-- **Qualifier merge**: `merge_qualifiers()` then decides, with the statements
-  of the existing items (fetched via `wbgetentities`, 50 items per request,
-  shared with the math check), what happens with each `RELATION` entry (see
+- **Relation existence check**: `check_existing_relations()` fetches the
+  statements of the existing items the `RELATION` entries belong to
+  (`wbgetentities`, 50 items per request) and marks every entry whose
+  statement, with the same value and all its qualifiers, is there already
+  (`exists_in_claims()`).  Values are compared by datatype: items by QID,
+  text and formulas (LaTeX) as stored, monolingual text with its language,
+  quantities by amount and unit, dates by time and precision.  If the
+  statements cannot be fetched, the export is aborted, since posting without
+  the check could create duplicate statements.
+- **Qualifier merge**: `merge_qualifiers()` then decides, with the same
+  statements, what happens with each `RELATION` entry (see
   [below](#qualifier-merge)): it exists already and is skipped, it is a new
   statement, or it exists and only gets the qualifiers it lacks.
 
-All requests of these checks (duplicate search, relation and math check,
-statements for the qualifier merge) are
+All requests of these checks (duplicate search, statements of the existing
+items) are
 retried twice on a timeout, a connection error, or the answers 429, 502, 503 and
 504, after 2 and 5 seconds or the portal's `Retry-After` (at most 10 seconds);
 other answers, such as 400, are not retried.  Each check gives up after
@@ -246,7 +247,7 @@ symbol stands for exactly one quantity:
 | without a quantity (no *symbol represents*) | the quantity is added to it (`partial`) |
 | none | a new statement is written |
 
-The SPARQL check also finds a portal statement with a role for an entry without
+The existence check also finds a portal statement with a role for an entry without
 one, so entries of the properties MaRDMO writes with meaning qualifiers
 (*contains*, *described by source*, *uses*) are always compared with the portal
 statements again.  Several entries adding to the same statement share it; each

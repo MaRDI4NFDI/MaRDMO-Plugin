@@ -2,7 +2,7 @@
 
 The portal's claims are put into the payload's claims cache, so no request
 is made.  Statements are built with add_answer/add_qualifier as the workers
-do; "exists" is set as the SPARQL existence check would.
+do; "exists" is set as the existence check would.
 '''
 import pytest
 
@@ -93,7 +93,7 @@ def test_no_role_is_a_meaning_too(payload):
 
 
 def test_existing_statement_found_by_sparql_with_other_meaning_is_new(payload):
-    '''The SPARQL check does not look at missing qualifiers: a plain "contains" matches one with a role.'''
+    '''The existence check does not look at missing qualifiers: a plain "contains" matches one with a role.'''
     key = relation(payload, exists='true')
     relation(payload, (ROLE, 'Q9'), exists='true')
     portal(payload, claim('Q1$a', 'Q2', **{ROLE: ['Q9']}))
@@ -167,7 +167,7 @@ def test_claims_that_cannot_be_fetched_stop_the_export(payload, monkeypatch):
 
 
 
-# --- plain statements found by the SPARQL check (it also finds statements with a qualifier)
+# --- plain statements found by the existence check (it also finds statements with a qualifier)
 
 def test_only_a_plain_statement_against_one_with_a_role(payload):
     '''The export holds only "contains A"; the portal has "contains A as initial condition".'''
@@ -185,7 +185,7 @@ def test_plain_statement_that_is_on_the_portal_stays(payload):
 
 
 def test_statement_with_a_role_against_a_plain_one_is_new(payload):
-    '''The SPARQL check asks for the role, so it does not find the plain statement.'''
+    '''The existence check asks for the role, so it does not find the plain statement.'''
     key = relation(payload, (ROLE, 'Q9'))
     portal(payload, claim('Q1$a', 'Q2'))
     payload.merge_qualifiers('https://portal.example.org/w/api.php')
