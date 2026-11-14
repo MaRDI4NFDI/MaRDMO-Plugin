@@ -69,8 +69,7 @@ class PrepareModel(PublicationExport):
                 },
                 entity = {
                     'old_name': mapping[2],
-                    'new_name': mapping[3],
-                    'encryption': mapping[4]
+                    'new_name': mapping[3]
                 }
             )
 
@@ -85,8 +84,7 @@ class PrepareModel(PublicationExport):
                 entity = {
                     'relation': relation['relation'],
                     'old_name': relation['old_name'],
-                    'new_name': relation['new_name'],
-                    'encryption': relation['encryption']
+                    'new_name': relation['new_name']
                 },
                 assumption = relation['assumption'],
                 mapping = (

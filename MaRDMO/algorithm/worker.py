@@ -59,8 +59,7 @@ class PrepareAlgorithm(PublicationExport):
                 entity = {
                     'relation': relation['relation'],
                     'old_name': relation['old_name'],
-                    'new_name': relation['new_name'],
-                    'encryption': relation['encryption']
+                    'new_name': relation['new_name']
                 },
                 assumption = False,
                 mapping = (

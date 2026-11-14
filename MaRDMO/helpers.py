@@ -11,8 +11,8 @@ Contains:
 - Date helpers: :func:`date_format`, :func:`date_precision`.
 - Entity-relation processing: :func:`entity_relations`,
   :func:`entity_relations_grouped`, :func:`map_entity`,
-  :func:`build_new_value`, :func:`resolve_target`, :func:`id_index_map`,
-  :func:`link_to_pages`, :func:`mark_same_own_items`.
+  :func:`build_new_value`, :func:`link_to_pages`,
+  :func:`mark_same_own_items` (pages: :mod:`MaRDMO.pages`).
 - Export helpers: :func:`unique_items`, :func:`compare_items`,
   :func:`replace_in_dict`.
 - Questionnaire utilities: :func:`process_question_dict`,
@@ -33,6 +33,7 @@ from rdmo.domain.models import Attribute
 from rdmo.options.models import Option
 
 from .ids import is_own_item, is_user_id, item_key, item_text
+from .pages import page_ref, page_refs
 
 # Set while MaRDMO itself writes values (hydration, publication lookup, ID
 # write-back); the pre-save router skips validators then, since they are meant
@@ -641,8 +642,8 @@ def mark_same_own_items(data):
       one: the export would make one item of them ("new" in a relation always
       makes another page).
 
-    The value is the position (1-based, as the preview counts) of the first
-    page.  The checks report the same.
+    The value is the :class:`~MaRDMO.pages.PageRef` of the first page.  The
+    checks report the same.
 
     Args:
         data: Top-level answers dict; mutated in place.
@@ -650,69 +651,24 @@ def mark_same_own_items(data):
     Returns:
         *data*.
     '''
-    for section in data.values():
-        if not isinstance(section, dict):
+    for section, pages in data.items():
+        if not isinstance(pages, dict):
             continue
         first_id, first_name = {}, {}
-        for position, entry in enumerate(section.values(), start=1):
+        for index, entry in pages.items():
             if not isinstance(entry, dict) or not entry.get('ID'):
                 continue
-            same = first_id.setdefault(entry['ID'], position)
-            if same != position:
-                entry['SameItemAs'] = same
+            first = first_id.setdefault(entry['ID'], index)
+            if first != index:
+                entry['SameItemAs'] = page_ref(section, first, pages[first])
                 continue
             if not is_own_item(entry['ID']) or not entry.get('Name'):
                 continue
-            same = first_name.setdefault((entry['Name'], entry.get('Description') or ''), position)
-            if same != position:
-                entry['SameAs'] = same
+            first = first_name.setdefault((entry['Name'], entry.get('Description') or ''), index)
+            if first != index:
+                entry['SameAs'] = page_ref(section, first, pages[first])
     return data
 
-
-def id_index_map(data, data_type):
-    '''Build a list of ID→index mappings of the pages of the given entity types.
-
-    For each type key in *data_type*, constructs a dict mapping the ``ID`` of
-    every page of ``data[type_key]`` to its 0-based position.  Used by
-    :func:`entity_relations` and :func:`map_entity` to resolve a relation to
-    the page of its item.
-
-    Args:
-        data:      Top-level answers dict.
-        data_type: List of entity-type keys (e.g. ``['formulation', 'task']``).
-
-    Returns:
-        List of dicts, one per entry in *data_type*.
-    '''
-    maps = []
-    for to_idx in data_type:
-        # Two pages with one ID (a copied tab): the first, as the checks name it
-        id_map = {}
-        for idx, entry in enumerate(data.get(to_idx, {}).values()):
-            if entry.get('ID'):
-                id_map.setdefault(entry['ID'], idx)
-        maps.append(id_map)
-    return maps
-
-
-def resolve_target(id_, entity_enc, id_map):
-    """Resolve a relation to the local page of its item, or fall back to its ID.
-
-    Looks up the relation's item ID in *id_map*.  If found, returns the
-    prefixed index of the page (e.g. ``"MF3"``); otherwise returns *id_*
-    unchanged (an item without page in these sections).
-
-    Args:
-        id_:         ID of the item the relation holds.
-        entity_enc:  Prefix string for locally indexed entities (e.g. ``"MF"``).
-        id_map:      Dict mapping page IDs to 0-based index (:func:`id_index_map`).
-
-    Returns:
-        Local index string or *id_*.
-    """
-    if id_ in id_map:
-        return f"{entity_enc}{id_map[id_] + 1}"
-    return id_
 
 def build_new_value(from_entry, entity, key, resolved, assumption, mapping):
     """Assemble the processed relation dict for a single relatant.
@@ -723,10 +679,10 @@ def build_new_value(from_entry, entity, key, resolved, assumption, mapping):
 
     Args:
         from_entry: Source entity dict (one entry from the answers).
-        entity:     Configuration dict with keys ``relation``, ``old_name``,
-                    ``new_name``, and ``encryption``.
+        entity:     Configuration dict with keys ``relation``, ``old_name``
+                    and ``new_name``.
         key:        Relation key within *from_entry*.
-        resolved:   Resolved relatant reference (local index or external ID).
+        resolved:   Resolved relatant (:class:`~MaRDMO.pages.PageRef` or ID).
         assumption: Boolean; if ``True``, attach assumption qualifier.
         mapping:    :class:`~MaRDMO.helpers.PropertyRegistry` for relation lookup.
 
@@ -771,14 +727,11 @@ def entity_relations(data, idx, entity, assumption, mapping):
         data:       Top-level answers dict; mutated in place.
         idx:        Dict with keys ``from`` (source type) and ``to`` (list of
                     target types of the pages).
-        entity:     Dict with keys ``relation``, ``old_name``, ``new_name``,
-                    and ``encryption``.
+        entity:     Dict with keys ``relation``, ``old_name`` and ``new_name``.
         assumption: Boolean controlling assumption qualifier attachment.
         mapping:    :class:`~MaRDMO.helpers.PropertyRegistry` for relation type lookup.
     """
-    idx['to'] = check_list(idx.get('to'))
-    entity['encryption'] = check_list(entity['encryption'])
-    id_to_index_maps = id_index_map(data, idx['to'])
+    refs = page_refs(data, check_list(idx.get('to')))
 
     for from_entry in data.get(idx.get('from'), {}).values():
         # Get and combine Relation and Relatant Keys
@@ -796,16 +749,7 @@ def entity_relations(data, idx, entity, assumption, mapping):
                 for key2 in from_entry[entity['old_name']][key]:
                     value = from_entry[entity['old_name']][key][key2]
                     # Resolve Relatant
-                    resolved = None
-                    if value:
-                        for enc_entry, id_map in zip(entity['encryption'], id_to_index_maps):
-                            resolved = resolve_target(
-                                id_=value.get("ID"),
-                                entity_enc=enc_entry,
-                                id_map=id_map,
-                            )
-                            if resolved != value.get("ID"):
-                                break
+                    resolved = refs.get(value.get('ID'), value.get('ID')) if value else None
 
                     # Build new Item Value
                     new_value = build_new_value(
@@ -822,15 +766,7 @@ def entity_relations(data, idx, entity, assumption, mapping):
                         entity_values[f"{key}|{key2}"] = new_value
             else:
                 #Handle flat dicts
-                resolved = None
-                for enc_entry, id_map in zip(entity['encryption'], id_to_index_maps):
-                    resolved = resolve_target(
-                        id_=values.get("ID"),
-                        entity_enc=enc_entry,
-                        id_map=id_map,
-                    )
-                    if resolved != values.get("ID"):
-                        break
+                resolved = refs.get(values.get('ID'), values.get('ID'))
                 # Build new Item Value
                 new_value = build_new_value(from_entry, entity, key, resolved, assumption, mapping)
                 if new_value not in entity_values.values():
@@ -848,14 +784,11 @@ def entity_relations_grouped(data, idx, entity, assumption, mapping):
     Args:
         data:       Top-level answers dict; mutated in place.
         idx:        Dict with keys ``from`` and ``to``.
-        entity:     Dict with keys ``relation``, ``old_name``, ``new_name``,
-                    and ``encryption``.
+        entity:     Dict with keys ``relation``, ``old_name`` and ``new_name``.
         assumption: Boolean controlling assumption qualifier attachment.
         mapping:    :class:`~MaRDMO.helpers.PropertyRegistry` for relation type lookup.
     """
-    idx['to'] = check_list(idx.get('to'))
-    entity['encryption'] = check_list(entity['encryption'])
-    id_to_index_maps = id_index_map(data, idx['to'])
+    refs = page_refs(data, check_list(idx.get('to')))
 
     for from_entry in data.get(idx.get('from'), {}).values():
         relation_keys = from_entry.get(entity['relation'], {}).keys()
@@ -866,30 +799,13 @@ def entity_relations_grouped(data, idx, entity, assumption, mapping):
             if not is_flat(values):
                 for key2 in from_entry[entity['old_name']][key]:
                     value = from_entry[entity['old_name']][key][key2]
-                    resolved = None
-                    if value:
-                        for enc_entry, id_map in zip(entity['encryption'], id_to_index_maps):
-                            resolved = resolve_target(
-                                id_=value.get("ID"),
-                                entity_enc=enc_entry,
-                                id_map=id_map,
-                            )
-                            if resolved != value.get("ID"):
-                                break
+                    resolved = refs.get(value.get('ID'), value.get('ID')) if value else None
                     new_value = build_new_value(
                         from_entry, entity, key, resolved, assumption, mapping
                     )
                     entity_values[f"{key}|{key2}"] = new_value
             else:
-                resolved = None
-                for enc_entry, id_map in zip(entity['encryption'], id_to_index_maps):
-                    resolved = resolve_target(
-                        id_=values.get("ID"),
-                        entity_enc=enc_entry,
-                        id_map=id_map,
-                    )
-                    if resolved != values.get("ID"):
-                        break
+                resolved = refs.get(values.get('ID'), values.get('ID'))
                 new_value = build_new_value(
                     from_entry, entity, key, resolved, assumption, mapping
                 )
@@ -909,37 +825,23 @@ def initialize_counter(counter):
 def map_entity(data, idx, entity):
     '''Resolve entity references to their pages by ID and store the result under a new key.
 
-    Similar to :func:`entity_relations` but for simple ID-to-index
-    mappings (without relation types).  Iterates nested ``old_name`` entries
-    in every source entity and writes resolved references into ``new_name``.
+    Similar to :func:`entity_relations` but without relation types: every
+    nested ``old_name`` entry of a source entity becomes the
+    :class:`~MaRDMO.pages.PageRef` of the page with its ID, or keeps the ID
+    (an item without page), under ``new_name``.
 
     Args:
         data:   Top-level answers dict; mutated in place.
         idx:    Dict with keys ``from`` (source type) and ``to`` (target
                 types of the pages).
-        entity: Dict with keys ``old_name``, ``new_name``, and ``encryption``.
+        entity: Dict with keys ``old_name`` and ``new_name``.
     '''
-    # Ensure idx['to'] and enc are lists
-    idx['to'] = check_list(idx['to'])
-    entity['encryption'] = check_list(entity['encryption'])
-
-    # Create mappings for all idx['to'] lists
-    id_to_index_maps = id_index_map(data, idx['to'])
+    refs = page_refs(data, check_list(idx['to']))
     for from_entry in data.get(idx['from'], {}).values():
         for outer_key, relation in from_entry.get(entity['old_name'], {}).items():
             for inner_key, item in relation.items():
-                match_found = False
-                # Create Dict Entry
-                outer = from_entry.setdefault(entity['new_name'], {})
-                inner = outer.setdefault(outer_key, {})
-                for enc_entry, id_to_index in zip(entity['encryption'], id_to_index_maps):
-                    if item.get('ID') in id_to_index:
-                        match_found = True
-                        inner[inner_key] = f"{enc_entry}{id_to_index[item['ID']]+1}"
-                        break
-
-                if not match_found:
-                    inner[inner_key] = item['ID']
+                inner = from_entry.setdefault(entity['new_name'], {}).setdefault(outer_key, {})
+                inner[inner_key] = refs.get(item.get('ID'), item['ID'])
 
 def process_qualifier(value):
     '''Parse a compound qualifier string into a structured dict.

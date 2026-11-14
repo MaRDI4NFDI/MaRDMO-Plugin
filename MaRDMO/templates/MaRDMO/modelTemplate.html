@@ -6,7 +6,7 @@
 {% for values in answers.model.values %}
     
     {# Include Mathematical Model Name #}
-    {% include "MaRDMO/partials/_name.html" with class="MATHEMATICAL MODEL" counter=forloop.counter name=values.Name prefix="MM" %}
+    {% include "MaRDMO/partials/_name.html" with class="MATHEMATICAL MODEL" name=values.Name %}
 
     {# Include Mathematical Model Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="MATHEMATICAL MODEL" description=values.Description name=values.Name %}
@@ -43,7 +43,7 @@
 {% for values in answers.task.values %}
 
     {# Include Computational Task Name #}
-    {% include "MaRDMO/partials/_name.html" with class="COMPUTATIONAL TASK" counter=forloop.counter name=values.Name prefix="CT" %}
+    {% include "MaRDMO/partials/_name.html" with class="COMPUTATIONAL TASK" name=values.Name %}
 
     {# Include Computational Task Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="COMPUTATIONAL TASK" description=values.Description name=values.Name %}
@@ -77,7 +77,7 @@
 {% for values in answers.formulation.values %}
 
     {# Include Formula Name #}
-    {% include "MaRDMO/partials/_name.html" with class="FORMULA" counter=forloop.counter name=values.Name prefix="F" %}
+    {% include "MaRDMO/partials/_name.html" with class="FORMULA" name=values.Name %}
 
     {# Include Formula Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="FORMULA" description=values.Description name=values.Name %}
@@ -114,7 +114,7 @@
 {% for values in answers.publication.values %}
 
     {# Include Publication Name #}
-    {% include "MaRDMO/partials/_name.html" with class="PUBLICATION" counter=forloop.counter name=values.Name prefix="P" %}
+    {% include "MaRDMO/partials/_name.html" with class="PUBLICATION" name=values.Name %}
     
     {# Include Publication DOI, Citation, Authors and Journal #}
     {% include "MaRDMO/partials/_publication.html" with values=values %}
@@ -133,7 +133,7 @@
 {% for values in answers.field.values %}
     
     {# Include Academic Discipline Name #}
-    {% include "MaRDMO/partials/_name.html" with class="ACADEMIC DISCIPLINE" counter=forloop.counter name=values.Name prefix="AD" %}
+    {% include "MaRDMO/partials/_name.html" with class="ACADEMIC DISCIPLINE" name=values.Name %}
 
     {# Include Academic Discipline Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="ACADEMIC DISCIPLINE" description=values.Description name=values.Name %}
@@ -158,7 +158,7 @@
 {% for values in answers.problem.values %}
     
     {# Include Research Problem Name #}
-    {% include "MaRDMO/partials/_name.html" with class="RESEARCH PROBLEM" counter=forloop.counter name=values.Name prefix="RP" %}
+    {% include "MaRDMO/partials/_name.html" with class="RESEARCH PROBLEM" name=values.Name %}
 
     {# Include Research Problem Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="RESEARCH PROBLEM" description=values.Description name=values.Name %}
@@ -186,7 +186,7 @@
 {% for values in answers.quantity.values %}
     
     {# Include Quantity [Kind] Name #}
-    {% include "MaRDMO/partials/_name.html" with class="QUANTITY / QUANTITY KIND" counter=forloop.counter name=values.Name prefix="QQK" %}
+    {% include "MaRDMO/partials/_name.html" with class="QUANTITY / QUANTITY KIND" name=values.Name %}
 
     {# Include Quantity [Kind] Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="QUANTITY / QUANTITY KIND" description=values.Description name=values.Name %}

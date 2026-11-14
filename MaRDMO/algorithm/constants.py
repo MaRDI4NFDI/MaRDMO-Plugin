@@ -145,7 +145,6 @@ preview_relations = [
         "relation": None,
         "old_name": "PRelatant",
         "new_name": "RelationP",
-        "encryption": "AT"
     },
     {
         "from_idx": "algorithm",
@@ -153,7 +152,6 @@ preview_relations = [
         "relation": None,
         "old_name": "SRelatant",
         "new_name": "RelationS",
-        "encryption": "S"
     },
     {
         "from_idx": "algorithm",
@@ -161,7 +159,6 @@ preview_relations = [
         "relation": "IntraClassRelation",
         "old_name": "IntraClassElement",
         "new_name": "RelationA",
-        "encryption": "A"
     },
     {
         "from_idx": "problem",
@@ -169,7 +166,6 @@ preview_relations = [
         "relation": None,
         "old_name": "BRelatant",
         "new_name": "RelationB",
-        "encryption": "B"
     },
     {
         "from_idx": "problem",
@@ -177,7 +173,6 @@ preview_relations = [
         "relation": "IntraClassRelation",
         "old_name": "IntraClassElement",
         "new_name": "RelationP",
-        "encryption": "AT"
     },
     {
         "from_idx": "software",
@@ -185,7 +180,6 @@ preview_relations = [
         "relation": None,
         "old_name": "BRelatant",
         "new_name": "RelationB",
-        "encryption": "B"
     },
     {
         "from_idx": "software",
@@ -193,7 +187,6 @@ preview_relations = [
         "relation": None,
         "old_name": "dependency",
         "new_name": "RelationS",
-        "encryption": "S"
     },
     {
         "from_idx": "publication",
@@ -201,7 +194,6 @@ preview_relations = [
         "relation": "P2A",
         "old_name": "ARelatant",
         "new_name": "RelationA",
-        "encryption": "A",
         "mapping": "publication",
     },
     {
@@ -212,7 +204,6 @@ preview_relations = [
         "relation": "P2BS",
         "old_name": "BSRelatant",
         "new_name": "RelationBS",
-        "encryption": ["B", "S"],
         "mapping": "publication",
     }
 ]

@@ -59,7 +59,8 @@ def own_item(identifier):
 
     Usage: ``{% if values.ID|own_item %}``.
     '''
-    return is_own_item(identifier)
+    # A relation resolved to its page is a PageRef, no ID
+    return isinstance(identifier, str) and is_own_item(identifier)
 
 
 @register.filter

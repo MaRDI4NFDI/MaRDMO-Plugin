@@ -6,7 +6,7 @@
 {% for values in answers.algorithm.values %}
 
     {# Include Algorithm Name #}
-    {% include "MaRDMO/partials/_name.html" with class="ALGORITHM" counter=forloop.counter name=values.Name prefix="A" %}
+    {% include "MaRDMO/partials/_name.html" with class="ALGORITHM" name=values.Name %}
    
     {# Include Algorithm Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="ALGORITHM" description=values.Description name=values.Name %}
@@ -31,7 +31,7 @@
 {% for values in answers.problem.values %}
 
     {# Include Algorithmic Task Name #}
-    {% include "MaRDMO/partials/_name.html" with class="ALGORITHMIC TASK" counter=forloop.counter name=values.Name prefix="AT" %}
+    {% include "MaRDMO/partials/_name.html" with class="ALGORITHMIC TASK" name=values.Name %}
 
     {# Include Algorithmic Task Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="ALGORITHMIC TASK" description=values.Description name=values.Name %}            
@@ -53,7 +53,7 @@
 {% for values in answers.software.values %}
 
     {# Include Software Name #}
-    {% include "MaRDMO/partials/_name.html" with class="SOFTWARE" counter=forloop.counter name=values.Name prefix="S" %}
+    {% include "MaRDMO/partials/_name.html" with class="SOFTWARE" name=values.Name %}
 
     {# Include Software Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="SOFTWARE" description=values.Description name=values.Name %}            
@@ -80,7 +80,7 @@
 {% for values in answers.benchmark.values %}
 
     {# Include Benchmark Name #}
-    {% include "MaRDMO/partials/_name.html" with class="BENCHMARK" counter=forloop.counter name=values.Name prefix="B" %}
+    {% include "MaRDMO/partials/_name.html" with class="BENCHMARK" name=values.Name %}
 
     {# Include Benchmark Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="BENCHMARK" description=values.Description name=values.Name %}
@@ -98,7 +98,7 @@
 {% for values in answers.publication.values %}
 
     {# Include Publication Name #}
-    {% include "MaRDMO/partials/_name.html" with class="PUBLICATION" counter=forloop.counter name=values.Name prefix="P" %}
+    {% include "MaRDMO/partials/_name.html" with class="PUBLICATION" name=values.Name %}
     
     {# Include Publication DOI, Citation, Authors and Journal #}
     {% include "MaRDMO/partials/_publication.html" with values=values %}
