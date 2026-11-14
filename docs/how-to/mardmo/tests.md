@@ -56,7 +56,8 @@ to another server; a server reached by TCP must be allowed with
 `tests.yml` runs ruff, the tests with coverage, and builds the package.  The
 tests use the MaRDMO-Questionnaire branch with the same name as the plugin
 branch; without one, the questionnaire branch of the integration branch the
-plugin branch is based on (e.g. `0.8.0`), else `main`.  A plugin change that
+plugin branch shares commits with that `main` has not (e.g. `0.8.0`; also
+when the branch goes on after its pull request was merged), else `main`.  A plugin change that
 needs a questionnaire change gets a questionnaire branch of the same name.
 
 | Event | Combinations |
@@ -136,6 +137,20 @@ LIVE=1 pytest tests/live --force-enable-socket
 Scheduled workflows run on the default branch only; GitHub turns the
 schedule off after 60 days without commits (it says so by email), and a run
 started by hand ("Run workflow") turns it on again.
+
+## Browser tests: pages in a real browser
+
+`tests/browser` opens MaRDMO's pages in Chromium (Playwright), e.g. the
+preview's section "Already on the MaRDI Portal" with its button "Use portal
+item".  The pages come from a live server on the test database, the portal
+is faked.  They are opt-in and not part of CI yet:
+
+```bash
+pip install playwright && playwright install chromium
+BROWSER=1 pytest tests/browser --force-enable-socket
+```
+
+`SCREENSHOTS=<folder>` saves pictures of what the tests look at.
 
 ## Add a documentation as a test project
 
