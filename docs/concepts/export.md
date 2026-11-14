@@ -158,7 +158,8 @@ and a dependency graph:
   workers read them from there (`_add_common_metadata(payload, section)`), and
   the preview decides with the same table whether a portal item may be used
   instead (each worker's `marker_sections`; the golden tests check that it
-  names the sections the export uses).  An item that exists on the portal gets only the markers it lacks and
+  names the sections the export uses).  Research fields and academic
+  disciplines get the same markers in every catalog.  An item that exists on the portal gets only the markers it lacks and
   that do not contradict its own: never a second MaRDMO class (of another
   family: a section's main class with its data-property classes, e.g. *linear
   model* for *mathematical model*), community or profile type.  Classes MaRDMO
