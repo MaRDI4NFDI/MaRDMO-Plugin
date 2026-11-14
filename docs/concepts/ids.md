@@ -64,6 +64,14 @@ item whose page is not there is reported ("Selected … not found in …
 Section"), as are two own pages of a section with the same name and
 description (the export would make one item of them).
 
+Preview and checks name a page by its tab, the name it has in the interview
+(`MaRDMO.pages.add_tab_names`): the preview heads each page with its tab and
+the name of its item ("F4: Navier-Stokes equation") and shows a relation as
+the name of its page's item, linked to the page, with the tab in brackets
+("Navier-Stokes equation (F4)", a `MaRDMO.pages.PageRef`).  A renamed or
+deleted tab changes nothing else; the tabs MaRDMO creates are called by
+their section and number ("F4").  Two tabs may have the same name.
+
 ## When the name or description of a page changes
 
 Saving the name or short description of a page in the interview gives every
@@ -127,9 +135,9 @@ opened again.
 
 "Copy tab" copies a page with its ID, so the copy is the same item as the
 original; MaRDMO does not change it (RDMO writes the copy without signals).
-Checks and preview report both pages as one item ("Same Item as Page …"),
-since the export would merge them.  Deleting either page leaves the
-relations with the other one, which has the item's ID.
+Checks and preview report both pages as one item ("Same Item as Page …",
+naming the first page), since the export would merge them.  Deleting either
+page leaves the relations with the other one, which has the item's ID.
 
 A copy of a portal or Wikidata item becomes a new item by choosing "new
 item" as its ID (a template, see above).  A copy of an own item stays the

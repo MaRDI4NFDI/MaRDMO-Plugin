@@ -45,8 +45,12 @@ def test_own_page_with_the_name_and_description_of_an_earlier_one_is_marked():
                            1: {'ID': 'user:2', 'Name': 'reaction rate', 'Description': 'another rate'},
                            2: {'ID': 'user:3', 'Name': 'reaction rate', 'Description': 'a rate'},
                            3: {'ID': 'mardi:Q1', 'Name': 'reaction rate', 'Description': 'a rate'}}}
+    for index, entry in answers['problem'].items():
+        entry['Tab'] = f'RP{index + 1}'
     mark_same_own_items(answers)
-    assert [entry.get('SameAs') for entry in answers['problem'].values()] == [None, None, 1, None]
-    html = render_to_string('MaRDMO/partials/_name.html', {
-        'values': answers['problem'][2], 'name': 'reaction rate', 'counter': 3, 'prefix': 'RP'})
-    assert 'SAME NAME AND SHORT DESCRIPTION AS RP1' in html
+    assert [getattr(entry.get('SameAs'), 'tab', None) for entry in answers['problem'].values()] == \
+        [None, None, 'RP1', None]
+    html = text(render_to_string('MaRDMO/partials/_name.html', {
+        'values': answers['problem'][2], 'name': 'reaction rate'}))
+    assert 'RP3: reaction rate' in html
+    assert 'SAME NAME AND SHORT DESCRIPTION AS reaction rate (RP1)' in html

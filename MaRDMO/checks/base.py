@@ -24,9 +24,9 @@ OLD_PROJECT = 'Made with MaRDMO before 0.8.0, not supported (enter it in a new p
 def without_page(values):
     '''Return ``True`` if one of the resolved relations *values* is an own item without page.
 
-    The preview resolves a relation to the page with its ID (e.g. ``"MF3"``);
-    one that keeps a ``user:`` ID refers to an own item whose page is not
-    there (deleted, or not in this section).
+    The preview resolves a relation to the page with its ID (a
+    :class:`~MaRDMO.pages.PageRef`); one that keeps a ``user:`` ID refers to
+    an own item whose page is not there (deleted, or not in this section).
     '''
     return any(isinstance(value, str) and is_own_item(value) for value in values)
 

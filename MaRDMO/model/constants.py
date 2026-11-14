@@ -394,7 +394,6 @@ preview_relations = [
         "relation": None,
         "old_name": "RPRelatant",
         "new_name": "RelationRP",
-        "encryption": "RP",
         "assumption": False,
     },
     {
@@ -403,7 +402,6 @@ preview_relations = [
         "relation": "MM2MF",
         "old_name": "MFRelatant",
         "new_name": "RelationMF",
-        "encryption": "F",
         "assumption": False,
     },
     {
@@ -412,7 +410,6 @@ preview_relations = [
         "relation": None,
         "old_name": "TRelatant",
         "new_name": "RelationT",
-        "encryption": "CT",
         "assumption": False,
     },
     {
@@ -421,7 +418,6 @@ preview_relations = [
         "relation": "IntraClassRelation",
         "old_name": "IntraClassElement",
         "new_name": "RelationMM",
-        "encryption": "MM",
         "assumption": True,
     },
     {
@@ -430,7 +426,6 @@ preview_relations = [
         "relation": "T2MF",
         "old_name": "MFRelatant",
         "new_name": "RelationMF",
-        "encryption": "F",
         "assumption": False,
     },
     {
@@ -439,7 +434,6 @@ preview_relations = [
         "relation": "T2Q",
         "old_name": "QRelatant",
         "new_name": "RelationQQK",
-        "encryption": "QQK",
         "assumption": False,
     },
     {
@@ -448,7 +442,6 @@ preview_relations = [
         "relation": "IntraClassRelation",
         "old_name": "IntraClassElement",
         "new_name": "RelationT",
-        "encryption": "CT",
         "assumption": True,
     },
     {
@@ -457,7 +450,6 @@ preview_relations = [
         "relation": "MF2MF",
         "old_name": "MFRelatant",
         "new_name": "RelationMF1",
-        "encryption": "F",
         "assumption": False,
     },
     {
@@ -466,7 +458,6 @@ preview_relations = [
         "relation": "IntraClassRelation",
         "old_name": "IntraClassElement",
         "new_name": "RelationMF2",
-        "encryption": "F",
         "assumption": True,
     },
     {
@@ -475,7 +466,6 @@ preview_relations = [
         "relation": "Q2Q",
         "old_name": "QRelatant-Q",
         "new_name": "RelationQQ",
-        "encryption": "QQK",
         "assumption": False,
     },
     {
@@ -484,7 +474,6 @@ preview_relations = [
         "relation": "QK2QK",
         "old_name": "QKRelatant-QK",
         "new_name": "RelationQKQK",
-        "encryption": "QQK",
         "assumption": False,
     },
     {
@@ -493,7 +482,6 @@ preview_relations = [
         "relation": "Q2QK",
         "old_name": "QKRelatant-Q",
         "new_name": "RelationQQK",
-        "encryption": "QQK",
         "assumption": False,
     },
     {
@@ -502,7 +490,6 @@ preview_relations = [
         "relation": "QK2Q",
         "old_name": "QRelatant-QK",
         "new_name": "RelationQKQ",
-        "encryption": "QQK",
         "assumption": False,
     },
     {
@@ -511,7 +498,6 @@ preview_relations = [
         "relation": "IntraClassRelation",
         "old_name": "IntraClassElement",
         "new_name": "RelationRF",
-        "encryption": "AD",
         "assumption": False,
     },
     {
@@ -520,7 +506,6 @@ preview_relations = [
         "relation": None,
         "old_name": "RFRelatant",
         "new_name": "RelationRF",
-        "encryption": "AD",
         "assumption": False,
     },
     {
@@ -529,7 +514,6 @@ preview_relations = [
         "relation": "IntraClassRelation",
         "old_name": "IntraClassElement",
         "new_name": "RelationRP",
-        "encryption": "RP",
         "assumption": False,
     },
     {
@@ -541,17 +525,16 @@ preview_relations = [
         "relation": "P2E",
         "old_name": "EntityRelatant",
         "new_name": "RelationP",
-        "encryption": ["AD", "RP", "MM", "F", "QQK", "CT"],
         "assumption": False,
         "mapping": "publication",
     },
 ]
 
 preview_map_general = [
-    # fromIDX, toIDX, entityOld, entityNew, enc
-    ('model', 'formulation', 'assumption', 'assumptionMapped', 'F'),
-    ('task', 'formulation', 'assumption', 'assumptionMapped', 'F'),
-    ('formulation', 'formulation', 'assumption', 'assumptionMapped', 'F'),
+    # fromIDX, toIDX, entityOld, entityNew
+    ('model', 'formulation', 'assumption', 'assumptionMapped'),
+    ('task', 'formulation', 'assumption', 'assumptionMapped'),
+    ('formulation', 'formulation', 'assumption', 'assumptionMapped'),
 ]
 
 preview_map_quantity = [

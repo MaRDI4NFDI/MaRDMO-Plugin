@@ -48,6 +48,7 @@ from .helpers import (
 )
 from .oauth2 import OauthProviderMixin
 from .payload import DocumentationProblem, PortalUnavailable
+from .pages import add_tab_names
 from .views import render_preview
 
 from .model.worker import PrepareModel
@@ -343,8 +344,10 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                 get_answer=get_answers
             )
 
-        # Relations show their page's name and description (IDs, #100), own
-        # items without page a generic one (#129)
+        # Pages are named by their tab (#152); relations show their page's
+        # name and description (IDs, #100), own items without page a generic
+        # one (#129)
+        add_tab_names(self.project, answers)
         link_to_pages(answers)
         describe_items_without_page(answers)
         mark_same_own_items(answers)

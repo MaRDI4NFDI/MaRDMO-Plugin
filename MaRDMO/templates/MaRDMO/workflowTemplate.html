@@ -6,7 +6,7 @@
 {% for values in answers.workflow.values %}
     
     {# Include Interdisciplinary Workflow Name #}
-    {% include "MaRDMO/partials/_name.html" with class="INTERDISCIPLINARY WORKFLOW" counter=forloop.counter name=values.Name prefix="IW" %}
+    {% include "MaRDMO/partials/_name.html" with class="INTERDISCIPLINARY WORKFLOW" name=values.Name %}
 
     {# Include Interdisciplinary Workflow Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="INTERDISCIPLINARY WORKFLOW" description=values.Description name=values.Name %}
@@ -57,7 +57,7 @@
 {% for values in answers.processstep.values %}
     
     {# Include Process Step Name #}
-    {% include "MaRDMO/partials/_name.html" with class="PROCESS STEP" counter=forloop.counter name=values.Name prefix="PS" %}
+    {% include "MaRDMO/partials/_name.html" with class="PROCESS STEP" name=values.Name %}
 
     {# Include Process Step Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="PROCESS STEP" description=values.Description name=values.Name %}
@@ -92,7 +92,7 @@
 {% for values in answers.algorithm.values %}
 
     {# Include Algorithm Name #}
-    {% include "MaRDMO/partials/_name.html" with class="ALGORITHM" counter=forloop.counter name=values.Name prefix="A" %}
+    {% include "MaRDMO/partials/_name.html" with class="ALGORITHM" name=values.Name %}
    
     {# Include Algorithm Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="ALGORITHM" description=values.Description name=values.Name %}
@@ -114,7 +114,7 @@
 {% for values in answers.software.values %}
 
     {# Include Software Name #}
-    {% include "MaRDMO/partials/_name.html" with class="SOFTWARE" counter=forloop.counter name=values.Name prefix="S" %}
+    {% include "MaRDMO/partials/_name.html" with class="SOFTWARE" name=values.Name %}
 
     {# Include Software Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="SOFTWARE" description=values.Description name=values.Name %}            
@@ -138,7 +138,7 @@
 {% for values in answers.hardware.values %}
 
     {# Include Hardware Name #}
-    {% include "MaRDMO/partials/_name.html" with class="HARDWARE" counter=forloop.counter name=values.Name prefix="HW" %}
+    {% include "MaRDMO/partials/_name.html" with class="HARDWARE" name=values.Name %}
 
     {# Include Hardware Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="HARDWARE" description=values.Description name=values.Name %}            
@@ -184,7 +184,7 @@
 {% for values in answers.dataset.values %}
 
     {# Include Data Set Name #}
-    {% include "MaRDMO/partials/_name.html" with class="DATA SET" counter=forloop.counter name=values.Name prefix="DS" %}
+    {% include "MaRDMO/partials/_name.html" with class="DATA SET" name=values.Name %}
 
     {# Include Data Set Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="DATA SET" description=values.Description name=values.Name %}            
@@ -270,7 +270,7 @@
 {% for values in answers.publication.values %}
 
     {# Include Publication Name #}
-    {% include "MaRDMO/partials/_name.html" with class="PUBLICATION" counter=forloop.counter name=values.Name prefix="P" %}
+    {% include "MaRDMO/partials/_name.html" with class="PUBLICATION" name=values.Name %}
     
     {# Include Publication DOI, Citation, Authors and Journal #}
     {% include "MaRDMO/partials/_publication.html" with values=values %}

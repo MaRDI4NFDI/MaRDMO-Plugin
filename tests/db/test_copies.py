@@ -62,7 +62,7 @@ def test_a_copied_tab_is_reported_as_the_same_item(model, client):
     answers = answers_of(model)
     messages = [str(m) for m in Checks().run_model(project=model, data=answers, catalog=str(model.catalog))]
     assert any('QQK2' in m and 'Same Item as Page QQK1' in m for m in messages)
-    assert answers['quantity'][1]['SameItemAs'] == 1
+    assert answers['quantity'][1]['SameItemAs'].tab == 'QQK1'    # named as the check names it
 
 
 def test_relations_find_the_copy_when_the_original_is_deleted(model, client):
@@ -81,5 +81,6 @@ def test_the_first_of_two_pages_with_one_id_is_the_item():
                             2: {'ID': 'user:1', 'Name': 'b', 'Description': 'c'},
                             3: {'ID': 'user:1', 'Name': 'b', 'Description': 'c'}}}
     mark_same_own_items(answers)
-    assert [entry.get('SameItemAs') for entry in answers['quantity'].values()] == [None, 1, None, 3]
+    assert [getattr(entry.get('SameItemAs'), 'index', None) for entry in answers['quantity'].values()] == \
+        [None, 0, None, 2]
     assert 'SameAs' not in answers['quantity'][3]

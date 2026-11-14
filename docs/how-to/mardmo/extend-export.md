@@ -37,7 +37,10 @@ restructuring, this step can be skipped.
 
 The answers dict (augmented by pre-processing if applicable) is passed to a Django
 template as context.  Add a new section to the relevant template to render the new
-entity's fields.
+entity's fields.  Head each page with `partials/_name.html` (its tab and name); a
+relation to a page is resolved by `entity_relations` in pre-processing (an entry
+of `preview_relations` in `<submodule>/constants.py`) and is printed as it is:
+`{{ relation.relatant }}` renders the link to the page.
 
 !!! note
     Errors (missing required fields, invalid values) are flagged with red text at
