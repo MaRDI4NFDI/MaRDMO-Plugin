@@ -1,0 +1,9 @@
+{% load i18n %}
+{# An item as the dropdowns will show it (#142): its source as a coloured badge with the word, the label, the description below #}
+<div class="mardmo-item">
+    <span class="mardmo-source mardmo-source--{{ source }}">{% if source == 'mardi' %}MaRDI{% elif source == 'wikidata' %}Wikidata{% elif source == 'project' %}{% translate "project" %}{% else %}{% translate "new" %}{% endif %}</span>
+    <span class="mardmo-item__text">
+        <span class="mardmo-item__label">{{ label }}</span>
+        {% if description %}<span class="mardmo-item__description">{{ description }}</span>{% endif %}
+    </span>
+</div>

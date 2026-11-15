@@ -153,8 +153,8 @@ started by hand ("Run workflow") turns it on again.
 ## Browser tests: pages in a real browser
 
 `tests/browser` opens MaRDMO's pages in Chromium (Playwright), e.g. the
-preview's section "Already on the MaRDI Portal" with its button "Use portal
-item".  The pages come from a live server on the test database, the portal
+preview's box "Before you can export" with the items already on the MaRDI
+Portal and their decision ("Use this item", "Redefine").  The pages come from a live server on the test database, the portal
 is faked.  They are opt-in and not part of CI yet:
 
 ```bash

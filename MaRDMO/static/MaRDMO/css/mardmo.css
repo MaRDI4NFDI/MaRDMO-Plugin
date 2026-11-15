@@ -62,8 +62,268 @@
     margin: 0.3em 0 0 1.5em;
 }
 
-/* Items that are on the MaRDI Portal already (#141); the reuse form stays in its cell */
-.mardmo-duplicates form {
-    display: inline;
-    margin-right: 0.5em;
+/* An item as the dropdowns show it (#142): source badge, label, description below.
+   The badge always has the word: the colour alone is not accessible. */
+.mardmo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6em;
+}
+.mardmo-source {
+    flex: none;
+    margin-top: 0.15em;
+    padding: 0.1em 0.5em;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    color: #333;
+    font-size: 0.8em;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.mardmo-source--mardi { background-color: #dbe9ff; }
+.mardmo-source--wikidata { background-color: #dcf3e3; }
+.mardmo-source--project { background-color: #fff1cc; }
+.mardmo-source--new { background-color: #ece3fb; }
+.mardmo-item__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.mardmo-item__label {
+    font-weight: bold;
+}
+.mardmo-item__description {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Everything that prevents the export, above the preview (#141, #152): it
+   must not look like the preview, so a framed box with a warning colour */
+.mardmo-before-export {
+    margin: 0 0 3em 0;
+    padding: 1em 1.5em 1.2em 1.5em;
+    background-color: #fdf1f0;
+    border: 1px solid #ebccd1;
+    border-left: 8px solid #c9302c;
+    border-radius: 4px;
+}
+.mardmo-before-export h1 {
+    margin-top: 0.2em;
+    color: #a94442;
+}
+.mardmo-before-export__icon {
+    margin-right: 0.2em;
+}
+.mardmo-before-export__summary {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.mardmo-before-export__summary a {
+    color: #a94442;
+}
+.mardmo-before-export__part {
+    margin-top: 1.2em;
+    padding: 0.4em 1.2em 0.8em 1.2em;
+    background-color: white;
+    border: 1px solid #ebccd1;
+    border-top-width: 4px;
+    border-radius: 4px;
+}
+.mardmo-before-export__part h2 {
+    margin-top: 0.4em;
+    font-size: 1.4em;
+}
+.mardmo-before-export__part--duplicates { border-top-color: #ec971f; }
+.mardmo-before-export__part--problems { border-top-color: #c9302c; }
+
+/* A small caption above a value, instead of a table header */
+.mardmo-caption {
+    display: block;
+    margin-bottom: 0.2em;
+    color: #6c757d;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+/* Items already on the portal: the item, then where it is entered, the
+   portal item to check, and the decision; a rule after each item */
+.mardmo-duplicates {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.mardmo-duplicate {
+    padding: 0.9em 0;
+    border-bottom: 1px solid #ddd;
+}
+.mardmo-duplicate:last-child {
+    border-bottom: none;
+}
+.mardmo-duplicate__details {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 0.8fr) minmax(0, 1.5fr);
+    gap: 1em;
+    margin-top: 0.7em;
+}
+@media (max-width: 767px) {
+    .mardmo-duplicate__details {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* The decision: two choices like a switch, nothing chosen at first; a
+   choice shows its button next to the switch (no JavaScript) */
+.mardmo-decision {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.mardmo-decision legend {
+    width: auto;
+    margin: 0 0 0.2em 0;
+    border: none;
+}
+.mardmo-decision__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+}
+.mardmo-decision__choices {
+    display: inline-flex;
+    border: 1px solid #adadad;
+    border-radius: 4px;
+    overflow: hidden;
+}
+/* The radio buttons stay focusable for the keyboard, but are not seen */
+.mardmo-decision__choices input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+.mardmo-decision__choices label {
+    margin: 0;
+    padding: 0.3em 0.9em;
+    background-color: white;
+    font-weight: normal;
+    cursor: pointer;
+}
+.mardmo-decision__choices label + input + label {
+    border-left: 1px solid #adadad;
+}
+.mardmo-decision__choices label:hover {
+    background-color: #f0f0f0;
+}
+.mardmo-decision__choices input:checked + label {
+    background-color: #337ab7;
+    color: white;
+}
+.mardmo-decision__choices input:focus-visible + label {
+    outline: 2px solid #337ab7;
+    outline-offset: -4px;
+}
+.mardmo-decision__choices input:disabled + label {
+    color: #999;
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+.mardmo-decision__then {
+    display: none;
+    margin: 0;
+}
+.mardmo-decision:has(.mardmo-decision__use:checked) .mardmo-decision__then--use,
+.mardmo-decision:has(.mardmo-decision__redefine:checked) .mardmo-decision__then--redefine {
+    display: inline-block;
+}
+
+/* Why an item cannot be used: a small (i) next to the switch, opened by
+   click or tap as a bubble below it */
+.mardmo-why {
+    position: relative;
+}
+.mardmo-why summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5em;
+    height: 1.5em;
+    border: 1px solid #6c757d;
+    border-radius: 50%;
+    color: #6c757d;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+}
+.mardmo-why summary::-webkit-details-marker {
+    display: none;
+}
+.mardmo-why[open] summary {
+    background-color: #6c757d;
+    color: white;
+}
+.mardmo-why__text {
+    position: absolute;
+    z-index: 10;
+    top: 2em;
+    right: 0;
+    width: 22em;
+    max-width: 80vw;
+    padding: 0.6em 0.8em;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    color: #555;
+    font-size: 0.9em;
+}
+.mardmo-why__text p {
+    margin-bottom: 0.3em;
+}
+.mardmo-why__text p:last-child {
+    margin-bottom: 0;
+}
+
+/* The problems, by section and page */
+.mardmo-problems {
+    padding-left: 1.2em;
+}
+.mardmo-problems > li {
+    margin-bottom: 0.5em;
+}
+/* A link styled as a button: RDMO makes the text of every a.btn white */
+a.btn.mardmo-button-link,
+a.btn.mardmo-button-link:visited,
+a.btn.mardmo-button-link:hover,
+a.btn.mardmo-button-link:focus {
+    color: #333;
+}
+
+/* The heading and the box stay below RDMO's fixed navigation bar when jumped to */
+.mardmo-preview #title,
+.mardmo-preview [id] {
+    scroll-margin-top: 70px;
+}
+
+/* The disabled export button: its wrapper has the hover text */
+.mardmo-blocked {
+    display: inline-block;
+    cursor: not-allowed;
+}
+
+/* A link into the interview (it opens in a new window) */
+.mardmo-interview-link {
+    margin-left: 0.5em;
+    font-size: 0.9em;
+}
+.mardmo-decision__then .mardmo-interview-link {
+    margin-left: 0;
+}
+.mardmo-interview-link::before {
+    content: "\2192\00a0";
 }

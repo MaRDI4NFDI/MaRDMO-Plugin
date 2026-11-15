@@ -8,6 +8,8 @@ once more: what it finds changed since the preview.
 '''
 import re
 
+from rdmo.questions.models import Page
+
 from MaRDMO.constants import BASE_URI
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 
@@ -44,6 +46,10 @@ def test_problems_are_listed_with_links_and_the_export_is_disabled(white, client
     assert '<a href="#page-formulation-1">conservation law for the opiate-using career ODE model</a> (F2)' in section
     assert 'Missing Short Description' in text(section)
     assert 'id="page-formulation-1"' in html
+    # The interview page of the formulas (RDMO opens the page, the tab is named)
+    page = Page.objects.get(attribute__uri=f'{BASE_URI}domain/formulation', sections__catalogs=white.catalog)
+    assert f'href="/projects/{white.pk}/interview/{page.pk}/" target="_blank" rel="noopener" class="mardmo-interview-link"' in section
+    assert '1 point to fix in the documentation' in text(html)
     assert f'{BUTTON} disabled aria-describedby="export-blocked" />' in html
     assert 'Fix the points at the top (Before you can export)' in text(html)
 
@@ -82,3 +88,15 @@ def test_the_export_checks_again_and_names_what_changed(white, client):
     page = text(response.content.decode())
     assert 'Something changed since the preview' in page
     assert 'Formula (Page F2): Missing Short Description' in page
+
+
+def test_a_missing_relation_is_marked_not_not_documented(white, client):
+    '''An empty relation is "NOT DOCUMENTED" only if it may be empty; a missing one shows just its mark.'''
+    html = preview(client, white)
+    block = html[html.index('id="RP2AD"'):]
+    assert 'NOT DOCUMENTED' not in block[:block.index('<h')]
+    white.values.filter(attribute__uri=f'{BASE_URI}domain/problem/field-relatant').delete()
+    html = preview(client, white)
+    block = html[html.index('id="RP2AD"'):]
+    block = block[:block.index('<h', 1)]
+    assert 'Missing Academic Discipline' in text(block) and 'NOT DOCUMENTED' not in block

@@ -213,7 +213,7 @@ def item_ids(item):
 
 @dataclass
 class Row:
-    '''A row of the preview's section "Already on the MaRDI Portal".'''
+    '''An item of the preview's "Items already on the MaRDI Portal" (in "Before you can export").'''
     duplicate: Duplicate
     action: str
     portal_label: str = ''
@@ -291,7 +291,7 @@ def documentation_items(answers):
 
 
 def preview_duplicates(project, answers, prepare):
-    '''The rows of the preview's section "Already on the MaRDI Portal".
+    '''The items of the preview's "Items already on the MaRDI Portal" (in "Before you can export").
 
     Args:
         project: The RDMO project (for where the items are entered).

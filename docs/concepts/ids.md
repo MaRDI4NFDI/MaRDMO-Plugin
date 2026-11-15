@@ -156,7 +156,7 @@ Answers with the ID of an exported Wikidata item get its new `mardi:` ID too.
 
 An item the export would create may exist on the MaRDI Portal already (the
 same label and description, or for a Wikidata item the same Wikidata QID).
-The preview lists these; **Use portal item** (`MaRDMO.duplicates.reuse`) makes
+The preview lists these; **Use this item** (`MaRDMO.duplicates.reuse`) makes
 the item the portal item: every answer with one of its IDs (all `user:` IDs
 the export would merge, or its `wikidata:` ID) gets `mardi:<QID>` and the
 text "Label (Description)" of the portal item, and its page the portal item's

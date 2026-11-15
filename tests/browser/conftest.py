@@ -14,8 +14,9 @@ import os
 
 import pytest
 from django.db import connections
+from django.contrib.staticfiles.handlers import StaticFilesHandler
 from django.test import Client
-from django.test.testcases import LiveServerThread, _StaticFilesHandler
+from django.test.testcases import LiveServerThread
 
 # The test database with the questionnaire, and the helpers to fill projects
 from tests.db.conftest import django_db_setup, project  # noqa: F401
@@ -42,7 +43,8 @@ def server(db, settings):
     # The connection itself, not django.db.connection (a proxy to the thread's own)
     connection = connections['default']
     connection.inc_thread_sharing()
-    thread = LiveServerThread('localhost', _StaticFilesHandler, connections_override={'default': connection}, port=0)
+    # The static files from the apps (RDMO's and MaRDMO's styles), as StaticLiveServerTestCase
+    thread = LiveServerThread('localhost', StaticFilesHandler, connections_override={'default': connection}, port=0)
     thread.daemon = True
     thread.start()
     thread.is_ready.wait()

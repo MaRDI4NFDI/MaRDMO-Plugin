@@ -51,13 +51,21 @@ The preview runs everything the export checks (`MaRDMO.pipeline.run`): the
 export itself on a copy of the answers, without posting
 ([payload construction](#6-payload-construction) with its checks against the
 MaRDI Portal, and the [cyclic dependency check](#7-cyclic-dependency-check)).
-What they find (`MaRDMO.problems.Problem`) is listed at the top, in the section
-**Before you can export**, by section and page; each page is linked to its
-place in the preview.  The export's own problems have no page and are listed
-under *Export*.
+Everything that prevents the export is shown at the top, in the box **Before
+you can export** (`partials/_before_export.html`), with a summary line and two
+parts: the items already on the MaRDI Portal (below) and **Errors,
+inconsistencies and incomplete documentation**.  The latter lists what the
+checks find (`MaRDMO.problems.Problem`) by section and page; each page is
+linked to its place in the preview and to its page in the interview
+(`MaRDMO.pages.interview_urls`; RDMO opens a page, not a tab, so the tab is
+named).  The export's own problems have no page and are listed under
+*Export*.  On the pages of the preview a problem is a red mark at its field
+(template tag `marks`); an empty relation block says *NOT DOCUMENTED* only if
+it has no mark (filter `has_marks`).
 
 The export button stays on the page, but is disabled until nothing is left;
-the text next to it says why:
+its hover text says why (on a wrapper: a disabled button gets no mouse events
+in some browsers), and **To the top** next to Cancel leads back to the box:
 
 | Case | The preview says |
 |---|---|
@@ -75,27 +83,35 @@ seconds for the largest documentations of the portal.
 Before the template, `MaRDMO.duplicates.preview_duplicates` looks up the items
 the export would create, with the same rules as the export (see
 [Payload Construction](#6-payload-construction); the results are cached, so the
-export reuses them).  If any exist on the portal, the section **Already on the
-MaRDI Portal** at the top lists them: the item, where it is entered (page and
-tab, linked to the interview; RDMO cannot open a tab), the portal item with its
-class, community and profile type, and what the user can do:
+export reuses them).  If any exist on the portal, the part **Items already on
+the MaRDI Portal** lists them.  Each item has two lines: the item as the
+dropdowns will show it (source badge, label, description;
+`partials/_item_card.html`), then where it is entered (page and tab, linked to
+the interview), the portal item to check (its QID, linked; no label or
+statements), and the decision.  The decision is a switch of two radio buttons,
+**Use this item** and **Redefine**, with nothing chosen and what they do as
+hover texts; a choice shows its one button next to the switch (CSS only),
+**Apply** or **To interview** (the item's page, in a new window), so no click
+on the switch changes answers.  When "Use this item" is not possible it is
+greyed out, and a small **i** (a `<details>`, so it opens on tap too) shows
+the reasons and what to do:
 
-| Case | Action |
-|---|---|
-| none of the markers the export would give the item (`SECTION_MARKERS`, see below) contradicts the portal item's | **Use portal item** |
-| an own item, the portal item is another kind of item | rename it on its page |
-| a Wikidata item, its portal twin is another kind of item | choose another item or make it a new item (a new name would not change its Wikidata QID) |
-| an own item with the label and description of a Wikidata item of the same documentation (the portal takes only one) | rename it, or select the Wikidata item |
-| the portal item's markers could not be looked up | open the preview again later |
+| Case (`row.action`) | Use this item | Redefine (and the **i**) |
+|---|---|---|
+| `reuse`: none of the markers the export would give the item (`SECTION_MARKERS`, see below) contradicts the portal item's | **Apply** | rename it on its page |
+| `rename`: an own item, the portal item is another kind of item | greyed out, the reasons on hover | rename it on its page (with the reasons) |
+| `replace`: a Wikidata item, its portal twin is another kind of item | greyed out | choose another item or make it a new item (a new name would not change its Wikidata QID) |
+| `rename`, rule `documentation`: an own item with the label and description of a Wikidata item of the same documentation (the portal takes only one) | greyed out | rename it, or select the Wikidata item |
+| `unknown`: the portal item's markers could not be looked up | greyed out | rename it, or open the preview again later |
 
 Authors and journals of publications are not listed: MaRDMO takes them from
 the citation, the user cannot change them, and the export decides for them
 (see [Payload Construction](#6-payload-construction)).
 
-While the section has rows, the export button is disabled.  If the lookup
+While the part has items, the export button is disabled.  If the lookup
 failed, the section says so, and the export waits until the portal answers.
 
-**Use portal item** posts to `services/reuse/<project>/`
+**Apply** posts to `services/reuse/<project>/`
 (`MaRDMO.views.reuse_portal_item`, POST with Django's CSRF token, RDMO's
 permission `projects.change_value_object`).  The view trusts nothing of the
 request: it looks the duplicate up again and refuses unless the preview would
@@ -103,7 +119,9 @@ offer this action for exactly this item and portal item.  Then
 `MaRDMO.duplicates.reuse` gives every answer with the item's ID(s) the portal
 item's `mardi:` ID and text, and its page the portal item's label and
 description (see [Item IDs](ids.md#using-a-portal-item-instead)), and the
-preview opens again.  The export then adds what the documentation says to
+preview opens again at the box (`#before-export`), with its checks run again
+on the changed answers (the item is no longer listed).  "Apply" shows "…"
+while it waits, so it is not sent twice.  The export then adds what the documentation says to
 the portal item, with the markers it lacks.
 
 Publications are shown as the export writes them: a citation line built from the

@@ -9,7 +9,7 @@ Provides:
 - ``get_progress``   — JSON endpoint that returns current task progress for polling
 - ``show_progress``  — HTML view that renders a live progress page for a running task
 - ``show_success``   — HTML view that renders the completed-task result page
-- ``reuse_portal_item`` — POST endpoint of the preview's "use portal item" (#141)
+- ``reuse_portal_item`` — POST endpoint of the preview's "Use this item" (#141)
 - ``render_preview`` — helper that renders a Jinja2 template with questionnaire answers
 
 Success page (``show_success``)
@@ -38,6 +38,7 @@ from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.translation import gettext as _, gettext_noop as N_
 from django.views.decorators.http import require_GET, require_POST
 
@@ -49,6 +50,7 @@ from .constants import (DOI_BASE_URL, ISSN_BASE_URL, MORWIKI_BASE_URL, ORCID_BAS
                         WIKIDATA, ZBMATH_AUTHOR_BASE_URL)
 from . import VERSION
 from .getters import get_item_url
+from .pages import interview_urls
 from .validators import url_problem
 from .store import (
     _progress_store,
@@ -370,6 +372,9 @@ def render_preview(self, template, answers, option, submit_label, duplicates=Non
             'submit_label': submit_label,
             'duplicates': duplicates,
             'gate': gate,
+            # The interview pages of the problems' pages, linked in "Before you can export"
+            'interview': interview_urls(self.project, {problem.page.section for problem in gate.problems
+                                                       if problem.page is not None}) if gate else {},
             'project': self.project,
             'export_format': getattr(self, 'key', ''),
             'mardiURI': get_item_url('mardi'),
@@ -391,14 +396,14 @@ def _refuse(request, error):
 def reuse_portal_item(request, project_id):
     """Make an item of the documentation the MaRDI Portal item it duplicates (#141).
 
-    The preview's "use portal item" posts ``format`` (the export's key),
+    The preview's "Use this item" posts ``format`` (the export's key),
     ``item`` (the item's ID) and ``qid`` (the portal item).  Nothing of the
     request is trusted: the duplicate is looked up again and must allow the
     reuse (:func:`~MaRDMO.duplicates.decide`).  The user needs RDMO's
     permission to change the project's answers; Django checks the CSRF token.
 
     Returns:
-        A redirect to the preview, or an error page.
+        A redirect to the preview's box "Before you can export", or an error page.
     """
     from .duplicates import preview_duplicates, reuse, same_duplicate
     from .main import _CATALOG_PREPARE_MAP, MaRDMOExportProvider
@@ -428,4 +433,5 @@ def reuse_portal_item(request, project_id):
         return _refuse(request, _('The label of the portal item could not be looked up; please try again.'))
 
     reuse(project, row.duplicate, row.portal_label, row.portal_description)
-    return redirect('project_export', project.pk, export_format)
+    # Back to the box at the top: the preview runs its checks again, the item is no longer listed
+    return redirect(reverse('project_export', args=[project.pk, export_format]) + '#before-export')

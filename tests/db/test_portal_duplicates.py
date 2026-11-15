@@ -1,4 +1,4 @@
-'''The preview's section "Already on the MaRDI Portal" and its "use portal item" (#141).
+'''The preview's items already on the MaRDI Portal (in "Before you can export") and their reuse (#141).
 
 The portal's answers are faked: find_portal_items finds what a test gives it.
 '''
@@ -63,8 +63,8 @@ def test_without_duplicates_the_preview_has_no_section(model, client, portal):
     '''The documentation is incomplete, so the button is disabled for that reason, not for duplicates.'''
     portal()
     html = preview(client, model)
-    assert 'Already on the MaRDI Portal' not in html and 'Decide on the items at the top' not in html
-    assert 'Before you can export' in html
+    assert 'Items already on the MaRDI Portal' not in html and 'Decide on the items' not in html
+    assert 'Before you can export' in html and 'id="export-problems"' in html
 
 
 def test_a_failed_lookup_asks_to_try_again(model, client, portal):
@@ -80,18 +80,21 @@ def test_duplicates_are_listed_and_block_the_export(model, client, portal):
            by_wikidata={'Q7150': 'Q60093'},
            markers={'Q5': markers(), 'Q6': markers(ITEMS['software']), 'Q60093': markers(ITEMS['software'])})
     html = preview(client, model)
-    assert 'Already on the MaRDI Portal' in html
-    assert 'id="export-blocked"' in html and 'Decide on the items at the top' in html
+    assert 'Items already on the MaRDI Portal' in html and '3 items are already on the MaRDI Portal' in html
+    assert 'id="export-blocked"' in html and 'Decide on the items already on the MaRDI Portal first' in html
     assert '<input type="submit" value="Export to MaRDI Portal" class="btn btn-primary" disabled' in html
     # The quantity may become Q5: a form with the CSRF token
     assert html.count('data-action="reuse"') == 1 and 'csrfmiddlewaretoken' in html
     assert 'name="item" value="user:mass"' in html and 'name="qid" value="Q5"' in html
+    assert html.count('class="mardmo-decision__use">') == 1 and html.count('class="mardmo-decision__use" disabled>') == 2
     # The task: Q6 is software; the Wikidata field: its twin is software too
     assert 'data-action="rename"' in html and 'data-action="replace"' in html
     assert 'Its class on the MaRDI Portal is software; MaRDMO would give it the class computational task.' in html
-    # Where: the page and the tab's name; the twin's portal label
+    assert 'a new name would not change its Wikidata QID' in html
+    # The items with their source; where they are entered; the portal items to check, without their labels
+    assert html.count('mardmo-source--new') == 2 and html.count('mardmo-source--wikidata') == 1
     assert f'/projects/{model.pk}/interview/' in html and 'QQK1' in html and 'CT1' in html
-    assert 'ecology (branch of biology)' in html
+    assert 'Q60093</a>' in html and 'branch of biology' not in html
 
 
 def reuse(client, model, item='user:mass', qid='Q5'):
@@ -106,7 +109,7 @@ def text(model, path, **fields):
 def test_use_portal_item_rewrites_every_answer_and_the_page(model, client, portal):
     portal(by_label={('mass', 'physical quantity'): 'Q5'}, markers={'Q5': markers()})
     response = reuse(client, model)
-    assert response.status_code == 302 and response.url == f'/projects/{model.pk}/export/wikibase/'
+    assert response.status_code == 302 and response.url == f'/projects/{model.pk}/export/wikibase/#before-export'
     assert text(model, 'quantity/id') == ('mardi:Q5', 'mass (physical quantity)')
     assert text(model, 'task/quantity-relatant') == ('mardi:Q5', 'mass (physical quantity)')
     assert text(model, 'quantity/name')[1] == 'mass'

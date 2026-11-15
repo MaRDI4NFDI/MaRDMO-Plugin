@@ -324,7 +324,7 @@ def test_the_message_says_what_to_do():
         'The MaRDI Portal did not create "mass" (physical quantity): an item with this label and description '
         'now exists there (Q77). It was not there when MaRDMO checked before the export, so it was probably '
         'created in the meantime. Nothing was sent to the MaRDI Portal. Open the preview again: under '
-        '"Already on the MaRDI Portal" you can use Q77 or rename your item. Then export again; the export '
+        '"Items already on the MaRDI Portal" you can use Q77 or redefine your item. Then export again; the export '
         'adds the rest.')
     # After something was created, the result page lists it
     assert 'Nothing was sent' not in own.message(sent=True)
