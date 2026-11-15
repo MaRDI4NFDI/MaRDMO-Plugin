@@ -105,48 +105,28 @@ skip pre-save validation and are checked by the steps below.
 
 ---
 
-## Step 4 — Preview marker
-
-**File:** `templatetags/mardmo_tags.py` — expose the rule as a template filter
-that returns the message, or `''`:
-
-```python
-@register.filter
-def swmath_problem(swmath_id):
-    '''Return what is wrong with a swMATH work ID (same rule everywhere), or ``''``.'''
-    return _swmath_problem(swmath_id) or ''
-```
-
-**File:** the preview template (here `templates/MaRDMO/partials/_reference_block.html`)
-— show the value followed by the marker, so the user sees what is wrong with
-which value:
-
-```django
-{{ reference.1 }}{% with problem=reference.1|swmath_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %}
-```
-
-Add `{% load mardmo_tags %}` at the top of the template if it is not there yet.
-
----
-
-## Step 5 — Documentation check
+## Step 4 — Documentation check
 
 **File:** `checks/base.py`, `checks/model.py`, `checks/algorithm.py` or
-`checks/workflow.py` — call the same rule and add an error naming the section,
-the page and the problem.  For references this happens in
-`ChecksBase._check_references`:
+`checks/workflow.py` — call the same rule and add a problem naming the section,
+the page, the problem and the field (the answer it belongs to).  For references
+this happens in `ChecksBase._check_references`:
 
 ```python
 elif option_key == 'SWMATH':
     problem = swmath_problem(entry[1])
 ...
 if problem:
-    self.err.append(self._error(section, page_name, f'Invalid {label}: {problem}'))
+    self.err.append(self._error(section, page_name, f'Invalid {label}: {problem}', field='reference'))
 ```
+
+The preview shows the problem in red where the template shows the field
+(`{% marks values "reference" %}`, here in `partials/_reference_block.html`), and
+lists it under *Before you can export*; nothing else is needed for the preview.
 
 ---
 
-## Step 6 — Export
+## Step 5 — Export
 
 **Normalise** values whose problems never change their meaning, instead of
 reporting them.  For references, `PublicationExport._add_references` removes
@@ -170,7 +150,7 @@ for example answers saved before the rule existed.
 
 ---
 
-## Step 7 — Test
+## Step 6 — Test
 
 Check each place with a valid value, an unfinished value, and a wrong one:
 
@@ -179,8 +159,8 @@ Check each place with a valid value, an unfinished value, and a wrong one:
 2. **Preview, checks, export:** write a wrong value past the validator — for
    example in a Django shell, where pre-save validation does not run because
    there is no interview request — and confirm that the preview shows the
-   marker, the checks list the error, and the export is blocked with the value
-   named.
+   problem next to the value and in its list, and the export is blocked with
+   the value named.
 3. **Imported data:** select an existing item from the MaRDI Portal that carries
    the field and confirm that the import is not blocked.
 4. **Docs:** add the rule to the table in [Validation](../../concepts/validation.md).

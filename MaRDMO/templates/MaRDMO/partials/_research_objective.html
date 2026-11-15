@@ -1,7 +1,2 @@
-
-<b>Research Objective</b>:
-{% if objective %}
-    {{ objective }} <br>
-{% else %}
-    <strong class="mardmo-error">MISSING RESEARCH OBJECTIVE</strong> <br>
-{% endif %}
+{% load mardmo_tags %}
+<b>Research Objective</b>: {{ objective }}{% marks values "objective" before=" " %} <br>

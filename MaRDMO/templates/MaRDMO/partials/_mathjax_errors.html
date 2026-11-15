@@ -1,4 +1,5 @@
-{# Show formulas MathJax cannot render as raw TeX with MathJax's message instead  #}
+{# Show formulas MathJax cannot render as raw TeX with MathJax's message (a note: #}
+{# the checks report invalid formulas) instead                                   #}
 {# of its red error box, and fill the hints next to formulas the MaRDI Portal     #}
 {# rejected (see the "formula" template tag).  Include before the MathJax script. #}
 <script>
@@ -27,7 +28,7 @@
         code.className = 'mardmo-tex';
         code.textContent = tex.trim();
         var marker = document.createElement('strong');
-        marker.className = 'mardmo-error';
+        marker.className = 'mardmo-note';
         marker.textContent = 'FORMULA CANNOT BE DISPLAYED: ' + message.toUpperCase();
         span.appendChild(code);
         span.appendChild(document.createTextNode(' '));

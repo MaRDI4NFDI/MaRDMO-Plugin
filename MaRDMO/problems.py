@@ -38,3 +38,26 @@ class Problem:
 def report_lines(problems):
     '''The error page's lines: :data:`HEADER` and every problem as text, or ``[]``.'''
     return [HEADER, *map(str, problems)] if problems else []
+
+
+def attach(data, problems):
+    '''Give every page of *data* its problems: ``page['Problems'] = {field: [message]}``.
+
+    The preview shows them where the page shows the field (template tag
+    ``marks``) and the rest at the end of the page (``remaining_marks``), so
+    its red marks are the problems of the checks (#152).  Problems without
+    page (the export's own checks) are only listed at the top.
+
+    Args:
+        data:     Top-level answers dict; mutated in place.
+        problems: :class:`Problem` list.
+
+    Returns:
+        *data*.
+    '''
+    for problem in problems:
+        page = problem.page
+        entry = (data.get(page.section) or {}).get(page.index) if page is not None else None
+        if isinstance(entry, dict):
+            entry.setdefault('Problems', {}).setdefault(problem.field or '', []).append(problem.message)
+    return data

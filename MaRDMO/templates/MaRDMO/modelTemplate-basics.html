@@ -18,16 +18,18 @@
     {% include "MaRDMO/partials/_properties.html" with properties=values.Properties_Check %}
 
     {# Include Block for single Relation between Model and Problem #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="MM2RP" title="Research Problems" relation="models" relatants=values.RelationRP class="RESEARCH PROBLEM" empty_msg="True" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="MM2RP" title="Research Problems" relation="models" relatants=values.RelationRP class="RESEARCH PROBLEM" field="RelationRP" %}
 
     {# Include Block for multiple Relations between Model and Formulation #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MM2MF" title="Formulas" relations=values.RelationMF class="FORMULA" empty_msg="True" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MM2MF" title="Formulas" relations=values.RelationMF class="FORMULA" field="RelationMF" %}
 
     {# Include Block for single Relation between Model and Task #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="MM2CT" title="Computational Tasks" relation="used by" relatants=values.RelationT class="COMPUTATIONAL TASK" empty_msg="False" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="MM2CT" title="Computational Tasks" relation="used by" relatants=values.RelationT class="COMPUTATIONAL TASK" field="RelationT" %}
 
     {# Include Block for multiple Relations between Model and Model #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MM2MM" title="Mathematical Models" relations=values.RelationMM class="MATHEMATICAL MODEL" empty_msg="False"%}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MM2MM" title="Mathematical Models" relations=values.RelationMM class="MATHEMATICAL MODEL"%}
+    {% remaining_marks values %}
+
 
 {% empty %}
     <strong class="mardmo-empty">NO MODEL DOCUMENTED</strong>
@@ -49,10 +51,12 @@
     {% include "MaRDMO/partials/_properties.html" with properties=values.Properties_Check %}
 
     {# Include Block for multiple Relations between Task and Formulation #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2MF" title="Formulas" relations=values.RelationMF class="FORMULA" empty_msg="True" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2MF" title="Formulas" relations=values.RelationMF class="FORMULA" field="RelationMF" %}
 
     {# Include Block for multiple Relations between Task and Task #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2CT" title="Computational Tasks" relations=values.RelationT class="COMPUTATIONAL TASK" empty_msg="False" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2CT" title="Computational Tasks" relations=values.RelationT class="COMPUTATIONAL TASK" field="RelationT" %}
+    {% remaining_marks values %}
+
 
 {% empty %}
     <strong class="mardmo-empty">NO TASK DOCUMENTED</strong>
@@ -74,11 +78,7 @@
     {% include "MaRDMO/partials/_detailed_description.html" with detailed_descriptions=values.descriptionLong %}
 
     {% if values.ID|own_item %}
-        {% if values.reference %}
-            <b>Reference</b>: {{ values.reference|linebreaksbr }}{% if values.reference|has_line_break %} <strong class="mardmo-error">LINE BREAKS NOT ALLOWED</strong>{% endif %}
-        {% else %}
-            <b>Reference</b>: <strong class="mardmo-error">MISSING FORMULA REFERENCE</strong>
-        {% endif %} <br>
+        <b>Reference</b>: {{ values.reference|default:"-"|linebreaksbr }}{% marks values "reference" before=" " %} <br>
     {% endif %}
 
     {# Include Formula ID #}
@@ -88,7 +88,9 @@
     {% include "MaRDMO/partials/_properties.html" with properties=values.Properties_Check %}
 
     {# Include Block for multiple Relations between Formulation and Formulation #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_2" title="Formulas" relations=values.RelationMF2 class="FORMULA" empty_msg="False" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_2" title="Formulas" relations=values.RelationMF2 class="FORMULA" field="RelationMF2" %}
+    {% remaining_marks values %}
+
 
 {% empty %}
     <strong class="mardmo-empty">NO FORMULA DOCUMENTED</strong>
@@ -99,22 +101,24 @@
 
     {# Include Publication Name #}
     {% include "MaRDMO/partials/_name.html" with class="PUBLICATION" name=values.Name %}
+
+    {# Include Publication Short Description #}
+    {% include "MaRDMO/partials/_short_description.html" with class="PUBLICATION" description=values.Description name=values.Name %}
     
     {% for reference in values.reference.values %}
         {% if reference.0 == option.DOI %}
-            <b>DOI</b>: {{ reference.1 }}{% with problem=reference.1|doi_problem %}{% if problem %} <strong class="mardmo-error">{{ problem|upper }}</strong>{% endif %}{% endwith %} <br>
-	    {% endif %} 
-    {% empty %}
-        {% if values.ID|own_item %}
-            <strong class="mardmo-error">MISSING PUBLICATION DOI OR URL</strong>
+            <b>DOI</b>: {{ reference.1 }} <br>
         {% endif %}
     {% endfor %}
+    {% marks values "reference" as reference_marks %}{% if reference_marks %}{{ reference_marks }} <br>{% endif %}
     
     {# Include Publication ID #}
     {% include "MaRDMO/partials/_id.html" with id=values.ID %}
 
     {# Include Block for multiple Relations between Publication and Model Entity #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2E" title="Entities of the Mathematical Models" relations=values.RelationP class="MATHEMATICAL MODEL ENTITY" empty_msg="True" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2E" title="Entities of the Mathematical Models" relations=values.RelationP class="MATHEMATICAL MODEL ENTITY" field="RelationP" %}
+    {% remaining_marks values %}
+
 
 {% empty %}
     <strong class="mardmo-empty">NO PUBLICATION DOCUMENTED</strong>
@@ -133,7 +137,9 @@
     {% include "MaRDMO/partials/_id.html" with class="RESEARCH PROBLEM" id=values.ID %}
 
     {# Include Block for multiple Relations between Problem and Problem #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="RP2RP" title="other Research Problems" relations=values.RelationRP class="RESEARCH PROBLEM" empty_msg="False"%}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="RP2RP" title="other Research Problems" relations=values.RelationRP class="RESEARCH PROBLEM"%}
+    {% remaining_marks values %}
+
 
 {% empty %}
     <strong class="mardmo-empty">NO PROBLEM DOCUMENTED</strong>

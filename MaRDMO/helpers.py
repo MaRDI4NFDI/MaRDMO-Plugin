@@ -11,8 +11,7 @@ Contains:
 - Date helpers: :func:`date_format`, :func:`date_precision`.
 - Entity-relation processing: :func:`entity_relations`,
   :func:`entity_relations_grouped`, :func:`map_entity`,
-  :func:`build_new_value`, :func:`link_to_pages`,
-  :func:`mark_same_own_items` (pages: :mod:`MaRDMO.pages`).
+  :func:`build_new_value`, :func:`link_to_pages` (pages: :mod:`MaRDMO.pages`).
 - Export helpers: :func:`unique_items`, :func:`compare_items`,
   :func:`replace_in_dict`.
 - Questionnaire utilities: :func:`process_question_dict`,
@@ -33,7 +32,7 @@ from rdmo.domain.models import Attribute
 from rdmo.options.models import Option
 
 from .ids import is_own_item, is_user_id, item_key, item_text
-from .pages import page_ref, page_refs
+from .pages import page_refs
 
 # Set while MaRDMO itself writes values (hydration, publication lookup, ID
 # write-back); the pre-save router skips validators then, since they are meant
@@ -630,43 +629,6 @@ def describe_items_without_page(data):
         for entry in data.get(section, {}).values():
             if isinstance(entry, dict) and isinstance(entry.get(key), dict):
                 describe(entry[key], description)
-    return data
-
-
-def mark_same_own_items(data):
-    '''Mark item pages that are, or look like, an earlier page of their section.
-
-    - ``SameItemAs``: the page has the ID of an earlier page (e.g. a copied
-      tab): both are the same item, and the export would merge them.
-    - ``SameAs``: an own item with the name and description of an earlier
-      one: the export would make one item of them ("new" in a relation always
-      makes another page).
-
-    The value is the :class:`~MaRDMO.pages.PageRef` of the first page.  The
-    checks report the same.
-
-    Args:
-        data: Top-level answers dict; mutated in place.
-
-    Returns:
-        *data*.
-    '''
-    for section, pages in data.items():
-        if not isinstance(pages, dict):
-            continue
-        first_id, first_name = {}, {}
-        for index, entry in pages.items():
-            if not isinstance(entry, dict) or not entry.get('ID'):
-                continue
-            first = first_id.setdefault(entry['ID'], index)
-            if first != index:
-                entry['SameItemAs'] = page_ref(section, first, pages[first])
-                continue
-            if not is_own_item(entry['ID']) or not entry.get('Name'):
-                continue
-            first = first_name.setdefault((entry['Name'], entry.get('Description') or ''), index)
-            if first != index:
-                entry['SameAs'] = page_ref(section, first, pages[first])
     return data
 
 

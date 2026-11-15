@@ -1,7 +1,4 @@
+{% load mardmo_tags %}
 {# A page's heading: its tab (the name in the interview) and its item's name (#152) #}
-<h2 id="{{ values.Anchor }}">{% if values.Tab %}{{ values.Tab }}: {% endif %}{% if name %}{{ name }}{% else %}<strong class="mardmo-error">MISSING {{ class }} NAME</strong>{% endif %}</h2>
-{% if values.SameItemAs %}
-    <strong class="mardmo-error">SAME ITEM AS {{ values.SameItemAs }} (DELETE ONE OF THEM)</strong> <br>
-{% elif values.SameAs %}
-    <strong class="mardmo-error">SAME NAME AND SHORT DESCRIPTION AS {{ values.SameAs }}</strong> <br>
-{% endif %}
+<h2 id="{{ values.Anchor }}">{% if values.Tab %}{{ values.Tab }}: {% endif %}{{ name }}</h2>
+{% marks values "Name" as name_marks %}{% if name_marks %}{{ name_marks }} <br>{% endif %}

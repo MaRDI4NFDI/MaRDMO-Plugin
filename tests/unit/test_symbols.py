@@ -10,10 +10,10 @@ from django.template.loader import render_to_string
 import MaRDMO.model.handlers as handlers
 from MaRDMO.checks import Checks
 from MaRDMO.pages import PageRef
+from MaRDMO.problems import attach
 from MaRDMO.models import Relatant
 from MaRDMO.model.utils import map_entity_quantity
 from MaRDMO.payload import GeneratePayload
-from MaRDMO.templatetags.mardmo_tags import element_problems
 from MaRDMO.validators import element_symbol_problems
 
 VELOCITY = {'ID': 'mardi:Q10', 'Name': 'velocity', 'Description': 'speed in a direction'}
@@ -82,26 +82,19 @@ def test_symbol_used_in_two_formula_fields_counts_once():
 
 # --- preview
 
-def render(elements):
-    return render_to_string('MaRDMO/partials/_in_defining_formula.html', {'element': elements})
-
-
-def test_preview_marks_the_symbols():
-    elements = {
+def test_preview_shows_the_symbols_problems_of_the_check():
+    '''The marks under the symbol table are the check's problems (#152).'''
+    page = {'Tab': 'F1', 'Anchor': 'page-formulation-0', 'element': {
         0: {'symbol': 'a', 'quantity': VELOCITY, 'Info': {'Type': 'Quantity', 'Name': 'velocity', 'ID': 'mardi:Q10',
                                                          'Description': 'speed'}},
         1: {'symbol': 'a', 'quantity': PRESSURE, 'Info': {'Type': 'Quantity', 'Name': 'pressure', 'ID': 'mardi:Q11',
                                                          'Description': 'force'}},
-        2: {'symbol': 'b'},
-    }
-    html = render(elements)
-    assert html.count('SYMBOL STANDS FOR SEVERAL QUANTITIES') == 2
-    assert 'MISSING QUANTITY OR QUANTITY KIND' in html
-
-
-def test_preview_filter():
-    assert element_problems({0: element('a', VELOCITY), 1: element('a', dict(VELOCITY))}) == {
-        1: 'SYMBOL APPEARS TWICE WITH THE SAME QUANTITY'}
+        2: {'symbol': 'b'}}}
+    checks = Checks()
+    checks._check_element_symbols(page, 'Formula', PageRef('formulation', 0, '', 'F1'))
+    attach({'formulation': {0: page}}, checks.err)
+    html = render_to_string('MaRDMO/partials/_in_defining_formula.html', {'element': page['element'], 'values': page})
+    assert html.count('stands for several quantities') == 1 and 'mardmo-error' in html
 
 
 def test_element_without_quantity_does_not_match_a_page_without_name():

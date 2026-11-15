@@ -36,13 +36,12 @@ source knows the publication; otherwise the next preview looks it up again.
 
 The answers dict is passed to the catalog-appropriate Django template, which renders
 an **HTML documentation preview** — a human-readable rendering of everything the
-user has entered in the questionnaire.  Missing fields and invalid values (URLs,
-DOIs, swMATH IDs, numbers, …) are already flagged with red text at this stage,
-using the same rules as the checks and the export (see
-[Validation](validation.md)), giving the user a chance to review and correct the
-documentation before committing to the export.  For model catalogs, every formula
-is checked with the MaRDI Portal's TeX checker; rejected formulas are shown as raw
-TeX with an explanation.  A second "Export to MaRDI Portal" button at the bottom
+user has entered in the questionnaire.  What the checks find (missing fields,
+invalid URLs, DOIs, swMATH IDs, numbers, …) is shown in red on its page, next to
+the field it belongs to (see [Validation](validation.md)), giving the user a
+chance to review and correct the documentation before committing to the export.
+For model catalogs, every formula is checked with the MaRDI Portal's TeX
+checker; rejected formulas are shown as raw TeX with the check's explanation.  A second "Export to MaRDI Portal" button at the bottom
 of the preview page triggers the actual export.
 
 #### Before you can export

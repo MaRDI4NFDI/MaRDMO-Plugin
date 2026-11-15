@@ -32,24 +32,26 @@ class ModelMixin:
         verdicts = getattr(self, '_tex_verdicts', {})
         for number, tex in enumerate((ivalue.get('Formula') or {}).values(), start=1):
             if comment := formula_comment_problem(tex):
-                self.err.append(self._error(section, page_name, f'Invalid Formula {number}: {comment}'))
+                self.err.append(self._error(section, page_name, f'Invalid Formula {number}: {comment}', field='Formula'))
             problem = verdict(verdicts, tex)
             if problem and problem != UNAVAILABLE:
                 hint = environment_hint(tex)
                 self.err.append(self._error(
                     section, page_name,
                     f'Invalid Formula {number}: rejected by the MaRDI Portal ({problem}), '
-                    + (hint or 'see the preview for details')
+                    + (hint or 'see the preview for details'),
+                    field='Formula'
                 ))
         for element in (ivalue.get('element') or {}).values():
             symbol = element.get('symbol') if isinstance(element, dict) else None
             if comment := formula_comment_problem(symbol):
-                self.err.append(self._error(section, page_name, f'Invalid Symbol "{symbol}": {comment}'))
+                self.err.append(self._error(section, page_name, f'Invalid Symbol "{symbol}": {comment}', field='element'))
             problem = verdict(verdicts, symbol)
             if problem and problem != UNAVAILABLE:
                 self.err.append(self._error(
                     section, page_name,
-                    f'Invalid Symbol "{symbol}": rejected by the MaRDI Portal ({problem})'
+                    f'Invalid Symbol "{symbol}": rejected by the MaRDI Portal ({problem})',
+                    field='element'
                 ))
 
     def _check_element_symbols(self, ivalue, section, page_name):
@@ -65,7 +67,8 @@ class ModelMixin:
                 continue
             reported.add((symbol, problem))
             self.err.append(self._error(
-                section, page_name, f'Symbol "{symbol}" {ELEMENT_SYMBOL_MESSAGES[problem]}'
+                section, page_name, f'Symbol "{symbol}" {ELEMENT_SYMBOL_MESSAGES[problem]}',
+                field='element'
             ))
 
     def properties(self, project, data, catalog):
@@ -104,7 +107,8 @@ class ModelMixin:
                             section = section_map[okey],
                             page = page_name,
                             message = f'Inconsistent Properties ({self.mathmoddb.get(key=url[0])["label"]}'
-                                      f' and {self.mathmoddb.get(key=url[1])["label"]})'
+                                      f' and {self.mathmoddb.get(key=url[1])["label"]})',
+                                      field   = 'Properties'
                         )
                     )
 
@@ -162,7 +166,8 @@ class ModelMixin:
                     self._error(
                         section = 'Mathematical Model',
                         page    = page_name,
-                        message = 'Missing Assumption (Mathematical Model Specialization)'
+                        message = 'Missing Assumption (Mathematical Model Specialization)',
+                        field   = 'RelationMM'
                     )
                 )
 
@@ -174,7 +179,8 @@ class ModelMixin:
                     self._error(
                         section = 'Mathematical Model',
                         page    = page_name,
-                        message = 'Selected Formula not found in Section'
+                        message = 'Selected Formula not found in Section',
+                        field   = 'RelationMM'
                     )
                 )
 
@@ -218,7 +224,8 @@ class ModelMixin:
                     self._error(
                         section = 'Computational Task',
                         page    = page_name,
-                        message = 'Missing Assumption (Computational Task Specialization)'
+                        message = 'Missing Assumption (Computational Task Specialization)',
+                        field   = 'RelationT'
                     )
                 )
 
@@ -230,7 +237,8 @@ class ModelMixin:
                     self._error(
                         section = 'Computational Task',
                         page    = page_name,
-                        message = 'Selected Formula not found in Section'
+                        message = 'Selected Formula not found in Section',
+                        field   = 'RelationT'
                     )
                 )
 
@@ -270,7 +278,8 @@ class ModelMixin:
                         self._error(
                             section = 'Formula',
                             page    = page_name,
-                            message = 'Missing Reference'
+                            message = 'Missing Reference',
+                            field   = 'reference'
                         )
                     )
                 continue
@@ -283,7 +292,7 @@ class ModelMixin:
                     self._error(
                         section = 'Formula',
                         page    = page_name,
-                        message = 'Missing Assumption (Formula Specialization)'))
+                        message = 'Missing Assumption (Formula Specialization)', field='RelationMF2'))
 
             if any(
                 without_page((mval.get('assumption') or {}).values())
@@ -293,7 +302,8 @@ class ModelMixin:
                     self._error(
                         section = 'Formula',
                         page    = page_name,
-                        message = 'Selected Formula not found in Section'
+                        message = 'Selected Formula not found in Section',
+                        field   = 'RelationMF2'
                     )
                 )
 
@@ -302,7 +312,8 @@ class ModelMixin:
                     self._error(
                         section = 'Formula',
                         page    = page_name,
-                        message = 'Missing Formula Formula'
+                        message = 'Missing Formula Formula',
+                        field   = 'Formula'
                     )
                 )
             self._check_formula_syntax(ivalue, 'Formula', page_name)
@@ -312,7 +323,8 @@ class ModelMixin:
                     self._error(
                         section = 'Formula',
                         page    = page_name,
-                        message = 'Missing Formula Element Information'
+                        message = 'Missing Formula Element Information',
+                        field   = 'element'
                     )
                 )
             else:
@@ -323,7 +335,8 @@ class ModelMixin:
                         self._error(
                             section = 'Formula',
                             page    = page_name,
-                            message = 'Missing Formula Symbol'
+                            message = 'Missing Formula Symbol',
+                            field   = 'element'
                         )
                     )
                 if not_quantity:
@@ -331,7 +344,8 @@ class ModelMixin:
                         self._error(
                             section = 'Formula',
                             page    = page_name,
-                            message = 'Missing Formula Quantity'
+                            message = 'Missing Formula Quantity',
+                            field   = 'element'
                         )
                     )
                 self._check_element_symbols(ivalue, 'Formula', page_name)
@@ -364,7 +378,8 @@ class ModelMixin:
                     self._error(
                         section = 'Quantity [Kind]',
                         page    = page_name,
-                        message = 'Missing Quantity [Kind] Class'
+                        message = 'Missing Quantity [Kind] Class',
+                        field   = 'QorQK'
                     )
                 )
 
@@ -375,7 +390,8 @@ class ModelMixin:
                         self._error(
                             section = 'Quantity [Kind]',
                             page    = page_name,
-                            message = 'QUDT Quantity Kind ID selected, but no ID provided!'
+                            message = 'QUDT Quantity Kind ID selected, but no ID provided!',
+                            field   = 'reference'
                         )
                     )
                 elif ref.get(0) and ref[0][1] and not QUDT_ID_STRICT_RE.match(ref[0][1]):
@@ -383,7 +399,8 @@ class ModelMixin:
                         self._error(
                             section = 'Quantity [Kind]',
                             page    = page_name,
-                            message = f'Invalid QUDT Quantity Kind ID format: "{ref[0][1]}"'
+                            message = f'Invalid QUDT Quantity Kind ID format: "{ref[0][1]}"',
+                            field   = 'reference'
                         )
                     )
                 if ref.get(1) and not ref[1][1]:
@@ -391,7 +408,8 @@ class ModelMixin:
                         self._error(
                             section = 'Quantity [Kind]',
                             page    = page_name,
-                            message = 'QUDT Constant ID selected, but no ID provided!'
+                            message = 'QUDT Constant ID selected, but no ID provided!',
+                            field   = 'reference'
                         )
                     )
                 elif ref.get(1) and ref[1][1] and not QUDT_ID_STRICT_RE.match(ref[1][1]):
@@ -399,7 +417,8 @@ class ModelMixin:
                         self._error(
                             section = 'Quantity [Kind]',
                             page    = page_name,
-                            message = f'Invalid QUDT Constant ID format: "{ref[1][1]}"'
+                            message = f'Invalid QUDT Constant ID format: "{ref[1][1]}"',
+                            field   = 'reference'
                         )
                     )
                 if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["label"] and ref.get(0):
@@ -407,7 +426,8 @@ class ModelMixin:
                         self._error(
                             section = 'Quantity [Kind]',
                             page    = page_name,
-                            message = 'QUDT Quantity Kind ID limited to Quantity Kinds!'
+                            message = 'QUDT Quantity Kind ID limited to Quantity Kinds!',
+                            field   = 'reference'
                         )
                     )
                 if (
@@ -418,7 +438,8 @@ class ModelMixin:
                         self._error(
                             section = 'Quantity [Kind]',
                             page    = page_name,
-                            message = 'QUDT Constant ID limited to Quantities!'
+                            message = 'QUDT Constant ID limited to Quantities!',
+                            field   = 'reference'
                         )
                     )
 
@@ -430,7 +451,8 @@ class ModelMixin:
                             self._error(
                                 section = 'Quantity [Kind]',
                                 page    = page_name,
-                                message = r'Inconsistent Quantity Definition (missing \equiv)'
+                                message = r'Inconsistent Quantity Definition (missing \equiv)',
+                                field   = 'Formula'
                             )
                         )
                 if not ivalue.get('element'):
@@ -438,7 +460,8 @@ class ModelMixin:
                         self._error(
                             section = 'Quantity [Kind]',
                             page    = page_name,
-                            message = 'Missing Quantity Definition Element Information'
+                            message = 'Missing Quantity Definition Element Information',
+                            field   = 'element'
                         )
                     )
                 else:
@@ -447,7 +470,8 @@ class ModelMixin:
                             self._error(
                                 section = 'Quantity [Kind]',
                                 page    = page_name,
-                                message = 'Missing Quantity Definition Symbol'
+                                message = 'Missing Quantity Definition Symbol',
+                                field   = 'element'
                             )
                         )
                     if any(not ev.get('quantity') for ev in ivalue['element'].values()):
@@ -455,7 +479,8 @@ class ModelMixin:
                             self._error(
                                 section = 'Quantity [Kind]',
                                 page    = page_name,
-                                message = 'Missing Quantity Definition Quantity'
+                                message = 'Missing Quantity Definition Quantity',
+                                field   = 'element'
                             )
                         )
                     self._check_element_symbols(ivalue, 'Quantity [Kind]', page_name)

@@ -8,6 +8,7 @@ import pytest
 from django.template.loader import render_to_string
 
 from MaRDMO.checks import Checks
+from MaRDMO.problems import attach
 from MaRDMO.workflow.worker import PrepareWorkflow
 
 SOFTWARE = {'ID': 'mardi:Q1', 'Name': 'solver', 'Description': 'a solver'}
@@ -37,10 +38,12 @@ def test_cpu_entry_with_model_passes(checks):
     assert checks.err == []
 
 
-def test_preview_shows_the_missing_cpu_model():
+def test_preview_shows_the_missing_cpu_model(checks):
     answers = hardware()
+    checks.hardware(None, answers)
+    attach(answers, checks.err)
     html = render_to_string('MaRDMO/workflowTemplate.html', {'answers': answers, 'option': {}})
-    assert 'MISSING CPU MODEL' in html
+    assert '<strong class="mardmo-error">Missing CPU Model</strong>' in html
 
 
 @pytest.mark.parametrize('parameter, pairs', [

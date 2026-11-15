@@ -1,12 +1,10 @@
 {% load mardmo_tags %}
-{% if id %}
-    {% if id|own_item %}
-        <b>ID</b>: - <br><br>
-    {% elif 'mardi' in id %} 
-        <b>MaRDI Portal ID</b>: {{ id|cut:"mardi:"}} <br><br>
-    {% elif 'wikidata' in id %} 
-        <b>Wikidata ID</b>: {{ id|cut:"wikidata:"}} <br><br>
-    {% endif %}
+{% if id|own_item or not id %}
+    <b>ID</b>: -{% marks values "ID" before=" " %} <br><br>
+{% elif 'mardi' in id %}
+    <b>MaRDI Portal ID</b>: {{ id|cut:"mardi:"}}{% marks values "ID" before=" " %} <br><br>
+{% elif 'wikidata' in id %}
+    <b>Wikidata ID</b>: {{ id|cut:"wikidata:"}}{% marks values "ID" before=" " %} <br><br>
 {% else %}
-    <strong class="mardmo-error">MISSING {{ class }} ID</strong> <br><br>
+    <b>ID</b>: {{ id }}{% marks values "ID" before=" " %} <br><br>
 {% endif %}
