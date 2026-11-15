@@ -1025,6 +1025,14 @@ msgstr "Autor/in"
 msgid "Journal"
 msgstr "Zeitschrift"
 
+#: MaRDMO/views.py:142
+msgid "Not ready"
+msgstr "Noch nicht fertig"
+
+#: MaRDMO/views.py:143
+msgid "Job not found."
+msgstr "Der Export wurde nicht gefunden."
+
 #: MaRDMO/views.py:327
 msgid "New {class}"
 msgstr "Neu: {class}"
@@ -1158,11 +1166,11 @@ msgstr "vorhandene Aussage, Qualifikatoren hinzugefügt:"
 msgid "Fit all"
 msgstr "Alles einpassen"
 
-#: MaRDMO/templates/MaRDMO/export_result.html:627
+#: MaRDMO/templates/MaRDMO/export_result.html:629
 msgid "Export complete — no new items or relations."
 msgstr "Export abgeschlossen – keine neuen Items oder Beziehungen."
 
-#: MaRDMO/templates/MaRDMO/export_result.html:632
+#: MaRDMO/templates/MaRDMO/export_result.html:634
 msgid "Checkout"
 msgstr "Zum"
 

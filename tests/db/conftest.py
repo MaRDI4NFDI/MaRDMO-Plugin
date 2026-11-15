@@ -24,7 +24,7 @@ from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_questions
 from MaRDMO.helpers import value_editor
 from MaRDMO.queries import PortalItems
-from tests.recordings import record, replay
+from tests.support.recordings import record, replay
 
 # Referenced elements first; the catalogs use all of them
 ORDER = ['attributes.xml', 'optionsets.xml', 'conditions.xml']
@@ -68,7 +68,7 @@ def save(project, *answers):
 
 @pytest.fixture
 def portal(monkeypatch):
-    '''Answers of the external services from the recordings *names* (see tests/recordings.py).
+    '''Answers of the external services from the recordings *names* (see tests/support/recordings.py).
 
     Recording stores the requests that the earlier recordings do not have
     in the last one.
@@ -114,3 +114,9 @@ def white(project, portal, client, django_user_model, monkeypatch):
     Membership.objects.create(project=documentation, user=user, role='owner')
     client.force_login(user)
     return documentation
+
+
+def without_description(documentation, section, index):
+    '''Delete the short description of the page *index* of *section* (a problem the checks report).'''
+    documentation.values.filter(attribute__uri=f'{BASE_URI}domain/{section}/description',
+                                set_prefix=str(index)).delete()

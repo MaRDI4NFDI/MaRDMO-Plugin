@@ -58,7 +58,7 @@ jobs:
             echo
             echo "Run: $RUN"
             echo
-            echo "A change of the portal or Wikidata data: record again (RECORD=1, tests/recordings.py)."
+            echo "A change of the portal or Wikidata data: record again (RECORD=1, tests/support/recordings.py)."
             echo "A change of their API: adapt MaRDMO."
           } > issue.md
           issue=$(gh issue list --state open --search 'in:title "Live check failed"' --json number --jq '.[0].number')

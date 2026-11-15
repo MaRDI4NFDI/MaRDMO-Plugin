@@ -139,8 +139,8 @@ def show_success(request, job_id):
             request,
             "core/error.html",
             {
-                "title": "Not ready",
-                "errors": ["Job not found."],
+                "title": _("Not ready"),
+                "errors": [_("Job not found.")],
             },
         )
 

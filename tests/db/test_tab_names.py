@@ -3,29 +3,13 @@
 white_2006 has quantity tabs QQK2..QQK14 (two were deleted before), so the
 position of a page and its tab differ.
 '''
-import re
-
 import pytest
-from django.template.loader import render_to_string
 
-from MaRDMO import main
 from MaRDMO.checks import Checks
-from MaRDMO.constants import BASE_URI, CATALOG_TEMPLATE_MAP
+from MaRDMO.constants import BASE_URI
 from MaRDMO.pages import PageRef
 from tests.db.test_export import imported
-
-
-def preview(documentation):
-    provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
-    provider.project, provider.snapshot = documentation, None
-    answers, options = provider.get_post_data()
-    html = render_to_string(CATALOG_TEMPLATE_MAP['mardmo-model-catalog'],
-                            {'answers': answers, 'option': options, 'title': 'x'})
-    return answers, html
-
-
-def text(html):
-    return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', html))
+from tests.support.html import element, links, rendered_preview, text
 
 
 @pytest.fixture
@@ -42,22 +26,23 @@ def tab(documentation, section, index):
 
 
 def test_pages_are_headed_by_their_tab(white):
-    answers, html = preview(white)
+    answers, html = rendered_preview(white)
     assert answers['quantity'][1]['Tab'] == 'QQK2'
-    assert re.search(r'<h2 id="page-quantity-1">\s*QQK2: total population size', html)
+    assert text(element(html, id='page-quantity-1')).startswith('QQK2: total population size')
     assert 'QQK1:' not in text(html)
 
 
 def test_relations_link_to_their_page(white):
-    answers, html = preview(white)
+    answers, html = rendered_preview(white)
     model = next(iter(answers['model'].values()))
     relatants = [entry['relatant'] for entry in model['RelationMF'].values()]
     assert all(isinstance(relatant, PageRef) for relatant in relatants)
     assert relatants[1].label == 'conservation law for the opiate-using career ODE model (F2)'
-    assert '<a href="#page-formulation-1">conservation law for the opiate-using career ODE model</a> (F2)' in html
-    anchors = set(re.findall(r'id="(page-[^"]+)"', html))
-    links = re.findall(r'href="#(page-[^"]+)"', html)
-    assert links and set(links) <= anchors
+    assert ('conservation law for the opiate-using career ODE model', '#page-formulation-1') in links(html)
+    assert 'conservation law for the opiate-using career ODE model (F2)' in text(html)
+    # Every link to a page leads to a page of the preview
+    targets = {href[1:] for _, href in links(html) if href.startswith('#page-')}
+    assert targets and all(element(html, id=target) for target in targets)
 
 
 def test_a_renamed_tab_is_named_everywhere(white):
@@ -65,8 +50,8 @@ def test_a_renamed_tab_is_named_everywhere(white):
     renamed = tab(white, 'formulation', 1)
     renamed.text = 'conservation'
     renamed.save()
-    answers, html = preview(white)
-    assert re.search(r'<h2 id="page-formulation-1">\s*conservation: conservation law', html)
+    answers, html = rendered_preview(white)
+    assert text(element(html, id='page-formulation-1')).startswith('conservation: conservation law')
     assert 'conservation law for the opiate-using career ODE model (conservation)' in text(html)
     formula = answers['formulation'][1]
     formula.pop('Description')

@@ -52,3 +52,17 @@ def empty_cache():
     '''
     from django.core.cache import cache
     cache.clear()
+
+
+@pytest.fixture(autouse=True)
+def english():
+    '''Every test starts in English, the language of the expected texts.
+
+    A request in another language (``HTTP_ACCEPT_LANGUAGE``) leaves that
+    language active in the test's thread: Django's test client does not
+    reset it, so a later test would read German messages.
+    '''
+    from django.utils import translation
+    translation.activate('en')
+    yield
+    translation.activate('en')

@@ -18,9 +18,27 @@ from django.contrib.staticfiles.handlers import StaticFilesHandler
 from django.test import Client
 from django.test.testcases import LiveServerThread
 
+from MaRDMO.store import SESSION_JOBS_KEY
+
 # The test database with the questionnaire, and the helpers to fill projects
 from tests.db.conftest import django_db_setup, project  # noqa: F401
 
+# SCREENSHOTS=<folder> saves pictures of what the tests look at (CI uploads them)
+SCREENSHOTS = os.environ.get('SCREENSHOTS')
+
+
+def screenshot(target, name, full_page=False):
+    '''Save a picture of *target* (a page or a locator) as <SCREENSHOTS>/<name>.png, if SCREENSHOTS is set.'''
+    if SCREENSHOTS:
+        os.makedirs(SCREENSHOTS, exist_ok=True)
+        options = {'full_page': True} if full_page else {}
+        target.screenshot(path=os.path.join(SCREENSHOTS, f'{name}.png'), **options)
+
+
+
+# Without Playwright the test modules cannot even be imported (the tests run
+# without it, e.g. CI's test step); with it but without BROWSER=1 they are skipped
+collect_ignore_glob = [] if importlib.util.find_spec('playwright') else ['test_*.py']
 
 
 def pytest_collection_modifyitems(config, items):
@@ -69,13 +87,22 @@ def browser():
 
 @pytest.fixture
 def page_as(browser, server):
-    '''``page_as(user)``: a browser page logged in as *user* (session cookie of Django's test client).'''
+    '''``page_as(user, jobs=(), language='en')``: a browser page logged in as *user*.
+
+    It has the session cookie of Django's test client; *jobs* are export
+    jobs of this session (as if it had started them), *language* is the
+    browser's language.
+    '''
     contexts = []
 
-    def open_page(user):
+    def open_page(user, jobs=(), language='en'):
         client = Client()
         client.force_login(user)
-        context = browser.new_context(base_url=server)
+        if jobs:
+            session = client.session
+            session[SESSION_JOBS_KEY] = list(jobs)
+            session.save()
+        context = browser.new_context(base_url=server, locale=language)
         context.add_cookies([{'name': 'sessionid', 'value': client.cookies['sessionid'].value,
                               'url': server}])
         contexts.append(context)

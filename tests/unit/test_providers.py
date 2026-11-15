@@ -19,7 +19,7 @@ from pathlib import Path
 import pytest
 
 from MaRDMO.optionsets import OPTIONSET_PROVIDERS, PROVIDERS
-from tests.provider_calls import record
+from tests.support.provider_calls import record
 
 GOLDEN = json.loads((Path(__file__).parents[1] / 'data' / 'providers.json').read_text(encoding='utf-8'))
 

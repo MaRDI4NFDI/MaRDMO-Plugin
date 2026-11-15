@@ -39,6 +39,10 @@ jobs:
         # installations (RDMO's extras install their drivers)
         include: ${{ github.event_name == 'push' && !inputs.full_matrix && fromJSON('[]') || fromJSON('[{"python":"3.14","rdmo":"2.5.2","db":"postgresql","db_label":", PostgreSQL 16","image":"postgres:16","port":"5432","user":"postgres","extra":"postgres","health":"pg_isready"},{"python":"3.14","rdmo":"2.5.2","db":"mysql","db_label":", MariaDB 11","image":"mariadb:11","port":"3306","user":"root","extra":"mysql","health":"healthcheck.sh --connect --innodb_initialized"}]') }}
 
+    # The browser tests: pull requests and releases, on Python 3.14, RDMO 2.5.2, SQLite
+    env:
+      BROWSER_TESTS: ${{ (github.event_name != 'push' || inputs.full_matrix) && matrix.db == 'sqlite' && matrix.python == '3.14' && matrix.rdmo == '2.5.2' }}
+
     # Not started for SQLite (empty image)
     services:
       database:
@@ -126,6 +130,44 @@ jobs:
 
       - name: Coverage
         run: coverage report --skip-covered --sort=cover | tail -25
+
+      # The pages in a real browser (tests/browser), once per pull request and
+      # release, on the quick combination; the screenshots are uploaded as an
+      # artifact to look at the pages without running them
+      - name: Install Playwright and Chromium
+        if: env.BROWSER_TESTS == 'true'
+        run: |
+          pip install -e ".[browser]"
+          echo "PLAYWRIGHT_VERSION=$(python -c 'import importlib.metadata as m; print(m.version("playwright"))')" >> "$GITHUB_ENV"
+
+      - name: Cache Chromium
+        if: env.BROWSER_TESTS == 'true'
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}
+
+      - name: Install Chromium
+        if: env.BROWSER_TESTS == 'true'
+        run: playwright install --with-deps chromium
+
+      # Only the local test server may be reached; the browser runs in its own process
+      - name: Browser tests
+        if: env.BROWSER_TESTS == 'true'
+        env:
+          QUESTIONNAIRE: questionnaire/catalog
+          BROWSER: '1'
+          SCREENSHOTS: screenshots
+        run: pytest tests/browser --allow-hosts=127.0.0.1,::1,localhost
+
+      - name: Upload the screenshots
+        if: always() && env.BROWSER_TESTS == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: screenshots
+          path: screenshots
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Build the package
         run: python -m build

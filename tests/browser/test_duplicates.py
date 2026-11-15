@@ -1,5 +1,4 @@
 '''The preview's items already on the MaRDI Portal (Before you can export) in a browser (#141).'''
-import os
 import re
 
 import pytest
@@ -8,16 +7,10 @@ from rdmo.projects.models import Membership
 from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_items
 from MaRDMO.queries import PortalItems
+from tests.browser.conftest import screenshot
 from tests.db.conftest import answer, save
 
 ITEMS = get_items()
-# SCREENSHOTS=<folder> saves pictures of the section
-SCREENSHOTS = os.environ.get('SCREENSHOTS')
-
-
-def screenshot(locator, name):
-    if SCREENSHOTS:
-        locator.screenshot(path=os.path.join(SCREENSHOTS, f'{name}.png'))
 EMPTY = {'class': set(), 'community': set(), 'profile': set()}
 
 
@@ -55,9 +48,8 @@ def test_use_portal_item_in_the_browser(documentation, page_as):
     page.goto(f'/projects/{model.pk}/export/wikibase/')
 
     box = page.locator('#before-export')
-    if SCREENSHOTS:
-        page.screenshot(path=os.path.join(SCREENSHOTS, 'top.png'))
-    screenshot(box, 'before-export')
+    screenshot(page, 'duplicates-top')
+    screenshot(box, 'duplicates-box')
     assert box.locator('h1').inner_text().endswith('Before you can export')
     section = box.locator('#portal-duplicates')
     assert section.locator('h2').inner_text() == 'Items already on the MaRDI Portal'
@@ -91,7 +83,7 @@ def test_use_portal_item_in_the_browser(documentation, page_as):
     assert not why.is_visible()
     weighing.locator('.mardmo-why summary').click()
     assert why.is_visible() and 'MaRDMO would give it the class computational task' in why.inner_text()
-    screenshot(box, 'before-export-why')
+    screenshot(box, 'duplicates-why')
     weighing.locator('.mardmo-why summary').click()
     assert not why.is_visible()
     assert mass.locator('.mardmo-why').count() == 0
@@ -104,16 +96,15 @@ def test_use_portal_item_in_the_browser(documentation, page_as):
     mass.locator('label', has_text='Use this item').click()
     assert mass.get_by_role('button', name='Apply').is_visible()
     assert not mass.get_by_role('link', name='To interview').is_visible()
-    screenshot(box, 'before-export-decisions')
-    if SCREENSHOTS:
-        page.screenshot(path=os.path.join(SCREENSHOTS, 'preview.png'), full_page=True)
+    screenshot(box, 'duplicates-decisions')
+    screenshot(page, 'duplicates-preview', full_page=True)
     mass.get_by_role('button', name='Apply').click()
     page.wait_for_load_state()
 
     # Back on the preview: one item left, still no export
     assert page.url.endswith(f'/projects/{model.pk}/export/wikibase/#before-export')
     assert page.locator('li.mardmo-duplicate').count() == 1
-    screenshot(page.locator('#before-export'), 'before-export-after-reuse')
+    screenshot(page.locator('#before-export'), 'duplicates-after-reuse')
     assert page.locator('li.mardmo-duplicate').inner_text().count('weighing')
     quantity = model.values.get(attribute__uri=f'{BASE_URI}domain/quantity/id')
     relation = model.values.get(attribute__uri=f'{BASE_URI}domain/task/quantity-relatant')

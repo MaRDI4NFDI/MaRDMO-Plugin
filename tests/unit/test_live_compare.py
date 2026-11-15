@@ -33,7 +33,7 @@ def test_only_reading_requests_are_sent():
 
 
 def test_every_recorded_request_is_kept_and_reading():
-    '''Recorded with the request as sent (tests/recordings.py), and nothing that writes.'''
+    '''Recorded with the request as sent (tests/support/recordings.py), and nothing that writes.'''
     entries = recorded()
     assert entries and all('request' in entry and read_only(entry['url'], entry['request'])
                            for _, entry in entries)

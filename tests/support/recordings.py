@@ -24,7 +24,7 @@ from pathlib import Path
 import requests
 from requests.structures import CaseInsensitiveDict
 
-FOLDER = Path(__file__).parent / 'data' / 'recorded'
+FOLDER = Path(__file__).parent.parent / 'data' / 'recorded'
 PAUSE = 1
 REAL_REQUEST = requests.Session.request
 # Recordings written in this test run: later tests add their requests
@@ -70,7 +70,7 @@ def load(names):
     answers = {}
     for name in names:
         path = FOLDER / f'{name}.json'
-        assert path.exists(), f'{path.name} not recorded (see tests/recordings.py)'
+        assert path.exists(), f'{path.name} not recorded (see tests/support/recordings.py)'
         answers.update({entry['key']: entry for entry in json.loads(path.read_text(encoding='utf-8'))})
     return answers
 

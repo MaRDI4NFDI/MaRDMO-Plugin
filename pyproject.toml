@@ -56,6 +56,10 @@ test = [
     "babel>=2.14",
     "polib>=1.2",
 ]
+# pip install -e ".[browser]" && playwright install chromium; tests/browser (BROWSER=1)
+browser = [
+    "playwright>=1.48",
+]
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"

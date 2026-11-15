@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from MaRDMO.checks import Checks
 from MaRDMO.problems import attach
 from MaRDMO.workflow.worker import PrepareWorkflow
+from tests.support.html import elements, text
 
 SOFTWARE = {'ID': 'mardi:Q1', 'Name': 'solver', 'Description': 'a solver'}
 
@@ -43,7 +44,7 @@ def test_preview_shows_the_missing_cpu_model(checks):
     checks.hardware(None, answers)
     attach(answers, checks.err)
     html = render_to_string('MaRDMO/preview_workflow.html', {'answers': answers, 'option': {}})
-    assert '<strong class="mardmo-error">Missing CPU Model</strong>' in html
+    assert 'Missing CPU Model' in [text(mark) for mark in elements(html, tag='strong', cls='mardmo-error')]
 
 
 @pytest.mark.parametrize('parameter, pairs', [
