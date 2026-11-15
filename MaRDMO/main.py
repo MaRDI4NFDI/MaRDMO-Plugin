@@ -40,13 +40,12 @@ from .helpers import (
     batched_writes,
     describe_items_without_page,
     link_to_pages,
-    mark_same_own_items,
     process_question_dict,
     topological_order
 )
 from .oauth2 import OauthProviderMixin
 from .pages import add_tab_names
-from .problems import report_lines
+from .problems import attach as attach_problems, report_lines
 from . import pipeline
 from .views import render_preview
 
@@ -171,6 +170,8 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
             # Everything the export checks, so a clean preview exports (#152)
             gate = pipeline.run(self.project, answers, prepare_class, check_method,
                                 preview=True, duplicates=duplicates)
+            # The red marks of the pages are these problems (#152)
+            attach_problems(answers, gate.problems)
             return render_preview(
                 self=self,
                 template=template,
@@ -321,7 +322,6 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         add_tab_names(self.project, answers)
         link_to_pages(answers)
         describe_items_without_page(answers)
-        mark_same_own_items(answers)
 
         prepare = prepare_class()
         answers = prepare.preview(answers)

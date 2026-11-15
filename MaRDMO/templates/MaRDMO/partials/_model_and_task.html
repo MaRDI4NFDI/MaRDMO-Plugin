@@ -1,25 +1,19 @@
+{% load mardmo_tags %}
 <h3 id="{{ anchor }}">Relevant Mathematical Models and Computational Tasks</h3>
 <ol style="margin-left: 1.5em;">
     {% for pair in pairs %}
         <li style="margin-bottom: 0.5em;">
-            {% if pair.has_model %}
-                {{ pair.model.Name }}
-            {% else %}
-                <strong class="mardmo-error">MISSING MATHEMATICAL MODEL</strong>
-            {% endif %}
-            {% if pair.has_tasks %}
+            {% if pair.has_model %}{{ pair.model.Name }}{% else %}-{% endif %}
             <ul style="margin-top: 0.3em; list-style-type: none; padding-left: 1em;">
                 {% for task in pair.tasks %}
                 <li>&#8594; {{ task.Name }}</li>
+                {% empty %}
+                <li>&#8594; -</li>
                 {% endfor %}
             </ul>
-            {% else %}
-                <ul style="margin-top: 0.3em; list-style-type: none; padding-left: 1em;">
-                    <li>&#8594; <strong class="mardmo-error">MISSING COMPUTATIONAL TASK</strong> </li>
-                </ul>
-            {% endif %}
         </li>
     {% empty %}
         -
     {% endfor %}
 </ol>
+{% marks values "model_task_pairs" %}

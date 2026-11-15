@@ -9,8 +9,7 @@ from rdmo.projects.models import Membership
 
 from MaRDMO import main
 from MaRDMO.checks import Checks
-from MaRDMO.constants import BASE_URI
-from MaRDMO.helpers import mark_same_own_items
+from MaRDMO.constants import BASE_URI, CATALOG_MODEL
 from tests.db.conftest import answer, save
 
 
@@ -62,7 +61,6 @@ def test_a_copied_tab_is_reported_as_the_same_item(model, client):
     answers = answers_of(model)
     messages = [str(m) for m in Checks().run_model(project=model, data=answers, catalog=str(model.catalog))]
     assert any('QQK2' in m and 'Same Item as Page QQK1' in m for m in messages)
-    assert answers['quantity'][1]['SameItemAs'].tab == 'QQK1'    # named as the check names it
 
 
 def test_relations_find_the_copy_when_the_original_is_deleted(model, client):
@@ -77,10 +75,11 @@ def test_relations_find_the_copy_when_the_original_is_deleted(model, client):
 
 
 def test_the_first_of_two_pages_with_one_id_is_the_item():
-    answers = {'quantity': {0: {'ID': 'mardi:Q1', 'Name': 'a'}, 1: {'ID': 'mardi:Q1', 'Name': 'a'},
-                            2: {'ID': 'user:1', 'Name': 'b', 'Description': 'c'},
-                            3: {'ID': 'user:1', 'Name': 'b', 'Description': 'c'}}}
-    mark_same_own_items(answers)
-    assert [getattr(entry.get('SameItemAs'), 'index', None) for entry in answers['quantity'].values()] == \
-        [None, 0, None, 2]
-    assert 'SameAs' not in answers['quantity'][3]
+    answers = {'quantity': {index: {**entry, 'Tab': f'QQK{index + 1}'} for index, entry in enumerate([
+        {'ID': 'mardi:Q1', 'Name': 'a'}, {'ID': 'mardi:Q1', 'Name': 'a'},
+        {'ID': 'user:1', 'Name': 'b', 'Description': 'c'}, {'ID': 'user:1', 'Name': 'b', 'Description': 'c'}])}}
+    checks = Checks()
+    checks.id_name_description(None, answers, CATALOG_MODEL)
+    same = {problem.page.tab: problem.message for problem in checks.err if 'Same' in problem.message}
+    assert same == {'QQK2': 'Same Item as Page QQK1 (delete one of them)',
+                    'QQK4': 'Same Item as Page QQK3 (delete one of them)'}

@@ -43,12 +43,12 @@ of `preview_relations` in `<submodule>/constants.py`) and is printed as it is:
 `{{ relation.relatant }}` renders the link to the page.
 
 !!! note
-    Errors (missing required fields, invalid values) are flagged with red text at
-    this stage so the user can correct them before committing to the export.
-    Value formats are checked with the template filters in
-    `templatetags/mardmo_tags.py` (e.g. `url_problem`, `doi_problem`,
-    `count_problem`), which use the same rules as the checks and the export;
-    see [Validation](../../concepts/validation.md).
+    The template only shows the answers; it does not decide what is wrong.  The
+    checks do (step 3): their problems are attached to the pages, and the template
+    shows those of a field with `{% marks values "Field" %}` where it shows the
+    field (relation blocks get `field="RelationX"`).  `{% remaining_marks values %}`
+    at the end of each page shows the problems no `marks` showed, so a problem is
+    never missing from the preview; see [Validation](../../concepts/validation.md).
 
 ---
 
@@ -66,10 +66,11 @@ entry-point method:
 | `Checks.run_workflow(project, data, catalog)` | Workflow catalog |
 
 These methods validate the collected answers for completeness and consistency and
-return a list of `MaRDMO.problems.Problem` (section, page, message), made with
-`self._error(section, self._page(section_key, index, entry), message)`; the
-preview lists them under *Before you can export*, and the export stops if the
-list is not empty.  Add checks for any
+return a list of `MaRDMO.problems.Problem` (section, page, message, field), made
+with `self._error(section, self._page(section_key, index, entry), message,
+field='Field')`; the preview lists them under *Before you can export* and marks
+them on the page where it shows *field*, and the export stops if the list is
+not empty.  Add checks for any
 mandatory fields or cross-entity constraints introduced by the new entity.  For
 the format of individual values, reuse the shared rules in `validators.py` — see
 [How to Validate a New Field](validate-field.md).

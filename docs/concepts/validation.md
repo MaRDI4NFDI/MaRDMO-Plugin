@@ -2,18 +2,21 @@
 
 Everything MaRDMO exports must be accepted by the MaRDI Portal; a value the
 portal rejects would otherwise stop the upload halfway.  MaRDMO therefore checks
-entered values in four places, which all use the same rules:
+entered values in three places, which all use the same rules:
 
 | Place | When | What happens on a problem |
 |---|---|---|
 | **Pre-save validation** | While the user types in the interview | The answer is not saved; the message appears below the question |
-| **Preview** | First click on *Export to MaRDI Portal* | The value is shown with a red marker explaining the problem |
-| **Documentation checks** | Second click, before anything is posted | The export stops with a list of errors |
-| **Final export check** | After the payload is built, before anything is posted | The export stops with a list of errors |
+| **Documentation checks** | Preview and export, before anything is posted | The preview lists the problems and marks them in red on their pages; the export stops with a list of errors |
+| **Final export check** | Preview and export, after the payload is built | The same, listed under *Export* |
 
 The rules live in one place — `validators.py`, with the regular expressions in
-`patterns.py` — so that the four places always agree.  The preview uses them
-through template filters in `templatetags/mardmo_tags.py`.
+`patterns.py` — so that pre-save validation and the checks always agree.  The
+preview's red marks are the problems of the checks themselves
+(`MaRDMO.problems.attach` and the template tags `marks` and `remaining_marks`
+in `templatetags/mardmo_tags.py`): a template shows a problem where it shows
+the field it belongs to, and the end of each page the rest, so the preview
+marks exactly what the checks report.
 
 ---
 
@@ -26,7 +29,7 @@ complete DOI.  These *typing rules* are kept separately from the *complete
 rules* that the preview, the checks and the export apply, e.g. `DOI_RE`
 (typing) and `DOI_STRICT_RE` (complete) in `patterns.py`.  Where every prefix
 of a valid value is itself valid (a swMATH ID consists of digits only), one
-rule serves all four places.
+rule serves all three places.
 
 ---
 
@@ -117,13 +120,14 @@ the documentation checks run:
 - Verdicts are cached for a week, so unchanged formulas are not sent again.
   Failed requests are not cached.
 - If the checker cannot be reached, the preview marks the formula as
-  *not verified by the MaRDI Portal* and the checks do not report it; the portal
-  still checks it during the upload.
+  *not verified by the MaRDI Portal* and says that the MaRDI Portal is not
+  reachable; the export waits until the checker answers.
 
 **In the preview**, a rejected formula is not handed to MathJax (an unbalanced
-brace would otherwise swallow the rest of the line).  It is shown as raw TeX
-with a marker; the browser adds MathJax's explanation, e.g. *Missing close
-brace* (`partials/_mathjax_errors.html`).  Formulas that MathJax itself cannot
+brace would otherwise swallow the rest of the line).  It is shown as raw TeX,
+the check's problem below the formulas; the browser adds MathJax's
+explanation as a note, e.g. *Missing close brace*
+(`partials/_mathjax_errors.html`).  Formulas that MathJax itself cannot
 render are shown the same way instead of MathJax's error box.
 
 **Environments.**  The checker only answers *syntax error*, also for

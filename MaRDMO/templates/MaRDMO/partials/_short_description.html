@@ -1,8 +1,2 @@
 {% load mardmo_tags %}
-{% description_error description name class as error %}
-<b>Short Description</b>:
-{% if description %}
-    {{ description }}{% if error %} <strong class="mardmo-error">{{ error }}</strong>{% endif %} <br>
-{% else %}
-    <strong class="mardmo-error">{{ error }}</strong> <br>
-{% endif %}
+<b>Short Description</b>: {{ description }}{% marks values "Description" before=" " %} <br>

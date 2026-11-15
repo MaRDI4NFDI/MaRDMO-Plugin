@@ -3,9 +3,6 @@
 {% for relatant in relatants.values %}
     {{ relation }}: {% user_entity relatant.ID relatant.Name relatant.Description class %} <br>
 {% empty %}
-    {% if empty_msg == "True" %}
-        <strong class="mardmo-error">MISSING {{ class }}</strong>
-    {% else %}
-        <strong class="mardmo-empty">NOT DOCUMENTED</strong>
-    {% endif %}
+    <strong class="mardmo-empty">NOT DOCUMENTED</strong> <br>
 {% endfor %}
+{% marks values field %}

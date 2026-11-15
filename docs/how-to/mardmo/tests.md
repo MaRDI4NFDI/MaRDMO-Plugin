@@ -90,6 +90,16 @@ The order of the writes is not stored: items that do not need each other come
 in any order.  The test checks instead that every item comes after the items
 it needs.
 
+## Red marks: the preview shows the problems of the checks
+
+`tests/db/test_marks.py` deletes (and blanks) one answer of every question of a
+project of each catalog, one at a time, and renders the preview: every problem
+of the checks must be red on its page, and nothing else may be red.  It fails
+when a template marks something itself (only `{% marks %}` and
+`{% remaining_marks %}` may), or when a check problem cannot be shown.  A
+failure names the answer, the page and the message, e.g.
+`delete quantity/name: page-quantity-1: not shown: Missing Name`.
+
 ## Recordings: when the requests change
 
 A test that sends a request that is not recorded fails, also where MaRDMO

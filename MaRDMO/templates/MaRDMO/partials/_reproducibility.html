@@ -1,11 +1,14 @@
 {% load mardmo_tags %}
 <h3 id="{{ anchor }}">{{ title }}</h3>
+<p>
 {% if value.0.0 == option.YesLargeText %}
-    <p>Yes: {{ value.0.1|linebreaksbr }}{% if value.0.1|has_line_break %} <strong class="mardmo-error">LINE BREAKS NOT ALLOWED</strong>{% endif %}</p>
+    Yes: {{ value.0.1|linebreaksbr }}
 {% elif value.0.0 == option.No %}
-    <p>No</p>
+    No
 {% elif value.0.0 == option.NotRelevant %}
-    <p>Not relevant</p>
+    Not relevant
 {% else %}
-    <p><strong class="mardmo-error">MISSING {{ title|upper }}</strong></p>
+    -
 {% endif %}
+{% marks values field as reproducibility_marks %}{% if reproducibility_marks %}<br>{{ reproducibility_marks }}{% endif %}
+</p>

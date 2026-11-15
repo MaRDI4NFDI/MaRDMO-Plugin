@@ -1,73 +1,47 @@
 {% load mardmo_tags %}
-{% if pairs %}
-    <h3 id="{{ anchor }}">Relations to {{ title }}</h3>
-    <ul style="list-style-type: none; padding-left: 1em;">
-        {% for pair in pairs %}
-        <li style="margin-bottom: 0.5em;">
-            {% if pair.has_primary %}
-                {% for item in pair.primary %}
-                    {% if has_sections %}
-                        {% if item|own_item %}
-                            {{ primary_label }}: <strong class="mardmo-error">SELECTED {{ primary_class }} NOT FOUND IN {{ primary_class }} SECTION</strong>{% if not forloop.last %}<br>{% endif %}
-                        {% else %}
-                            {{ primary_label }}: {{ item }}{% if not forloop.last %}<br>{% endif %}
-                        {% endif %}
-                    {% else %}
-                        {{ primary_label }}: {% user_entity item.ID item.Name item.Description primary_class %}{% if not forloop.last %}<br>{% endif %}
-                    {% endif %}
-                {% endfor %}
+<h3 id="{{ anchor }}">Relations to {{ title }}</h3>
+<ul style="list-style-type: none; padding-left: 1em;">
+    {% for pair in pairs %}
+    <li style="margin-bottom: 0.5em;">
+        {% for item in pair.primary %}
+            {% if has_sections %}
+                {{ primary_label }}: {% relatant item %}{% if not forloop.last %}<br>{% endif %}
             {% else %}
-                <strong class="mardmo-error">{{ primary_missing }}</strong>
+                {{ primary_label }}: {% user_entity item.ID item.Name item.Description primary_class %}{% if not forloop.last %}<br>{% endif %}
             {% endif %}
-            <ul style="margin-top: 0.3em; list-style-type: none; padding-left: 1em;">
-                {% if pair.parameters %}
-                <li>&#8594; Parameters: {{ pair.parameters }}</li>
-                {% endif %}
-                <li>&#8594; {{ qualifier_env_label }}:
-                    {% if pair.has_qualifier %}
-                        {% if has_sections %}
-                            {% if pair.qualifier|own_item %}
-                                <strong class="mardmo-error">SELECTED {{ qualifier_class }} NOT FOUND IN {{ qualifier_class }} SECTION</strong>
-                            {% else %}
-                                {{ pair.qualifier }}
-                            {% endif %}
-                        {% else %}
-                            {% user_entity pair.qualifier.ID pair.qualifier.Name pair.qualifier.Description qualifier_class %}
-                        {% endif %}
-                    {% else %}
-                        <strong class="mardmo-error">{{ qualifier_missing }}</strong>
-                    {% endif %}
-                </li>
-                <li>&#8594; {{ doc_label }}:
-                    {% if has_sections %}
-                        {% include "MaRDMO/partials/_doc_entries.html" with doc_dict=pair.software_doc %}
-                    {% else %}
-                        {% include "MaRDMO/partials/_doc_entries.html" with doc_dict=pair.method_doc %}
-                    {% endif %}
-                </li>
-                {% if show_hardware %}
-                <li>&#8594; Hardware-Environment:
-                    {% if pair.hardware %}
-                        {% if pair.hardware|own_item %}
-                            <strong class="mardmo-error">SELECTED HARDWARE NOT FOUND IN HARDWARE SECTION</strong>
-                        {% else %}
-                            {{ pair.hardware }}
-                        {% endif %}
-                    {% else %}
-                        <strong class="mardmo-error">MISSING HARDWARE ENVIRONMENT</strong>
-                    {% endif %}
-                </li>
-                {% endif %}
-            </ul>
-        </li>
-        {% if not forloop.last %}
-            <br><br>
-        {% endif %}
+        {% empty %}
+            {{ primary_label }}: -
         {% endfor %}
-    </ul>
-{% elif show_empty_msg %}
-    <h3 id="{{ anchor }}">Relations to {{ title }}</h3>
-    <ul style="list-style-type: none; padding-left: 1em;">
-        <li><strong class="mardmo-error">{{ show_empty_msg }}</strong></li>
-    </ul>
-{% endif %}
+        <ul style="margin-top: 0.3em; list-style-type: none; padding-left: 1em;">
+            {% if pair.parameters %}
+            <li>&#8594; Parameters: {{ pair.parameters }}</li>
+            {% endif %}
+            <li>&#8594; {{ qualifier_env_label }}:
+                {% if not pair.has_qualifier %}
+                    -
+                {% elif has_sections %}
+                    {% relatant pair.qualifier %}
+                {% else %}
+                    {% user_entity pair.qualifier.ID pair.qualifier.Name pair.qualifier.Description qualifier_class %}
+                {% endif %}
+            </li>
+            <li>&#8594; {{ doc_label }}:
+                {% if has_sections %}
+                    {% include "MaRDMO/partials/_doc_entries.html" with doc_dict=pair.software_doc %}
+                {% else %}
+                    {% include "MaRDMO/partials/_doc_entries.html" with doc_dict=pair.method_doc %}
+                {% endif %}
+            </li>
+            {% if show_hardware %}
+            <li>&#8594; Hardware-Environment: {% if pair.hardware %}{% relatant pair.hardware %}{% else %}-{% endif %}</li>
+            {% endif %}
+        </ul>
+    </li>
+    {% if not forloop.last %}
+        <br><br>
+    {% endif %}
+    {% empty %}
+    <li>-</li>
+    {% endfor %}
+</ul>
+{% marks values field %}

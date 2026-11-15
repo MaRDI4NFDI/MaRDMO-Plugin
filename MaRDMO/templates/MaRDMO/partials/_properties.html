@@ -1,9 +1,6 @@
+{% load mardmo_tags %}
 <b>Properties</b>:
 {% for property in properties %}
-    {% if property.error %}
-        <strong class="mardmo-error">{{ property.label }}</strong>
-    {% else %}
-        {{ property.label }}
-    {% endif %}
-    {% if not forloop.last %}, {% endif %}
+    {{ property.label }}{% if not forloop.last %}, {% endif %}
 {% endfor %}
+{% marks values "Properties" before=" " %}
