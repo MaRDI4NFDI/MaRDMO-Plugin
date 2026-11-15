@@ -19,39 +19,42 @@
 {% block page %}
 
     <div class="mardmo-preview">
-        {% include "MaRDMO/partials/_portal_duplicates.html" %}
-        {% include "MaRDMO/partials/_export_problems.html" %}
-        {% include include_file with title=include_params.title %}
+        <h1 id="title">{{ include_params.title }}</h1>
+        {% include "MaRDMO/partials/_before_export.html" %}
+        {% include include_file %}
     </div>
     <br>
     <br>
     <br>
     {% if gate and not gate.clear %}
-        {# The export button stays, greyed out, until nothing prevents the export (#141, #152) #}
-        <p class="mardmo-error" id="export-blocked">
-            {% if gate.duplicates %}
-                {% trans "Decide on the items at the top (Already on the MaRDI Portal) first; then the export is possible." %}
-            {% elif gate.unreachable %}
-                {% trans "The MaRDI Portal is not reachable at the moment, so the documentation could not be checked completely. Please try again shortly." %}
-            {% else %}
-                {% trans "Fix the points at the top (Before you can export), then open the preview again." %}
-            {% endif %}
-        </p>
+        {# The export button stays, greyed out, until nothing prevents the export (#141, #152); why is its hover text #}
+        {% if gate.duplicates %}
+            {% trans "Decide on the items already on the MaRDI Portal first (at the top, Before you can export); then the export is possible." as blocked %}
+        {% elif gate.unreachable %}
+            {% trans "The MaRDI Portal is not reachable at the moment, so the documentation could not be checked completely. Please try again shortly." as blocked %}
+        {% else %}
+            {% trans "Fix the points at the top (Before you can export), then open the preview again." as blocked %}
+        {% endif %}
+        <p class="sr-only" id="export-blocked">{{ blocked }}</p>
     {% endif %}
     {# RDMO's bootstrap_form, with the export button disabled while something prevents the export #}
-    <form method="post" action="" novalidate>
+    <form method="post" action="" novalidate class="mardmo-export-form">
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ next }}" />
         {% include 'core/bootstrap_form_fields.html' %}
         {% if not gate or gate.clear %}
         <input type="submit" value="{{ submit_label }}" class="btn btn-primary" />
         {% else %}
-        <input type="submit" value="{{ submit_label }}" class="btn btn-primary" disabled aria-describedby="export-blocked" />
+        {# A disabled button gets no mouse events in some browsers: the hover text is on its wrapper #}
+        <span class="mardmo-blocked" title="{{ blocked }}"><input type="submit" value="{{ submit_label }}" class="btn btn-primary" disabled aria-describedby="export-blocked" /></span>
         {% endif %}
         {% if gate.unreachable %}
-        <a href="{{ request.get_full_path }}" class="btn btn-default" id="check-again">{% trans "Check again" %}</a>
+        <a href="{{ request.get_full_path }}" class="btn btn-default mardmo-button-link" id="check-again">{% trans "Check again" %}</a>
         {% endif %}
         <input type="submit" name="cancel" value="{% trans 'Cancel' %}" class="btn" />
+        {% if gate and not gate.clear %}
+        <button type="button" class="btn" id="to-the-top" onclick="document.getElementById('title').scrollIntoView()">{% trans "To the top" %}</button>
+        {% endif %}
     </form>
 
 {% endblock %}

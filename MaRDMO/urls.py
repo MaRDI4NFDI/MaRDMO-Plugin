@@ -7,7 +7,7 @@ relative to the prefix under which the instance includes ``MaRDMO.urls`` in its
 - ``progress/<job_id>/``        — ``show_progress``: render the live progress page
 - ``progress/<job_id>/status/`` — ``get_progress``: JSON progress for polling
 - ``success/<job_id>/``         — ``show_success``: render the export result page
-- ``reuse/<project_id>/``       — ``reuse_portal_item``: the preview's "use portal item" (#141)
+- ``reuse/<project_id>/``       — ``reuse_portal_item``: the preview's "Use this item" (#141)
 '''
 
 from django.urls import path

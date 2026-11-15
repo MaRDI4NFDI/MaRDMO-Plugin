@@ -93,8 +93,8 @@ class DuplicateOnPortal(RuntimeError):
                        'description now exists there ({qid}). It was not there when MaRDMO checked before the '
                        'export, so it was probably created in the meantime.').format(
                            label=self.label, description=self.description, qid=self.qid)]
-            last = _('Open the preview again: under "Already on the MaRDI Portal" you can use {qid} or rename your '
-                     'item. Then export again; the export adds the rest.').format(qid=self.qid)
+            last = _('Open the preview again: under "Items already on the MaRDI Portal" you can use {qid} or '
+                     'redefine your item. Then export again; the export adds the rest.').format(qid=self.qid)
         # The result page of an incomplete export says what was created
         if not sent:
             parts.append(str(_('Nothing was sent to the MaRDI Portal.')))

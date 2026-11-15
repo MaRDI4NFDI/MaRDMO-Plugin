@@ -1,0 +1,162 @@
+{% load i18n mardmo_tags %}
+{# Everything that prevents the export, above the preview: the items already on the MaRDI Portal (#141, see duplicates.py) and what the checks found (#152, see pipeline.py) #}
+{% if duplicates.rows or duplicates.failed or gate.problems or gate.unreachable %}
+<section class="mardmo-before-export" id="before-export" aria-labelledby="before-export-title">
+    <h1 id="before-export-title"><span class="mardmo-before-export__icon" aria-hidden="true">&#9888;</span> {% translate "Before you can export" %}</h1>
+    {% if duplicates.rows or gate.problems %}
+    <p class="mardmo-before-export__summary">
+        {% if duplicates.rows %}<a href="#portal-duplicates">{% blocktranslate trimmed count counter=duplicates.rows|length %}
+            {{ counter }} item is already on the MaRDI Portal
+        {% plural %}
+            {{ counter }} items are already on the MaRDI Portal
+        {% endblocktranslate %}</a>{% endif %}
+        {% if duplicates.rows and gate.problems %}&middot;{% endif %}
+        {% if gate.problems %}<a href="#export-problems">{% blocktranslate trimmed count counter=gate.problems|length %}
+            {{ counter }} point to fix in the documentation
+        {% plural %}
+            {{ counter }} points to fix in the documentation
+        {% endblocktranslate %}</a>{% endif %}
+    </p>
+    {% endif %}
+
+    {% if duplicates.rows or duplicates.failed %}
+    <div class="mardmo-before-export__part mardmo-before-export__part--duplicates" id="portal-duplicates">
+        <h2>{% translate "Items already on the MaRDI Portal" %}</h2>
+
+        {% if duplicates.failed %}
+        <p class="mardmo-note">
+            {% translate "MaRDMO could not check which items are on the MaRDI Portal already (the portal did not answer). Please try again shortly." %}
+        </p>
+        {% endif %}
+
+        {% if duplicates.rows %}
+        <p>
+            {% blocktranslate trimmed %}
+            The export would create these items, but the MaRDI Portal has them already. Check the portal
+            item, then decide for each: use the portal item, or redefine yours.
+            {% endblocktranslate %}
+        </p>
+        <ul class="mardmo-duplicates">
+        {% for row in duplicates.rows %}
+            <li class="mardmo-duplicate" data-action="{{ row.action }}">
+                {% if row.duplicate.source == 'wikidata' %}
+                {% include "MaRDMO/partials/_item_card.html" with source="wikidata" label=row.duplicate.item.Name description=row.duplicate.item.Description %}
+                {% else %}
+                {% include "MaRDMO/partials/_item_card.html" with source="new" label=row.duplicate.item.Name description=row.duplicate.item.Description %}
+                {% endif %}
+                <div class="mardmo-duplicate__details">
+                    <div class="mardmo-duplicate__where">
+                        <span class="mardmo-caption">{% translate "In the interview" %}</span>
+                        {% for place in row.locations %}
+                            <a href="{{ place.url }}" target="_blank" rel="noopener">{{ place.page }}</a>, {{ place.tab }}<br>
+                        {% empty %}
+                            {% translate "relations only" %}
+                        {% endfor %}
+                    </div>
+                    <div class="mardmo-duplicate__portal">
+                        <span class="mardmo-caption">{% translate "On the MaRDI Portal" %}</span>
+                        {% if row.duplicate.rule == 'documentation' %}
+                            {% translate "not yet; please check the Wikidata item of this documentation:" %}
+                            <a href="{{ wikidataURI }}{{ row.duplicate.other.ID|slice:'9:' }}" target="_blank" rel="noopener">{{ row.duplicate.other.ID|slice:'9:' }}</a>
+                        {% else %}
+                            {% translate "Please check:" %}
+                            <a href="{{ mardiURI }}{{ row.duplicate.qid }}" target="_blank" rel="noopener">{{ row.duplicate.qid }}</a>
+                        {% endif %}
+                    </div>
+                    {% with number=forloop.counter %}
+                    <fieldset class="mardmo-decision">
+                        <legend class="mardmo-caption">{% translate "Your decision" %}</legend>
+                        {# Nothing is chosen at first; a choice shows its one button next to the switch, so no click changes answers by itself #}
+                        <div class="mardmo-decision__row">
+                            <span class="mardmo-decision__choices">
+                                {% if row.action == 'reuse' %}
+                                <input type="radio" name="decision-{{ number }}" id="use-{{ number }}" value="use" class="mardmo-decision__use">
+                                <label for="use-{{ number }}" title="{% translate 'Use this item: it replaces your item and all its relations.' %}">{% translate "Use this item" %}</label>
+                                {% else %}
+                                <input type="radio" name="decision-{{ number }}" id="use-{{ number }}" value="use" class="mardmo-decision__use" disabled>
+                                <label for="use-{{ number }}" title="{% if row.reasons %}{{ row.reasons|join:' ' }}{% else %}{% translate 'This item cannot become the portal item.' %}{% endif %}">{% translate "Use this item" %}</label>
+                                {% endif %}
+                                <input type="radio" name="decision-{{ number }}" id="redefine-{{ number }}" value="redefine" class="mardmo-decision__redefine">
+                                <label for="redefine-{{ number }}" title="{% if row.action == 'replace' %}{% translate 'Redefine: go back to the interview and choose another item, or make it a new item.' %}{% elif row.duplicate.rule == 'documentation' %}{% translate 'Redefine: go back to the interview and give your item a new label and description, or select the Wikidata item there.' %}{% else %}{% translate 'Redefine: go back to the interview and give your item a new label and description.' %}{% endif %}">{% translate "Redefine" %}</label>
+                            </span>
+                            {% if row.action != 'reuse' %}
+                            {# Why this item cannot be used, and what to do: on tap too (hover texts are not shown on touch screens) #}
+                            <details class="mardmo-why">
+                                <summary title="{% translate 'Why can this item not be used?' %}" aria-label="{% translate 'Why can this item not be used?' %}">i</summary>
+                                <div class="mardmo-why__text">
+                                    {% for reason in row.reasons %}<p>{{ reason }}</p>{% endfor %}
+                                    <p>
+                                    {% if row.action == 'rename' and row.duplicate.rule == 'documentation' %}
+                                        {% translate "Give your item a new label and description on its page, or select the Wikidata item there." %}
+                                    {% elif row.action == 'replace' %}
+                                        {% translate "Choose another item on its page, or make it a new item: the portal item is another kind of item, and a new name would not change its Wikidata QID." %}
+                                    {% elif row.action == 'unknown' %}
+                                        {% translate "Give your item a new label and description on its page, or open the preview again later: then the portal item may be usable." %}
+                                    {% else %}
+                                        {% translate "Give your item a new label and description on its page." %}
+                                    {% endif %}
+                                    </p>
+                                </div>
+                            </details>
+                            {% endif %}
+                            {% if row.action == 'reuse' %}
+                            <form method="post" action="{% url 'reuse_portal_item' project.pk %}" class="mardmo-decision__then mardmo-decision__then--use">
+                                {% csrf_token %}
+                                <input type="hidden" name="format" value="{{ export_format }}">
+                                <input type="hidden" name="item" value="{{ row.duplicate.item.ID }}">
+                                <input type="hidden" name="qid" value="{{ row.duplicate.qid }}">
+                                <button type="submit" class="btn btn-primary btn-sm">{% translate "Apply" %}</button>
+                            </form>
+                            {% endif %}
+                            <a href="{% if row.locations %}{{ row.locations.0.url }}{% else %}{% url 'project_interview' project.pk %}{% endif %}" target="_blank" rel="noopener"
+                               class="btn btn-default btn-sm mardmo-button-link mardmo-decision__then mardmo-decision__then--redefine">{% translate "To interview" %}</a>
+                        </div>
+                    </fieldset>
+                    {% endwith %}
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if gate.problems or gate.unreachable %}
+    <div class="mardmo-before-export__part mardmo-before-export__part--problems" id="export-problems">
+        <h2>{% translate "Errors, inconsistencies and incomplete documentation" %}</h2>
+
+        {% if gate.unreachable %}
+        <p class="mardmo-error">{{ gate.unreachable }}</p>
+        <p>{% translate "The MaRDI Portal is not reachable at the moment, so the documentation could not be checked completely. Please try again shortly." %}</p>
+        {% endif %}
+
+        {% if gate.problems %}
+        <p>{% translate "Fix these points in the interview, then open the preview again." %}</p>
+        <ul class="mardmo-problems">
+            {% for section, page, messages in gate.groups %}
+            <li>
+                <strong>{% translate section %}</strong>{% if page %}, {{ page }}{% with url=interview|get_item:page.section %}{% if url %}
+                <a href="{{ url }}" target="_blank" rel="noopener" class="mardmo-interview-link">{% translate "To interview" %}</a>{% endif %}{% endwith %}{% endif %}
+                <ul>
+                    {% for message in messages %}
+                    <li class="mardmo-error">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    {% endif %}
+    {# "Apply" reloads the preview (the checks run again): one click is enough #}
+    <script>
+        document.querySelectorAll('#before-export .mardmo-decision__then--use').forEach(function (form) {
+            form.addEventListener('submit', function () {
+                var button = form.querySelector('button');
+                button.disabled = true;
+                button.textContent = '\u2026';
+            });
+        });
+    </script>
+</section>
+{% endif %}

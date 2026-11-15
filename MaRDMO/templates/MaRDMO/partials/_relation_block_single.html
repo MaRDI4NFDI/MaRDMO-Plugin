@@ -1,9 +1,8 @@
-{% load i18n %}
 {% load i18n mardmo_tags %}
 <h3 id="{{ anchor }}">{% blocktranslate trimmed %}Relations to {{ title }}{% endblocktranslate %}</h3>
 {% for models in relatants.values %}
     {{ relation }}: {% relatant models %} <br>
 {% empty %}
-    <strong class="mardmo-empty">{% translate "NOT DOCUMENTED" %}</strong> <br>
+    {% if not values|has_marks:field %}<strong class="mardmo-empty">{% translate "NOT DOCUMENTED" %}</strong> <br>{% endif %}
 {% endfor %}
 {% marks values field %}

@@ -8,8 +8,10 @@ becomes a :class:`PageRef`, which renders as a link to the page:
 '''
 from dataclasses import dataclass
 
+from django.urls import reverse
 from django.utils.html import format_html
 from rdmo.projects.models import Value
+from rdmo.questions.models import Page
 
 
 def anchor(section, index):
@@ -78,6 +80,23 @@ def tab_names(project, sections):
     ).values_list('attribute__uri', 'set_index', 'text'):
         names.setdefault(uris[uri], {})[index] = text
     return names
+
+
+def interview_urls(project, sections):
+    '''``{section: URL}`` of the interview pages whose tabs are the pages of *sections*.
+
+    RDMO opens a page of the interview, not one of its tabs, so the preview
+    names the tab next to the link.  A section without such a page in the
+    project's catalog has no URL.
+    '''
+    from .constants import BASE_URI  # constants imports helpers, which imports this module
+    uris = {f'{BASE_URI}domain/{section}': section for section in sections}
+    base = reverse('project_interview', args=[project.pk])
+    urls = {}
+    for page in (Page.objects.filter(attribute__uri__in=list(uris), sections__catalogs=project.catalog)
+                 .select_related('attribute').order_by('pk').distinct()):
+        urls.setdefault(uris[page.attribute.uri], f'{base}{page.pk}/')
+    return urls
 
 
 def add_tab_names(project, data):

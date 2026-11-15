@@ -1,5 +1,6 @@
-'''The preview's section "Already on the MaRDI Portal" in a browser (#141).'''
+'''The preview's items already on the MaRDI Portal (Before you can export) in a browser (#141).'''
 import os
+import re
 
 import pytest
 from rdmo.projects.models import Membership
@@ -53,30 +54,67 @@ def test_use_portal_item_in_the_browser(documentation, page_as):
     page = page_as(owner)
     page.goto(f'/projects/{model.pk}/export/wikibase/')
 
-    section = page.locator('#portal-duplicates')
-    screenshot(section, 'portal-duplicates')
-    assert section.locator('h1').inner_text() == 'Already on the MaRDI Portal'
-    rows = section.locator('tr.mardmo-duplicate')
+    box = page.locator('#before-export')
+    if SCREENSHOTS:
+        page.screenshot(path=os.path.join(SCREENSHOTS, 'top.png'))
+    screenshot(box, 'before-export')
+    assert box.locator('h1').inner_text().endswith('Before you can export')
+    section = box.locator('#portal-duplicates')
+    assert section.locator('h2').inner_text() == 'Items already on the MaRDI Portal'
+    rows = section.locator('li.mardmo-duplicate')
     assert rows.count() == 2
-    assert page.locator('#export-blocked').is_visible()
+    # Why the export button is disabled: its hover text; a button back to the top
+    assert 'Decide on the items already on the MaRDI Portal first' in page.locator('.mardmo-blocked').get_attribute('title')
     assert page.locator('input[type=submit][value="Export to MaRDI Portal"]').is_disabled()
+    assert page.get_by_role('button', name='To the top').is_visible()
+    # The project's title above the box
+    assert page.locator('#title').inner_text() == model.title
+    assert page.locator('#title').bounding_box()['y'] < box.bounding_box()['y']
 
-    # The page of the item: the interview, in a new window
-    link = rows.filter(has_text='mass').locator('a', has_text='Quantity')
+    def row(label):
+        return rows.filter(has=page.locator('.mardmo-item__label', has_text=re.compile(f'^{label}$')))
+    mass, weighing = row('mass'), row('weighing')
+    assert mass.locator('.mardmo-source').inner_text() == 'new'
+    # The page of the item: the interview, in a new window; the portal item to check
+    link = mass.locator('.mardmo-duplicate__where a', has_text='Quantity')
     assert link.get_attribute('target') == '_blank'
     assert f'/projects/{model.pk}/interview/' in link.get_attribute('href')
+    assert mass.locator('.mardmo-duplicate__portal a').inner_text() == 'Q5'
 
-    # The task cannot become software; the quantity can become Q5
-    assert rows.filter(has_text='weighing').locator('button').count() == 0
-    assert 'MaRDMO would give it the class computational task' in rows.filter(has_text='weighing').inner_text()
-    rows.filter(has_text='mass').get_by_role('button', name='Use portal item').click()
+    # Nothing chosen: no button.  The task cannot become software: only "Redefine", and why (hover, and the (i))
+    assert not mass.get_by_role('button', name='Apply').is_visible()
+    assert not mass.get_by_role('link', name='To interview').is_visible()
+    assert weighing.get_by_label('Use this item').is_disabled()
+    assert 'MaRDMO would give it the class computational task' in weighing.locator(
+        'label', has_text='Use this item').get_attribute('title')
+    why = weighing.locator('.mardmo-why__text')
+    assert not why.is_visible()
+    weighing.locator('.mardmo-why summary').click()
+    assert why.is_visible() and 'MaRDMO would give it the class computational task' in why.inner_text()
+    screenshot(box, 'before-export-why')
+    weighing.locator('.mardmo-why summary').click()
+    assert not why.is_visible()
+    assert mass.locator('.mardmo-why').count() == 0
+    weighing.locator('label', has_text='Redefine').click()
+    to_interview = weighing.get_by_role('link', name='To interview')
+    assert to_interview.is_visible() and to_interview.get_attribute('target') == '_blank'
+    assert f'/projects/{model.pk}/interview/' in to_interview.get_attribute('href')
+
+    # The quantity can become Q5: choosing shows "Apply", which does it
+    mass.locator('label', has_text='Use this item').click()
+    assert mass.get_by_role('button', name='Apply').is_visible()
+    assert not mass.get_by_role('link', name='To interview').is_visible()
+    screenshot(box, 'before-export-decisions')
+    if SCREENSHOTS:
+        page.screenshot(path=os.path.join(SCREENSHOTS, 'preview.png'), full_page=True)
+    mass.get_by_role('button', name='Apply').click()
     page.wait_for_load_state()
 
-    # Back on the preview: one row left, still no export
-    assert page.url.endswith(f'/projects/{model.pk}/export/wikibase/')
-    assert page.locator('tr.mardmo-duplicate').count() == 1
-    screenshot(page.locator('#portal-duplicates'), 'portal-duplicates-after-reuse')
-    assert page.locator('tr.mardmo-duplicate').inner_text().count('weighing')
+    # Back on the preview: one item left, still no export
+    assert page.url.endswith(f'/projects/{model.pk}/export/wikibase/#before-export')
+    assert page.locator('li.mardmo-duplicate').count() == 1
+    screenshot(page.locator('#before-export'), 'before-export-after-reuse')
+    assert page.locator('li.mardmo-duplicate').inner_text().count('weighing')
     quantity = model.values.get(attribute__uri=f'{BASE_URI}domain/quantity/id')
     relation = model.values.get(attribute__uri=f'{BASE_URI}domain/task/quantity-relatant')
     assert (quantity.external_id, relation.external_id) == ('mardi:Q5', 'mardi:Q5')

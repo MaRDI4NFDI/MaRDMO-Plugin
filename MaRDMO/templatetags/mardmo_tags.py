@@ -63,6 +63,16 @@ def marks(page, *fields, before=''):
     return format_html('{}{}', before, _mark_list(messages)) if messages else ''
 
 
+@register.filter
+def has_marks(page, field):
+    '''Whether the checks found a problem with *field* of *page*.
+
+    A block shows "NOT DOCUMENTED" only if not: an answer that is missing
+    shows just its red mark (``{% if not values|has_marks:field %}``).
+    '''
+    return isinstance(page, dict) and bool((page.get('Problems') or {}).get(field))
+
+
 @register.simple_tag
 def relatant(value):
     '''A relation's item: the link to its page, ``-`` if there is none, or its ID.

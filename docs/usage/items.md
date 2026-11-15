@@ -97,23 +97,30 @@ zbMATH author ID.
 The dropdowns offer only MaRDI Portal items of the kind a question asks for.
 An item may exist on the portal anyway: with another class or none (e.g.
 imported from Wikidata), or not among the results.  The export would create
-it a second time, so the preview lists such items at the top, under
-**Already on the MaRDI Portal**, and the export button stays disabled until
-none is left.  Each row says where you entered the item (page and tab) and
-what you can do:
+it a second time, so the preview lists such items at the top, in the box
+**Before you can export** under **Items already on the MaRDI Portal**, and
+the export button stays disabled until none is left.  Each item shows its
+source (*new* or *Wikidata*), name and short description; below it where you
+entered it (page and tab, linked to the interview), the portal item to check
+(linked to the MaRDI Portal), and your decision.  Nothing is chosen at first;
+a choice shows its button next to it (hover over a choice to read what it
+does):
 
-- **Use portal item**: your item becomes the portal item.  Every answer that
+- **Use this item**, then **Apply**: your item becomes the portal item, and
+  the preview opens again without it.  Every answer that
   refers to it then refers to the portal item, and its tab gets the portal
   item's name and short description.  The export adds what you documented to
-  the portal item.  This is offered if the portal item is not another kind
-  of item (another class, community or profile type than MaRDMO would give it).
-- **Rename it**: the portal item is another kind of item; give yours another
-  name or short description on its tab.
-- **Choose another item or make it a new item**: the same for an item you
-  selected from Wikidata; a new name would not change the Wikidata item.
-- **Same as another item of your documentation**: an item of your own with
-  the name and short description of a Wikidata item you selected elsewhere;
-  the MaRDI Portal takes only one.  Rename yours, or select the Wikidata item.
+  the portal item.  This can be chosen if the portal item is not another kind
+  of item (another class, community or profile type than MaRDMO would give
+  it); otherwise it is greyed out, and hovering over it or the small **i**
+  next to it says why.
+- **Redefine**, then **To interview** (opens in a new window): give
+  your item another name or short description on its tab.  For an item you
+  selected from Wikidata, choose another item or make it a new item there: a
+  new name would not change the Wikidata item.  An item of your own with the
+  name and short description of a Wikidata item you selected elsewhere (the
+  MaRDI Portal takes only one): rename yours, or select the Wikidata item.
+  Then open the preview again.
 
 Authors and journals of publications are not listed: MaRDMO takes them from
 the citation and decides for them itself.
@@ -140,8 +147,12 @@ instance whether they can convert it.
 
 The preview checks everything the export checks, also against the MaRDI
 Portal (for example a symbol that stands for another quantity there).  What
-it finds is listed at the top, under **Before you can export**, by tab, each
-linked to the tab's place in the preview.  The export button is disabled
+it finds is listed at the top, in the box **Before you can export** under
+**Errors, inconsistencies and incomplete documentation**, by tab, each linked
+to the tab's place in the preview and to its page in the interview.  In the
+preview itself a missing answer is marked in red where it belongs (instead
+of *NOT DOCUMENTED*, which marks only what may be left out).  The export button is disabled
+(hover over it to read why; **To the top** next to it leads back to the box)
 until the list is empty: fix the points in the interview and open the
 preview again.  If the MaRDI Portal does not answer, the preview says so;
 try again shortly with **Check again**.
