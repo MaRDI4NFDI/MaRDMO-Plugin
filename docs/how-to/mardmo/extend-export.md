@@ -32,8 +32,8 @@ restructuring, this step can be skipped.
 
 ## 2. HTML Preview
 
-**File:** `templates/MaRDMO/<catalog>Template.html` (e.g. `modelTemplate.html`,
-`workflowTemplate.html`), with shared blocks in `templates/MaRDMO/partials/`
+**File:** `templates/MaRDMO/preview_<catalog>.html` (e.g. `preview_model.html`,
+`preview_workflow.html`), with shared blocks in `templates/MaRDMO/partials/`
 
 The answers dict (augmented by pre-processing if applicable) is passed to a Django
 template as context.  Add a new section to the relevant template to render the new

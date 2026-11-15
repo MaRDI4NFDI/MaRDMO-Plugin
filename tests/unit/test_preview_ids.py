@@ -45,7 +45,7 @@ def test_own_publication_without_doi_is_marked():
 def test_own_formula_without_reference_is_marked_in_the_basics_catalog():
     answers = checked({'formulation': {0: {'ID': OWN, 'Name': 'f', 'Description': 'a formula'}}},
                       'formulation', catalog=CATALOG_MODEL_BASICS)
-    html = render_to_string('MaRDMO/modelTemplate-basics.html', {'answers': answers, 'option': {}})
+    html = render_to_string('MaRDMO/preview_model_basics.html', {'answers': answers, 'option': {}})
     assert 'Missing Reference' in html
 
 

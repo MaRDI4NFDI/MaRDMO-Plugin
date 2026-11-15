@@ -11,5 +11,6 @@ class Checks(WorkflowMixin, AlgorithmMixin, ModelMixin, ChecksBase):
 
     Runs catalog-specific consistency checks (mandatory fields, relations
     to own items without page, projects made before 0.8.0, conflicting data
-    properties) and collects human-readable error messages for display.
+    properties) and returns what they find as
+    :class:`~MaRDMO.problems.Problem` (see :mod:`MaRDMO.pipeline`).
     '''

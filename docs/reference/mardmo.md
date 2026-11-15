@@ -8,6 +8,10 @@
 
 ::: MaRDMO.oauth2
 
+## Store
+
+::: MaRDMO.store
+
 ## Providers
 
 ::: MaRDMO.providers
@@ -31,6 +35,10 @@
 ## Router
 
 ::: MaRDMO.router
+
+## Builders
+
+::: MaRDMO.builders
 
 ## Validators
 

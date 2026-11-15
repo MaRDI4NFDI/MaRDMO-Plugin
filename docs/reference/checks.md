@@ -1,5 +1,13 @@
 # Checks
 
+## Pipeline
+
+::: MaRDMO.pipeline
+
+## Problems
+
+::: MaRDMO.problems
+
 ## Base
 
 ::: MaRDMO.checks.base

@@ -614,9 +614,9 @@ class PrepareWorkflow(PublicationExport):
     def _export_hardwares(self, payload, hardwares: dict):
         '''Export each hardware item.
 
-        Sets instance of: computer hardware, adds CPU relation, number-of-
-        compute-nodes (has-part: compute node with quantity qualifier), and
-        number-of-processor-cores (quantity).
+        Sets instance of: computer hardware, adds the number of compute nodes
+        (quantity), the CPUs (with their count as qualifier) and the number
+        of processor cores of each CPU (quantity, on the CPU item).
         '''
         for entry in hardwares.values():
             if not entry.get("ID"):
