@@ -12,15 +12,12 @@ import pytest
 from django.utils import translation
 
 from MaRDMO.oauth2 import in_language
-from tests.db.test_preview_gate import URL, text, without_description
-
-GERMAN = {'HTTP_ACCEPT_LANGUAGE': 'de'}
+from tests.db.conftest import without_description
+from tests.support.html import element, export_button, export_page, preview_page, text
 
 
 def preview(client, documentation):
-    response = client.get(URL.format(documentation.pk), **GERMAN)
-    assert response.status_code == 200
-    return response.content.decode()
+    return preview_page(client, documentation, language='de')
 
 
 @pytest.mark.django_db
@@ -29,6 +26,7 @@ def test_the_preview_is_german(white, client):
     page = text(html)
     for german in ('Mathematische Modelle', 'Formeln', 'Kurzbeschreibung', 'Beziehungen: Forschungsprobleme'):
         assert german in page
+    assert export_button(html) == 'enabled'
     assert 'value="Zum MaRDI Portal exportieren"' in html and 'value="Abbrechen"' in html
     for english in ('Short Description', 'Relations to', 'Export to MaRDI Portal', 'NOT DOCUMENTED'):
         assert english not in html
@@ -37,17 +35,19 @@ def test_the_preview_is_german(white, client):
 @pytest.mark.django_db
 def test_problems_are_german(white, client):
     without_description(white, 'formulation', 1)
-    page = text(preview(client, white))
-    assert 'Bevor Sie exportieren können' in page
-    assert 'Formel , conservation law for the opiate-using career ODE model (F2)' in page
-    assert 'Kurzbeschreibung fehlt' in page and 'Missing Short Description' not in page
+    html = preview(client, white)
+    box = text(element(html, id='before-export'))
+    assert 'Bevor Sie exportieren können' in box and 'Fehler, Widersprüche und unvollständige Dokumentation' in box
+    assert 'Formel, conservation law for the opiate-using career ODE model (F2) Zum Interview' in box
+    assert 'Kurzbeschreibung fehlt' in box and 'Missing Short Description' not in html
+    assert 'Beheben Sie die Punkte oben' in text(element(html, id='export-blocked'))
 
 
 @pytest.mark.django_db
 def test_the_export_page_is_german(white, client):
-    assert 'value="Zum MaRDI Portal exportieren"' in preview(client, white)
+    assert export_button(preview(client, white)) == 'enabled'
     without_description(white, 'formulation', 1)       # after the preview
-    page = text(client.post(URL.format(white.pk), {}, **GERMAN).content.decode())
+    page = text(export_page(client, white, language='de').content.decode())
     assert 'Seit der Vorschau hat sich etwas geändert' in page
     assert 'Formel (Seite F2): Kurzbeschreibung fehlt' in page
 

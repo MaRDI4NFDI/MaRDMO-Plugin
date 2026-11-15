@@ -21,6 +21,32 @@ admin would import it; other tests compare the plugin with it.  Without
 | `tests/static` | files only: data files, SPARQL queries, templates, workflows, README, questionnaire |
 | `tests/unit` | single functions, without database |
 | `tests/db` | with a database and the questionnaire: providers, handlers, hydration, preview, export |
+| `tests/browser` | pages in a real browser (opt-in locally, see [Browser tests](#browser-tests-pages-in-a-real-browser)) |
+| `tests/live` | the recordings against the real portal (opt-in, see [Live check](#live-check-does-the-portal-still-answer-as-recorded)) |
+| `tests/support` | helpers, no tests: reading pages (`html.py`), recordings, the providers' calls |
+
+Every test starts in English with an empty cache (`tests/conftest.py`), so
+a test does not depend on the language or the answers of the tests before.
+
+### Reading a page in a test
+
+A test checks what the user sees, not the exact markup, so a change of the
+look does not break it.  `tests/support/html.py` parses a page and finds its
+parts by ID, class or tag:
+
+```python
+from tests.support.html import element, export_button, links, preview_page, text
+
+page = preview_page(client, documentation)          # GET the export page; language='de'
+assert export_button(page) == 'disabled'
+problems = element(page, id='export-problems')
+assert 'Missing Short Description' in text(problems)
+assert ('To interview', f'/projects/{documentation.pk}/interview/12/') in links(problems)
+```
+
+`rendered_preview(project)` renders the catalog's template without request
+and checks.  Compare HTML literally only where the markup itself is tested
+(e.g. `PageRef` in `tests/unit/test_pages.py`).
 
 ## Run them on PostgreSQL or MariaDB
 
@@ -63,7 +89,7 @@ needs a questionnaire change gets a questionnaire branch of the same name.
 | Event | Combinations |
 |---|---|
 | Push to any branch | Python 3.14, RDMO 2.5.2, SQLite |
-| Pull request to `main` or the integration branch, release | Python 3.10, 3.13, 3.14 × RDMO 2.5.1, 2.5.2 on SQLite; Python 3.14, RDMO 2.5.2 on PostgreSQL 16 and on MariaDB 11 |
+| Pull request to `main` or the integration branch, release | Python 3.10, 3.13, 3.14 × RDMO 2.5.1, 2.5.2 on SQLite; Python 3.14, RDMO 2.5.2 on PostgreSQL 16 and on MariaDB 11; the browser tests on Python 3.14, RDMO 2.5.2, SQLite |
 
 A test of the database jobs fails if the tests did not run on the database
 asked for, so a database job cannot pass on SQLite unnoticed.
@@ -152,17 +178,30 @@ started by hand ("Run workflow") turns it on again.
 
 ## Browser tests: pages in a real browser
 
-`tests/browser` opens MaRDMO's pages in Chromium (Playwright), e.g. the
-preview's box "Before you can export" with the items already on the MaRDI
-Portal and their decision ("Use this item", "Redefine").  The pages come from a live server on the test database, the portal
-is faked.  They are opt-in and not part of CI yet:
+`tests/browser` opens MaRDMO's pages in Chromium (Playwright): what only a
+browser shows, i.e. what CSS and JavaScript do.
+
+| File | Page |
+|---|---|
+| `test_duplicates.py` | the preview's box "Before you can export": the items already on the MaRDI Portal, the decision ("Use this item", "Redefine", the **i**), "Apply" |
+| `test_formulas.py` | formulas in the preview rendered by MathJax; one it cannot render shown as TeX |
+| `test_progress.py` | the progress page following an upload (`progress.js`, also in German, errors as text), the result page and its graph (cytoscape: nodes, filters, fullscreen), someone else's job |
+
+The pages come from a live server on the test database; the portal and the
+upload are faked (the progress tests write what the upload's thread writes).
+Locally they are opt-in:
 
 ```bash
-pip install playwright && playwright install chromium
-BROWSER=1 pytest tests/browser --force-enable-socket
+pip install -e ".[test,browser]" && playwright install chromium
+BROWSER=1 pytest tests/browser --allow-hosts=127.0.0.1,::1,localhost
 ```
 
-`SCREENSHOTS=<folder>` saves pictures of what the tests look at.
+`--allow-hosts` lets the tests reach the local test server, nothing else.
+`SCREENSHOTS=<folder>` saves pictures of what the tests look at.  In CI they
+run for every pull request and release (see [What runs in CI](#what-runs-in-ci)),
+and the pictures are uploaded as the artifact *screenshots* of the run, to
+look at the pages of a pull request without running it.  The result graph
+is reachable for the tests as `window.mardmoGraph`.
 
 ## Add a documentation as a test project
 

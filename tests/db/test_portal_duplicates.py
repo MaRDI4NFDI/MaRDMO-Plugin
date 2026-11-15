@@ -10,6 +10,7 @@ from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_items
 from MaRDMO.queries import PortalItems
 from tests.db.conftest import answer, save
+from tests.support.html import attribute, element, elements, export_button, links, preview_page, text
 
 ITEMS = get_items()
 
@@ -53,55 +54,62 @@ def portal(monkeypatch):
     return use
 
 
-def preview(client, model):
-    response = client.get(f'/projects/{model.pk}/export/wikibase/')
-    assert response.status_code == 200
-    return response.content.decode()
-
-
 def test_without_duplicates_the_preview_has_no_section(model, client, portal):
     '''The documentation is incomplete, so the button is disabled for that reason, not for duplicates.'''
     portal()
-    html = preview(client, model)
-    assert 'Items already on the MaRDI Portal' not in html and 'Decide on the items' not in html
-    assert 'Before you can export' in html and 'id="export-problems"' in html
+    html = preview_page(client, model)
+    assert not elements(html, id='portal-duplicates') and elements(html, id='export-problems')
+    assert 'Decide on the items' not in text(element(html, id='export-blocked'))
 
 
 def test_a_failed_lookup_asks_to_try_again(model, client, portal):
     portal(label_failed=True)
-    html = preview(client, model)
-    assert 'could not check' in html and 'Please try again shortly.' in html
-    assert 'id="check-again"' in html
-    assert '<input type="submit" value="Export to MaRDI Portal" class="btn btn-primary" disabled' in html
+    html = preview_page(client, model)
+    duplicates = text(element(html, id='portal-duplicates'))
+    assert 'could not check' in duplicates and 'Please try again shortly.' in duplicates
+    assert elements(html, id='check-again')
+    assert export_button(html) == 'disabled'
 
 
 def test_duplicates_are_listed_and_block_the_export(model, client, portal):
     portal(by_label={('mass', 'physical quantity'): 'Q5', ('weighing', 'measure a mass'): 'Q6'},
            by_wikidata={'Q7150': 'Q60093'},
            markers={'Q5': markers(), 'Q6': markers(ITEMS['software']), 'Q60093': markers(ITEMS['software'])})
-    html = preview(client, model)
-    assert 'Items already on the MaRDI Portal' in html and '3 items are already on the MaRDI Portal' in html
-    assert 'id="export-blocked"' in html and 'Decide on the items already on the MaRDI Portal first' in html
-    assert '<input type="submit" value="Export to MaRDI Portal" class="btn btn-primary" disabled' in html
-    # The quantity may become Q5: a form with the CSRF token
-    assert html.count('data-action="reuse"') == 1 and 'csrfmiddlewaretoken' in html
-    assert 'name="item" value="user:mass"' in html and 'name="qid" value="Q5"' in html
-    assert html.count('class="mardmo-decision__use">') == 1 and html.count('class="mardmo-decision__use" disabled>') == 2
+    html = preview_page(client, model)
+    assert '3 items are already on the MaRDI Portal' in text(element(html, id='before-export'))
+    assert 'Decide on the items already on the MaRDI Portal first' in text(element(html, id='export-blocked'))
+    assert export_button(html) == 'disabled'
+    rows = {text(element(row, cls='mardmo-item__label')): row for row in elements(html, tag='li', cls='mardmo-duplicate')}
+    assert {name: attribute(row, 'data-action') for name, row in rows.items()} == {
+        'mass': 'reuse', 'weighing': 'rename', 'ecology': 'replace'}
+    # The items with their source
+    assert {name: text(element(row, cls='mardmo-source')) for name, row in rows.items()} == {
+        'mass': 'new', 'weighing': 'new', 'ecology': 'Wikidata'}
+    # Where they are entered (the interview); the portal item to check, without its label
+    for row in rows.values():
+        assert all(href.startswith(f'/projects/{model.pk}/interview/')
+                   for _, href in links(element(row, cls='mardmo-duplicate__where')))
+    assert 'QQK1' in text(rows['mass']) and 'CT1' in text(rows['weighing'])
+    assert [label for label, _ in links(element(rows['ecology'], cls='mardmo-duplicate__portal'))] == ['Q60093']
+    assert 'branch of biology' not in html
+    # The quantity may become Q5: only its "Use this item" can be chosen, and its form names the item and Q5
+    assert {name: attribute(element(row, tag='input', cls='mardmo-decision__use'), 'disabled') is None
+            for name, row in rows.items()} == {'mass': True, 'weighing': False, 'ecology': False}
+    form = element(rows['mass'], tag='form')
+    assert {attribute(node, 'name'): attribute(node, 'value') for node in elements(form, tag='input', type='hidden')
+            if attribute(node, 'name') != 'csrfmiddlewaretoken'} == {'format': 'wikibase', 'item': 'user:mass', 'qid': 'Q5'}
+    assert elements(form, tag='input', name='csrfmiddlewaretoken')
     # The task: Q6 is software; the Wikidata field: its twin is software too
-    assert 'data-action="rename"' in html and 'data-action="replace"' in html
-    assert 'Its class on the MaRDI Portal is software; MaRDMO would give it the class computational task.' in html
-    assert 'a new name would not change its Wikidata QID' in html
-    # The items with their source; where they are entered; the portal items to check, without their labels
-    assert html.count('mardmo-source--new') == 2 and html.count('mardmo-source--wikidata') == 1
-    assert f'/projects/{model.pk}/interview/' in html and 'QQK1' in html and 'CT1' in html
-    assert 'Q60093</a>' in html and 'branch of biology' not in html
+    assert 'Its class on the MaRDI Portal is software; MaRDMO would give it the class computational task.' in text(
+        element(rows['weighing'], cls='mardmo-why'))
+    assert 'a new name would not change its Wikidata QID' in text(element(rows['ecology'], cls='mardmo-why'))
 
 
 def reuse(client, model, item='user:mass', qid='Q5'):
     return client.post(f'/services/reuse/{model.pk}/', {'format': 'wikibase', 'item': item, 'qid': qid})
 
 
-def text(model, path, **fields):
+def stored(model, path, **fields):
     value = model.values.get(attribute__uri=f'{BASE_URI}domain/{path}', **fields)
     return value.external_id, value.text
 
@@ -110,17 +118,17 @@ def test_use_portal_item_rewrites_every_answer_and_the_page(model, client, porta
     portal(by_label={('mass', 'physical quantity'): 'Q5'}, markers={'Q5': markers()})
     response = reuse(client, model)
     assert response.status_code == 302 and response.url == f'/projects/{model.pk}/export/wikibase/#before-export'
-    assert text(model, 'quantity/id') == ('mardi:Q5', 'mass (physical quantity)')
-    assert text(model, 'task/quantity-relatant') == ('mardi:Q5', 'mass (physical quantity)')
-    assert text(model, 'quantity/name')[1] == 'mass'
-    assert text(model, 'task/id')[0] == 'user:task'
+    assert stored(model, 'quantity/id') == ('mardi:Q5', 'mass (physical quantity)')
+    assert stored(model, 'task/quantity-relatant') == ('mardi:Q5', 'mass (physical quantity)')
+    assert stored(model, 'quantity/name')[1] == 'mass'
+    assert stored(model, 'task/id')[0] == 'user:task'
 
 
 def test_use_portal_item_takes_the_label_of_a_wikidata_twin(model, client, portal):
     portal(by_wikidata={'Q7150': 'Q60093'}, markers={'Q60093': markers()})
     assert reuse(client, model, 'wikidata:Q7150', 'Q60093').status_code == 302
-    assert text(model, 'field/id') == ('mardi:Q60093', 'ecology (branch of biology)')
-    assert text(model, 'field/description')[1] == 'branch of biology'
+    assert stored(model, 'field/id') == ('mardi:Q60093', 'ecology (branch of biology)')
+    assert stored(model, 'field/description')[1] == 'branch of biology'
 
 
 @pytest.mark.parametrize('item, qid, found', [
@@ -132,7 +140,7 @@ def test_use_portal_item_takes_the_label_of_a_wikidata_twin(model, client, porta
 def test_use_portal_item_is_refused_unless_the_preview_offers_it(model, client, portal, item, qid, found):
     portal(**found)
     assert reuse(client, model, item, qid).status_code == 400
-    assert text(model, 'quantity/id')[0] == 'user:mass' and text(model, 'task/id')[0] == 'user:task'
+    assert stored(model, 'quantity/id')[0] == 'user:mass' and stored(model, 'task/id')[0] == 'user:task'
 
 
 def test_use_portal_item_needs_permission_to_change_answers(model, portal, django_user_model):
@@ -142,7 +150,7 @@ def test_use_portal_item_needs_permission_to_change_answers(model, portal, djang
     client = Client()
     client.force_login(guest)
     assert reuse(client, model).status_code == 403
-    assert text(model, 'quantity/id')[0] == 'user:mass'
+    assert stored(model, 'quantity/id')[0] == 'user:mass'
 
 
 def test_use_portal_item_needs_post_and_the_csrf_token(model, portal):
@@ -151,4 +159,4 @@ def test_use_portal_item_needs_post_and_the_csrf_token(model, portal):
     client.force_login(model.values.first().project.owners[0])
     assert client.get(f'/services/reuse/{model.pk}/').status_code == 405
     assert reuse(client, model).status_code == 403
-    assert text(model, 'quantity/id')[0] == 'user:mass'
+    assert stored(model, 'quantity/id')[0] == 'user:mass'

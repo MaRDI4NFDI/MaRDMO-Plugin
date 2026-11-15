@@ -1,6 +1,6 @@
 '''Read-only check of the MaRDI Portal and Wikidata: do they still answer as recorded? (#93)
 
-The recordings (tests/recordings.py) hold the requests MaRDMO sends: entity
+The recordings (tests/support/recordings.py) hold the requests MaRDMO sends: entity
 searches, SPARQL queries, TeX checks.  Each is sent again, one per second,
 and its answer is compared with the recorded one by structure, not by value,
 so that ordinary edits on the portal do not count:
@@ -29,7 +29,7 @@ import requests
 from MaRDMO import queries
 from MaRDMO.constants import TEX_CHECK_URL
 from MaRDMO.getters import get_items, get_url
-from tests.recordings import FOLDER, REAL_REQUEST
+from tests.support.recordings import FOLDER, REAL_REQUEST
 
 pytestmark = pytest.mark.skipif(os.environ.get('LIVE') != '1', reason='live check: LIVE=1 (see module docstring)')
 
@@ -91,7 +91,7 @@ def describe(recording, entry):
 @pytest.mark.parametrize('recording, entry', [pytest.param(recording, entry, id=f'{recording}-{index}')
                                               for index, (recording, entry) in enumerate(recorded())])
 def test_the_portal_answers_as_recorded(recording, entry):
-    assert 'request' in entry, f'{recording}: recorded without the request; record again (tests/recordings.py)'
+    assert 'request' in entry, f'{recording}: recorded without the request; record again (tests/support/recordings.py)'
     request, url = entry['request'], entry['url']
     assert read_only(url, request), f'{describe(recording, entry)}: not a reading request, not sent'
     time.sleep(PAUSE)

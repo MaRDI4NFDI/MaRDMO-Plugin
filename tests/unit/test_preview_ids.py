@@ -1,27 +1,22 @@
 '''The preview shows the user's own items (``user:`` ID) as own items: no ID, and what they still need.'''
-import re
-
 from django.template.loader import render_to_string
 
 from MaRDMO.checks import Checks
 from MaRDMO.constants import CATALOG_MODEL, CATALOG_MODEL_BASICS
 from MaRDMO.problems import attach
+from tests.support.html import text
 
 OWN = 'user:6f1c2a3e-0000-4000-8000-000000000000'
 
 
-def text(html):
-    return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', html))
-
-
 def test_own_item_has_no_id_shown():
     html = text(render_to_string('MaRDMO/partials/_id.html', {'id': OWN, 'class': 'MODEL'}))
-    assert 'ID : -' in html
+    assert 'ID: -' in html
     assert OWN not in html
 
 
 def test_portal_item_shows_its_id():
-    assert 'MaRDI Portal ID : Q1' in text(render_to_string('MaRDMO/partials/_id.html', {'id': 'mardi:Q1'}))
+    assert 'MaRDI Portal ID: Q1' in text(render_to_string('MaRDMO/partials/_id.html', {'id': 'mardi:Q1'}))
 
 
 def checked(answers, *checks, catalog=CATALOG_MODEL):

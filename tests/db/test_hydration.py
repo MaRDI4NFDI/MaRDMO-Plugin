@@ -1,21 +1,19 @@
 '''Selecting a portal or Wikidata item fills its pages (MaRDMO's handlers), and the preview reads them.
 
-The answers of the portal and Wikidata are recorded (tests/recordings.py);
+The answers of the portal and Wikidata are recorded (tests/support/recordings.py);
 PAGES are the items the selected item links to on the portal when recorded.
 '''
 import collections
 
 import pytest
-from django.template.loader import render_to_string
 
-from MaRDMO import main
 from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_item_url
 from rdmo.options.models import OptionSet
 from rdmo.projects.models import Value
 from rdmo.projects.signals import value_updated
 
 from tests.db.conftest import select
+from tests.support.html import rendered_preview
 
 CASES = {  # recording: (catalog, questions, page, ID, label, description)
     'si_model': ('mardmo-model-catalog', 'model', 'Mathematical Model', 'mardi:Q6675167',
@@ -79,16 +77,6 @@ def pages(values):
         if set_prefix == '' and len(parts) == 3 and parts[2] == 'id':
             result[parts[1]].append(external_id)
     return result
-
-
-def preview(project):
-    provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
-    provider.project, provider.snapshot = project, None
-    answers, options = provider.get_post_data('preview')
-    html = render_to_string(main.CATALOG_TEMPLATE_MAP[project.catalog.uri.rsplit('/', 1)[1]], {
-        'answers': answers, 'option': options, 'title': project.title,
-        'mardiURI': get_item_url('mardi'), 'wikidataURI': get_item_url('wikidata')})
-    return answers, html
 
 
 @pytest.fixture(params=sorted(CASES))
@@ -156,7 +144,7 @@ def test_selecting_again_changes_nothing(hydrated):
 
 def test_preview_shows_every_page(hydrated):
     name, model = hydrated
-    answers, html = preview(model)
+    answers, html = rendered_preview(model, "preview")
     shown = {section: len(answers.get(section, {})) for section in PAGES[name]}
     assert shown == {section: len(ids) for section, ids in PAGES[name].items()}
     assert CASES[name][4] in html
@@ -165,9 +153,9 @@ def test_preview_shows_every_page(hydrated):
 def test_preview_reads_back_what_it_wrote(hydrated):
     """A second preview finds the project as the first one left it."""
     _, model = hydrated
-    first, _ = preview(model)
+    first, _ = rendered_preview(model, "preview")
     values = dump(model)
-    second, _ = preview(model)
+    second, _ = rendered_preview(model, "preview")
     assert second == first
     assert dump(model) == values
 

@@ -350,6 +350,8 @@ window.MathJax = {
                     numIter:       1000
                 }
             });
+            // The graph, for the browser tests (tests/browser/test_result.py)
+            window.mardmoGraph = cy;
 
             // Defer resize/fit until after the browser has painted the container at its real size
             requestAnimationFrame(function() {

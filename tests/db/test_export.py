@@ -7,7 +7,7 @@ is checked to put every item after the items it needs; items that do not
 need each other come in any order (topological_order).  The
 projects are documentations made with MaRDMO (tests/data/projects, RDMO
 project exports) and the portal items of tests/db/test_hydration.py,
-exported unchanged.  The portal's answers are recorded (tests/recordings.py).
+exported unchanged.  The portal's answers are recorded (tests/support/recordings.py).
 
 After an intended change of the export, write the golden files again and
 review their diff:
