@@ -1,8 +1,8 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 
 <h1 id="title"> {{ title }} </h1>
 
-<h1 id="Algorithm"> Algorithms </h1>
+<h1 id="Algorithm"> {% translate "Algorithms" %} </h1>
 {% for values in answers.algorithm.values %}
 
     {# Include Algorithm Name #}
@@ -15,21 +15,21 @@
     {% include "MaRDMO/partials/_id.html" with class="ALGORITHM" id=values.ID %}
 
     {# Include Block for single Relation between Algorithm and Task #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2AT" title="Algorithmic Tasks" relation="solves" relatants=values.RelationP class="ALGORITHMIC TASK" field="RelationP" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2AT" title=_("Algorithmic Tasks") relation=_("solves") relatants=values.RelationP class="ALGORITHMIC TASK" field="RelationP" %}
 
     {# Include Block for single Relation between Algorithm and Software #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2S" title="Software" relation="implemented by" relatants=values.RelationS class="SOFTWARE" field="RelationS" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2S" title=_("Software") relation=_("implemented by") relatants=values.RelationS class="SOFTWARE" field="RelationS" %}
         
     {# Include Block for multiple Relations between Algorithm and Algorithm #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="A2A" title="Algorithms" relations=values.RelationA class="ALGORITHM" field="RelationA" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="A2A" title=_("Algorithms") relations=values.RelationA class="ALGORITHM" field="RelationA" %}
     {% remaining_marks values %}
 
     
 {% empty %}
-    <strong class="mardmo-empty">NO ALGORITHM DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO ALGORITHM DOCUMENTED" %}</strong>
 {% endfor %}
     
-<h1 id="Task"> Algorithmic Tasks </h1> 
+<h1 id="Task"> {% translate "Algorithmic Tasks" %} </h1> 
 {% for values in answers.problem.values %}
 
     {# Include Algorithmic Task Name #}
@@ -42,18 +42,18 @@
     {% include "MaRDMO/partials/_id.html" with class="ALGORITHMIC TASK" id=values.ID %}
                 
     {# Include Block for single Relation between Algorithmic Task and Benchmark #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="AT2B" title="Benchmarks" relation="instantiated by" relatants=values.RelationB class="BENCHMARK" field="RelationB" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="AT2B" title=_("Benchmarks") relation=_("instantiated by") relatants=values.RelationB class="BENCHMARK" field="RelationB" %}
 
     {# Include Block for multiple Relations between Algorithmic Task and Algorithmic Task #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="AT2AT" title="Algorithmic Tasks" relations=values.RelationP class="ALGORITHMIC TASK" field="RelationP" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="AT2AT" title=_("Algorithmic Tasks") relations=values.RelationP class="ALGORITHMIC TASK" field="RelationP" %}
     {% remaining_marks values %}
 
     
 {% empty %}
-    <strong class="mardmo-empty">NO ALGORITHMIC TASK DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO ALGORITHMIC TASK DOCUMENTED" %}</strong>
 {% endfor %}
     
-<h1 id="Software"> Software </h1> 
+<h1 id="Software"> {% translate "Software" %} </h1> 
 {% for values in answers.software.values %}
 
     {# Include Software Name #}
@@ -62,27 +62,27 @@
     {# Include Software Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="SOFTWARE" description=values.Description name=values.Name %}            
 
-    {% include "MaRDMO/partials/_reference_block.html" with references=values.reference id_option=option.SWMATH id_label="swMath ID" %}
+    {% include "MaRDMO/partials/_reference_block.html" with references=values.reference id_option=option.SWMATH id_label=_("swMath ID") %}
 
     {# Include Software ID #}
     {% include "MaRDMO/partials/_id.html" with class="SOFTWARE" id=values.ID %}
 
     {# Include Block for single Relation between Software and Programming Language without Section #}
-    {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="S2PL" title="Programming Languages" relation="programmed in" relatants=values.programminglanguage class="PROGRAMMING LANGUAGE" field="programminglanguage" %}
+    {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="S2PL" title=_("Programming Languages") relation=_("programmed in") relatants=values.programminglanguage class="PROGRAMMING LANGUAGE" field="programminglanguage" %}
 
     {# Include Block for single Relation between Software and Software Dependencies without Section #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2SD" title="Software" relation="depends on software" relatants=values.RelationS class="SOFTWARE" field="RelationS" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2SD" title=_("Software") relation=_("depends on software") relatants=values.RelationS class="SOFTWARE" field="RelationS" %}
 
     {# Include Block for single Relation between Software and Benchmark #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2B" title="Benchmarks" relation="tests" relatants=values.RelationB class="BENCHMARK" field="RelationB" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2B" title=_("Benchmarks") relation=_("tests") relatants=values.RelationB class="BENCHMARK" field="RelationB" %}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO SOFTWARE DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO SOFTWARE DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="Benchmark"> Benchmarks </h1> 
+<h1 id="Benchmark"> {% translate "Benchmarks" %} </h1> 
 {% for values in answers.benchmark.values %}
 
     {# Include Benchmark Name #}
@@ -91,7 +91,7 @@
     {# Include Benchmark Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="BENCHMARK" description=values.Description name=values.Name %}
    
-    {% include "MaRDMO/partials/_reference_block.html" with references=values.reference id_option=option.MORWIKI id_label="MORwiki ID" %}
+    {% include "MaRDMO/partials/_reference_block.html" with references=values.reference id_option=option.MORWIKI id_label=_("MORwiki ID") %}
 
     {# Include Benchmark ID #}
     {% include "MaRDMO/partials/_id.html" with class="BENCHMARK" id=values.ID %}
@@ -99,10 +99,10 @@
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO BENCHMARK DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO BENCHMARK DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="Publication"> Publications </h1>
+<h1 id="Publication"> {% translate "Publications" %} </h1>
 {% for values in answers.publication.values %}
 
     {# Include Publication Name #}
@@ -118,13 +118,13 @@
     {% include "MaRDMO/partials/_id.html" with id=values.ID %}
 
     {# Include Block for multiple Relations between Publication and Algorithm #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2A" title="Algorithms" relations=values.RelationA class="ALGORITHM" field="RelationA" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2A" title=_("Algorithms") relations=values.RelationA class="ALGORITHM" field="RelationA" %}
 
     {# Include Block for multiple Relations between Publication and Benchmark or Software #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2BS" title="Benchmarks or Software" relations=values.RelationBS class="BENCHMARK OR SOFTWARE" field="RelationBS" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2BS" title=_("Benchmarks or Software") relations=values.RelationBS class="BENCHMARK OR SOFTWARE" field="RelationBS" %}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO PUBLICATION DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO PUBLICATION DOCUMENTED" %}</strong>
 {% endfor %}

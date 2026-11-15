@@ -19,22 +19,24 @@ window.MathJax = {
         <img src="{% static 'MaRDMO/images/MaRDMOLogo.png' %}" alt="Logo of MaRDMO Plugin">
     </figure>
     <div style="font-size:11px;color:grey;margin-bottom:30px;">
-        MaRDMO Logo by <a href="https://www.mardi4nfdi.de/about/mission" target="_blank" style="color:grey;">MaRDI</a>, licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color:grey;">CC BY-NC-ND 4.0</a>.
+        {% translate "MaRDMO Logo by" %} <a href="https://www.mardi4nfdi.de/about/mission" target="_blank" style="color:grey;">MaRDI</a>, {% translate "licensed under" %} <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color:grey;">CC BY-NC-ND 4.0</a>.
         &ensp;&middot;&ensp;
-        Graph powered by <a href="https://js.cytoscape.org/" target="_blank" style="color:grey;">Cytoscape.js</a> (MIT).
+        {% translate "Graph powered by" %} <a href="https://js.cytoscape.org/" target="_blank" style="color:grey;">Cytoscape.js</a> (MIT).
         &ensp;&middot;&ensp;
-        Mathematics rendered by <a href="https://www.mathjax.org/" target="_blank" style="color:grey;">MathJax</a> (Apache&nbsp;2.0).
+        {% translate "Mathematics rendered by" %} <a href="https://www.mathjax.org/" target="_blank" style="color:grey;">MathJax</a> (Apache&nbsp;2.0).
     </div>
 
     {% if export_error %}
         <div style="width:90%;margin:0 auto 30px auto;padding:16px 20px;text-align:left;border:2px solid darkred;border-radius:6px;background:#fdecea;">
-            <p style="color:darkred;font-size:24px;font-weight:bold;margin:0 0 8px 0">Upload incomplete</p>
+            <p style="color:darkred;font-size:24px;font-weight:bold;margin:0 0 8px 0">{% translate "Upload incomplete" %}</p>
             <p style="color:darkred;font-size:15px;margin:0 0 8px 0">{{ export_error }}</p>
             <p style="color:#333;font-size:15px;margin:0">
-                Created {{ counts.items_created }} of {{ counts.items_planned }} new items
-                and {{ counts.relations_created }} of {{ counts.relations_planned }} statements on existing items
+                {% blocktranslate trimmed with items_created=counts.items_created items_planned=counts.items_planned relations_created=counts.relations_created relations_planned=counts.relations_planned %}
+                Created {{ items_created }} of {{ items_planned }} new items
+                and {{ relations_created }} of {{ relations_planned }} statements on existing items
                 (listed below). The created items are linked in your project.
                 Fix the problem and export again to add the rest.
+                {% endblocktranslate %}
             </p>
         </div>
     {% endif %}
@@ -45,11 +47,11 @@ window.MathJax = {
         <div style="margin-bottom:30px;">
             <button id="tab-list-btn" onclick="switchTab('list')"
                     style="padding:8px 28px;font-size:16px;font-weight:bold;cursor:pointer;background:#333;color:white;border:none;border-radius:4px 0 0 4px;">
-                List
+                {% translate "List" %}
             </button>
             <button id="tab-graph-btn" onclick="switchTab('graph')"
                     style="padding:8px 28px;font-size:16px;font-weight:bold;cursor:pointer;background:#ddd;color:#555;border:none;border-radius:0 4px 4px 0;">
-                Graph
+                {% translate "Graph" %}
             </button>
         </div>
 
@@ -57,10 +59,10 @@ window.MathJax = {
         <div id="view-list" style="width:90%;margin:0 auto;text-align:left;">
 
             {% if grouped_ids %}
-                <p style="color:Black;font-size:40px;font-weight:bold;margin:0 0 4px 0">Entities added to MaRDI Portal!</p>
-                <p style="color:#555555;font-size:15px;font-style:italic;margin:0 0 20px 0">Questionnaire entries updated with new MaRDI identifiers.</p>
+                <p style="color:Black;font-size:40px;font-weight:bold;margin:0 0 4px 0">{% translate "Entities added to MaRDI Portal!" %}</p>
+                <p style="color:#555555;font-size:15px;font-style:italic;margin:0 0 20px 0">{% translate "Questionnaire entries updated with new MaRDI identifiers." %}</p>
                 {% for class_name, items in grouped_ids %}
-                    <p style="color:Black;font-size:22px;font-weight:bold;margin:16px 0 4px 0">{{ class_name }}</p>
+                    <p style="color:Black;font-size:22px;font-weight:bold;margin:16px 0 4px 0">{% translate class_name %}</p>
                     {% for item in items %}
                         <p style="color:grey;font-size:18px;font-weight:bold;margin:4px 0 2px 20px">
                             <a href="{{mardi_uri}}{{item.qid}}" style="color:dodgerblue;">{{item.name}}</a>
@@ -80,17 +82,17 @@ window.MathJax = {
                     {% endfor %}
                 {% endfor %}
             {% else %}
-                <p style="color:Black;font-size:30px;font-weight:bold">No new Entities added to MaRDI Portal!</p>
+                <p style="color:Black;font-size:30px;font-weight:bold">{% translate "No new Entities added to MaRDI Portal!" %}</p>
             {% endif %}
 
             {% if relation_stmts %}
-                <p style="color:Black;font-size:40px;font-weight:bold;margin:32px 0 8px 0">Relations added to MaRDI Portal!</p>
+                <p style="color:Black;font-size:40px;font-weight:bold;margin:32px 0 8px 0">{% translate "Relations added to MaRDI Portal!" %}</p>
                 {% for r in relation_stmts %}
                     <p style="color:grey;font-size:16px;margin:3px 0 3px 20px">
                         {% if r.subject_qid %}<a href="{{mardi_uri}}{{r.subject_qid}}" style="color:dodgerblue;">{{r.subject}}</a>{% else %}{{r.subject}}{% endif %}
                         &nbsp;<em style="color:#888">{{r.prop}}</em>&nbsp;
                         {% if r.obj_url %}<a href="{{r.obj_url}}" target="_blank" style="color:dodgerblue;">{{r.obj}}</a>{% elif r.obj_qid %}<a href="{{mardi_uri}}{{r.obj_qid}}" style="color:dodgerblue;">{{r.obj}}</a>{% else %}{{r.obj}}{% endif %}{% if r.unit_qid %} <a href="{{mardi_uri}}{{r.unit_qid}}" style="color:dodgerblue;">{{r.unit_label}}</a>{% endif %}
-                        {% if r.qualifiers_added %}&nbsp;<em style="color:#888">(existing statement, qualifiers added:)</em>{% endif %}
+                        {% if r.qualifiers_added %}&nbsp;<em style="color:#888">({% translate "existing statement, qualifiers added:" %})</em>{% endif %}
                     </p>
                     {% for q in r.qualifiers %}
                         <p style="color:#999;font-size:13px;margin:0 0 0 40px">
@@ -113,8 +115,8 @@ window.MathJax = {
                 <div style="position:absolute;top:10px;right:10px;z-index:10;display:flex;flex-direction:column;gap:4px;">
                     <button id="btn-zoom-in"  style="width:30px;height:30px;font-size:18px;font-weight:bold;line-height:1;cursor:pointer;background:white;border:1px solid #ccc;border-radius:4px;">+</button>
                     <button id="btn-zoom-out" style="width:30px;height:30px;font-size:18px;font-weight:bold;line-height:1;cursor:pointer;background:white;border:1px solid #ccc;border-radius:4px;">&minus;</button>
-                    <button id="btn-fit"      style="width:30px;height:30px;font-size:13px;line-height:1;cursor:pointer;background:white;border:1px solid #ccc;border-radius:4px;" title="Fit all">&#x26F6;</button>
-                    <button id="btn-fullscreen" style="width:30px;height:30px;font-size:14px;line-height:1;cursor:pointer;background:white;border:1px solid #ccc;border-radius:4px;" title="Fullscreen">&#x2922;</button>
+                    <button id="btn-fit"      style="width:30px;height:30px;font-size:13px;line-height:1;cursor:pointer;background:white;border:1px solid #ccc;border-radius:4px;" title="{% translate 'Fit all' %}">&#x26F6;</button>
+                    <button id="btn-fullscreen" style="width:30px;height:30px;font-size:14px;line-height:1;cursor:pointer;background:white;border:1px solid #ccc;border-radius:4px;" title="{% translate 'Fullscreen' %}">&#x2922;</button>
                 </div>
                 <div id="cy-legend" style="margin-top:10px;font-size:12px;"></div>
             </div>
@@ -129,6 +131,7 @@ window.MathJax = {
         </div>
 
         {{ graph_data|json_script:"graph-data" }}
+        {{ graph_texts|json_script:"graph-texts" }}
         <script src="{% static 'MaRDMO/js/cytoscape.min.js' %}"></script>
         <script>
         var MARDI_URI = "{{ mardi_uri }}";
@@ -147,6 +150,9 @@ window.MathJax = {
                 requestAnimationFrame(initGraph);
             }
         }
+
+        // Texts of the graph in the language of the page (views.show_success)
+        var T = JSON.parse(document.getElementById('graph-texts').textContent);
 
         var CLASS_COLORS = {
             'Mathematical Model':     '#4e79a7',
@@ -383,13 +389,13 @@ window.MathJax = {
                     wrapper.style.cssText   = 'width:100%;height:100%;text-align:left;position:relative;';
                     cyDiv.style.height      = 'calc(100vh - 80px)';
                     this.innerHTML = '&#x2715;';
-                    this.title = 'Exit fullscreen';
+                    this.title = T.exit_fullscreen;
                 } else {
                     viewGraph.style.cssText = '';
                     wrapper.style.cssText   = 'width:90%;margin:0 auto;text-align:left;position:relative;';
                     cyDiv.style.height      = '680px';
                     this.innerHTML = '&#x2922;';
-                    this.title = 'Fullscreen';
+                    this.title = T.fullscreen;
                 }
                 requestAnimationFrame(function() {
                     requestAnimationFrame(function() {
@@ -424,7 +430,7 @@ window.MathJax = {
                 tooltip.replaceChildren();
                 var heading = document.createElement('strong');
                 heading.style.fontSize = '13px';
-                heading.textContent = 'Qualifiers';
+                heading.textContent = T.qualifiers;
                 tooltip.append(heading, document.createElement('br'));
                 quals.forEach(function(q) {
                     var prop = document.createElement('em');
@@ -503,42 +509,43 @@ window.MathJax = {
             }
             var lh = '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin-bottom:8px;">';
             Object.keys(presentClasses).forEach(function(cls) {
-                lh += '<span data-cls="' + _esc(cls) + '" title="Click to toggle"'
+                lh += '<span data-cls="' + _esc(cls) + '" title="' + _esc(T.toggle) + '"'
                     + ' style="display:inline-flex;align-items:center;cursor:pointer;user-select:none;">'
                     + '<span style="display:inline-block;width:13px;height:13px;border-radius:50%;background:'
-                    + _esc(presentClasses[cls]) + ';margin-right:5px;flex-shrink:0;"></span>New ' + _esc(cls) + '</span>';
+                    + _esc(presentClasses[cls]) + ';margin-right:5px;flex-shrink:0;"></span>'
+                    + _esc(T.new_class.replace('{class}', T.classes[cls] || cls)) + '</span>';
             });
             if (hasExisting) {
-                lh += '<span data-type="existing" title="Click to toggle"'
+                lh += '<span data-type="existing" title="' + _esc(T.toggle) + '"'
                     + ' style="display:inline-flex;align-items:center;cursor:pointer;user-select:none;">'
                     + '<span style="display:inline-block;width:13px;height:13px;border-radius:50%;background:#bbb;'
-                    + 'border:2px solid #999;margin-right:5px;flex-shrink:0;"></span>Existing item</span>';
+                    + 'border:2px solid #999;margin-right:5px;flex-shrink:0;"></span>' + _esc(T.existing_item) + '</span>';
             }
             if (hasLiteral) {
-                lh += '<span data-type="literal" title="Click to toggle"'
+                lh += '<span data-type="literal" title="' + _esc(T.toggle) + '"'
                     + ' style="display:inline-flex;align-items:center;cursor:pointer;user-select:none;">'
                     + '<span style="display:inline-block;width:15px;height:9px;background:#e8e8e8;'
-                    + 'border:2px solid #4a4a4a;margin-right:5px;flex-shrink:0;"></span>New Literal Value</span>';
+                    + 'border:2px solid #4a4a4a;margin-right:5px;flex-shrink:0;"></span>' + _esc(T.new_literal) + '</span>';
             }
             lh += '</div>';
 
             // ── Build filter panel HTML ────────────────────────────────────
             lh += '<div style="text-align:center;margin-bottom:4px;">'
                 + '<button id="btn-filter-toggle" style="font-size:11px;padding:3px 12px;cursor:pointer;'
-                + 'background:#f0f0f0;border:1px solid #ccc;border-radius:4px;">Filters &#9660;</button></div>'
+                + 'background:#f0f0f0;border:1px solid #ccc;border-radius:4px;">' + _esc(T.filters) + ' &#9660;</button></div>'
                 + '<div id="cy-filter-panel" style="display:none;border:1px solid #ddd;border-radius:4px;'
                 + 'padding:10px 16px;background:#fafafa;font-size:12px;margin-bottom:6px;text-align:left;">'
                 + '<div style="font-weight:bold;font-size:11px;color:#666;text-transform:uppercase;'
-                + 'letter-spacing:.05em;margin-bottom:6px;">Node types</div>'
+                + 'letter-spacing:.05em;margin-bottom:6px;">' + _esc(T.node_types) + '</div>'
                 + '<div style="display:flex;flex-wrap:wrap;gap:4px 18px;margin-bottom:10px;">'
                 + '<label style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">'
-                + '<input type="checkbox" id="flt-literals" checked> Literal values</label>'
+                + '<input type="checkbox" id="flt-literals" checked> ' + _esc(T.literal_values) + '</label>'
                 + '<label style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;">'
-                + '<input type="checkbox" id="flt-existing" checked> Existing items</label>'
+                + '<input type="checkbox" id="flt-existing" checked> ' + _esc(T.existing_items) + '</label>'
                 + '</div>';
             if (allProps.length) {
                 lh += '<div style="font-weight:bold;font-size:11px;color:#666;text-transform:uppercase;'
-                    + 'letter-spacing:.05em;margin-bottom:6px;">Properties</div>'
+                    + 'letter-spacing:.05em;margin-bottom:6px;">' + _esc(T.properties) + '</div>'
                     + '<div style="display:flex;flex-wrap:wrap;gap:4px 18px;">';
                 allProps.forEach(function(p) {
                     var pid = 'flt-p-' + p.replace(/[^a-zA-Z0-9]/g, '_');
@@ -592,7 +599,7 @@ window.MathJax = {
                 var panel = document.getElementById('cy-filter-panel');
                 var open  = panel.style.display !== 'none';
                 panel.style.display = open ? 'none' : '';
-                this.innerHTML = 'Filters ' + (open ? '&#9660;' : '&#9650;');
+                this.innerHTML = _esc(T.filters) + ' ' + (open ? '&#9660;' : '&#9650;');
             });
 
             cbLiterals.addEventListener('change', function() {
@@ -617,12 +624,12 @@ window.MathJax = {
         </script>
 
     {% else %}
-        <p style="color:Black;font-size:40px;font-weight:bold">Export complete — no new items or relations.</p>
+        <p style="color:Black;font-size:40px;font-weight:bold">{% translate "Export complete — no new items or relations." %}</p>
         {% if standard_added %}
             <p style="color:Black;font-size:20px">{% include "MaRDMO/partials/_standard_added.html" %}</p>
         {% endif %}
         <br>
-        <p style="color:Black;font-size:20px;font-weight:bold">Checkout <a href="{{mardi_uri|cut:"wiki/Item:"}}" style="color:dodgerblue;">MaRDI Portal</a>&#x1F517;</p>
+        <p style="color:Black;font-size:20px;font-weight:bold">{% translate "Checkout" %} <a href="{{mardi_uri|cut:"wiki/Item:"}}" style="color:dodgerblue;">MaRDI Portal</a>&#x1F517;</p>
     {% endif %}
 
 </div>

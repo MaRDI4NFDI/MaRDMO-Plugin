@@ -20,6 +20,7 @@ from multiprocessing.pool import ThreadPool
 
 import requests
 from django.core.cache import cache
+from django.utils.translation import ngettext
 
 from .constants import TEX_CHECK_URL
 from .helpers import commit_writes
@@ -62,10 +63,11 @@ def environment_hint(tex):
     })
     if not unsupported:
         return None
-    return (
-        f'{", ".join(unsupported)} {"is" if len(unsupported) == 1 else "are"} not supported; '
-        f'supported environments are {", ".join(SUPPORTED_ENVIRONMENTS)}'
-    )
+    return ngettext(
+        '{environments} is not supported; supported environments are {supported}',
+        '{environments} are not supported; supported environments are {supported}',
+        len(unsupported),
+    ).format(environments=', '.join(unsupported), supported=', '.join(SUPPORTED_ENVIRONMENTS))
 
 
 def _cache_key(tex):

@@ -1,4 +1,4 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 {% for reference in references.values %}
     {% if id_option and reference.0 == id_option %}
         <b>{{ id_label }}</b>: {{ reference.1|default:"-" }} <br>
@@ -7,10 +7,10 @@
         <b>DOI</b>: {{ reference.1|default:"-" }} <br>
     {% endif %}
     {% if reference.0 == option.DESCRIPTION_URL %}
-        <b>Described at URL</b>: {{ reference.1|default:"-" }} <br>
+        <b>{% translate "Described at URL" %}</b>: {{ reference.1|default:"-" }} <br>
     {% endif %}
     {% if reference.0 == option.SOURCECODE_URL %}
-        <b>Source Code URL</b>: {{ reference.1|default:"-" }} <br>
+        <b>{% translate "Source Code URL" %}</b>: {{ reference.1|default:"-" }} <br>
     {% endif %}
 {% endfor %}
 {% marks values "reference" as reference_marks %}{% if reference_marks %}{{ reference_marks }} <br>{% endif %}

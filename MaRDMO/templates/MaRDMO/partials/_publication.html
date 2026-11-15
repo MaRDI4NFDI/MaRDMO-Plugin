@@ -1,4 +1,4 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 {# A publication as the export writes it: DOI, citation, what is new on the MaRDI Portal, authors and journal #}
 {% for reference in values.reference.values %}
     {% if reference.0 == option.DOI %}
@@ -8,29 +8,29 @@
 {% marks values "reference" as reference_marks %}{% if reference_marks %}{{ reference_marks }} <br>{% endif %}
 {% publication_info values as pub %}
 {% if pub.citation %}
-    <b>Citation</b>: {{ pub.citation }} <br>
+    <b>{% translate "Citation" %}</b>: {{ pub.citation }} <br>
 {% endif %}
 {% if pub.on_portal %}
-    <b>MaRDI Portal</b>: already there, nothing is added to it <br>
+    <b>MaRDI Portal</b>: {% translate "already there, nothing is added to it" %} <br>
 {% elif pub.new %}
-    <b>New on the MaRDI Portal</b>: {{ pub.new|join:", " }}{% if pub.name_only %} ({{ pub.name_only }} author{{ pub.name_only|pluralize }} as name only){% endif %} <br>
+    <b>{% translate "New on the MaRDI Portal" %}</b>: {{ pub.new|join:", " }}{% if pub.name_only %} ({% blocktranslate trimmed count counter=pub.name_only %}{{ counter }} author as name only{% plural %}{{ counter }} authors as name only{% endblocktranslate %}){% endif %} <br>
 {% endif %}
 {% if pub.authors or pub.journal %}
     <details class="mardmo-details">
-        <summary>Authors and journal</summary>
+        <summary>{% translate "Authors and journal" %}</summary>
         <ul>
             {% for author in pub.authors %}
                 <li>{{ author.name }} —
-                    {% if author.status == 'portal' %}MaRDI Portal {{ author.qid }}{% elif author.status == 'new' %}new{% else %}name only{% endif %}{% if author.orcid %}, ORCID {{ author.orcid }}{% endif %}{% if author.zbmath %}, zbMATH {{ author.zbmath }}{% endif %}{% if author.wikidata %}, Wikidata {{ author.wikidata }}{% endif %}
+                    {% if author.status == 'portal' %}MaRDI Portal {{ author.qid }}{% elif author.status == 'new' %}{% translate "new" %}{% else %}{% translate "name only" %}{% endif %}{% if author.orcid %}, ORCID {{ author.orcid }}{% endif %}{% if author.zbmath %}, zbMATH {{ author.zbmath }}{% endif %}{% if author.wikidata %}, Wikidata {{ author.wikidata }}{% endif %}
                 </li>
             {% endfor %}
             {% if pub.journal %}
-                <li>Journal: {{ pub.journal.name }} —
-                    {% if pub.journal.status == 'portal' %}MaRDI Portal {{ pub.journal.qid }}{% else %}new{% endif %}{% if pub.journal.issn %}, ISSN {{ pub.journal.issn }}{% endif %}{% if pub.journal.wikidata %}, Wikidata {{ pub.journal.wikidata }}{% endif %}
+                <li>{% translate "Journal" %}: {{ pub.journal.name }} —
+                    {% if pub.journal.status == 'portal' %}MaRDI Portal {{ pub.journal.qid }}{% else %}{% translate "new" %}{% endif %}{% if pub.journal.issn %}, ISSN {{ pub.journal.issn }}{% endif %}{% if pub.journal.wikidata %}, Wikidata {{ pub.journal.wikidata }}{% endif %}
                 </li>
             {% endif %}
             {% if pub.language %}
-                <li>Language: {{ pub.language }}</li>
+                <li>{% translate "Language" %}: {{ pub.language }}</li>
             {% endif %}
         </ul>
     </details>

@@ -1,6 +1,6 @@
-{% load mardmo_tags %}
-<b>Properties</b>:
+{% load i18n mardmo_tags %}
+<b>{% translate "Properties" %}</b>:
 {% for property in properties %}
-    {{ property.label }}{% if not forloop.last %}, {% endif %}
+    {% translate property.label %}{% if not forloop.last %}, {% endif %}
 {% endfor %}
 {% marks values "Properties" before=" " %}

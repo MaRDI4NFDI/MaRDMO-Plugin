@@ -11,6 +11,8 @@ from contextlib import nullcontext
 from dataclasses import dataclass, field
 from typing import Optional
 
+from django.utils.translation import gettext as _, gettext_noop as N_
+
 from .checks import Checks
 from .duplicates import PREVIEW_DEADLINE, PREVIEW_RETRY_WAITS
 from .getters import get_url
@@ -20,7 +22,7 @@ from .problems import Problem
 from .queries import check_limits
 
 # The section of the problems the export's own checks find (they have no page)
-EXPORT_SECTION = 'Export'
+EXPORT_SECTION = N_('Export')
 
 
 @dataclass
@@ -89,7 +91,7 @@ def run(project, answers, prepare_class, check_method, preview=False, duplicates
     if duplicates is not None:
         gate.duplicates = bool(duplicates.rows)
         if duplicates.failed and not gate.unreachable:
-            gate.unreachable = 'Could not check which items are on the MaRDI Portal already.'
+            gate.unreachable = _('Could not check which items are on the MaRDI Portal already.')
     if not gate.clear:
         return gate
 
@@ -101,14 +103,14 @@ def run(project, answers, prepare_class, check_method, preview=False, duplicates
         gate.problems = [Problem(EXPORT_SECTION, None, str(message)) for message in problem.args]
         return gate
     except PortalUnavailable as problem:
-        gate.unreachable = str(problem.args[0]) if problem.args else 'The MaRDI Portal did not answer.'
+        gate.unreachable = str(problem.args[0]) if problem.args else _('The MaRDI Portal did not answer.')
         return gate
     except (ValueError, KeyError) as error:
         gate.internal = True
         gate.problems = [Problem(EXPORT_SECTION, None, str(message)) for message in (error.args or [error])]
         return gate
     if is_cyclic(dependency):
-        gate.problems = [Problem(EXPORT_SECTION, None, 'Cyclic Dependency Graph')]
+        gate.problems = [Problem(EXPORT_SECTION, None, _('Cyclic Dependency Graph'))]
         return gate
     gate.payload, gate.dependency = payload, dependency
     return gate

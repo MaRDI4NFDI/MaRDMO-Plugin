@@ -31,6 +31,7 @@ import logging
 import time
 
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from rdmo.projects.models import Value
 from rdmo.questions.models import Question
 
@@ -252,14 +253,14 @@ def _reasons(sections, catalog, portal):
         if 'class' in kinds:
             family = families.get(ours['class'], set())
             other = [qid for qid in portal['class'] if qid in families and families[qid].isdisjoint(family)]
-            reasons.append(f"Its class on the MaRDI Portal is {', '.join(_names(other))}; "
-                           f"MaRDMO would give it the class {markers.cls}.")
+            reasons.append(_('Its class on the MaRDI Portal is {portal}; MaRDMO would give it the class {ours}.').format(
+                portal=', '.join(_names(other)), ours=markers.cls))
         if 'community' in kinds:
-            reasons.append(f"It belongs to {', '.join(_names(portal['community']))}; "
-                           f"MaRDMO would add {markers.community}.")
+            reasons.append(_('It belongs to {portal}; MaRDMO would add {ours}.').format(
+                portal=', '.join(_names(portal['community'])), ours=markers.community))
         if 'profile' in kinds:
-            reasons.append(f"Its profile type is {', '.join(_names(portal['profile']))}; "
-                           f"MaRDMO would add {markers.profile}.")
+            reasons.append(_('Its profile type is {portal}; MaRDMO would add {ours}.').format(
+                portal=', '.join(_names(portal['profile'])), ours=markers.profile))
     return list(dict.fromkeys(reasons))
 
 
@@ -270,12 +271,12 @@ def decide(duplicate, found, sections, catalog):
     '''
     if duplicate.rule == 'documentation':
         other = duplicate.other
-        return 'rename', [f"The Wikidata item {other['ID'].split(':', 1)[-1]} of this documentation has the same "
-                          "label and description, and the MaRDI Portal takes only one item per label and "
-                          "description. Rename yours, or select the Wikidata item."]
+        return 'rename', [_('The Wikidata item {qid} of this documentation has the same label and description, '
+                            'and the MaRDI Portal takes only one item per label and description. Rename yours, '
+                            'or select the Wikidata item.').format(qid=other['ID'].split(':', 1)[-1])]
     portal = found.markers.get(duplicate.qid)
     if portal is None:
-        return 'unknown', ['The markers of the portal item could not be looked up.']
+        return 'unknown', [_('The markers of the portal item could not be looked up.')]
     item_sections = set().union(*(sections.get(identifier, set()) for identifier in item_ids(duplicate.item)))
     reasons = _reasons(item_sections, catalog, portal)
     if not reasons:
@@ -285,7 +286,7 @@ def decide(duplicate, found, sections, catalog):
 
 def documentation_items(answers):
     '''``[(source, item)]`` of the items the export of *answers* handles (see :func:`item_source`).'''
-    items, _ = unique_items(answers)
+    items, __ = unique_items(answers)
     return [(item_source(item), item) for item in items.values() if item_source(item)]
 
 

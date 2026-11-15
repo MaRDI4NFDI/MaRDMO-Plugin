@@ -8,33 +8,11 @@ once more: what it finds changed since the preview.
 '''
 import re
 
-import pytest
-from rdmo.projects.models import Membership
-
 from MaRDMO.constants import BASE_URI
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
-from MaRDMO.queries import PortalItems
-from tests.db.test_export import imported
 
 URL = '/projects/{}/export/wikibase/'
 BUTTON = '<input type="submit" value="Export to MaRDI Portal" class="btn btn-primary"'
-
-
-@pytest.fixture
-def white(project, portal, client, django_user_model, monkeypatch):
-    monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
-    monkeypatch.setattr('MaRDMO.checks.model.check_formulas', lambda formulas: {})
-    # The preview looks up the publication; the recorded portal has no answers for it
-    monkeypatch.setattr('MaRDMO.publication.worker.PublicationRetriever.get_information',
-                        lambda self, project, snapshot, answers: answers)
-    # Nothing of it is on the portal already (the lookup by label changes with the answers)
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
-    portal('export_white_2006')
-    documentation = imported(project, 'white_2006')
-    user = django_user_model.objects.create_user('owner', password='owner')
-    Membership.objects.create(project=documentation, user=user, role='owner')
-    client.force_login(user)
-    return documentation
 
 
 def preview(client, documentation):

@@ -1,5 +1,6 @@
+{% load i18n %}
 {% if aliases %}
-    <b>Alias</b>:
+    <b>{% translate "Alias" %}</b>:
     <ol style="margin-left: 1.5em;">
         {% for alias in aliases.values %}
             <li style="margin-bottom: 0.5em;">{{ alias }}</li>

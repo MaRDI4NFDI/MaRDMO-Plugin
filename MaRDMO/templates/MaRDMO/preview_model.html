@@ -1,8 +1,8 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 
 <h1 id="title"> {{ title }} </h1>
 
-<h1 id="MathematicalModel"> Mathematical Models </h1>
+<h1 id="MathematicalModel"> {% translate "Mathematical Models" %} </h1>
 {% for values in answers.model.values %}
     
     {# Include Mathematical Model Name #}
@@ -24,24 +24,24 @@
     {% include "MaRDMO/partials/_properties.html" with properties=values.Properties_Check %}
 
     {# Include Block for single Relation between Model and Problem #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="MM2RP" title="Research Problems" relation="models" relatants=values.RelationRP class="RESEARCH PROBLEM" field="RelationRP" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="MM2RP" title=_("Research Problems") relation=_("models") relatants=values.RelationRP class="RESEARCH PROBLEM" field="RelationRP" %}
 
     {# Include Block for multiple Relations between Model and Formulation #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MM2MF" title="Formulas" relations=values.RelationMF class="FORMULA" field="RelationMF" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MM2MF" title=_("Formulas") relations=values.RelationMF class="FORMULA" field="RelationMF" %}
 
     {# Include Block for single Relation between Model and Task #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="MM2CT" title="Computational Tasks" relation="used by" relatants=values.RelationT class="COMPUTATIONAL TASK"%}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="MM2CT" title=_("Computational Tasks") relation=_("used by") relatants=values.RelationT class="COMPUTATIONAL TASK"%}
 
     {# Include Block for multiple Relations between Model and Model #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MM2MM" title="Mathematical Models" relations=values.RelationMM class="MATHEMATICAL MODEL"%}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MM2MM" title=_("Mathematical Models") relations=values.RelationMM class="MATHEMATICAL MODEL"%}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO MODEL DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO MODEL DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="Task"> Computational Tasks </h1> 
+<h1 id="Task"> {% translate "Computational Tasks" %} </h1> 
 {% for values in answers.task.values %}
 
     {# Include Computational Task Name #}
@@ -63,21 +63,21 @@
     {% include "MaRDMO/partials/_properties.html" with properties=values.Properties_Check %}
 
     {# Include Block for multiple Relations between Task and Formulation #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2MF" title="Formulas" relations=values.RelationMF class="FORMULA" field="RelationMF" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2MF" title=_("Formulas") relations=values.RelationMF class="FORMULA" field="RelationMF" %}
 
     {# Include Block for multiple Relations between Task and Quantity #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2QQK" title="Quantities / Quantity Kinds" relations=values.RelationQQK class="QUANTITY / QUANTITY KIND" field="RelationQQK" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2QQK" title=_("Quantities / Quantity Kinds") relations=values.RelationQQK class="QUANTITY / QUANTITY KIND" field="RelationQQK" %}
 
     {# Include Block for multiple Relations between Task and Task #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2CT" title="Computational Tasks" relations=values.RelationT class="COMPUTATIONAL TASK" field="RelationT" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="CT2CT" title=_("Computational Tasks") relations=values.RelationT class="COMPUTATIONAL TASK" field="RelationT" %}
     {% remaining_marks values %}
 
 
  {% empty %}
-    <strong class="mardmo-empty">NO TASK DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO TASK DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="MathematicalFormulations"> Formulas </h1>
+<h1 id="MathematicalFormulations"> {% translate "Formulas" %} </h1>
 {% for values in answers.formulation.values %}
 
     {# Include Formula Name #}
@@ -105,18 +105,18 @@
     {% include "MaRDMO/partials/_in_defining_formula.html" with element=values.element %}
 
     {# Include Block for multiple Relations between Formulation and Formulation I #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_1" title="Formulas I" relations=values.RelationMF1 class="FORMULA" field="RelationMF1" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_1" title=_("Formulas I") relations=values.RelationMF1 class="FORMULA" field="RelationMF1" %}
 
     {# Include Block for multiple Relations between Formulation and Formulation II #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_2" title="Formulas II" relations=values.RelationMF2 class="FORMULA" field="RelationMF2" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_2" title=_("Formulas II") relations=values.RelationMF2 class="FORMULA" field="RelationMF2" %}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO FORMULA DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO FORMULA DOCUMENTED" %}</strong>
 {% endfor %}
     
-<h1 id="Publication"> Publications </h1>
+<h1 id="Publication"> {% translate "Publications" %} </h1>
 {% for values in answers.publication.values %}
 
     {# Include Publication Name #}
@@ -132,15 +132,15 @@
     {% include "MaRDMO/partials/_id.html" with id=values.ID %}
 
     {# Include Block for multiple Relations between Publication and Model Entity #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2E" title="Entities of the Mathematical Models" relations=values.RelationP class="MATHEMATICAL MODEL ENTITY" field="RelationP" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2E" title=_("Entities of the Mathematical Models") relations=values.RelationP class="MATHEMATICAL MODEL ENTITY" field="RelationP" %}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO PUBLICATION DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO PUBLICATION DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="ResearchField"> Academic Disciplines </h1>
+<h1 id="ResearchField"> {% translate "Academic Disciplines" %} </h1>
 {% for values in answers.field.values %}
     
     {# Include Academic Discipline Name #}
@@ -159,15 +159,15 @@
     {% include "MaRDMO/partials/_id.html" with class="ACADEMIC DISCIPLINE" id=values.ID %}
 
     {# Include Block for multiple Relations between Discipline and Discipline #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="AD2AD" title="other Academic Disciplines" relations=values.RelationRF class="ACADEMIC DISCIPLINE" field="RelationRF" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="AD2AD" title=_("other Academic Disciplines") relations=values.RelationRF class="ACADEMIC DISCIPLINE" field="RelationRF" %}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO ACADEMIC DISCIPLINE DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO ACADEMIC DISCIPLINE DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="ResearchProblem"> Research Problems </h1>
+<h1 id="ResearchProblem"> {% translate "Research Problems" %} </h1>
 {% for values in answers.problem.values %}
     
     {# Include Research Problem Name #}
@@ -186,18 +186,18 @@
     {% include "MaRDMO/partials/_id.html" with class="RESEARCH PROBLEM" id=values.ID %}
 
     {# Include Block for single Relation between Problem and Discipline #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="RP2AD" title="Academic Disciplines" relation="contained in Field" relatants=values.RelationRF class="ACADEMIC DISCIPLINE" field="RelationRF" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="RP2AD" title=_("Academic Disciplines") relation=_("contained in Field") relatants=values.RelationRF class="ACADEMIC DISCIPLINE" field="RelationRF" %}
 
     {# Include Block for multiple Relations between Problem and Problem #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="RP2RP" title="other Research Problems" relations=values.RelationRP class="RESEARCH PROBLEM"%}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="RP2RP" title=_("other Research Problems") relations=values.RelationRP class="RESEARCH PROBLEM"%}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO RESEARCH PROBLEM DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO RESEARCH PROBLEM DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="QuantityQuantityKind"> Quantities / Quantity Kinds </h1>
+<h1 id="QuantityQuantityKind"> {% translate "Quantities / Quantity Kinds" %} </h1>
 {% for values in answers.quantity.values %}
     
     {# Include Quantity [Kind] Name #}
@@ -212,13 +212,13 @@
     {# Include Quantity [Kind] Detailed Description #}
     {% include "MaRDMO/partials/_detailed_description.html" with detailed_descriptions=values.descriptionLong %}
 
-    <b>Class</b>: {{ values.QorQK|default:"-" }}{% marks values "QorQK" before=" " %} <br>
+    <b>{% translate "Class" %}</b>: {{ values.QorQK|default:"-" }}{% marks values "QorQK" before=" " %} <br>
 
     {% for reference in values.reference.values %}
         {% if reference.0 == option.qudt_quantitykind_id %}
-            <b>QUDT Quantity Kind ID</b>: {{ reference.1|default:"-" }} <br>
+            <b>{% translate "QUDT Quantity Kind ID" %}</b>: {{ reference.1|default:"-" }} <br>
         {% elif reference.0 == option.qudt_constant_id %}
-            <b>QUDT Constant ID</b>: {{ reference.1|default:"-" }} <br>
+            <b>{% translate "QUDT Constant ID" %}</b>: {{ reference.1|default:"-" }} <br>
         {% endif %}
     {% endfor %}
     {% marks values "reference" as reference_marks %}{% if reference_marks %}{{ reference_marks }} <br>{% endif %}
@@ -231,7 +231,7 @@
 
     {% if values.Formula %}
     
-        <h3 id="QuantityOrQuantityKindDefinition"> Definition of {{ values.QorQK }} </h3>
+        <h3 id="QuantityOrQuantityKindDefinition"> {% blocktranslate trimmed with kind=values.QorQK %}Definition of {{ kind }}{% endblocktranslate %} </h3>
         
         {# Include Quantity / Quantity Kind Formulas #}
         {% include "MaRDMO/partials/_defining_formula.html" with formula=values.Formula formula_check=values.FormulaCheck definition="True" %}
@@ -244,22 +244,22 @@
     {% if values.QorQK == "Quantity" %}
         
         {# Include Block for multiple Relations between Quantity and Quantity #}
-        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="Q2Q" title="other Quantities" relations=values.RelationQQ class="QUANTITY" field="RelationQQ" %}
+        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="Q2Q" title=_("other Quantities") relations=values.RelationQQ class="QUANTITY" field="RelationQQ" %}
         
         {# Include Block for multiple Relations between Quantity and Quantity Kind #}
-        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="Q2QK" title="Quantity Kinds" relations=values.RelationQQK class="QUANTITY KIND" field="RelationQQK" %}
+        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="Q2QK" title=_("Quantity Kinds") relations=values.RelationQQK class="QUANTITY KIND" field="RelationQQK" %}
 
     {% elif values.QorQK == "Quantity Kind" %}
 
         {# Include Block for multiple Relations between Quantity Kind and Quantity Kind #}
-        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="QK2QK" title="other Quantity Kinds" relations=values.RelationQKQK class="QUANTITY KIND" field="RelationQKQK" %}
+        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="QK2QK" title=_("other Quantity Kinds") relations=values.RelationQKQK class="QUANTITY KIND" field="RelationQKQK" %}
 
         {# Include Block for multiple Relations between Quantity Kind and Quantity #}
-        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="QK2Q" title="Quantities" relations=values.RelationQKQ class="QUANTITY" field="RelationQKQ" %}
+        {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="QK2Q" title=_("Quantities") relations=values.RelationQKQ class="QUANTITY" field="RelationQKQ" %}
 
      {% endif %}
     {% remaining_marks values %}
 
 {% empty %}
-    <strong class="mardmo-empty">NO QUANTITY / QUANTITY KIND DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO QUANTITY / QUANTITY KIND DOCUMENTED" %}</strong>
 {% endfor %}

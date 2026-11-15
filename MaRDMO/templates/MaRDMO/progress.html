@@ -5,7 +5,16 @@
 {% block page %}
 <div id="progress-root"
      data-job-id="{{ job_id }}"
-     data-progress-url="{% url 'get_progress' job_id=job_id %}">
+     data-progress-url="{% url 'get_progress' job_id=job_id %}"
+     data-text-failed="{% translate 'Upload failed' %}"
+     data-text-incomplete="{% translate 'Upload incomplete' %}"
+     data-text-unknown="{% translate 'Unknown error' %}"
+     data-text-showing="{% translate 'Showing what was created' %}"
+     data-text-items="{% translate 'Create new Items' %}"
+     data-text-statements="{% translate 'Create new Statements' %}"
+     data-text-complete="{% translate 'Upload complete!' %}"
+     data-text-redirecting="{% translate 'Redirecting' %}"
+     data-text-no-progress="{% translate 'Could not retrieve the upload progress.' %}">
     <div align="center">
         <br><br><br><br><br><br><br>
 
@@ -27,14 +36,14 @@
 
         <!-- Attribution -->
         <div style="font-size: 11px; color: grey; margin-top: 6px;">
-            MaRDMO Logo by <a href="https://www.mardi4nfdi.de/about/mission" target="_blank" style="color: grey;">MaRDI</a>, licensed under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color: grey;">CC BY-NC-ND 4.0</a>.
+            {% translate "MaRDMO Logo by" %} <a href="https://www.mardi4nfdi.de/about/mission" target="_blank" style="color: grey;">MaRDI</a>, {% translate "licensed under" %} <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color: grey;">CC BY-NC-ND 4.0</a>.
         </div>
 
         <br><br><br>
 
         <!-- Status Text -->
         <div id="status" style="font-size: 30px; font-weight: bold; margin-top: 40px;">
-            Starting...
+            {% translate "Starting..." %}
         </div>
     </div>
 </div>

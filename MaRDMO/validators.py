@@ -39,7 +39,7 @@ import ipaddress
 from urllib.parse import urlsplit
 
 from django.utils.text import format_lazy
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _, gettext_noop as N_
 from rest_framework.exceptions import ValidationError
 
 from .getters import get_mathmoddb, get_options
@@ -101,18 +101,18 @@ def url_schemes(option_uri):
 def _scheme_message(schemes):
     '''Return the "must start with" message for *schemes*.'''
     if schemes == WEB_URL_SCHEMES:
-        return 'URL must start with http:// or https://'
-    return 'URL must start with http://, https://, git://, ssh://, svn://, cvs://, bzr:// or ftp://'
+        return gettext('URL must start with http:// or https://')
+    return gettext('URL must start with http://, https://, git://, ssh://, svn://, cvs://, bzr:// or ftp://')
 
 
 def _common_url_problem(url):
     '''Problems that make a URL invalid no matter how it continues.'''
     if len(url) > URL_MAX_LENGTH:
-        return f'URL must not be longer than {URL_MAX_LENGTH} characters'
+        return gettext('URL must not be longer than {length} characters').format(length=URL_MAX_LENGTH)
     if any(char.isspace() for char in url):
-        return 'URL must not contain spaces'
+        return gettext('URL must not contain spaces')
     if URL_FORBIDDEN_CHARS_RE.search(url):
-        return 'URL contains characters that are not allowed (< > " { } | \\ ^ `)'
+        return gettext('URL contains characters that are not allowed (< > " { } | \\ ^ `)')
     return None
 
 
@@ -141,12 +141,12 @@ def url_problem(url, schemes=WEB_URL_SCHEMES):
     try:
         host, _port = parts.hostname or '', parts.port
     except ValueError:
-        return 'URL contains an invalid port'
+        return gettext('URL contains an invalid port')
     try:
         ipaddress.ip_address(host)
     except ValueError:
         if not URL_HOST_RE.match(host):
-            return 'URL needs a domain such as example.org'
+            return gettext('URL needs a domain such as example.org')
     return None
 
 
@@ -190,9 +190,9 @@ def doi_problem(doi):
     if not doi:
         return None
     if _looks_like_link(doi):
-        return 'Enter only the DOI (e.g. 10.1000/xyz123), not the link'
+        return gettext('Enter only the DOI (e.g. 10.1000/xyz123), not the link')
     if not DOI_STRICT_RE.match(doi):
-        return 'DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)'
+        return gettext('DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)')
     return None
 
 
@@ -207,9 +207,9 @@ def swmath_problem(swmath_id):
     if not swmath_id:
         return None
     if _looks_like_link(swmath_id) or '/' in swmath_id:
-        return 'Enter only the swMATH number (e.g. 7554), not the link'
+        return gettext('Enter only the swMATH number (e.g. 7554), not the link')
     if not SWMATH_ID_RE.match(swmath_id):
-        return 'swMATH ID must be a number (e.g. 7554)'
+        return gettext('swMATH ID must be a number (e.g. 7554)')
     return None
 
 
@@ -223,7 +223,7 @@ def archive_year_problem(year):
     if not year:
         return None
     if not YEAR_STRICT_RE.match(year):
-        return 'Archival year must be a 4-digit year (e.g. 2030)'
+        return gettext('Archival year must be a 4-digit year (e.g. 2030)')
     return None
 
 
@@ -246,9 +246,9 @@ def normalize_formula(tex):
 
 # What element_symbol_problems() reports, for the checks and the preview
 ELEMENT_SYMBOL_MESSAGES = {
-    'several': 'stands for several quantities (in MaRDMO a symbol stands for exactly one quantity; '
-               'properties belong to the quantity)',
-    'duplicate': 'appears twice with the same quantity',
+    'several': N_('stands for several quantities (in MaRDMO a symbol stands for exactly one quantity; '
+                  'properties belong to the quantity)'),
+    'duplicate': N_('appears twice with the same quantity'),
 }
 
 
@@ -314,7 +314,7 @@ def formula_comment_problem(tex):
     is fine.
     '''
     if isinstance(tex, str) and LINE_BREAK_RE.search(tex) and TEX_COMMENT_RE.search(tex):
-        return 'contains a % comment, which would hide the rest of the formula (use \\% for a percent sign)'
+        return gettext('contains a % comment, which would hide the rest of the formula (use \\% for a percent sign)')
     return None
 
 
@@ -479,11 +479,11 @@ def count_problem(value):
     if not text:
         return None
     if not text.isascii() or not text.isdigit():
-        return 'must be a whole number (e.g. 4)'
+        return gettext('must be a whole number (e.g. 4)')
     if int(text) == 0:
-        return 'must be at least 1'
+        return gettext('must be at least 1')
     if not COUNT_STRICT_RE.match(text):
-        return 'must not start with 0 (e.g. 8 instead of 08)'
+        return gettext('must not start with 0 (e.g. 8 instead of 08)')
     return None
 
 
@@ -500,13 +500,13 @@ def size_problem(value, integer=False):
     if not text:
         return None
     if ',' in text:
-        return 'use a dot as decimal separator (e.g. 1.5)'
+        return gettext('use a dot as decimal separator (e.g. 1.5)')
     if not SIZE_STRICT_RE.match(text):
         if SIZE_STRICT_RE.match(text.lstrip('0')) and text.lstrip('0')[:1] not in ('', '.'):
-            return 'must not start with 0 (e.g. 7.5 instead of 07.5)'
-        return 'must be a number (e.g. 12 or 1.5)'
+            return gettext('must not start with 0 (e.g. 7.5 instead of 07.5)')
+        return gettext('must be a number (e.g. 12 or 1.5)')
     if float(text) == 0:
-        return 'must be greater than 0'
+        return gettext('must be greater than 0')
     return None
 
 
@@ -633,7 +633,7 @@ def validate_properties(instance):
                             'Inconsistent properties: {a} and {b}'
                             ' cannot both be selected.'
                         ),
-                        a=mathmoddb.get(key=key_a)['label'],
-                        b=mathmoddb.get(key=key_b)['label'],
+                        a=_(mathmoddb.get(key=key_a)['label']),
+                        b=_(mathmoddb.get(key=key_b)['label']),
                     )]
                 })

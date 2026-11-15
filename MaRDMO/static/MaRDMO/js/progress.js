@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const progressStatusUrl = root.dataset.progressUrl;
   const coloredContainer = document.getElementById("coloredContainer");
   const status = document.getElementById("status");
+  // Texts in the language of the page (data-text-* of progress.html)
+  const text = root.dataset;
 
   if (!progressStatusUrl || !coloredContainer || !status) {
     console.error("Progress page is missing required elements or data attributes.");
@@ -50,16 +52,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Error state
       if (data.phase === "error" || data.progress === -1) {
-        showError("❌ Upload failed", data.error || "Unknown error");
+        showError(`❌ ${text.textFailed}`, data.error || text.textUnknown);
         return;
       }
 
       // Failed after some entities were created: show what exists on the portal
       if (data.phase === "partial") {
         showError(
-          "⚠️ Upload incomplete",
-          data.error || "Unknown error",
-          `<div style="font-size:20px;margin-top:1rem;">Showing what was created${getDotHTML()}</div>`
+          `⚠️ ${text.textIncomplete}`,
+          data.error || text.textUnknown,
+          `<div style="font-size:20px;margin-top:1rem;">${text.textShowing}${getDotHTML()}</div>`
         );
         if (data.redirect) {
           setTimeout(() => {
@@ -77,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Phase: items
       if (data.phase === "items") {
         status.innerHTML = `
-          <div style="white-space:nowrap;">Create new Items${getDotHTML()}</div>
+          <div style="white-space:nowrap;">${text.textItems}${getDotHTML()}</div>
         `;
         setTimeout(updateProgress, 500);
         return;
@@ -86,8 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // Phase: relations
       if (data.phase === "relations") {
         status.innerHTML = `
-          <div style="white-space:nowrap;">Create new Items ✅</div>
-          <div style="white-space:nowrap;">Create new Statements${getDotHTML()}</div>
+          <div style="white-space:nowrap;">${text.textItems} ✅</div>
+          <div style="white-space:nowrap;">${text.textStatements}${getDotHTML()}</div>
         `;
         setTimeout(updateProgress, 500);
         return;
@@ -97,12 +99,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.phase === "done" && data.done) {
         const hasRedirect = !!data.redirect;
         const finalLine = hasRedirect
-          ? `✅ Upload complete! Redirecting${getDotHTML()}`
-          : "✅ Upload complete!";
+          ? `✅ ${text.textComplete} ${text.textRedirecting}${getDotHTML()}`
+          : `✅ ${text.textComplete}`;
 
         status.innerHTML = `
-          <div style="white-space:nowrap;">Create new Items ✅</div>
-          <div style="white-space:nowrap;">Create new Statements ✅</div>
+          <div style="white-space:nowrap;">${text.textItems} ✅</div>
+          <div style="white-space:nowrap;">${text.textStatements} ✅</div>
           <div style="white-space:nowrap;">${finalLine}</div>
         `;
         coloredContainer.style.width = "100%";
@@ -121,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     } catch (err) {
       console.error("Error updating progress:", err);
-      showError("❌ Upload failed", "Could not retrieve the upload progress.");
+      showError(`❌ ${text.textFailed}`, text.textNoProgress);
     }
   }
 

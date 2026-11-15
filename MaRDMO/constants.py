@@ -8,6 +8,8 @@ corresponding :mod:`~MaRDMO.rules` function used by
 the correct position in the answers dict.
 '''
 
+from django.utils.translation import gettext_noop as N_
+
 from . import rules
 
 #RDMO BASE URI
@@ -56,15 +58,15 @@ CATALOG_TEMPLATE_MAP = {
 
 #MaRDMO Section Mapt (Base)
 SECTION_MAP_BASE = {
-    'model':       'Mathematical Model',
-    'task':        'Computational Task',
-    'formulation': 'Formula',
-    'quantity':    'Quantity [Kind]',
-    'field':       'Academic Discipline',
-    'algorithm':   'Algorithm',
-    'software':    'Software',
-    'benchmark':   'Benchmark',
-    'publication': 'Publication',
+    'model':       N_('Mathematical Model'),
+    'task':        N_('Computational Task'),
+    'formulation': N_('Formula'),
+    'quantity':    N_('Quantity [Kind]'),
+    'field':       N_('Academic Discipline'),
+    'algorithm':   N_('Algorithm'),
+    'software':    N_('Software'),
+    'benchmark':   N_('Benchmark'),
+    'publication': N_('Publication'),
 }
 
 ALGORITHM_PROPS = {

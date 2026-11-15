@@ -23,6 +23,7 @@ from typing import Optional
 import re
 
 import requests
+from django.utils.translation import gettext as _
 
 from .helpers import commit_writes
 from .duplicates import item_source, look_up
@@ -352,9 +353,9 @@ class GeneratePayload:
             DocumentationProblem: If *value* is empty or missing ``Name``/``Description``.
         """
         if not value:
-            raise DocumentationProblem("Missing Item in Statement!")
+            raise DocumentationProblem(_("Missing Item in Statement!"))
         if not value.get('Name') or not value.get('Description'):
-            raise DocumentationProblem("All Items need to have a 'Name' and 'Description'!")
+            raise DocumentationProblem(_("All Items need to have a 'Name' and 'Description'!"))
 
         item_key = self._find_key_by_values(
             value['ID'],
@@ -476,14 +477,14 @@ class GeneratePayload:
             if data_type == 'quantity':
                 text = str(value.get('amount', '')) if isinstance(value, dict) else str(value)
                 if not QUANTITY_AMOUNT_RE.match(text):
-                    errors.append(f'"{item_name}", {pid_to_name.get(prop_id, prop_id)}: '
-                                  f'invalid number ("{text.lstrip("+")}")')
+                    errors.append(_('"{item}", {property}: invalid number ("{value}")').format(
+                        item=item_name, property=pid_to_name.get(prop_id, prop_id), value=text.lstrip('+')))
                 return
             if data_type == 'time':
                 text = value.get('time', '') if isinstance(value, dict) else str(value)
                 if not _TIME_RE.match(text):
-                    errors.append(f'"{item_name}", {pid_to_name.get(prop_id, prop_id)}: '
-                                  f'invalid date ("{text}")')
+                    errors.append(_('"{item}", {property}: invalid date ("{value}")').format(
+                        item=item_name, property=pid_to_name.get(prop_id, prop_id), value=text))
                 return
             text = value if isinstance(value, str) else ''
             if not text:
@@ -550,8 +551,9 @@ class GeneratePayload:
                 for inner in value:
                     walk(inner, owner)
             elif isinstance(value, str) and _ITEM_KEY_RE.match(value) and value not in self.state.dictionary:
-                found.append(f'"{owner}": refers to an item that is not part of the export ({value}); '
-                             'nothing was exported, please report this to the MaRDMO developers')
+                found.append(_('"{owner}": refers to an item that is not part of the export ({key}); '
+                               'nothing was exported, please report this to the MaRDMO developers').format(
+                                   owner=owner, key=value))
 
         for key, entry in self.state.dictionary.items():
             if key.startswith('Item'):
@@ -669,10 +671,12 @@ class GeneratePayload:
                 _logger.warning("Claims check via API failed: %s", body['error'])
                 body = None
             if body is None:
-                raise PortalUnavailable(
-                    f"Could not check which {what} already exist on the MaRDI Portal "
-                    "(API not reachable). Nothing was exported; please try again later."
-                )
+                raise PortalUnavailable({
+                    'statements': _('Could not check which statements already exist on the MaRDI Portal '
+                                    '(API not reachable). Nothing was exported; please try again later.'),
+                    'formulas': _('Could not check which formulas already exist on the MaRDI Portal '
+                                  '(API not reachable). Nothing was exported; please try again later.'),
+                }[what])
             for qid, entity in body.get('entities', {}).items():
                 claims_by_item[qid] = entity.get('claims', {})
         return claims_by_item
@@ -894,11 +898,10 @@ class GeneratePayload:
             other = sorted({qid for _, found in same_symbol for qid in found})
             if other:
                 shown = ', '.join(f'{qid} ({labels[qid]})' if labels.get(qid) else qid for qid in other)
-                conflicts.append(
-                    f'"{labels.get(subject) or subject}" ({subject}): on the MaRDI Portal the symbol {symbol} '
-                    f'already stands for {shown}. MaRDMO cannot change this: use that quantity for the '
-                    'symbol, or correct it on the MaRDI Portal.'
-                )
+                conflicts.append(_(
+                    '"{label}" ({qid}): on the MaRDI Portal the symbol {symbol} already stands for {other}. '
+                    'MaRDMO cannot change this: use that quantity for the symbol, or correct it on the MaRDI Portal.'
+                ).format(label=labels.get(subject) or subject, qid=subject, symbol=symbol, other=shown))
                 continue
             incomplete = next((claim for claim, found in same_symbol
                                if not found and claim['id'] not in taken), None)
@@ -1459,10 +1462,10 @@ class GeneratePayload:
         found, duplicates = look_up([(id_type, value) for id_type, _, _, value in todo],
                                     check_waits(), check_deadline())
         if found.wikidata_failed:
-            raise PortalUnavailable(
+            raise PortalUnavailable(_(
                 "Could not check which Wikidata items already exist on the MaRDI Portal "
                 "(the portal did not answer). Nothing was exported; please try again later."
-            )
+            ))
         if found.label_failed:
             _logger.warning("Duplicate check by label and description failed; the portal rejects exact duplicates.")
         self.portal_markers = found.markers
@@ -1472,22 +1475,21 @@ class GeneratePayload:
         for duplicate in duplicates:
             name, description = duplicate.item['Name'], duplicate.item['Description']
             if duplicate.rule == 'documentation':
-                messages.append(
-                    f"'{name}' ({description}) has the label and description of the Wikidata item "
-                    f"{duplicate.other['ID'].split(':', 1)[-1]} of this documentation; the MaRDI Portal takes "
-                    "only one item per label and description. Rename yours, or select the Wikidata item."
-                )
+                messages.append(_(
+                    "'{name}' ({description}) has the label and description of the Wikidata item {qid} of this "
+                    "documentation; the MaRDI Portal takes only one item per label and description. Rename yours, "
+                    "or select the Wikidata item."
+                ).format(name=name, description=description, qid=duplicate.other['ID'].split(':', 1)[-1]))
             elif duplicate.rule == 'wikidata':
-                messages.append(
-                    f"'{name}' ({description}) is the Wikidata item "
-                    f"{duplicate.item['ID'].split(':', 1)[-1]}, which exists on the MaRDI Portal as {duplicate.qid}. "
-                    "Use the portal item, or choose another item or make it a new item."
-                )
+                messages.append(_(
+                    "'{name}' ({description}) is the Wikidata item {qid}, which exists on the MaRDI Portal as "
+                    "{portal_qid}. Use the portal item, or choose another item or make it a new item."
+                ).format(name=name, description=description, qid=duplicate.item['ID'].split(':', 1)[-1],
+                         portal_qid=duplicate.qid))
             else:
-                messages.append(
-                    f"An item ({duplicate.qid}) with the label '{name}' and description "
-                    f"'{description}' already exists on the MaRDI Portal. "
-                    "Use the portal item, or rename yours."
-                )
+                messages.append(_(
+                    "An item ({qid}) with the label '{name}' and description '{description}' already exists on "
+                    "the MaRDI Portal. Use the portal item, or rename yours."
+                ).format(qid=duplicate.qid, name=name, description=description))
         if messages:
             raise DocumentationProblem(*messages)

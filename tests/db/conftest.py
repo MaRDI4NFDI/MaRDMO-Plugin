@@ -16,13 +16,14 @@ from rdmo.core.xml import parse_xml_to_elements
 from rdmo.domain.models import Attribute
 from rdmo.management.imports import import_elements
 from rdmo.options.models import Option
-from rdmo.projects.models import Project, Value
+from rdmo.projects.models import Membership, Project, Value
 from rdmo.projects.signals import value_created
 from rdmo.questions.models import Catalog
 
 from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_questions
 from MaRDMO.helpers import value_editor
+from MaRDMO.queries import PortalItems
 from tests.recordings import record, replay
 
 # Referenced elements first; the catalogs use all of them
@@ -94,3 +95,22 @@ def select(project, qkey, item_type, external_id, text, set_index=0):
                             info={'text': text, 'external_id': external_id, 'set_index': set_index})
     value_created.send(sender=Value, instance=value)
     return value
+
+
+@pytest.fixture
+def white(project, portal, client, django_user_model, monkeypatch):
+    '''white_2006, imported, with an owner logged in; offline and without duplicates on the portal.'''
+    from tests.db.test_export import imported
+    monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
+    monkeypatch.setattr('MaRDMO.checks.model.check_formulas', lambda formulas: {})
+    # The preview looks up the publication; the recorded portal has no answers for it
+    monkeypatch.setattr('MaRDMO.publication.worker.PublicationRetriever.get_information',
+                        lambda self, project, snapshot, answers: answers)
+    # Nothing of it is on the portal already (the lookup by label changes with the answers)
+    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
+    portal('export_white_2006')
+    documentation = imported(project, 'white_2006')
+    user = django_user_model.objects.create_user('owner', password='owner')
+    Membership.objects.create(project=documentation, user=user, role='owner')
+    client.force_login(user)
+    return documentation

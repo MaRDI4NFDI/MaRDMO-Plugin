@@ -1,8 +1,8 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 {% if doc_dict %}
     <ul style="list-style-type: none; padding-left: 2em;">
     {% for key, entry in doc_dict.items %}
-        <li>{{ entry.0|option_name|default:"Reference" }}: {{ entry.1|default:"-" }}</li>
+        <li>{% if entry.0|option_name %}{% translate entry.0|option_name %}{% else %}{% translate "Reference" %}{% endif %}: {{ entry.1|default:"-" }}</li>
     {% endfor %}
     </ul>
 {% else %}

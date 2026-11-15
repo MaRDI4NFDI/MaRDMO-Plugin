@@ -410,13 +410,13 @@ class MaRDMOQueryProvider(Export):
         answers, options = self.get_post_data()
 
         if answers['search']['options'] == options['InterdisciplinaryWorkflow']:
-            datatype = "Workflow(s)"
+            datatype = _("Workflow(s)")
         elif answers['search']['options'] == options['MathematicalModel']:
-            datatype = "Mathematical Model(s)"
+            datatype = _("Mathematical Model(s)")
         elif answers['search']['options'] == options['Algorithm']:
-            datatype = "Algorithm(s)"
+            datatype = _("Algorithm(s)")
         else:
-            datatype = "Unknown"
+            datatype = _("Unknown")
 
         return render(
             self.request,

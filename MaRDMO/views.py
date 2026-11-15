@@ -38,7 +38,7 @@ from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, gettext_noop as N_
 from django.views.decorators.http import require_GET, require_POST
 
 from rdmo.core.plugins import get_plugin
@@ -59,11 +59,11 @@ from .store import (
 
 # Classes of the items on the success page, in this order; others follow
 CLASS_ORDER = [
-    'Mathematical Model', 'Research Problem', 'Formula', 'Computational Task',
-    'Quantity', 'Algorithm', 'Algorithmic Task', 'Software', 'Benchmark',
-    'Workflow', 'Process Step', 'Hardware', 'CPU Model', 'Dataset',
-    'Experimental Method', 'Experimental Equipment', 'Academic Discipline',
-    'Programming Language', 'Publication', 'Author', 'Journal',
+    N_('Mathematical Model'), N_('Research Problem'), N_('Formula'), N_('Computational Task'),
+    N_('Quantity'), N_('Algorithm'), N_('Algorithmic Task'), N_('Software'), N_('Benchmark'),
+    N_('Workflow'), N_('Process Step'), N_('Hardware'), N_('CPU Model'), N_('Dataset'),
+    N_('Experimental Method'), N_('Experimental Equipment'), N_('Academic Discipline'),
+    N_('Programming Language'), N_('Publication'), N_('Author'), N_('Journal'),
 ]
 
 
@@ -319,6 +319,22 @@ def show_success(request, job_id):
             "counts": job_data.get("counts", {}),
             "mardi_uri": mardi_uri,
             "graph_data": graph_data,
+            # The graph's texts, for its script
+            "graph_texts": {
+                'classes': {name: _(name) for name in CLASS_ORDER},
+                'new_class': _('New {class}'),
+                'existing_item': _('Existing item'),
+                'new_literal': _('New Literal Value'),
+                'toggle': _('Click to toggle'),
+                'filters': _('Filters'),
+                'node_types': _('Node types'),
+                'literal_values': _('Literal values'),
+                'existing_items': _('Existing items'),
+                'properties': _('Properties'),
+                'qualifiers': _('Qualifiers'),
+                'fullscreen': _('Fullscreen'),
+                'exit_fullscreen': _('Exit fullscreen'),
+            },
         },
     )
 

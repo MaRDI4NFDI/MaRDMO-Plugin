@@ -1,8 +1,8 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 
 <h1 id="title"> {{ title }} </h1>
 
-<h1 id="Interdisciplinary Workflow"> Interdisciplinary Workflow </h1>
+<h1 id="Interdisciplinary Workflow"> {% translate "Interdisciplinary Workflow" %} </h1>
 {% for values in answers.workflow.values %}
     
     {# Include Interdisciplinary Workflow Name #}
@@ -26,36 +26,36 @@
     {% endif %}
 
     {# Include Block for single Relation between Workflow and Step #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="IW2PS" title="Process Steps" relation="contains" relatants=values.RelationPS class="PROCESS STEP" field="RelationPS" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="IW2PS" title=_("Process Steps") relation=_("contains") relatants=values.RelationPS class="PROCESS STEP" field="RelationPS" %}
 
     {# Include Mathematical Reproducibility #}
-    {% include "MaRDMO/partials/_reproducibility.html" with anchor="mathematical-reproducibility" title="Mathematical Reproducibility" value=values.mathematical field="mathematical" %}
+    {% include "MaRDMO/partials/_reproducibility.html" with anchor="mathematical-reproducibility" title=_("Mathematical Reproducibility") value=values.mathematical field="mathematical" %}
 
     {# Include Runtime Reproducibility #}
-    {% include "MaRDMO/partials/_reproducibility.html" with anchor="runtime-reproducibility" title="Runtime Reproducibility" value=values.runtime field="runtime" %}
+    {% include "MaRDMO/partials/_reproducibility.html" with anchor="runtime-reproducibility" title=_("Runtime Reproducibility") value=values.runtime field="runtime" %}
 
     {# Include Reproducibility of Results #}
-    {% include "MaRDMO/partials/_reproducibility.html" with anchor="reproducibility-of-results" title="Reproducibility of Results" value=values.result field="result" %}
+    {% include "MaRDMO/partials/_reproducibility.html" with anchor="reproducibility-of-results" title=_("Reproducibility of Results") value=values.result field="result" %}
 
     {# Include Reproducibility on original Platform #}
-    {% include "MaRDMO/partials/_reproducibility.html" with anchor="reproducibility-on-original-platform" title="Reproducibility on original Hardware or Instrument" value=values.originalplatform field="originalplatform" %}
+    {% include "MaRDMO/partials/_reproducibility.html" with anchor="reproducibility-on-original-platform" title=_("Reproducibility on original Hardware or Instrument") value=values.originalplatform field="originalplatform" %}
 
     {# Include Reproducibility on other Platform #}
-    {% include "MaRDMO/partials/_reproducibility.html" with anchor="reproducibility-on-other-platform" title="Reproducibility on other Hardware or Instrument" value=values.otherplatform field="otherplatform" %}
+    {% include "MaRDMO/partials/_reproducibility.html" with anchor="reproducibility-on-other-platform" title=_("Reproducibility on other Hardware or Instrument") value=values.otherplatform field="otherplatform" %}
 
     {# Include Transferability Statements #}
     {% include "MaRDMO/partials/_transferability.html" with transferability=values.transferability.values %}
 
     {# Include Block for multiple Relations between Workflow and Workflow #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="IW2IW" title="Interdisciplinary Workflows" relations=values.RelationWF class="INTERDISCIPLINARY WORKFLOW" field="RelationWF" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="IW2IW" title=_("Interdisciplinary Workflows") relations=values.RelationWF class="INTERDISCIPLINARY WORKFLOW" field="RelationWF" %}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO WORKFLOW DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO WORKFLOW DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="Process Steps"> Process Step </h1>
+<h1 id="Process Steps"> {% translate "Process Step" %} </h1>
 {% for values in answers.processstep.values %}
     
     {# Include Process Step Name #}
@@ -68,31 +68,31 @@
     {% include "MaRDMO/partials/_id.html" with class="PROCESS STEP" id=values.ID %}
 
     {# Include Block for single Relation between Process Step and Input Data Set #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="PS2IDS" title="Input Data Sets" relation="input data set" relatants=values.RelationIDS class="INPUT DATA SET" field="RelationIDS" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="PS2IDS" title=_("Input Data Sets") relation=_("input data set") relatants=values.RelationIDS class="INPUT DATA SET" field="RelationIDS" %}
 
     {# Include Block for single Relation between Process Step and Output Data Set #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="PS2ODS" title="Output Data Sets" relation="output data set" relatants=values.RelationODS class="OUTPUT DATA SET" field="RelationODS" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="PS2ODS" title=_("Output Data Sets") relation=_("output data set") relatants=values.RelationODS class="OUTPUT DATA SET" field="RelationODS" %}
 
     {# Include Block for Relation between Process Step and Algorithm (only when documented) #}
     {% if values.algorithm_software_pairs %}
-        {% include "MaRDMO/partials/_relation_block_single_with_qualifier.html" with anchor="PS2A" primary_class="ALGORITHM" qualifier_class="SOFTWARE" pairs=values.algorithm_software_pairs title="Algorithms" primary_label="uses" qualifier_env_label="Software-Environment" doc_label="Software-Requirements" has_sections=True show_hardware=True field="algorithm_software_pairs" %}
+        {% include "MaRDMO/partials/_relation_block_single_with_qualifier.html" with anchor="PS2A" primary_class="ALGORITHM" qualifier_class="SOFTWARE" pairs=values.algorithm_software_pairs title=_("Algorithms") primary_label=_("uses") qualifier_env_label=_("Software-Environment") doc_label=_("Software-Requirements") has_sections=True show_hardware=True field="algorithm_software_pairs" %}
     {% endif %}
 
     {# Include Block for Relation between Process Step and Method (only when documented) #}
     {% if values.method_instrument_pairs %}
-        {% include "MaRDMO/partials/_relation_block_single_with_qualifier.html" with anchor="PS2M" primary_class="EXPERIMENTAL METHOD" qualifier_class="EXPERIMENTAL EQUIPMENT" pairs=values.method_instrument_pairs title="Methods" primary_label="uses" qualifier_env_label="Instrument-Environment" doc_label="Method-Protocol" field="method_instrument_pairs" %}
+        {% include "MaRDMO/partials/_relation_block_single_with_qualifier.html" with anchor="PS2M" primary_class="EXPERIMENTAL METHOD" qualifier_class="EXPERIMENTAL EQUIPMENT" pairs=values.method_instrument_pairs title=_("Methods") primary_label=_("uses") qualifier_env_label=_("Instrument-Environment") doc_label=_("Method-Protocol") field="method_instrument_pairs" %}
     {% endif %}
 
     {# Include Block for single Relation between Process Step and Academic Discipline without Section #}
-    {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="PS2AD" title="Academic Disciplines" relation="field of work" relatants=values.RFRelatant class="ACADEMIC DISCIPLINE" field="RFRelatant" %}    
+    {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="PS2AD" title=_("Academic Disciplines") relation=_("field of work") relatants=values.RFRelatant class="ACADEMIC DISCIPLINE" field="RFRelatant" %}    
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO STEP DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO STEP DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="Algorithm"> Algorithm </h1>
+<h1 id="Algorithm"> {% translate "Algorithm" %} </h1>
 {% for values in answers.algorithm.values %}
 
     {# Include Algorithm Name #}
@@ -105,18 +105,18 @@
     {% include "MaRDMO/partials/_id.html" with class="ALGORITHM" id=values.ID %}
 
     {# Include Block for single Relation between Algorithm and Algorithmic Task without Section #}
-    {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="A2AD" title="Algorithmic Tasks" relation="solves" relatants=values.PRelatant class="ALGORITHMIC TASK" field="PRelatant" %}
+    {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="A2AD" title=_("Algorithmic Tasks") relation=_("solves") relatants=values.PRelatant class="ALGORITHMIC TASK" field="PRelatant" %}
 
     {# Include Block for single Relation between Algorithm and Software #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2S" title="Software" relation="implemented by" relatants=values.RelationS class="SOFTWARE" field="RelationS" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="A2S" title=_("Software") relation=_("implemented by") relatants=values.RelationS class="SOFTWARE" field="RelationS" %}
     {% remaining_marks values %}
 
     
 {% empty %}
-    <strong class="mardmo-empty">NO ALGORITHM DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO ALGORITHM DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="Software"> Software </h1> 
+<h1 id="Software"> {% translate "Software" %} </h1> 
 {% for values in answers.software.values %}
 
     {# Include Software Name #}
@@ -125,24 +125,24 @@
     {# Include Software Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="SOFTWARE" description=values.Description name=values.Name %}            
 
-    {% include "MaRDMO/partials/_reference_block.html" with references=values.reference id_option=option.SWMATH id_label="swMath ID" %}
+    {% include "MaRDMO/partials/_reference_block.html" with references=values.reference id_option=option.SWMATH id_label=_("swMath ID") %}
 
     {# Include Software ID #}
     {% include "MaRDMO/partials/_id.html" with class="SOFTWARE" id=values.ID %}
 
     {# Include Block for single Relation between Software and Programming Language without Section #}
-    {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="S2PL" title="Programming Languages" relation="programmed in" relatants=values.programminglanguage class="PROGRAMMING LANGUAGE" field="programminglanguage" %}
+    {% include "MaRDMO/partials/_relation_block_single_without_section.html" with anchor="S2PL" title=_("Programming Languages") relation=_("programmed in") relatants=values.programminglanguage class="PROGRAMMING LANGUAGE" field="programminglanguage" %}
 
     {# Include Block for single Relation between Software and Software Dependencies without Section #}
-    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2SD" title="Software" relation="depends on software" relatants=values.RelationS class="SOFTWARE" field="RelationS" %}
+    {% include "MaRDMO/partials/_relation_block_single.html" with anchor="S2SD" title=_("Software") relation=_("depends on software") relatants=values.RelationS class="SOFTWARE" field="RelationS" %}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO SOFTWARE DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO SOFTWARE DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="Hardware"> Hardware </h1> 
+<h1 id="Hardware"> {% translate "Hardware" %} </h1> 
 {% for values in answers.hardware.values %}
 
     {# Include Hardware Name #}
@@ -155,15 +155,15 @@
     {% include "MaRDMO/partials/_id.html" with class="HARDWARE" id=values.ID %}
 
     {# Include Hardware Number of Compute Nodes #}
-    <strong>Number of Compute Nodes:</strong> {{ values.nodes|default:"-" }}{% marks values "nodes" before=" " %} <br>
+    <strong>{% translate "Number of Compute Nodes" %}:</strong> {{ values.nodes|default:"-" }}{% marks values "nodes" before=" " %} <br>
 
     {# Include CPU List #}
-    <h3>CPUs of the Hardware</h3>
+    <h3>{% translate "CPUs of the Hardware" %}</h3>
     {% for cpu in values.cpu_entries %}
         {{ forloop.counter }}.
-        <strong>CPU:</strong> {% if cpu.id or cpu.name %}{% user_entity cpu.id cpu.name cpu.description "CPU" %}{% else %}-{% endif %} <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;-&gt; Occurrence in Hardware: {{ cpu.count|default:"-" }} <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;-&gt; Number of Processor Cores: {{ cpu.cores|default:"-" }} <br>
+        <strong>{% translate "CPU" %}:</strong> {% if cpu.id or cpu.name %}{% user_entity cpu.id cpu.name cpu.description "CPU" %}{% else %}-{% endif %} <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-&gt; {% translate "Occurrence in Hardware" %}: {{ cpu.count|default:"-" }} <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;-&gt; {% translate "Number of Processor Cores" %}: {{ cpu.cores|default:"-" }} <br>
     {% empty %}
         - <br>
     {% endfor %}
@@ -173,10 +173,10 @@
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO HARDWARE DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO HARDWARE DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="Data Set"> Data Set </h1> 
+<h1 id="Data Set"> {% translate "Data Set" %} </h1> 
 {% for values in answers.dataset.values %}
 
     {# Include Data Set Name #}
@@ -189,36 +189,36 @@
     {% include "MaRDMO/partials/_id.html" with class="DATA SET" id=values.ID %}
 
     {# Include Data Set Size #}
-    <strong>Data Size:</strong>
-    {% with unit=values.Size.0|option_name %}{% if unit %}{{ values.Size.1|default:"-" }} {{ unit }}{% else %}-{% endif %}{% endwith %}{% marks values "Size" before=" " %} <br>
+    <strong>{% translate "Data Size" %}:</strong>
+    {% with unit=values.Size.0|option_name %}{% if unit %}{{ values.Size.1|default:"-" }} {% translate unit %}{% else %}-{% endif %}{% endwith %}{% marks values "Size" before=" " %} <br>
 
     {# Include Data Set File Format #}
-    <strong>File Format:</strong> {{ values.FileFormat|default:"-" }}{% marks values "FileFormat" before=" " %} <br>
+    <strong>{% translate "File Format" %}:</strong> {{ values.FileFormat|default:"-" }}{% marks values "FileFormat" before=" " %} <br>
 
     {# Include Data Set Type #}
-    <strong>Data Set Type:</strong>
-    {% if values.BinaryText == option.binary %}binary{% elif values.BinaryText == option.text %}text{% else %}-{% endif %}{% marks values "BinaryText" before=" " %} <br>
+    <strong>{% translate "Data Set Type" %}:</strong>
+    {% if values.BinaryText == option.binary %}{% translate "binary" %}{% elif values.BinaryText == option.text %}{% translate "text" %}{% else %}-{% endif %}{% marks values "BinaryText" before=" " %} <br>
 
     {# Include Data Set Proprietary #}
-    <strong>Data Set Proprietary:</strong>
-    {% if values.Proprietary == option.Yes %}Yes{% elif values.Proprietary == option.No %}No{% else %}-{% endif %}{% marks values "Proprietary" before=" " %} <br>
+    <strong>{% translate "Data Set Proprietary" %}:</strong>
+    {% if values.Proprietary == option.Yes %}{% translate "Yes" %}{% elif values.Proprietary == option.No %}{% translate "No" %}{% else %}-{% endif %}{% marks values "Proprietary" before=" " %} <br>
 
     {# Include Data Set Publication #}
-    <strong>Data Set Publication:</strong>
-    {% if values.ToPublish.0 == option.YesText %}Yes{% if values.ToPublish.1 %} ({{ values.ToPublish.1 }}){% endif %}{% elif values.ToPublish.0 == option.NoText %}No{% else %}-{% endif %}{% marks values "ToPublish" before=" " %} <br>
+    <strong>{% translate "Data Set Publication" %}:</strong>
+    {% if values.ToPublish.0 == option.YesText %}{% translate "Yes" %}{% if values.ToPublish.1 %} ({{ values.ToPublish.1 }}){% endif %}{% elif values.ToPublish.0 == option.NoText %}{% translate "No" %}{% else %}-{% endif %}{% marks values "ToPublish" before=" " %} <br>
 
     {# Include Data Set Archiving #}
-    <strong>Data Set Archiving:</strong>
-    {% if values.ToArchive.0 == option.YesText %}Yes{% if values.ToArchive.1 %} ({{ values.ToArchive.1 }}){% endif %}{% elif values.ToArchive.0 == option.NoText %}No{% else %}-{% endif %}{% marks values "ToArchive" before=" " %} <br>
+    <strong>{% translate "Data Set Archiving" %}:</strong>
+    {% if values.ToArchive.0 == option.YesText %}{% translate "Yes" %}{% if values.ToArchive.1 %} ({{ values.ToArchive.1 }}){% endif %}{% elif values.ToArchive.0 == option.NoText %}{% translate "No" %}{% else %}-{% endif %}{% marks values "ToArchive" before=" " %} <br>
 
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO DATA SET DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO DATA SET DOCUMENTED" %}</strong>
 {% endfor %}
 
-<h1 id="Publication"> Publications </h1>
+<h1 id="Publication"> {% translate "Publications" %} </h1>
 {% for values in answers.publication.values %}
 
     {# Include Publication Name #}
@@ -234,16 +234,16 @@
     {% include "MaRDMO/partials/_id.html" with id=values.ID %}
 
     {# Include Block for multiple Relations between Publication and Algorithm #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2A" title="Algorithms" relations=values.RelationA class="ALGORITHM" field="RelationA" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2A" title=_("Algorithms") relations=values.RelationA class="ALGORITHM" field="RelationA" %}
 
     {# Include Block for multiple Relations between Publication and Hardware or Software #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2HS" title="Hardware or Software" relations=values.RelationHS class="HARDWARE OR SOFTWARE" field="RelationHS" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2HS" title=_("Hardware or Software") relations=values.RelationHS class="HARDWARE OR SOFTWARE" field="RelationHS" %}
 
     {# Include Block for multiple Relations between Publication and remaining Workflow Entities #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2E" title="Interdisciplinary Workflows, Process Steps, or Data Sets" relations=values.RelationP class="INTERDISCIPLINARY WORKFLOW, PROCESS STEP, OR DATA SET" field="RelationP" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="P2E" title=_("Interdisciplinary Workflows, Process Steps, or Data Sets") relations=values.RelationP class="INTERDISCIPLINARY WORKFLOW, PROCESS STEP, OR DATA SET" field="RelationP" %}
     {% remaining_marks values %}
 
 
 {% empty %}
-    <strong class="mardmo-empty">NO PUBLICATION DOCUMENTED</strong>
+    <strong class="mardmo-empty">{% translate "NO PUBLICATION DOCUMENTED" %}</strong>
 {% endfor %}

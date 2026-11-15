@@ -3,14 +3,20 @@
 A :class:`Problem` names its section and page (a :class:`~MaRDMO.pages.PageRef`,
 or none for a problem of the whole documentation); as text it reads as the
 checks have always reported it: "Formula (Page F4): Missing Short Description".
+
+The section stays English (it groups the problems and names the checks);
+it is translated where it is shown.  The message is translated by the check
+that finds it, in the language of the request.
 '''
 from dataclasses import dataclass
 from typing import Optional
 
+from django.utils.translation import gettext as _, gettext_lazy
+
 from .pages import PageRef
 
 # First line of the error page of an export that is stopped
-HEADER = 'Following aspects prevented the export:'
+HEADER = gettext_lazy('Following aspects prevented the export:')
 
 
 @dataclass(frozen=True)
@@ -31,13 +37,14 @@ class Problem:
 
     def __str__(self):
         if self.page is None:
-            return f'{self.section}: {self.message}'
-        return f'{self.section} (Page {self.page.tab}): {self.message}'
+            return f'{_(self.section)}: {self.message}'
+        return _('{section} (Page {tab}): {message}').format(
+            section=_(self.section), tab=self.page.tab, message=self.message)
 
 
 def report_lines(problems):
     '''The error page's lines: :data:`HEADER` and every problem as text, or ``[]``.'''
-    return [HEADER, *map(str, problems)] if problems else []
+    return [str(HEADER), *map(str, problems)] if problems else []
 
 
 def attach(data, problems):

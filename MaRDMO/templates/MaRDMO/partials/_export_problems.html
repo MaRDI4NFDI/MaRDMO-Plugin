@@ -14,7 +14,7 @@
     <ul>
         {% for section, page, messages in gate.groups %}
         <li>
-            <strong>{{ section }}</strong>{% if page %}, {{ page }}{% endif %}
+            <strong>{% translate section %}</strong>{% if page %}, {{ page }}{% endif %}
             <ul>
                 {% for message in messages %}
                 <li class="mardmo-error">{{ message }}</li>
