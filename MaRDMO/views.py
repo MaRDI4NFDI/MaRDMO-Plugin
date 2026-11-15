@@ -125,7 +125,7 @@ def show_success(request, job_id):
                  cleared from the cache after being read.
 
     Returns:
-        Rendered ``MaRDMO/portalExport.html`` with the exported item IDs,
+        Rendered ``MaRDMO/export_result.html`` with the exported item IDs,
         or an error page if the job data is missing.
     """
     if not _job_belongs_to_session(request, job_id):
@@ -309,7 +309,7 @@ def show_success(request, job_id):
 
     return render(
         request,
-        "MaRDMO/portalExport.html",
+        "MaRDMO/export_result.html",
         {
             "grouped_ids": grouped_ids,
             "relation_stmts": relation_stmts,
@@ -338,11 +338,11 @@ def render_preview(self, template, answers, option, submit_label, duplicates=Non
                     not clear the export button is disabled (#152).
 
     Returns:
-        HTTP 200 response rendering ``MaRDMO/mardmoPreview.html``.
+        HTTP 200 response rendering ``MaRDMO/preview.html``.
     """
     return render(
         self.request,
-        'MaRDMO/mardmoPreview.html',
+        'MaRDMO/preview.html',
         {
             'form': self.ExportForm(),
             'include_file': template,

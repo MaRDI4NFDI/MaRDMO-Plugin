@@ -48,10 +48,10 @@ TEX_CHECK_URL            = 'https://portal.mardi4nfdi.de/w/rest.php/math/v0/chec
 
 # Mapping from catalog slug to preview template
 CATALOG_TEMPLATE_MAP = {
-    CATALOG_MODEL_NAME:        'MaRDMO/modelTemplate.html',
-    CATALOG_MODEL_BASICS_NAME: 'MaRDMO/modelTemplate-basics.html',
-    CATALOG_ALGORITHM_NAME:    'MaRDMO/algorithmTemplate.html',
-    CATALOG_WORKFLOW_NAME:     'MaRDMO/workflowTemplate.html',
+    CATALOG_MODEL_NAME:        'MaRDMO/preview_model.html',
+    CATALOG_MODEL_BASICS_NAME: 'MaRDMO/preview_model_basics.html',
+    CATALOG_ALGORITHM_NAME:    'MaRDMO/preview_algorithm.html',
+    CATALOG_WORKFLOW_NAME:     'MaRDMO/preview_workflow.html',
 }
 
 #MaRDMO Section Mapt (Base)

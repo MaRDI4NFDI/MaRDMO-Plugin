@@ -269,18 +269,19 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
     def get_post_data(self, mode = 'submit'):
         '''Collect and pre-process user answers for the documentation catalogs.
 
-        Reads all RDMO project values, applies catalog-specific processing
-        (relation resolution, publication retrieval, etc.), and returns the
-        structured answers dict alongside the global options dict.
+        Reads all RDMO project values, names the pages by their tabs, gives
+        relations the name and description of their page, applies the
+        catalog's preview step, and returns the structured answers dict
+        alongside the global options dict.
 
         Supports the model, algorithm, and workflow documentation catalogs;
         callers check the catalog beforehand.  The search catalog is handled
         by :class:`MaRDMOQueryProvider`.
 
         Args:
-            mode: ``'preview'`` additionally fetches publication metadata and
-                  runs relation resolution for display; ``'submit'`` (default)
-                  skips those steps for a leaner export payload.
+            mode: ``'preview'`` first looks up the citation data of the
+                  publications and stores it in the project; ``'submit'``
+                  (default) reads what is stored.
 
         Returns:
             Tuple ``(answers, options)`` where *answers* is a nested dict
@@ -349,14 +350,14 @@ class MaRDMOQueryProvider(Export):
         '''Render the search configuration preview page.
 
         Returns:
-            HTTP response rendering ``MaRDMO/serachTemplate.html``, or an error
+            HTTP response rendering ``MaRDMO/preview_search.html``, or an error
             page if the active catalog is not the search catalog.
         '''
         if str(self.project.catalog).endswith('mardmo-search-catalog'):
             answers, options = self.get_post_data()
             return render_preview(
                 self = self,
-                template = 'MaRDMO/searchTemplate.html',
+                template = 'MaRDMO/preview_search.html',
                 answers = answers,
                 option = options,
                 submit_label = _('Query MaRDI Portal'),
@@ -403,7 +404,7 @@ class MaRDMOQueryProvider(Export):
         Reads the search type from the answers dict to set the result datatype label.
 
         Returns:
-            Rendered ``MaRDMO/searchResults.html`` response with the list of
+            Rendered ``MaRDMO/search_results.html`` response with the list of
             matching portal items.
         '''
         answers, options = self.get_post_data()
@@ -419,7 +420,7 @@ class MaRDMOQueryProvider(Export):
 
         return render(
             self.request,
-            'MaRDMO/searchResults.html',
+            'MaRDMO/search_results.html',
             {
                 'datatype': datatype,
                 'noResults': answers['no_results'],

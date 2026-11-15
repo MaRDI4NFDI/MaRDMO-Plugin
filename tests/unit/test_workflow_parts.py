@@ -42,7 +42,7 @@ def test_preview_shows_the_missing_cpu_model(checks):
     answers = hardware()
     checks.hardware(None, answers)
     attach(answers, checks.err)
-    html = render_to_string('MaRDMO/workflowTemplate.html', {'answers': answers, 'option': {}})
+    html = render_to_string('MaRDMO/preview_workflow.html', {'answers': answers, 'option': {}})
     assert '<strong class="mardmo-error">Missing CPU Model</strong>' in html
 
 
