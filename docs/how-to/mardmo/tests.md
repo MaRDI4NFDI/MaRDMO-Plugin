@@ -98,7 +98,9 @@ of the checks must be red on its page, and nothing else may be red.  It fails
 when a template marks something itself (only `{% marks %}` and
 `{% remaining_marks %}` may), or when a check problem cannot be shown.  A
 failure names the answer, the page and the message, e.g.
-`delete quantity/name: page-quantity-1: not shown: Missing Name`.
+`delete quantity/name: page-quantity-1: not shown: Missing Name`.  white_2006
+runs once more in German; there a problem whose section has no German name
+fails as well (see [How to Translate MaRDMO](translate.md)).
 
 ## Recordings: when the requests change
 

@@ -7,13 +7,18 @@ nothing else may be red.  Answers of the same question are mutated once
 of them (no difference).  The answers that name a tab are left out: deleting
 one is deleting the tab, which RDMO does with all its answers.
 
+white_2006 runs once more in German: the marks are the German problems,
+and every section of a problem is in the German catalog.
+
 Offline: recorded portal answers; the TeX checker accepts every formula.
 '''
 import html
 import re
 
+import polib
 import pytest
 from django.db import transaction
+from django.utils import translation
 from django.template.loader import render_to_string
 
 from MaRDMO import main
@@ -23,9 +28,13 @@ from MaRDMO.problems import attach
 from tests.db.conftest import select
 from tests.db.test_export import imported
 from tests.db.test_hydration import CASES
+from tools.messages import CATALOG
 
 MARK = re.compile(r'<strong class="mardmo-error">(.*?)</strong>', re.S)
-PROJECTS = [('white_2006', 'import'), ('si_model', 'select'), ('thomas_algorithm', 'select'), ('workflow', 'select')]
+PROJECTS = [('white_2006', 'import', 'en'), ('si_model', 'select', 'en'), ('thomas_algorithm', 'select', 'en'),
+            ('workflow', 'select', 'en'), ('white_2006', 'import', 'de')]
+# Texts of the German catalog
+GERMAN = {entry.msgid for entry in polib.pofile(str(CATALOG)) if entry.msgstr}
 
 
 class Rollback(Exception):
@@ -43,8 +52,13 @@ def regions(page):
     return result
 
 
-def compare(documentation):
-    '''What is wrong with the marks of the preview of *documentation*, as a list of strings.'''
+def compare(documentation, language='en'):
+    '''What is wrong with the marks of the preview of *documentation* in *language*, as a list of strings.'''
+    with translation.override(language):
+        return _compare(documentation, language)
+
+
+def _compare(documentation, language):
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = documentation, None
     answers, options = provider.get_post_data()
@@ -59,6 +73,8 @@ def compare(documentation):
     expected = {}
     for problem in problems:
         expected.setdefault(problem.page.anchor, []).append(problem.message)
+        if language == 'de' and problem.section not in GERMAN:
+            wrong.append(f'section without German: {problem.section}')
     for anchor in found.keys() | expected.keys():
         missing = sorted(set(expected.get(anchor, [])) - set(found.get(anchor, [])))
         extra = sorted(set(found.get(anchor, [])) - set(expected.get(anchor, [])))
@@ -86,8 +102,8 @@ def mutations(documentation):
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize('name, how', PROJECTS)
-def test_marks_are_the_problems_of_the_checks(name, how, project, portal, monkeypatch):
+@pytest.mark.parametrize('name, how, language', PROJECTS)
+def test_marks_are_the_problems_of_the_checks(name, how, language, project, portal, monkeypatch):
     monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
     monkeypatch.setattr('MaRDMO.checks.model.check_formulas', lambda formulas: {})
     if how == 'import':
@@ -98,7 +114,7 @@ def test_marks_are_the_problems_of_the_checks(name, how, project, portal, monkey
         catalog, qkey, page, external_id, label, description = CASES[name]
         documentation = project(catalog)
         select(documentation, qkey, page, external_id, f'{label} ({description}) [{external_id.split(":")[0]}]')
-    assert compare(documentation) == []
+    assert compare(documentation, language) == []
     wrong = []
     for value, how in list(mutations(documentation)):
         path = value.attribute.uri.replace(f'{BASE_URI}domain/', '')
@@ -109,7 +125,7 @@ def test_marks_are_the_problems_of_the_checks(name, how, project, portal, monkey
                 else:
                     value.text = ''
                     value.save()
-                wrong += [f'{how} {path}: {line}' for line in compare(documentation)]
+                wrong += [f'{how} {path}: {line}' for line in compare(documentation, language)]
                 raise Rollback
         except Rollback:
             pass

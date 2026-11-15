@@ -1,2 +1,3 @@
+{% load i18n %}
 {# Standard statements written to existing items; they are not listed one by one #}
-{{ standard_added }} standard statement{{ standard_added|pluralize }} (community, MaRDI profile type) {{ standard_added|pluralize:"was,were" }} added to existing items.
+{% blocktranslate trimmed count counter=standard_added %}{{ counter }} standard statement (community, MaRDI profile type) was added to existing items.{% plural %}{{ counter }} standard statements (community, MaRDI profile type) were added to existing items.{% endblocktranslate %}

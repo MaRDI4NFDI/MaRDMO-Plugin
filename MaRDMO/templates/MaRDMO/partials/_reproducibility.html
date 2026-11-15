@@ -1,12 +1,12 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 <h3 id="{{ anchor }}">{{ title }}</h3>
 <p>
 {% if value.0.0 == option.YesLargeText %}
-    Yes: {{ value.0.1|linebreaksbr }}
+    {% translate "Yes" %}: {{ value.0.1|linebreaksbr }}
 {% elif value.0.0 == option.No %}
-    No
+    {% translate "No" %}
 {% elif value.0.0 == option.NotRelevant %}
-    Not relevant
+    {% translate "Not relevant" %}
 {% else %}
     -
 {% endif %}

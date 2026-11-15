@@ -1,6 +1,6 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 <p>
-    <b>Defining formulations</b>:
+    <b>{% translate "Defining formulations" %}</b>:
     <ol style="margin-left: 1.5em;">
         {% for idx, value in formula.items %}
             <li style="margin-bottom: 0.5em;">&nbsp;&nbsp; {% formula value formula_check|get_item:idx %}</li>

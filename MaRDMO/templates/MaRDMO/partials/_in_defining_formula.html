@@ -1,4 +1,4 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 {% if element.values %}
     <table border="1">
         <colgroup>
@@ -11,12 +11,12 @@
         </colgroup>
         <thead>
             <tr class="header">
-                <th style="text-align: center; vertical-align: middle;">Symbol</th>
-                <th style="text-align: center; vertical-align: middle;">Quantity</th>
-                <th style="text-align: center; vertical-align: middle;">Quantity ID</th>
-                <th style="text-align: center; vertical-align: middle;">Quantity Kind</th>
-                <th style="text-align: center; vertical-align: middle;">Quantity Kind ID</th>
-                <th style="text-align: center; vertical-align: middle;">Description</th>
+                <th style="text-align: center; vertical-align: middle;">{% translate "Symbol" %}</th>
+                <th style="text-align: center; vertical-align: middle;">{% translate "Quantity" %}</th>
+                <th style="text-align: center; vertical-align: middle;">{% translate "Quantity ID" %}</th>
+                <th style="text-align: center; vertical-align: middle;">{% translate "Quantity Kind" %}</th>
+                <th style="text-align: center; vertical-align: middle;">{% translate "Quantity Kind ID" %}</th>
+                <th style="text-align: center; vertical-align: middle;">{% translate "Description" %}</th>
             </tr>
         </thead>
         <tbody>

@@ -1,6 +1,6 @@
-{% load mardmo_tags %}
+{% load i18n mardmo_tags %}
 {% if detailed_descriptions %}
-    <b>Detailed Description</b>:
+    <b>{% translate "Detailed Description" %}</b>:
     <ol style="margin-left: 1.5em;">
         {% for detailed_description in detailed_descriptions.values %}
             <li style="margin-bottom: 0.5em;">{{ detailed_description|linebreaksbr }}</li>

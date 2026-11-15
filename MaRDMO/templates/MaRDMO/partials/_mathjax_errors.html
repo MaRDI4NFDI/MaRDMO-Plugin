@@ -2,6 +2,7 @@
 {# the checks report invalid formulas) instead                                   #}
 {# of its red error box, and fill the hints next to formulas the MaRDI Portal     #}
 {# rejected (see the "formula" template tag).  Include before the MathJax script. #}
+{% load i18n %}{% translate "FORMULA CANNOT BE DISPLAYED" as cannot_display %}
 <script>
 (function () {
     // MathJax's explanation for an invalid formula, or null if it can render it
@@ -29,7 +30,7 @@
         code.textContent = tex.trim();
         var marker = document.createElement('strong');
         marker.className = 'mardmo-note';
-        marker.textContent = 'FORMULA CANNOT BE DISPLAYED: ' + message.toUpperCase();
+        marker.textContent = '{{ cannot_display|escapejs }}: ' + message.toUpperCase();
         span.appendChild(code);
         span.appendChild(document.createTextNode(' '));
         span.appendChild(marker);

@@ -1,5 +1,6 @@
-{% load mardmo_tags %}
-<h3 id="{{ anchor }}">Relations to {{ title }}</h3>
+{% load i18n %}
+{% load i18n mardmo_tags %}
+<h3 id="{{ anchor }}">{% blocktranslate trimmed %}Relations to {{ title }}{% endblocktranslate %}</h3>
 <ul style="list-style-type: none; padding-left: 1em;">
     {% for pair in pairs %}
     <li style="margin-bottom: 0.5em;">
@@ -14,7 +15,7 @@
         {% endfor %}
         <ul style="margin-top: 0.3em; list-style-type: none; padding-left: 1em;">
             {% if pair.parameters %}
-            <li>&#8594; Parameters: {{ pair.parameters }}</li>
+            <li>&#8594; {% translate "Parameters" %}: {{ pair.parameters }}</li>
             {% endif %}
             <li>&#8594; {{ qualifier_env_label }}:
                 {% if not pair.has_qualifier %}
@@ -33,7 +34,7 @@
                 {% endif %}
             </li>
             {% if show_hardware %}
-            <li>&#8594; Hardware-Environment: {% if pair.hardware %}{% relatant pair.hardware %}{% else %}-{% endif %}</li>
+            <li>&#8594; {% translate "Hardware Environment" %}: {% if pair.hardware %}{% relatant pair.hardware %}{% else %}-{% endif %}</li>
             {% endif %}
         </ul>
     </li>

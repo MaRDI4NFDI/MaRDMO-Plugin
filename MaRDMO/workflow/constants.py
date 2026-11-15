@@ -12,17 +12,18 @@ Provides:
 '''
 
 from ..constants import BASE_URI
+from django.utils.translation import gettext_noop as N_
 from ..getters import get_mathmoddb, get_properties, get_questions
 from ..publication.constants import get_publication_relations
 
 SECTION_MAP = {
-    'workflow':    'Interdisciplinary Workflow',
-    'processstep': 'Process Step',
-    'algorithm':   'Algorithm',
-    'software':    'Software',
-    'hardware':    'Hardware',
-    'dataset':     'Data Set',
-    'publication': 'Publication',
+    'workflow':    N_('Interdisciplinary Workflow'),
+    'processstep': N_('Process Step'),
+    'algorithm':   N_('Algorithm'),
+    'software':    N_('Software'),
+    'hardware':    N_('Hardware'),
+    'dataset':     N_('Data Set'),
+    'publication': N_('Publication'),
 }
 
 # URI PREFIX Map

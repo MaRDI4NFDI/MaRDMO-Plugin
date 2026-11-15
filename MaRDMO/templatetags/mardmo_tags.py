@@ -26,6 +26,7 @@ shows the rest, so every problem is on its page and nothing else is red.
 from django import template
 from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _, gettext_noop as N_, ngettext
 
 from ..getters import get_options
 from ..ids import is_own_item
@@ -34,6 +35,9 @@ from ..validators import formula_comment_problem
 from ..tex_check import UNAVAILABLE
 
 register = template.Library()
+
+# Option names the preview shows ({% translate value|option_name %}): data size units
+OPTION_NAMES = (N_('kilobyte'), N_('megabyte'), N_('gigabyte'), N_('terabyte'), N_('items'))
 
 # Fields of a page whose problems a ``marks`` showed; kept on the page (the
 # includes have render contexts of their own) until its ``remaining_marks``
@@ -71,7 +75,7 @@ def relatant(value):
     if not value or value == 'MISSING OBJECT ITEM':
         return '-'
     if isinstance(value, str) and is_own_item(value):
-        return format_html('<span class="mardmo-note">{}</span>', 'item without page')
+        return format_html('<span class="mardmo-note">{}</span>', _('item without page'))
     return value
 
 
@@ -135,7 +139,7 @@ def formula(tex, verdict=None):
     if verdict == UNAVAILABLE:
         return format_html(
             '<span class="mardmo-formula" data-tex="{}">\\( {} \\)</span> '
-            '<span class="mardmo-note">(not verified by the MaRDI Portal)</span>', tex, tex
+            '<span class="mardmo-note">({})</span>', tex, tex, _('not verified by the MaRDI Portal')
         )
     if verdict:
         # Not handed to MathJax; the browser adds MathJax's explanation as a note
@@ -231,12 +235,12 @@ def publication_info(values):
     citation = format_html(' '.join(['{}'] * len(parts)), *parts) if parts else ''
 
     on_portal = (values.get('ID') or '').startswith('mardi:')
-    new = [] if on_portal else ['publication']
+    new = [] if on_portal else [_('publication')]
     if journal and journal['status'] == 'new':
-        new.append('journal')
+        new.append(_('journal'))
     new_authors = sum(a['status'] == 'new' for a in authors)
     if new_authors:
-        new.append(f"{new_authors} author{'s' if new_authors > 1 else ''}")
+        new.append(ngettext('{count} author', '{count} authors', new_authors).format(count=new_authors))
     return {
         'citation': citation,
         'on_portal': on_portal,

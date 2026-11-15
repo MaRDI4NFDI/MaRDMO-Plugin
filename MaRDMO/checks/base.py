@@ -1,5 +1,10 @@
-'''Base validation helpers shared across all catalog check modules.'''
+'''Base validation helpers shared across all catalog check modules.
 
+The messages are translated when the checks run (the language of the
+request); sections and class names stay English in the problems and are
+marked with ``N_`` so that the catalog has them (see :mod:`MaRDMO.problems`).
+'''
+from django.utils.translation import gettext as _, gettext_noop as N_
 
 from ..model.constants import SECTION_MAP as SECTION_MAP_MODEL
 from ..algorithm.constants import SECTION_MAP as SECTION_MAP_ALGO
@@ -19,7 +24,7 @@ from ..validators import doi_problem, short_description_problem, swmath_problem,
 
 # An item without a real ID: the project was made before MaRDMO 0.8.0, which
 # gives every item one (see ids.py); such projects are not supported
-OLD_PROJECT = 'Made with MaRDMO before 0.8.0, not supported (enter it in a new project)'
+OLD_PROJECT = N_('Made with MaRDMO before 0.8.0, not supported (enter it in a new project)')
 
 
 def without_page(values):
@@ -46,24 +51,24 @@ def has_old_id(entry):
 # Reference answers to check: (option key, label in messages, noun for "no ... provided")
 SOFTWARE_REFERENCE_CHECKS = (
     ('DOI',             'DOI',             'ID'),
-    ('SWMATH',          'swMath ID',       'ID'),
-    ('DESCRIPTION_URL', 'Description URL', 'URL'),
-    ('SOURCECODE_URL',  'Repository URL',  'URL'),
+    ('SWMATH',          N_('swMath ID'),       'ID'),
+    ('DESCRIPTION_URL', N_('Description URL'), 'URL'),
+    ('SOURCECODE_URL',  N_('Repository URL'),  'URL'),
 )
 BENCHMARK_REFERENCE_CHECKS = (
     ('DOI',             'DOI',             'ID'),
-    ('MORWIKI',         'MORwiki ID',      'ID'),
-    ('DESCRIPTION_URL', 'Description URL', 'URL'),
-    ('SOURCECODE_URL',  'Repository URL',  'URL'),
+    ('MORWIKI',         N_('MORwiki ID'),      'ID'),
+    ('DESCRIPTION_URL', N_('Description URL'), 'URL'),
+    ('SOURCECODE_URL',  N_('Repository URL'),  'URL'),
 )
 
 # Workflow textarea answers besides the procedure: answer key -> field label
 _WORKFLOW_SINGLE_LINE_FIELDS = {
-    'mathematical':     'Mathematical Reproducibility',
-    'runtime':          'Runtime Reproducibility',
-    'result':           'Reproducibility of Results',
-    'originalplatform': 'Reproducibility on original Hardware or Instrument',
-    'otherplatform':    'Reproducibility on other Hardware or Instrument',
+    'mathematical':     N_('Mathematical Reproducibility'),
+    'runtime':          N_('Runtime Reproducibility'),
+    'result':           N_('Reproducibility of Results'),
+    'originalplatform': N_('Reproducibility on original Hardware or Instrument'),
+    'otherplatform':    N_('Reproducibility on other Hardware or Instrument'),
 }
 
 
@@ -121,7 +126,7 @@ class ChecksBase:
                 self._error(
                     section = from_class,
                     page    = page_name,
-                    message = f'Missing {to_class}',
+                    message = _('Missing {item}').format(item=_(to_class)),
                     field   = relation
                 )
             )
@@ -130,7 +135,7 @@ class ChecksBase:
                 self._error(
                     section = from_class,
                     page    = page_name,
-                    message = f'Selected {to_class} not found in {to_class} Section',
+                    message = _('Selected {item} not found in {item} Section').format(item=_(to_class)),
                     field   = relation
                 )
             )
@@ -152,7 +157,7 @@ class ChecksBase:
                 self._error(
                     section = from_class,
                     page    = page_name,
-                    message = f'Selected {to_class} not found in {to_class} Section',
+                    message = _('Selected {item} not found in {item} Section').format(item=_(to_class)),
                     field   = relation
                 )
             )
@@ -176,20 +181,20 @@ class ChecksBase:
                 continue
             name = item.get('Name', '')
             desc = item.get('Description', '')
-            label = name or '(unnamed)'
+            label = name or _('(unnamed)')
             if not name:
                 self.err.append(self._error(
                     parent_class, parent_page,
-                    f'Missing {item_class} Name ({label})',
+                    _('Missing {item} Name ({label})').format(item=_(item_class), label=label),
                     field=items_field
                 ))
             problem = short_description_problem(desc, name)
             if problem:
                 message = {
-                    'missing':      f'Missing {item_class} Short Description',
-                    'too_long':     f'{item_class} Short Description Too Long',
-                    'same_as_name': f'Equal {item_class} Name and Short Description Forbidden',
-                }[problem]
+                    'missing':      _('Missing {item} Short Description'),
+                    'too_long':     _('{item} Short Description Too Long'),
+                    'same_as_name': _('Equal {item} Name and Short Description Forbidden'),
+                }[problem].format(item=_(item_class))
                 self.err.append(self._error(parent_class, parent_page, f'{message} ({label})', field=items_field))
 
     def _check_references(self, references, section, page_name, checks):
@@ -211,7 +216,7 @@ class ChecksBase:
             if not entry:
                 continue
             if not entry[1]:
-                self.err.append(self._error(section, page_name, f'{label} selected, but no {noun} provided!',
+                self.err.append(self._error(section, page_name, _('{label} selected, but no {noun} provided!').format(label=_(label), noun=noun),
                                              field='reference'))
             else:
                 if noun == 'URL':
@@ -223,7 +228,8 @@ class ChecksBase:
                 else:
                     problem = None
                 if problem:
-                    self.err.append(self._error(section, page_name, f'Invalid {label}: {problem}', field='reference'))
+                    self.err.append(self._error(section, page_name, _('Invalid {label}: {problem}').format(label=_(label), problem=problem),
+                                                 field='reference'))
 
     def _check_doc_entries(self, doc, options, page_name, context_label, doc_field=None):
         '''Validate that each selected doc entry has a non-empty text value.
@@ -242,22 +248,22 @@ class ChecksBase:
                 elif entry[0] == options['URL']:
                     label = 'URL'
                 else:
-                    label = 'Value'
+                    label = N_('Value')
                 self.err.append(self._error(
-                    'Process Step', page_name,
-                    f'Missing {context_label} {label}',
+                    N_('Process Step'), page_name,
+                    _('Missing {item} {label}').format(item=_(context_label), label=_(label)),
                     field=doc_field
                 ))
             elif entry[0] == options['URL'] and url_problem(entry[1]):
                 self.err.append(self._error(
-                    'Process Step', page_name,
-                    f'Invalid {context_label} URL: {url_problem(entry[1])}',
+                    N_('Process Step'), page_name,
+                    _('Invalid {item} URL: {problem}').format(item=_(context_label), problem=url_problem(entry[1])),
                     field=doc_field
                 ))
             elif entry[0] == options['DOI'] and doi_problem(entry[1]):
                 self.err.append(self._error(
-                    'Process Step', page_name,
-                    f'Invalid {context_label} DOI: {doi_problem(entry[1])}',
+                    N_('Process Step'), page_name,
+                    _('Invalid {item} DOI: {problem}').format(item=_(context_label), problem=doi_problem(entry[1])),
                     field=doc_field
                 ))
 
@@ -283,14 +289,14 @@ class ChecksBase:
         entries = data.get(relation, {})
 
         if not optional and not entries:
-            self.err.append(self._error(from_class, page_name, f'Missing {to_class}', field=relation))
+            self.err.append(self._error(from_class, page_name, _('Missing {item}').format(item=_(to_class)), field=relation))
 
         if any(v['relation'] is None for v in entries.values()):
             self.err.append(
                 self._error(
                     section = from_class,
                     page    = page_name,
-                    message = f'Missing Relation Type ({to_class})',
+                    message = _('Missing Relation Type ({item})').format(item=_(to_class)),
                     field   = relation
                 )
             )
@@ -300,7 +306,7 @@ class ChecksBase:
                 self._error(
                     section = from_class,
                     page    = page_name,
-                    message = f'Missing Object Item ({to_class})',
+                    message = _('Missing Object Item ({item})').format(item=_(to_class)),
                     field   = relation
                 )
             )
@@ -310,7 +316,7 @@ class ChecksBase:
                 self._error(
                     section = from_class,
                     page    = page_name,
-                    message = f'Selected {to_class} not found in {to_class} Section',
+                    message = _('Selected {item} not found in {item} Section').format(item=_(to_class)),
                     field   = relation
                 )
             )
@@ -359,7 +365,7 @@ class ChecksBase:
                         self._error(
                             section = section_map[okey],
                             page    = page_name,
-                            message = f'Same Item as Page {seen[ivalue["ID"]].tab} (delete one of them)',
+                            message = _('Same Item as Page {tab} (delete one of them)').format(tab=seen[ivalue["ID"]].tab),
                             field   = 'Name'
                         )
                     )
@@ -370,7 +376,7 @@ class ChecksBase:
                             self._error(
                                 section = section_map[okey],
                                 page    = page_name,
-                                message = f'Same Name and Short Description as Page {same.tab}',
+                                message = _('Same Name and Short Description as Page {tab}').format(tab=same.tab),
                                 field   = 'Name'
                             )
                         )
@@ -379,7 +385,7 @@ class ChecksBase:
                         self._error(
                             section = section_map[okey],
                             page    = page_name,
-                            message = 'Missing ID',
+                            message = _('Missing ID'),
                             field   = 'ID'
                         )
                     )
@@ -388,7 +394,7 @@ class ChecksBase:
                         self._error(
                             section = section_map[okey],
                             page    = page_name,
-                            message = OLD_PROJECT,
+                            message = _(OLD_PROJECT),
                             field   = 'ID'
                         )
                     )
@@ -397,7 +403,7 @@ class ChecksBase:
                         self._error(
                             section = section_map[okey],
                             page    = page_name,
-                            message = 'Missing Name',
+                            message = _('Missing Name'),
                             field   = 'Name'
                         )
                     )
@@ -408,9 +414,9 @@ class ChecksBase:
                             section = section_map[okey],
                             page    = page_name,
                             message = {
-                                'missing':      'Missing Short Description',
-                                'too_long':     'Short Description Too Long',
-                                'same_as_name': 'Equal Name and Short Description Forbidden',
+                                'missing':      _('Missing Short Description'),
+                                'too_long':     _('Short Description Too Long'),
+                                'same_as_name': _('Equal Name and Short Description Forbidden'),
                             }[problem],
                             field   = 'Description'
                         )
@@ -441,10 +447,10 @@ class ChecksBase:
             if not data.get(okey):
                 continue
             for ikey, ivalue in data[okey].items():
-                long_label = 'Procedure' if okey == 'workflow' else 'Detailed Description'
+                long_label = N_('Procedure') if okey == 'workflow' else N_('Detailed Description')
                 fields = [(long_label, text, 'descriptionLong') for text in ivalue.get('descriptionLong', {}).values()]
                 if isinstance(ivalue.get('reference'), str):
-                    fields.append(('Reference', ivalue['reference'], 'reference'))
+                    fields.append((N_('Reference'), ivalue['reference'], 'reference'))
                 if okey == 'workflow':
                     for key, label in _WORKFLOW_SINGLE_LINE_FIELDS.items():
                         for answer in ivalue.get(key, {}).values():
@@ -459,7 +465,7 @@ class ChecksBase:
                         self._error(
                             section = section_map[okey],
                             page    = self._page(okey, ikey, ivalue),
-                            message = f'Line Breaks Not Allowed in {label}',
+                            message = _('Line Breaks Not Allowed in {field}').format(field=_(label)),
                             field   = line_field
                         )
                     )
@@ -501,9 +507,9 @@ class ChecksBase:
             if is_own_item(ivalue.get('ID')) and not ivalue.get('reference'):
                 self.err.append(
                     self._error(
-                        section = 'Publication',
+                        section = N_('Publication'),
                         page    = page_name,
-                        message = 'Missing Publication DOI',
+                        message = _('Missing Publication DOI'),
                         field   = 'reference'
                     )
                 )
@@ -511,9 +517,9 @@ class ChecksBase:
             if doi and doi_problem(doi[1]):
                 self.err.append(
                     self._error(
-                        section = 'Publication',
+                        section = N_('Publication'),
                         page    = page_name,
-                        message = f'Invalid Publication DOI: {doi_problem(doi[1])}',
+                        message = _('Invalid Publication DOI: {problem}').format(problem=doi_problem(doi[1])),
                         field   = 'reference'
                     )
                 )
@@ -525,24 +531,24 @@ class ChecksBase:
                         data       = ivalue,
                         page_name  = page_name,
                         relation   = 'RelationA',
-                        from_class = 'Publication',
-                        to_class   = 'Algorithm',
+                        from_class = N_('Publication'),
+                        to_class   = N_('Algorithm'),
                         optional   = True
                     )
                     self._check_flexible(
                         data       = ivalue,
                         page_name  = page_name,
                         relation   = 'RelationBS',
-                        from_class = 'Publication',
-                        to_class   = 'Benchmark/Software',
+                        from_class = N_('Publication'),
+                        to_class   = N_('Benchmark/Software'),
                         optional   = True
                     )
                 else:
                     self.err.append(
                         self._error(
-                            section = 'Publication',
+                            section = N_('Publication'),
                             page    = page_name,
-                            message = 'Missing Algorithm, Benchmark, or Software',
+                            message = _('Missing Algorithm, Benchmark, or Software'),
                             field   = 'RelationA'
                         )
                     )
@@ -553,32 +559,32 @@ class ChecksBase:
                         data       = ivalue,
                         page_name  = page_name,
                         relation   = 'RelationA',
-                        from_class = 'Publication',
-                        to_class   = 'Algorithm',
+                        from_class = N_('Publication'),
+                        to_class   = N_('Algorithm'),
                         optional   = True
                     )
                     self._check_flexible(
                         data       = ivalue,
                         page_name  = page_name,
                         relation   = 'RelationHS',
-                        from_class = 'Publication',
-                        to_class   = 'Hardware or Software',
+                        from_class = N_('Publication'),
+                        to_class   = N_('Hardware or Software'),
                         optional   = True
                     )
                     self._check_flexible(
                         data       = ivalue,
                         page_name  = page_name,
                         relation   = 'RelationP',
-                        from_class = 'Publication',
-                        to_class   = 'Interdisciplinary Workflow, Process Step, or Data Set',
+                        from_class = N_('Publication'),
+                        to_class   = N_('Interdisciplinary Workflow, Process Step, or Data Set'),
                         optional   = True
                     )
                 else:
                     self.err.append(
                         self._error(
-                            section = 'Publication',
+                            section = N_('Publication'),
                             page    = page_name,
-                            message = 'Missing Algorithm, Hardware/Software, or Workflow Entity',
+                            message = _('Missing Algorithm, Hardware/Software, or Workflow Entity'),
                             field   = 'RelationA'
                         )
                     )
@@ -588,8 +594,8 @@ class ChecksBase:
                     data       = ivalue,
                     page_name  = page_name,
                     relation   = 'RelationP',
-                    from_class = 'Publication',
-                    to_class   = 'Mathematical Model Entity',
+                    from_class = N_('Publication'),
+                    to_class   = N_('Mathematical Model Entity'),
                     optional   = False
                 )
 

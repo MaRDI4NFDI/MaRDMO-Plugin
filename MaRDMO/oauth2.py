@@ -33,6 +33,7 @@ from django.db import connection
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.crypto import get_random_string
+from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 
@@ -59,6 +60,14 @@ _POLICY_VIOLATIONS = {
 }
 
 
+def in_language(language, function):
+    """*function*, run in *language* (Django's language is per thread; a new thread has the default)."""
+    def run(*args, **kwargs):
+        with translation.override(language):
+            return function(*args, **kwargs)
+    return run
+
+
 class DuplicateOnPortal(RuntimeError):
     '''The portal did not create an item: one with its label and description exists (#141).
 
@@ -74,19 +83,21 @@ class DuplicateOnPortal(RuntimeError):
     def message(self, sent):
         '''The message for the user; *sent*: whether something was created before.'''
         if self.part:
-            parts = [f'The MaRDI Portal did not create the {self.part} "{self.label}" ({self.description}): '
-                     f'an item with this name and description now exists there ({self.qid}), '
-                     'probably created in the meantime.']
-            last = f'Please export again: MaRDMO then handles the {self.part} itself.'
+            part = {'author': _('author'), 'journal': _('journal')}.get(self.part, self.part)
+            parts = [_('The MaRDI Portal did not create the {part} "{label}" ({description}): an item with this '
+                       'name and description now exists there ({qid}), probably created in the meantime.').format(
+                           part=part, label=self.label, description=self.description, qid=self.qid)]
+            last = _('Please export again: MaRDMO then handles the {part} itself.').format(part=part)
         else:
-            parts = [f'The MaRDI Portal did not create "{self.label}" ({self.description}): an item with this '
-                     f'label and description now exists there ({self.qid}). It was not there when MaRDMO '
-                     'checked before the export, so it was probably created in the meantime.']
-            last = (f'Open the preview again: under "Already on the MaRDI Portal" you can use {self.qid} '
-                    'or rename your item. Then export again; the export adds the rest.')
+            parts = [_('The MaRDI Portal did not create "{label}" ({description}): an item with this label and '
+                       'description now exists there ({qid}). It was not there when MaRDMO checked before the '
+                       'export, so it was probably created in the meantime.').format(
+                           label=self.label, description=self.description, qid=self.qid)]
+            last = _('Open the preview again: under "Already on the MaRDI Portal" you can use {qid} or rename your '
+                     'item. Then export again; the export adds the rest.').format(qid=self.qid)
         # The result page of an incomplete export says what was created
         if not sent:
-            parts.append('Nothing was sent to the MaRDI Portal.')
+            parts.append(str(_('Nothing was sent to the MaRDI Portal.')))
         return ' '.join([*parts, last])
 
 
@@ -204,9 +215,9 @@ class OauthProviderMixin:
         project_id = self.pop_from_session(request, 'project_id')
         project = Project.objects.get(pk=project_id) if project_id else None
 
-        # Start posting thread
+        # Start posting thread; its messages are in the language of the request
         thread = threading.Thread(
-            target=self._background_post,
+            target=in_language(translation.get_language(), self._background_post),
             args=(request, access_token, jsons, dependency, job_id, project),
             daemon=True,
         )
@@ -257,14 +268,14 @@ class OauthProviderMixin:
             current_key = None
         except Exception as err:  # pylint: disable=broad-exception-caught
             logger.exception("[%s] Failed posting %s: %s", job_id, current_key, err)
-            error = f"Unexpected error: {err}"
+            error = _('Unexpected error: {error}').format(error=err)
             if current_key:
                 try:
                     error = self._explain_error(current_key, jsons, err)
                 except Exception:  # pylint: disable=broad-exception-caught
                     # Never let message formatting hide the actual error
                     logger.exception("[%s] Could not describe error for %s", job_id, current_key)
-                    error = f"Error while posting to the MaRDI Portal: {err}"
+                    error = _('Error while posting to the MaRDI Portal: {error}').format(error=err)
 
         try:
             self._finish_job(request, job_id, project, init, jsons, error, completed, total)
@@ -276,7 +287,7 @@ class OauthProviderMixin:
                 "phase": "error",
                 # Whether something was created is not known here
                 "error": (error.message(sent=True) if isinstance(error, DuplicateOnPortal) else error)
-                         or f"Unexpected error: {err}",
+                         or _('Unexpected error: {error}').format(error=err),
             }
         finally:
             # The thread opened its own DB connection; Django only closes
@@ -367,12 +378,13 @@ class OauthProviderMixin:
             except (KeyError, IndexError, ValueError, TypeError, AttributeError):
                 pass
             else:
-                value_text = f" '{value}'" if value else ''
-                return (
-                    f"The MaRDI Portal rejected the value{value_text} for \"{field_name}\" "
-                    f"of {target}. Please correct it in the questionnaire and export again. "
-                    f"(Portal message: Invalid value)"
-                )
+                if value:
+                    return _("The MaRDI Portal rejected the value '{value}' for \"{field}\" of {target}. Please "
+                             "correct it in the questionnaire and export again. (Portal message: Invalid value)"
+                             ).format(value=value, field=field_name, target=target)
+                return _("The MaRDI Portal rejected the value for \"{field}\" of {target}. Please correct it in "
+                         "the questionnaire and export again. (Portal message: Invalid value)"
+                         ).format(field=field_name, target=target)
         return f"{self._describe_entry(key, jsons)}: {err}"
 
     def _locate_rejected_value(self, key, jsons, path):
@@ -392,16 +404,16 @@ class OauthProviderMixin:
         entry = jsons[key]
         if key.startswith('Item') and path[0] == 'item':
             item = entry['payload']['item']
-            target = f"the new item '{entry.get('label', key)}'"
+            target = _("the new item '{label}'").format(label=entry.get('label', key))
             if path[1] in ('labels', 'descriptions'):
-                field = 'label' if path[1] == 'labels' else 'description'
+                field = _('label') if path[1] == 'labels' else _('description')
                 return field, self._short_value(item[path[1]][path[2]], jsons), target
             if path[1] != 'statements':
                 raise ValueError(path)
             statement, rest = item['statements'][path[2]][int(path[3])], path[4:]
         elif key.startswith('RELATION') and path[0] == 'statement':
             statement, rest = entry['payload']['statement'], path[1:]
-            target = f"the existing item '{self._item_label(entry, jsons)}'"
+            target = _("the existing item '{label}'").format(label=self._item_label(entry, jsons))
         else:
             raise ValueError(path)
 
@@ -410,7 +422,7 @@ class OauthProviderMixin:
         if rest[0] == 'qualifiers':
             qualifier = statement['qualifiers'][int(rest[1])]
             q_id = qualifier['property']['id']
-            field = f'{field}, qualifier {pid_to_name.get(q_id, q_id)}'
+            field = _('{property}, qualifier {qualifier}').format(property=field, qualifier=pid_to_name.get(q_id, q_id))
             return field, self._short_value(qualifier['value']['content'], jsons), target
         return field, self._short_value(statement['value']['content'], jsons), target
 
@@ -447,18 +459,19 @@ class OauthProviderMixin:
         '''
         entry = jsons.get(key, {})
         if key.startswith('Item'):
-            return f"Error creating item '{entry.get('label', key)}'"
+            return _("Error creating item '{label}'").format(label=entry.get('label', key))
 
         item_label = self._item_label(entry, jsons)
         if key.startswith('ALIAS'):
             aliases = ', '.join(entry.get('payload', {}).get('aliases', []))
-            return f"Error adding alias '{aliases}' to '{item_label}'"
+            return _("Error adding alias '{aliases}' to '{label}'").format(aliases=aliases, label=item_label)
 
         statement = entry.get('payload', {}).get('statement', {})
         prop_id = statement.get('property', {}).get('id', '')
         prop_name = {pid: name for name, pid in get_properties().items()}.get(prop_id, prop_id)
         value = self._short_value(statement.get('value', {}).get('content', ''), jsons)
-        return f"Error adding statement '{prop_name}' to '{item_label}' (value: '{value}')"
+        return _("Error adding statement '{property}' to '{label}' (value: '{value}')").format(
+            property=prop_name, label=item_label, value=value)
 
     # ------------------- CORE POST LOGIC -------------------
 

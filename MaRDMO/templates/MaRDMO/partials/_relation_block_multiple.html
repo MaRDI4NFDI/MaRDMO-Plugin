@@ -1,16 +1,17 @@
-{% load mardmo_tags %}
-<h3 id="{{ anchor }}">Relations to {{ title }}</h3>
+{% load i18n %}
+{% load i18n mardmo_tags %}
+<h3 id="{{ anchor }}">{% blocktranslate trimmed %}Relations to {{ title }}{% endblocktranslate %}</h3>
 {% for relation in relations.values %}
-    {% if relation.relation %}{{ relation.relation.label }}{% else %}-{% endif %}: {% relatant relation.relatant %}
+    {% if relation.relation %}{% translate relation.relation.label %}{% else %}-{% endif %}: {% relatant relation.relatant %}
     {# Assumptions of a specialization (general to special) #}
     {% if relation.relation.key == 'specialized_by' or relation.relation.key == 'specializes' %}
         {% if anchor == 'MM2MM' or anchor == 'CT2CT' or anchor == 'MF2MF_2' %}
-            - assumptions (general to special):
+            - {% translate "assumptions (general to special)" %}:
             {% for val in relation.assumption.values %}{% relatant val %}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
         {% endif %}
     {% endif %}
     <br>
 {% empty %}
-    <strong class="mardmo-empty">NOT DOCUMENTED</strong> <br>
+    <strong class="mardmo-empty">{% translate "NOT DOCUMENTED" %}</strong> <br>
 {% endfor %}
 {% marks values field %}

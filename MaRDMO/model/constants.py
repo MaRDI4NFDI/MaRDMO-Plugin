@@ -12,6 +12,8 @@ Provides:
 - Module-level constants built from the above (``RELATIONS``, ``URI_PREFIX_MAP``, etc.)
 '''
 
+from django.utils.translation import gettext_noop as N_
+
 from ..constants import BASE_URI, SECTION_MAP_BASE
 from ..getters import get_items, get_mathmoddb, get_properties, get_questions
 from ..publication.constants import get_publication_relations
@@ -94,7 +96,7 @@ qudt_reference_ids = [
 ]
 
 # Dictionary for internal / external section names
-SECTION_MAP = {**SECTION_MAP_BASE, 'problem': 'Research Problem'}
+SECTION_MAP = {**SECTION_MAP_BASE, 'problem': N_('Research Problem')}
 
 # Dictionary with list of property names
 props = {

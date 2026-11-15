@@ -12,12 +12,14 @@ Provides:
 - Module-level constants built from the above (``RELATIONS``, ``URI_PREFIX_MAP``, etc.)
 '''
 
+from django.utils.translation import gettext_noop as N_
+
 from ..constants import ALGORITHM_PROPS, BASE_URI, SECTION_MAP_BASE
 from ..getters import get_mathalgodb, get_properties, get_questions
 from ..publication.constants import get_publication_relations
 
 #Dictionary for internal / external section names
-SECTION_MAP = {**SECTION_MAP_BASE, 'problem': 'Algorithmic Task'}
+SECTION_MAP = {**SECTION_MAP_BASE, 'problem': N_('Algorithmic Task')}
 
 # Dictionary with list of property names
 PROPS = {

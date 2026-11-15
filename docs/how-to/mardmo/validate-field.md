@@ -55,14 +55,15 @@ def swmath_problem(swmath_id):
     if not swmath_id:
         return None
     if _looks_like_link(swmath_id) or '/' in swmath_id:
-        return 'Enter only the swMATH number (e.g. 7554), not the link'
+        return gettext('Enter only the swMATH number (e.g. 7554), not the link')
     if not SWMATH_ID_RE.match(swmath_id):
-        return 'swMATH ID must be a number (e.g. 7554)'
+        return gettext('swMATH ID must be a number (e.g. 7554)')
     return None
 ```
 
 Messages should say what to enter, ideally with an example, since users see them
-directly.
+directly.  They are translated (`gettext`, see
+[How to Translate MaRDMO](translate.md)): add the German text to the catalog.
 
 ---
 
@@ -117,8 +118,14 @@ elif option_key == 'SWMATH':
     problem = swmath_problem(entry[1])
 ...
 if problem:
-    self.err.append(self._error(section, page_name, f'Invalid {label}: {problem}', field='reference'))
+    self.err.append(self._error(section, page_name,
+                                _('Invalid {label}: {problem}').format(label=_(label), problem=problem),
+                                field='reference'))
 ```
+
+The message is translated when the check runs, with placeholders instead of an
+f-string; *section* and *label* are English names marked with `N_` and
+translated where they are shown (see [How to Translate MaRDMO](translate.md)).
 
 The preview shows the problem in red where the template shows the field
 (`{% marks values "reference" %}`, here in `partials/_reference_block.html`), and

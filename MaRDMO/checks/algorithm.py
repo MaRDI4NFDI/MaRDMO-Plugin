@@ -1,5 +1,5 @@
 '''Algorithm Documentation check mixin.'''
-
+from django.utils.translation import gettext as _, gettext_noop as N_
 
 from ..constants import CATALOG_ALGORITHM
 from .base import BENCHMARK_REFERENCE_CHECKS, SOFTWARE_REFERENCE_CHECKS
@@ -28,21 +28,21 @@ class AlgorithmMixin:
                 data       = ivalue,
                 page_name  = page_name,
                 relation   = 'RelationP',
-                from_class = 'Algorithm',
-                to_class   = 'Algorithmic Task'
+                from_class = N_('Algorithm'),
+                to_class   = N_('Algorithmic Task')
             )
             self._check_static(
                 data       = ivalue,
                 page_name  = page_name,
                 relation   = 'RelationS',
-                from_class = 'Algorithm',
-                to_class   = 'Software'
+                from_class = N_('Algorithm'),
+                to_class   = N_('Software')
             )
             self._check_flexible(
                 data       = ivalue,
                 page_name  = page_name,
                 relation   = 'RelationA',
-                from_class = 'Algorithm')
+                from_class = N_('Algorithm'))
 
     def algo_problem(self, project, data):
         '''Check Algorithmic Task documentation completeness.
@@ -60,14 +60,14 @@ class AlgorithmMixin:
                 data       = ivalue,
                 page_name  = page_name,
                 relation   = 'RelationB',
-                from_class = 'Algorithmic Task',
-                to_class   = 'Benchmark'
+                from_class = N_('Algorithmic Task'),
+                to_class   = N_('Benchmark')
             )
             self._check_flexible(
                 data       = ivalue,
                 page_name  = page_name,
                 relation   = 'RelationP',
-                from_class = 'Algorithmic Task'
+                from_class = N_('Algorithmic Task')
             )
 
     def software(self, project, data):
@@ -87,25 +87,25 @@ class AlgorithmMixin:
                 data       = ivalue,
                 page_name  = page_name,
                 relation   = 'RelationB',
-                from_class = 'Software',
-                to_class   = 'Benchmark'
+                from_class = N_('Software'),
+                to_class   = N_('Benchmark')
             )
             self._check_optional_static(
                 data       = ivalue,
                 page_name  = page_name,
                 relation   = 'RelationS',
-                from_class = 'Software',
-                to_class   = 'Software'
+                from_class = N_('Software'),
+                to_class   = N_('Software')
             )
             self._check_without_section_items(
                 items        = ivalue.get('programminglanguage', {}),
                 parent_page  = page_name,
-                parent_class = 'Software',
-                item_class   = 'Programming Language',
+                parent_class = N_('Software'),
+                item_class   = N_('Programming Language'),
                 items_field  = 'programminglanguage'
             )
             if not ivalue.get('reference'):
-                self.err.append(self._error('Software', page_name, 'Missing Reference', field='reference'))
+                self.err.append(self._error(N_('Software'), page_name, _('Missing Reference'), field='reference'))
             else:
                 self._check_references(ivalue['reference'], 'Software', page_name, SOFTWARE_REFERENCE_CHECKS)
 
@@ -122,7 +122,7 @@ class AlgorithmMixin:
         for ikey, ivalue in data.get('benchmark', {}).items():
             page_name = self._page('benchmark', ikey, ivalue)
             if not ivalue.get('reference'):
-                self.err.append(self._error('Benchmark', page_name, 'Missing Reference', field='reference'))
+                self.err.append(self._error(N_('Benchmark'), page_name, _('Missing Reference'), field='reference'))
             else:
                 self._check_references(ivalue['reference'], 'Benchmark', page_name, BENCHMARK_REFERENCE_CHECKS)
 
