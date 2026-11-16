@@ -116,6 +116,14 @@ The order of the writes is not stored: items that do not need each other come
 in any order.  The test checks instead that every item comes after the items
 it needs.
 
+To review a golden file (or its change), read it as text: every item the
+export creates with its statements, the statements it adds to portal items,
+and the aliases:
+
+```bash
+python -m tools.synthetic.summary synthetic_model > synthetic_model.md
+```
+
 ## Red marks: the preview shows the problems of the checks
 
 `tests/db/test_marks.py` deletes (and blanks) one answer of every question of a
@@ -124,9 +132,71 @@ of the checks must be red on its page, and nothing else may be red.  It fails
 when a template marks something itself (only `{% marks %}` and
 `{% remaining_marks %}` may), or when a check problem cannot be shown.  A
 failure names the answer, the page and the message, e.g.
-`delete quantity/name: page-quantity-1: not shown: Missing Name`.  white_2006
-runs once more in German; there a problem whose section has no German name
-fails as well (see [How to Translate MaRDMO](translate.md)).
+`delete quantity/name: page-quantity-1: not shown: Missing Name`.  With the
+[synthetic documentations](#synthetic-documentations-every-question-option-and-relation)
+every question of each catalog is deleted once.  white_2006 runs once more in
+German; there a problem whose section has no German name fails as well (see [How to Translate MaRDMO](translate.md)).
+
+## Synthetic documentations: every question, option and relation
+
+`tests/data/projects/synthetic_*.xml` are one documentation per catalog
+(model, model basics, algorithm, workflow) that use everything the catalog
+has: every question, every fixed option (relation types, properties,
+reproducibility, data set sizes, ...), options with their text, and in every
+dropdown of items an item of each source it offers: own new items, items of
+the MaRDI Portal, of Wikidata, and new items typed into a relation (MaRDMO
+gives them a page).  Each section has two or more new items, a portal item
+and a Wikidata item as page items (MaRDMO fills their pages and adds the
+pages of their relations), and new publications whose citation the preview
+looks up (Crossref, DataCite, ORCID, zbMATH).
+
+They are made by a generator, not by hand: `tools/synthetic/<catalog>.py`
+describes the documentation, `tools/synthetic/writer.py` writes it as the
+interview does (each answer where the interview puts it, validated, saved,
+announced with RDMO's `value_created`, so MaRDMO's handlers run; items are
+selected from the options their dropdown offers).  Then the preview runs as
+the user opens it: items on the portal already are reused ("Use this item"),
+and nothing may be left that prevents the export.  `tools/synthetic/complete.py`
+answers what MaRDMO asks of pages it filled (references of portal software,
+the data of portal data sets, ...) before that.
+
+| Test | What it checks |
+|---|---|
+| `tests/static/test_synthetic.py` | every question answered, every option chosen, options with text used with a text, every source of every dropdown (exceptions with reason in `UNAVAILABLE`); every relation of the documentation is a statement of the export, in the direction MaRDMO's `get_relations()` gives |
+| `tests/db/test_export.py` | the export as stored (golden files), as for every project in `tests/data/projects` |
+| `tests/db/test_synthetic_preview.py` | the preview as the user opens it: every page shown, the citations of the new publications looked up (recorded `preview_synthetic_*`), nothing that prevents the export |
+| `tests/db/test_marks.py` | the red marks, for every question |
+
+### Build them again
+
+When the questionnaire gets a question or option, `test_synthetic.py` names
+it: add it to the description and build again.  The build asks the MaRDI
+Portal, Wikidata and the citation services (read-only, a pause before each
+request; a few hundred requests per documentation):
+
+```bash
+BUILD=1 QUESTIONNAIRE=../MaRDMO-Questionnaire/catalog \
+    pytest tests/db/test_synthetic_build.py --force-enable-socket -s -k synthetic_model
+RECORD=1 GOLDEN=1 QUESTIONNAIRE=../MaRDMO-Questionnaire/catalog \
+    pytest tests/db/test_export.py tests/db/test_synthetic_preview.py --force-enable-socket -k synthetic_model
+```
+
+The new items get IDs from the documentation's name and a counter, so the
+same description and portal data give the same XML.  A build stops with what
+is wrong: an item the dropdown does not offer (the error lists what it
+offers), an answer stored twice, a check problem (`BUILD_PAGES=1` lists the
+pages of the sections concerned), an item on the portal that cannot be
+reused, or a cycle of the export (it names the items).  Things learned:
+
+- New items may not need each other both ways: the export creates them in one
+  order.  Relations stored on the other item ("approximates" is stored as
+  "approximated by" there, see `get_relations()`) go from a new item to a
+  portal item.
+- Choose Wikidata items without a twin on the portal and without a long chain
+  of defining formulas (MaRDMO adds a page for every quantity of a Wikidata
+  formula, recursively).
+- New publications need DOIs that are on neither the portal nor Wikidata
+  (recent ones); otherwise the preview makes them that item.
 
 ## Recordings: when the requests change
 

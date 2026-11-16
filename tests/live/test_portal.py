@@ -1,7 +1,7 @@
 '''Read-only check of the MaRDI Portal and Wikidata: do they still answer as recorded? (#93)
 
 The recordings (tests/support/recordings.py) hold the requests MaRDMO sends: entity
-searches, SPARQL queries, TeX checks.  Each is sent again, one per second,
+searches, SPARQL queries, TeX checks, the citation services.  Each is sent again, one per second,
 and its answer is compared with the recorded one by structure, not by value,
 so that ordinary edits on the portal do not count:
 
@@ -49,9 +49,16 @@ def recorded():
 
 
 def read_only(url, request):
-    '''Whether *request* to *url* only reads: searches, SPARQL queries and TeX checks.'''
+    '''Whether *request* to *url* only reads: searches, SPARQL queries, TeX checks, citation services.
+
+    The wiki APIs (``api.php``) only with reading actions; other GET requests
+    (Crossref, DataCite, doi.org, zbMATH, ORCID) read; POST only to SPARQL
+    and the TeX check.
+    '''
     if request['method'] == 'GET':
-        return url.endswith('/api.php') and request['params'].get('action') in API_ACTIONS
+        if url.endswith('/api.php'):
+            return request['params'].get('action') in API_ACTIONS
+        return '/rest.php/wikibase/' not in url
     return url.endswith('/sparql') or url == TEX_CHECK_URL
 
 
@@ -83,8 +90,11 @@ def compare(recorded_value, live_value, path=''):
 
 def describe(recording, entry):
     request = entry['request']
-    what = request['params'].get('action') or ('SPARQL' if entry['url'].endswith('/sparql') else 'TeX check')
-    detail = request['params'].get('search') or request['params'].get('ids') or str(request['data'] or '')[:80]
+    url = entry['url']
+    what = (request['params'].get('action') or ('SPARQL' if url.endswith('/sparql') else None)
+            or ('TeX check' if url == TEX_CHECK_URL else url.split('/')[2]))
+    detail = (request['params'].get('search') or request['params'].get('ids') or str(request['data'] or '')[:80]
+              or url.split('/', 3)[-1][:80])
     return f'{recording}: {what} {detail!r}'
 
 
