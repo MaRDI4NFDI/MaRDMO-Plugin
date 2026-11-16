@@ -1,0 +1,17 @@
+{
+ "labels": {
+  "Item0000000000": "emission tomography (no scatter no attenuation)",
+  "Item0000000001": "emission tomography (no scatter with attenuation)"
+ },
+ "source": "model Q6775430 emission tomography (no scatter no attenuation)",
+ "statements": {
+  "Item0000000000": [],
+  "Item0000000001": [
+   [
+    "P1684",
+    "Item0000000000",
+    []
+   ]
+  ]
+ }
+}

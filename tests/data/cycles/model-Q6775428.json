@@ -1,0 +1,188 @@
+{
+ "labels": {
+  "Item0000000000": "mean-field PDE model",
+  "Item0000000001": "convolution between interaction force and density formulation",
+  "Item0000000002": "evolution of the concentration of particles PDE",
+  "Item0000000003": "mean-field theory",
+  "Item0000000004": "convolution between interaction force and density",
+  "Item0000000005": "interaction force",
+  "Item0000000006": "concentration of particles",
+  "Item0000000007": "time",
+  "Item0000000008": "mass diffusivity",
+  "Item0000000009": "Fokker-Planck equation",
+  "Item0000000010": "force",
+  "Item0000000011": "age of a person",
+  "Item0000000012": "time step",
+  "Item0000000013": "duration",
+  "Item0000000014": "exposure of an individual",
+  "Item0000000015": "free fall time",
+  "Item0000000016": "period length",
+  "Item0000000017": "turn over time",
+  "Item0000000018": "point in time",
+  "Item0000000019": "diffusion coefficient for SEIR model"
+ },
+ "source": "model Q6775428 mean-field PDE model",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1560",
+    "Item0000000001",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000004"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000005"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000006"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000007"
+    ]
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000004"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000005"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000008"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000006"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000007"
+    ]
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P1684",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000004": [],
+  "Item0000000005": [],
+  "Item0000000006": [],
+  "Item0000000007": [
+   [
+    "P1684",
+    "Item0000000011",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000012",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000013",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000014",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000015",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000016",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000017",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000018",
+    []
+   ]
+  ],
+  "Item0000000008": [
+   [
+    "P1684",
+    "Item0000000019",
+    []
+   ]
+  ],
+  "Item0000000009": [
+   [
+    "P1684",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000010": [
+   [
+    "P1684",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000011": [],
+  "Item0000000012": [],
+  "Item0000000013": [],
+  "Item0000000014": [],
+  "Item0000000015": [],
+  "Item0000000016": [],
+  "Item0000000017": [],
+  "Item0000000018": [],
+  "Item0000000019": []
+ }
+}

@@ -1,0 +1,717 @@
+{
+ "labels": {
+  "Item0000000000": "epidemiology",
+  "Item0000000001": "spreading of infectious diseases",
+  "Item0000000002": "SEIR epidemiological ODE model",
+  "Item0000000003": "rate of change of population density fraction of exposed mean ODE",
+  "Item0000000004": "rate of change of population density fraction of infectious mean ODE",
+  "Item0000000005": "rate of change of population density fraction of removed mean ODE",
+  "Item0000000006": "rate of change of population density fraction of susceptibles mean ODE",
+  "Item0000000007": "decomposition of population density fractions in the ODE region into spatially constant and fluctuating part",
+  "Item0000000008": "initial number of SEIR condition",
+  "Item0000000009": "hybrid PDE ODE SEIR model",
+  "Item0000000010": "Allee threshold",
+  "Item0000000011": "diffusion coefficient for SEIR model",
+  "Item0000000012": "fraction of population density of exposed in the ODE region (mean)",
+  "Item0000000013": "fraction of population density of infectious in the ODE region (mean)",
+  "Item0000000014": "fraction of population density of susceptibles in the ODE region (mean)",
+  "Item0000000015": "asymptomatic infection rate",
+  "Item0000000016": "symptomatic infection rate",
+  "Item0000000017": "unit normal vector",
+  "Item0000000018": "asymptomatic recovery rate",
+  "Item0000000019": "rate of becoming infectious",
+  "Item0000000020": "fraction of population density of exposed in the PDE region",
+  "Item0000000021": "population density",
+  "Item0000000022": "infected recovery rate",
+  "Item0000000023": "fraction of population density of infectious in the PDE region",
+  "Item0000000024": "fraction of population density of removed in the ODE region (mean)",
+  "Item0000000025": "fraction of population density of removed in the PDE region",
+  "Item0000000026": "fraction of population density of susceptibles in the PDE region",
+  "Item0000000027": "fraction of population density of exposed in the ODE region (fluctuating part)",
+  "Item0000000028": "fraction of population density of infectious in the ODE region (fluctuating part)",
+  "Item0000000029": "fraction of population density of removed in the ODE region (fluctuating part)",
+  "Item0000000030": "fraction of population density of susceptibles in the ODE region (fluctuating part)",
+  "Item0000000031": "fraction of population density of exposed in the ODE region",
+  "Item0000000032": "fraction of population density of infectious in the ODE region",
+  "Item0000000033": "fraction of population density of removed in the ODE region",
+  "Item0000000034": "fraction of population density of susceptibles in the ODE region",
+  "Item0000000035": "fluctuating parts of population density fractions approximately zero",
+  "Item0000000036": "number of exposed individuals",
+  "Item0000000037": "number of infectious individuals",
+  "Item0000000038": "total population size",
+  "Item0000000039": "number of removed individuals",
+  "Item0000000040": "number of susceptible individuals",
+  "Item0000000041": "mass diffusivity",
+  "Item0000000042": "rate",
+  "Item0000000043": "unit outer normal vector",
+  "Item0000000044": "normal vector",
+  "Item0000000045": "fraction of population density of exposed",
+  "Item0000000046": "fraction of population density of infectious",
+  "Item0000000047": "fraction of population density of removed",
+  "Item0000000048": "fraction of population density of susceptibles",
+  "Item0000000049": "integer",
+  "Item0000000050": "infectious",
+  "Item0000000051": "removed",
+  "Item0000000052": "susceptibles"
+ },
+ "source": "model Q6775429 SEIR epidemiological ODE model",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1560",
+    "Item0000000001",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P1513",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P1560",
+    "Item0000000003",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000004",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000007",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000008",
+    []
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000010"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000015"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000019"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000020"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000021"
+    ]
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000019"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ]
+  ],
+  "Item0000000005": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000024"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ]
+  ],
+  "Item0000000006": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000010"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000015"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000021"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000026"
+    ]
+   ]
+  ],
+  "Item0000000007": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000027"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000028"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000029"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000030"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000024"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000031"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000032"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000033"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000034"
+    ]
+   ],
+   [
+    "P1674",
+    "Item0000000035",
+    []
+   ]
+  ],
+  "Item0000000008": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000036"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000037"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000038"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000039"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000040"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000024"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ]
+  ],
+  "Item0000000009": [
+   [
+    "P1560",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000010": [],
+  "Item0000000011": [],
+  "Item0000000012": [],
+  "Item0000000013": [],
+  "Item0000000014": [],
+  "Item0000000015": [],
+  "Item0000000016": [],
+  "Item0000000017": [
+   [
+    "P1684",
+    "Item0000000043",
+    []
+   ]
+  ],
+  "Item0000000018": [],
+  "Item0000000019": [],
+  "Item0000000020": [],
+  "Item0000000021": [
+   [
+    "P1684",
+    "Item0000000045",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000046",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000047",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000048",
+    []
+   ]
+  ],
+  "Item0000000022": [],
+  "Item0000000023": [],
+  "Item0000000024": [],
+  "Item0000000025": [],
+  "Item0000000026": [],
+  "Item0000000027": [],
+  "Item0000000028": [],
+  "Item0000000029": [],
+  "Item0000000030": [],
+  "Item0000000031": [],
+  "Item0000000032": [],
+  "Item0000000033": [],
+  "Item0000000034": [],
+  "Item0000000035": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000027"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000028"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000029"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000030"
+    ]
+   ]
+  ],
+  "Item0000000036": [],
+  "Item0000000037": [],
+  "Item0000000038": [],
+  "Item0000000039": [],
+  "Item0000000040": [],
+  "Item0000000041": [
+   [
+    "P1684",
+    "Item0000000011",
+    []
+   ]
+  ],
+  "Item0000000042": [
+   [
+    "P1684",
+    "Item0000000015",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000016",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000018",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000019",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000022",
+    []
+   ]
+  ],
+  "Item0000000043": [],
+  "Item0000000044": [
+   [
+    "P1658",
+    "Item0000000017",
+    []
+   ]
+  ],
+  "Item0000000045": [],
+  "Item0000000046": [],
+  "Item0000000047": [],
+  "Item0000000048": [],
+  "Item0000000049": [
+   [
+    "P1684",
+    "Item0000000036",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000037",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000038",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000039",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000040",
+    []
+   ]
+  ],
+  "Item0000000050": [
+   [
+    "P1684",
+    "Item0000000037",
+    []
+   ]
+  ],
+  "Item0000000051": [
+   [
+    "P1684",
+    "Item0000000039",
+    []
+   ]
+  ],
+  "Item0000000052": [
+   [
+    "P1684",
+    "Item0000000040",
+    []
+   ]
+  ]
+ }
+}

@@ -1,0 +1,1467 @@
+{
+ "labels": {
+  "Item0000000000": "semiconductor physics",
+  "Item0000000001": "charge transport in semiconductor devices",
+  "Item0000000002": "drift-diffusion model",
+  "Item0000000003": "continuity equation for electrons",
+  "Item0000000004": "continuity equation for holes",
+  "Item0000000005": "Poisson's equation for the electric potential (semiconductors)",
+  "Item0000000006": "Boltzmann approximation for electrons",
+  "Item0000000007": "Boltzmann approximation for holes",
+  "Item0000000008": "current density relation for electrons",
+  "Item0000000009": "current density relation for holes",
+  "Item0000000010": "Dirichlet boundary condition for electric potential",
+  "Item0000000011": "Neumann boundary condition for electric potential",
+  "Item0000000012": "Dirichlet boundary condition for quasi-Fermi potential for electrons",
+  "Item0000000013": "Dirichlet boundary condition for quasi-Fermi potential for holes",
+  "Item0000000014": "Neumann boundary condition for electron Fermi potential",
+  "Item0000000015": "Neumann boundary condition for hole Fermi potential",
+  "Item0000000016": "semiconductor charge neutrality",
+  "Item0000000017": "semiconductor thermodynamic equilibrium",
+  "Item0000000018": "semiconductor current voltage",
+  "Item0000000019": "Scharfetter-Gummel scheme",
+  "Item0000000020": "recombination rate for electron hole pairs",
+  "Item0000000021": "quasi-Fermi potential for electrons",
+  "Item0000000022": "quasi-Fermi potential for holes",
+  "Item0000000023": "electric potential",
+  "Item0000000024": "electric current density of electrons",
+  "Item0000000025": "elementary charge",
+  "Item0000000026": "electron density",
+  "Item0000000027": "continuity equation",
+  "Item0000000028": "continuity equation for electrons (finite volume)",
+  "Item0000000029": "electric current density of holes",
+  "Item0000000030": "hole density",
+  "Item0000000031": "continuity equation for holes (finite volume)",
+  "Item0000000032": "doping profile",
+  "Item0000000033": "permittivity",
+  "Item0000000034": "Laplace equation for the electric potential",
+  "Item0000000035": "Gauss's law",
+  "Item0000000036": "Poisson's equation for the electric potential",
+  "Item0000000037": "Poisson equation for the electric potential (finite volume)",
+  "Item0000000038": "band edge energy for conduction band",
+  "Item0000000039": "effective density of states in the conduction band",
+  "Item0000000040": "temperature",
+  "Item0000000041": "Boltzmann constant",
+  "Item0000000042": "band edge energy for valence band",
+  "Item0000000043": "effective density of states in the valence band",
+  "Item0000000044": "mobility of electrons",
+  "Item0000000045": "particle flux (drift-diffusion)",
+  "Item0000000046": "mobility of holes",
+  "Item0000000047": "applied external voltage",
+  "Item0000000048": "electrode interfaces",
+  "Item0000000049": "time",
+  "Item0000000050": "built-in potential",
+  "Item0000000051": "contact index",
+  "Item0000000052": "Dirichlet boundary condition",
+  "Item0000000053": "artificial boundary interface",
+  "Item0000000054": "unit normal vector",
+  "Item0000000055": "Neumann boundary condition",
+  "Item0000000056": "local charge-neutrality condition in semiconductors",
+  "Item0000000057": "local charge-neutrality potential",
+  "Item0000000058": "nonlinear Poisson equation (Boltzmann approximation)",
+  "Item0000000059": "Dirichlet boundary condition in thermodynamic equilibrium",
+  "Item0000000060": "Neumann boundary condition in thermodynamic equilibrium",
+  "Item0000000061": "reaction rate constant",
+  "Item0000000062": "sources and sinks",
+  "Item0000000063": "energy",
+  "Item0000000064": "membrane potential",
+  "Item0000000065": "voltage",
+  "Item0000000066": "electric current density",
+  "Item0000000067": "electric charge",
+  "Item0000000068": "particle number density",
+  "Item0000000069": "electric charge density",
+  "Item0000000070": "permittivity of vacuum",
+  "Item0000000071": "relative permittivity",
+  "Item0000000072": "maximum temperature",
+  "Item0000000073": "minimum temperature",
+  "Item0000000074": "crop-specific base temperature",
+  "Item0000000075": "electrical mobility",
+  "Item0000000076": "length",
+  "Item0000000077": "age of a person",
+  "Item0000000078": "time step",
+  "Item0000000079": "duration",
+  "Item0000000080": "exposure of an individual",
+  "Item0000000081": "free fall time",
+  "Item0000000082": "period length",
+  "Item0000000083": "turn over time",
+  "Item0000000084": "point in time",
+  "Item0000000085": "integer",
+  "Item0000000086": "unit outer normal vector",
+  "Item0000000087": "normal vector",
+  "Item0000000088": "Theory of the flow of electrons and holes in Germanium and other semiconductors",
+  "Item0000000089": "Numerical methods for drift-diffusion models",
+  "Item0000000090": "Drift-Diffusion Models"
+ },
+ "source": "model Q6675396 drift-diffusion model",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1560",
+    "Item0000000001",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P1513",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P1560",
+    "Item0000000003",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000004",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000007",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000008",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000009",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000010",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000011",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000012",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000013",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000014",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000015",
+    []
+   ],
+   [
+    "P147",
+    "Item0000000016",
+    []
+   ],
+   [
+    "P147",
+    "Item0000000017",
+    []
+   ],
+   [
+    "P147",
+    "Item0000000018",
+    []
+   ],
+   [
+    "P1656",
+    "Item0000000019",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000088",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000089",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000090",
+    []
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000020"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000021"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000024"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000026"
+    ]
+   ],
+   [
+    "P1656",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000020"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000021"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000029"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000030"
+    ]
+   ],
+   [
+    "P1656",
+    "Item0000000031",
+    []
+   ]
+  ],
+  "Item0000000005": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000032"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000033"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000021"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000026"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000030"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P1684",
+    "Item0000000034",
+    []
+   ],
+   [
+    "P1656",
+    "Item0000000037",
+    []
+   ]
+  ],
+  "Item0000000006": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000038"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000039"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000040"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000021"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000041"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000026"
+    ]
+   ]
+  ],
+  "Item0000000007": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000042"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000043"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000040"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000041"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000030"
+    ]
+   ]
+  ],
+  "Item0000000008": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000021"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000026"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000044"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000024"
+    ]
+   ],
+   [
+    "P1691",
+    "Item0000000045",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000009",
+    []
+   ]
+  ],
+  "Item0000000009": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000030"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000046"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000029"
+    ]
+   ],
+   [
+    "P1691",
+    "Item0000000045",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000008",
+    []
+   ]
+  ],
+  "Item0000000010": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000047"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000048"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000049"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000050"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000051"
+    ]
+   ]
+  ],
+  "Item0000000011": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000053"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000049"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000054"
+    ]
+   ]
+  ],
+  "Item0000000012": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000047"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000048"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000021"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000049"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000051"
+    ]
+   ]
+  ],
+  "Item0000000013": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000047"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000048"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000049"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000051"
+    ]
+   ]
+  ],
+  "Item0000000014": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000053"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000021"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000054"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000049"
+    ]
+   ]
+  ],
+  "Item0000000015": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000053"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000054"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000049"
+    ]
+   ]
+  ],
+  "Item0000000016": [
+   [
+    "P1560",
+    "Item0000000056",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000032",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000057",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000038",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000039",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000043",
+    []
+   ]
+  ],
+  "Item0000000017": [
+   [
+    "P1684",
+    "Item0000000016",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000058",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000059",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000060",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000032",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000050",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000016",
+    []
+   ]
+  ],
+  "Item0000000018": [
+   [
+    "P1560",
+    "Item0000000070",
+    []
+   ]
+  ],
+  "Item0000000019": [],
+  "Item0000000020": [],
+  "Item0000000021": [],
+  "Item0000000022": [],
+  "Item0000000023": [
+   [
+    "P1684",
+    "Item0000000064",
+    []
+   ]
+  ],
+  "Item0000000024": [
+   [
+    "P1691",
+    "Item0000000029",
+    []
+   ]
+  ],
+  "Item0000000025": [],
+  "Item0000000026": [
+   [
+    "P1691",
+    "Item0000000030",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000069",
+    []
+   ]
+  ],
+  "Item0000000027": [
+   [
+    "P1684",
+    "Item0000000003",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000004",
+    []
+   ]
+  ],
+  "Item0000000028": [],
+  "Item0000000029": [
+   [
+    "P1691",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000030": [
+   [
+    "P1691",
+    "Item0000000026",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000069",
+    []
+   ]
+  ],
+  "Item0000000031": [],
+  "Item0000000032": [],
+  "Item0000000033": [
+   [
+    "P1684",
+    "Item0000000070",
+    []
+   ],
+   [
+    "P1658",
+    "Item0000000071",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000070",
+    []
+   ]
+  ],
+  "Item0000000034": [],
+  "Item0000000035": [
+   [
+    "P1684",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000036": [
+   [
+    "P1684",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000037": [],
+  "Item0000000038": [],
+  "Item0000000039": [],
+  "Item0000000040": [
+   [
+    "P1684",
+    "Item0000000072",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000073",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000074",
+    []
+   ]
+  ],
+  "Item0000000041": [],
+  "Item0000000042": [],
+  "Item0000000043": [],
+  "Item0000000044": [
+   [
+    "P1691",
+    "Item0000000046",
+    []
+   ]
+  ],
+  "Item0000000045": [],
+  "Item0000000046": [],
+  "Item0000000047": [],
+  "Item0000000048": [],
+  "Item0000000049": [
+   [
+    "P1684",
+    "Item0000000077",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000078",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000079",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000080",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000081",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000082",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000083",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000084",
+    []
+   ]
+  ],
+  "Item0000000050": [],
+  "Item0000000051": [],
+  "Item0000000052": [
+   [
+    "P1684",
+    "Item0000000010",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000012",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000013",
+    []
+   ]
+  ],
+  "Item0000000053": [],
+  "Item0000000054": [
+   [
+    "P1684",
+    "Item0000000086",
+    []
+   ]
+  ],
+  "Item0000000055": [
+   [
+    "P1684",
+    "Item0000000011",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000014",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000015",
+    []
+   ]
+  ],
+  "Item0000000056": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000032"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000057"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000043"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000039"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000042"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000038"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000041"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000040"
+    ]
+   ]
+  ],
+  "Item0000000057": [],
+  "Item0000000058": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000050"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000032"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000043"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000042"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000039"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000038"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000033"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000041"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000040"
+    ]
+   ]
+  ],
+  "Item0000000059": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000050"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000057"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000048"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000051"
+    ]
+   ]
+  ],
+  "Item0000000060": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000050"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000053"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000054"
+    ]
+   ]
+  ],
+  "Item0000000061": [
+   [
+    "P1684",
+    "Item0000000020",
+    []
+   ]
+  ],
+  "Item0000000062": [
+   [
+    "P1684",
+    "Item0000000020",
+    []
+   ]
+  ],
+  "Item0000000063": [
+   [
+    "P1684",
+    "Item0000000021",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000022",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000038",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000042",
+    []
+   ]
+  ],
+  "Item0000000064": [],
+  "Item0000000065": [
+   [
+    "P1684",
+    "Item0000000023",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000047",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000050",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000057",
+    []
+   ]
+  ],
+  "Item0000000066": [
+   [
+    "P1684",
+    "Item0000000024",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000029",
+    []
+   ]
+  ],
+  "Item0000000067": [
+   [
+    "P1684",
+    "Item0000000025",
+    []
+   ]
+  ],
+  "Item0000000068": [
+   [
+    "P1684",
+    "Item0000000026",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000030",
+    []
+   ]
+  ],
+  "Item0000000069": [
+   [
+    "P1684",
+    "Item0000000026",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000030",
+    []
+   ]
+  ],
+  "Item0000000070": [],
+  "Item0000000071": [],
+  "Item0000000072": [],
+  "Item0000000073": [],
+  "Item0000000074": [],
+  "Item0000000075": [
+   [
+    "P1684",
+    "Item0000000044",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000046",
+    []
+   ]
+  ],
+  "Item0000000076": [
+   [
+    "P1684",
+    "Item0000000048",
+    []
+   ]
+  ],
+  "Item0000000077": [],
+  "Item0000000078": [],
+  "Item0000000079": [],
+  "Item0000000080": [],
+  "Item0000000081": [],
+  "Item0000000082": [],
+  "Item0000000083": [],
+  "Item0000000084": [],
+  "Item0000000085": [
+   [
+    "P1684",
+    "Item0000000051",
+    []
+   ]
+  ],
+  "Item0000000086": [],
+  "Item0000000087": [
+   [
+    "P1658",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000088": [],
+  "Item0000000089": [],
+  "Item0000000090": []
+ }
+}

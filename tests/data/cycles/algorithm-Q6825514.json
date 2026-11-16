@@ -1,0 +1,57 @@
+{
+ "labels": {
+  "Item0000000000": "Algorithm Class: Krylov subspace iterative solvers (CG, BiCG, BiCGSTAB, GMRES)",
+  "Item0000000001": "BiCGSTAB (stabilized BiCG) for improved smooth convergence on nonsymmetric systems",
+  "Item0000000002": "Conjugate Gradient (CG) for sparse symmetric positive definite systems",
+  "Item0000000003": "Generalized Minimal Residual",
+  "Item0000000004": "Algorithm Class: Work per iteration ~ O(nnz)",
+  "Item0000000005": "Algorithm Class: Handles sparse matrices",
+  "Item0000000006": "BiConjugate Gradient (BiCG) for nonsymmetric sparse linear systems"
+ },
+ "source": "algorithm Q6825514 Algorithm Class: Krylov subspace iterative solvers (CG, BiCG, BiCGSTAB, GMRES)",
+ "statements": {
+  "Item0000000000": [],
+  "Item0000000001": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000005": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000006": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ]
+  ]
+ }
+}

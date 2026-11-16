@@ -1,0 +1,668 @@
+[
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q6534304|Q6673724|Q6684705\"], [\"props\", \"claims\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"entities\":{\"Q6534304\":{\"type\":\"item\",\"id\":\"Q6534304\",\"claims\":{\"P31\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P31\",\"hash\":\"90e14380271ee99dd88eca5da99ded823a84a3dc\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6534245,\"id\":\"Q6534245\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$E6F836D4-D652-4CCE-93E9-0ACEA6C3B7B4\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P31\",\"hash\":\"7828a276140b936cb3b2f8ada17468e9a5765edb\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6775553,\"id\":\"Q6775553\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$0FF690F8-95E5-4388-BC9F-1155AEFE8EEE\",\"rank\":\"normal\"}],\"P1654\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1654\",\"hash\":\"7836a156574cc3b6baf8faadd6c9b0c54c8a500d\",\"datavalue\":{\"value\":\"Time\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6534304$5B4AD4AA-4D29-44AB-A7C3-BB1035B1BCD2\",\"rank\":\"normal\"}],\"P12\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P12\",\"hash\":\"2d14eade110afb5b4dc845bc6a37edf5334d1ff6\",\"datavalue\":{\"value\":\"Q11471\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6534304$34D86591-4807-4F08-BD56-7AB7A20B2AF2\",\"rank\":\"normal\"}],\"P1495\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1495\",\"hash\":\"3829be87a43f9c3f931ee87cdfd749b2541f9f31\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6534265,\"id\":\"Q6534265\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$673B4C8C-39A1-48CA-BDAD-6B0205CC3300\",\"rank\":\"normal\"}],\"P1684\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"af419c5c049876093f5e412c9c5eaa8166586e2e\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673735,\"id\":\"Q6673735\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$9A0138D1-92C6-4A92-8784-9E0852F079FA\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"739586992c9f3e2d38754ceb0f42734647a56f69\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673794,\"id\":\"Q6673794\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$AA4F122A-789B-40C6-8986-A6D219D15561\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"ee7638f78217f1fcd2d262ab9f64e1309e4f5f9b\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673931,\"id\":\"Q6673931\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$C834864A-EE44-4835-A3F8-65950FC6FBC7\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"5402cae73aadb4295e4a07e6d00ca80cbd8f13a3\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673969,\"id\":\"Q6673969\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$5962589D-D61E-4FC3-ACB7-37EF60CE5696\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"3b57b1f5dbf7c38661d4515f1968abbbf80a844c\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673995,\"id\":\"Q6673995\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$39B55F74-E909-4923-B470-688E9F156036\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"e3fec3ba634a8267d0017872a6d09cfa3d67839d\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674045,\"id\":\"Q6674045\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$665CF96E-4786-4C86-9E9E-AE2EDF44FD9B\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"efbffae4867b27eaefb2e6c8aeddd4149683d6da\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674046,\"id\":\"Q6674046\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$0AA2A30A-9716-4B56-BEAE-65ABE6ED04BE\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"e722d5f11664da88449671dd94e94d2e2fb2a9f8\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674052,\"id\":\"Q6674052\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$7CDE23D8-8B38-48BB-8C76-A2F17362C56C\",\"rank\":\"normal\"}],\"P356\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P356\",\"hash\":\"7a3f9ff24a1795957628a25557dc1882c93a46db\",\"datavalue\":{\"value\":\"MontreGousset001.jpg\",\"type\":\"string\"},\"datatype\":\"commonsMedia\"},\"type\":\"statement\",\"qualifiers\":{\"P401\":[{\"snaktype\":\"value\",\"property\":\"P401\",\"hash\":\"c5b45997f809898be721f811d9a6d7484b635cbb\",\"datavalue\":{\"value\":{\"text\":\"A pocket watch (savonette type) which is showing time.\",\"language\":\"en\"},\"type\":\"monolingualtext\"},\"datatype\":\"monolingualtext\"}]},\"qualifiers-order\":[\"P401\"],\"id\":\"Q6534304$e9a6a858-4a9c-7f47-2337-f721d241cbb3\",\"rank\":\"normal\"}],\"P1460\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1460\",\"hash\":\"1875e8e320782e4b36cdc4754053cd2d002a5f71\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6534271,\"id\":\"Q6534271\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6534304$88154462-25F2-4002-9A7E-01BE2B721C7B\",\"rank\":\"normal\"}],\"P104\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P104\",\"hash\":\"dda2e18dd9dff0246577c8f22387190a66e8c6a7\",\"datavalue\":{\"value\":\"https://en.wikipedia.org/wiki/Time\",\"type\":\"string\"},\"datatype\":\"url\"},\"type\":\"statement\",\"id\":\"Q6534304$cbb5408c-4471-5f53-185d-a3abf64a5c9c\",\"rank\":\"normal\"}],\"P1690\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1690\",\"hash\":\"08ec72d9f3687d0e4e472612dc68eef1ed41b2f7\",\"datavalue\":{\"value\":\"https://en.wikipedia.org/wiki/Time_in_physics\",\"type\":\"string\"},\"datatype\":\"url\"},\"type\":\"statement\",\"id\":\"Q6534304$5d1e60d3-4e12-224c-f724-b589147c004a\",\"rank\":\"normal\"}],\"P1212\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1212\",\"hash\":\"1cf30025b4efdf30d7d9a810d273c32ce796ab0b\",\"datavalue\":{\"value\":\"\\\\mathsf{T}\",\"type\":\"string\"},\"datatype\":\"math\"},\"type\":\"statement\",\"id\":\"Q6534304$fd508b81-4909-8d13-426d-9a05c6289e66\",\"rank\":\"normal\"}]}},\"Q6673724\":{\"type\":\"item\",\"id\":\"Q6673724\",\"claims\":{\"P31\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P31\",\"hash\":\"90e14380271ee99dd88eca5da99ded823a84a3dc\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6534245,\"id\":\"Q6534245\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$290A64A1-F2D3-469E-A79A-473C966F1563\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P31\",\"hash\":\"4aa5f0710d828bc8b66c46b1f23f1e47bae6555d\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6482820,\"id\":\"Q6482820\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$d7214549-4e6d-9a6d-1074-a49a99e6e54b\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P31\",\"hash\":\"0e5600c64518f20d889429e1931dc669c4ebb1f7\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7271705,\"id\":\"Q7271705\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$9BFF6B2D-3D1B-438B-8BBE-C889B6D79F7E\",\"rank\":\"normal\"}],\"P1684\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"94644884006ceffd7de6a1b5f2454736dd56e7c7\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6534309,\"id\":\"Q6534309\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$3F1E880B-3CE6-4FE3-8B33-0CDE0FCF38AA\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"2cebf43a4cf496f49af8752a37267ab29ab38155\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673745,\"id\":\"Q6673745\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$E5992F53-B347-4DC7-8D7E-3187D92F58DC\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"892c809790d2f71e0d144a1e3a58ab350e3107ea\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673749,\"id\":\"Q6673749\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$33A7E72B-6D65-4F8E-B4FC-36D6EE34C243\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"d2bed0ed589affe63d66c54c47b7fd509600bf6f\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673750,\"id\":\"Q6673750\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$4A327071-2F26-44E7-BF87-4CEDE68055FD\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"9f2affee83da953dd2283a2db54b2dcda77ec624\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673795,\"id\":\"Q6673795\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$B298E957-B4C8-40B1-B524-BB68995251D8\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"f30c8674524cce5f80d826be6607797078afc125\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673879,\"id\":\"Q6673879\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$5919158D-4DB4-4CED-8E14-69DDF58EB8F6\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"2a9c35813a20ec78a4ffcfcafc95412d9a58baa8\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673880,\"id\":\"Q6673880\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$8E505E25-8320-48CA-95AC-BC3E0C7B0AA5\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"d00477c0668fb904cd0411301b38727d8c8f9b6d\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673881,\"id\":\"Q6673881\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$80C74353-9EED-446A-AAB0-7FB10E08DE32\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"81fcc0417911c3cd690b19b8a169cd5defe85c7f\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673882,\"id\":\"Q6673882\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$CFF8BA83-7E3B-44B1-B71D-D61B2F58871A\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"682b6e0547a4ed961eabcc9661386bd28aa36dc9\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673895,\"id\":\"Q6673895\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$1A43CFF0-922C-4B47-9A40-2C39F78671C4\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"4b045787d0128588cbbb1965af821430efbfe4da\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6673956,\"id\":\"Q6673956\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$48CA4662-1797-415F-8E06-BCD494CB9AA2\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"c07eca08c748981a6d3596fa4ac71701ebdb5b9d\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674017,\"id\":\"Q6674017\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$56381A02-5889-4B5A-A7D3-AE270D76CBB0\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"aa823def63f8ece245088e55fcc940251de147f2\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674050,\"id\":\"Q6674050\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$F0B73FB3-4ECA-4726-8B75-A8B95D5F87DA\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"05b570273941418270bb01043591265043010d58\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674056,\"id\":\"Q6674056\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$664D38BD-F787-4EB1-AD93-CDDBD0364A4C\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"0a7fe60ec0a7e2b642493c23cf5ae2d8bd850a29\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674057,\"id\":\"Q6674057\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$15CE2998-BC40-4F43-964E-66E177CE6E1A\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"af82666167a517f04782d76fd4c58082a0d8cedc\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674083,\"id\":\"Q6674083\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$0885442B-C66D-4E1A-9432-C2A31E163C11\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"bc852b80c9754e76aa5d1dde15cf0c7e598ae1c7\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674084,\"id\":\"Q6674084\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$26BD9F30-A68D-4AFE-92A4-277AF0485208\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"ab3fd8385a6573399d823fa6771ff051d4e9a565\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674085,\"id\":\"Q6674085\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$A8C6962B-1B40-4FB1-9D6D-FC72F4DBF771\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"c67b21668c582722e513981029396885792bbed4\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674086,\"id\":\"Q6674086\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$ED6FE973-116D-4C5E-9722-2B18B881DAAD\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"db220b0916e51a80db685f03da6ac963f9763f6b\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674087,\"id\":\"Q6674087\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$C81DD0E8-7F77-4C1C-B37C-6EECAB82B4FF\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"bbf1502720d27617afb055ba4e39c02745b1b89a\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674114,\"id\":\"Q6674114\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$3F9B82FB-8274-41A3-AF05-A4F568DC3919\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"2f0e5704fa6c125a186c7dece780658a403b48ba\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6674120,\"id\":\"Q6674120\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$4E1E03A1-7DAD-4063-898F-6FC39077AD2D\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"5613faba169eec3af9409e4e38e965dda7bb5870\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6821289,\"id\":\"Q6821289\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$092845AB-9CA5-415B-BFB0-6A995B4526C8\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"8aa1f739ed9f1e3f5dbc6cf28ba96f3536ec78a5\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6822026,\"id\":\"Q6822026\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$FC89E892-82B2-4045-A1B8-8CA9111099A4\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"66615de48abfeec4dbb545e16a560f04103f7cb0\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6945229,\"id\":\"Q6945229\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$98C08C9D-3BD2-4926-8DE4-BC2B3AFE4E01\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"d8ae7d966e2a6f967faf13a32cd6966825bc368f\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6945230,\"id\":\"Q6945230\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$CC69060D-5506-4AFC-B6CD-CFA17D11C402\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1684\",\"hash\":\"6aa2bece0806a178ad0afa51d30c0455adeebd88\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7284047,\"id\":\"Q7284047\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$9dfc1fb0-4d07-1eaa-b6fa-b2400a1be0a3\",\"rank\":\"normal\"}],\"P1495\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1495\",\"hash\":\"3829be87a43f9c3f931ee87cdfd749b2541f9f31\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6534265,\"id\":\"Q6534265\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$F2F63200-2979-4B3D-B1AF-C75BCB4F3E02\",\"rank\":\"normal\"}],\"P356\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P356\",\"hash\":\"a8fa6eaf088fc03a856fb9d1ebbdb2e5c000e583\",\"datavalue\":{\"value\":\"Number-line.svg\",\"type\":\"string\"},\"datatype\":\"commonsMedia\"},\"type\":\"statement\",\"qualifiers\":{\"P401\":[{\"snaktype\":\"value\",\"property\":\"P401\",\"hash\":\"f57dd716f7d1f38798dba01c3bf1fdb0462961b4\",\"datavalue\":{\"value\":{\"text\":\"Integers can be thought of as discrete, equally spaced points on an infinitely long number line.\",\"language\":\"en\"},\"type\":\"monolingualtext\"},\"datatype\":\"monolingualtext\"}]},\"qualifiers-order\":[\"P401\"],\"id\":\"Q6673724$3d398890-4ca3-2ebb-f1dd-52deab83f78f\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P356\",\"hash\":\"812891fa6c8b682b7cf2b4a89e0c081d179bdd04\",\"datavalue\":{\"value\":\"EvenOddNumberLine.svg\",\"type\":\"string\"},\"datatype\":\"commonsMedia\"},\"type\":\"statement\",\"id\":\"Q6673724$5D374BA0-4BC9-48C3-8213-E8BC0FBC18FD\",\"rank\":\"normal\"}],\"P12\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P12\",\"hash\":\"7c5cb224fc93b054955c1dbe735dc1276868d6c4\",\"datavalue\":{\"value\":\"Q12503\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$e2fa16c2-47e8-66e6-7152-e73b598ef1a4\",\"rank\":\"normal\"}],\"P104\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P104\",\"hash\":\"fee7750d426c7b48f5b94baf0a0527e315704d53\",\"datavalue\":{\"value\":\"https://en.wikipedia.org/wiki/Integer\",\"type\":\"string\"},\"datatype\":\"url\"},\"type\":\"statement\",\"id\":\"Q6673724$7570b722-46da-992b-7536-6b951f93acc2\",\"rank\":\"normal\"}],\"P1212\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1212\",\"hash\":\"79db0ddc16f1adfb09b4f026dd39cbfd4dfe5650\",\"datavalue\":{\"value\":\"1\",\"type\":\"string\"},\"datatype\":\"math\"},\"type\":\"statement\",\"id\":\"Q6673724$af9b51d1-4d78-635d-832a-9a7453885ae9\",\"rank\":\"normal\"}],\"P1460\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1460\",\"hash\":\"1875e8e320782e4b36cdc4754053cd2d002a5f71\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6534271,\"id\":\"Q6534271\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$af3ebe62-448a-7436-6152-10145495ba8e\",\"rank\":\"normal\"}],\"P234\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P234\",\"hash\":\"2d08aba0d1cb892ffa51d7e6e3f27fe5b0c097ae\",\"datavalue\":{\"value\":\"Integers\",\"type\":\"string\"},\"datatype\":\"string\"},\"type\":\"statement\",\"id\":\"Q6673724$18E6647E-692D-4CFE-A1FD-23C33AEA227C\",\"rank\":\"normal\"}],\"P36\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P36\",\"hash\":\"c0c9ebb93b333be54530d8f501477fe8ad74a74f\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7276929,\"id\":\"Q7276929\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$8AD22B2E-D8AC-4781-B2DB-AD4699B64C0E\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P36\",\"hash\":\"88c0d6eba16d1efb247fa1433bf8fa88ec2861c7\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7266060,\"id\":\"Q7266060\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$A6C748D2-3E4C-4640-9AD8-A714A8BB61A8\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P36\",\"hash\":\"4923c88463847da343a36ccae07b38456381f89b\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7276930,\"id\":\"Q7276930\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$CCE40FF2-79E4-478D-82FD-2B882F7F4D4C\",\"rank\":\"normal\"}],\"P235\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P235\",\"hash\":\"f5d589e67d4d092564ec8c4d7b5766db0fdbb364\",\"datavalue\":{\"value\":\"23876\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$3AC8FE87-5773-43C1-90F6-C93A6C3B2DDB\",\"rank\":\"normal\",\"references\":[{\"hash\":\"d3906c6d061174752d0505951f9eba346ea08a95\",\"snaks\":{\"P98\":[{\"snaktype\":\"value\",\"property\":\"P98\",\"hash\":\"6336e5908fd94549601724b0016a1a445a9804a2\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56567,\"id\":\"Q56567\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"snaks-order\":[\"P98\"]}]}],\"P88\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P88\",\"hash\":\"5d74b7cb1e7c3f7c54ad31e283e5d6adc5ae905a\",\"datavalue\":{\"value\":\"00570428\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$FEDBE574-50E2-45F9-873F-E26B92A1A96F\",\"rank\":\"normal\"}],\"P239\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P239\",\"hash\":\"b7e03b488f84395280ab61b28e97292cf2e9b162\",\"datavalue\":{\"value\":\"/m/03rv4\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$A4176218-E8D5-42C1-B4B4-A93320C2CFFE\",\"rank\":\"normal\",\"references\":[{\"hash\":\"6499e90742e6a3b2d9cb91c8c38ff13ffd6eb773\",\"snaks\":{\"P98\":[{\"snaktype\":\"value\",\"property\":\"P98\",\"hash\":\"765c249748dbeb69c8c4d98de780dc063f8e09cf\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56521,\"id\":\"Q56521\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}],\"P28\":[{\"snaktype\":\"value\",\"property\":\"P28\",\"hash\":\"ad31989710dc3c2a167cc95050bb6ea34e0bbe88\",\"datavalue\":{\"value\":{\"time\":\"+2013-10-28T00:00:00Z\",\"timezone\":0,\"before\":0,\"after\":0,\"precision\":11,\"calendarmodel\":\"http://www.wikidata.org/entity/Q1985727\"},\"type\":\"time\"},\"datatype\":\"time\"}]},\"snaks-order\":[\"P98\",\"P28\"]}]}],\"P241\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P241\",\"hash\":\"7cd1c98472f3e466a9c518ac983b5d33e846336d\",\"datavalue\":{\"value\":\"7210\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$5C20B8AC-CAF4-42D6-ADFC-5866B794AB3A\",\"rank\":\"normal\"}],\"P236\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P236\",\"hash\":\"d66735bbaae69117486dabe0ecc06b9f5ae60c63\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7276931,\"id\":\"Q7276931\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$1407D92C-9DDD-4E14-9B96-19F916283968\",\"rank\":\"normal\",\"references\":[{\"hash\":\"b1c26adb02134e27dc00d199655e6147a0522fe8\",\"snaks\":{\"P180\":[{\"snaktype\":\"value\",\"property\":\"P180\",\"hash\":\"53476108ad154b5becc9cf3137ede96860bada24\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":105305,\"id\":\"Q105305\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"snaks-order\":[\"P180\"]}]}],\"P83\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P83\",\"hash\":\"d12adbac0c3eb69a422765ff7b3c6601ab52dc1c\",\"datavalue\":{\"value\":\"4134668-3\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$963A3A9E-7BDC-4650-90C1-EB0404C68AAA\",\"rank\":\"normal\",\"references\":[{\"hash\":\"d70677073f98d7382dfdf177a48383c33be13c11\",\"snaks\":{\"P180\":[{\"snaktype\":\"value\",\"property\":\"P180\",\"hash\":\"32e08acef214d0b1e07dc62593bddad94fbead0a\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56520,\"id\":\"Q56520\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"snaks-order\":[\"P180\"]}]}],\"P1192\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1192\",\"hash\":\"1129d6a0cc0c17fbeb761d3904d1a95c907f7851\",\"datavalue\":{\"value\":\"Integer\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"qualifiers\":{\"P96\":[{\"snaktype\":\"value\",\"property\":\"P96\",\"hash\":\"b649e85e735f306a77b57a38e40821b75898e390\",\"datavalue\":{\"value\":\"Integer\",\"type\":\"string\"},\"datatype\":\"string\"}]},\"qualifiers-order\":[\"P96\"],\"id\":\"Q6673724$2C0E9649-5AEC-4F08-AEAF-5820C1AB3C24\",\"rank\":\"normal\",\"references\":[{\"hash\":\"e095c1777d78c6310fee7299bfc6f5735414b4b7\",\"snaks\":{\"P180\":[{\"snaktype\":\"value\",\"property\":\"P180\",\"hash\":\"0c2cea297152a3f12f4296fca42de18f460a63f3\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56456,\"id\":\"Q56456\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"snaks-order\":[\"P180\"]}]}],\"P1903\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1903\",\"hash\":\"ed8012078d81575d477c73d425d2091a4a52ee8f\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6481274,\"id\":\"Q6481274\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"qualifiers\":{\"P263\":[{\"snaktype\":\"value\",\"property\":\"P263\",\"hash\":\"4a28d92c6d0feed7d68909163fa6289c8ad4c6e5\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56595,\"id\":\"Q56595\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}],\"P370\":[{\"snaktype\":\"value\",\"property\":\"P370\",\"hash\":\"efc16e34201a5887440c128609a79b2446c9b160\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7265976,\"id\":\"Q7265976\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"qualifiers-order\":[\"P263\",\"P370\"],\"id\":\"Q6673724$5C4742A8-10AB-467D-9197-0BB8F386EA38\",\"rank\":\"deprecated\"}],\"P240\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P240\",\"hash\":\"d6f66070db10636a385aebc7a0c84da9eb1f6e95\",\"datavalue\":{\"value\":\"https://schema.org/Integer\",\"type\":\"string\"},\"datatype\":\"url\"},\"type\":\"statement\",\"id\":\"Q6673724$CFE30409-8656-4AFA-98CA-8A54AD713B26\",\"rank\":\"normal\"}],\"P270\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P270\",\"hash\":\"98f4c412e84a10d1318a3dd4dc6701f5473f663a\",\"datavalue\":{\"value\":\"00047009n\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$2E25305C-CCA5-4F46-877A-60794F9B45C1\",\"rank\":\"normal\",\"references\":[{\"hash\":\"6f1b253864fb428a0c28db77d5c965326f3a3577\",\"snaks\":{\"P98\":[{\"snaktype\":\"value\",\"property\":\"P98\",\"hash\":\"b1fcd81ab16039bae306f0da4899af1b34ad852a\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56553,\"id\":\"Q56553\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"snaks-order\":[\"P98\"]}]}],\"P37\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P37\",\"hash\":\"47231b9eea591143456a13fd50eeeeaa78da00b4\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7265976,\"id\":\"Q7265976\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$581F51AD-94E8-4BD1-BF1B-01CDEFECD701\",\"rank\":\"normal\"}],\"P881\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P881\",\"hash\":\"f6073f595faa728ee442dc1d02d28e1383cbce4c\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56573,\"id\":\"Q56573\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"qualifiers\":{\"P322\":[{\"snaktype\":\"value\",\"property\":\"P322\",\"hash\":\"4936d21bd1238e04ed943616914f7e006a3ef6f1\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7265168,\"id\":\"Q7265168\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},{\"snaktype\":\"value\",\"property\":\"P322\",\"hash\":\"4c471f6bfcd6ed2c8a1a4e7dd9d67b246fcf55d7\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7276932,\"id\":\"Q7276932\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},{\"snaktype\":\"value\",\"property\":\"P322\",\"hash\":\"b7c7a831c6a88468e02580e20d089e441febf987\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6480773,\"id\":\"Q6480773\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"qualifiers-order\":[\"P322\"],\"id\":\"Q6673724$3A948CAD-271D-4762-8068-45D3FC4E322F\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P881\",\"hash\":\"f6073f595faa728ee442dc1d02d28e1383cbce4c\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56573,\"id\":\"Q56573\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"qualifiers\":{\"P322\":[{\"snaktype\":\"value\",\"property\":\"P322\",\"hash\":\"5322ec34406677872facdbde7356a76e8cbff54e\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7266068,\"id\":\"Q7266068\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},{\"snaktype\":\"value\",\"property\":\"P322\",\"hash\":\"b7c7a831c6a88468e02580e20d089e441febf987\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6480773,\"id\":\"Q6480773\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"qualifiers-order\":[\"P322\"],\"id\":\"Q6673724$9F0AE772-2E21-4774-A4F8-8D5E7EA83169\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P881\",\"hash\":\"f6073f595faa728ee442dc1d02d28e1383cbce4c\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56573,\"id\":\"Q56573\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"qualifiers\":{\"P322\":[{\"snaktype\":\"value\",\"property\":\"P322\",\"hash\":\"b66061abd44c67a2f29a7d59613e78e52f7d0b9d\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6480774,\"id\":\"Q6480774\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},{\"snaktype\":\"value\",\"property\":\"P322\",\"hash\":\"4c471f6bfcd6ed2c8a1a4e7dd9d67b246fcf55d7\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7276932,\"id\":\"Q7276932\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"qualifiers-order\":[\"P322\"],\"id\":\"Q6673724$A1C86B17-3809-40FD-AC5D-0850F455D7CF\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P881\",\"hash\":\"f6073f595faa728ee442dc1d02d28e1383cbce4c\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56573,\"id\":\"Q56573\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"qualifiers\":{\"P322\":[{\"snaktype\":\"value\",\"property\":\"P322\",\"hash\":\"a763ed29db80564cbd4cf5cd59d88506d751ace4\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7265895,\"id\":\"Q7265895\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},{\"snaktype\":\"value\",\"property\":\"P322\",\"hash\":\"c520c52fde45f93bc53cbcccef1557b17ea30216\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7270589,\"id\":\"Q7270589\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"qualifiers-order\":[\"P322\"],\"id\":\"Q6673724$1E1E9B37-2E59-43C3-A0F7-3B89E65143E7\",\"rank\":\"normal\"}],\"P276\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P276\",\"hash\":\"5bce9fcba30dea18e3526469e5a8730baaf34773\",\"datavalue\":{\"value\":\"topic/integer\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"qualifiers\":{\"P96\":[{\"snaktype\":\"value\",\"property\":\"P96\",\"hash\":\"c1b4e47a0d55c421b64ae14fd8213202933558b6\",\"datavalue\":{\"value\":\"integer\",\"type\":\"string\"},\"datatype\":\"string\"}]},\"qualifiers-order\":[\"P96\"],\"id\":\"Q6673724$F2CBE5F2-C6E7-45EB-8D95-5EC41094A047\",\"rank\":\"normal\"}],\"P1194\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1194\",\"hash\":\"c1b625068de4cece83a07e75dce47fc3b17420cd\",\"datavalue\":{\"value\":\"integers\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$F2190E4C-41E5-4759-8C25-2605627786C5\",\"rank\":\"normal\"}],\"P244\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P244\",\"hash\":\"177f08dce9858bcb4b3396b69bc70fdfdcd6cec5\",\"datavalue\":{\"value\":\"0234541\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$F29E2F16-BBCA-4D8F-9E23-CFC33AE2BA5C\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P244\",\"hash\":\"f3e06f151c01b94b8acb4a29c0534570eb252b16\",\"datavalue\":{\"value\":\"0234544\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$230C9F74-7BF7-4585-B7ED-B1F47FF33AED\",\"rank\":\"normal\"}],\"P389\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P389\",\"hash\":\"4c00f7bd36eb55b3450bad605520af65930d792e\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6480713,\"id\":\"Q6480713\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$484D8CE0-4B06-4860-99FE-E46ED876476C\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P389\",\"hash\":\"647428aa517a99e6688e2d8a8fe8ebaa58d4f80a\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7273658,\"id\":\"Q7273658\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$B015AD4A-7D27-40D9-9AF3-F992050ECC03\",\"rank\":\"normal\"}],\"P284\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P284\",\"hash\":\"119e1495d866f10e0588762cb8e358330cad2ba6\",\"datavalue\":{\"value\":\"968897\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$B244C840-6D13-4717-84A1-178A21FEC552\",\"rank\":\"normal\"}],\"P889\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P889\",\"hash\":\"c4bd9a3b702f9588ad1d51947aa26d105b7cc924\",\"datavalue\":{\"value\":\"293245\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$DFF1620A-2748-4016-ACD8-F6D5AD9B0A6D\",\"rank\":\"normal\"}],\"P373\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P373\",\"hash\":\"8196382c0251baf8722a5fa895acbaf6cb3bc27d\",\"datavalue\":{\"value\":\"4071166\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$A36E4B4E-CA59-4406-9E6B-CDFC410A809D\",\"rank\":\"normal\"}],\"P639\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P639\",\"hash\":\"52e9525dfc089e68f9350507e824432bc99d6878\",\"datavalue\":{\"value\":\"\\u6574\\u6570\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$B069A357-3F70-4DAC-A2B9-C9C12B0E001F\",\"rank\":\"normal\"}],\"P281\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P281\",\"hash\":\"8259d1320b9aef91de7872f53d201330cfc25f21\",\"datavalue\":{\"value\":\"scot/5136\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$D47F0E46-15BB-41C5-A3B7-FA6E5027AD6E\",\"rank\":\"normal\"}],\"P294\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P294\",\"hash\":\"93fccaf137d8285ac071dbb6a30eb165f383f4e7\",\"datavalue\":{\"value\":\"Integer\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$D9CBB9DD-359F-4A41-BB53-DD0EB6A82216\",\"rank\":\"normal\",\"references\":[{\"hash\":\"00aecfbe761c025df2d03be8a01c0517e827f828\",\"snaks\":{\"P98\":[{\"snaktype\":\"value\",\"property\":\"P98\",\"hash\":\"5826672b850b1dc5989ca83142af2df32bc3577a\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56566,\"id\":\"Q56566\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}],\"P69\":[{\"snaktype\":\"value\",\"property\":\"P69\",\"hash\":\"657a02fa5bc1c652c10dada51e589d0dd0a8ce4b\",\"datavalue\":{\"value\":{\"time\":\"+2020-07-09T00:00:00Z\",\"timezone\":0,\"before\":0,\"after\":0,\"precision\":11,\"calendarmodel\":\"http://www.wikidata.org/entity/Q1985727\"},\"type\":\"time\"},\"datatype\":\"time\"}]},\"snaks-order\":[\"P98\",\"P69\"]}]}],\"P329\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P329\",\"hash\":\"94689f875c6b01dae4e350e58c537a74465167a7\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":7276933,\"id\":\"Q7276933\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6673724$4273EE23-9CBB-4C55-B075-29BF9390CF8C\",\"rank\":\"normal\"}],\"P378\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P378\",\"hash\":\"34839130c39e5a74f4c721c5c4826c094675eb29\",\"datavalue\":{\"value\":\"102-02-02\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$01A57398-D74F-4B3D-8175-83ECE19AB1AB\",\"rank\":\"normal\"}],\"P574\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P574\",\"hash\":\"818c3a35ed76e7b96a39bf55aab8189441472705\",\"datavalue\":{\"value\":\"3932364\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$4E446B70-1E43-426D-854D-E977DB874354\",\"rank\":\"normal\"}],\"P312\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P312\",\"hash\":\"be2198948dc7cbafadef92743cf2a630e975c9e4\",\"datavalue\":{\"value\":\"11028\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"qualifiers\":{\"P1887\":[{\"snaktype\":\"value\",\"property\":\"P1887\",\"hash\":\"fd66a6d984140eca1ff5c3d43eb87b8121c32bac\",\"datavalue\":{\"value\":{\"text\":\"hela tal\",\"language\":\"sv\"},\"type\":\"monolingualtext\"},\"datatype\":\"monolingualtext\"},{\"snaktype\":\"value\",\"property\":\"P1887\",\"hash\":\"3aa515a2621104fc5b7ef82afb41c58e6f0ef388\",\"datavalue\":{\"value\":{\"text\":\"integers\",\"language\":\"en\"},\"type\":\"monolingualtext\"},\"datatype\":\"monolingualtext\"},{\"snaktype\":\"value\",\"property\":\"P1887\",\"hash\":\"955a4f9b4916a75eac59dc0b618567b613b045f4\",\"datavalue\":{\"value\":{\"text\":\"\\u010davdelogut\",\"language\":\"se\"},\"type\":\"monolingualtext\"},\"datatype\":\"monolingualtext\"},{\"snaktype\":\"value\",\"property\":\"P1887\",\"hash\":\"f054118bf1ac6608d14fbf713a03b0b0e46cac3e\",\"datavalue\":{\"value\":{\"text\":\"kokonaisluvut\",\"language\":\"fi\"},\"type\":\"monolingualtext\"},\"datatype\":\"monolingualtext\"}],\"P1906\":[{\"snaktype\":\"value\",\"property\":\"P1906\",\"hash\":\"2fc5f475269a8d739498b84bc4dff2a2662ae2e7\",\"datavalue\":{\"value\":{\"text\":\"heltal\",\"language\":\"sv\"},\"type\":\"monolingualtext\"},\"datatype\":\"monolingualtext\"}]},\"qualifiers-order\":[\"P1887\",\"P1906\"],\"id\":\"Q6673724$4C4860E3-6DE9-4D5A-84CC-DAFD4431AD88\",\"rank\":\"normal\",\"references\":[{\"hash\":\"116af4c29ad00a690f4091c27c2870208c18ee68\",\"snaks\":{\"P98\":[{\"snaktype\":\"value\",\"property\":\"P98\",\"hash\":\"0fd59f491ac1785acd7bd8a8bf17ce8f24dafabe\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56571,\"id\":\"Q56571\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}],\"P69\":[{\"snaktype\":\"value\",\"property\":\"P69\",\"hash\":\"de82840a22aa8aa8ac50c7f25f87b1be29dba16a\",\"datavalue\":{\"value\":{\"time\":\"+2021-11-24T00:00:00Z\",\"timezone\":0,\"before\":0,\"after\":0,\"precision\":11,\"calendarmodel\":\"http://www.wikidata.org/entity/Q1985727\"},\"type\":\"time\"},\"datatype\":\"time\"}]},\"snaks-order\":[\"P98\",\"P69\"]}]}],\"P325\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P325\",\"hash\":\"2b6ec166bb3f064d800a62bb06ade986ea8d5a8d\",\"datavalue\":{\"value\":\"heltall\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$A6C00BE2-3606-470C-A8E8-3C92158C082B\",\"rank\":\"normal\"}],\"P501\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P501\",\"hash\":\"e13df4f13a242d0f8c7eb85db9abed888f5cfcbf\",\"datavalue\":{\"value\":\"Z_-_matematisk_begreb\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$91869B3C-3B6E-42A1-A4B5-FA894D0651C4\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P501\",\"hash\":\"8f5518d78243d5415ca9bab3a35543b2bffe3869\",\"datavalue\":{\"value\":\"heltal\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$81B214F7-D777-4561-A7AF-3CD23E6B3A6C\",\"rank\":\"normal\"}],\"P304\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P304\",\"hash\":\"06c75f01dfadab8eef4e37d8bb49ea231c26d066\",\"datavalue\":{\"value\":\"13750609-n\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$92795D77-C412-4FB8-A592-98FF39CB60E4\",\"rank\":\"normal\",\"references\":[{\"hash\":\"3399d23b45a6934e0161e6bb8e4cbb538be3cd7d\",\"snaks\":{\"P98\":[{\"snaktype\":\"value\",\"property\":\"P98\",\"hash\":\"b83afb3eb4ee8f3e84128fdf8318e3ea461b0b6e\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56568,\"id\":\"Q56568\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}]},\"snaks-order\":[\"P98\"]}]}],\"P315\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P315\",\"hash\":\"edcb41c034889fd2f09af3bf9a29495bbd974e45\",\"datavalue\":{\"value\":\"ph135364\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"qualifiers\":{\"P96\":[{\"snaktype\":\"value\",\"property\":\"P96\",\"hash\":\"a49acc557fe35d3ca72330cf3187da636ba66d02\",\"datavalue\":{\"value\":\"cel\\u00e1 \\u010d\\u00edsla\",\"type\":\"string\"},\"datatype\":\"string\"}]},\"qualifiers-order\":[\"P96\"],\"id\":\"Q6673724$B7D31217-4A5A-400C-B581-E8EED3E44673\",\"rank\":\"normal\"}],\"P250\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P250\",\"hash\":\"841962a8d75ae0e05b39c0183752ec0dff56a87d\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6822664,\"id\":\"Q6822664\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"qualifiers\":{\"P869\":[{\"snaktype\":\"value\",\"property\":\"P869\",\"hash\":\"0949ad65507d4004fab9496d82693fd928da6c5d\",\"datavalue\":{\"value\":{\"text\":\"integral number\",\"language\":\"en\"},\"type\":\"monolingualtext\"},\"datatype\":\"monolingualtext\"}]},\"qualifiers-order\":[\"P869\"],\"id\":\"Q6673724$6070083A-969F-4928-B9B0-88347C24E75E\",\"rank\":\"normal\"}],\"P190\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P190\",\"hash\":\"ec09a01ffb9735d16c085e9a702ce77582984246\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56557,\"id\":\"Q56557\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"qualifiers\":{\"P140\":[{\"snaktype\":\"value\",\"property\":\"P140\",\"hash\":\"a4fff9abace604f2c7effb8525a9b720eef0ccb5\",\"datavalue\":{\"value\":{\"time\":\"+2022-10-31T00:00:00Z\",\"timezone\":0,\"before\":0,\"after\":0,\"precision\":11,\"calendarmodel\":\"http://www.wikidata.org/entity/Q1985727\"},\"type\":\"time\"},\"datatype\":\"time\"}]},\"qualifiers-order\":[\"P140\"],\"id\":\"Q6673724$ABCF4397-E957-4412-8FA9-0F95876607E2\",\"rank\":\"normal\"}],\"P327\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P327\",\"hash\":\"553bae35277360b9c519393df6011b86005195d9\",\"datavalue\":{\"value\":\"\\u6574\\u6570\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$B9B2DE78-ED5C-4A28-956F-F5AC9C53CD75\",\"rank\":\"normal\"}],\"P933\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P933\",\"hash\":\"15716c872ee4671fabfd25ec97a01a7d9b679b88\",\"datavalue\":{\"value\":\"2323\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$0184DC05-DE4C-4B2E-AA30-2F854634FE75\",\"rank\":\"normal\"}],\"P357\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P357\",\"hash\":\"98ba815c7dc786e33920f89ed5ecb240d1303202\",\"datavalue\":{\"value\":\"https://math.stackexchange.com/tags/integers\",\"type\":\"string\"},\"datatype\":\"url\"},\"type\":\"statement\",\"id\":\"Q6673724$A996CB8D-A4F9-44E6-ADD3-5B8B66FE1B32\",\"rank\":\"normal\"}],\"P1575\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1575\",\"hash\":\"f5cb9d7ff4ed0c7d904cd1203efda943a80154d8\",\"datavalue\":{\"value\":\"Definition:Integer\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$EC5693FB-0293-45E6-AB95-F641CBD96A17\",\"rank\":\"normal\"}],\"P1531\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1531\",\"hash\":\"e087764bb5f31a566ba0938fcd4ed0c67ba2e49d\",\"datavalue\":{\"value\":\"nombre-enter\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$0DCE3706-34E8-43F6-982D-74C1AC677E62\",\"rank\":\"normal\"}],\"P1538\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1538\",\"hash\":\"fab8daab5afa6e46085898083ddeead20c072c32\",\"datavalue\":{\"value\":\"es:N\\u00famero_entero\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$1A9F477B-A03A-4E05-B8B7-1649A06E31C4\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1538\",\"hash\":\"4212dd1dc9e64d79e3ab8f4e2df93ded87e0c9d3\",\"datavalue\":{\"value\":\"eu:Zenbaki_oso\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$0A5FE42F-9195-4152-BDB4-9A2F5B074068\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1538\",\"hash\":\"954aa83e98d585cde2bc42d4d35890a810b292e1\",\"datavalue\":{\"value\":\"fr:Nombre_entier_relatif\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$9DF73BC6-9C34-463A-9EC8-D05FF5499571\",\"rank\":\"normal\"}],\"P1678\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1678\",\"hash\":\"3bf90224e451256721cb6ab85a2b5e7e248c941b\",\"datavalue\":{\"value\":\"whole+number\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$46186EF6-506A-483F-B563-8BBB94528636\",\"rank\":\"normal\"},{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1678\",\"hash\":\"75e163a86d50608ac92808d113127e0b587efdeb\",\"datavalue\":{\"value\":\"integer\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$3432EE90-B0E2-474A-BF7B-96461D555AA4\",\"rank\":\"preferred\",\"references\":[{\"hash\":\"eaa84a50b2c50b5f4f49e791e0cc0e3f6405ce75\",\"snaks\":{\"P69\":[{\"snaktype\":\"value\",\"property\":\"P69\",\"hash\":\"8bbc5d4a3da7d0beb991289bab293be2f5f839e6\",\"datavalue\":{\"value\":{\"time\":\"+2026-06-10T00:00:00Z\",\"timezone\":0,\"before\":0,\"after\":0,\"precision\":11,\"calendarmodel\":\"http://www.wikidata.org/entity/Q1985727\"},\"type\":\"time\"},\"datatype\":\"time\"}]},\"snaks-order\":[\"P69\"]}]}],\"P377\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P377\",\"hash\":\"12f34dfef6c22f1268252259f6cc524ae2d7eb5a\",\"datavalue\":{\"value\":\"integers\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"qualifiers\":{\"P96\":[{\"snaktype\":\"value\",\"property\":\"P96\",\"hash\":\"ed02dacae592e5597cce88576c3c7f32ef12437a\",\"datavalue\":{\"value\":\"Integers\",\"type\":\"string\"},\"datatype\":\"string\"}]},\"qualifiers-order\":[\"P96\"],\"id\":\"Q6673724$BC95393D-A1BB-4371-9364-B8ABA066808D\",\"rank\":\"normal\"}],\"P382\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P382\",\"hash\":\"05944ddd94b1302d4e66a91b3ed5bf49d83e3583\",\"datavalue\":{\"value\":\"numero-intero\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"qualifiers\":{\"P96\":[{\"snaktype\":\"value\",\"property\":\"P96\",\"hash\":\"c5250451dd4e0d65ec562b7a473133f384289045\",\"datavalue\":{\"value\":\"Numero intero\",\"type\":\"string\"},\"datatype\":\"string\"}],\"P28\":[{\"snaktype\":\"value\",\"property\":\"P28\",\"hash\":\"5e75219c8cee2bb66a30bc1eac77b3f1fe83abf5\",\"datavalue\":{\"value\":{\"time\":\"+2013-00-00T00:00:00Z\",\"timezone\":0,\"before\":0,\"after\":0,\"precision\":9,\"calendarmodel\":\"http://www.wikidata.org/entity/Q1985727\"},\"type\":\"time\"},\"datatype\":\"time\"}]},\"qualifiers-order\":[\"P96\",\"P28\"],\"id\":\"Q6673724$E998FE22-FC1E-42CA-94FA-0E05425771E0\",\"rank\":\"normal\"}],\"P1202\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1202\",\"hash\":\"219a3314e2ca58c35c793c053c51b594cdce2fa2\",\"datavalue\":{\"value\":\"Integer\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"qualifiers\":{\"P96\":[{\"snaktype\":\"value\",\"property\":\"P96\",\"hash\":\"b649e85e735f306a77b57a38e40821b75898e390\",\"datavalue\":{\"value\":\"Integer\",\"type\":\"string\"},\"datatype\":\"string\"}]},\"qualifiers-order\":[\"P96\"],\"id\":\"Q6673724$2809898F-CFF6-4721-AB80-04691CB42E53\",\"rank\":\"normal\"}],\"P1710\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1710\",\"hash\":\"7d946050c92dd59bf1fd65e5e45a36a39cfd4b02\",\"datavalue\":{\"value\":\"concept/9b1617ee-b360-456c-b019-71509a39f60a\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$5D6A9C87-5F9A-456F-9C88-EA6A94A74017\",\"rank\":\"normal\"}],\"P393\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P393\",\"hash\":\"2a4dd132e4681a0a1d0ac4c22ee157300f6a95b2\",\"datavalue\":{\"value\":\"heltal\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$B28C780B-600E-4F1B-BB35-35C9D0B8013C\",\"rank\":\"normal\"}],\"P252\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P252\",\"hash\":\"471aac00aa0af0a4139ba87bc1cd019a926c4b0e\",\"datavalue\":{\"value\":\"whole-numbers\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$C0554FCC-CD50-4632-855C-2BB9B3EB772A\",\"rank\":\"normal\"}],\"P306\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P306\",\"hash\":\"2f8ac3d2ad93fbbd544495673ad2c3f1ccb569a2\",\"datavalue\":{\"value\":\"512.72\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$8DC12472-C29A-4363-8C72-B1DD8DC7A928\",\"rank\":\"normal\",\"references\":[{\"hash\":\"9ad39d90504535bdca920a4ffdd310b4e12da271\",\"snaks\":{\"P98\":[{\"snaktype\":\"value\",\"property\":\"P98\",\"hash\":\"6336e5908fd94549601724b0016a1a445a9804a2\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56567,\"id\":\"Q56567\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"}],\"P235\":[{\"snaktype\":\"value\",\"property\":\"P235\",\"hash\":\"f5d589e67d4d092564ec8c4d7b5766db0fdbb364\",\"datavalue\":{\"value\":\"23876\",\"type\":\"string\"},\"datatype\":\"external-id\"}],\"P69\":[{\"snaktype\":\"value\",\"property\":\"P69\",\"hash\":\"47ada85b0c2b4d8be847f98900face24af868c84\",\"datavalue\":{\"value\":{\"time\":\"+2025-11-21T00:00:00Z\",\"timezone\":0,\"before\":0,\"after\":0,\"precision\":11,\"calendarmodel\":\"http://www.wikidata.org/entity/Q1985727\"},\"type\":\"time\"},\"datatype\":\"time\"}]},\"snaks-order\":[\"P98\",\"P235\",\"P69\"]}]}],\"P1121\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1121\",\"hash\":\"9ac4f80bc5feee8409724739079e30e3aefb852c\",\"datavalue\":{\"value\":\"0217278-cela-cisla\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$D005D7EB-172F-4731-AEAB-728713802E7D\",\"rank\":\"normal\"}],\"P1994\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1994\",\"hash\":\"e00803042e61b28ff0f28ed8da52e31a48179177\",\"datavalue\":{\"value\":\"integer number\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6673724$2F6F90B6-D737-4408-A5B6-258F3E5A94C1\",\"rank\":\"normal\"}]}},\"Q6684705\":{\"type\":\"item\",\"id\":\"Q6684705\",\"claims\":{\"P31\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P31\",\"hash\":\"da0b891167577e987d030a37ac0197947920fd95\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":60231,\"id\":\"Q60231\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6684705$4A9C803C-3B3E-41F9-876E-AE8B81F45CE0\",\"rank\":\"normal\"}],\"P1560\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1560\",\"hash\":\"046bd74dc0c2909bad9412854064f59f67093f75\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6684648,\"id\":\"Q6684648\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6684705$7931BCB7-2A74-4EAE-B76A-02B1F3B9CF7B\",\"rank\":\"normal\"}],\"P12\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P12\",\"hash\":\"df19a2c288a1efd08af7bb36bd52fc537b074c14\",\"datavalue\":{\"value\":\"Q133805\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6684705$6EF8EBF7-47F5-49BF-86B1-EEEBD99CDC44\",\"rank\":\"normal\"}],\"P1495\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1495\",\"hash\":\"3829be87a43f9c3f931ee87cdfd749b2541f9f31\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6534265,\"id\":\"Q6534265\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6684705$794480EB-21E9-40D8-A47B-22F2B73CAB3F\",\"rank\":\"normal\"}],\"P1460\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1460\",\"hash\":\"ce6aee0f226517df73754e918400fa383b36b90b\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":6534268,\"id\":\"Q6534268\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6684705$D0A140C1-D24F-46C9-916D-E2135249F542\",\"rank\":\"normal\"}],\"P356\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P356\",\"hash\":\"3839d22f41617ae682a13fde52369a8aa1598684\",\"datavalue\":{\"value\":\"3548786222 7a3d3208d3 bInfluenzaGrippe.jpg\",\"type\":\"string\"},\"datatype\":\"commonsMedia\"},\"type\":\"statement\",\"qualifiers\":{\"P401\":[{\"snaktype\":\"value\",\"property\":\"P401\",\"hash\":\"074bfe0385168c076ce2d6a0bafd50aa200bd5ed\",\"datavalue\":{\"value\":{\"text\":\"Sanitation. Influenza epidemic 1918. Symptomatology.\",\"language\":\"en\"},\"type\":\"monolingualtext\"},\"datatype\":\"monolingualtext\"}]},\"qualifiers-order\":[\"P401\"],\"id\":\"Q6684705$38dd9d37-4aaf-c442-ec0d-d189bc8abeb1\",\"rank\":\"normal\"}],\"P104\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P104\",\"hash\":\"28c177322cd06a399c724e99f1d8e751021d25ab\",\"datavalue\":{\"value\":\"https://en.wikipedia.org/wiki/Epidemiology\",\"type\":\"string\"},\"datatype\":\"url\"},\"type\":\"statement\",\"id\":\"Q6684705$4e3ab8c5-42cb-23b0-ebbb-b03787276378\",\"rank\":\"normal\"}]}}},\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbgetentities",
+    "ids": "Q6534304|Q6673724|Q6684705",
+    "props": "claims",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\begin{align} \\\\frac{di}{dt} &= bi(k-i) - \\\\gamma(i) y - ci \\\\\\\\ \\\\frac{dy}{dt} &= ( \\\\epsilon \\\\gamma(i) - d) y \\\\end{align}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\begin{aligned}{\\\\frac {di}{dt}}&=bi(k-i)-\\\\gamma (i)y-ci\\\\\\\\{\\\\frac {dy}{dt}}&=(\\\\epsilon \\\\gamma (i)-d)y\\\\end{aligned}}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"i\",\"d\",\"t\",\"b\",\"i\",\"k\",\"i\",\"\\\\gamma\",\"i\",\"y\",\"c\",\"i\",\"d\",\"y\",\"d\",\"t\",\"\\\\epsilon\",\"\\\\gamma\",\"i\",\"d\",\"y\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\begin{align} \\frac{di}{dt} &= bi(k-i) - \\gamma(i) y - ci \\\\ \\frac{dy}{dt} &= ( \\epsilon \\gamma(i) - d) y \\end{align}"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\begin{align} \\\\frac{ds}{dt} &= r(s+i) (1-\\\\frac{s+i}{k}) - bsi - \\\\eta \\\\gamma_1(s) y \\\\\\\\ \\\\frac{di}{dt} &= bsi - \\\\gamma(i) y - ci \\\\\\\\ \\\\frac{dy}{dt} &= ( \\\\epsilon \\\\gamma(i) + \\\\eta \\\\epsilon \\\\gamma_1(s)  - d) y \\\\end{align}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\begin{aligned}{\\\\frac {ds}{dt}}&=r(s+i)(1-{\\\\frac {s+i}{k}})-bsi-\\\\eta \\\\gamma _{1}(s)y\\\\\\\\{\\\\frac {di}{dt}}&=bsi-\\\\gamma (i)y-ci\\\\\\\\{\\\\frac {dy}{dt}}&=(\\\\epsilon \\\\gamma (i)+\\\\eta \\\\epsilon \\\\gamma _{1}(s)-d)y\\\\end{aligned}}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"s\",\"d\",\"t\",\"r\",\"s\",\"i\",\"s\",\"i\",\"k\",\"b\",\"s\",\"i\",\"\\\\eta\",\"\\\\gamma_{1}\",\"s\",\"y\",\"d\",\"i\",\"d\",\"t\",\"b\",\"s\",\"i\",\"\\\\gamma\",\"i\",\"y\",\"c\",\"i\",\"d\",\"y\",\"d\",\"t\",\"\\\\epsilon\",\"\\\\gamma\",\"i\",\"\\\\eta\",\"\\\\epsilon\",\"\\\\gamma_{1}\",\"s\",\"d\",\"y\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\begin{align} \\frac{ds}{dt} &= r(s+i) (1-\\frac{s+i}{k}) - bsi - \\eta \\gamma_1(s) y \\\\ \\frac{di}{dt} &= bsi - \\gamma(i) y - ci \\\\ \\frac{dy}{dt} &= ( \\epsilon \\gamma(i) + \\eta \\epsilon \\gamma_1(s)  - d) y \\end{align}"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\begin{align} \\\\frac{ds}{dt} &= r(s+i) (1-\\\\frac{s+i}{k}) - bsi \\\\\\\\ \\\\frac{di}{dt} &= bsi - \\\\gamma(i) y - ci \\\\\\\\ \\\\frac{dy}{dt} &= ( \\\\epsilon \\\\gamma(i) - d) y \\\\end{align}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\begin{aligned}{\\\\frac {ds}{dt}}&=r(s+i)(1-{\\\\frac {s+i}{k}})-bsi\\\\\\\\{\\\\frac {di}{dt}}&=bsi-\\\\gamma (i)y-ci\\\\\\\\{\\\\frac {dy}{dt}}&=(\\\\epsilon \\\\gamma (i)-d)y\\\\end{aligned}}\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"s\",\"d\",\"t\",\"r\",\"s\",\"i\",\"s\",\"i\",\"k\",\"b\",\"s\",\"i\",\"d\",\"i\",\"d\",\"t\",\"b\",\"s\",\"i\",\"\\\\gamma\",\"i\",\"y\",\"c\",\"i\",\"d\",\"y\",\"d\",\"t\",\"\\\\epsilon\",\"\\\\gamma\",\"i\",\"d\",\"y\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\begin{align} \\frac{ds}{dt} &= r(s+i) (1-\\frac{s+i}{k}) - bsi \\\\ \\frac{di}{dt} &= bsi - \\gamma(i) y - ci \\\\ \\frac{dy}{dt} &= ( \\epsilon \\gamma(i) - d) y \\end{align}"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\epsilon\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\epsilon \",\"requiredPackages\":[],\"identifiers\":[\"\\\\epsilon\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\epsilon"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\eta = 0\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\eta =0\",\"requiredPackages\":[],\"identifiers\":[\"\\\\eta\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\eta = 0"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\eta\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\eta \",\"requiredPackages\":[],\"identifiers\":[\"\\\\eta\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\eta"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{di}{dt} = bi(k-i) - \\\\gamma(i) y - ci\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {di}{dt}}=bi(k-i)-\\\\gamma (i)y-ci\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"i\",\"d\",\"t\",\"b\",\"i\",\"k\",\"i\",\"\\\\gamma\",\"i\",\"y\",\"c\",\"i\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\frac{di}{dt} = bi(k-i) - \\gamma(i) y - ci"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{di}{dt} = bsi - \\\\gamma(i) y - ci\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {di}{dt}}=bsi-\\\\gamma (i)y-ci\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"i\",\"d\",\"t\",\"b\",\"s\",\"i\",\"\\\\gamma\",\"i\",\"y\",\"c\",\"i\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\frac{di}{dt} = bsi - \\gamma(i) y - ci"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{ds}{dt} = r(s+i) (1-\\\\frac{s+i}{k}) - bsi - \\\\eta \\\\gamma_1(s) y\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {ds}{dt}}=r(s+i)(1-{\\\\frac {s+i}{k}})-bsi-\\\\eta \\\\gamma _{1}(s)y\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"s\",\"d\",\"t\",\"r\",\"s\",\"i\",\"s\",\"i\",\"k\",\"b\",\"s\",\"i\",\"\\\\eta\",\"\\\\gamma_{1}\",\"s\",\"y\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\frac{ds}{dt} = r(s+i) (1-\\frac{s+i}{k}) - bsi - \\eta \\gamma_1(s) y"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{ds}{dt} = r(s+i) (1-\\\\frac{s+i}{k}) - bsi\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {ds}{dt}}=r(s+i)(1-{\\\\frac {s+i}{k}})-bsi\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"s\",\"d\",\"t\",\"r\",\"s\",\"i\",\"s\",\"i\",\"k\",\"b\",\"s\",\"i\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\frac{ds}{dt} = r(s+i) (1-\\frac{s+i}{k}) - bsi"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{dy}{dt} = ( \\\\epsilon \\\\gamma(i)  - d) y\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dy}{dt}}=(\\\\epsilon \\\\gamma (i)-d)y\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"y\",\"d\",\"t\",\"\\\\epsilon\",\"\\\\gamma\",\"i\",\"d\",\"y\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\frac{dy}{dt} = ( \\epsilon \\gamma(i)  - d) y"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\frac{dy}{dt} = ( \\\\epsilon \\\\gamma(i) + \\\\eta \\\\epsilon \\\\gamma_1(s) - d) y\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"{\\\\frac {dy}{dt}}=(\\\\epsilon \\\\gamma (i)+\\\\eta \\\\epsilon \\\\gamma _{1}(s)-d)y\",\"requiredPackages\":[],\"identifiers\":[\"d\",\"y\",\"d\",\"t\",\"\\\\epsilon\",\"\\\\gamma\",\"i\",\"\\\\eta\",\"\\\\epsilon\",\"\\\\gamma_{1}\",\"s\",\"d\",\"y\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\frac{dy}{dt} = ( \\epsilon \\gamma(i) + \\eta \\epsilon \\gamma_1(s) - d) y"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\gamma\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\gamma \",\"requiredPackages\":[],\"identifiers\":[\"\\\\gamma\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\gamma"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\gamma(i) \\\\equiv \\\\frac{m i}{a + i}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\gamma (i)\\\\equiv {\\\\frac {mi}{a+i}}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\gamma\",\"i\",\"m\",\"i\",\"a\",\"i\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\gamma(i) \\equiv \\frac{m i}{a + i}"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\gamma_1\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\gamma _{1}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\gamma_{1}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\gamma_1"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\gamma_1(s) \\\\equiv \\\\frac{m_1 s}{a_1 + s}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"\\\\gamma _{1}(s)\\\\equiv {\\\\frac {m_{1}s}{a_{1}+s}}\",\"requiredPackages\":[],\"identifiers\":[\"\\\\gamma_{1}\",\"s\",\"m_{1}\",\"s\",\"a_{1}\",\"s\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\gamma_1(s) \\equiv \\frac{m_1 s}{a_1 + s}"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"a\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"a\",\"requiredPackages\":[],\"identifiers\":[\"a\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "a"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"a_1\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"a_{1}\",\"requiredPackages\":[],\"identifiers\":[\"a_{1}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "a_1"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"b\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"b\",\"requiredPackages\":[],\"identifiers\":[\"b\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "b"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"c\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"c\",\"requiredPackages\":[],\"identifiers\":[\"c\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "c"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"d\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"d\",\"requiredPackages\":[],\"identifiers\":[\"d\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "d"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"i\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"i\",\"requiredPackages\":[],\"identifiers\":[\"i\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "i"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"i(0) > 0\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"i(0)>0\",\"requiredPackages\":[],\"identifiers\":[\"i\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "i(0) > 0"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"i(0) \\\\leq k\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"i(0)\\\\leq k\",\"requiredPackages\":[],\"identifiers\":[\"i\",\"k\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "i(0) \\leq k"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"k = s + i\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"k=s+i\",\"requiredPackages\":[],\"identifiers\":[\"k\",\"s\",\"i\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "k = s + i"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"k\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"k\",\"requiredPackages\":[],\"identifiers\":[\"k\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "k"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"m\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"m\",\"requiredPackages\":[],\"identifiers\":[\"m\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "m"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"m_1\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"m_{1}\",\"requiredPackages\":[],\"identifiers\":[\"m_{1}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "m_1"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"r\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"r\",\"requiredPackages\":[],\"identifiers\":[\"r\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "r"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"s\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"s\",\"requiredPackages\":[],\"identifiers\":[\"s\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "s"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"s(0) + i(0) \\\\leq k\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"s(0)+i(0)\\\\leq k\",\"requiredPackages\":[],\"identifiers\":[\"s\",\"i\",\"k\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "s(0) + i(0) \\leq k"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"s(0) > 0\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"s(0)>0\",\"requiredPackages\":[],\"identifiers\":[\"s\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "s(0) > 0"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"t\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"t\",\"requiredPackages\":[],\"identifiers\":[\"t\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "t"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"y\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"y\",\"requiredPackages\":[],\"identifiers\":[\"y\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "y"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"y(0) > 0\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"y(0)>0\",\"requiredPackages\":[],\"identifiers\":[\"y\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "y(0) > 0"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://query.portal.mardi4nfdi.de/sparql\", [], \"SELECT ?item ?class ?community ?profile WHERE { VALUES ?item { wd:Q4239789 wd:Q6534304 wd:Q6673724 wd:Q6673735 wd:Q6673794 wd:Q6673931 wd:Q6673969 wd:Q6673995 wd:Q6674045 wd:Q6674046 wd:Q6674052 wd:Q6684705 } OPTIONAL { ?item wdt:P31 ?class . } OPTIONAL { ?item wdt:P1495 ?community . } OPTIONAL { ?item wdt:P1460 ?profile . } }\"]",
+  "url": "https://query.portal.mardi4nfdi.de/sparql",
+  "status": 200,
+  "content_type": "application/sparql-results+json;charset=utf-8",
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"item\", \"class\", \"community\", \"profile\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q4239789\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q56887\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q5976449\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534304\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534245\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534304\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6775553\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673735\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673735\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6775552\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673794\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673931\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673931\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6775552\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673969\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673995\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674045\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674046\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674052\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6482820\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6674052\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534237\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673724\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6482820\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673724\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534245\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6673724\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q7271705\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534271\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6684705\"\n      },\n      \"class\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q60231\"\n      },\n      \"profile\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534268\"\n      },\n      \"community\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"https://portal.mardi4nfdi.de/entity/Q6534265\"\n      }\n    } ]\n  }\n}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "SELECT ?item ?class ?community ?profile WHERE { VALUES ?item { wd:Q4239789 wd:Q6534304 wd:Q6673724 wd:Q6673735 wd:Q6673794 wd:Q6673931 wd:Q6673969 wd:Q6673995 wd:Q6674045 wd:Q6674046 wd:Q6674052 wd:Q6684705 } OPTIONAL { ?item wdt:P31 ?class . } OPTIONAL { ?item wdt:P1495 ?community . } OPTIONAL { ?item wdt:P1460 ?profile . } }",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://query.portal.mardi4nfdi.de/sparql\", [], \"SELECT ?item ?label ?description WHERE { VALUES (?label ?description) { (\\\"conversion rate\\\"@en \\\"efficiency of conversion\\\"@en) (\\\"death rate constant of predator population\\\"@en \\\"rate constant\\\"@en) (\\\"ecological epidemiology\\\"@en \\\"research field\\\"@en) (\\\"environmental carrying capacity\\\"@en \\\"ecosystem support\\\"@en) (\\\"half-saturation constant (infected prey)\\\"@en \\\"reciprocal of search rate times handling time\\\"@en) (\\\"half-saturation constant (sound prey)\\\"@en \\\"reciprocal of search rate times handling time\\\"@en) (\\\"infected prey in predator-prey with disease in prey ODE\\\"@en \\\"ordinary differential equation describing infected prey in predator-prey with disease in prey system\\\"@en) (\\\"infected prey in predator-prey with disease in prey ODE (rapid prey growth)\\\"@en \\\"ordinary differential equation describing infected prey in predator-prey with disease in prey system\\\"@en) (\\\"initial carrying capacity condition (infected prey)\\\"@en \\\"condition for the initial carrying capacity\\\"@en) (\\\"initial carrying capacity condition (sound and infected prey)\\\"@en \\\"condition for the initial carrying capacity\\\"@en) (\\\"initial infected prey population condition\\\"@en \\\"condition for the initial infected prey population\\\"@en) (\\\"initial predator population condition\\\"@en \\\"condition for the initial predator population\\\"@en) (\\\"initial sound prey population condition\\\"@en \\\"condition for the initial sound prey population\\\"@en) (\\\"intrinsic growth rate constant of sound population\\\"@en \\\"rate constant\\\"@en) (\\\"maximum consumption rate (infected prey)\\\"@en \\\"inverse handling time\\\"@en) (\\\"maximum consumption rate (sound prey)\\\"@en \\\"inverse handling time\\\"@en) (\\\"natural death rate constant of infected prey\\\"@en \\\"rate constant\\\"@en) (\\\"no predation on sound prey\\\"@en \\\"predation coefficient of sound prey is zero\\\"@en) (\\\"number of infected prey population\\\"@en \\\"infected prey population size\\\"@en) (\\\"number of predator population\\\"@en \\\"predator population size\\\"@en) (\\\"number of sound prey population\\\"@en \\\"sound prey population size\\\"@en) (\\\"predation coefficient of sound prey\\\"@en \\\"coefficient of predation\\\"@en) (\\\"predator in predator-prey with disease in prey ODE\\\"@en \\\"ordinary differential equation describing predator in predator-prey with disease in prey system\\\"@en) (\\\"predator in predator-prey with disease in prey ODE (predation on infected prey only)\\\"@en \\\"ordinary differential equation describing predator in predator-prey with disease in prey system\\\"@en) (\\\"predator response function (infected prey)\\\"@en \\\"response function\\\"@en) (\\\"predator response function (sound prey)\\\"@en \\\"response function\\\"@en) (\\\"predator-prey dynamics\\\"@en \\\"relationship between populations of predators and their prey in an ecosystem\\\"@en) (\\\"predator-prey with disease in prey ODE system\\\"@en \\\"system of ordinary differential equations describing the interaction of sound prey, infected prey, and predators\\\"@en) (\\\"predator-prey with disease in prey ODE system (predation on infected prey only)\\\"@en \\\"system of ordinary differential equations describing the interaction of sound prey, infected prey, and predators\\\"@en) (\\\"predator-prey with disease in prey ODE system (predation on infected prey only, rapid prey growth)\\\"@en \\\"system of ordinary differential equations describing the interaction of infected prey and predators\\\"@en) (\\\"predator-prey with disease in prey model\\\"@en \\\"sound prey, infected prey and predator, which eats both kinds of prey\\\"@en) (\\\"predator-prey with disease in prey model (predation on infected prey only)\\\"@en \\\"sound prey, infected prey and predator, which eats only infected prey\\\"@en) (\\\"predator-prey with disease in prey model (predation on infected prey only, rapid prey growth)\\\"@en \\\"infected prey and predator, sound prey fills the carrying capacity\\\"@en) (\\\"sound prey in predator-prey with disease in prey ODE\\\"@en \\\"ordinary differential equation describing sound prey in predator-prey with disease in prey system\\\"@en) (\\\"sound prey in predator-prey with disease in prey ODE (predation on infected prey only)\\\"@en \\\"ordinary differential equation describing sound prey in predator-prey with disease in prey system\\\"@en) (\\\"total prey at carrying capacity\\\"@en \\\"sound and infected prey together equal the carrying capacity\\\"@en) (\\\"transmission rate constant (sound to infected prey population)\\\"@en \\\"rate constant\\\"@en) } ?item rdfs:label ?label ; schema:description ?description . }\"]",
+  "url": "https://query.portal.mardi4nfdi.de/sparql",
+  "status": 200,
+  "content_type": "application/sparql-results+json;charset=utf-8",
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"item\", \"label\", \"description\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ ]\n  }\n}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "SELECT ?item ?label ?description WHERE { VALUES (?label ?description) { (\"conversion rate\"@en \"efficiency of conversion\"@en) (\"death rate constant of predator population\"@en \"rate constant\"@en) (\"ecological epidemiology\"@en \"research field\"@en) (\"environmental carrying capacity\"@en \"ecosystem support\"@en) (\"half-saturation constant (infected prey)\"@en \"reciprocal of search rate times handling time\"@en) (\"half-saturation constant (sound prey)\"@en \"reciprocal of search rate times handling time\"@en) (\"infected prey in predator-prey with disease in prey ODE\"@en \"ordinary differential equation describing infected prey in predator-prey with disease in prey system\"@en) (\"infected prey in predator-prey with disease in prey ODE (rapid prey growth)\"@en \"ordinary differential equation describing infected prey in predator-prey with disease in prey system\"@en) (\"initial carrying capacity condition (infected prey)\"@en \"condition for the initial carrying capacity\"@en) (\"initial carrying capacity condition (sound and infected prey)\"@en \"condition for the initial carrying capacity\"@en) (\"initial infected prey population condition\"@en \"condition for the initial infected prey population\"@en) (\"initial predator population condition\"@en \"condition for the initial predator population\"@en) (\"initial sound prey population condition\"@en \"condition for the initial sound prey population\"@en) (\"intrinsic growth rate constant of sound population\"@en \"rate constant\"@en) (\"maximum consumption rate (infected prey)\"@en \"inverse handling time\"@en) (\"maximum consumption rate (sound prey)\"@en \"inverse handling time\"@en) (\"natural death rate constant of infected prey\"@en \"rate constant\"@en) (\"no predation on sound prey\"@en \"predation coefficient of sound prey is zero\"@en) (\"number of infected prey population\"@en \"infected prey population size\"@en) (\"number of predator population\"@en \"predator population size\"@en) (\"number of sound prey population\"@en \"sound prey population size\"@en) (\"predation coefficient of sound prey\"@en \"coefficient of predation\"@en) (\"predator in predator-prey with disease in prey ODE\"@en \"ordinary differential equation describing predator in predator-prey with disease in prey system\"@en) (\"predator in predator-prey with disease in prey ODE (predation on infected prey only)\"@en \"ordinary differential equation describing predator in predator-prey with disease in prey system\"@en) (\"predator response function (infected prey)\"@en \"response function\"@en) (\"predator response function (sound prey)\"@en \"response function\"@en) (\"predator-prey dynamics\"@en \"relationship between populations of predators and their prey in an ecosystem\"@en) (\"predator-prey with disease in prey ODE system\"@en \"system of ordinary differential equations describing the interaction of sound prey, infected prey, and predators\"@en) (\"predator-prey with disease in prey ODE system (predation on infected prey only)\"@en \"system of ordinary differential equations describing the interaction of sound prey, infected prey, and predators\"@en) (\"predator-prey with disease in prey ODE system (predation on infected prey only, rapid prey growth)\"@en \"system of ordinary differential equations describing the interaction of infected prey and predators\"@en) (\"predator-prey with disease in prey model\"@en \"sound prey, infected prey and predator, which eats both kinds of prey\"@en) (\"predator-prey with disease in prey model (predation on infected prey only)\"@en \"sound prey, infected prey and predator, which eats only infected prey\"@en) (\"predator-prey with disease in prey model (predation on infected prey only, rapid prey growth)\"@en \"infected prey and predator, sound prey fills the carrying capacity\"@en) (\"sound prey in predator-prey with disease in prey ODE\"@en \"ordinary differential equation describing sound prey in predator-prey with disease in prey system\"@en) (\"sound prey in predator-prey with disease in prey ODE (predation on infected prey only)\"@en \"ordinary differential equation describing sound prey in predator-prey with disease in prey system\"@en) (\"total prey at carrying capacity\"@en \"sound and infected prey together equal the carrying capacity\"@en) (\"transmission rate constant (sound to infected prey population)\"@en \"rate constant\"@en) } ?item rdfs:label ?label ; schema:description ?description . }",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://query.portal.mardi4nfdi.de/sparql\", [], \"SELECT ?item ?wikidata WHERE { VALUES ?wikidata { \\\"Q112309116\\\" } ?item wdt:P12 ?wikidata . }\"]",
+  "url": "https://query.portal.mardi4nfdi.de/sparql",
+  "status": 200,
+  "content_type": "application/sparql-results+json;charset=utf-8",
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"item\", \"wikidata\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ ]\n  }\n}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "SELECT ?item ?wikidata WHERE { VALUES ?wikidata { \"Q112309116\" } ?item wdt:P12 ?wikidata . }",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ }
+]

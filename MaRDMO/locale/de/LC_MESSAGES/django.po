@@ -809,9 +809,9 @@ msgstr "Es konnte nicht geprüft werden, welche Items es auf dem MaRDI Portal sc
 msgid "The MaRDI Portal did not answer."
 msgstr "Das MaRDI Portal hat nicht geantwortet."
 
-#: MaRDMO/pipeline.py:113
-msgid "Cyclic Dependency Graph"
-msgstr "Zyklischer Abhängigkeitsgraph"
+#: MaRDMO/pipeline.py:116
+msgid "The new items could not be put in an order of creation ({items}); nothing was exported, please report this to the MaRDMO developers"
+msgstr "Die neuen Items konnten nicht in eine Reihenfolge zum Anlegen gebracht werden ({items}); es wurde nichts exportiert, bitte melden Sie das den MaRDMO-Entwicklern"
 
 #: MaRDMO/problems.py:19
 msgid "Following aspects prevented the export:"

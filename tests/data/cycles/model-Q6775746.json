@@ -1,0 +1,141 @@
+{
+ "labels": {
+  "Item0000000000": "geostatistics",
+  "Item0000000001": "spatial prediction",
+  "Item0000000002": "Kriging model",
+  "Item0000000003": "stochastic process formulation",
+  "Item0000000004": "second-moment stochastic process specification",
+  "Item0000000005": "Gaussian-process regression model",
+  "Item0000000006": "simple Kriging model",
+  "Item0000000007": "ordinary Kriging model",
+  "Item0000000008": "universal Kriging model",
+  "Item0000000009": "index set",
+  "Item0000000010": "random variable",
+  "Item0000000011": "stochastic process",
+  "Item0000000012": "coefficient simulation behavior prediction global",
+  "Item0000000013": "Wiener process",
+  "Item0000000014": "Gaussian process",
+  "Item0000000015": "global stochastic process",
+  "Item0000000016": "local stochastic process"
+ },
+ "source": "model Q6775746 Kriging model",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1560",
+    "Item0000000001",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P1513",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P1560",
+    "Item0000000003",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000004",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000007",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000008",
+    []
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000009"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000010"
+    ]
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000009"
+    ]
+   ]
+  ],
+  "Item0000000005": [],
+  "Item0000000006": [],
+  "Item0000000007": [],
+  "Item0000000008": [],
+  "Item0000000009": [],
+  "Item0000000010": [
+   [
+    "P1684",
+    "Item0000000012",
+    []
+   ]
+  ],
+  "Item0000000011": [
+   [
+    "P1684",
+    "Item0000000013",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000014",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000015",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000016",
+    []
+   ]
+  ],
+  "Item0000000012": [],
+  "Item0000000013": [],
+  "Item0000000014": [],
+  "Item0000000015": [],
+  "Item0000000016": []
+ }
+}

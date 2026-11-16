@@ -25,7 +25,7 @@ import re
 import requests
 from django.utils.translation import gettext as _
 
-from .helpers import commit_writes
+from .helpers import commit_writes, cycle_groups
 from .duplicates import item_source, look_up
 from .ids import item_key
 from .markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
@@ -63,6 +63,17 @@ _MEANING_QUALIFIERS = ('object has role', 'symbol represents', 'platform')
 _MEANING_PROPERTIES = ('contains', 'described by source', 'uses')
 # Class of new authors and journals of publications (kind, see helpers.PART_KINDS)
 _NEW_ITEM_CLASS = {'author': 'Author', 'journal': 'Journal'}
+
+
+def _item_references(statement):
+    '''The ``Item<n>`` keys a statement ``[pid, type, value, qualifiers]`` of a new item refers to.'''
+    found = set()
+    values = [statement[2]] + [qualifier['value']['content'] for qualifier in
+                               (statement[3] if len(statement) > 3 else [])]
+    for value in values:
+        if isinstance(value, str) and _ITEM_KEY_RE.match(value):
+            found.add(value)
+    return found
 
 
 def _text_of(value):
@@ -971,20 +982,15 @@ class GeneratePayload:
             'datatype': object_and_type[1],
             'value': value
         }
-        # Pattern of New Item
-        pattern = re.compile(r"^Item\d{10}$")
-        # Add Relation
-        if (
-            self.state.dictionary[subject]['id']
-        ):
+        # Statements of existing items are added to them; those of new
+        # items are created with them (the dependencies: order_items)
+        if self.state.dictionary[subject]['id']:
             self._add_relation(
                 item=subject,
                 statement=statement,
                 qualifier=qualifier
             )
         else:
-            if (isinstance(statement['value'], str) and pattern.match(statement['value'])):
-                self.dependency[subject].add(statement['value'])
             self._add_to_item_statement(
                 item=subject,
                 statement=statement,
@@ -1160,33 +1166,18 @@ class GeneratePayload:
                 'wikibase-item',
                 quantity_item
             )
-            # Pattern of New Item
-            pattern = re.compile(r"^Item\d{10}$")
-            # Add Symbol to Payload
-            if (
-                self.state.dictionary[self.state.subject_item]['id']
-                or self.state.subject_item == quantity_item
-            ):
-                self._add_relation(
-                    item = self.state.subject_item,
-                    statement = {
-                        'property_id': self.wikibase['properties']['in defining formula'],
-                        'value': element.get('symbol', ''),
-                        'datatype': 'math'
-                    },
-                    qualifier = qualifier
+            # A symbol without quantity adds nothing to a new item.  A
+            # quantity whose formula has its own symbol refers to itself:
+            # order_items adds that statement after its creation (#164)
+            if self.state.dictionary[self.state.subject_item]['id'] or _ITEM_KEY_RE.match(quantity_item or ''):
+                self.add_answer(
+                    verb=self.wikibase['properties']['in defining formula'],
+                    object_and_type=[
+                        element.get('symbol', ''),
+                        'math',
+                    ],
+                    qualifier=qualifier
                 )
-            else:
-                if (isinstance(quantity_item, str) and pattern.match(quantity_item)):
-                    self.dependency[self.state.subject_item].add(quantity_item)
-                    self.add_answer(
-                        verb=self.wikibase['properties']['in defining formula'],
-                        object_and_type=[
-                            element.get('symbol', ''),
-                            'math',
-                        ],
-                        qualifier=qualifier
-                    )
 
     def _add_entry(self, key, value):
         '''Insert *value* under *key* into ``self.state.dictionary``.
@@ -1271,8 +1262,10 @@ class GeneratePayload:
         qualifiers]`` tuples) into the Wikibase REST API item-creation format
         and stores it back in the dictionary under ``item_data["payload"]``.
         Must be called after all :meth:`add_answer` / :meth:`add_multiple_relation`
-        calls and before posting.
+        calls and before posting.  First :meth:`order_items` builds the order
+        of creation.
         '''
+        self.order_items()
         for item_id, item_data in self.state.dictionary.items():
             # Check if Item in Payload
             if not item_id.startswith('Item'):
@@ -1310,6 +1303,60 @@ class GeneratePayload:
                 payload["item"]["aliases"] = {"en": aliases}
             # Attach to original dict
             item_data["payload"] = payload
+
+    def order_items(self):
+        '''Build the dependencies of the new items and break their cycles (#164).
+
+        A new item is created with its statements, after every item they
+        refer to, in the value or in a qualifier (e.g. the formula an
+        assumption names, the software of an algorithm in a process step).
+        ``self.dependency`` becomes these references.  Items that refer to
+        each other in a cycle cannot be ordered: of each cycle, the item with
+        the fewest statements to the other items of the cycle (ties: the
+        lower key) gets these statements afterwards, as single statements
+        on the created item (``RELATION`` entries, qualifiers included),
+        until no cycle is left.  A statement of an item about itself is added
+        afterwards too.  A documentation without cycles keeps all its
+        statements in its items.
+        '''
+        dictionary = self.state.dictionary
+        keys = {key for key in dictionary if key.startswith('Item')}
+        new = {key for key in keys if not dictionary[key].get('id')}
+        references = {key: [_item_references(statement) & keys for statement in dictionary[key].get('statements', [])]
+                      for key in sorted(new)}
+
+        def postpone(key, closing):
+            '''Move the statements of *key* that refer to an item of *closing* into RELATION entries.'''
+            kept, kept_references = [], []
+            for statement, refs in zip(dictionary[key]['statements'], references[key]):
+                if refs & closing:
+                    self._add_relation(
+                        item=key,
+                        statement={'property_id': statement[0], 'datatype': statement[1], 'value': statement[2]},
+                        qualifier=statement[3] if len(statement) > 3 else [])
+                else:
+                    kept.append(statement)
+                    kept_references.append(refs)
+            dictionary[key]['statements'], references[key] = kept, kept_references
+
+        def graph():
+            return {key: set().union(*references[key]) - {key} if key in references else set()
+                    for key in sorted(keys)}
+
+        for key in references:
+            if any(key in refs for refs in references[key]):
+                postpone(key, {key})
+        # Each cycle is broken within itself: what is left of it may form smaller cycles
+        groups = cycle_groups({key: set().union(*references[key]) & new for key in references})
+        while groups:
+            members = set(groups.pop())
+            chosen = min(sorted(members), key=lambda key: (sum(bool(refs & members) for refs in references[key]), key))
+            postpone(chosen, members - {chosen})
+            # The chosen item refers to no other item of the cycle any more
+            rest = members - {chosen}
+            groups += cycle_groups({key: set().union(*references[key]) & rest for key in rest})
+        self.dependency.clear()
+        self.dependency.update(graph())
 
     def _statement_by_id_type(self, value: dict, id_type: str):
         """Build the external-identifier statements for a user-defined item.

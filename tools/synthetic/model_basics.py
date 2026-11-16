@@ -46,12 +46,13 @@ def describe(doc):
     wave = doc.tab('formulation', 'F6', WAVE_EQUATION)
     if not wave.answered('reference'):
         wave.answer('reference', 'The second time derivative equals the squared speed times the Laplacian.')
-    # Relations stored on the other item ("approximates" is "approximated by" there) go to the
-    # portal: the export creates new items in one order, so new items may not need each other
-    for relation, relatant in (('approximated-by', formulas['B']), ('approximates', SIS_INFECTIOUS),
+    # Relations stored on the other item ("approximates" is "approximated by" there) close cycles
+    # of new items (#164): A approximated by B, B specialized by C, A approximates C (A, B, C);
+    # A approximated by B, A linearizes B (A, B).  The others go to the portal
+    for relation, relatant in (('approximated-by', formulas['B']), ('approximates', formulas['C']),
                                ('discretized-by', formulas['B']), ('discretizes', SIS_INFECTIOUS),
                                ('is-weak-formulation-of', SIS_INFECTIOUS), ('has-weak-formulation', formulas['B']),
-                               ('linearized-by', formulas['C']), ('linearizes', SIS_INFECTIOUS),
+                               ('linearized-by', formulas['C']), ('linearizes', formulas['B']),
                                ('nondimensionalized-by', formulas['B']), ('nondimensionalizes', SIS_INFECTIOUS),
                                ('similar-to', STATIONARY_NAVIER_STOKES)):
         formulas['A'].block('formulation-to-formulation-basics', {'formulation-relation-2': relation,
@@ -81,7 +82,8 @@ def describe(doc):
         task = task_a if number % 2 == 0 else task_b
         task.block('task-to-formulation', {'formulation-relation': relation,
                                            'formulation-relatant': [relatants[number % len(relatants)]]})
-    for relation, relatant in (('approximates', KINETIC_SIMULATION), ('approximated-by', task_b), ('contains', task_b),
+    # A approximates B and is approximated by B: a cycle of new tasks (#164)
+    for relation, relatant in (('approximates', task_b), ('approximated-by', task_b), ('contains', task_b),
                                ('contained-in', KINETIC_SIMULATION), ('discretizes', KINETIC_SIMULATION),
                                ('discretized-by', task_b), ('linearizes', KINETIC_SIMULATION), ('linearized-by', task_b),
                                ('similar-to', KINETIC_SIMULATION)):
@@ -120,9 +122,11 @@ def describe(doc):
     for number, relation in enumerate(FORMULA_RELATIONS):
         models[number % 3].block('model-to-formulation-basics', {
             'formulation-relation': relation, 'formulation-relatant': [relatants[number % len(relatants)]]})
-    for relation, relatant in (('approximates', SIS_MODEL), ('approximated-by', model_c), ('contains', model_b),
+    # Cycles of new models (#164): A approximates C and is approximated by C; A is the weak
+    # formulation of B and has B as weak formulation
+    for relation, relatant in (('approximates', model_c), ('approximated-by', model_c), ('contains', model_b),
                                ('contained-in', SIS_MODEL), ('discretizes', SIS_MODEL), ('discretized-by', model_c),
-                               ('has-weak-formulation', model_b), ('is-weak-formulation-of', SIS_MODEL),
+                               ('has-weak-formulation', model_b), ('is-weak-formulation-of', model_b),
                                ('linearizes', SIS_MODEL), ('linearized-by', model_c), ('similar-to', SIS_MODEL)):
         model_a.block('model-to-model', {'model-relation': relation, 'model-relatant': [relatant]})
     model_b.block('model-to-model', {'model-relation': 'specializes', 'model-relatant': [model_a],

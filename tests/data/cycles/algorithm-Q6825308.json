@@ -1,0 +1,607 @@
+{
+ "labels": {
+  "Item0000000000": "QR Decomposition",
+  "Item0000000001": "Linear system of equations (Ax=b)",
+  "Item0000000002": "MAGMA — GPU-accelerated dense linear algebra",
+  "Item0000000003": "LAPACK - Linear Algebra PACKage",
+  "Item0000000004": "PLASMA - Parallel Linear Algebra Software for Multicore Architectures",
+  "Item0000000005": "SLATE - Software for Linear Algebra Targeting Exascale",
+  "Item0000000006": "Armadillo - C++ library for linear algebra & scientific computing",
+  "Item0000000007": "ARMAS - Another Rewrite of Matrix Algebra Subroutines",
+  "Item0000000008": "QR Decomposition via Gram-Schmidt",
+  "Item0000000009": "QR Decomposition via Givens Rotations",
+  "Item0000000010": "QR Decomposition via Householder Reflections",
+  "Item0000000011": "Column-Wise Modified Gram-Schmidt",
+  "Item0000000012": "QR Decomposition via Modified Gram-Schmidt",
+  "Item0000000013": "Multifrontal QR Decomposition",
+  "Item0000000014": "HPL",
+  "Item0000000015": "High Performance Conjugate Gradient (HPCG) benchmark",
+  "Item0000000016": "Symmetric Linear Problem",
+  "Item0000000017": "Preconditioning a Distributed Linear Problem",
+  "Item0000000018": "Symmetric Positive-Definite Linear Problem",
+  "Item0000000019": "Saddle Point Problem",
+  "Item0000000020": "Preconditioning a Linear Problem",
+  "Item0000000021": "The LINPACK Benchmark: An explanation",
+  "Item0000000022": "The LINPACK Benchmark: past, present and future",
+  "Item0000000023": "Toward a New Metric for Ranking High Performance Computing Systems",
+  "Item0000000024": "Dense linear algebra solvers for multicore with GPU accelerators",
+  "Item0000000025": "Numerical linear algebra algorithms and software",
+  "Item0000000026": "ScaLAPACK - Scalable Linear Algebra PACKage",
+  "Item0000000027": "LAPACK Users' Guide",
+  "Item0000000028": "SUITESPARSE: A Suite Of Sparse Matrix Software",
+  "Item0000000029": "A class of parallel tiled linear algebra algorithms for multicore architectures",
+  "Item0000000030": "SLATE",
+  "Item0000000031": "An Adaptive Solver for Systems of Linear Equations",
+  "Item0000000032": "Armadillo: a template-based C++ library for linear algebra",
+  "Item0000000033": "Numerical methods for large eigenvalue problems",
+  "Item0000000034": "Arnoldi Method",
+  "Item0000000035": "Modified Gram-Schmidt",
+  "Item0000000036": "Rayleigh Quotient Iteration",
+  "Item0000000037": "Wielandt Iteration",
+  "Item0000000038": "Lanczos Algorithm",
+  "Item0000000039": "Gram-Schmidt",
+  "Item0000000040": "Power Method",
+  "Item0000000041": "Inverse Power Method",
+  "Item0000000042": "Iterative Methods for Solving Linear Systems",
+  "Item0000000043": "Successive Over Relaxation",
+  "Item0000000044": "Cholesky Decomposition",
+  "Item0000000045": "Multigrid Method",
+  "Item0000000046": "Conjugate Gradients",
+  "Item0000000047": "LU decomposition",
+  "Item0000000048": "Biconjugate Gradients",
+  "Item0000000049": "Biconjugate Gradients Stabilized",
+  "Item0000000050": "Generalized Minimal Residual",
+  "Item0000000051": "Jacobi Method",
+  "Item0000000052": "Minimal Residual Method",
+  "Item0000000053": "The Symmetric Eigenvalue Problem",
+  "Item0000000054": "Numerical Mathematics",
+  "Item0000000055": "Singular Value Decomposition",
+  "Item0000000056": "Incomplete LU Factorization",
+  "Item0000000057": "Seidel Method",
+  "Item0000000058": "Gradient Descent",
+  "Item0000000059": "Preconditioned Conjugate Gradients"
+ },
+ "source": "algorithm Q6825308 QR Decomposition",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1766",
+    "Item0000000002",
+    []
+   ],
+   [
+    "P1766",
+    "Item0000000003",
+    []
+   ],
+   [
+    "P1766",
+    "Item0000000004",
+    []
+   ],
+   [
+    "P1766",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P1766",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P1766",
+    "Item0000000007",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P1578",
+    "Item0000000000",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000016",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000017",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000018",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000019",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000020",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P286",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P286",
+    "Item0000000025",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000027",
+    []
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P286",
+    "Item0000000029",
+    []
+   ]
+  ],
+  "Item0000000005": [
+   [
+    "P286",
+    "Item0000000030",
+    []
+   ]
+  ],
+  "Item0000000006": [
+   [
+    "P286",
+    "Item0000000031",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000032",
+    []
+   ]
+  ],
+  "Item0000000007": [],
+  "Item0000000008": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000009": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ]
+  ],
+  "Item0000000010": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ]
+  ],
+  "Item0000000011": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000012": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000013": [
+   [
+    "P36",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000014": [
+   [
+    "P930",
+    "Item0000000001",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000021",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000022",
+    []
+   ]
+  ],
+  "Item0000000015": [
+   [
+    "P930",
+    "Item0000000001",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000023",
+    []
+   ]
+  ],
+  "Item0000000016": [],
+  "Item0000000017": [],
+  "Item0000000018": [],
+  "Item0000000019": [],
+  "Item0000000020": [],
+  "Item0000000021": [],
+  "Item0000000022": [],
+  "Item0000000023": [],
+  "Item0000000024": [],
+  "Item0000000025": [],
+  "Item0000000026": [
+   [
+    "P286",
+    "Item0000000025",
+    []
+   ]
+  ],
+  "Item0000000027": [],
+  "Item0000000028": [
+   [
+    "P286",
+    "Item0000000027",
+    []
+   ]
+  ],
+  "Item0000000029": [],
+  "Item0000000030": [],
+  "Item0000000031": [],
+  "Item0000000032": [],
+  "Item0000000033": [],
+  "Item0000000034": [
+   [
+    "P286",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000035": [
+   [
+    "P286",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000036": [
+   [
+    "P286",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ]
+  ],
+  "Item0000000037": [
+   [
+    "P286",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000038": [
+   [
+    "P286",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000039": [
+   [
+    "P286",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000040": [
+   [
+    "P286",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000041": [
+   [
+    "P286",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ]
+  ],
+  "Item0000000042": [],
+  "Item0000000043": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000044": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000045": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ]
+  ],
+  "Item0000000046": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000047": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000048": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ]
+  ],
+  "Item0000000049": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ]
+  ],
+  "Item0000000050": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000051": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000052": [
+   [
+    "P286",
+    "Item0000000042",
+    []
+   ]
+  ],
+  "Item0000000053": [],
+  "Item0000000054": [],
+  "Item0000000055": [
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000056": [
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000057": [
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000058": [
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000059": [
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ]
+ }
+}

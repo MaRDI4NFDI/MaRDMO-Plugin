@@ -1,0 +1,1209 @@
+{
+ "labels": {
+  "Item0000000000": "enzyme kinetics",
+  "Item0000000001": "chemical kinetics",
+  "Item0000000002": "initial reaction rate of bi bi reaction following ordered mechanism without products",
+  "Item0000000003": "bi bi reaction following ordered mechanism",
+  "Item0000000004": "bi bi reaction ordered mechanism Michaelis Menten model without products (steady state assumption)",
+  "Item0000000005": "steady state assumption",
+  "Item0000000006": "law of mass action",
+  "Item0000000007": "mass balance",
+  "Item0000000008": "Michaelis Menten equation (bi bi reaction ordered without products - steady state assumption)",
+  "Item0000000009": "initial product 2 concentration (bi bi reaction ordered without product 2 - Michaelis Menten model)",
+  "Item0000000010": "initial substrate 1 concentration (bi bi reaction ordered - Michaelis Menten model)",
+  "Item0000000011": "initial substrate 2 concentration (bi bi reaction ordered - Michaelis Menten model)",
+  "Item0000000012": "initial product 1 concentration (bi bi reaction ordered without product 1 - Michaelis Menten model)",
+  "Item0000000013": "nonlinear parameter estimation of enzyme kinetics",
+  "Item0000000014": "bi bi reaction ordered mechanism (ODE model)",
+  "Item0000000015": "complexed enzyme concentration",
+  "Item0000000016": "time",
+  "Item0000000017": "concentration",
+  "Item0000000018": "reaction rate constant",
+  "Item0000000019": "molecularity",
+  "Item0000000020": "reaction rate",
+  "Item0000000021": "conservation law",
+  "Item0000000022": "Michaelis constant substrate 1 (bi bi reaction ordered - steady state assumption)",
+  "Item0000000023": "Michaelis constant substrate 2 (bi bi reaction ordered - steady state assumption)",
+  "Item0000000024": "inhibition constant substrate 1 (bi bi reaction ordered - steady state assumption)",
+  "Item0000000025": "limiting reaction rate (bi bi reaction ordered mechanism - forward)",
+  "Item0000000026": "substrate concentration",
+  "Item0000000027": "initial reaction rate",
+  "Item0000000028": "initial substrate 1 concentration (bi bi reaction ordered - ODE model)",
+  "Item0000000029": "initial substrate 2 concentration (bi bi reaction ordered - ODE model)",
+  "Item0000000030": "initial substrate 1 concentration (bi bi reaction ping pong - Michaelis Menten model)",
+  "Item0000000031": "initial substrate 2 concentration (bi bi reaction ping pong - Michaelis Menten model)",
+  "Item0000000032": "initial substrate 1 concentration (bi bi reaction ping pong - ODE model)",
+  "Item0000000033": "initial substrate 2 concentration (bi bi reaction ping pong - ODE model)",
+  "Item0000000034": "initial substrate 1 concentration (bi bi reaction Theorell-Chance - Michaelis Menten model)",
+  "Item0000000035": "initial substrate 2 concentration (bi bi reaction Theorell-Chance - Michaelis Menten model)",
+  "Item0000000036": "initial substrate 1 concentration (bi bi reaction Theorell-Chance - ODE model)",
+  "Item0000000037": "initial substrate 2 concentration (bi bi reaction Theorell-Chance - ODE model)",
+  "Item0000000038": "initial substrate concentration (uni uni reaction - ODE model)",
+  "Item0000000039": "initial substrate concentration (uni uni reaction)",
+  "Item0000000040": "enzyme-substrate complex concentration",
+  "Item0000000041": "enzyme concentration",
+  "Item0000000042": "age of a person",
+  "Item0000000043": "time step",
+  "Item0000000044": "duration",
+  "Item0000000045": "exposure of an individual",
+  "Item0000000046": "free fall time",
+  "Item0000000047": "period length",
+  "Item0000000048": "turn over time",
+  "Item0000000049": "point in time",
+  "Item0000000050": "enzyme - product 1 complex concentration",
+  "Item0000000051": "enzyme - product 1 - product 2 complex concentration",
+  "Item0000000052": "enzyme - substrate 1 complex concentration",
+  "Item0000000053": "enzyme - substrate 1 - substrate 2 complex concentration",
+  "Item0000000054": "product 1 concentration",
+  "Item0000000055": "product 2 concentration",
+  "Item0000000056": "substrate 1 concentration",
+  "Item0000000057": "substrate 2 concentration",
+  "Item0000000058": "enzyme - substrate 1 - substrate 2 = enzyme - product 1 - product 2 complex concentration",
+  "Item0000000059": "intermediate concentration",
+  "Item0000000060": "intermediate - substrate 2 complex concentration",
+  "Item0000000061": "enzyme - product 2 complex concentration",
+  "Item0000000062": "competitive inhibition constant (uni uni reaction reversible inhibition)",
+  "Item0000000063": "inhibitor concentration",
+  "Item0000000064": "product concentration",
+  "Item0000000065": "Michaelis constant",
+  "Item0000000066": "concentrations of reaction entities",
+  "Item0000000067": "biomass concentration",
+  "Item0000000068": "solute concentration (equilibrium)",
+  "Item0000000069": "half saturation constant (Hill kinetics)",
+  "Item0000000070": "half maximal effective concentration",
+  "Item0000000071": "drug concentration",
+  "Item0000000072": "ligand concentration",
+  "Item0000000073": "half saturation constant (Hill binding)",
+  "Item0000000074": "initial solute concentration",
+  "Item0000000075": "quantum damping rate",
+  "Item0000000076": "recombination rate for electron hole pairs",
+  "Item0000000077": "damping coefficient",
+  "Item0000000078": "adsorption rate constant",
+  "Item0000000079": "desorption rate constant",
+  "Item0000000080": "pseudo-first-order reaction rate constant",
+  "Item0000000081": "pseudo-second-order reaction rate constant",
+  "Item0000000082": "integer",
+  "Item0000000083": "reaction rate of enzyme",
+  "Item0000000084": "reaction rate of enzyme - product 1 complex",
+  "Item0000000085": "reaction rate of enzyme - product 1 - product 2 complex",
+  "Item0000000086": "reaction rate of enzyme - substrate 1 complex",
+  "Item0000000087": "reaction rate of enzyme - substrate 1 - substrate 2 complex",
+  "Item0000000088": "reaction rate of product 1",
+  "Item0000000089": "reaction rate of product 2",
+  "Item0000000090": "reaction rate of substrate 1",
+  "Item0000000091": "reaction rate of substrate 2",
+  "Item0000000092": "reaction rate of enzyme - substrate 1 - substrate 2 = enzyme - product 1 - product 2 complex",
+  "Item0000000093": "reaction rate of intermediate",
+  "Item0000000094": "reaction rate of intermediate - substrate 2 complex",
+  "Item0000000095": "reaction rate of enzyme - product 2 complex",
+  "Item0000000096": "limiting reaction rate (uni uni reaction - forward)",
+  "Item0000000097": "limiting reaction rate (bi bi reaction ordered mechanism - backward)",
+  "Item0000000098": "limiting reaction rate (bi bi reaction ordered mechanism with single central complex - forward)",
+  "Item0000000099": "limiting reaction rate (uni uni reaction - backward)",
+  "Item0000000100": "limiting reaction rate with inhibitor (uni uni reaction - forward)",
+  "Item0000000101": "Hill limiting reaction rate",
+  "Item0000000102": "rate",
+  "Item0000000103": "inhibition constant",
+  "Item0000000104": "Monod constant",
+  "Item0000000105": "inhibition constant (Andrews)",
+  "Item0000000106": "nonlinear parameter estimation (uni uni reaction without product - Michaelis Menten model - irreversibility assumption)",
+  "Item0000000107": "nonlinear parameter estimation (uni uni reaction without product - Michaelis Menten model - rapid equilibrium assumption)",
+  "Item0000000108": "nonlinear parameter estimation (uni uni reaction without product - Michaelis Menten model - steady state assumption)",
+  "Item0000000109": "nonlinear parameter estimation (uni uni reaction without product and competitive complete inhibition - Michaelis Menten model - steady state assumption)",
+  "Item0000000110": "nonlinear parameter estimation (uni uni reaction without product and mixed complete inhibition - Michaelis Menten model - steady state assumption)",
+  "Item0000000111": "nonlinear parameter estimation (uni uni reaction without product and non-competitive complete inhibition - Michaelis Menten model - steady state assumption)",
+  "Item0000000112": "nonlinear parameter estimation (uni uni reaction without product and uncompetitive complete inhibition - Michaelis Menten model - steady state assumption)",
+  "Item0000000113": "nonlinear parameter estimation (uni uni reaction with product - Michaelis Menten model - steady state assumption)",
+  "Item0000000114": "nonlinear parameter estimation (uni uni reaction without product and competitive partial inhibition - Michaelis Menten model - steady state assumption)",
+  "Item0000000115": "nonlinear parameter estimation (uni uni reaction without product and mixed partial inhibition - Michaelis Menten model - steady state assumption)",
+  "Item0000000116": "nonlinear parameter estimation (uni uni reaction without product and non-competitive partial inhibition - Michaelis Menten model - steady state assumption)",
+  "Item0000000117": "nonlinear parameter estimation (uni uni reaction without product and uncompetitive partial inhibition - Michaelis Menten model - steady state assumption)",
+  "Item0000000118": "parameter estimation of enzyme kinetics",
+  "Item0000000119": "Comprehensive enzyme kinetics by V. Leskovac, Published by Kluwer Academic/Plenum Publisher New York, March 2003-11-17"
+ },
+ "source": "model Q6675342 bi bi reaction ordered mechanism Michaelis Menten model without products (steady state assumption)",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1560",
+    "Item0000000002",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000119",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P1684",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P1513",
+    "Item0000000004",
+    []
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P1684",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P1674",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000007",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000008",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000009",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000010",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000011",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000012",
+    []
+   ],
+   [
+    "P147",
+    "Item0000000013",
+    []
+   ]
+  ],
+  "Item0000000005": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000015"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ]
+  ],
+  "Item0000000006": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000019"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000020"
+    ]
+   ]
+  ],
+  "Item0000000007": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ]
+  ],
+  "Item0000000008": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000024"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000026"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000026"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000027"
+    ]
+   ]
+  ],
+  "Item0000000009": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ],
+   [
+    "P1691",
+    "Item0000000012",
+    []
+   ]
+  ],
+  "Item0000000010": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ]
+  ],
+  "Item0000000011": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ],
+   [
+    "P1691",
+    "Item0000000010",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000028",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000029",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000030",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000031",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000032",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000033",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000034",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000035",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000036",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000037",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000038",
+    []
+   ],
+   [
+    "P1691",
+    "Item0000000039",
+    []
+   ]
+  ],
+  "Item0000000012": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ]
+  ],
+  "Item0000000013": [
+   [
+    "P1684",
+    "Item0000000106",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000107",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000108",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000109",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000110",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000111",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000112",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000113",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000114",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000115",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000116",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000117",
+    []
+   ]
+  ],
+  "Item0000000014": [
+   [
+    "P1684",
+    "Item0000000004",
+    [
+     "Item0000000005"
+    ]
+   ]
+  ],
+  "Item0000000015": [
+   [
+    "P1684",
+    "Item0000000040",
+    []
+   ]
+  ],
+  "Item0000000016": [
+   [
+    "P1684",
+    "Item0000000042",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000043",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000044",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000045",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000046",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000047",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000048",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000049",
+    []
+   ]
+  ],
+  "Item0000000017": [
+   [
+    "P1684",
+    "Item0000000041",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000050",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000051",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000052",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000054",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000055",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000056",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000057",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000058",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000059",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000060",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000061",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000062",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000063",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000026",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000064",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000065",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000066",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000067",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000068",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000069",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000070",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000071",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000072",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000073",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000074",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000026",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000041",
+    []
+   ]
+  ],
+  "Item0000000018": [
+   [
+    "P1684",
+    "Item0000000075",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000076",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000077",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000078",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000079",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000080",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000081",
+    []
+   ]
+  ],
+  "Item0000000019": [],
+  "Item0000000020": [
+   [
+    "P1684",
+    "Item0000000083",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000084",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000085",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000086",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000087",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000088",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000089",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000090",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000091",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000092",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000093",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000094",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000095",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000027",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000096",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000097",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000025",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000098",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000099",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000100",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000101",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000025",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000027",
+    []
+   ]
+  ],
+  "Item0000000021": [
+   [
+    "P1684",
+    "Item0000000007",
+    []
+   ]
+  ],
+  "Item0000000022": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ]
+  ],
+  "Item0000000023": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ]
+  ],
+  "Item0000000024": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000024"
+    ]
+   ]
+  ],
+  "Item0000000025": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000041"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000025"
+    ]
+   ]
+  ],
+  "Item0000000026": [
+   [
+    "P1684",
+    "Item0000000056",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000057",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000104",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000105",
+    []
+   ]
+  ],
+  "Item0000000027": [],
+  "Item0000000028": [],
+  "Item0000000029": [],
+  "Item0000000030": [],
+  "Item0000000031": [],
+  "Item0000000032": [],
+  "Item0000000033": [],
+  "Item0000000034": [],
+  "Item0000000035": [],
+  "Item0000000036": [],
+  "Item0000000037": [],
+  "Item0000000038": [],
+  "Item0000000039": [],
+  "Item0000000040": [],
+  "Item0000000041": [
+   [
+    "P1684",
+    "Item0000000015",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000015",
+    []
+   ]
+  ],
+  "Item0000000042": [],
+  "Item0000000043": [],
+  "Item0000000044": [],
+  "Item0000000045": [],
+  "Item0000000046": [],
+  "Item0000000047": [],
+  "Item0000000048": [],
+  "Item0000000049": [],
+  "Item0000000050": [],
+  "Item0000000051": [],
+  "Item0000000052": [],
+  "Item0000000053": [],
+  "Item0000000054": [],
+  "Item0000000055": [],
+  "Item0000000056": [],
+  "Item0000000057": [],
+  "Item0000000058": [],
+  "Item0000000059": [],
+  "Item0000000060": [],
+  "Item0000000061": [],
+  "Item0000000062": [],
+  "Item0000000063": [],
+  "Item0000000064": [],
+  "Item0000000065": [
+   [
+    "P1684",
+    "Item0000000022",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000023",
+    []
+   ]
+  ],
+  "Item0000000066": [],
+  "Item0000000067": [],
+  "Item0000000068": [],
+  "Item0000000069": [],
+  "Item0000000070": [],
+  "Item0000000071": [],
+  "Item0000000072": [],
+  "Item0000000073": [],
+  "Item0000000074": [],
+  "Item0000000075": [],
+  "Item0000000076": [],
+  "Item0000000077": [],
+  "Item0000000078": [],
+  "Item0000000079": [],
+  "Item0000000080": [],
+  "Item0000000081": [],
+  "Item0000000082": [
+   [
+    "P1684",
+    "Item0000000019",
+    []
+   ]
+  ],
+  "Item0000000083": [],
+  "Item0000000084": [],
+  "Item0000000085": [],
+  "Item0000000086": [],
+  "Item0000000087": [],
+  "Item0000000088": [],
+  "Item0000000089": [],
+  "Item0000000090": [],
+  "Item0000000091": [],
+  "Item0000000092": [],
+  "Item0000000093": [],
+  "Item0000000094": [],
+  "Item0000000095": [],
+  "Item0000000096": [],
+  "Item0000000097": [],
+  "Item0000000098": [],
+  "Item0000000099": [],
+  "Item0000000100": [],
+  "Item0000000101": [],
+  "Item0000000102": [
+   [
+    "P1684",
+    "Item0000000020",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000025",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000027",
+    []
+   ]
+  ],
+  "Item0000000103": [
+   [
+    "P1684",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000104": [],
+  "Item0000000105": [],
+  "Item0000000106": [],
+  "Item0000000107": [],
+  "Item0000000108": [],
+  "Item0000000109": [],
+  "Item0000000110": [],
+  "Item0000000111": [],
+  "Item0000000112": [],
+  "Item0000000113": [],
+  "Item0000000114": [],
+  "Item0000000115": [],
+  "Item0000000116": [],
+  "Item0000000117": [],
+  "Item0000000118": [
+   [
+    "P1684",
+    "Item0000000013",
+    []
+   ]
+  ],
+  "Item0000000119": []
+ }
+}
