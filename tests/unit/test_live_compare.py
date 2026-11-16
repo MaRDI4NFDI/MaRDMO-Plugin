@@ -30,6 +30,10 @@ def test_only_reading_requests_are_sent():
     assert read_only(TEX_CHECK_URL, {'method': 'POST', 'params': {}, 'data': {'q': 'x'}})
     assert not read_only(API, {'method': 'POST', 'params': {'action': 'wbeditentity'}, 'data': {}})
     assert not read_only(API, {'method': 'GET', 'params': {'action': 'wbeditentity'}, 'data': None})
+    assert read_only('https://api.crossref.org/works/10.1/x', {'method': 'GET', 'params': {}, 'data': None})
+    assert not read_only('https://api.crossref.org/works', {'method': 'POST', 'params': {}, 'data': {}})
+    assert not read_only('https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items',
+                         {'method': 'GET', 'params': {}, 'data': None})
 
 
 def test_every_recorded_request_is_kept_and_reading():

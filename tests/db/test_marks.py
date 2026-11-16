@@ -7,8 +7,10 @@ nothing else may be red.  Answers of the same question are mutated once
 of them (no difference).  The answers that name a tab are left out: deleting
 one is deleting the tab, which RDMO does with all its answers.
 
-white_2006 runs once more in German: the marks are the German problems,
-and every section of a problem is in the German catalog.
+The synthetic documentations (tools/synthetic) answer every question of
+their catalog, so every question is deleted once.  white_2006 runs once
+more in German: the marks are the German problems, and every section of a
+problem is in the German catalog.
 
 Offline: recorded portal answers; the TeX checker accepts every formula.
 '''
@@ -29,10 +31,14 @@ from tests.db.conftest import select
 from tests.db.test_export import imported
 from tests.db.test_hydration import CASES
 from tools.messages import CATALOG
+from tools.synthetic.catalog import Catalog
 
 MARK = re.compile(r'<strong class="mardmo-error">(.*?)</strong>', re.S)
 PROJECTS = [('white_2006', 'import', 'en'), ('si_model', 'select', 'en'), ('thomas_algorithm', 'select', 'en'),
-            ('workflow', 'select', 'en'), ('white_2006', 'import', 'de')]
+            ('workflow', 'select', 'en'), ('white_2006', 'import', 'de'),
+            # Every question of each catalog (tools/synthetic)
+            ('synthetic_model', 'import', 'en'), ('synthetic_model_basics', 'import', 'en'),
+            ('synthetic_algorithm', 'import', 'en'), ('synthetic_workflow', 'import', 'en')]
 # Texts of the German catalog
 GERMAN = {entry.msgid for entry in polib.pofile(str(CATALOG)) if entry.msgstr}
 
@@ -86,14 +92,19 @@ def _compare(documentation, language):
     return wrong
 
 
-def mutations(documentation):
-    '''One answer per question (the first), deleted and, with text, blanked.'''
+def mutations(documentation, questions):
+    '''One answer per question (the first), deleted and, with text, blanked.
+
+    Only answers of questions of the catalog (*questions*: their attribute
+    URIs): the user cannot change the others (a publication's authors,
+    what MaRDMO stores without a question).
+    '''
     sections = {f'{BASE_URI}domain/{section}' for section in ('model', 'formulation', 'quantity', 'task', 'problem',
                 'field', 'publication', 'algorithm', 'software', 'benchmark', 'workflow', 'processstep',
                 'hardware', 'dataset')}
     seen = set()
     for value in documentation.values.filter(snapshot=None).select_related('attribute').order_by('id'):
-        if value.attribute.uri in sections or value.attribute.uri in seen:
+        if value.attribute.uri in sections or value.attribute.uri in seen or value.attribute.uri not in questions:
             continue
         seen.add(value.attribute.uri)
         yield value, 'delete'
@@ -103,7 +114,7 @@ def mutations(documentation):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize('name, how, language', PROJECTS)
-def test_marks_are_the_problems_of_the_checks(name, how, language, project, portal, monkeypatch):
+def test_marks_are_the_problems_of_the_checks(name, how, language, project, portal, monkeypatch, questionnaire):
     monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
     monkeypatch.setattr('MaRDMO.checks.model.check_formulas', lambda formulas: {})
     if how == 'import':
@@ -116,7 +127,9 @@ def test_marks_are_the_problems_of_the_checks(name, how, language, project, port
         select(documentation, qkey, page, external_id, f'{label} ({description}) [{external_id.split(":")[0]}]')
     assert compare(documentation, language) == []
     wrong = []
-    for value, how in list(mutations(documentation)):
+    catalog = Catalog.read(questionnaire.path, str(documentation.catalog).rsplit('/', 1)[1])
+    questions = {f'{BASE_URI}domain/{question.attribute}' for question in catalog.questions()}
+    for value, how in list(mutations(documentation, questions)):
         path = value.attribute.uri.replace(f'{BASE_URI}domain/', '')
         try:
             with transaction.atomic():
