@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .constants import ALGORITHM_PROPS, SOFTWARE_PROPS
-from .models import Algorithm, Software
+from .models import Algorithm, Relatant, Software
 from .getters import (
     get_id,
     get_items,
@@ -56,6 +56,8 @@ class _RelatantSpec:
     visited           – mutable set of already-processed external IDs
     batch_fill_method – optional batch SPARQL hydrator; when set, mardi/wikidata
                         relatants are collected and dispatched in one query
+    wikidata_basics   – item type: Wikidata relatants get a page with their name
+                        and description only, they are not filled (#166)
 
     The free set_index of a section is always read fresh via _next_set_index.
     '''
@@ -66,6 +68,37 @@ class _RelatantSpec:
     catalog: str
     visited: set
     batch_fill_method: Any = None
+    # Item type of the pages of Wikidata relatants that get their name and
+    # description only, not filled further (no Wikidata chains, #166)
+    wikidata_basics: Any = None
+
+
+_NO_MARKERS = {'class': set(), 'community': set(), 'profile': set()}
+
+
+def portal_twins(relatants, markers):
+    '''The fitting portal twins of the Wikidata items among *relatants*: ``{wikidata ID: Relatant}`` (#166).
+
+    A twin is the portal item with the Wikidata item's QID (P12).  It fits
+    when one of *markers* (:class:`~MaRDMO.markers.Markers`, e.g. of a
+    quantity and of a quantity kind) does not contradict its class,
+    community and profile type: the rule of the preview's "Use this item"
+    (#141).  Its label and description are the portal's.  A lookup that
+    fails finds no twins: the Wikidata items stay, and the preview lists
+    those that are on the portal.
+    '''
+    from .markers import contradictions  # pylint: disable=import-outside-toplevel
+    from .queries import find_portal_items, portal_labels  # pylint: disable=import-outside-toplevel
+    qids = sorted({relatant.id.split(':', 1)[1] for relatant in relatants
+                   if relatant.id and relatant.id.startswith('wikidata:')})
+    if not qids:
+        return {}
+    found = find_portal_items(wikidata_qids=qids)
+    fitting = {qid: twin for qid, twin in found.by_wikidata.items() if twin and any(
+        not contradictions(marker, {**_NO_MARKERS, **(found.markers.get(twin) or {})}) for marker in markers)}
+    labels = (portal_labels(list(fitting.values())) or {}) if fitting else {}
+    return {f'wikidata:{qid}': Relatant(f'mardi:{twin}', *labels[twin])
+            for qid, twin in fitting.items() if twin in labels and labels[twin][0]}
 
 
 def _values_clause(items):
@@ -258,7 +291,11 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                              info={'text': text, 'external_id': relatant.id,
                                    'set_index': next_idx})
 
-                if spec.batch_fill_method and source in ('mardi', 'wikidata'):
+                if source == 'wikidata' and spec.wikidata_basics:
+                    # A page with name and description only: no Wikidata chain (#166)
+                    add_basics(project=project, text=text, questions=self.questions,
+                               item_type=spec.wikidata_basics, index=(0, next_idx))
+                elif spec.batch_fill_method and source in ('mardi', 'wikidata'):
                     batch_items.append((text, relatant.id, next_idx))
                 else:
                     spec.fill_method(project=project, text=text,

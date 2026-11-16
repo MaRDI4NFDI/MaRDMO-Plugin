@@ -15,8 +15,9 @@ from rdmo.options.models import Option
 from . import models
 from .constants import props, relatant_uris, relation_uris
 
-from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source
+from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, portal_twins
 from ..constants import BASE_URI
+from ..markers import SECTION_MARKERS
 from ..getters import (
     get_mathmoddb,
     get_questions,
@@ -74,6 +75,22 @@ def write_defining_formula(project, page, data, set_index):
         value_editor(project=project, uri=f'{BASE_URI}{page["Element Quantity"]["uri"]}',
                      info={'text': item_text(qty.label, qty.description),
                            'external_id': qty.id, 'set_index': idx, 'set_prefix': f'{set_index}|0|0'})
+
+
+def use_portal_twins(datas):
+    '''Replace the Wikidata quantities of the defining formulas of *datas* by their fitting portal twins (#166).
+
+    A Wikidata quantity of a formula whose twin on the MaRDI Portal fits (a
+    quantity or quantity kind there) becomes the portal item, which is then
+    filled from the portal; the others stay Wikidata items, whose pages get
+    their name and description only (no Wikidata chains).  One lookup for
+    all *datas*.
+    '''
+    datas = [data for data in datas if getattr(data, 'contains_quantity', None)]
+    twins = portal_twins([quantity for data in datas for quantity in data.contains_quantity],
+                         (SECTION_MARKERS['model']['quantity'], SECTION_MARKERS['model']['quantity kind']))
+    for data in datas:
+        data.contains_quantity = [twins.get(quantity.id, quantity) for quantity in data.contains_quantity]
 
 
 class Information(BaseInformation):
@@ -294,6 +311,12 @@ class Information(BaseInformation):
             'model/queries/quantity_wikidata.sparql',
             models.QuantityOrQuantityKind,
         )
+        # A quantity the query finds nothing for (e.g. a portal twin without MathModDB
+        # data, #166) gets the name and description its page is selected with
+        for text, external_id, set_index in items:
+            if external_id not in data_by_id:
+                add_basics(project=project, text=text, questions=self.questions,
+                           item_type='Quantity', index=(0, set_index))
         if not data_by_id:
             return
 
@@ -320,6 +343,9 @@ class Information(BaseInformation):
                     data_by_id[external_id].formulas          = fd['formulas']
                     data_by_id[external_id].symbols           = fd['symbols']
                     data_by_id[external_id].contains_quantity = fd['contains_quantity']
+
+        # Quantities of the formulas: portal twins instead of Wikidata items (#166)
+        use_portal_twins(data_by_id.values())
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
@@ -367,6 +393,7 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_quantity_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_quantity_batch,
+                    wikidata_basics='Quantity',
                 ))
 
             # The relation questions depend on the classes of the quantity and
@@ -439,6 +466,9 @@ class Information(BaseInformation):
                     data_by_id[external_id].symbols           = fd['symbols']
                     data_by_id[external_id].contains_quantity = fd['contains_quantity']
 
+        # Quantities of the formulas: portal twins instead of Wikidata items (#166)
+        use_portal_twins(data_by_id.values())
+
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -475,6 +505,7 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_quantity_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_quantity_batch,
+                    wikidata_basics='Quantity',
                 ))
 
             add_relations_flexible(
