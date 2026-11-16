@@ -32,7 +32,7 @@ from ..getters import get_options
 from ..ids import is_own_item
 from ..pages import PageRef
 from ..validators import formula_comment_problem
-from ..tex_check import UNAVAILABLE
+from ..tex_check import NOT_VERIFIED
 
 register = template.Library()
 
@@ -133,8 +133,8 @@ def formula(tex, verdict=None):
     Args:
         tex:     TeX string.
         verdict: Result of :func:`~MaRDMO.tex_check.check_formulas` for *tex*:
-                 ``None`` (valid), :data:`~MaRDMO.tex_check.UNAVAILABLE`, or the
-                 checker's message.
+                 ``None`` (valid), one of :data:`~MaRDMO.tex_check.NOT_VERIFIED`
+                 (no verdict), or the checker's message.
 
     Invalid formulas are not handed to MathJax (an unbalanced brace would
     swallow the rest of the line); the browser fills ``mardmo-tex-hint`` with
@@ -146,7 +146,7 @@ def formula(tex, verdict=None):
     '''
     if formula_comment_problem(tex):
         return format_html('<code class="mardmo-tex">{}</code>', tex)
-    if verdict == UNAVAILABLE:
+    if verdict in NOT_VERIFIED:
         return format_html(
             '<span class="mardmo-formula" data-tex="{}">\\( {} \\)</span> '
             '<span class="mardmo-note">({})</span>', tex, tex, _('not verified by the MaRDI Portal')

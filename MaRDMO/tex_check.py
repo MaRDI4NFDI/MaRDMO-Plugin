@@ -11,7 +11,15 @@ Provides:
 - :func:`collect_formulas` — all formulas and symbols of a model answers dict
 - :func:`annotate_formulas` — store the verdicts next to the formulas for the preview
 - :func:`environment_hint` — explanation for a rejection caused by an unsupported environment
-- :data:`UNAVAILABLE`      — verdict when the checker could not be reached
+- :data:`UNAVAILABLE`      — verdict when the checker could not be reached (try again)
+- :data:`FAILED`           — verdict when the checker failed on a formula (not verified)
+
+The checker answers 200 (valid) or 400 (invalid, with its message).  Other
+answers mean that no verdict was reached: when the portal is not reachable
+(no connection, timeout, 429, 502, 503, 504) the preview asks to try again;
+when the checker itself fails on a formula (e.g. HTTP 500 for valid TeX the
+portal saves and renders, #165) trying again does not help, so the formula
+passes as "not verified by the MaRDI Portal".
 '''
 import hashlib
 import logging
@@ -24,17 +32,25 @@ from django.utils.translation import ngettext
 
 from .constants import TEX_CHECK_URL
 from .helpers import commit_writes
-from .queries import request_with_retry
+from .queries import SPARQL_RETRY_STATUS, request_with_retry
 from .validators import normalize_formula
 
 logger = logging.getLogger(__name__)
 
 UNAVAILABLE = 'unavailable'
-'''Verdict for formulas the checker could not answer (timeout, server error).'''
+'''Verdict for formulas the checker could not answer: the portal is not reachable (try again).'''
+
+FAILED = 'failed'
+'''Verdict for formulas the checker failed on (no verdict): they pass as not verified.'''
+
+NOT_VERIFIED = (UNAVAILABLE, FAILED)
+'''Verdicts that are no verdict on the formula.'''
 
 TEX_CHECK_TIMEOUT = 5
 _CACHE_PREFIX = 'mardmo_tex_'
 _CACHE_TIMEOUT = 7 * 24 * 60 * 60
+# A failure of the checker is kept for a day: it does not go away by asking again
+_FAILED_TIMEOUT = 24 * 60 * 60
 _VALID = 'valid'
 _MAX_THREADS = 8
 
@@ -74,8 +90,14 @@ def _cache_key(tex):
     return _CACHE_PREFIX + hashlib.sha1(tex.encode('utf-8')).hexdigest()
 
 
+def _failed(tex, response):
+    logger.warning("TeX check failed on %r: HTTP %s: %s", tex, response.status_code, response.text[:200])
+    cache.set(_cache_key(tex), FAILED, _FAILED_TIMEOUT)
+    return FAILED
+
+
 def _check_one(tex):
-    '''Return ``None`` (valid), the checker's message (invalid), or :data:`UNAVAILABLE`.'''
+    '''Return ``None`` (valid), the checker's message (invalid), :data:`UNAVAILABLE` or :data:`FAILED`.'''
     cached = cache.get(_cache_key(tex))
     if cached is not None:
         return None if cached == _VALID else cached
@@ -96,8 +118,7 @@ def _check_one(tex):
         except ValueError:
             valid = False
         if not valid:
-            logger.warning("TeX check returned an unexpected answer: %s", response.text[:200])
-            return UNAVAILABLE
+            return _failed(tex, response)
         cache.set(_cache_key(tex), _VALID, _CACHE_TIMEOUT)
         return None
     if response.status_code == 400:
@@ -115,8 +136,10 @@ def _check_one(tex):
         message = str(message)
         cache.set(_cache_key(tex), message, _CACHE_TIMEOUT)
         return message
-    logger.warning("TeX check returned HTTP %s: %s", response.status_code, response.text[:200])
-    return UNAVAILABLE
+    if response.status_code in SPARQL_RETRY_STATUS:
+        logger.warning("TeX check returned HTTP %s: %s", response.status_code, response.text[:200])
+        return UNAVAILABLE
+    return _failed(tex, response)
 
 
 def check_formulas(formulas):
@@ -132,8 +155,9 @@ def check_formulas(formulas):
 
     Returns:
         Dict ``{tex: verdict}`` with ``None`` for valid formulas, the checker's
-        message (e.g. ``"syntax error"``) for invalid ones, and
-        :data:`UNAVAILABLE` when the checker could not be reached.
+        message (e.g. ``"syntax error"``) for invalid ones, :data:`UNAVAILABLE`
+        when the checker could not be reached, and :data:`FAILED` when it
+        failed on the formula.
     '''
     # checked as exported: on one line, see normalize_formula
     unique = sorted({normalize_formula(tex) for tex in formulas if isinstance(tex, str)} - {''})

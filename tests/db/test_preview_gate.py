@@ -65,6 +65,15 @@ def test_an_unanswered_tex_check_asks_to_try_again(white, client, monkeypatch):
     assert 'The TeX check of the MaRDI Portal did not answer' in text(html) and export_button(html) == 'disabled'
 
 
+def test_a_formula_the_tex_check_fails_on_passes_unverified(white, client, monkeypatch):
+    '''The checker fails on a formula (e.g. HTTP 500 for valid TeX, #165): no dead end, a note.'''
+    monkeypatch.setattr('MaRDMO.checks.model.check_formulas', lambda formulas: {tex: 'failed' for tex in formulas})
+    monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {tex: 'failed' for tex in formulas})
+    html = preview_page(client, white)
+    assert not elements(html, id='before-export') and export_button(html) == 'enabled'
+    assert 'not verified by the MaRDI Portal' in text(html)
+
+
 def test_the_export_checks_again_and_names_what_changed(white, client):
     assert export_button(preview_page(client, white)) == 'enabled'
     without_description(white, 'formulation', 1)       # after the preview

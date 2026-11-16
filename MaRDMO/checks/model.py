@@ -9,7 +9,7 @@ from ..constants import CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..ids import is_own_item
 from .base import without_page
 from ..patterns import QUDT_ID_STRICT_RE
-from ..tex_check import UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
+from ..tex_check import NOT_VERIFIED, UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
 from ..validators import (
     ELEMENT_SYMBOL_MESSAGES, element_symbol_problems, formula_comment_problem, has_equivalence_sign,
 )
@@ -34,7 +34,7 @@ class ModelMixin:
             if comment := formula_comment_problem(tex):
                 self.err.append(self._error(section, page_name, _('Invalid Formula {number}: {problem}').format(number=number, problem=comment), field='Formula'))
             problem = verdict(verdicts, tex)
-            if problem and problem != UNAVAILABLE:
+            if problem and problem not in NOT_VERIFIED:
                 hint = environment_hint(tex)
                 self.err.append(self._error(
                     section, page_name,
@@ -47,7 +47,7 @@ class ModelMixin:
             if comment := formula_comment_problem(symbol):
                 self.err.append(self._error(section, page_name, _('Invalid Symbol "{symbol}": {problem}').format(symbol=symbol, problem=comment), field='element'))
             problem = verdict(verdicts, symbol)
-            if problem and problem != UNAVAILABLE:
+            if problem and problem not in NOT_VERIFIED:
                 self.err.append(self._error(
                     section, page_name,
                     _('Invalid Symbol "{symbol}": rejected by the MaRDI Portal ({problem})').format(
