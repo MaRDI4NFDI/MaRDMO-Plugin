@@ -1,0 +1,578 @@
+{
+ "labels": {
+  "Item0000000000": "environmental engineering",
+  "Item0000000001": "engineering",
+  "Item0000000002": "chemical wastewater treatment",
+  "Item0000000003": "wastewater treatment",
+  "Item0000000004": "Redlich-Peterson isotherm model",
+  "Item0000000005": "Redlich-Peterson equation",
+  "Item0000000006": "Redlich-Peterson exponent constraint",
+  "Item0000000007": "nonlinear parameter estimation (Redlich-Peterson model)",
+  "Item0000000008": "Langmuir isotherm model",
+  "Item0000000009": "Henry's isotherm model",
+  "Item0000000010": "Freundlich isotherm model",
+  "Item0000000011": "Langmuir limit assumption",
+  "Item0000000012": "Henry limit assumption",
+  "Item0000000013": "high solute concentration in equilibrium assumption",
+  "Item0000000014": "adsorbed solute (equilibrium)",
+  "Item0000000015": "solute concentration (equilibrium)",
+  "Item0000000016": "Redlich-Peterson constant",
+  "Item0000000017": "Redlich-Peterson coefficient",
+  "Item0000000018": "Redlich-Peterson exponent",
+  "Item0000000019": "Langmuir equation",
+  "Item0000000020": "Henry adsorption equation",
+  "Item0000000021": "Freundlich equation",
+  "Item0000000022": "adsorbed solute (time-dependent)",
+  "Item0000000023": "solute concentration (equilibrium, dimensionless)",
+  "Item0000000024": "concentration",
+  "Item0000000025": "nonlinear parameter estimation (Langmuir adsorption model)",
+  "Item0000000026": "linear parameter estimation (Henry's isotherm)",
+  "Item0000000027": "linear parameter estimation (Freundlich isotherm)",
+  "Item0000000028": "Monolayer and multilayer adsorption isotherm models for sorption from aqueous media",
+  "Item0000000029": "Hill model (adsorption)",
+  "Item0000000030": "Temkin isotherm model",
+  "Item0000000031": "Fowler-Guggenheim isotherm model",
+  "Item0000000032": "Kiselev isotherm model",
+  "Item0000000033": "Volmer isotherm model",
+  "Item0000000034": "Flory-Huggins isotherm model",
+  "Item0000000035": "Jovanovic isotherm model",
+  "Item0000000036": "Dubinin-Radushkevich isotherm model",
+  "Item0000000037": "Sips isotherm model",
+  "Item0000000038": "Toth isotherm model",
+  "Item0000000039": "Radke-Prausnitz isotherm model",
+  "Item0000000040": "Fritz-Schlunder 3-parameter isotherm model",
+  "Item0000000041": "Fritz-Schlunder 4-parameter isotherm model",
+  "Item0000000042": "Fritz-Schlunder 5-parameter isotherm model",
+  "Item0000000043": "Jossens isotherm model",
+  "Item0000000044": "Koble-Corrigan isotherm model",
+  "Item0000000045": "Khan isotherm model",
+  "Item0000000046": "UNILAN isotherm model",
+  "Item0000000047": "Dubinin–Astakhov isotherm model",
+  "Item0000000048": "Frumkin isotherm model",
+  "Item0000000049": "Baudu isotherm model",
+  "Item0000000050": "Weber-van Vliet isotherm model",
+  "Item0000000051": "A Useful Adsorption Isotherm",
+  "Item0000000052": "Adsorption of phenols from wastewater",
+  "Item0000000053": "Adsorption and desorption of phenol on activated carbon and a comparison of isotherm models",
+  "Item0000000054": "Adsorption isotherm models for dye removal by cationized starch-based material in a single component system: error analysis",
+  "Item0000000055": "Adsorptive removal of lead ions from wastewater using modified diatomite"
+ },
+ "source": "model Q6821116 Redlich-Peterson isotherm model",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1560",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P1684",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P1513",
+    "Item0000000004",
+    []
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P1684",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P1560",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P147",
+    "Item0000000007",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000008",
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P1684",
+    "Item0000000009",
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P1684",
+    "Item0000000010",
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000051",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000052",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000055",
+    []
+   ]
+  ],
+  "Item0000000005": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000015"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P1560",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000019",
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P1684",
+    "Item0000000020",
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P1684",
+    "Item0000000021",
+    [
+     "Item0000000013"
+    ]
+   ]
+  ],
+  "Item0000000006": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ]
+  ],
+  "Item0000000007": [
+   [
+    "P1560",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000014",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000015",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000016",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000017",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000018",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000025",
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P1684",
+    "Item0000000026",
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P1684",
+    "Item0000000027",
+    [
+     "Item0000000013"
+    ]
+   ]
+  ],
+  "Item0000000008": [
+   [
+    "P286",
+    "Item0000000052",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000055",
+    []
+   ]
+  ],
+  "Item0000000009": [],
+  "Item0000000010": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000052",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000055",
+    []
+   ]
+  ],
+  "Item0000000011": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ]
+  ],
+  "Item0000000012": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ]
+  ],
+  "Item0000000013": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000015"
+    ]
+   ]
+  ],
+  "Item0000000014": [],
+  "Item0000000015": [
+   [
+    "P1658",
+    "Item0000000023",
+    []
+   ]
+  ],
+  "Item0000000016": [],
+  "Item0000000017": [],
+  "Item0000000018": [],
+  "Item0000000019": [],
+  "Item0000000020": [],
+  "Item0000000021": [],
+  "Item0000000022": [
+   [
+    "P1684",
+    "Item0000000014",
+    []
+   ]
+  ],
+  "Item0000000023": [],
+  "Item0000000024": [
+   [
+    "P1684",
+    "Item0000000015",
+    []
+   ]
+  ],
+  "Item0000000025": [],
+  "Item0000000026": [],
+  "Item0000000027": [],
+  "Item0000000028": [],
+  "Item0000000029": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000030": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000031": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000032": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000033": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000034": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000035": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000036": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000037": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000055",
+    []
+   ]
+  ],
+  "Item0000000038": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000053",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000054",
+    []
+   ]
+  ],
+  "Item0000000039": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000040": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000041": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000042": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000043": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000044": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000045": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000046": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000047": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000048": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000049": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000050": [
+   [
+    "P286",
+    "Item0000000028",
+    []
+   ]
+  ],
+  "Item0000000051": [],
+  "Item0000000052": [],
+  "Item0000000053": [],
+  "Item0000000054": [],
+  "Item0000000055": []
+ }
+}

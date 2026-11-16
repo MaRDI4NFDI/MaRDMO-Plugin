@@ -7,7 +7,7 @@ Contains:
   :func:`basic_list`, :func:`split_value`, :func:`nested_set`.
 - Questionnaire write helpers: :func:`value_editor`, :func:`batched_writes`,
   :func:`commit_writes`, :func:`get_attribute`.
-- Graph utilities: :func:`topological_order`, :func:`is_cyclic`.
+- Graph utilities: :func:`topological_order`, :func:`is_cyclic`, :func:`cycle_groups`.
 - Date helpers: :func:`date_format`, :func:`date_precision`.
 - Entity-relation processing: :func:`entity_relations`,
   :func:`entity_relations_grouped`, :func:`map_entity`,
@@ -224,6 +224,54 @@ def topological_order(direct_dependencies: dict[str, set[str]]) -> list[str]:
             if in_degree[dependent] == 0:
                 queue.append(dependent)
     return order
+
+def cycle_groups(dependencies: dict[str, set[str]]) -> list[list[str]]:
+    '''The groups of nodes that depend on each other in a cycle, each sorted, sorted by first node (#164).
+
+    The strongly connected components with more than one node (Tarjan's
+    algorithm, iterative: a cycle of thousands of items does not reach the
+    recursion limit).  A node that depends on itself is not a group; edges
+    to nodes not in *dependencies* are left out.
+
+    Args:
+        dependencies: Mapping ``{node: set_of_nodes_it_depends_on}``.
+    '''
+    index, low, on_stack, stack, groups = {}, {}, set(), [], []
+    successors = {node: sorted(dep for dep in deps if dep in dependencies and dep != node)
+                  for node, deps in dependencies.items()}
+    for root in sorted(dependencies):
+        if root in index:
+            continue
+        work = [(root, 0)]
+        while work:
+            node, position = work.pop()
+            if position == 0:
+                index[node] = low[node] = len(index)
+                stack.append(node)
+                on_stack.add(node)
+            if position < len(successors[node]):
+                work.append((node, position + 1))
+                successor = successors[node][position]
+                if successor not in index:
+                    work.append((successor, 0))
+                elif successor in on_stack:
+                    low[node] = min(low[node], index[successor])
+                continue
+            if work:
+                parent = work[-1][0]
+                low[parent] = min(low[parent], low[node])
+            if low[node] == index[node]:
+                group = []
+                while True:
+                    member = stack.pop()
+                    on_stack.discard(member)
+                    group.append(member)
+                    if member == node:
+                        break
+                if len(group) > 1:
+                    groups.append(sorted(group))
+    return sorted(groups)
+
 
 def is_cyclic(dependencies: dict[str, set[str]]) -> bool:
     '''Return ``True`` if the dependency graph contains a cycle (Kahn's algorithm).

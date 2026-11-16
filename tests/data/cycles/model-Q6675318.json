@@ -1,0 +1,430 @@
+{
+ "labels": {
+  "Item0000000000": "epidemiology",
+  "Item0000000001": "spreading of infectious diseases",
+  "Item0000000002": "susceptible infectious removed model with births and deaths",
+  "Item0000000003": "infectious at time step n+1 in the SIR model with births and deaths",
+  "Item0000000004": "removed at time step n+1 in the discrete SIR model with births and deaths",
+  "Item0000000005": "susceptibles at time step n+1 in the discrete SIR model with births and deaths",
+  "Item0000000006": "condition for positive solutions in the SIR model with births and deaths",
+  "Item0000000007": "second condition for positive solutions in the SIR model with births and deaths",
+  "Item0000000008": "initial condition for the discrete SIR model with and without births and deaths",
+  "Item0000000009": "number of infectious individuals",
+  "Item0000000010": "total population size",
+  "Item0000000011": "number of susceptible individuals",
+  "Item0000000012": "time step",
+  "Item0000000013": "contact rate",
+  "Item0000000014": "birth rate",
+  "Item0000000015": "relative removal rate",
+  "Item0000000016": "number of removed individuals",
+  "Item0000000017": "conservation law for the continuous SIR model",
+  "Item0000000018": "infectious",
+  "Item0000000019": "integer",
+  "Item0000000020": "susceptibles",
+  "Item0000000021": "time",
+  "Item0000000022": "rate",
+  "Item0000000023": "removed",
+  "Item0000000024": "Some discrete-time SI, SIR, and SIS epidemic models",
+  "Item0000000025": "susceptible infectious model",
+  "Item0000000026": "susceptible infectious removed model",
+  "Item0000000027": "susceptible infectious susceptible model",
+  "Item0000000028": "discrete susceptible infectious model",
+  "Item0000000029": "discrete susceptible infectious removed model",
+  "Item0000000030": "discrete susceptible infectious susceptible model",
+  "Item0000000031": "susceptible infectious susceptible model with births and deaths"
+ },
+ "source": "model Q6675318 susceptible infectious removed model with births and deaths",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1560",
+    "Item0000000001",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P1513",
+    "Item0000000002",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P1560",
+    "Item0000000003",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000004",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000007",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000008",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000009"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000010"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000015"
+    ]
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000009"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000015"
+    ]
+   ]
+  ],
+  "Item0000000005": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000009"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000010"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ]
+  ],
+  "Item0000000006": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000015"
+    ]
+   ]
+  ],
+  "Item0000000007": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000012"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ]
+  ],
+  "Item0000000008": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000009"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000010"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ]
+  ],
+  "Item0000000009": [],
+  "Item0000000010": [],
+  "Item0000000011": [],
+  "Item0000000012": [],
+  "Item0000000013": [],
+  "Item0000000014": [],
+  "Item0000000015": [],
+  "Item0000000016": [],
+  "Item0000000017": [
+   [
+    "P1656",
+    "Item0000000008",
+    []
+   ]
+  ],
+  "Item0000000018": [
+   [
+    "P1684",
+    "Item0000000009",
+    []
+   ]
+  ],
+  "Item0000000019": [
+   [
+    "P1684",
+    "Item0000000009",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000010",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000011",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000016",
+    []
+   ]
+  ],
+  "Item0000000020": [
+   [
+    "P1684",
+    "Item0000000011",
+    []
+   ]
+  ],
+  "Item0000000021": [
+   [
+    "P1684",
+    "Item0000000012",
+    []
+   ]
+  ],
+  "Item0000000022": [
+   [
+    "P1684",
+    "Item0000000013",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000014",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000015",
+    []
+   ]
+  ],
+  "Item0000000023": [
+   [
+    "P1684",
+    "Item0000000016",
+    []
+   ]
+  ],
+  "Item0000000024": [],
+  "Item0000000025": [
+   [
+    "P286",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000026": [
+   [
+    "P286",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000027": [
+   [
+    "P286",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000028": [
+   [
+    "P286",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000029": [
+   [
+    "P286",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000030": [
+   [
+    "P286",
+    "Item0000000024",
+    []
+   ]
+  ],
+  "Item0000000031": [
+   [
+    "P286",
+    "Item0000000024",
+    []
+   ]
+  ]
+ }
+}

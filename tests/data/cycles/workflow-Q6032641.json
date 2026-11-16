@@ -1,0 +1,192 @@
+{
+ "labels": {
+  "Item0000000000": "Logical Data Analysis for Egyptian Objects",
+  "Item0000000001": "object comparison model",
+  "Item0000000002": "extract logical rules",
+  "Item0000000003": "Extract relevant Objects from Cachette de Karnak Database",
+  "Item0000000004": "Define Properties for the Subset of Objects from the Cachette de Karnak",
+  "Item0000000005": "Encode Subset of Objects from the Cachette de Karnak in binary Strings",
+  "Item0000000006": "Extract logical Rules from encoded Subset of Objects from the Cachette de Karnak",
+  "Item0000000007": "Interprete Logical Rules determined from Subset of Objects from the Cachette de Karnak",
+  "Item0000000008": "Jupyter Notebook",
+  "Item0000000009": "Python",
+  "Item0000000010": "Lenovo IdeaPad Flex 5 14ARE05",
+  "Item0000000011": "AMD Ryzen 7 4700U",
+  "Item0000000012": "Objects from the Cachette de Karnak",
+  "Item0000000013": "Subset of objects from the Cachette de Karnak",
+  "Item0000000014": "Object Properties defined for the Subset of Objects from the Cachette de Karnak",
+  "Item0000000015": "Subset of objects from the Cachette de Karnak (boolean encoded)",
+  "Item0000000016": "Logical Rules extracted from Subset of objects from the Cachette de Karnak",
+  "Item0000000017": "Relevant logical Rules extracted from Subset of objects from the Cachette de Karnak",
+  "Item0000000018": "Egyptology",
+  "Item0000000019": "RAP Algorithm",
+  "Item0000000020": "boolean algebra"
+ },
+ "source": "workflow Q6032641 Logical Data Analysis for Egyptian Objects",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P557",
+    "Item0000000001",
+    [
+     "Item0000000002"
+    ]
+   ],
+   [
+    "P1560",
+    "Item0000000003",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000004",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000007",
+    []
+   ]
+  ],
+  "Item0000000001": [],
+  "Item0000000002": [],
+  "Item0000000003": [
+   [
+    "P1605",
+    "Item0000000012",
+    []
+   ],
+   [
+    "P1606",
+    "Item0000000013",
+    []
+   ],
+   [
+    "P437",
+    "Item0000000018",
+    []
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P1605",
+    "Item0000000013",
+    []
+   ],
+   [
+    "P1606",
+    "Item0000000014",
+    []
+   ],
+   [
+    "P437",
+    "Item0000000018",
+    []
+   ]
+  ],
+  "Item0000000005": [
+   [
+    "P1605",
+    "Item0000000013",
+    []
+   ],
+   [
+    "P1605",
+    "Item0000000014",
+    []
+   ],
+   [
+    "P1606",
+    "Item0000000015",
+    []
+   ],
+   [
+    "P437",
+    "Item0000000018",
+    []
+   ]
+  ],
+  "Item0000000006": [
+   [
+    "P1605",
+    "Item0000000015",
+    []
+   ],
+   [
+    "P1606",
+    "Item0000000016",
+    []
+   ],
+   [
+    "P557",
+    "Item0000000019",
+    [
+     "Item0000000008",
+     "Item0000000010"
+    ]
+   ],
+   [
+    "P437",
+    "Item0000000020",
+    []
+   ]
+  ],
+  "Item0000000007": [
+   [
+    "P1605",
+    "Item0000000016",
+    []
+   ],
+   [
+    "P1606",
+    "Item0000000017",
+    []
+   ],
+   [
+    "P437",
+    "Item0000000018",
+    []
+   ]
+  ],
+  "Item0000000008": [
+   [
+    "P114",
+    "Item0000000009",
+    []
+   ],
+   [
+    "P342",
+    "Item0000000009",
+    []
+   ]
+  ],
+  "Item0000000009": [],
+  "Item0000000010": [
+   [
+    "P1540",
+    "Item0000000011",
+    []
+   ]
+  ],
+  "Item0000000011": [],
+  "Item0000000012": [],
+  "Item0000000013": [],
+  "Item0000000014": [],
+  "Item0000000015": [],
+  "Item0000000016": [],
+  "Item0000000017": [],
+  "Item0000000018": [],
+  "Item0000000019": [],
+  "Item0000000020": []
+ }
+}

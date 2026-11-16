@@ -375,7 +375,7 @@
          "id": "P1684"
         },
         "value": {
-         "content": "Item0000000012",
+         "content": "Item0000000011",
          "type": "value"
         }
        },
@@ -385,7 +385,7 @@
          "id": "P1684"
         },
         "value": {
-         "content": "Item0000000012",
+         "content": "Item0000000011",
          "type": "value"
         }
        }
@@ -433,13 +433,13 @@
     [
      "P1684",
      "wikibase-item",
-     "Item0000000012",
+     "Item0000000011",
      []
     ],
     [
      "P1684",
      "wikibase-item",
-     "Item0000000012",
+     "Item0000000011",
      []
     ]
    ],
@@ -703,6 +703,16 @@
          "id": "P114"
         },
         "value": {
+         "content": "Item0000000036",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P114"
+        },
+        "value": {
          "content": "Item0000000037",
          "type": "value"
         }
@@ -714,16 +724,6 @@
         },
         "value": {
          "content": "Item0000000038",
-         "type": "value"
-        }
-       },
-       {
-        "property": {
-         "data_type": "wikibase-item",
-         "id": "P114"
-        },
-        "value": {
-         "content": "Item0000000039",
          "type": "value"
         }
        }
@@ -831,7 +831,7 @@
          "id": "P342"
         },
         "value": {
-         "content": "Item0000000013",
+         "content": "Item0000000012",
          "type": "value"
         }
        },
@@ -841,7 +841,7 @@
          "id": "P342"
         },
         "value": {
-         "content": "Item0000000040",
+         "content": "Item0000000039",
          "type": "value"
         }
        },
@@ -861,7 +861,7 @@
          "id": "P342"
         },
         "value": {
-         "content": "Item0000000041",
+         "content": "Item0000000040",
          "type": "value"
         }
        }
@@ -891,6 +891,12 @@
     [
      "P114",
      "wikibase-item",
+     "Item0000000036",
+     []
+    ],
+    [
+     "P114",
+     "wikibase-item",
      "Item0000000037",
      []
     ],
@@ -901,21 +907,15 @@
      []
     ],
     [
-     "P114",
+     "P342",
+     "wikibase-item",
+     "Item0000000012",
+     []
+    ],
+    [
+     "P342",
      "wikibase-item",
      "Item0000000039",
-     []
-    ],
-    [
-     "P342",
-     "wikibase-item",
-     "Item0000000013",
-     []
-    ],
-    [
-     "P342",
-     "wikibase-item",
-     "Item0000000040",
      []
     ],
     [
@@ -927,7 +927,7 @@
     [
      "P342",
      "wikibase-item",
-     "Item0000000041",
+     "Item0000000040",
      []
     ],
     [
@@ -1074,7 +1074,7 @@
          "id": "P342"
         },
         "value": {
-         "content": "Item0000000044",
+         "content": "Item0000000043",
          "type": "value"
         }
        }
@@ -1109,7 +1109,7 @@
     [
      "P342",
      "wikibase-item",
-     "Item0000000044",
+     "Item0000000043",
      []
     ],
     [
@@ -1262,7 +1262,7 @@
          "id": "P1766"
         },
         "value": {
-         "content": "Item0000000013",
+         "content": "Item0000000012",
          "type": "value"
         }
        }
@@ -1350,7 +1350,7 @@
     [
      "P1766",
      "wikibase-item",
-     "Item0000000013",
+     "Item0000000012",
      []
     ],
     [
@@ -1394,24 +1394,6 @@
    ]
   },
   "Item0000000010": {
-   "description": "Performs a forward sweep eliminating subdiagonal entries followed by back substitution, exploiting the tridiagonal pattern for linear-time work and storage. Stable for diagonally dominant or SPD problems; otherwise pivoting may be needed.",
-   "id": "Q6825618",
-   "label": "Thomas algorithm (tridiagonal matrix algorithm) for O(n) solution of tridiagonal systems",
-   "payload": {
-    "item": {
-     "descriptions": {
-      "en": "Performs a forward sweep eliminating subdiagonal entries followed by back substitution, exploiting the tridiagonal pattern for linear-time work and storage. Stable for diagonally dominant or SPD problems; otherwise pivoting may be needed."
-     },
-     "labels": {
-      "en": "Thomas algorithm (tridiagonal matrix algorithm) for O(n) solution of tridiagonal systems"
-     },
-     "statements": {}
-    }
-   },
-   "statements": [],
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
-  },
-  "Item0000000011": {
    "description": "Recursively partitions the array around a pivot and sorts subarrays in place; average-case O(n log n) with small constant factors. Performance hinges on pivot selection and handling of equal keys; randomized and three-way variants mitigate worst cases.",
    "id": "Q6825489",
    "label": "Quicksort: in-place partition-based divide-and-conquer comparison sorting algorithm (Hoare partition scheme)",
@@ -1429,7 +1411,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000012": {
+  "Item0000000011": {
    "class": "Algorithmic Task",
    "description": "synthetic algorithmic task B of the MaRDMO tests",
    "id": "",
@@ -1484,7 +1466,7 @@
          "id": "P1578"
         },
         "value": {
-         "content": "Item0000000023",
+         "content": "Item0000000022",
          "type": "value"
         }
        }
@@ -1514,7 +1496,7 @@
     [
      "P1578",
      "wikibase-item",
-     "Item0000000023",
+     "Item0000000022",
      []
     ],
     [
@@ -1541,7 +1523,7 @@
     "user:309e04e9-72f4-5ff8-91fe-ad372d2cf235"
    ]
   },
-  "Item0000000013": {
+  "Item0000000012": {
    "class": "Software",
    "description": "synthetic software B of the MaRDMO tests",
    "id": "",
@@ -1562,7 +1544,7 @@
          "id": "P114"
         },
         "value": {
-         "content": "Item0000000043",
+         "content": "Item0000000042",
          "type": "value"
         }
        }
@@ -1664,7 +1646,7 @@
     [
      "P114",
      "wikibase-item",
-     "Item0000000043",
+     "Item0000000042",
      []
     ],
     [
@@ -1696,7 +1678,7 @@
     "user:52fc8d76-8b56-5ac6-b3cd-6f70b087c4e9"
    ]
   },
-  "Item0000000014": {
+  "Item0000000013": {
    "class": "Algorithm",
    "description": "Krylov subspace method minimizing the A-norm of the error; per-iteration cost is O(nnz) and convergence depends on κ(A) and preconditioning quality. Cornerstone solver for large SPD problems arising from PDEs.",
    "id": "Q6825529",
@@ -1715,7 +1697,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000015": {
+  "Item0000000014": {
    "class": "Algorithmic Task",
    "description": "Systems Ax=b where A is Hermitian/symmetric positive definite, admitting Cholesky factorization and specialized Krylov solvers such as Conjugate Gradient.",
    "id": "Q6825781",
@@ -1734,7 +1716,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000016": {
+  "Item0000000015": {
    "class": "Software",
    "description": "",
    "id": "Q6825671",
@@ -1750,7 +1732,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000017": {
+  "Item0000000016": {
    "class": "Software",
    "description": "",
    "id": "Q6825738",
@@ -1766,7 +1748,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000018": {
+  "Item0000000017": {
    "class": "Software",
    "description": "",
    "id": "Q6826026",
@@ -1782,7 +1764,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000019": {
+  "Item0000000018": {
    "description": "",
    "id": "Q6825687",
    "label": "Algorithm Class: Work per iteration ~ O(nnz)",
@@ -1797,7 +1779,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000020": {
+  "Item0000000019": {
    "description": "",
    "id": "Q6825756",
    "label": "Algorithm Class: Handles sparse matrices",
@@ -1812,7 +1794,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000021": {
+  "Item0000000020": {
    "description": "",
    "id": "Q6825911",
    "label": "Algorithm Class: Handles SPD matrices",
@@ -1827,7 +1809,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000022": {
+  "Item0000000021": {
    "description": "",
    "id": "Q6825514",
    "label": "Algorithm Class: Krylov subspace iterative solvers (CG, BiCG, BiCGSTAB, GMRES)",
@@ -1842,7 +1824,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000023": {
+  "Item0000000022": {
    "class": "Algorithm",
    "description": "algorithm for calculating determinants",
    "id": "",
@@ -1899,7 +1881,7 @@
          "id": "P1766"
         },
         "value": {
-         "content": "Item0000000013",
+         "content": "Item0000000012",
          "type": "value"
         }
        }
@@ -1946,13 +1928,13 @@
     [
      "P1766",
      "wikibase-item",
-     "Item0000000013",
+     "Item0000000012",
      []
     ]
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000024": {
+  "Item0000000023": {
    "class": "Benchmark",
    "description": "synthetic benchmark A of the MaRDMO tests",
    "id": "",
@@ -2161,7 +2143,7 @@
     "user:b6028d35-ec68-52b9-bc87-a9217451b45d"
    ]
   },
-  "Item0000000025": {
+  "Item0000000024": {
    "class": "Benchmark",
    "description": "",
    "id": "Q6826014",
@@ -2177,7 +2159,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000026": {
+  "Item0000000025": {
    "class": "Benchmark",
    "description": "database of handwritten digits",
    "id": "",
@@ -2305,7 +2287,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000027": {
+  "Item0000000026": {
    "class": "Benchmark",
    "description": "synthetic benchmark typed into a relation of an algorithmic task",
    "id": "",
@@ -2401,7 +2383,7 @@
     "user:67ab3bb1-98ff-5c7b-b245-85294b540c51"
    ]
   },
-  "Item0000000028": {
+  "Item0000000027": {
    "class": "Benchmark",
    "description": "synthetic benchmark B of the MaRDMO tests",
    "id": "",
@@ -2446,7 +2428,7 @@
          "id": "P1750"
         },
         "value": {
-         "content": "Item0000000013",
+         "content": "Item0000000012",
          "type": "value"
         }
        }
@@ -2470,7 +2452,7 @@
          "id": "P930"
         },
         "value": {
-         "content": "Item0000000012",
+         "content": "Item0000000011",
          "type": "value"
         }
        }
@@ -2482,13 +2464,13 @@
     [
      "P930",
      "wikibase-item",
-     "Item0000000012",
+     "Item0000000011",
      []
     ],
     [
      "P1750",
      "wikibase-item",
-     "Item0000000013",
+     "Item0000000012",
      []
     ],
     [
@@ -2515,7 +2497,7 @@
     "user:a93374f4-1de1-52ce-88e0-c99cc3c6caee"
    ]
   },
-  "Item0000000029": {
+  "Item0000000028": {
    "class": "Algorithmic Task",
    "description": "Given a finite sequence and a total order, permute the sequence so that it is nondecreasing. The objective is to minimize comparisons, moves, and memory usage.",
    "id": "Q6825656",
@@ -2534,7 +2516,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000030": {
+  "Item0000000029": {
    "class": "Benchmark",
    "description": "",
    "id": "Q6826047",
@@ -2550,7 +2532,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000031": {
+  "Item0000000030": {
    "description": "",
    "id": "Q6825352",
    "label": "Symmetric Linear Problem",
@@ -2565,7 +2547,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000032": {
+  "Item0000000031": {
    "description": "",
    "id": "Q6825650",
    "label": "Preconditioning a Distributed Linear Problem",
@@ -2580,7 +2562,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000033": {
+  "Item0000000032": {
    "description": "",
    "id": "Q6825744",
    "label": "Symmetric Positive-Definite Linear Problem",
@@ -2595,7 +2577,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000034": {
+  "Item0000000033": {
    "description": "",
    "id": "Q6825764",
    "label": "Saddle Point Problem",
@@ -2610,7 +2592,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000035": {
+  "Item0000000034": {
    "description": "",
    "id": "Q6826110",
    "label": "Preconditioning a Linear Problem",
@@ -2625,7 +2607,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000036": {
+  "Item0000000035": {
    "class": "Benchmark",
    "description": "synthetic benchmark typed into a relation",
    "id": "",
@@ -2721,7 +2703,7 @@
     "user:2ce2c556-412c-5f54-be7f-9da7340fbb33"
    ]
   },
-  "Item0000000037": {
+  "Item0000000036": {
    "class": "Programming Language",
    "description": "general-purpose programming language",
    "id": "Q6230810",
@@ -2740,7 +2722,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000038": {
+  "Item0000000037": {
    "class": "Programming Language",
    "description": "1990 edition of the Fortran programming language standard",
    "id": "",
@@ -2796,7 +2778,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000039": {
+  "Item0000000038": {
    "class": "Programming Language",
    "description": "programming language",
    "id": "",
@@ -2838,7 +2820,7 @@
     "user:c65deb29-14a7-510d-b99c-b56011e45740"
    ]
   },
-  "Item0000000040": {
+  "Item0000000039": {
    "class": "Software",
    "description": "Reference dense eigensolvers: QR/QZ (xHSEQR, xGEES, xGGES), symmetric drivers (xSYEV/xSYEVD/xSYEVR), tridiagonal (xSTEBZ/xSTEIN/xSTEDC/xSTEMR).",
    "id": "Q6825400",
@@ -2857,7 +2839,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000041": {
+  "Item0000000040": {
    "class": "Software",
    "description": "synthetic software typed into a relation",
    "id": "",
@@ -2935,7 +2917,7 @@
     "user:cb1fb66d-d7a9-59ec-a49b-2f4f2dee1110"
    ]
   },
-  "Item0000000042": {
+  "Item0000000041": {
    "class": "Benchmark",
    "description": "",
    "id": "Q6826034",
@@ -2951,7 +2933,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000043": {
+  "Item0000000042": {
    "class": "Programming Language",
    "description": "general-purpose programming language",
    "id": "Q56773",
@@ -2970,7 +2952,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000044": {
+  "Item0000000043": {
    "class": "Software",
    "description": "Python library",
    "id": "",
@@ -3062,7 +3044,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000045": {
+  "Item0000000044": {
    "class": "Publication",
    "description": "book chapter",
    "id": "Q6824988",
@@ -3081,7 +3063,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000046": {
+  "Item0000000045": {
    "class": "Publication",
    "description": "scientific article",
    "id": "Q6825078",
@@ -3100,7 +3082,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000047": {
+  "Item0000000046": {
    "class": "Publication",
    "description": "scientific article; zbMATH DE number 1546560",
    "id": "Q1591199",
@@ -3119,7 +3101,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000048": {
+  "Item0000000047": {
    "description": "",
    "id": "Q6825571",
    "label": "ScaLAPACK - Scalable Linear Algebra PACKage",
@@ -3134,7 +3116,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000049": {
+  "Item0000000048": {
    "class": "Publication",
    "description": "scientific article; zbMATH DE number 1372110",
    "id": "Q3835990",
@@ -3153,7 +3135,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000050": {
+  "Item0000000049": {
    "description": "",
    "id": "Q6825373",
    "label": "SUITESPARSE: A Suite Of Sparse Matrix Software",
@@ -3168,7 +3150,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000051": {
+  "Item0000000050": {
    "class": "Publication",
    "description": "academic book",
    "id": "Q6824614",
@@ -3187,7 +3169,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000052": {
+  "Item0000000051": {
    "description": "Enhances BiCG by introducing a stabilization (minimal residual) step to reduce oscillatory behavior; widely used with ILU-type preconditioners.",
    "id": "Q6825326",
    "label": "BiCGSTAB (stabilized BiCG) for improved smooth convergence on nonsymmetric systems",
@@ -3205,7 +3187,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000053": {
+  "Item0000000052": {
    "description": "For SPD matrices A=LL^T (or A=R^TR), enabling fast solves and log-determinants; numerically stable and halves the floating-point work compared to LU for SPD problems. Forms the basis of many preconditioners.",
    "id": "Q6825339",
    "label": "Cholesky (LL^T) factorization for SPD matrices",
@@ -3223,7 +3205,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000054": {
+  "Item0000000053": {
    "description": "Stores only the populated diagonals and performs band-aware elimination with reduced fill and operation count proportional to the bandwidth. Common in PDE discretizations where the bandwidth is modest relative to n.",
    "id": "Q6825417",
    "label": "Gaussian/LU factorization specialized to band-diagonal matrices",
@@ -3241,7 +3223,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000055": {
+  "Item0000000054": {
    "description": "Factorizes a nonsingular matrix A into PA = LU with a permutation P, unit-lower L, and upper-triangular U. Once factored, multiple right-hand sides and determinants are efficient, and the factorization is more stable than naive Gauss-Jordan.",
    "id": "Q6825507",
    "label": "LU decomposition with (partial) pivoting for solving Ax=b and computing determinants",
@@ -3259,7 +3241,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000056": {
+  "Item0000000055": {
    "description": "Builds an orthonormal Krylov basis via Arnoldi and chooses the iterate with minimal residual over the subspace; restarted and flexible variants control memory and cost. Robust and widely applicable with suitable preconditioning.",
    "id": "Q6825578",
    "label": "Generalized Minimal Residual",
@@ -3277,7 +3259,7 @@
    "statements": [],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000057": {
+  "Item0000000056": {
    "description": "Exploits the special structure of Vandermonde matrices to reduce work and improve numerical behavior compared to naive Gaussian elimination; useful in polynomial interpolation contexts.",
    "id": "Q6825600",
    "label": "Björck-Pereyra O(n^2) algorithm for solving Vandermonde systems",
@@ -3288,6 +3270,24 @@
      },
      "labels": {
       "en": "Björck-Pereyra O(n^2) algorithm for solving Vandermonde systems"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000057": {
+   "description": "Performs a forward sweep eliminating subdiagonal entries followed by back substitution, exploiting the tridiagonal pattern for linear-time work and storage. Stable for diagonally dominant or SPD problems; otherwise pivoting may be needed.",
+   "id": "Q6825618",
+   "label": "Thomas algorithm (tridiagonal matrix algorithm) for O(n) solution of tridiagonal systems",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Performs a forward sweep eliminating subdiagonal entries followed by back substitution, exploiting the tridiagonal pattern for linear-time work and storage. Stable for diagonally dominant or SPD problems; otherwise pivoting may be needed."
+     },
+     "labels": {
+      "en": "Thomas algorithm (tridiagonal matrix algorithm) for O(n) solution of tridiagonal systems"
      },
      "statements": {}
     }
@@ -3529,7 +3529,7 @@
          "id": "P16"
         },
         "value": {
-         "content": "Item0000000069",
+         "content": "Item0000000070",
          "type": "value"
         }
        },
@@ -3539,7 +3539,7 @@
          "id": "P16"
         },
         "value": {
-         "content": "Item0000000070",
+         "content": "Item0000000071",
          "type": "value"
         }
        }
@@ -3703,9 +3703,9 @@
      []
     ],
     [
-     "P16",
-     "wikibase-item",
-     "Item0000000069",
+     "P43",
+     "string",
+     "Cyril Donnelly",
      []
     ],
     [
@@ -3715,9 +3715,9 @@
      []
     ],
     [
-     "P43",
-     "string",
-     "Cyril Donnelly",
+     "P16",
+     "wikibase-item",
+     "Item0000000071",
      []
     ]
    ],
@@ -3863,7 +3863,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000069": {
+  "Item0000000070": {
    "class": "Author",
    "description": "researcher ORCID ID = 0000-0003-3662-7203",
    "id": "",
@@ -3955,7 +3955,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000070": {
+  "Item0000000071": {
    "class": "Author",
    "description": "",
    "id": "Q1890089",
@@ -4394,7 +4394,7 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P265"
+      "id": "P36"
      },
      "qualifiers": [],
      "value": {
@@ -4412,47 +4412,18 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P1766"
+      "id": "P36"
      },
      "qualifiers": [],
      "value": {
-      "content": "Item0000000018",
+      "content": "Item0000000013",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000018/statements"
   },
   "RELATION100": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P286"
-     },
-     "qualifiers": [
-      {
-       "property": {
-        "data_type": "wikibase-item",
-        "id": "P560"
-       },
-       "value": {
-        "content": "Q6825292",
-        "type": "value"
-       }
-      }
-     ],
-     "value": {
-      "content": "Item0000000062",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000063/statements"
-  },
-  "RELATION101": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -4481,7 +4452,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000064/statements"
   },
-  "RELATION102": {
+  "RELATION101": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -4508,7 +4479,36 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000030/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000029/statements"
+  },
+  "RELATION102": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825298",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000066",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000057/statements"
   },
   "RELATION103": {
    "exists": "false",
@@ -4526,7 +4526,7 @@
         "id": "P560"
        },
        "value": {
-        "content": "Q6825298",
+        "content": "Q6672366",
         "type": "value"
        }
       }
@@ -4555,35 +4555,6 @@
         "id": "P560"
        },
        "value": {
-        "content": "Q6672366",
-        "type": "value"
-       }
-      }
-     ],
-     "value": {
-      "content": "Item0000000066",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000011/statements"
-  },
-  "RELATION105": {
-   "exists": "false",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P286"
-     },
-     "qualifiers": [
-      {
-       "property": {
-        "data_type": "wikibase-item",
-        "id": "P560"
-       },
-       "value": {
         "content": "Q6672349",
         "type": "value"
        }
@@ -4595,9 +4566,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000040/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000039/statements"
   },
-  "RELATION106": {
+  "RELATION105": {
    "exists": "false",
    "id": "",
    "payload": {
@@ -4624,7 +4595,25 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000024/statements"
+  },
+  "RELATION106": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P265"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000000",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000009/statements"
   },
   "RELATION11": {
    "exists": "true",
@@ -4637,7 +4626,7 @@
      },
      "qualifiers": [],
      "value": {
-      "content": "Item0000000014",
+      "content": "Item0000000013",
       "type": "value"
      }
     }
@@ -4655,7 +4644,7 @@
      },
      "qualifiers": [],
      "value": {
-      "content": "Item0000000014",
+      "content": "Item0000000013",
       "type": "value"
      }
     }
@@ -4673,32 +4662,14 @@
      },
      "qualifiers": [],
      "value": {
-      "content": "Item0000000014",
+      "content": "Item0000000021",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000021/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
   },
   "RELATION14": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P36"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Item0000000022",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
-  },
-  "RELATION15": {
    "exists": "false",
    "id": "",
    "payload": {
@@ -4714,9 +4685,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000024/statements"
   },
-  "RELATION16": {
+  "RELATION15": {
    "exists": "false",
    "id": "",
    "payload": {
@@ -4727,12 +4698,30 @@
      },
      "qualifiers": [],
      "value": {
-      "content": "Item0000000012",
+      "content": "Item0000000011",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000029/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000028/statements"
+  },
+  "RELATION16": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6775701",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000028/statements"
   },
   "RELATION17": {
    "exists": "true",
@@ -4741,16 +4730,16 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P31"
+      "id": "P1495"
      },
      "qualifiers": [],
      "value": {
-      "content": "Q6775701",
+      "content": "Q6830558",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000029/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000028/statements"
   },
   "RELATION18": {
    "exists": "true",
@@ -4759,16 +4748,16 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P1495"
+      "id": "P1460"
      },
      "qualifiers": [],
      "value": {
-      "content": "Q6830558",
+      "content": "Q6534272",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000029/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000028/statements"
   },
   "RELATION19": {
    "exists": "true",
@@ -4777,36 +4766,18 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P1460"
+      "id": "P31"
      },
      "qualifiers": [],
      "value": {
-      "content": "Q6534272",
+      "content": "Q6775701",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000029/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
   },
   "RELATION2": {
-   "exists": "false",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P36"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Item0000000000",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000011/statements"
-  },
-  "RELATION20": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -4817,14 +4788,14 @@
      },
      "qualifiers": [],
      "value": {
-      "content": "Q6775701",
+      "content": "Q127020",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
   },
-  "RELATION21": {
+  "RELATION20": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -4840,9 +4811,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
   },
-  "RELATION22": {
+  "RELATION21": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -4858,9 +4829,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
   },
-  "RELATION23": {
+  "RELATION22": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -4872,6 +4843,24 @@
      "qualifiers": [],
      "value": {
       "content": "Q6775701",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
+  },
+  "RELATION23": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
       "type": "value"
      }
     }
@@ -4885,11 +4874,11 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P1495"
+      "id": "P1460"
      },
      "qualifiers": [],
      "value": {
-      "content": "Q6830558",
+      "content": "Q6534272",
       "type": "value"
      }
     }
@@ -4903,16 +4892,16 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P1460"
+      "id": "P930"
      },
      "qualifiers": [],
      "value": {
-      "content": "Q6534272",
+      "content": "Item0000000002",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000024/statements"
   },
   "RELATION26": {
    "exists": "true",
@@ -4930,7 +4919,7 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000029/statements"
   },
   "RELATION27": {
    "exists": "true",
@@ -4939,16 +4928,16 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P930"
+      "id": "P1684"
      },
      "qualifiers": [],
      "value": {
-      "content": "Item0000000002",
+      "content": "Item0000000030",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000030/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
   },
   "RELATION28": {
    "exists": "true",
@@ -4993,16 +4982,16 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P31"
+      "id": "P1495"
      },
      "qualifiers": [],
      "value": {
-      "content": "Q127020",
+      "content": "Q6830558",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
   },
   "RELATION30": {
    "exists": "true",
@@ -5041,24 +5030,6 @@
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
   },
   "RELATION32": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1684"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Item0000000035",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
-  },
-  "RELATION33": {
    "exists": "false",
    "id": "",
    "payload": {
@@ -5074,9 +5045,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000024/statements"
   },
-  "RELATION34": {
+  "RELATION33": {
    "exists": "false",
    "id": "",
    "payload": {
@@ -5087,14 +5058,14 @@
      },
      "qualifiers": [],
      "value": {
-      "content": "Item0000000013",
+      "content": "Item0000000012",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000042/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000041/statements"
   },
-  "RELATION35": {
+  "RELATION34": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5112,7 +5083,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
   },
-  "RELATION36": {
+  "RELATION35": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5130,7 +5101,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
   },
-  "RELATION37": {
+  "RELATION36": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5148,7 +5119,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
   },
-  "RELATION38": {
+  "RELATION37": {
    "exists": "false",
    "id": "",
    "payload": {
@@ -5166,6 +5137,24 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000006/statements"
   },
+  "RELATION38": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q56614",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000039/statements"
+  },
   "RELATION39": {
    "exists": "true",
    "id": "",
@@ -5173,216 +5162,18 @@
     "statement": {
      "property": {
       "data_type": "wikibase-item",
-      "id": "P31"
+      "id": "P1460"
      },
      "qualifiers": [],
      "value": {
-      "content": "Q56614",
+      "content": "Q5976450",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000040/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000039/statements"
   },
   "RELATION4": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1495"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q6830558",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
-  },
-  "RELATION40": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1460"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q5976450",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000040/statements"
-  },
-  "RELATION41": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "external-id",
-      "id": "P13"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "503",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000040/statements"
-  },
-  "RELATION42": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "URL",
-      "id": "P104"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "http://www.netlib.org/lapack/",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000040/statements"
-  },
-  "RELATION43": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P31"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q56614",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
-  },
-  "RELATION44": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1495"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q6830558",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
-  },
-  "RELATION45": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1460"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q5976450",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
-  },
-  "RELATION46": {
-   "exists": "false",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "URL",
-      "id": "P104"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "https://portal.mardi4nfdi.de/",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
-  },
-  "RELATION47": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P31"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q56614",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000017/statements"
-  },
-  "RELATION48": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1495"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q6830558",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000017/statements"
-  },
-  "RELATION49": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1460"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q5976450",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000017/statements"
-  },
-  "RELATION5": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5398,9 +5189,261 @@
      }
     }
    },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
+  },
+  "RELATION40": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "external-id",
+      "id": "P13"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "503",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000039/statements"
+  },
+  "RELATION41": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "URL",
+      "id": "P104"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "http://www.netlib.org/lapack/",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000039/statements"
+  },
+  "RELATION42": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q56614",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
+  },
+  "RELATION43": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
+  },
+  "RELATION44": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q5976450",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
+  },
+  "RELATION45": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "URL",
+      "id": "P104"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "https://portal.mardi4nfdi.de/",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
+  },
+  "RELATION46": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q56614",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
+  },
+  "RELATION47": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
+  },
+  "RELATION48": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q5976450",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
+  },
+  "RELATION49": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "URL",
+      "id": "P104"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "https://portal.mardi4nfdi.de/",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
+  },
+  "RELATION5": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1578"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000013",
+      "type": "value"
+     }
+    }
+   },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
   },
   "RELATION50": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q56614",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000017/statements"
+  },
+  "RELATION51": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000017/statements"
+  },
+  "RELATION52": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q5976450",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000017/statements"
+  },
+  "RELATION53": {
    "exists": "false",
    "id": "",
    "payload": {
@@ -5418,79 +5461,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000017/statements"
   },
-  "RELATION51": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P31"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q56614",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000018/statements"
-  },
-  "RELATION52": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1495"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q6830558",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000018/statements"
-  },
-  "RELATION53": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1460"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q5976450",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000018/statements"
-  },
   "RELATION54": {
-   "exists": "false",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "URL",
-      "id": "P104"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "https://portal.mardi4nfdi.de/",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000018/statements"
-  },
-  "RELATION55": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5506,9 +5477,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000024/statements"
   },
-  "RELATION56": {
+  "RELATION55": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5524,9 +5495,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000024/statements"
   },
-  "RELATION57": {
+  "RELATION56": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5542,9 +5513,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000024/statements"
   },
-  "RELATION58": {
+  "RELATION57": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5560,9 +5531,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000042/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000041/statements"
   },
-  "RELATION59": {
+  "RELATION58": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5578,27 +5549,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000042/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000041/statements"
   },
-  "RELATION6": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1578"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Item0000000014",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
-  },
-  "RELATION60": {
+  "RELATION59": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5614,171 +5567,9 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000042/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000041/statements"
   },
-  "RELATION61": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P31"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q6825282",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000030/statements"
-  },
-  "RELATION62": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1495"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q6830558",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000030/statements"
-  },
-  "RELATION63": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "URL",
-      "id": "P104"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "http://www.hpcg-benchmark.org/",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000030/statements"
-  },
-  "RELATION64": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P31"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q56422",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000043/statements"
-  },
-  "RELATION65": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P31"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q57162",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000070/statements"
-  },
-  "RELATION66": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1460"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q5976445",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000070/statements"
-  },
-  "RELATION67": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "external-id",
-      "id": "P20"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "0000-0002-8292-7189",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000070/statements"
-  },
-  "RELATION68": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P31"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q57162",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000073/statements"
-  },
-  "RELATION69": {
-   "exists": "true",
-   "id": "",
-   "payload": {
-    "statement": {
-     "property": {
-      "data_type": "wikibase-item",
-      "id": "P1460"
-     },
-     "qualifiers": [],
-     "value": {
-      "content": "Q5976445",
-      "type": "value"
-     }
-    }
-   },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000073/statements"
-  },
-  "RELATION7": {
+  "RELATION6": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5794,9 +5585,171 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
   },
-  "RELATION70": {
+  "RELATION60": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6825282",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000029/statements"
+  },
+  "RELATION61": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000029/statements"
+  },
+  "RELATION62": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "URL",
+      "id": "P104"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "http://www.hpcg-benchmark.org/",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000029/statements"
+  },
+  "RELATION63": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q56422",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000042/statements"
+  },
+  "RELATION64": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q57162",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000071/statements"
+  },
+  "RELATION65": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q5976445",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000071/statements"
+  },
+  "RELATION66": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "external-id",
+      "id": "P20"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "0000-0002-8292-7189",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000071/statements"
+  },
+  "RELATION67": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q57162",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000073/statements"
+  },
+  "RELATION68": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q5976445",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000073/statements"
+  },
+  "RELATION69": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5814,7 +5767,25 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000073/statements"
   },
-  "RELATION71": {
+  "RELATION7": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1766"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000015",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
+  },
+  "RELATION70": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5832,7 +5803,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000074/statements"
   },
-  "RELATION72": {
+  "RELATION71": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5850,7 +5821,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000074/statements"
   },
-  "RELATION73": {
+  "RELATION72": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5868,7 +5839,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000074/statements"
   },
-  "RELATION74": {
+  "RELATION73": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5886,7 +5857,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000075/statements"
   },
-  "RELATION75": {
+  "RELATION74": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5904,7 +5875,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000075/statements"
   },
-  "RELATION76": {
+  "RELATION75": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5922,7 +5893,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000075/statements"
   },
-  "RELATION77": {
+  "RELATION76": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5940,7 +5911,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000075/statements"
   },
-  "RELATION78": {
+  "RELATION77": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5958,7 +5929,7 @@
    },
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000081/statements"
   },
-  "RELATION79": {
+  "RELATION78": {
    "exists": "true",
    "id": "",
    "payload": {
@@ -5970,6 +5941,24 @@
      "qualifiers": [],
      "value": {
       "content": "Q5976445",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000081/statements"
+  },
+  "RELATION79": {
+   "exists": "false",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "external-id",
+      "id": "P20"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "0000-0002-7903-2472",
       "type": "value"
      }
     }
@@ -5992,25 +5981,36 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
   },
   "RELATION80": {
-   "exists": "false",
+   "exists": "true",
    "id": "",
    "payload": {
     "statement": {
      "property": {
-      "data_type": "external-id",
-      "id": "P20"
+      "data_type": "wikibase-item",
+      "id": "P286"
      },
-     "qualifiers": [],
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6672349",
+        "type": "value"
+       }
+      }
+     ],
      "value": {
-      "content": "0000-0002-7903-2472",
+      "content": "Item0000000044",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000081/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000024/statements"
   },
   "RELATION81": {
    "exists": "true",
@@ -6039,7 +6039,7 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000024/statements"
   },
   "RELATION82": {
    "exists": "true",
@@ -6068,7 +6068,7 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000039/statements"
   },
   "RELATION83": {
    "exists": "true",
@@ -6092,12 +6092,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000047",
+      "content": "Item0000000046",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000040/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000047/statements"
   },
   "RELATION84": {
    "exists": "true",
@@ -6121,12 +6121,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000047",
+      "content": "Item0000000048",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000048/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000049/statements"
   },
   "RELATION85": {
    "exists": "true",
@@ -6150,12 +6150,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000049",
+      "content": "Item0000000048",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000050/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000039/statements"
   },
   "RELATION86": {
    "exists": "true",
@@ -6173,18 +6173,18 @@
         "id": "P560"
        },
        "value": {
-        "content": "Q6672349",
+        "content": "Q6825292",
         "type": "value"
        }
       }
      ],
      "value": {
-      "content": "Item0000000049",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000040/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000051/statements"
   },
   "RELATION87": {
    "exists": "true",
@@ -6208,7 +6208,7 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
@@ -6237,7 +6237,7 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
@@ -6266,7 +6266,7 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
@@ -6289,7 +6289,7 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
   },
   "RELATION90": {
    "exists": "true",
@@ -6313,12 +6313,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000055/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
   },
   "RELATION91": {
    "exists": "true",
@@ -6342,12 +6342,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000055/statements"
   },
   "RELATION92": {
    "exists": "true",
@@ -6371,7 +6371,7 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
@@ -6400,7 +6400,7 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
@@ -6429,12 +6429,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000010/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000058/statements"
   },
   "RELATION95": {
    "exists": "true",
@@ -6458,12 +6458,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000058/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000059/statements"
   },
   "RELATION96": {
    "exists": "true",
@@ -6487,12 +6487,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000059/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000060/statements"
   },
   "RELATION97": {
    "exists": "true",
@@ -6516,12 +6516,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000050",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000060/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000061/statements"
   },
   "RELATION98": {
    "exists": "true",
@@ -6545,12 +6545,12 @@
       }
      ],
      "value": {
-      "content": "Item0000000051",
+      "content": "Item0000000062",
       "type": "value"
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000061/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
   },
   "RELATION99": {
    "exists": "true",
@@ -6579,7 +6579,7 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000063/statements"
   }
  },
  "written": [
@@ -6652,16 +6652,12 @@
   "Item0000000066",
   "Item0000000067",
   "Item0000000068",
-  "Item0000000069",
   "Item0000000070",
   "Item0000000071",
   "Item0000000072",
   "Item0000000073",
   "Item0000000074",
   "Item0000000075",
-  "Item0000000076",
-  "Item0000000077",
-  "Item0000000078",
   "Item0000000079",
   "Item0000000080",
   "Item0000000081"

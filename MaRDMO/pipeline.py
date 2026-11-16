@@ -16,7 +16,7 @@ from django.utils.translation import gettext as _, gettext_noop as N_
 from .checks import Checks
 from .duplicates import PREVIEW_DEADLINE, PREVIEW_RETRY_WAITS
 from .getters import get_url
-from .helpers import is_cyclic
+from .helpers import cycle_groups, is_cyclic
 from .payload import DocumentationProblem, PortalUnavailable
 from .problems import Problem
 from .queries import check_limits
@@ -110,7 +110,13 @@ def run(project, answers, prepare_class, check_method, preview=False, duplicates
         gate.problems = [Problem(EXPORT_SECTION, None, str(message)) for message in (error.args or [error])]
         return gate
     if is_cyclic(dependency):
-        gate.problems = [Problem(EXPORT_SECTION, None, _('Cyclic Dependency Graph'))]
+        # The export breaks every cycle (payload.order_items, #164): one left is a bug
+        gate.internal = True
+        items = [' -> '.join(payload.get(key, {}).get('label') or key for key in group)
+                 for group in cycle_groups({key: set(deps) for key, deps in dependency.items()})]
+        gate.problems = [Problem(EXPORT_SECTION, None, _(
+            'The new items could not be put in an order of creation ({items}); nothing was exported, '
+            'please report this to the MaRDMO developers').format(items='; '.join(items) or '?'))]
         return gate
     gate.payload, gate.dependency = payload, dependency
     return gate

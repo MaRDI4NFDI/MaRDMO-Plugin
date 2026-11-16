@@ -306,10 +306,29 @@ one, so entries of the properties MaRDMO writes with meaning qualifiers
 statements again.  Several entries adding to the same statement share it; each
 qualifier is added once.
 
-### 7. Cyclic Dependency Check
+### 7. Order of Creation
 
-`is_cyclic(dependency)` inspects the dependency graph before proceeding.  If a cycle
-is detected an error page is returned.
+New items are created with their statements, so each one after the items its
+statements refer to: in the value or in a qualifier (the formula an assumption names,
+the quantity a symbol stands for, the software of an algorithm in a process step).
+`GeneratePayload.order_items()` (called by `add_item_payload()`, before the final
+checks) builds these dependencies from the statements of the new items (#164).
+
+New items that refer to each other in a cycle cannot be ordered, and such cycles are
+common: relations are stored on the other item ("approximates" is "approximated by"
+there, "component of" is "has component", "contained in" is "contains").  The cycles
+are the strongly connected groups of the graph (`helpers.cycle_groups`).  Of each
+group, the item with the fewest statements to the other items of the group (ties: the
+lower key) gets these statements afterwards: as `RELATION` entries on the item key,
+qualifiers included, posted after all items like the statements on portal items.  What
+is left of the group is searched for cycles again, until none is left.  A statement of
+an item about itself (a quantity whose defining formula has a symbol for it) is added
+afterwards too.
+
+A documentation without cycles keeps all its statements in its items; a cycle costs
+one request per statement added afterwards.  The choice is deterministic, so the
+payload of a documentation is always the same.  Should a cycle remain (a bug),
+`pipeline.run()` stops with an internal error that names its items.
 
 ### 8. OAuth2 Authentication
 

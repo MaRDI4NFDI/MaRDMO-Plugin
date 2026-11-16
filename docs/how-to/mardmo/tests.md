@@ -124,6 +124,17 @@ and the aliases:
 python -m tools.synthetic.summary synthetic_model > synthetic_model.md
 ```
 
+## Cycles of new items: the order of creation
+
+The export creates new items after the items they refer to and breaks cycles
+(see the export pipeline, *Order of Creation*).  Three kinds of tests check it:
+
+| Test | Checks |
+|---|---|
+| `tests/unit/test_cycles.py` | hand-made cases and seeded random graphs of up to 1000 items and 10000 references: no cycle left, every item after the items it refers to, every statement arrives exactly once (in its item or afterwards), only statements that closed a cycle come afterwards, the same result for every order of the items, and the time |
+| `tests/db/test_upload.py` | for every project of `tests/data/projects`: every reference of a new item (also in qualifiers) is a dependency, and the real upload (`_background_post`) against a fake portal that rejects any `Item…` placeholder left writes every statement |
+| `tests/unit/test_cycles_real.py` | the checks of `test_cycles` on the relation graphs of real portal models, algorithms and the workflow, every item made new (`tests/data/cycles`, written by `dev-tests/cycles_real.py`, which hydrates them read-only from the portal) |
+
 ## Red marks: the preview shows the problems of the checks
 
 `tests/db/test_marks.py` deletes (and blanks) one answer of every question of a
@@ -186,12 +197,13 @@ same description and portal data give the same XML.  A build stops with what
 is wrong: an item the dropdown does not offer (the error lists what it
 offers), an answer stored twice, a check problem (`BUILD_PAGES=1` lists the
 pages of the sections concerned), an item on the portal that cannot be
-reused, or a cycle of the export (it names the items).  Things learned:
+reused, or an internal error of the export.  Things learned:
 
-- New items may not need each other both ways: the export creates them in one
-  order.  Relations stored on the other item ("approximates" is stored as
-  "approximated by" there, see `get_relations()`) go from a new item to a
-  portal item.
+- New items may need each other both ways: the export breaks such cycles
+  (#164).  The synthetic documentations have some on purpose (formulas,
+  quantities, tasks, models, algorithms); relations stored on the other item
+  ("approximates" is stored as "approximated by" there, see `get_relations()`)
+  close them.
 - Choose Wikidata items without a twin on the portal and without a long chain
   of defining formulas (MaRDMO adds a page for every quantity of a Wikidata
   formula, recursively).
@@ -280,7 +292,10 @@ golden test.  Add one when it covers something the others do not (another
 catalog, other kinds of formulas, conditions or relations); similar projects
 add test time and data, but no coverage.
 
-1. Copy the XML to `tests/data/projects/<name>.xml`.
+1. Copy the XML to `tests/data/projects/<name>.xml`.  A documentation made with
+   a MaRDMO before 0.8.0 has `not found` as the ID of its new items: convert its
+   copy to item IDs first (relations then name the ID of their item's page):
+   `PYTHONPATH=. python dev-tests/convert_old_project.py ../MaRDMO-Questionnaire/catalog tests/data/projects/<name>.xml`.
 2. Record its export requests and write its golden file:
    `RECORD=1 GOLDEN=1 QUESTIONNAIRE=../MaRDMO-Questionnaire/catalog pytest --force-enable-socket tests/db/test_export.py -k <name>`
 3. Review `tests/data/golden/<name>.json`: the check messages should be empty

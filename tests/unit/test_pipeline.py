@@ -30,7 +30,8 @@ def worker(raises=None, cyclic=False, seen=None):
                 seen.append((answers, check_waits(), check_deadline()))
             if raises:
                 raise raises
-            return {'Item0000000001': {}}, ({'a': ['b'], 'b': ['a']} if cyclic else {'a': []})
+            return ({'Item0000000001': {}, 'a': {'label': 'model a'}},
+                    {'a': ['b'], 'b': ['a']} if cyclic else {'a': []})
     return Prepare
 
 
@@ -48,14 +49,15 @@ def run(prepare, **kwargs):
 def test_problem_reads_as_the_checks_always_did():
     problem = Problem('Formula', F4, 'Missing Short Description')
     assert str(problem) == 'Formula (Page F4): Missing Short Description'
-    assert str(Problem('Export', None, 'Cyclic Dependency Graph')) == 'Export: Cyclic Dependency Graph'
+    assert str(Problem('Export', None, 'DOI: invalid')) == 'Export: DOI: invalid'
     assert report_lines([problem]) == [HEADER, 'Formula (Page F4): Missing Short Description']
     assert report_lines([]) == []
 
 
 def test_clean_documentation_gives_the_payload():
     gate = run(worker())
-    assert gate.clear and gate.payload == {'Item0000000001': {}} and gate.dependency == {'a': []}
+    assert gate.clear and gate.payload == {'Item0000000001': {}, 'a': {'label': 'model a'}}
+    assert gate.dependency == {'a': []}
 
 
 def test_problems_of_the_checks_stop_before_the_export():
@@ -97,8 +99,13 @@ def test_internal_error(error):
     assert gate.internal and len(gate.problems) == 1 and not gate.clear
 
 
-def test_cyclic_dependency():
-    assert [str(problem) for problem in run(worker(cyclic=True)).problems] == ['Export: Cyclic Dependency Graph']
+def test_a_cycle_left_is_an_internal_error():
+    '''The export breaks every cycle (#164): one left names its items and asks for a report.'''
+    gate = run(worker(cyclic=True))
+    assert gate.internal and not gate.clear
+    assert [str(problem) for problem in gate.problems] == [
+        'Export: The new items could not be put in an order of creation (model a -> b); nothing was exported, '
+        'please report this to the MaRDMO developers']
 
 
 def test_duplicates_stop_before_the_export():

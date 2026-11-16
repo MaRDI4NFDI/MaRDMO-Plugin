@@ -96,7 +96,8 @@ def describe(doc):
     typed.answer('description', 'synthetic software typed into a relation of an algorithm')
     typed.answer('reference', ('swmath', '4384'))
     algorithm_b.answer('software-relatant', software_b)
-    for relation, relatant in (('has-component', algorithm_b), ('component-of', THOMAS),
+    # A has component B and is component of B: a cycle of new algorithms (#164)
+    for relation, relatant in (('has-component', algorithm_b), ('component-of', algorithm_b),
                                ('has-subclass', QUICKSORT), ('subclass-of', algorithm_b),
                                ('related-to', algorithm_b)):
         algorithm_a.block('algorithm-to-algorithm', {'algorithm-relation': relation,

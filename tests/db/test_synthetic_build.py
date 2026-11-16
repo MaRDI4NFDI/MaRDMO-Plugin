@@ -30,7 +30,6 @@ from rdmo.questions.models import Catalog as RDMOCatalog
 
 from MaRDMO import main, pipeline
 from MaRDMO.duplicates import preview_duplicates, reuse
-from MaRDMO.getters import get_url
 from MaRDMO.problems import report_lines
 from tools.synthetic.catalog import Catalog
 from tools.synthetic.writer import SENT, Documentation, polite
@@ -91,35 +90,6 @@ def use_portal_items(project):
     raise AssertionError('items on the MaRDI Portal remain after five rounds of "Use this item"')
 
 
-def cycle(project):
-    '''A cycle of the export's dependency graph, as the labels of its items (for the build's message).'''
-    provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
-    provider.project, provider.snapshot = project, None
-    answers, _ = provider.get_post_data()
-    _, prepare_class, _ = main._CATALOG_PREPARE_MAP[str(project.catalog).rsplit('/', 1)[1]]
-    payload, dependency = prepare_class().export(answers, get_url('mardi', 'uri'))
-    state = {}
-
-    def visit(node, path):
-        state[node] = 'open'
-        for needed in dependency.get(node, ()):
-            if state.get(needed) == 'open':
-                return path[path.index(needed):] + [needed]
-            if needed not in state:
-                found = visit(needed, path + [needed])
-                if found:
-                    return found
-        state[node] = 'done'
-        return None
-    for node in dependency:
-        if node not in state:
-            found = visit(node, [node])
-            if found:
-                return [f"{node} {payload.get(node, {}).get('class', '')}: {payload.get(node, {}).get('label', '')}"
-                        for node in found]
-    return []
-
-
 @pytest.mark.parametrize('name', sorted(BUILDS))
 def test_build(name, db, monkeypatch, django_db_setup):
     catalog_name, module = BUILDS[name]
@@ -144,8 +114,6 @@ def test_build(name, db, monkeypatch, django_db_setup):
             for tab in doc.tabs(section):
                 print(f'  {section} {tab.index}: {tab.id} {tab.label}')
     assert not gate.unreachable, gate.unreachable
-    if any(problem.message == 'Cyclic Dependency Graph' for problem in gate.problems):
-        print('cycle:', ' -> '.join(cycle(project)))
     assert gate.clear, '\n'.join(report_lines(gate.problems))
     xml = prettify_xml(XMLRenderer().render(ProjectSerializer(project).data))
     (PROJECTS / f'{name}.xml').write_text(xml.decode() if isinstance(xml, bytes) else xml, encoding='utf-8')

@@ -1,0 +1,392 @@
+{
+ "labels": {
+  "Item0000000000": "Egyptology",
+  "Item0000000001": "archaeology",
+  "Item0000000002": "identify destruction rules in ancient Egyptian objects",
+  "Item0000000003": "sort ancient Egyptian objects",
+  "Item0000000004": "object comparison model",
+  "Item0000000005": "object comparison formulation",
+  "Item0000000006": "extract logical rules",
+  "Item0000000007": "sorting objects",
+  "Item0000000008": "Boolean ring",
+  "Item0000000009": "power set",
+  "Item0000000010": "number of object properties",
+  "Item0000000011": "object property",
+  "Item0000000012": "logical rule extraction formulation",
+  "Item0000000013": "Gröbner basis",
+  "Item0000000014": "ideal",
+  "Item0000000015": "object cluster formulation",
+  "Item0000000016": "object committor functions",
+  "Item0000000017": "object cluster matrix",
+  "Item0000000018": "object rating matrix",
+  "Item0000000019": "object committor function formulation",
+  "Item0000000020": "second eigenvalue of orthogonal matrix",
+  "Item0000000021": "object commonality formulation",
+  "Item0000000022": "number of objects",
+  "Item0000000023": "object commonality matrix",
+  "Item0000000024": "object",
+  "Item0000000025": "object rating formulation",
+  "Item0000000026": "maximal object descriptiveness rating",
+  "Item0000000027": "object rating matrix decomposition (Schur)",
+  "Item0000000028": "orthogonal matrix",
+  "Item0000000029": "upper-triangular matrix",
+  "Item0000000030": "integer",
+  "Item0000000031": "The Mathematics of Comparing Objects",
+  "Item0000000032": "Mathematische Forschungsdaten im FDM: MaRDMO als Brücke zwischen Wissensgraph und Forschungseinrichtungen"
+ },
+ "source": "model Q6675403 object comparison model",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1560",
+    "Item0000000002",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000003",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P1684",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P1513",
+    "Item0000000004",
+    []
+   ]
+  ],
+  "Item0000000003": [
+   [
+    "P1513",
+    "Item0000000004",
+    []
+   ]
+  ],
+  "Item0000000004": [
+   [
+    "P1560",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P147",
+    "Item0000000006",
+    []
+   ],
+   [
+    "P147",
+    "Item0000000007",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000031",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000032",
+    []
+   ]
+  ],
+  "Item0000000005": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000008"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000009"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000010"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ]
+  ],
+  "Item0000000006": [
+   [
+    "P1560",
+    "Item0000000012",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000008",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000013",
+    []
+   ]
+  ],
+  "Item0000000007": [
+   [
+    "P1560",
+    "Item0000000015",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000019",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000021",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000025",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000027",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000024",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000011",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000022",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000017",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000016",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000018",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000023",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000028",
+    []
+   ],
+   [
+    "P1560",
+    "Item0000000029",
+    []
+   ]
+  ],
+  "Item0000000008": [],
+  "Item0000000009": [],
+  "Item0000000010": [],
+  "Item0000000011": [],
+  "Item0000000012": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000013"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000014"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000008"
+    ]
+   ]
+  ],
+  "Item0000000013": [],
+  "Item0000000014": [],
+  "Item0000000015": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000017"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ]
+  ],
+  "Item0000000016": [],
+  "Item0000000017": [],
+  "Item0000000018": [],
+  "Item0000000019": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000016"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000020"
+    ]
+   ]
+  ],
+  "Item0000000020": [],
+  "Item0000000021": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000022"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000011"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000024"
+    ]
+   ]
+  ],
+  "Item0000000022": [],
+  "Item0000000023": [],
+  "Item0000000024": [],
+  "Item0000000025": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000023"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000026"
+    ]
+   ]
+  ],
+  "Item0000000026": [],
+  "Item0000000027": [
+   [
+    "P983",
+    null,
+    [
+     "Item0000000018"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000028"
+    ]
+   ],
+   [
+    "P983",
+    null,
+    [
+     "Item0000000029"
+    ]
+   ]
+  ],
+  "Item0000000028": [],
+  "Item0000000029": [],
+  "Item0000000030": [
+   [
+    "P1684",
+    "Item0000000010",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000022",
+    []
+   ],
+   [
+    "P1684",
+    "Item0000000026",
+    []
+   ]
+  ],
+  "Item0000000031": [],
+  "Item0000000032": []
+ }
+}

@@ -1,0 +1,118 @@
+{
+ "labels": {
+  "Item0000000000": "Rayleigh quotient iteration (RQI) for rapidly convergent eigenpair refinement",
+  "Item0000000001": "Problem Class: Hermitian / symmetric eigenvalue problem",
+  "Item0000000002": "Problem Class: Interior-eigenvalue targeting",
+  "Item0000000003": "SLEPc — Scalable Library for Eigenvalue Problem Computations",
+  "Item0000000004": "Algorithm Class: Subspace/orthogonal iteration",
+  "Item0000000005": "The Finite Element Method for Elliptic Problems",
+  "Item0000000006": "Bisection on Sturm counts with inverse iteration on symmetric tridiagonals",
+  "Item0000000007": "Inverse iteration with (possibly shifted) solves for eigenpair refinement",
+  "Item0000000008": "Implicitly shifted QR (including multishift variants) with Wilkinson/Francis shifts",
+  "Item0000000009": "Orthogonal (simultaneous) subspace iteration with Rayleigh-Ritz extraction",
+  "Item0000000010": "QZ (generalized Schur) algorithm for Ax = λBx",
+  "Item0000000011": "QR algorithm (implicit) for dense eigenvalue decomposition",
+  "Item0000000012": "Jacobi eigenvalue algorithm (cyclic and block variants) for symmetric matrices",
+  "Item0000000013": "Power method for the dominant eigenpair of a matrix",
+  "Item0000000014": "The Rayleigh Quotient Iteration and Some Generalizations for Nonnormal Matrices"
+ },
+ "source": "algorithm Q6825359 Rayleigh quotient iteration (RQI) for rapidly convergent eigenpair refinement",
+ "statements": {
+  "Item0000000000": [
+   [
+    "P1766",
+    "Item0000000003",
+    []
+   ],
+   [
+    "P36",
+    "Item0000000004",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000005",
+    []
+   ],
+   [
+    "P286",
+    "Item0000000014",
+    []
+   ]
+  ],
+  "Item0000000001": [
+   [
+    "P1578",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000002": [
+   [
+    "P1578",
+    "Item0000000000",
+    []
+   ]
+  ],
+  "Item0000000003": [],
+  "Item0000000004": [],
+  "Item0000000005": [],
+  "Item0000000006": [
+   [
+    "P286",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000007": [
+   [
+    "P286",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000008": [
+   [
+    "P286",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000009": [
+   [
+    "P286",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000010": [
+   [
+    "P286",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000011": [
+   [
+    "P286",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000012": [
+   [
+    "P286",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000013": [
+   [
+    "P286",
+    "Item0000000005",
+    []
+   ]
+  ],
+  "Item0000000014": []
+ }
+}
