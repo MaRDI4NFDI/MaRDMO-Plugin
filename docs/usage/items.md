@@ -49,23 +49,28 @@ choose its [project] entry.
 A selected item from the MaRDI Portal or Wikidata gets its own tab too,
 filled in by MaRDMO.
 
-### Formulas and quantities from Wikidata
+### Items from Wikidata
 
-A formula or quantity selected from Wikidata brings its defining formula, and
-MaRDMO adds a tab for the quantity of each of its symbols:
+An item you select from Wikidata is filled completely, and it brings the
+items it relates to: the quantities of its defining formula, the
+dependencies and programming languages of a software, the research problem
+and tasks of a model, the algorithms and software of a process step, ...
+For each of these:
 
-- **The MaRDI Portal has the quantity already** (as the same Wikidata item,
-  and as a quantity or quantity kind there): MaRDMO uses the portal's item
-  and fills its tab from the MaRDI Portal.
-- **Otherwise** the quantity gets a tab with its name and short description
-  only.  MaRDMO does not follow its own defining formula: on Wikidata the
-  defining formulas refer to each other in long chains (Ohm's law alone would
-  bring almost 70 quantities).  Complete such a quantity yourself if you need
-  it: its class (quantity or quantity kind), and its definition, written with
-  `\equiv`.
+- **The MaRDI Portal has the item already** (as the same Wikidata item, and
+  of the kind the relation asks for, e.g. software for a dependency): MaRDMO
+  uses the portal's item, with its name and description.  An item with a tab
+  is filled from the MaRDI Portal.
+- **Otherwise** the item stays a Wikidata item.  If it has a tab, the tab
+  gets its name and short description only: MaRDMO does not follow its
+  relations on Wikidata, which often form long chains (Ohm's law alone would
+  bring almost 70 quantities, a software its whole dependency tree).
+  Complete such an item yourself if you need more of it, e.g. the class and
+  definition of a quantity (written with `\equiv`).
 
-The same applies to quantities of Wikidata quantities, also when you select
-them in a relation.
+An item that has a tab in your documentation already keeps it, also when it
+is from Wikidata.  Publications are the exception: their citation data is
+always looked up by their DOI.
 
 ### Items without a tab
 

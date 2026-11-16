@@ -33,22 +33,30 @@ The sequence when a user picks a *Mathematical Model* from the portal:
 7. Each `_fill_*_batch()` call batches its SPARQL query across **all** entities of that type at once.  For example, if the selected model contains ten Mathematical Formulations, all ten are fetched in a single query and then distributed across the ten questionnaire pages.  The same applies to linked Research Problems, Computational Tasks, and so on.  Linked publications are fetched the same way, with one query per source (MaRDI Portal, Wikidata) for up to 50 publications.
 8. A `visited` set is passed through the entire call tree to prevent infinite loops when entities reference each other cyclically.
 
-**Wikidata chains (#166).**  The quantities of a defining formula (`contains_quantity` of a
-formula or quantity) end the chain for Wikidata: `model.handlers.use_portal_twins()` first
-replaces each Wikidata quantity by its twin on the MaRDI Portal (same Wikidata QID, P12) if the
-twin fits (a quantity or quantity kind there, the rule of the preview's "Use this item",
-`markers.contradictions`); one lookup for all quantities of a batch (`handler_base.portal_twins()`).
-A twin with classes MaRDMO does not know (a plain Wikidata import, e.g. the Laplace operator
-Q7276420 of the heat equation) fits as well, as in the preview: an unknown class contradicts
-nothing, and the portal item is the right item even if Wikidata classifies it otherwise.
-The twins are filled from the portal like any portal item; one the portal has no MathModDB data
-for keeps the name and description it was selected with.  The remaining Wikidata quantities
-get a page with name and description only (`_RelatantSpec.wikidata_basics`): no defining formula,
-no further quantities.  Without this, a Wikidata formula filled its whole formula graph
-(Ohm's law: 68 quantity pages, 81 requests, about two minutes; now 4 pages, 18 requests,
-a few seconds).  A failed twin lookup keeps the Wikidata items; the preview then lists those on
-the portal.  Other Wikidata relatants (software dependencies, programming languages, …) are
-filled as before.
+**Wikidata chains (#166).**  Hydration ends at Wikidata relatants.  Each `_fill_*_batch`
+first calls `handler_base.use_portal_twins()` on the fetched data: every Wikidata relatant of a
+relation attribute whose twin on the MaRDI Portal (same Wikidata QID, P12) fits becomes the
+portal item, with the portal's label and description, both for relations with a page
+(dependencies, quantities, formulas, ...) and without one (programming languages, CPUs,
+research fields of process steps, the models and tasks of a workflow), so the preview shows
+no Wikidata duplicate of a portal item.  The attributes and the sections whose markers a twin
+must fit are the `TWINS` tables (`model.handlers`, `workflow.handlers`, `ALGORITHM_TWINS` and
+`SOFTWARE_TWINS` in `handler_base`; `twin_fields()` turns them into markers); qualifier entities
+are addressed as `'uses_algorithm.qualifier'`.  A twin fits by the rule of the preview's "Use
+this item" (`markers.contradictions`): one with classes MaRDMO does not know (a plain Wikidata
+import, e.g. the Laplace operator Q7276420 of the heat equation) fits as well, as an unknown
+class contradicts nothing.  One lookup per batch (`_twin_lookup()`, cached by
+`queries.find_portal_items`); a failed lookup keeps the Wikidata items, the preview then lists
+those on the portal.  A Wikidata item already on a page (`visited`) keeps its ID.  Publications
+are left out: their citation is looked up by DOI.
+
+`_hydrate_relatants` and `_hydrate_qualifier_entities` then give every new page the name and
+description of its relatant (item type: the `item_type` of `_RelatantSpec.fill_method`) and fill
+portal items only; a Wikidata page is not filled, so no Wikidata chain follows.  A Wikidata item
+the user selects is filled completely (`_fill`), its relatants follow the rule above.  Without
+this, a Wikidata formula filled its whole formula graph (Ohm's law: 68 quantity pages, 81
+requests, about two minutes; now 4 pages, 18 requests, a few seconds), and a Wikidata software
+its whole dependency tree.
 
 **The model basics catalog (#168)** shares the questions of the model catalog
 (`questions.json`) but has no quantities, academic disciplines and formula notation.  Its

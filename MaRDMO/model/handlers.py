@@ -15,9 +15,8 @@ from rdmo.options.models import Option
 from . import models
 from .constants import props, relatant_uris, relation_uris
 
-from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, portal_twins
+from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, twin_fields, use_portal_twins
 from ..constants import BASE_URI
-from ..markers import SECTION_MARKERS
 from ..getters import (
     get_mathmoddb,
     get_questions,
@@ -77,20 +76,17 @@ def write_defining_formula(project, page, data, set_index):
                            'external_id': qty.id, 'set_index': idx, 'set_prefix': f'{set_index}|0|0'})
 
 
-def use_portal_twins(datas):
-    '''Replace the Wikidata quantities of the defining formulas of *datas* by their fitting portal twins (#166).
-
-    A Wikidata quantity of a formula whose twin on the MaRDI Portal fits (a
-    quantity or quantity kind there) becomes the portal item, which is then
-    filled from the portal; the others stay Wikidata items, whose pages get
-    their name and description only (no Wikidata chains).  One lookup for
-    all *datas*.
-    '''
-    datas = [data for data in datas if getattr(data, 'contains_quantity', None)]
-    twins = portal_twins([quantity for data in datas for quantity in data.contains_quantity],
-                         (SECTION_MARKERS['model']['quantity'], SECTION_MARKERS['model']['quantity kind']))
-    for data in datas:
-        data.contains_quantity = [twins.get(quantity.id, quantity) for quantity in data.contains_quantity]
+# The relatants of each section of the model catalogs: {section: {markers section: attributes}}
+_QUANTITY = ('quantity', 'quantity kind')
+TWINS = {
+    'field': {'field': props['Field']},
+    'problem': {'field': props['RP2RF'], 'problem': props['Problem']},
+    'quantity': {_QUANTITY: ['contains_quantity', *props['Quantity']]},
+    'formulation': {_QUANTITY: ['contains_quantity'], 'formulation': [*props['MF2MF'], *props['Formulation']]},
+    'task': {'formulation': props['T2MF'], _QUANTITY: props['T2Q'], 'task': props['Task']},
+    'model': {'problem': props['MM2RP'], 'formulation': props['MM2MF'], 'task': props['MM2T'],
+              'model': props['Model']},
+}
 
 
 class Information(BaseInformation):
@@ -189,6 +185,7 @@ class Information(BaseInformation):
         )
         if not data_by_id:
             return
+        use_portal_twins(data_by_id.values(), twin_fields('model', TWINS['field']), visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
@@ -242,6 +239,7 @@ class Information(BaseInformation):
         )
         if not data_by_id:
             return
+        use_portal_twins(data_by_id.values(), twin_fields('model', TWINS['problem']), visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
@@ -344,8 +342,8 @@ class Information(BaseInformation):
                     data_by_id[external_id].symbols           = fd['symbols']
                     data_by_id[external_id].contains_quantity = fd['contains_quantity']
 
-        # Quantities of the formulas: portal twins instead of Wikidata items (#166)
-        use_portal_twins(data_by_id.values())
+        # Portal twins instead of Wikidata items (#166)
+        use_portal_twins(data_by_id.values(), twin_fields('model', TWINS['quantity']), visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
@@ -393,7 +391,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_quantity_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_quantity_batch,
-                    wikidata_basics='Quantity',
                 ))
 
             # The relation questions depend on the classes of the quantity and
@@ -468,8 +465,8 @@ class Information(BaseInformation):
                     data_by_id[external_id].symbols           = fd['symbols']
                     data_by_id[external_id].contains_quantity = fd['contains_quantity']
 
-        # Quantities of the formulas: portal twins instead of Wikidata items (#166)
-        use_portal_twins(data_by_id.values())
+        # Portal twins instead of Wikidata items (#166)
+        use_portal_twins(data_by_id.values(), twin_fields('model', TWINS['formulation']), visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
@@ -507,7 +504,6 @@ class Information(BaseInformation):
                                         batch_fill_method=self._fill_quantity_batch),
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_quantity_batch,
-                    wikidata_basics='Quantity',
                 ))
 
             add_relations_flexible(
@@ -580,6 +576,7 @@ class Information(BaseInformation):
         )
         if not data_by_id:
             return
+        use_portal_twins(data_by_id.values(), twin_fields('model', TWINS['task']), visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
@@ -695,6 +692,7 @@ class Information(BaseInformation):
         )
         if not data_by_id:
             return
+        use_portal_twins(data_by_id.values(), twin_fields('model', TWINS['model']), visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)

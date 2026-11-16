@@ -6,13 +6,22 @@ dependency (before, the export created a Wikidata dependency without
 class).  A method of a process step goes with its instrument only:
 hardware goes with algorithms.  The portal's answers are given here.
 '''
+import pytest
+
 from MaRDMO.constants import BASE_URI
 from MaRDMO.models import Relatant, Software
+from MaRDMO.queries import PortalItems
 from MaRDMO.workflow.models import ProcessStep, ProcessStepUsage
 from tests.db.conftest import answer, save
 
 MATPLOTLIB_INLINE = ('wikidata:Q107380685', 'matplotlib-inline', 'Python library')
 TRAITLETS = Relatant('wikidata:Q107380679', 'traitlets', 'Python library')
+
+
+@pytest.fixture(autouse=True)
+def no_twins(monkeypatch):
+    '''The portal has no twins of the Wikidata items (#166, see test_portal_twins).'''
+    monkeypatch.setattr('MaRDMO.queries.find_portal_items', lambda **kwargs: PortalItems())
 
 
 def given(monkeypatch, module, data):

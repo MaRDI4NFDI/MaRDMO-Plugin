@@ -13,7 +13,7 @@ from functools import partial
 from .constants import PROPS
 from .models import Benchmark, Problem
 
-from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source
+from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, twin_fields, use_portal_twins
 from ..constants import BASE_URI
 from ..getters import (
     get_mathalgodb,
@@ -142,6 +142,9 @@ class Information(BaseInformation):
         )
         if not data_by_id:
             return
+        use_portal_twins(data_by_id.values(),
+                         twin_fields('algorithm', {'benchmark': PROPS['P2B'], 'problem': PROPS['Problem']}),
+                         visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)

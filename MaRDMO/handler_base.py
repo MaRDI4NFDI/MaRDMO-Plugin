@@ -11,7 +11,7 @@ Both handlers pass catalog through every call.  The algorithm handler
 simply uses the default catalog='' everywhere.
 '''
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 from .constants import ALGORITHM_PROPS, SOFTWARE_PROPS
@@ -54,10 +54,12 @@ class _RelatantSpec:
     fill_method       – pre-configured callable (usually a partial of _fill)
     catalog           – current project catalog string (forwarded to fill methods)
     visited           – mutable set of already-processed external IDs
-    batch_fill_method – optional batch SPARQL hydrator; when set, mardi/wikidata
+    batch_fill_method – optional batch SPARQL hydrator; when set, the portal
                         relatants are collected and dispatched in one query
-    wikidata_basics   – item type: Wikidata relatants get a page with their name
-                        and description only, they are not filled (#166)
+
+    Every page gets the name and description of its relatant; one of the
+    MaRDI Portal is then filled, one of Wikidata is not (no Wikidata chains,
+    #166).  The item type of the page is the ``item_type`` of *fill_method*.
 
     The free set_index of a section is always read fresh via _next_set_index.
     '''
@@ -68,37 +70,110 @@ class _RelatantSpec:
     catalog: str
     visited: set
     batch_fill_method: Any = None
-    # Item type of the pages of Wikidata relatants that get their name and
-    # description only, not filled further (no Wikidata chains, #166)
-    wikidata_basics: Any = None
 
 
 _NO_MARKERS = {'class': set(), 'community': set(), 'profile': set()}
 
 
+def _twin_lookup(qids):
+    '''``{Wikidata QID: (twin QID, markers of the twin, (label, description))}`` of *qids* (#166).
+
+    The twin is the portal item with the Wikidata QID (P12); its label and
+    description are the portal's, twins without an English label are left
+    out.  One lookup (cached for some minutes, see
+    :func:`~MaRDMO.queries.find_portal_items`); a lookup that fails finds no
+    twins.
+    '''
+    from .queries import find_portal_items, portal_labels  # pylint: disable=import-outside-toplevel
+    if not qids:
+        return {}
+    found = find_portal_items(wikidata_qids=sorted(qids))
+    twins = {qid: twin for qid, twin in found.by_wikidata.items() if twin}
+    labels = (portal_labels(sorted(set(twins.values()))) or {}) if twins else {}
+    return {qid: (twin, {**_NO_MARKERS, **(found.markers.get(twin) or {})}, labels[twin])
+            for qid, twin in twins.items() if twin in labels and labels[twin][0]}
+
+
+def _fits(portal, markers):
+    '''Whether one of *markers* (:class:`~MaRDMO.markers.Markers`) does not contradict the markers *portal*.
+
+    The rule of the preview's "Use this item" (#141): classes MaRDMO does
+    not use contradict nothing.
+    '''
+    from .markers import contradictions  # pylint: disable=import-outside-toplevel
+    return any(not contradictions(marker, portal) for marker in markers)
+
+
 def portal_twins(relatants, markers):
     '''The fitting portal twins of the Wikidata items among *relatants*: ``{wikidata ID: Relatant}`` (#166).
 
-    A twin is the portal item with the Wikidata item's QID (P12).  It fits
-    when one of *markers* (:class:`~MaRDMO.markers.Markers`, e.g. of a
-    quantity and of a quantity kind) does not contradict its class,
-    community and profile type: the rule of the preview's "Use this item"
-    (#141).  Its label and description are the portal's.  A lookup that
-    fails finds no twins: the Wikidata items stay, and the preview lists
-    those that are on the portal.
+    A twin fits when one of *markers* (e.g. of a quantity and of a quantity
+    kind) does not contradict its class, community and profile type.
     '''
-    from .markers import contradictions  # pylint: disable=import-outside-toplevel
-    from .queries import find_portal_items, portal_labels  # pylint: disable=import-outside-toplevel
-    qids = sorted({relatant.id.split(':', 1)[1] for relatant in relatants
-                   if relatant.id and relatant.id.startswith('wikidata:')})
-    if not qids:
-        return {}
-    found = find_portal_items(wikidata_qids=qids)
-    fitting = {qid: twin for qid, twin in found.by_wikidata.items() if twin and any(
-        not contradictions(marker, {**_NO_MARKERS, **(found.markers.get(twin) or {})}) for marker in markers)}
-    labels = (portal_labels(list(fitting.values())) or {}) if fitting else {}
-    return {f'wikidata:{qid}': Relatant(f'mardi:{twin}', *labels[twin])
-            for qid, twin in fitting.items() if twin in labels and labels[twin][0]}
+    lookup = _twin_lookup({relatant.id.split(':', 1)[1] for relatant in relatants
+                           if relatant.id and relatant.id.startswith('wikidata:')})
+    return {f'wikidata:{qid}': Relatant(f'mardi:{twin}', *label)
+            for qid, (twin, portal, label) in lookup.items() if _fits(portal, markers)}
+
+
+def use_portal_twins(datas, fields, visited=()):
+    '''Replace the Wikidata relatants of *datas* by their fitting portal twins (#166).
+
+    *fields* maps the relation attributes of the data classes to the
+    markers a twin may fit (``{'depends_on_software': (Markers, ...)}``);
+    ``'uses_algorithm.qualifier'`` is the qualifier entity of the
+    relatants (e.g. the software of an algorithm in a process step).  A
+    relatant with a fitting twin becomes the portal item, label and
+    description included: a relation to it, and a page that is filled
+    from the portal.  The others stay Wikidata items.  Items already on a
+    page (*visited*) keep the ID of their page.  One lookup for all
+    *datas*.
+    '''
+    datas = [data for data in datas if data is not None]
+    uses = [(data, *key.partition('.')[::2], markers)
+            for data in datas for key, markers in fields.items() if getattr(data, key.split('.')[0], None)]
+    entity = lambda relatant, part: getattr(relatant, part) if part else relatant.id
+    lookup = _twin_lookup({entity(relatant, part).split(':', 1)[1]
+                           for data, attr, part, _ in uses for relatant in getattr(data, attr)
+                           if (entity(relatant, part) or '').startswith('wikidata:')
+                           and entity(relatant, part) not in visited})
+    if not lookup:
+        return
+
+    def swap(relatant, part, markers):
+        external_id = entity(relatant, part) or ''
+        if not external_id.startswith('wikidata:') or external_id in visited:
+            return relatant
+        twin = lookup.get(external_id.split(':', 1)[1])
+        if not twin or not _fits(twin[1], markers):
+            return relatant
+        if part:
+            return replace(relatant, **{part: f'mardi:{twin[0]}', f'{part}_label': twin[2][0],
+                                        f'{part}_description': twin[2][1]})
+        return replace(relatant, id=f'mardi:{twin[0]}', label=twin[2][0], description=twin[2][1])
+
+    for data, attr, part, markers in uses:
+        setattr(data, attr, [swap(relatant, part, markers) for relatant in getattr(data, attr)])
+
+
+def twin_fields(catalog, table):
+    '''``{attribute: markers}`` for :func:`use_portal_twins` from *table* ``{section: attributes}``.
+
+    The markers are those of the section in *catalog* (see
+    :data:`~MaRDMO.markers.SECTION_MARKERS`); a tuple of sections fits
+    any of them (e.g. quantity and quantity kind).
+    '''
+    from .markers import SECTION_MARKERS  # pylint: disable=import-outside-toplevel
+    markers = SECTION_MARKERS[catalog]
+    return {attribute: tuple(markers[name] for name in ((section,) if isinstance(section, str) else section))
+            for section, attributes in table.items() for attribute in attributes}
+
+
+# The relatants of algorithms and software (both in the algorithm and workflow catalogs)
+ALGORITHM_TWINS = {'problem': ALGORITHM_PROPS['A2P'], 'software': ALGORITHM_PROPS['A2S'],
+                   'algorithm': ALGORITHM_PROPS['Algorithm']}
+SOFTWARE_TWINS = {'programminglanguage': SOFTWARE_PROPS['S2PL'], 'software': SOFTWARE_PROPS['S2DP'],
+                  'benchmark': SOFTWARE_PROPS['S2B']}
 
 
 def _values_clause(items):
@@ -291,11 +366,13 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                              info={'text': text, 'external_id': relatant.id,
                                    'set_index': next_idx})
 
-                if source == 'wikidata' and spec.wikidata_basics:
-                    # A page with name and description only: no Wikidata chain (#166)
-                    add_basics(project=project, text=text, questions=self.questions,
-                               item_type=spec.wikidata_basics, index=(0, next_idx))
-                elif spec.batch_fill_method and source in ('mardi', 'wikidata'):
+                # Every page has its name and description; one of Wikidata
+                # is not filled further: no Wikidata chains (#166)
+                add_basics(project=project, text=text, questions=self.questions,
+                           item_type=spec.fill_method.keywords['item_type'], index=(0, next_idx))
+                if source == 'wikidata':
+                    continue
+                if spec.batch_fill_method and source == 'mardi':
                     batch_items.append((text, relatant.id, next_idx))
                 else:
                     spec.fill_method(project=project, text=text,
@@ -370,7 +447,12 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                                  info={'text': text, 'external_id': ext_id,
                                        'set_index': next_idx})
 
-                    if spec.batch_fill_method and source in ('mardi', 'wikidata'):
+                    # As in _hydrate_relatants: no Wikidata chains (#166)
+                    add_basics(project=project, text=text, questions=self.questions,
+                               item_type=spec.fill_method.keywords['item_type'], index=(0, next_idx))
+                    if source == 'wikidata':
+                        continue
+                    if spec.batch_fill_method and source == 'mardi':
                         batch_items.append((text, ext_id, next_idx))
                     else:
                         spec.fill_method(project=project, text=text,
@@ -448,6 +530,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         )
         if not data_by_id:
             return
+        use_portal_twins(data_by_id.values(), twin_fields('algorithm', ALGORITHM_TWINS), visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
@@ -537,6 +620,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         )
         if not data_by_id:
             return
+        use_portal_twins(data_by_id.values(), twin_fields('algorithm', SOFTWARE_TWINS), visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
