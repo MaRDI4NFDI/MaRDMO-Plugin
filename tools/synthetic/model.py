@@ -18,6 +18,11 @@ PARAMETER_ESTIMATION = Wikidata('Q131147154', 'parameter estimation')
 SIS_INFECTIOUS = Portal('Q6674293', 'rate of change of infectious in the SIS model')
 STATIONARY_NAVIER_STOKES = Portal('Q6830615', 'stationary Navier-Stokes equations')
 WAVE_EQUATION = Wikidata('Q193846', 'wave equation')
+# A formula of Wikidata (no twin on the portal) with a long chain of defining formulas (#166:
+# its quantities come from the portal where it has them, the others without their formulas)
+IDEAL_GAS_LAW = Wikidata('Q191785', 'ideal gas law')
+# A quantity whose definition the portal's TeX check fails on (b_{\mathrm{B}}, #165)
+MOLALITY = Wikidata('Q172623', 'molality')
 FLUID_VELOCITY = Portal('Q7360710', 'fluid velocity')
 PARTICLE_VELOCITY = Portal('Q6673873', 'particle velocity')
 INTEGER = Portal('Q6673724', 'integer')
@@ -147,22 +152,23 @@ def describe(doc):
     typed.answer('description', 'synthetic quantity typed into a formula')
     typed.answer('is-quantity-or-quantity-kind', 'quantity')
     doc.tab('formulation', 'F5', SIS_INFECTIOUS)
-    doc.tab('formulation', 'F6', WAVE_EQUATION)
-    # The quantities of the wave equation come from Wikidata without MathModDB class, their
-    # definitions with "=": the user gives the class (a QUDT quantity kind ID: a quantity kind)
-    # and writes the definition with \equiv
+    doc.tab('formulation', 'F6', IDEAL_GAS_LAW)
+    doc.tab('quantity', 'QQK8', MOLALITY)
+    # The quantities of the ideal gas law come from Wikidata, or are their twins on the portal
+    # (#166), without MathModDB class; Wikidata definitions use "=": the user gives the class
+    # (a QUDT quantity kind ID: a quantity kind) and writes the definition with \equiv
     for quantity in doc.tabs('quantity'):
-        if not quantity.id.startswith('wikidata:'):
+        if quantity.id.startswith('user:'):
             continue
         if not quantity.answered('is-quantity-or-quantity-kind'):
             kind = any(reference for reference in quantity.references() if reference == 'mathmoddb/qudt-quantitykind-id')
             quantity.answer('is-quantity-or-quantity-kind', 'quantity-kind' if kind else 'quantity')
-        for index, tex in enumerate(quantity.texts('formula')):
+        for index, tex in enumerate(quantity.texts('formula') if quantity.id.startswith('wikidata:') else []):
             if tex and r'\equiv' not in tex:
                 quantity.change('formula', tex.replace('=', r'\equiv', 1), collection_index=index)
     # Formulas in formulas (assumptions, boundary conditions, ...)
     typed_formula = Typed('MaRDMO synthetic formula typed')
-    for relation, relatants in (('assumes', [formulas['B']]), ('contains', [formulas['C'], WAVE_EQUATION]),
+    for relation, relatants in (('assumes', [formulas['B']]), ('contains', [formulas['C'], IDEAL_GAS_LAW]),
                                 ('contains-boundary-condition', [formulas['D']]),
                                 ('contains-constraint-condition', [SIS_INFECTIOUS]),
                                 ('contains-coupling-condition', [typed_formula]),
@@ -188,7 +194,7 @@ def describe(doc):
                                                             'formulation-relatant-2': [relatant]})
     formulas['B'].block('formulation-to-formulation-2', {
         'formulation-relation-2': 'specialized-by', 'formulation-relatant-2': [formulas['C']],
-        'formulation-assumption': [formulas['D'], WAVE_EQUATION, SIS_INFECTIOUS]})
+        'formulation-assumption': [formulas['D'], IDEAL_GAS_LAW, SIS_INFECTIOUS]})
     formulas['C'].block('formulation-to-formulation-2', {
         'formulation-relation-2': 'specializes', 'formulation-relatant-2': [SIS_INFECTIOUS],
         'formulation-assumption': [formulas['D']]})
@@ -210,7 +216,7 @@ def describe(doc):
                          'contains-coupling-condition', 'contains-definition', 'contains-initial-condition',
                          'contains-final-condition', 'contains-governing-equation', 'contains-strong-formulation',
                          'contains-weak-formulation')
-    relatants = [formulas['A'], formulas['B'], formulas['C'], formulas['D'], SIS_INFECTIOUS, WAVE_EQUATION]
+    relatants = [formulas['A'], formulas['B'], formulas['C'], formulas['D'], SIS_INFECTIOUS, IDEAL_GAS_LAW]
     for number, relation in enumerate(formula_relations):
         task = task_a if number % 2 == 0 else task_b
         task.block('task-to-formulation', {'formulation-relation': relation,
@@ -229,7 +235,7 @@ def describe(doc):
     task_a.block('task-to-task', {'task-relation': 'specializes', 'task-relatant': [KINETIC_SIMULATION],
                                   'task-assumption': [formulas['A']]})
     task_b.block('task-to-task', {'task-relation': 'specialized-by', 'task-relatant': [KINETIC_SIMULATION],
-                                  'task-assumption': [formulas['B'], WAVE_EQUATION, SIS_INFECTIOUS]})
+                                  'task-assumption': [formulas['B'], IDEAL_GAS_LAW, SIS_INFECTIOUS]})
 
     # --- Mathematical models --------------------------------------------------------------
     model_a = doc.tab('model', 'MM1', synthetic('mathematical model', 'A'))
@@ -272,7 +278,7 @@ def describe(doc):
     model_b.block('model-to-model', {'model-relation': 'specializes', 'model-relatant': [model_a],
                                      'model-assumption': [formulas['C']]})
     model_c.block('model-to-model', {'model-relation': 'specialized-by', 'model-relatant': [SIS_MODEL],
-                                     'model-assumption': [formulas['D'], WAVE_EQUATION, SIS_INFECTIOUS]})
+                                     'model-assumption': [formulas['D'], IDEAL_GAS_LAW, SIS_INFECTIOUS]})
 
     # --- Publications ---------------------------------------------------------------------
     publication = doc.tab('publication', 'P1', HEROIN_EPIDEMICS)

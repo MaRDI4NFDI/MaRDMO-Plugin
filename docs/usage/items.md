@@ -49,6 +49,24 @@ choose its [project] entry.
 A selected item from the MaRDI Portal or Wikidata gets its own tab too,
 filled in by MaRDMO.
 
+### Formulas and quantities from Wikidata
+
+A formula or quantity selected from Wikidata brings its defining formula, and
+MaRDMO adds a tab for the quantity of each of its symbols:
+
+- **The MaRDI Portal has the quantity already** (as the same Wikidata item,
+  and as a quantity or quantity kind there): MaRDMO uses the portal's item
+  and fills its tab from the MaRDI Portal.
+- **Otherwise** the quantity gets a tab with its name and short description
+  only.  MaRDMO does not follow its own defining formula: on Wikidata the
+  defining formulas refer to each other in long chains (Ohm's law alone would
+  bring almost 70 quantities).  Complete such a quantity yourself if you need
+  it: its class (quantity or quantity kind), and its definition, written with
+  `\equiv`.
+
+The same applies to quantities of Wikidata quantities, also when you select
+them in a relation.
+
 ### Items without a tab
 
 Some items are entered only where they are used and have no tab of their

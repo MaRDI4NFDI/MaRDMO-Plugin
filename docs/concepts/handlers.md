@@ -33,6 +33,23 @@ The sequence when a user picks a *Mathematical Model* from the portal:
 7. Each `_fill_*_batch()` call batches its SPARQL query across **all** entities of that type at once.  For example, if the selected model contains ten Mathematical Formulations, all ten are fetched in a single query and then distributed across the ten questionnaire pages.  The same applies to linked Research Problems, Computational Tasks, and so on.  Linked publications are fetched the same way, with one query per source (MaRDI Portal, Wikidata) for up to 50 publications.
 8. A `visited` set is passed through the entire call tree to prevent infinite loops when entities reference each other cyclically.
 
+**Wikidata chains (#166).**  The quantities of a defining formula (`contains_quantity` of a
+formula or quantity) end the chain for Wikidata: `model.handlers.use_portal_twins()` first
+replaces each Wikidata quantity by its twin on the MaRDI Portal (same Wikidata QID, P12) if the
+twin fits (a quantity or quantity kind there, the rule of the preview's "Use this item",
+`markers.contradictions`); one lookup for all quantities of a batch (`handler_base.portal_twins()`).
+A twin with classes MaRDMO does not know (a plain Wikidata import, e.g. the Laplace operator
+Q7276420 of the heat equation) fits as well, as in the preview: an unknown class contradicts
+nothing, and the portal item is the right item even if Wikidata classifies it otherwise.
+The twins are filled from the portal like any portal item; one the portal has no MathModDB data
+for keeps the name and description it was selected with.  The remaining Wikidata quantities
+get a page with name and description only (`_RelatantSpec.wikidata_basics`): no defining formula,
+no further quantities.  Without this, a Wikidata formula filled its whole formula graph
+(Ohm's law: 68 quantity pages, 81 requests, about two minutes; now 4 pages, 18 requests,
+a few seconds).  A failed twin lookup keeps the Wikidata items; the preview then lists those on
+the portal.  Other Wikidata relatants (software dependencies, programming languages, …) are
+filled as before.
+
 Every related item that has a section of its own gets its page this way, as when the user
 selects it in the interview: research problems, formulas, tasks, quantities, assumptions
 (`_hydrate_qualifier_entities`), algorithms, software and its dependencies, benchmarks, process
