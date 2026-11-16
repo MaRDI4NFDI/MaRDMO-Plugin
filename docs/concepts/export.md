@@ -150,7 +150,8 @@ consistency, including the value formats described in
 [Validation](validation.md) and, for the detailed model catalog, the formula
 check against the MaRDI Portal's TeX checker.  A formula the TeX checker does
 not answer stops the export too: the portal is not reachable, and the user
-tries again shortly.
+tries again shortly.  A formula the checker fails on passes as not verified
+(see [Formula check](validation.md#formula-check)).
 
 The preview offered the export only when it found nothing, so whatever the
 export finds now changed in between, in the documentation or on the MaRDI

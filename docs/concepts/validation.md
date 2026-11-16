@@ -118,10 +118,17 @@ the documentation checks run:
 - Formulas are checked in parallel, with a timeout of 5 seconds, in the form in
   which they are exported (on one line).
 - Verdicts are cached for a week, so unchanged formulas are not sent again.
-  Failed requests are not cached.
-- If the checker cannot be reached, the preview marks the formula as
-  *not verified by the MaRDI Portal* and says that the MaRDI Portal is not
-  reachable; the export waits until the checker answers.
+- The checker answers *valid* (HTTP 200) or *invalid* with its message (HTTP 400).
+  Any other answer is no verdict, and the formula is marked
+  *not verified by the MaRDI Portal* in the preview:
+    - **The portal is not reachable** (no connection, timeout, HTTP 429, 502,
+      503, 504, after one retry): the preview says so, and the export waits
+      until the checker answers; nothing is cached.
+    - **The checker fails on the formula** (any other answer, e.g. HTTP 500 for
+      the valid `b_{\mathrm{B}}`, which the portal saves and renders, #165):
+      asking again does not help, so the formula passes unverified and does not
+      block the export.  This is kept for a day.  Should the portal reject the
+      formula when it is saved, the upload reports it.
 
 **In the preview**, a rejected formula is not handed to MathJax (an unbalanced
 brace would otherwise swallow the rest of the line).  It is shown as raw TeX,
