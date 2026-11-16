@@ -56,7 +56,8 @@ PAGES = {
         'publication': {'mardi:Q1591199', 'mardi:Q3835990', 'mardi:Q6824614', 'mardi:Q6825173'}},
     'workflow': {
         'workflow': {'mardi:Q6032641'}, 'algorithm': {'mardi:Q6032636'}, 'hardware': {'mardi:Q6487066'},
-        'software': {'mardi:Q6230812'},
+        # Jupyter Notebook and its dependency Python (#169)
+        'software': {'mardi:Q6230812', 'mardi:Q6230810'},
         'dataset': {'mardi:Q6486605', 'mardi:Q6486606', 'mardi:Q6486608', 'mardi:Q6032638', 'mardi:Q6032639',
                     'mardi:Q6486612'},
         'processstep': {'mardi:Q6486604', 'mardi:Q6486607', 'mardi:Q6486609', 'mardi:Q6486610', 'mardi:Q6486611'}},

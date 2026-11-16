@@ -473,7 +473,8 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         '''Hydrate multiple Software pages with a single SPARQL query per source.
 
         Writes references, programming languages, and dependencies for all
-        catalogs.  The benchmark cascade and publication hydration are only
+        catalogs; a dependency gets its page and is filled, as when the user
+        selects it.  The benchmark cascade and publication hydration are only
         executed when the active catalog contains a ``Benchmark`` or
         ``Publication`` section respectively (i.e. the algorithm catalog).
 
@@ -523,6 +524,19 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                 props={'keys': SOFTWARE_PROPS['S2DP']},
                 index={'set_prefix': set_index},
                 statement={'relatant': f'{self.base}{software["Dependency"]["uri"]}'})
+
+            # A dependency gets its page, as when the user selects it (#169)
+            self._hydrate_relatants(
+                project=project, data=data, prop_keys=SOFTWARE_PROPS['S2DP'],
+                spec=_RelatantSpec(
+                    question_id_uri=f'{self.base}{self.questions["Software"]["ID"]["uri"]}',
+                    question_set_uri=f'{self.base}{self.questions["Software"]["uri"]}',
+                    prefix='S',
+                    fill_method=partial(self._fill, item_type='Software',
+                                        batch_fill_method=self._fill_software_batch),
+                    catalog=catalog, visited=visited,
+                    batch_fill_method=self._fill_software_batch,
+                ))
 
             if 'Benchmark' in self.questions:
                 add_relations_static(

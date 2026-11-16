@@ -33,6 +33,13 @@ The sequence when a user picks a *Mathematical Model* from the portal:
 7. Each `_fill_*_batch()` call batches its SPARQL query across **all** entities of that type at once.  For example, if the selected model contains ten Mathematical Formulations, all ten are fetched in a single query and then distributed across the ten questionnaire pages.  The same applies to linked Research Problems, Computational Tasks, and so on.  Linked publications are fetched the same way, with one query per source (MaRDI Portal, Wikidata) for up to 50 publications.
 8. A `visited` set is passed through the entire call tree to prevent infinite loops when entities reference each other cyclically.
 
+Every related item that has a section of its own gets its page this way, as when the user
+selects it in the interview: research problems, formulas, tasks, quantities, assumptions
+(`_hydrate_qualifier_entities`), algorithms, software and its dependencies, benchmarks, process
+steps, data sets, and the software and hardware of an algorithm in a process step.  Items
+without a section stay answers of the relation: programming languages, CPU models, methods with
+their instruments, and in the workflow catalog the models and tasks of a workflow.
+
 The batching principle ensures that the number of SPARQL queries scales with the number of distinct *entity types* in the cascade, not with the number of individual entities.
 
 ## Split Queries

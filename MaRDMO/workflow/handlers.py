@@ -563,9 +563,10 @@ class Information(BaseInformation):
                     batch_fill_method=self._fill_software_batch,
                 ))
 
+            # Hardware goes with algorithms only; methods go with instruments (#169)
             self._hydrate_qualifier_entities(
                 project=project, data=data,
-                prop_keys=PROPS['PS2A'] + PROPS['PS2M'],
+                prop_keys=PROPS['PS2A'],
                 spec=_RelatantSpec(
                     question_id_uri=f'{self.base}{self.questions["Hardware"]["ID"]["uri"]}',
                     question_set_uri=f'{self.base}{self.questions["Hardware"]["uri"]}',
@@ -584,7 +585,6 @@ class Information(BaseInformation):
                 statement={
                     'relatant':      f'{self.base}{process_step["Method"]["uri"]}',
                     'platform':      f'{self.base}{process_step["Instrument"]["uri"]}',
-                    'hardware':      f'{self.base}{process_step["Hardware"]["uri"]}',
                     'documentation': (
                         f'{self.base}{process_step["Method-Documentation"]["uri"]}'
                     ),
