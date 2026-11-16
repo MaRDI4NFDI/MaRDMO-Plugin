@@ -30,7 +30,7 @@
   "url": "https://api.zbmath.org/v1/document/_structured_search?page=0&results_per_page=100&DOI=10.21105/JOSS.11112",
   "status": 404,
   "content_type": "application/json",
-  "body": "{\"result\":null,\"status\":{\"execution\":\"Entry not found!...\",\"execution_bool\":false,\"internal_code\":\"successful access. Zero results.\",\"last_id\":null,\"nr_total_results\":null,\"nr_request_results\":null,\"query_execution_time_in_seconds\":2.384185791015625e-06,\"status_code\":404,\"time_stamp\":\"2026-11-16 18:21:55.524963\"}}",
+  "body": "{\"result\":null,\"status\":{\"execution\":\"Entry not found!...\",\"execution_bool\":false,\"internal_code\":\"successful access. Zero results.\",\"last_id\":null,\"nr_total_results\":null,\"nr_request_results\":null,\"query_execution_time_in_seconds\":1.1920928955078125e-06,\"status_code\":404,\"time_stamp\":\"2026-11-16 19:35:24.654273\"}}",
   "request": {
    "method": "GET",
    "params": {},

@@ -5,9 +5,11 @@ and _fill from BaseInformation (MaRDMO/handler_base.py).
 '''
 
 import logging
+from dataclasses import dataclass
 from functools import partial
+from types import SimpleNamespace
 
-from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source
+from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, twin_fields, use_portal_twins
 from ..constants import BASE_URI
 from ..getters import (
     get_items, get_mathalgodb, get_mathmoddb, get_options,
@@ -22,6 +24,44 @@ from .constants import PROPS
 from .models import Cpu, ProcessStep, Hardware, DataSet, Workflow
 
 logger = logging.getLogger(__name__)
+
+# The relatants of each section of the workflow catalog: {section: {markers section: attributes}}
+TWINS = {
+    'workflow': {'processstep': ['contains_process_step'], 'workflow': PROPS['IW2IW']},
+    'processstep': {'dataset': [*PROPS['PS2IDS'], *PROPS['PS2ODS']], 'algorithm': PROPS['PS2A'],
+                    'software': ['uses_algorithm.qualifier'], 'hardware': ['uses_algorithm.hardware'],
+                    'method': PROPS['PS2M'], 'instrument': ['uses_method.qualifier'],
+                    'academicdiscipline': PROPS['PS2F']},
+    'hardware': {'cpu': ['cpu']},
+}
+
+
+@dataclass
+class _ModelUse:
+    '''A model of a workflow (``id``) with one of its tasks (``qualifier``, may be empty).'''
+    id: str
+    label: str
+    description: str
+    qualifier: str
+    qualifier_label: str
+    qualifier_description: str
+
+
+def _model_uses(raws, visited):
+    '''The models and tasks of a workflow (``"model || label || description || task || label || description"``).
+
+    Wikidata models and tasks with a fitting twin on the MaRDI Portal become
+    the portal items (#166).
+    '''
+    uses = SimpleNamespace(uses=[])
+    for raw in raws:
+        parts = raw.split(' || ')
+        parts += [''] * (6 - len(parts))
+        if parts[0]:
+            uses.uses.append(_ModelUse(*parts[:6]))
+    use_portal_twins([uses], {**twin_fields('model', {'model': ['uses']}),
+                              **twin_fields('model', {'task': ['uses.qualifier']})}, visited)
+    return uses.uses
 
 
 class Information(BaseInformation):
@@ -214,6 +254,7 @@ class Information(BaseInformation):
             'workflow/queries/workflow_wikidata.sparql',
             Workflow,
         )
+        use_portal_twins(data_by_id.values(), twin_fields('workflow', TWINS['workflow']), visited)
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
@@ -237,13 +278,9 @@ class Information(BaseInformation):
 
             model_order = []
             model_tasks = {}
-            for raw in data.uses_model:
-                parts = raw.split(' || ')
-                while len(parts) < 6:
-                    parts.append('')
-                model_id, model_label, model_desc, task_id, task_label, task_desc = parts[:6]
-                if not model_id:
-                    continue
+            for use in _model_uses(data.uses_model, visited):
+                model_id, model_label, model_desc = use.id, use.label, use.description
+                task_id, task_label, task_desc = use.qualifier, use.qualifier_label, use.qualifier_description
                 if model_id not in model_tasks:
                     model_order.append((model_id, model_label, model_desc))
                     model_tasks[model_id] = []
@@ -349,6 +386,7 @@ class Information(BaseInformation):
             'workflow/queries/hardware_wikidata.sparql',
             Hardware,
         )
+        use_portal_twins(data_by_id.values(), twin_fields('workflow', TWINS['hardware']), visited)
 
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
@@ -481,6 +519,7 @@ class Information(BaseInformation):
             'workflow/queries/process_step_wikidata.sparql',
             ProcessStep,
         )
+        use_portal_twins(data_by_id.values(), twin_fields('workflow', TWINS['processstep']), visited)
         for text, external_id, set_index in items:
             data = data_by_id.get(external_id)
             if not data:
