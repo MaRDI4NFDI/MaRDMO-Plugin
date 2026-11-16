@@ -106,6 +106,36 @@ def get_questions(question_set):
     '''
     return apps.get_app_config("MaRDMO").questions[question_set]
 
+def catalog_questions(questions, catalog, keep=('Publication',)):
+    '''*questions* without the sections and questions *catalog* does not have (#168).
+
+    The model basics catalog shares the questions of the model catalog
+    (``questions.json``) but has fewer: no quantities, academic disciplines
+    and formula notation.  Answers to these, e.g. written by an older
+    MaRDMO, are then not read: they neither block nor reach the portal.
+    The sections in *keep* stay complete (a publication's citation data is
+    stored without questions).
+
+    Args:
+        questions: Questions dict (``get_questions``).
+        catalog:   RDMO catalog of the project.
+        keep:      Section names to keep as they are.
+    '''
+    attributes = {f'{element.attribute.uri}' for element in catalog.descendants
+                  if getattr(element, 'attribute', None) is not None}
+    result = {}
+    for name, section in questions.items():
+        if name in keep:
+            result[name] = section
+            continue
+        if f'{BASE_URI}{section.get("uri", "")}' not in attributes:
+            continue
+        result[name] = {key: config for key, config in section.items()
+                        if key == 'uri' or not isinstance(config, dict)
+                        or f'{BASE_URI}{config.get("uri", "")}' in attributes}
+    return result
+
+
 def get_url(source, url_type):
     '''Return a URL for a Wikibase provider.
 

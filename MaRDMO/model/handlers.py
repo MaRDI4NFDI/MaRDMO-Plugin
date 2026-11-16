@@ -442,8 +442,10 @@ class Information(BaseInformation):
         if not data_by_id:
             return
 
+        # The basics catalog has no notation and no quantities (#168): no formula data
+        basics = 'basics' in catalog
         # Fetch formula data via API for mardi items
-        mardi_qids = [eid.split(':')[-1] for _, eid, _ in items if eid.startswith('mardi:')]
+        mardi_qids = [] if basics else [eid.split(':')[-1] for _, eid, _ in items if eid.startswith('mardi:')]
         formula_data = models.fetch_formula_data(mardi_qids)
         for _, external_id, _ in items:
             if external_id.startswith('mardi:') and external_id in data_by_id:
@@ -455,7 +457,7 @@ class Information(BaseInformation):
                     data_by_id[external_id].contains_quantity = fd['contains_quantity']
 
         # Fetch formula data via API for wikidata items
-        wikidata_qids = [eid.split(':')[-1] for _, eid, _ in items if eid.startswith('wikidata:')]
+        wikidata_qids = [] if basics else [eid.split(':')[-1] for _, eid, _ in items if eid.startswith('wikidata:')]
         wikidata_formula_data = models.fetch_formula_data_wikidata(wikidata_qids)
         for _, external_id, _ in items:
             if external_id.startswith('wikidata:') and external_id in data_by_id:
