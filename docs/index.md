@@ -16,7 +16,7 @@ MaRDMO provides five catalogs:
 | **Algorithm** | Document algorithms, algorithmic tasks, implementing software, benchmarks, and publications. Based on the [MathAlgoDB ontology](https://portal.mardi4nfdi.de/wiki/Service:6534228). |
 | **Interdisciplinary Workflow** | Document workflows, process steps, mathematical models, methods, software, hardware, experimental devices, data sets, and publications. Based on the MaRDI standardised scheme (to some extent on the [Metadata4Engineering (M4E) ontology](https://portal.mardi4nfdi.de/wiki/MD_UseCases)). |
 | **Mathematical Model (detailed)** | Document models, mathematical formulations, quantities, quantity kinds, computational tasks, research problems, academic disciplines, and publications. Based on the [MathModDB ontology](https://portal.mardi4nfdi.de/wiki/MathModDB). |
-| **Mathematical Model (basic)** | Reduced-scope model documentation using the same MathModDB ontology. |
+| **Mathematical Model (basic)** | Reduced-scope model documentation using the same MathModDB ontology: models, tasks, formulas described in words, research problems, publications (no quantities, academic disciplines or formula notation). |
 | **Search** | Query existing entries across the MaRDI Portal, MathModDB, and MathAlgoDB knowledge graphs. Results are displayed directly in RDMO. |
 
 <!-- The sections below come from the README (pymdownx.snippets, see mkdocs.yml): edit them there. -->

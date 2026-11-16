@@ -50,6 +50,14 @@ a few seconds).  A failed twin lookup keeps the Wikidata items; the preview then
 the portal.  Other Wikidata relatants (software dependencies, programming languages, …) are
 filled as before.
 
+**The model basics catalog (#168)** shares the questions of the model catalog
+(`questions.json`) but has no quantities, academic disciplines and formula notation.  Its
+hydration uses the basics queries (`_sparql_file`) and fetches no formula data
+(`_fill_formulation_batch`), so a selected formula brings no notation and no quantity pages.
+The export reads only answers to the catalog's own questions (`getters.catalog_questions()`,
+from the catalog's pages and questions; the citation data of publications is kept): answers
+an older MaRDMO wrote there neither block nor reach the portal.
+
 Every related item that has a section of its own gets its page this way, as when the user
 selects it in the interview: research problems, formulas, tasks, quantities, assumptions
 (`_hydrate_qualifier_entities`), algorithms, software and its dependencies, benchmarks, process

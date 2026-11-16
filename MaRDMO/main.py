@@ -31,6 +31,7 @@ from .constants import (
     CATALOG_WORKFLOW_NAME,
 )
 from .getters import (
+    catalog_questions,
     get_answers,
     get_options,
     get_questions,
@@ -293,6 +294,9 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         catalog_slug = str(self.project.catalog).rsplit('/', 1)[-1]
         question_set, prepare_class, _check_method = _CATALOG_PREPARE_MAP[catalog_slug]
         questions = get_questions(question_set) | get_questions('publication')
+        if catalog_slug == CATALOG_MODEL_BASICS_NAME:
+            # The basics catalog shares the model's questions but has fewer (#168)
+            questions = catalog_questions(questions, self.project.catalog)
         answers = process_question_dict(
             project=self.project,
             questions=questions,

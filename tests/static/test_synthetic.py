@@ -56,6 +56,14 @@ def test_every_question_is_answered(built):
     assert [question.key for question in catalog.questions() if question.attribute not in found] == []
 
 
+def test_no_answer_outside_the_catalog(built):
+    '''MaRDMO writes only answers the catalog has questions for (#168), apart from the
+    citation data of publications, which is stored without questions.'''
+    catalog, found = built
+    known = {question.attribute for question in catalog.questions()} | {page.attribute for page in catalog.pages}
+    assert sorted(key for key in found if key not in known and not key.startswith('publication/')) == []
+
+
 def test_every_option_is_chosen(built):
     catalog, found = built
     missing = [f'{question.key}: {option}' for question in catalog.questions() for option in question.options
