@@ -121,7 +121,7 @@ The dropdowns offer only MaRDI Portal items of the kind a question asks for.
 An item may exist on the portal anyway: with another class or none (e.g.
 imported from Wikidata), or not among the results.  The export would create
 it a second time, so the preview lists such items at the top, in the box
-**Before you can export** under **Items already on the MaRDI Portal**, and
+**Before you export** under **Items already on the MaRDI Portal**, and
 the export button stays disabled until none is left.  Each item shows its
 source (*new* or *Wikidata*), name and short description; below it where you
 entered it (page and tab, linked to the interview), the portal item to check
@@ -166,11 +166,11 @@ made with earlier versions are not supported: the checks report
 project)", and the export stops.  Ask the administrators of your RDMO
 instance whether they can convert it.
 
-## Before you can export
+## Before you export
 
 The preview checks everything the export checks, also against the MaRDI
 Portal (for example a symbol that stands for another quantity there).  What
-it finds is listed at the top, in the box **Before you can export** under
+it finds is listed at the top, in the box **Before you export** under
 **Errors, inconsistencies and incomplete documentation**, by tab, each linked
 to the tab's place in the preview and to its page in the interview.  In the
 preview itself a missing answer is marked in red where it belongs (instead
@@ -179,6 +179,15 @@ of *NOT DOCUMENTED*, which marks only what may be left out).  The export button 
 until the list is empty: fix the points in the interview and open the
 preview again.  If the MaRDI Portal does not answer, the preview says so;
 try again shortly with **Check again**.
+
+Items of the MaRDI Portal are not created by the export, so what they lack
+does not stop it: a reference of a portal software, the size of a portal
+data set, or an invalid value the portal item has already.  The box lists
+these under **Portal items you could complete (optional)**, marked in blue,
+and the export button stays enabled.  If you complete them in the interview,
+the export adds what you entered to the portal item.  A value you add to a
+portal item must be valid, as everything MaRDMO writes: an invalid one is
+red and stops the export.
 
 The export checks once more.  If something changed since the preview (in
 your documentation, or on the MaRDI Portal), it stops before anything is

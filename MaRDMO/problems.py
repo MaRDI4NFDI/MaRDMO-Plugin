@@ -1,5 +1,10 @@
 '''What prevents the export: problems of the checks and of the export's own checks (#152).
 
+A problem of a MaRDI Portal item that the export does not need solved is a
+hint (#167): something the portal item lacks, or an invalid value it has
+already.  Hints do not prevent the export; the preview lists them as
+optional.
+
 A :class:`Problem` names its section and page (a :class:`~MaRDMO.pages.PageRef`,
 or none for a problem of the whole documentation); as text it reads as the
 checks have always reported it: "Formula (Page F4): Missing Short Description".
@@ -29,11 +34,13 @@ class Problem:
         page:    The page, or ``None``.
         message: What is wrong.
         field:   The answer that is wrong (e.g. ``"Description"``), if known.
+        hint:    Only a hint: the portal item could be completed (#167).
     '''
     section: str
     page: Optional[PageRef]
     message: str
     field: Optional[str] = None
+    hint: bool = False
 
     def __str__(self):
         if self.page is None:
@@ -43,17 +50,19 @@ class Problem:
 
 
 def report_lines(problems):
-    '''The error page's lines: :data:`HEADER` and every problem as text, or ``[]``.'''
+    '''The error page's lines: :data:`HEADER` and every problem as text, or ``[]`` (hints are left out).'''
+    problems = [problem for problem in problems if not problem.hint]
     return [str(HEADER), *map(str, problems)] if problems else []
 
 
 def attach(data, problems):
-    '''Give every page of *data* its problems: ``page['Problems'] = {field: [message]}``.
+    '''Give every page of *data* its problems: ``page['Problems'] = {field: [message]}``, hints in ``page['Hints']``.
 
     The preview shows them where the page shows the field (template tag
     ``marks``) and the rest at the end of the page (``remaining_marks``), so
-    its red marks are the problems of the checks (#152).  Problems without
-    page (the export's own checks) are only listed at the top.
+    its red marks are the problems of the checks (#152) and its blue marks
+    the hints (#167).  Problems without page (the export's own checks) are
+    only listed at the top.
 
     Args:
         data:     Top-level answers dict; mutated in place.
@@ -66,5 +75,6 @@ def attach(data, problems):
         page = problem.page
         entry = (data.get(page.section) or {}).get(page.index) if page is not None else None
         if isinstance(entry, dict):
-            entry.setdefault('Problems', {}).setdefault(problem.field or '', []).append(problem.message)
+            key = 'Hints' if problem.hint else 'Problems'
+            entry.setdefault(key, {}).setdefault(problem.field or '', []).append(problem.message)
     return data

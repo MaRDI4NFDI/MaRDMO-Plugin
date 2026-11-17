@@ -44,17 +44,18 @@ For model catalogs, every formula is checked with the MaRDI Portal's TeX
 checker; rejected formulas are shown as raw TeX with the check's explanation.  A second "Export to MaRDI Portal" button at the bottom
 of the preview page triggers the actual export.
 
-#### Before you can export
+#### Before you export
 
 The preview runs everything the export checks (`MaRDMO.pipeline.run`): the
 [validation checks](#5-validation-checks) and, when they find nothing, the
 export itself on a copy of the answers, without posting
 ([payload construction](#6-payload-construction) with its checks against the
-MaRDI Portal, and the [cyclic dependency check](#7-cyclic-dependency-check)).
-Everything that prevents the export is shown at the top, in the box **Before
-you can export** (`partials/_before_export.html`), with a summary line and two
-parts: the items already on the MaRDI Portal (below) and **Errors,
-inconsistencies and incomplete documentation**.  The latter lists what the
+MaRDI Portal, and the [order of creation](#7-order-of-creation)).
+What prevents the export is shown at the top, in the box **Before you export**
+(`partials/_before_export.html`), with a summary line and its parts: the
+items already on the MaRDI Portal (below), **Errors, inconsistencies and
+incomplete documentation**, and the optional **Portal items you could
+complete** (see below).  The first two prevent the export.  The latter lists what the
 checks find (`MaRDMO.problems.Problem`) by section and page; each page is
 linked to its place in the preview and to its page in the interview
 (`MaRDMO.pages.interview_urls`; RDMO opens a page, not a tab, so the tab is
@@ -63,13 +64,35 @@ named).  The export's own problems have no page and are listed under
 (template tag `marks`); an empty relation block says *NOT DOCUMENTED* only if
 it has no mark (filter `has_marks`).
 
+#### Portal items you could complete
+
+The export creates own items and Wikidata items, so what their pages lack,
+or an invalid value on them, prevents it.  A MaRDI Portal item is not
+created (#167).  What it lacks (a reference, a short description, the size
+of a data set, the research objective of a workflow, …) is a **hint**
+(`Problem.hint`, `ChecksBase._missing`): listed in the blue part *Portal
+items you could complete (optional)* and marked in blue at its field.  An
+invalid value is a hint only if the portal item has it already
+(`ChecksBase._invalid` looks up the item's statements, only for such a
+value): MaRDMO does not write it.  One the user added is written, so it is a
+problem, red.  A broken structure (a relation without type or target, an item
+without page, the same item twice) is a problem everywhere.  The export
+itself checks the values only of the statements it writes (the existence
+check runs first) and needs name and description only of the items it
+creates.
+
+Hints never disable the export: with hints only, the box is neutral (blue
+instead of red), its summary says *Nothing prevents the export*, and the
+error page of the export does not list them.  What the user completes in the
+interview is added to the portal item.
+
 The export button stays on the page, but is disabled until nothing is left;
 its hover text says why (on a wrapper: a disabled button gets no mouse events
 in some browsers), and **To the top** next to Cancel leads back to the box:
 
 | Case | The preview says |
 |---|---|
-| problems | fix the points under *Before you can export*, then open the preview again |
+| problems | fix the points under *Before you export*, then open the preview again |
 | items on the MaRDI Portal already (see below) | decide on them first |
 | the MaRDI Portal did not answer (duplicate lookup, TeX check, statements of existing items) | the portal is not reachable at the moment, please try again shortly; **Check again** opens the preview again |
 

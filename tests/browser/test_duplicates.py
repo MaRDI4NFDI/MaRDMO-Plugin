@@ -1,4 +1,4 @@
-'''The preview's items already on the MaRDI Portal (Before you can export) in a browser (#141).'''
+'''The preview's items already on the MaRDI Portal (Before you export) in a browser (#141).'''
 import re
 
 import pytest
@@ -50,7 +50,7 @@ def test_use_portal_item_in_the_browser(documentation, page_as):
     box = page.locator('#before-export')
     screenshot(page, 'duplicates-top')
     screenshot(box, 'duplicates-box')
-    assert box.locator('h1').inner_text().endswith('Before you can export')
+    assert box.locator('h1').inner_text().endswith('Before you export')
     section = box.locator('#portal-duplicates')
     assert section.locator('h2').inner_text() == 'Items already on the MaRDI Portal'
     rows = section.locator('li.mardmo-duplicate')

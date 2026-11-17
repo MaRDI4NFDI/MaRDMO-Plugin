@@ -1,9 +1,1536 @@
 {
- "messages": [
-  "Following aspects prevented the export:",
+ "hints": [
   "Publication (Page P3): Invalid Publication DOI: DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)",
   "Publication (Page P4): Invalid Publication DOI: DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)",
   "Software (Page S2): Missing Reference",
   "Software (Page S3): Missing Reference"
+ ],
+ "messages": [],
+ "payload": {
+  "Item0000000000": {
+   "class": "Algorithm",
+   "description": "Performs a forward sweep eliminating subdiagonal entries followed by back substitution, exploiting the tridiagonal pattern for linear-time work and storage. Stable for diagonally dominant or SPD problems; otherwise pivoting may be needed.",
+   "id": "Q6825618",
+   "label": "Thomas algorithm (tridiagonal matrix algorithm) for O(n) solution of tridiagonal systems",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Performs a forward sweep eliminating subdiagonal entries followed by back substitution, exploiting the tridiagonal pattern for linear-time work and storage. Stable for diagonally dominant or SPD problems; otherwise pivoting may be needed."
+     },
+     "labels": {
+      "en": "Thomas algorithm (tridiagonal matrix algorithm) for O(n) solution of tridiagonal systems"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000001": {
+   "class": "Algorithmic Task",
+   "description": "",
+   "id": "Q6825985",
+   "label": "Problem Class: Tridiagonal linear systems",
+   "payload": {
+    "item": {
+     "labels": {
+      "en": "Problem Class: Tridiagonal linear systems"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000002": {
+   "class": "Software",
+   "description": "Reference dense eigensolvers: QR/QZ (xHSEQR, xGEES, xGGES), symmetric drivers (xSYEV/xSYEVD/xSYEVR), tridiagonal (xSTEBZ/xSTEIN/xSTEDC/xSTEMR).",
+   "id": "Q6825400",
+   "label": "LAPACK - Linear Algebra PACKage",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Reference dense eigensolvers: QR/QZ (xHSEQR, xGEES, xGGES), symmetric drivers (xSYEV/xSYEVD/xSYEVR), tridiagonal (xSTEBZ/xSTEIN/xSTEDC/xSTEMR)."
+     },
+     "labels": {
+      "en": "LAPACK - Linear Algebra PACKage"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000003": {
+   "class": "Software",
+   "description": "",
+   "id": "Q6825551",
+   "label": "SciPy (Python) — wrappers and algorithms (dense/sparse)",
+   "payload": {
+    "item": {
+     "labels": {
+      "en": "SciPy (Python) — wrappers and algorithms (dense/sparse)"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000004": {
+   "class": "Software",
+   "description": "",
+   "id": "Q6825690",
+   "label": "Eigen (C++) — header-only dense/sparse linear algebra",
+   "payload": {
+    "item": {
+     "labels": {
+      "en": "Eigen (C++) — header-only dense/sparse linear algebra"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000005": {
+   "description": "",
+   "id": "Q6825949",
+   "label": "Algorithm Class: Asymptotic work ~ O(n)",
+   "payload": {
+    "item": {
+     "labels": {
+      "en": "Algorithm Class: Asymptotic work ~ O(n)"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000006": {
+   "description": "",
+   "id": "Q6825790",
+   "label": "Algorithm Class: Specialized solvers for structured matrices (tridiagonal, banded, Toeplitz, Vandermonde)",
+   "payload": {
+    "item": {
+     "labels": {
+      "en": "Algorithm Class: Specialized solvers for structured matrices (tridiagonal, banded, Toeplitz, Vandermonde)"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000007": {
+   "description": "Families of problems exploiting particular matrix patterns—tridiagonal, band-diagonal, Toeplitz, Vandermonde, and cyclic tridiagonal—to achieve faster than generic O(n^3) algorithms.",
+   "id": "Q6826007",
+   "label": "Problem Class: Linear systems with strong matrix structure",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Families of problems exploiting particular matrix patterns—tridiagonal, band-diagonal, Toeplitz, Vandermonde, and cyclic tridiagonal—to achieve faster than generic O(n^3) algorithms."
+     },
+     "labels": {
+      "en": "Problem Class: Linear systems with strong matrix structure"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000008": {
+   "class": "Publication",
+   "description": "scientific article; zbMATH DE number 1546560",
+   "id": "Q1591199",
+   "label": "Numerical linear algebra algorithms and software",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "scientific article; zbMATH DE number 1546560"
+     },
+     "labels": {
+      "en": "Numerical linear algebra algorithms and software"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000009": {
+   "description": "",
+   "id": "Q6825571",
+   "label": "ScaLAPACK - Scalable Linear Algebra PACKage",
+   "payload": {
+    "item": {
+     "labels": {
+      "en": "ScaLAPACK - Scalable Linear Algebra PACKage"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000010": {
+   "class": "Publication",
+   "description": "scientific article; zbMATH DE number 1372110",
+   "id": "Q3835990",
+   "label": "LAPACK Users' Guide",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "scientific article; zbMATH DE number 1372110"
+     },
+     "labels": {
+      "en": "LAPACK Users' Guide"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000011": {
+   "description": "",
+   "id": "Q6825373",
+   "label": "SUITESPARSE: A Suite Of Sparse Matrix Software",
+   "payload": {
+    "item": {
+     "labels": {
+      "en": "SUITESPARSE: A Suite Of Sparse Matrix Software"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000012": {
+   "class": "Publication",
+   "description": "academic book",
+   "id": "Q6824614",
+   "label": "Matrix Computations",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "academic book"
+     },
+     "labels": {
+      "en": "Matrix Computations"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000013": {
+   "description": "Enhances BiCG by introducing a stabilization (minimal residual) step to reduce oscillatory behavior; widely used with ILU-type preconditioners.",
+   "id": "Q6825326",
+   "label": "BiCGSTAB (stabilized BiCG) for improved smooth convergence on nonsymmetric systems",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Enhances BiCG by introducing a stabilization (minimal residual) step to reduce oscillatory behavior; widely used with ILU-type preconditioners."
+     },
+     "labels": {
+      "en": "BiCGSTAB (stabilized BiCG) for improved smooth convergence on nonsymmetric systems"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000014": {
+   "description": "For SPD matrices A=LL^T (or A=R^TR), enabling fast solves and log-determinants; numerically stable and halves the floating-point work compared to LU for SPD problems. Forms the basis of many preconditioners.",
+   "id": "Q6825339",
+   "label": "Cholesky (LL^T) factorization for SPD matrices",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "For SPD matrices A=LL^T (or A=R^TR), enabling fast solves and log-determinants; numerically stable and halves the floating-point work compared to LU for SPD problems. Forms the basis of many preconditioners."
+     },
+     "labels": {
+      "en": "Cholesky (LL^T) factorization for SPD matrices"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000015": {
+   "description": "Stores only the populated diagonals and performs band-aware elimination with reduced fill and operation count proportional to the bandwidth. Common in PDE discretizations where the bandwidth is modest relative to n.",
+   "id": "Q6825417",
+   "label": "Gaussian/LU factorization specialized to band-diagonal matrices",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Stores only the populated diagonals and performs band-aware elimination with reduced fill and operation count proportional to the bandwidth. Common in PDE discretizations where the bandwidth is modest relative to n."
+     },
+     "labels": {
+      "en": "Gaussian/LU factorization specialized to band-diagonal matrices"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000016": {
+   "description": "Factorizes a nonsingular matrix A into PA = LU with a permutation P, unit-lower L, and upper-triangular U. Once factored, multiple right-hand sides and determinants are efficient, and the factorization is more stable than naive Gauss-Jordan.",
+   "id": "Q6825507",
+   "label": "LU decomposition with (partial) pivoting for solving Ax=b and computing determinants",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Factorizes a nonsingular matrix A into PA = LU with a permutation P, unit-lower L, and upper-triangular U. Once factored, multiple right-hand sides and determinants are efficient, and the factorization is more stable than naive Gauss-Jordan."
+     },
+     "labels": {
+      "en": "LU decomposition with (partial) pivoting for solving Ax=b and computing determinants"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000017": {
+   "description": "Krylov subspace method minimizing the A-norm of the error; per-iteration cost is O(nnz) and convergence depends on κ(A) and preconditioning quality. Cornerstone solver for large SPD problems arising from PDEs.",
+   "id": "Q6825529",
+   "label": "Conjugate Gradient (CG) for sparse symmetric positive definite systems",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Krylov subspace method minimizing the A-norm of the error; per-iteration cost is O(nnz) and convergence depends on κ(A) and preconditioning quality. Cornerstone solver for large SPD problems arising from PDEs."
+     },
+     "labels": {
+      "en": "Conjugate Gradient (CG) for sparse symmetric positive definite systems"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000018": {
+   "description": "Builds an orthonormal Krylov basis via Arnoldi and chooses the iterate with minimal residual over the subspace; restarted and flexible variants control memory and cost. Robust and widely applicable with suitable preconditioning.",
+   "id": "Q6825578",
+   "label": "Generalized Minimal Residual",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Builds an orthonormal Krylov basis via Arnoldi and chooses the iterate with minimal residual over the subspace; restarted and flexible variants control memory and cost. Robust and widely applicable with suitable preconditioning."
+     },
+     "labels": {
+      "en": "Generalized Minimal Residual"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000019": {
+   "description": "Exploits the special structure of Vandermonde matrices to reduce work and improve numerical behavior compared to naive Gaussian elimination; useful in polynomial interpolation contexts.",
+   "id": "Q6825600",
+   "label": "Björck-Pereyra O(n^2) algorithm for solving Vandermonde systems",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Exploits the special structure of Vandermonde matrices to reduce work and improve numerical behavior compared to naive Gaussian elimination; useful in polynomial interpolation contexts."
+     },
+     "labels": {
+      "en": "Björck-Pereyra O(n^2) algorithm for solving Vandermonde systems"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000020": {
+   "description": "Forward elimination transforms A to an upper-triangular U using row operations and (usually) partial pivoting; back-substitution then solves Ux=b. This is the workhorse of dense linear algebra and forms the basis for LU factorization used by LAPACK and most libraries.",
+   "id": "Q6825760",
+   "label": "Classical Gaussian elimination with pivoting plus back-substitution for dense linear systems",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Forward elimination transforms A to an upper-triangular U using row operations and (usually) partial pivoting; back-substitution then solves Ux=b. This is the workhorse of dense linear algebra and forms the basis for LU factorization used by LAPACK and most libraries."
+     },
+     "labels": {
+      "en": "Classical Gaussian elimination with pivoting plus back-substitution for dense linear systems"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000021": {
+   "description": "Row-reduction with both forward elimination and full back-elimination to produce RREF and, optionally, A^{-1} by augmenting with the identity. Robust pivoting strategies are essential; numerical stability is generally inferior to LU with partial pivoting for solving Ax=b. This method is pedagogically transparent but rarely used in production solvers for dense systems.",
+   "id": "Q6825773",
+   "label": "Gauss-Jordan elimination to compute reduced row-echelon form and matrix inverses",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Row-reduction with both forward elimination and full back-elimination to produce RREF and, optionally, A^{-1} by augmenting with the identity. Robust pivoting strategies are essential; numerical stability is generally inferior to LU with partial pivoting for solving Ax=b. This method is pedagogically transparent but rarely used in production solvers for dense systems."
+     },
+     "labels": {
+      "en": "Gauss-Jordan elimination to compute reduced row-echelon form and matrix inverses"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000022": {
+   "description": "Extends CG to nonsymmetric matrices by building polynomial approximations in bi-orthogonal Krylov subspaces; may suffer irregular convergence, often superseded by stabilized variants like BiCGSTAB.",
+   "id": "Q6825862",
+   "label": "BiConjugate Gradient (BiCG) for nonsymmetric sparse linear systems",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Extends CG to nonsymmetric matrices by building polynomial approximations in bi-orthogonal Krylov subspaces; may suffer irregular convergence, often superseded by stabilized variants like BiCGSTAB."
+     },
+     "labels": {
+      "en": "BiConjugate Gradient (BiCG) for nonsymmetric sparse linear systems"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000023": {
+   "description": "Reduces a cyclic tridiagonal system to a standard tridiagonal solve plus a low-rank correction using the Sherman-Morrison formula; retains O(n) structure while handling periodic boundary conditions.",
+   "id": "Q6825953",
+   "label": "Cyclic tridiagonal solver via Sherman-Morrison rank-1 update",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "Reduces a cyclic tridiagonal system to a standard tridiagonal solve plus a low-rank correction using the Sherman-Morrison formula; retains O(n) structure while handling periodic boundary conditions."
+     },
+     "labels": {
+      "en": "Cyclic tridiagonal solver via Sherman-Morrison rank-1 update"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000024": {
+   "class": "Publication",
+   "description": "scholarly monograph",
+   "id": "Q6825173",
+   "label": "LAPACK Users' Guide",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "scholarly monograph"
+     },
+     "labels": {
+      "en": "LAPACK Users' Guide"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "Item0000000025": {
+   "description": "After solving Ax=b via a direct factorization, compute the residual r=b−Ax in higher precision, solve Ad=r, and correct x←x+d; repeat until convergence. Modern variants enable mixed-precision workflows that recover high-precision accuracy at the cost of a few refinement steps.",
+   "id": "Q6825845",
+   "label": "Iterative refinement (iterative improvement) to enhance solutions of direct factorizations",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "After solving Ax=b via a direct factorization, compute the residual r=b−Ax in higher precision, solve Ad=r, and correct x←x+d; repeat until convergence. Modern variants enable mixed-precision workflows that recover high-precision accuracy at the cost of a few refinement steps."
+     },
+     "labels": {
+      "en": "Iterative refinement (iterative improvement) to enhance solutions of direct factorizations"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  },
+  "RELATION0": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q127020",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION1": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION10": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000001/statements"
+  },
+  "RELATION11": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6534272",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000001/statements"
+  },
+  "RELATION12": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1684"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000001",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000007/statements"
+  },
+  "RELATION13": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q56614",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
+  },
+  "RELATION14": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
+  },
+  "RELATION15": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q5976450",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
+  },
+  "RELATION16": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "external-id",
+      "id": "P13"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "503",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
+  },
+  "RELATION17": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "URL",
+      "id": "P104"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "http://www.netlib.org/lapack/",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
+  },
+  "RELATION18": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q56614",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000003/statements"
+  },
+  "RELATION19": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000003/statements"
+  },
+  "RELATION2": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6503323",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION20": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q5976450",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000003/statements"
+  },
+  "RELATION21": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q56614",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000004/statements"
+  },
+  "RELATION22": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1495"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6830558",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000004/statements"
+  },
+  "RELATION23": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1460"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q5976450",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000004/statements"
+  },
+  "RELATION24": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6672349",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000008",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
+  },
+  "RELATION25": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6672349",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000008",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000009/statements"
+  },
+  "RELATION26": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6672349",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000010",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000011/statements"
+  },
+  "RELATION27": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6672349",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000010",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000002/statements"
+  },
+  "RELATION28": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000013/statements"
+  },
+  "RELATION29": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
+  },
+  "RELATION3": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1578"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000000",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000001/statements"
+  },
+  "RELATION30": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
+  },
+  "RELATION31": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
+  },
+  "RELATION32": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000017/statements"
+  },
+  "RELATION33": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000018/statements"
+  },
+  "RELATION34": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000019/statements"
+  },
+  "RELATION35": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION36": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000020/statements"
+  },
+  "RELATION37": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000021/statements"
+  },
+  "RELATION38": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000022/statements"
+  },
+  "RELATION39": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000012",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000023/statements"
+  },
+  "RELATION4": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1766"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000002",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION40": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000024",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000014/statements"
+  },
+  "RELATION41": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000024",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000015/statements"
+  },
+  "RELATION42": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000024",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000016/statements"
+  },
+  "RELATION43": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000024",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION44": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P286"
+     },
+     "qualifiers": [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6825292",
+        "type": "value"
+       }
+      }
+     ],
+     "value": {
+      "content": "Item0000000024",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000025/statements"
+  },
+  "RELATION5": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1766"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000003",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION6": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P1766"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000004",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION7": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P36"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000000",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000005/statements"
+  },
+  "RELATION8": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P36"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Item0000000006",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000000/statements"
+  },
+  "RELATION9": {
+   "exists": "true",
+   "id": "",
+   "payload": {
+    "statement": {
+     "property": {
+      "data_type": "wikibase-item",
+      "id": "P31"
+     },
+     "qualifiers": [],
+     "value": {
+      "content": "Q6775701",
+      "type": "value"
+     }
+    }
+   },
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000001/statements"
+  }
+ },
+ "written": [
+  "Item0000000000",
+  "Item0000000001",
+  "Item0000000002",
+  "Item0000000003",
+  "Item0000000004",
+  "Item0000000005",
+  "Item0000000006",
+  "Item0000000007",
+  "Item0000000008",
+  "Item0000000009",
+  "Item0000000010",
+  "Item0000000011",
+  "Item0000000012",
+  "Item0000000013",
+  "Item0000000014",
+  "Item0000000015",
+  "Item0000000016",
+  "Item0000000017",
+  "Item0000000018",
+  "Item0000000019",
+  "Item0000000020",
+  "Item0000000021",
+  "Item0000000022",
+  "Item0000000023",
+  "Item0000000024",
+  "Item0000000025"
  ]
 }

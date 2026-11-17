@@ -20,6 +20,26 @@
   }
  },
  {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q6824614\"], [\"props\", \"claims\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"entities\":{\"Q6824614\":{\"type\":\"item\",\"id\":\"Q6824614\",\"claims\":{\"P31\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P31\",\"hash\":\"68b16735896630c76f5edf14aa4771e4a6edd8bc\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":56401,\"id\":\"Q56401\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6824614$A0C5364B-C330-4E52-BDDD-641D50EAD037\",\"rank\":\"normal\"}],\"P27\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P27\",\"hash\":\"654e04d5d80ca98d4bceee2b77436d4065f97a0e\",\"datavalue\":{\"value\":\"/10.56021/9781421407944\",\"type\":\"string\"},\"datatype\":\"external-id\"},\"type\":\"statement\",\"id\":\"Q6824614$A442A1EF-93A8-42EA-A7E9-F2A20E1FB3B1\",\"rank\":\"normal\"}],\"P28\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P28\",\"hash\":\"ac663eff6b901fcda15b920fc50e87643386954e\",\"datavalue\":{\"value\":{\"time\":\"+2012-00-00T00:00:00Z\",\"timezone\":0,\"before\":0,\"after\":0,\"precision\":9,\"calendarmodel\":\"http://www.wikidata.org/entity/Q1985727\"},\"type\":\"time\"},\"datatype\":\"time\"},\"type\":\"statement\",\"id\":\"Q6824614$91E80538-30ED-4E34-A24C-A1A53530D54C\",\"rank\":\"normal\"}],\"P43\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P43\",\"hash\":\"a20fd5d3897033ef0750c9c7524ed517bfb9746d\",\"datavalue\":{\"value\":\"Gene Golub\",\"type\":\"string\"},\"datatype\":\"string\"},\"type\":\"statement\",\"id\":\"Q6824614$0F3712B8-8843-41CD-8EB7-758E851D01C1\",\"rank\":\"normal\"}],\"P1460\":[{\"mainsnak\":{\"snaktype\":\"value\",\"property\":\"P1460\",\"hash\":\"57f7fea50d2ce1b39b695c4a1313582eed405e38\",\"datavalue\":{\"value\":{\"entity-type\":\"item\",\"numeric-id\":5976449,\"id\":\"Q5976449\"},\"type\":\"wikibase-entityid\"},\"datatype\":\"wikibase-item\"},\"type\":\"statement\",\"id\":\"Q6824614$7620261B-D694-47D9-9917-F75FC15D9534\",\"rank\":\"normal\"}]}}},\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbgetentities",
+    "ids": "Q6824614",
+    "props": "claims",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
   "key": "[\"POST\", \"https://query.portal.mardi4nfdi.de/sparql\", [], \"SELECT ?item ?class ?community ?profile WHERE { VALUES ?item { wd:Q1591199 wd:Q1890089 wd:Q2643268 wd:Q3835990 wd:Q395179 wd:Q4576500 wd:Q5233481 wd:Q56773 wd:Q615138 wd:Q6230810 wd:Q6824410 wd:Q6824614 wd:Q6824795 wd:Q6824988 wd:Q6825078 wd:Q6825326 wd:Q6825339 wd:Q6825352 wd:Q6825373 wd:Q6825400 wd:Q6825417 wd:Q6825434 wd:Q6825489 wd:Q6825507 wd:Q6825514 wd:Q6825529 wd:Q6825536 wd:Q6825551 wd:Q6825571 wd:Q6825573 wd:Q6825578 wd:Q6825600 wd:Q6825618 wd:Q6825650 wd:Q6825656 wd:Q6825671 wd:Q6825687 wd:Q6825738 wd:Q6825744 wd:Q6825756 wd:Q6825760 wd:Q6825764 wd:Q6825773 wd:Q6825781 wd:Q6825862 wd:Q6825911 wd:Q6825953 wd:Q6826014 wd:Q6826026 wd:Q6826034 } OPTIONAL { ?item wdt:P31 ?class . } OPTIONAL { ?item wdt:P1495 ?community . } OPTIONAL { ?item wdt:P1460 ?profile . } }\"]",
   "url": "https://query.portal.mardi4nfdi.de/sparql",
   "status": 200,

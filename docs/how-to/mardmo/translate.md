@@ -9,7 +9,7 @@ translations are in `MaRDMO/locale/de/LC_MESSAGES/django.po` (compiled to
 
 | Translated | Stays English |
 |---|---|
-| The preview: headings, labels, the notes, *Before you can export* | What goes to the MaRDI Portal: labels, descriptions, the generic descriptions of own items without page |
+| The preview: headings, labels, the notes, *Before you export* | What goes to the MaRDI Portal: labels, descriptions, the generic descriptions of own items without page |
 | The problems of the checks (list and red marks), the error pages of the export | Option texts stored in answers (*new item*) and the source tags (`[mardi]`, `[wikidata]`) |
 | The validators' messages in the interview | The logs |
 | The progress page and the result page of the export | Messages of the MaRDI Portal, passed on unchanged |
@@ -38,7 +38,7 @@ self.err.append(self._error(N_('Process Step'), page_name,
 Sections and class names (`'Process Step'`, `SECTION_MAP`) stay English in
 the problems, they group them; they are marked with `N_` so that the catalog
 has them, and translated where they are shown (`str(Problem)`, the list
-*Before you can export*).  A message that inserts a class name avoids German
+*Before you export*).  A message that inserts a class name avoids German
 articles and adjective endings (*{item} fehlt*, not *Fehlender {item}*).
 
 **The upload** runs in a thread of its own, which has the default language;

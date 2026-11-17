@@ -1,10 +1,12 @@
 {% load i18n mardmo_tags %}
-{# Everything that prevents the export, above the preview: the items already on the MaRDI Portal (#141, see duplicates.py) and what the checks found (#152, see pipeline.py) #}
-{% if duplicates.rows or duplicates.failed or gate.problems or gate.unreachable %}
-<section class="mardmo-before-export" id="before-export" aria-labelledby="before-export-title">
-    <h1 id="before-export-title"><span class="mardmo-before-export__icon" aria-hidden="true">&#9888;</span> {% translate "Before you can export" %}</h1>
-    {% if duplicates.rows or gate.problems %}
+{# Above the preview: what prevents the export, the items already on the MaRDI Portal (#141, see duplicates.py) and what the checks found (#152, see pipeline.py), and what portal items could have (#167, optional) #}
+{% if duplicates.rows or duplicates.failed or gate.problems or gate.unreachable or gate.hints %}
+{% with blocked=duplicates.rows|default:duplicates.failed|default:gate.problems|default:gate.unreachable %}
+<section class="mardmo-before-export{% if not blocked %} mardmo-before-export--optional{% endif %}" id="before-export" aria-labelledby="before-export-title">
+    <h1 id="before-export-title"><span class="mardmo-before-export__icon" aria-hidden="true">{% if blocked %}&#9888;{% else %}&#8505;{% endif %}</span> {% translate "Before you export" %}</h1>
+    {% if duplicates.rows or gate.problems or gate.hints %}
     <p class="mardmo-before-export__summary">
+        {% if not blocked %}{% translate "Nothing prevents the export" %} &middot;{% endif %}
         {% if duplicates.rows %}<a href="#portal-duplicates">{% blocktranslate trimmed count counter=duplicates.rows|length %}
             {{ counter }} item is already on the MaRDI Portal
         {% plural %}
@@ -15,6 +17,12 @@
             {{ counter }} point to fix in the documentation
         {% plural %}
             {{ counter }} points to fix in the documentation
+        {% endblocktranslate %}</a>{% endif %}
+        {% if gate.hints and blocked %}&middot;{% endif %}
+        {% if gate.hints %}<a href="#portal-hints" class="mardmo-before-export__optional">{% blocktranslate trimmed count counter=gate.hint_items %}
+            {{ counter }} portal item could be completed
+        {% plural %}
+            {{ counter }} portal items could be completed
         {% endblocktranslate %}</a>{% endif %}
     </p>
     {% endif %}
@@ -148,6 +156,32 @@
         {% endif %}
     </div>
     {% endif %}
+
+    {% if gate.hints %}
+    <div class="mardmo-before-export__part mardmo-before-export__part--hints" id="portal-hints">
+        <h2>{% translate "Portal items you could complete (optional)" %}</h2>
+        <p>
+            {% blocktranslate trimmed %}
+            These items are on the MaRDI Portal already and lack something, or have a value the portal
+            should not have. The export does not need it: you can export as it is. What you add in the
+            interview is added to the portal item.
+            {% endblocktranslate %}
+        </p>
+        <ul class="mardmo-problems">
+            {% for section, page, messages in gate.hint_groups %}
+            <li>
+                <strong>{% translate section %}</strong>{% if page %}, {{ page }}{% with url=interview|get_item:page.section %}{% if url %}
+                <a href="{{ url }}" target="_blank" rel="noopener" class="mardmo-interview-link">{% translate "To interview" %}</a>{% endif %}{% endwith %}{% endif %}
+                <ul>
+                    {% for message in messages %}
+                    <li class="mardmo-hint">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     {# "Apply" reloads the preview (the checks run again): one click is enough #}
     <script>
         document.querySelectorAll('#before-export .mardmo-decision__then--use').forEach(function (form) {
@@ -159,4 +193,5 @@
         });
     </script>
 </section>
+{% endwith %}
 {% endif %}

@@ -171,8 +171,8 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
             # Everything the export checks, so a clean preview exports (#152)
             gate = pipeline.run(self.project, answers, prepare_class, check_method,
                                 preview=True, duplicates=duplicates)
-            # The red marks of the pages are these problems (#152)
-            attach_problems(answers, gate.problems)
+            # The red marks of the pages are these problems (#152), the blue ones the hints (#167)
+            attach_problems(answers, gate.problems + gate.hints)
             return render_preview(
                 self=self,
                 template=template,

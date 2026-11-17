@@ -14,13 +14,16 @@ Provides:
   user-defined, otherwise its portal ID
 - ``publication_info``      — tag: citation line, authors and journal of a
   publication, each marked as on the MaRDI Portal, new, or name only
-- ``marks``                 — tag: the problems of fields of a page, in red
-- ``remaining_marks``       — tag: the problems of a page no ``marks`` showed
+- ``marks``                 — tag: the problems of fields of a page, in red, and
+  its hints, in blue
+- ``remaining_marks``       — tag: the problems and hints of a page no ``marks`` showed
 
 The red marks of the preview are the problems of the checks
-(:func:`~MaRDMO.problems.attach`): a template shows them with ``marks``
-where it shows the field, and ``remaining_marks`` at the end of each page
-shows the rest, so every problem is on its page and nothing else is red.
+(:func:`~MaRDMO.problems.attach`), the blue ones their hints: what a MaRDI
+Portal item could have (#167).  A template shows them with ``marks`` where
+it shows the field, and ``remaining_marks`` at the end of each page shows
+the rest, so every problem and hint is on its page and nothing else is
+marked.
 '''
 
 from django import template
@@ -44,9 +47,15 @@ OPTION_NAMES = (N_('kilobyte'), N_('megabyte'), N_('gigabyte'), N_('terabyte'), 
 _SHOWN = '_marks_shown'
 
 
-def _mark_list(messages):
-    return format_html_join(mark_safe('<br>'), '<strong class="mardmo-error">{}</strong>',
-                            ((message,) for message in messages))
+def _mark_list(messages, hints=()):
+    '''The *messages* as red marks, then the *hints* as blue ones, one per line.'''
+    marks = [('mardmo-error', message) for message in messages] + [('mardmo-hint', hint) for hint in hints]
+    return format_html_join(mark_safe('<br>'), '<strong class="{}">{}</strong>', marks)
+
+
+def _found(page, key, fields):
+    '''The messages of *fields* in ``page[key]`` (``'Problems'`` or ``'Hints'``).'''
+    return [message for field in fields for message in (page.get(key) or {}).get(field, [])]
 
 
 @register.simple_tag
@@ -59,18 +68,19 @@ def marks(page, *fields, before=''):
     if not isinstance(page, dict):
         return ''
     page.setdefault(_SHOWN, set()).update(fields)
-    messages = [message for field in fields for message in (page.get('Problems') or {}).get(field, [])]
-    return format_html('{}{}', before, _mark_list(messages)) if messages else ''
+    messages, hints = _found(page, 'Problems', fields), _found(page, 'Hints', fields)
+    return format_html('{}{}', before, _mark_list(messages, hints)) if messages or hints else ''
 
 
 @register.filter
 def has_marks(page, field):
-    '''Whether the checks found a problem with *field* of *page*.
+    '''Whether the checks found a problem with *field* of *page*, or have a hint for it.
 
     A block shows "NOT DOCUMENTED" only if not: an answer that is missing
-    shows just its red mark (``{% if not values|has_marks:field %}``).
+    shows just its mark (``{% if not values|has_marks:field %}``).
     '''
-    return isinstance(page, dict) and bool((page.get('Problems') or {}).get(field))
+    return isinstance(page, dict) and bool((page.get('Problems') or {}).get(field)
+                                           or (page.get('Hints') or {}).get(field))
 
 
 @register.simple_tag
@@ -91,13 +101,15 @@ def relatant(value):
 
 @register.simple_tag
 def remaining_marks(page):
-    '''The problems of *page* that no :func:`marks` of it showed; put at the end of each page.'''
+    '''The problems and hints of *page* that no :func:`marks` of it showed; put at the end of each page.'''
     if not isinstance(page, dict):
         return ''
     shown = page.pop(_SHOWN, set())
-    messages = [message for field, found in (page.get('Problems') or {}).items() if field not in shown
-                for message in found]
-    return format_html('<p>{}</p>', _mark_list(messages)) if messages else ''
+    rest = {key: [message for field, found in (page.get(key) or {}).items() if field not in shown
+                  for message in found] for key in ('Problems', 'Hints')}
+    if not rest['Problems'] and not rest['Hints']:
+        return ''
+    return format_html('<p>{}</p>', _mark_list(rest['Problems'], rest['Hints']))
 
 
 @register.filter

@@ -6,7 +6,7 @@ the tab and an anchor into every page of the answers; a relation to a page
 becomes a :class:`PageRef`, which renders as a link to the page:
 "Navier-Stokes equation (F4)".
 '''
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from django.urls import reverse
 from django.utils.html import format_html
@@ -26,6 +26,13 @@ class PageRef:
     index: int
     name: str
     tab: str
+    # The ID of the page's item; not part of what makes two references equal
+    item: str = field(default='', compare=False)
+
+    @property
+    def portal(self):
+        '''Whether the page's item is an item of the MaRDI Portal (#167: its gaps are hints).'''
+        return self.item.startswith('mardi:')
 
     @property
     def anchor(self):
@@ -53,7 +60,7 @@ class PageRef:
 
 def page_ref(section, index, entry):
     '''The :class:`PageRef` of the page *entry* (answers of page *index* of *section*).'''
-    return PageRef(section, index, entry.get('Name') or '', entry.get('Tab') or '')
+    return PageRef(section, index, entry.get('Name') or '', entry.get('Tab') or '', str(entry.get('ID') or ''))
 
 
 def page_refs(data, sections):

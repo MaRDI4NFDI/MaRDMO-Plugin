@@ -118,18 +118,23 @@ elif option_key == 'SWMATH':
     problem = swmath_problem(entry[1])
 ...
 if problem:
-    self.err.append(self._error(section, page_name,
-                                _('Invalid {label}: {problem}').format(label=_(label), problem=problem),
-                                field='reference'))
+    self._invalid(section, page_name, _('Invalid {label}: {problem}').format(label=_(label), problem=problem),
+                  'reference', [entry[1]])
 ```
+
+Choose the kind of the finding (#167): `_invalid` for an invalid value (with
+the value: on the page of a MaRDI Portal item it is a hint if the portal item
+has it already), `_missing` for something the page lacks (a hint on the page
+of a portal item), and `_error` for a broken structure (a relation without
+type or target, an item without page), which always prevents the export.
 
 The message is translated when the check runs, with placeholders instead of an
 f-string; *section* and *label* are English names marked with `N_` and
 translated where they are shown (see [How to Translate MaRDMO](translate.md)).
 
-The preview shows the problem in red where the template shows the field
+The preview shows the problem in red (a hint in blue) where the template shows the field
 (`{% marks values "reference" %}`, here in `partials/_reference_block.html`), and
-lists it under *Before you can export*; nothing else is needed for the preview.
+lists it under *Before you export*; nothing else is needed for the preview.
 
 ---
 

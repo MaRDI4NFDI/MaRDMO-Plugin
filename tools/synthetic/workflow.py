@@ -185,7 +185,7 @@ def describe(doc):
     for page in doc.tabs('hardware'):
         complete.missing(page, {'nodes': '1'})
         blocks = page.blocks('cpu-specification')
-        if not blocks:
+        if not blocks and complete.created(page):
             page.block('cpu-specification', {'cpu': RYZEN, 'number-of-cpu': '1', 'cores': '8'})
         for block in blocks:
             complete.missing(page, {'cpu': RYZEN, 'number-of-cpu': '1', 'cores': '8'}, within=(block,))

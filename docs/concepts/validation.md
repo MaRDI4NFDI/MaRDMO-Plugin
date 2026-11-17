@@ -7,8 +7,8 @@ entered values in three places, which all use the same rules:
 | Place | When | What happens on a problem |
 |---|---|---|
 | **Pre-save validation** | While the user types in the interview | The answer is not saved; the message appears below the question |
-| **Documentation checks** | Preview and export, before anything is posted | The preview lists the problems and marks them in red on their pages; the export stops with a list of errors |
-| **Final export check** | Preview and export, after the payload is built | The same, listed under *Export* |
+| **Documentation checks** | Preview and export, before anything is posted | The preview lists the problems and marks them in red on their pages; the export stops with a list of errors.  On pages of MaRDI Portal items, what is missing and invalid values the portal item has already are blue hints that do not stop the export |
+| **Final export check** | Preview and export, after the payload is built | The same, listed under *Export*; only for the values the export writes |
 
 The rules live in one place — `validators.py`, with the regular expressions in
 `patterns.py` — so that pre-save validation and the checks always agree.  The

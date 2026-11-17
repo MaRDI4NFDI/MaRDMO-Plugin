@@ -37,7 +37,7 @@ def test_problems_are_german(white, client):
     without_description(white, 'formulation', 1)
     html = preview(client, white)
     box = text(element(html, id='before-export'))
-    assert 'Bevor Sie exportieren können' in box and 'Fehler, Widersprüche und unvollständige Dokumentation' in box
+    assert 'Bevor Sie exportieren' in box and 'Fehler, Widersprüche und unvollständige Dokumentation' in box
     assert 'Formel, conservation law for the opiate-using career ODE model (F2) Zum Interview' in box
     assert 'Kurzbeschreibung fehlt' in box and 'Missing Short Description' not in html
     assert 'Beheben Sie die Punkte oben' in text(element(html, id='export-blocked'))

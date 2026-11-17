@@ -1,8 +1,9 @@
-'''The red marks of the preview are exactly the problems of the checks (#152).
+'''The red marks of the preview are exactly the problems of the checks (#152), the blue ones their hints (#167).
 
 Every answer of a project of each catalog is deleted (and, if it has text,
-blanked) once; then each problem of the checks must be red on its page, and
-nothing else may be red.  Answers of the same question are mutated once
+blanked) once; then each problem of the checks must be red on its page and
+each hint (what a MaRDI Portal item could have) blue, and nothing else may
+be marked.  Answers of the same question are mutated once
 (the first of them), so the test stays quick; the survey before #152 did all
 of them (no difference).  The answers that name a tab are left out: deleting
 one is deleting the tab, which RDMO does with all its answers.
@@ -34,6 +35,7 @@ from tools.messages import CATALOG
 from tools.synthetic.catalog import Catalog
 
 MARK = re.compile(r'<strong class="mardmo-error">(.*?)</strong>', re.S)
+HINT = re.compile(r'<strong class="mardmo-hint">(.*?)</strong>', re.S)
 PROJECTS = [('white_2006', 'import', 'en'), ('si_model', 'select', 'en'), ('thomas_algorithm', 'select', 'en'),
             ('workflow', 'select', 'en'), ('white_2006', 'import', 'de'),
             # Every question of each catalog (tools/synthetic)
@@ -73,22 +75,25 @@ def _compare(documentation, language):
         project=documentation, data=answers, catalog=str(documentation.catalog))
     attach(answers, problems)
     page = render_to_string(CATALOG_TEMPLATE_MAP[slug], {'answers': answers, 'option': options, 'title': 'x'})
-    found = {anchor: [html.unescape(re.sub(r'<[^>]+>', '', mark)) for mark in MARK.findall(part)]
-             for anchor, part in regions(page).items()}
     wrong = []
-    expected = {}
     for problem in problems:
-        expected.setdefault(problem.page.anchor, []).append(problem.message)
         if language == 'de' and problem.section not in GERMAN:
             wrong.append(f'section without German: {problem.section}')
-    for anchor in found.keys() | expected.keys():
-        missing = sorted(set(expected.get(anchor, [])) - set(found.get(anchor, [])))
-        extra = sorted(set(found.get(anchor, [])) - set(expected.get(anchor, [])))
-        wrong += [f'{anchor}: not shown: {message}' for message in missing]
-        wrong += [f'{anchor}: red without a problem: {message}' for message in extra]
-    outside = len(MARK.findall(page)) - sum(len(marks) for marks in found.values())
-    if outside:
-        wrong.append(f'{outside} red marks outside of the pages')
+    for pattern, colour, hint in ((MARK, 'red', False), (HINT, 'blue', True)):
+        found = {anchor: [html.unescape(re.sub(r'<[^>]+>', '', mark)) for mark in pattern.findall(part)]
+                 for anchor, part in regions(page).items()}
+        expected = {}
+        for problem in problems:
+            if problem.hint == hint:
+                expected.setdefault(problem.page.anchor, []).append(problem.message)
+        for anchor in found.keys() | expected.keys():
+            missing = sorted(set(expected.get(anchor, [])) - set(found.get(anchor, [])))
+            extra = sorted(set(found.get(anchor, [])) - set(expected.get(anchor, [])))
+            wrong += [f'{anchor}: not shown in {colour}: {message}' for message in missing]
+            wrong += [f'{anchor}: {colour} without a {"hint" if hint else "problem"}: {message}' for message in extra]
+        outside = len(pattern.findall(page)) - sum(len(marks) for marks in found.values())
+        if outside:
+            wrong.append(f'{outside} {colour} marks outside of the pages')
     return wrong
 
 

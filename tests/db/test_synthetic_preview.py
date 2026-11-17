@@ -27,7 +27,10 @@ def test_the_preview_offers_the_export(name, project, portal, client, django_use
     Membership.objects.create(project=documentation, user=owner, role='owner')
     client.force_login(owner)
     html = preview_page(client, documentation)
-    assert not elements(html, id='before-export'), text(element(html, id='before-export'))
+    # Nothing prevents the export: no problems and no items already on the portal; hints on
+    # the portal items MaRDMO filled are allowed (they are optional, #167)
+    blocking = elements(html, id='export-problems') + elements(html, id='portal-duplicates')
+    assert not blocking, text(element(html, id='before-export'))
     assert export_button(html) == 'enabled'
     # Every page of the documentation's sections is in the preview (the basics catalog has
     # no quantities, though MaRDMO stores some, see the findings of #138)

@@ -33,6 +33,12 @@
     font-weight: bold;
 }
 
+/* What a MaRDI Portal item could have; does not block the export (#167) */
+.mardmo-hint {
+    color: #1f6fb2;
+    font-weight: bold;
+}
+
 /* Optional information that was not documented */
 .mardmo-empty {
     color: black;
@@ -135,6 +141,18 @@
 }
 .mardmo-before-export__part--duplicates { border-top-color: #ec971f; }
 .mardmo-before-export__part--problems { border-top-color: #c9302c; }
+.mardmo-before-export__part--hints { border-top-color: #1f6fb2; border-color: #bcd6ec; }
+.mardmo-before-export__summary a.mardmo-before-export__optional { color: #1f6fb2; }
+
+/* Only hints (#167): nothing prevents the export, so no warning colour */
+.mardmo-before-export--optional {
+    background-color: #f1f6fb;
+    border-color: #bcd6ec;
+    border-left-color: #1f6fb2;
+}
+.mardmo-before-export--optional h1 {
+    color: #1f5a8c;
+}
 
 /* A small caption above a value, instead of a table header */
 .mardmo-caption {

@@ -144,6 +144,53 @@ class PayloadState:
     subject: dict = field(default_factory=dict)
     subject_item: Optional[str] = None
 
+def fetch_claims(qids, api_url, deadline, what, cache=None):
+    '''Return ``{qid: claims}`` of portal items, fetched with wbgetentities in chunks of 50.
+
+    Items in *cache* (``{qid: claims}``, extended) are not fetched again.
+
+    Raises:
+        PortalUnavailable: If the claims cannot be fetched; *what* names the
+            checked statements in the message (e.g. ``'formulas'``).
+    '''
+    claims_by_item = cache if cache is not None else {}
+    qids = [qid for qid in qids if qid not in claims_by_item]
+    for i in range(0, len(qids), 50):
+        body = None
+        try:
+            resp = request_with_retry(
+                'get',
+                api_url,
+                waits=check_waits(),
+                deadline=deadline,
+                params={
+                    'action': 'wbgetentities',
+                    'ids':    '|'.join(qids[i:i + 50]),
+                    'props':  'claims',
+                    'format': 'json',
+                },
+                headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
+                timeout=30,
+            )
+            resp.raise_for_status()
+            body = resp.json()
+        except (requests.exceptions.RequestException, ValueError) as exc:
+            _logger.warning("Claims check via API failed: %s", exc)
+        if body is not None and 'error' in body:
+            _logger.warning("Claims check via API failed: %s", body['error'])
+            body = None
+        if body is None:
+            raise PortalUnavailable({
+                'statements': _('Could not check which statements already exist on the MaRDI Portal '
+                                '(API not reachable). Nothing was exported; please try again later.'),
+                'formulas': _('Could not check which formulas already exist on the MaRDI Portal '
+                              '(API not reachable). Nothing was exported; please try again later.'),
+            }[what])
+        for qid, entity in body.get('entities', {}).items():
+            claims_by_item[qid] = entity.get('claims', {})
+    return claims_by_item
+
+
 class GeneratePayload:
     '''Class to build the Payload for an Export to a Wikibase
        with Items, Statements, Qualifiers, and Checks.'''
@@ -361,17 +408,20 @@ class GeneratePayload:
             The ``"Item<n>"`` key string for *value*.
 
         Raises:
-            DocumentationProblem: If *value* is empty or missing ``Name``/``Description``.
+            DocumentationProblem: If *value* is empty, or an item the export
+                creates misses ``Name``/``Description`` (a MaRDI Portal item
+                is found by its ID, it may lack them, #167).
         """
         if not value:
             raise DocumentationProblem(_("Missing Item in Statement!"))
-        if not value.get('Name') or not value.get('Description'):
+        on_portal = str(value.get('ID') or '').startswith('mardi:')
+        if not on_portal and (not value.get('Name') or not value.get('Description')):
             raise DocumentationProblem(_("All Items need to have a 'Name' and 'Description'!"))
 
         item_key = self._find_key_by_values(
             value['ID'],
-            value['Name'],
-            value['Description'],
+            value.get('Name') or '',
+            value.get('Description') or '',
         )
 
         if role == 'subject':
@@ -441,9 +491,11 @@ class GeneratePayload:
     def final_checks(self, api_url):
         '''Check the finished payload against the portal's rules and the portal itself.
 
-        Runs :meth:`validate_identifiers` and :meth:`check_existing_relations`
+        Runs :meth:`check_existing_relations` and :meth:`validate_identifiers`
         and reports the problems of both at once (#152), so the preview lists
-        all of them, not only those of the first check.
+        all of them, not only those of the first check.  The existence check
+        comes first: values of statements that are on the portal already are
+        not written, so they are not validated (#167).
 
         Raises:
             DocumentationProblem: Every invalid value and every symbol that
@@ -453,11 +505,11 @@ class GeneratePayload:
         '''
         problems = []
         try:
-            self.validate_identifiers()
+            self.check_existing_relations(api_url)
         except DocumentationProblem as problem:
             problems += problem.args
         try:
-            self.check_existing_relations(api_url)
+            self.validate_identifiers()
         except DocumentationProblem as problem:
             problems += problem.args
         if problems:
@@ -472,6 +524,8 @@ class GeneratePayload:
         every quantity amount a Wikibase decimal (``+8``, ``+1.5``).
         This catches values that bypassed the pre-save validator, the preview
         and the checks, so an export never fails halfway because of them.
+        Only what is written: statements the portal has already
+        (:meth:`check_existing_relations` marked them) are left out (#167).
 
         Raises:
             DocumentationProblem: One argument per invalid value, naming item and property.
@@ -530,11 +584,21 @@ class GeneratePayload:
                         statement[3] if len(statement) > 3 else [],
                     )
             elif key.startswith('RELATION'):
+                # Only what is written: not a statement the portal has, of one it
+                # extends only the qualifiers it adds (#167)
+                if entry.get('exists') == 'true':
+                    continue
                 item_key = entry['url'].split('/items/')[1].split('/')[0]
+                item_name = self.state.dictionary.get(item_key, {}).get('label') or item_key
                 statement = entry['payload']['statement']
+                if entry.get('exists') == 'partial':
+                    for qualifier in entry.get('add_qualifiers', []):
+                        if relevant(qualifier['property']['id'], qualifier['property']['data_type']):
+                            check(item_name, qualifier['property']['id'], qualifier['property']['data_type'],
+                                  qualifier['value']['content'])
+                    continue
                 check_statement(
-                    self.state.dictionary.get(item_key, {}).get('label') or item_key,
-                    statement['property']['id'], statement['property']['data_type'],
+                    item_name, statement['property']['id'], statement['property']['data_type'],
                     statement['value']['content'], statement.get('qualifiers', []),
                 )
 
@@ -646,51 +710,12 @@ class GeneratePayload:
         return 'false'
 
     def _fetch_claims(self, qids, api_url, deadline, what):
-        '''Return ``{qid: claims}`` of portal items, fetched with wbgetentities in chunks of 50.
+        '''Return ``{qid: claims}`` of portal items (:func:`fetch_claims`).
 
         Items fetched before during this export are taken from the earlier
         answer (the existence check, the qualifier merge and the symbol check need the same).
-
-        Raises:
-            PortalUnavailable: If the claims cannot be fetched; *what* names the
-                checked statements in the message (e.g. ``'formulas'``).
         '''
-        claims_by_item = self._claims
-        qids = [qid for qid in qids if qid not in claims_by_item]
-        for i in range(0, len(qids), 50):
-            body = None
-            try:
-                resp = request_with_retry(
-                    'get',
-                    api_url,
-                    waits=check_waits(),
-                    deadline=deadline,
-                    params={
-                        'action': 'wbgetentities',
-                        'ids':    '|'.join(qids[i:i + 50]),
-                        'props':  'claims',
-                        'format': 'json',
-                    },
-                    headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
-                    timeout=30,
-                )
-                resp.raise_for_status()
-                body = resp.json()
-            except (requests.exceptions.RequestException, ValueError) as exc:
-                _logger.warning("Claims check via API failed: %s", exc)
-            if body is not None and 'error' in body:
-                _logger.warning("Claims check via API failed: %s", body['error'])
-                body = None
-            if body is None:
-                raise PortalUnavailable({
-                    'statements': _('Could not check which statements already exist on the MaRDI Portal '
-                                    '(API not reachable). Nothing was exported; please try again later.'),
-                    'formulas': _('Could not check which formulas already exist on the MaRDI Portal '
-                                  '(API not reachable). Nothing was exported; please try again later.'),
-                }[what])
-            for qid, entity in body.get('entities', {}).items():
-                claims_by_item[qid] = entity.get('claims', {})
-        return claims_by_item
+        return fetch_claims(qids, api_url, deadline, what, self._claims)
 
     @staticmethod
     def _snak_matches(snak, value, data_type):
