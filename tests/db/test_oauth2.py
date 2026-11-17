@@ -88,6 +88,9 @@ def test_the_export_goes_through_the_portal_login_to_the_result(white, client, t
     fake = Portal()
     monkeypatch.setattr('MaRDMO.oauth2.requests.Session', lambda: fake)
     monkeypatch.setattr('MaRDMO.oauth2.time.sleep', lambda seconds: None)
+    # The thread closes its own database connection at the end; run in the test's thread it
+    # would close the test's (PostgreSQL and MariaDB refuse queries after that, SQLite reconnects)
+    monkeypatch.setattr('MaRDMO.oauth2.connection', SimpleNamespace(close=lambda: None))
     (target, args), = threads
     assert args[1] == 'token'
     target(*args)
