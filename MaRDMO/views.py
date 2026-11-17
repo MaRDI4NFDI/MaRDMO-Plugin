@@ -372,8 +372,8 @@ def render_preview(self, template, answers, option, submit_label, duplicates=Non
             'submit_label': submit_label,
             'duplicates': duplicates,
             'gate': gate,
-            # The interview pages of the problems' pages, linked in "Before you can export"
-            'interview': interview_urls(self.project, {problem.page.section for problem in gate.problems
+            # The interview pages of the problems' pages, linked in "Before you export"
+            'interview': interview_urls(self.project, {problem.page.section for problem in gate.problems + gate.hints
                                                        if problem.page is not None}) if gate else {},
             'project': self.project,
             'export_format': getattr(self, 'key', ''),
@@ -403,7 +403,7 @@ def reuse_portal_item(request, project_id):
     permission to change the project's answers; Django checks the CSRF token.
 
     Returns:
-        A redirect to the preview's box "Before you can export", or an error page.
+        A redirect to the preview's box "Before you export", or an error page.
     """
     from .duplicates import preview_duplicates, reuse, same_duplicate
     from .main import _CATALOG_PREPARE_MAP, MaRDMOExportProvider

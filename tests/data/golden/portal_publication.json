@@ -1,6 +1,30 @@
 {
- "messages": [
-  "Following aspects prevented the export:",
+ "hints": [
   "Publication (Page Publication 1): Missing Mathematical Model Entity"
+ ],
+ "messages": [],
+ "payload": {
+  "Item0000000000": {
+   "class": "Publication",
+   "description": "scientific article; zbMATH DE number 5182347",
+   "id": "Q2643268",
+   "label": "Heroin epidemics, treatment and ODE modelling",
+   "payload": {
+    "item": {
+     "descriptions": {
+      "en": "scientific article; zbMATH DE number 5182347"
+     },
+     "labels": {
+      "en": "Heroin epidemics, treatment and ODE modelling"
+     },
+     "statements": {}
+    }
+   },
+   "statements": [],
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
+  }
+ },
+ "written": [
+  "Item0000000000"
  ]
 }

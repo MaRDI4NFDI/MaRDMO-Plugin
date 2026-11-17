@@ -1179,8 +1179,27 @@ msgid "Alias"
 msgstr "Alias"
 
 #: MaRDMO/templates/MaRDMO/partials/_before_export.html:5
-msgid "Before you can export"
-msgstr "Bevor Sie exportieren können"
+msgid "Before you export"
+msgstr "Bevor Sie exportieren"
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:9
+msgid "Nothing prevents the export"
+msgstr "Nichts verhindert den Export"
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:22
+#, python-format
+msgid "%(counter)s portal item could be completed"
+msgid_plural "%(counter)s portal items could be completed"
+msgstr[0] "%(counter)s Item des Portals könnte ergänzt werden"
+msgstr[1] "%(counter)s Items des Portals könnten ergänzt werden"
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:150
+msgid "Portal items you could complete (optional)"
+msgstr "Items des Portals, die Sie ergänzen könnten (optional)"
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:152
+msgid "These items are on the MaRDI Portal already and lack something, or have a value the portal should not have. The export does not need it: you can export as it is. What you add in the interview is added to the portal item."
+msgstr "Diese Items gibt es auf dem MaRDI Portal schon, und ihnen fehlt etwas, oder sie haben einen Wert, den das Portal nicht haben sollte. Der Export braucht das nicht: Sie können so exportieren. Was Sie im Interview ergänzen, wird dem Item des Portals hinzugefügt."
 
 #: MaRDMO/templates/MaRDMO/partials/_before_export.html:8
 #, python-format
@@ -1436,12 +1455,12 @@ msgid "Transferability to..."
 msgstr "Transferierbarkeit zu..."
 
 #: MaRDMO/templates/MaRDMO/preview.html:32
-msgid "Decide on the items already on the MaRDI Portal first (at the top, Before you can export); then the export is possible."
-msgstr "Entscheiden Sie zuerst über die Items, die es auf dem MaRDI Portal schon gibt (oben, Bevor Sie exportieren können); dann ist der Export möglich."
+msgid "Decide on the items already on the MaRDI Portal first (at the top, Before you export); then the export is possible."
+msgstr "Entscheiden Sie zuerst über die Items, die es auf dem MaRDI Portal schon gibt (oben, Bevor Sie exportieren); dann ist der Export möglich."
 
 #: MaRDMO/templates/MaRDMO/preview.html:36
-msgid "Fix the points at the top (Before you can export), then open the preview again."
-msgstr "Beheben Sie die Punkte oben (Bevor Sie exportieren können) und öffnen Sie dann die Vorschau erneut."
+msgid "Fix the points at the top (Before you export), then open the preview again."
+msgstr "Beheben Sie die Punkte oben (Bevor Sie exportieren) und öffnen Sie dann die Vorschau erneut."
 
 #: MaRDMO/templates/MaRDMO/preview.html:52
 msgid "Check again"

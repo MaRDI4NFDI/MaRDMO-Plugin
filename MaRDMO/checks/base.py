@@ -1,5 +1,14 @@
 '''Base validation helpers shared across all catalog check modules.
 
+Three kinds of findings (#167): what a page lacks (:meth:`ChecksBase._missing`),
+an invalid value (:meth:`ChecksBase._invalid`) and a broken structure
+(:meth:`ChecksBase._error`: a relation without type or target, an item
+without page, the same item twice).  The export creates own items and
+Wikidata items: every finding of theirs prevents it.  A MaRDI Portal item
+is not created: what it lacks, and an invalid value it has already, are
+hints the preview offers to complete; only what MaRDMO would write must be
+valid, and the structure always.
+
 The messages are translated when the checks run (the language of the
 request); sections and class names stay English in the problems and are
 marked with ``N_`` so that the catalog has them (see :mod:`MaRDMO.problems`).
@@ -72,6 +81,30 @@ _WORKFLOW_SINGLE_LINE_FIELDS = {
 }
 
 
+def _normalized(value):
+    '''*value* as the statements of the portal have it: text without surrounding spaces and leading "+".'''
+    return str(value).strip().lstrip('+')
+
+
+def _snak_texts(snak):
+    '''The texts of a portal snak's value: string, monolingual text, amount, time (and its year), item.'''
+    value = (snak.get('datavalue') or {}).get('value')
+    if isinstance(value, str):
+        return {_normalized(value)}
+    if not isinstance(value, dict):
+        return set()
+    if 'text' in value:
+        return {_normalized(value['text'])}
+    if 'amount' in value:
+        return {_normalized(value['amount'])}
+    if 'time' in value:
+        time = _normalized(value['time'])
+        return {time, time.split('-', 1)[0]}
+    if 'id' in value:
+        return {value['id']}
+    return set()
+
+
 class ChecksBase:
     '''Core infrastructure: registry init, error helpers, shared checks, and publication.'''
 
@@ -82,6 +115,8 @@ class ChecksBase:
         self.err = []
         # Set when the MaRDI Portal did not answer a check (the TeX check): what it is
         self.unreachable = None
+        # Statements of portal items, looked up for their invalid values (_invalid)
+        self._claims = {}
 
     # -------------------------------------------------------------------------
     # Helpers
@@ -94,6 +129,56 @@ class ChecksBase:
         As text it reads ``"Section (Page <tab>): message"``.
         '''
         return Problem(section, page, message, field)
+
+    def _missing(self, section, page, message, field=None):
+        '''Report what *page* lacks: a problem, or a hint on the page of a MaRDI Portal item (#167).
+
+        The export does not create a portal item, so what it lacks does not
+        prevent the export; the preview offers to complete it.
+        '''
+        self.err.append(Problem(section, page, message, field, hint=bool(page is not None and page.portal)))
+
+    def _invalid(self, section, page, message, field=None, values=()):
+        '''Report the invalid *values* of *page*: a problem, or a hint if its MaRDI Portal item has them (#167).
+
+        MaRDMO writes to a portal item only what it does not have, so an
+        invalid value of the portal item itself is not written and does not
+        prevent the export; one the user added does.  The statements of the
+        portal item are looked up only for such a value
+        (:meth:`_portal_values`).
+        '''
+        hint = False
+        values = [value for value in values if value not in (None, '')]
+        if page is not None and page.portal and values:
+            known = self._portal_values(page.item)
+            hint = known is None or all(_normalized(value) in known for value in values)
+        self.err.append(Problem(section, page, message, field, hint=hint))
+
+    def _portal_values(self, item):
+        '''The values of the statements of the portal item *item* (``mardi:Q…``) as text, or ``None``.
+
+        Main values and qualifiers, normalized as :func:`_normalized`.  If the
+        portal does not answer, ``None``: the finding stays a hint, and
+        :attr:`unreachable` keeps the export waiting.
+        '''
+        # pylint: disable=import-outside-toplevel
+        from ..getters import get_url
+        from ..payload import PortalUnavailable, fetch_claims
+        from ..queries import check_deadline
+        qid = item.split(':', 1)[1]
+        try:
+            claims = fetch_claims([qid], get_url('mardi', 'api'), check_deadline(), 'statements', self._claims)
+        except PortalUnavailable as problem:
+            self.unreachable = self.unreachable or str(problem.args[0])
+            return None
+        found = set()
+        for statements in claims.get(qid, {}).values():
+            for statement in statements:
+                snaks = [statement.get('mainsnak', {})] + [
+                    snak for qualifiers in statement.get('qualifiers', {}).values() for snak in qualifiers]
+                for snak in snaks:
+                    found |= _snak_texts(snak)
+        return found
 
     @staticmethod
     def _tab_names(project, data):
@@ -122,14 +207,7 @@ class ChecksBase:
             to_class:   Display name of the expected target entity.
         '''
         if not data.get(relation):
-            self.err.append(
-                self._error(
-                    section = from_class,
-                    page    = page_name,
-                    message = _('Missing {item}').format(item=_(to_class)),
-                    field   = relation
-                )
-            )
+            self._missing(from_class, page_name, _('Missing {item}').format(item=_(to_class)), relation)
         elif without_page(data[relation].values()):
             self.err.append(
                 self._error(
@@ -216,8 +294,9 @@ class ChecksBase:
             if not entry:
                 continue
             if not entry[1]:
-                self.err.append(self._error(section, page_name, _('{label} selected, but no {noun} provided!').format(label=_(label), noun=noun),
-                                             field='reference'))
+                self._missing(section, page_name,
+                              _('{label} selected, but no {noun} provided!').format(label=_(label), noun=noun),
+                              'reference')
             else:
                 if noun == 'URL':
                     problem = url_problem(entry[1], url_schemes(options[option_key]))
@@ -228,8 +307,8 @@ class ChecksBase:
                 else:
                     problem = None
                 if problem:
-                    self.err.append(self._error(section, page_name, _('Invalid {label}: {problem}').format(label=_(label), problem=problem),
-                                                 field='reference'))
+                    self._invalid(section, page_name, _('Invalid {label}: {problem}').format(label=_(label), problem=problem),
+                                  'reference', [entry[1]])
 
     def _check_doc_entries(self, doc, options, page_name, context_label, doc_field=None):
         '''Validate that each selected doc entry has a non-empty text value.
@@ -249,23 +328,16 @@ class ChecksBase:
                     label = 'URL'
                 else:
                     label = N_('Value')
-                self.err.append(self._error(
-                    N_('Process Step'), page_name,
-                    _('Missing {item} {label}').format(item=_(context_label), label=_(label)),
-                    field=doc_field
-                ))
+                self._missing(N_('Process Step'), page_name,
+                              _('Missing {item} {label}').format(item=_(context_label), label=_(label)), doc_field)
             elif entry[0] == options['URL'] and url_problem(entry[1]):
-                self.err.append(self._error(
-                    N_('Process Step'), page_name,
-                    _('Invalid {item} URL: {problem}').format(item=_(context_label), problem=url_problem(entry[1])),
-                    field=doc_field
-                ))
+                self._invalid(N_('Process Step'), page_name,
+                              _('Invalid {item} URL: {problem}').format(item=_(context_label), problem=url_problem(entry[1])),
+                              doc_field, [entry[1]])
             elif entry[0] == options['DOI'] and doi_problem(entry[1]):
-                self.err.append(self._error(
-                    N_('Process Step'), page_name,
-                    _('Invalid {item} DOI: {problem}').format(item=_(context_label), problem=doi_problem(entry[1])),
-                    field=doc_field
-                ))
+                self._invalid(N_('Process Step'), page_name,
+                              _('Invalid {item} DOI: {problem}').format(item=_(context_label), problem=doi_problem(entry[1])),
+                              doc_field, [entry[1]])
 
     def _check_flexible(
         self, data, page_name, relation, from_class, to_class=None, optional=True
@@ -289,7 +361,7 @@ class ChecksBase:
         entries = data.get(relation, {})
 
         if not optional and not entries:
-            self.err.append(self._error(from_class, page_name, _('Missing {item}').format(item=_(to_class)), field=relation))
+            self._missing(from_class, page_name, _('Missing {item}').format(item=_(to_class)), relation)
 
         if any(v['relation'] is None for v in entries.values()):
             self.err.append(
@@ -398,29 +470,17 @@ class ChecksBase:
                             field   = 'ID'
                         )
                     )
+                # The export does not change the name and description of a
+                # portal item: what is wrong with them is a hint there
                 if not ivalue.get('Name'):
-                    self.err.append(
-                        self._error(
-                            section = section_map[okey],
-                            page    = page_name,
-                            message = _('Missing Name'),
-                            field   = 'Name'
-                        )
-                    )
+                    self._missing(section_map[okey], page_name, _('Missing Name'), 'Name')
                 problem = short_description_problem(ivalue.get('Description'), ivalue.get('Name'))
                 if problem:
-                    self.err.append(
-                        self._error(
-                            section = section_map[okey],
-                            page    = page_name,
-                            message = {
-                                'missing':      _('Missing Short Description'),
-                                'too_long':     _('Short Description Too Long'),
-                                'same_as_name': _('Equal Name and Short Description Forbidden'),
-                            }[problem],
-                            field   = 'Description'
-                        )
-                    )
+                    self._missing(section_map[okey], page_name, {
+                        'missing':      _('Missing Short Description'),
+                        'too_long':     _('Short Description Too Long'),
+                        'same_as_name': _('Equal Name and Short Description Forbidden'),
+                    }[problem], 'Description')
 
     def single_line_text(self, project, data, catalog):
         '''Flag textarea answers containing line breaks, which the MaRDI Portal rejects.
@@ -461,14 +521,8 @@ class ChecksBase:
                     if label in flagged or not (isinstance(text, str) and LINE_BREAK_RE.search(text)):
                         continue
                     flagged.add(label)
-                    self.err.append(
-                        self._error(
-                            section = section_map[okey],
-                            page    = self._page(okey, ikey, ivalue),
-                            message = _('Line Breaks Not Allowed in {field}').format(field=_(label)),
-                            field   = line_field
-                        )
-                    )
+                    self._invalid(section_map[okey], self._page(okey, ikey, ivalue),
+                                  _('Line Breaks Not Allowed in {field}').format(field=_(label)), line_field, [text])
 
     def _pairs(self, mapping, url_0, url_1):
         '''Return a set of the two URL strings for the given MathModDB/MathAlgoDB keys.'''
@@ -515,14 +569,9 @@ class ChecksBase:
                 )
             doi = find_reference(ivalue.get('reference'), get_options()['DOI'])
             if doi and doi_problem(doi[1]):
-                self.err.append(
-                    self._error(
-                        section = N_('Publication'),
-                        page    = page_name,
-                        message = _('Invalid Publication DOI: {problem}').format(problem=doi_problem(doi[1])),
-                        field   = 'reference'
-                    )
-                )
+                self._invalid(N_('Publication'), page_name,
+                              _('Invalid Publication DOI: {problem}').format(problem=doi_problem(doi[1])),
+                              'reference', [doi[1]])
 
             if catalog == CATALOG_ALGORITHM:
                 # Algorithm mode: optional links, but at least one required
@@ -544,14 +593,8 @@ class ChecksBase:
                         optional   = True
                     )
                 else:
-                    self.err.append(
-                        self._error(
-                            section = N_('Publication'),
-                            page    = page_name,
-                            message = _('Missing Algorithm, Benchmark, or Software'),
-                            field   = 'RelationA'
-                        )
-                    )
+                    self._missing(N_('Publication'), page_name, _('Missing Algorithm, Benchmark, or Software'),
+                                  'RelationA')
             elif catalog == CATALOG_WORKFLOW:
                 # Workflow mode: at least one of Algorithm, Hardware/Software, or Entity required
                 if ivalue.get('RelationA') or ivalue.get('RelationHS') or ivalue.get('RelationP'):
@@ -580,14 +623,8 @@ class ChecksBase:
                         optional   = True
                     )
                 else:
-                    self.err.append(
-                        self._error(
-                            section = N_('Publication'),
-                            page    = page_name,
-                            message = _('Missing Algorithm, Hardware/Software, or Workflow Entity'),
-                            field   = 'RelationA'
-                        )
-                    )
+                    self._missing(N_('Publication'), page_name,
+                                  _('Missing Algorithm, Hardware/Software, or Workflow Entity'), 'RelationA')
             else:
                 # Model mode: mandatory link to a model entity
                 self._check_flexible(

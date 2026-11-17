@@ -105,7 +105,7 @@ class AlgorithmMixin:
                 items_field  = 'programminglanguage'
             )
             if not ivalue.get('reference'):
-                self.err.append(self._error(N_('Software'), page_name, _('Missing Reference'), field='reference'))
+                self._missing(N_('Software'), page_name, _('Missing Reference'), 'reference')
             else:
                 self._check_references(ivalue['reference'], 'Software', page_name, SOFTWARE_REFERENCE_CHECKS)
 
@@ -122,7 +122,7 @@ class AlgorithmMixin:
         for ikey, ivalue in data.get('benchmark', {}).items():
             page_name = self._page('benchmark', ikey, ivalue)
             if not ivalue.get('reference'):
-                self.err.append(self._error(N_('Benchmark'), page_name, _('Missing Reference'), field='reference'))
+                self._missing(N_('Benchmark'), page_name, _('Missing Reference'), 'reference')
             else:
                 self._check_references(ivalue['reference'], 'Benchmark', page_name, BENCHMARK_REFERENCE_CHECKS)
 

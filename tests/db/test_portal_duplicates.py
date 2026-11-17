@@ -1,4 +1,4 @@
-'''The preview's items already on the MaRDI Portal (in "Before you can export") and their reuse (#141).
+'''The preview's items already on the MaRDI Portal (in "Before you export") and their reuse (#141).
 
 The portal's answers are faked: find_portal_items finds what a test gives it.
 '''

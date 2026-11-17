@@ -28,7 +28,7 @@ from rdmo.projects.renderers import XMLRenderer
 from rdmo.projects.serializers.export import ProjectSerializer
 from rdmo.questions.models import Catalog as RDMOCatalog
 
-from MaRDMO import main, pipeline
+from MaRDMO import main, pipeline, queries
 from MaRDMO.duplicates import preview_duplicates, reuse
 from MaRDMO.problems import report_lines
 from tools.synthetic.catalog import Catalog
@@ -37,6 +37,7 @@ from tools.synthetic.writer import SENT, Documentation, polite
 pytestmark = pytest.mark.skipif(os.environ.get('BUILD') != '1', reason='builds with BUILD=1 (see the module)')
 
 PROJECTS = Path(__file__).parents[1] / 'data' / 'projects'
+BUILD_SEARCH_TIMEOUT = 20  # seconds for a dropdown search during the build (MaRDMO: queries.SEARCH_TIMEOUT)
 BUILDS = {  # name: (catalog, description module)
     'synthetic_model': ('mardmo-model-catalog', 'tools.synthetic.model'),
     'synthetic_model_basics': ('mardmo-model-basics-catalog', 'tools.synthetic.model_basics'),
@@ -101,6 +102,11 @@ def test_build(name, db, monkeypatch, django_db_setup):
     monkeypatch.setattr('MaRDMO.ids.new_user_id',
                         lambda: f'user:{uuid.uuid5(uuid.NAMESPACE_URL, f"mardmo/{name}/{next(counter)}")}')
     polite(monkeypatch)
+    # The build is not waited for by a user: the portal's class-filtered search may take longer
+    # (it answers within seconds, but sometimes not within the dropdown's SEARCH_TIMEOUT)
+    monkeypatch.setattr('MaRDMO.queries.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)
+    monkeypatch.setattr('MaRDMO.queries.query_api.__defaults__',
+                        (BUILD_SEARCH_TIMEOUT, *queries.query_api.__defaults__[1:]))
     SENT.clear()
     project = Project.objects.create(title=name.replace('_', ' '), site=Site.objects.get_current(),
                                      catalog=RDMOCatalog.objects.get(uri__endswith=catalog_name))

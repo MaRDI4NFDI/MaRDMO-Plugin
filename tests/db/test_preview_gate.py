@@ -33,7 +33,7 @@ def test_problems_are_listed_with_links_and_the_export_is_disabled(white, client
     assert elements(html, id='page-formulation-1')
     assert '1 point to fix in the documentation' in text(element(html, id='before-export'))
     assert export_button(html) == 'disabled'
-    assert 'Fix the points at the top (Before you can export)' in text(element(html, id='export-blocked'))
+    assert 'Fix the points at the top (Before you export)' in text(element(html, id='export-blocked'))
 
 
 def test_what_only_the_export_finds_is_listed(white, client, monkeypatch):
@@ -92,3 +92,17 @@ def test_a_missing_relation_is_marked_not_not_documented(white, client):
     block = html[html.index('id="RP2AD"'):]
     block = block[:block.index('<h', 1)]
     assert 'Missing Academic Discipline' in text(block) and 'NOT DOCUMENTED' not in block
+
+
+def test_only_hints_leave_the_export_possible(white, client):
+    '''A portal quantity without short description (#167): listed as optional, blue at its field, export enabled.'''
+    without_description(white, 'quantity', 3)
+    html = preview_page(client, white)
+    box = element(html, id='before-export')
+    assert 'mardmo-before-export--optional' in box.attributes['class']
+    assert 'Nothing prevents the export' in text(box) and '1 portal item could be completed' in text(box)
+    hints = element(html, id='portal-hints')
+    assert 'Quantity [Kind], number of susceptible individuals' in text(hints) and 'Missing Short Description' in text(hints)
+    assert not elements(html, id='export-problems')
+    assert export_button(html) == 'enabled'
+    assert '<strong class="mardmo-hint">Missing Short Description</strong>' in html

@@ -32,28 +32,28 @@ class ModelMixin:
         verdicts = getattr(self, '_tex_verdicts', {})
         for number, tex in enumerate((ivalue.get('Formula') or {}).values(), start=1):
             if comment := formula_comment_problem(tex):
-                self.err.append(self._error(section, page_name, _('Invalid Formula {number}: {problem}').format(number=number, problem=comment), field='Formula'))
+                self._invalid(section, page_name, _('Invalid Formula {number}: {problem}').format(number=number, problem=comment),
+                              'Formula', [tex])
             problem = verdict(verdicts, tex)
             if problem and problem not in NOT_VERIFIED:
                 hint = environment_hint(tex)
-                self.err.append(self._error(
+                self._invalid(
                     section, page_name,
                     _('Invalid Formula {number}: rejected by the MaRDI Portal ({problem}), {hint}').format(
                         number=number, problem=problem, hint=hint or _('see the preview for details')),
-                    field='Formula'
-                ))
+                    'Formula', [tex])
         for element in (ivalue.get('element') or {}).values():
             symbol = element.get('symbol') if isinstance(element, dict) else None
             if comment := formula_comment_problem(symbol):
-                self.err.append(self._error(section, page_name, _('Invalid Symbol "{symbol}": {problem}').format(symbol=symbol, problem=comment), field='element'))
+                self._invalid(section, page_name, _('Invalid Symbol "{symbol}": {problem}').format(symbol=symbol, problem=comment),
+                              'element', [symbol])
             problem = verdict(verdicts, symbol)
             if problem and problem not in NOT_VERIFIED:
-                self.err.append(self._error(
+                self._invalid(
                     section, page_name,
                     _('Invalid Symbol "{symbol}": rejected by the MaRDI Portal ({problem})').format(
                         symbol=symbol, problem=problem),
-                    field='element'
-                ))
+                    'element', [symbol])
 
     def _check_element_symbols(self, ivalue, section, page_name):
         '''Append an error for every symbol that does not stand for exactly one quantity.
@@ -67,10 +67,9 @@ class ModelMixin:
             if (symbol, problem) in reported:
                 continue
             reported.add((symbol, problem))
-            self.err.append(self._error(
+            self._invalid(
                 section, page_name, _('Symbol "{symbol}" {problem}').format(symbol=symbol, problem=_(ELEMENT_SYMBOL_MESSAGES[problem])),
-                field='element'
-            ))
+                'element', [symbol])
 
     def properties(self, project, data, catalog):
         '''Check for mutually exclusive (conflicting) data-property combinations.
@@ -163,14 +162,7 @@ class ModelMixin:
                 not mval.get('assumption')
                 for mval in self._specializations(ivalue.get('RelationMM', {}))
             ):
-                self.err.append(
-                    self._error(
-                        section = N_('Mathematical Model'),
-                        page    = page_name,
-                        message = _('Missing Assumption (Mathematical Model Specialization)'),
-                        field   = 'RelationMM'
-                    )
-                )
+                self._missing(N_('Mathematical Model'), page_name, _('Missing Assumption (Mathematical Model Specialization)'), 'RelationMM')
 
             if any(
                 without_page((mval.get('assumption') or {}).values())
@@ -221,14 +213,7 @@ class ModelMixin:
                 not tval.get('assumption')
                 for tval in self._specializations(ivalue.get('RelationT', {}))
             ):
-                self.err.append(
-                    self._error(
-                        section = N_('Computational Task'),
-                        page    = page_name,
-                        message = _('Missing Assumption (Computational Task Specialization)'),
-                        field   = 'RelationT'
-                    )
-                )
+                self._missing(N_('Computational Task'), page_name, _('Missing Assumption (Computational Task Specialization)'), 'RelationT')
 
             if any(
                 without_page((tval.get('assumption') or {}).values())
@@ -275,25 +260,14 @@ class ModelMixin:
 
             if catalog == CATALOG_MODEL_BASICS:
                 if is_own_item(ivalue.get('ID')) and not ivalue.get('reference'):
-                    self.err.append(
-                        self._error(
-                            section = N_('Formula'),
-                            page    = page_name,
-                            message = _('Missing Reference'),
-                            field   = 'reference'
-                        )
-                    )
+                    self._missing(N_('Formula'), page_name, _('Missing Reference'), 'reference')
                 continue
 
             if any(
                 not mval.get('assumption')
                 for mval in self._specializations(ivalue.get('RelationMF2', {}))
             ):
-                self.err.append(
-                    self._error(
-                        section = N_('Formula'),
-                        page    = page_name,
-                        message = _('Missing Assumption (Formula Specialization)'), field='RelationMF2'))
+                self._missing(N_('Formula'), page_name, _('Missing Assumption (Formula Specialization)'), 'RelationMF2')
 
             if any(
                 without_page((mval.get('assumption') or {}).values())
@@ -309,46 +283,18 @@ class ModelMixin:
                 )
 
             if not ivalue.get('Formula'):
-                self.err.append(
-                    self._error(
-                        section = N_('Formula'),
-                        page    = page_name,
-                        message = _('Missing Formula Formula'),
-                        field   = 'Formula'
-                    )
-                )
+                self._missing(N_('Formula'), page_name, _('Missing Formula Formula'), 'Formula')
             self._check_formula_syntax(ivalue, N_('Formula'), page_name)
 
             if not ivalue.get('element'):
-                self.err.append(
-                    self._error(
-                        section = N_('Formula'),
-                        page    = page_name,
-                        message = _('Missing Formula Element Information'),
-                        field   = 'element'
-                    )
-                )
+                self._missing(N_('Formula'), page_name, _('Missing Formula Element Information'), 'element')
             else:
                 not_symbol = any(not ev.get('symbol') for ev in ivalue['element'].values())
                 not_quantity = any(not ev.get('quantity') for ev in ivalue['element'].values())
                 if not_symbol:
-                    self.err.append(
-                        self._error(
-                            section = N_('Formula'),
-                            page    = page_name,
-                            message = _('Missing Formula Symbol'),
-                            field   = 'element'
-                        )
-                    )
+                    self._missing(N_('Formula'), page_name, _('Missing Formula Symbol'), 'element')
                 if not_quantity:
-                    self.err.append(
-                        self._error(
-                            section = N_('Formula'),
-                            page    = page_name,
-                            message = _('Missing Formula Quantity'),
-                            field   = 'element'
-                        )
-                    )
+                    self._missing(N_('Formula'), page_name, _('Missing Formula Quantity'), 'element')
                 self._check_element_symbols(ivalue, N_('Formula'), page_name)
 
             self._check_flexible(
@@ -375,115 +321,48 @@ class ModelMixin:
         for ikey, ivalue in data.get('quantity', {}).items():
             page_name = self._page('quantity', ikey, ivalue)
             if not ivalue.get('QorQK'):
-                self.err.append(
-                    self._error(
-                        section = N_('Quantity [Kind]'),
-                        page    = page_name,
-                        message = _('Missing Quantity [Kind] Class'),
-                        field   = 'QorQK'
-                    )
-                )
+                self._missing(N_('Quantity [Kind]'), page_name, _('Missing Quantity [Kind] Class'), 'QorQK')
 
             if ivalue.get('reference'):
                 ref = ivalue['reference']
                 if ref.get(0) and not ref[0][1]:
-                    self.err.append(
-                        self._error(
-                            section = N_('Quantity [Kind]'),
-                            page    = page_name,
-                            message = _('QUDT Quantity Kind ID selected, but no ID provided!'),
-                            field   = 'reference'
-                        )
-                    )
+                    self._missing(N_('Quantity [Kind]'), page_name, _('QUDT Quantity Kind ID selected, but no ID provided!'), 'reference')
                 elif ref.get(0) and ref[0][1] and not QUDT_ID_STRICT_RE.match(ref[0][1]):
-                    self.err.append(
-                        self._error(
-                            section = N_('Quantity [Kind]'),
-                            page    = page_name,
-                            message = _('Invalid QUDT Quantity Kind ID format: "{value}"').format(value=ref[0][1]),
-                            field   = 'reference'
-                        )
-                    )
+                    self._invalid(N_('Quantity [Kind]'), page_name,
+                              _('Invalid QUDT Quantity Kind ID format: "{value}"').format(value=ref[0][1]),
+                              'reference', [ref[0][1]])
                 if ref.get(1) and not ref[1][1]:
-                    self.err.append(
-                        self._error(
-                            section = N_('Quantity [Kind]'),
-                            page    = page_name,
-                            message = _('QUDT Constant ID selected, but no ID provided!'),
-                            field   = 'reference'
-                        )
-                    )
+                    self._missing(N_('Quantity [Kind]'), page_name, _('QUDT Constant ID selected, but no ID provided!'), 'reference')
                 elif ref.get(1) and ref[1][1] and not QUDT_ID_STRICT_RE.match(ref[1][1]):
-                    self.err.append(
-                        self._error(
-                            section = N_('Quantity [Kind]'),
-                            page    = page_name,
-                            message = _('Invalid QUDT Constant ID format: "{value}"').format(value=ref[1][1]),
-                            field   = 'reference'
-                        )
-                    )
+                    self._invalid(N_('Quantity [Kind]'), page_name,
+                              _('Invalid QUDT Constant ID format: "{value}"').format(value=ref[1][1]),
+                              'reference', [ref[1][1]])
                 if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["label"] and ref.get(0):
-                    self.err.append(
-                        self._error(
-                            section = N_('Quantity [Kind]'),
-                            page    = page_name,
-                            message = _('QUDT Quantity Kind ID limited to Quantity Kinds!'),
-                            field   = 'reference'
-                        )
-                    )
+                    self._invalid(N_('Quantity [Kind]'), page_name,
+                              _('QUDT Quantity Kind ID limited to Quantity Kinds!'),
+                              'reference', [ref[0][1]])
                 if (
                     ivalue.get('QorQK') == self.mathmoddb.get(key='QuantityKind')["label"]
                     and ref.get(1)
                 ):
-                    self.err.append(
-                        self._error(
-                            section = N_('Quantity [Kind]'),
-                            page    = page_name,
-                            message = _('QUDT Constant ID limited to Quantities!'),
-                            field   = 'reference'
-                        )
-                    )
+                    self._invalid(N_('Quantity [Kind]'), page_name,
+                              _('QUDT Constant ID limited to Quantities!'),
+                              'reference', [ref[1][1]])
 
             if ivalue.get('Formula'):
                 self._check_formula_syntax(ivalue, N_('Quantity [Kind]'), page_name)
                 for formula in ivalue['Formula'].values():
                     if not has_equivalence_sign(formula):
-                        self.err.append(
-                            self._error(
-                                section = N_('Quantity [Kind]'),
-                                page    = page_name,
-                                message = _(r'Inconsistent Quantity Definition (missing \equiv)'),
-                                field   = 'Formula'
-                            )
-                        )
+                        self._invalid(N_('Quantity [Kind]'), page_name,
+                              _(r'Inconsistent Quantity Definition (missing \equiv)'),
+                              'Formula', [formula])
                 if not ivalue.get('element'):
-                    self.err.append(
-                        self._error(
-                            section = N_('Quantity [Kind]'),
-                            page    = page_name,
-                            message = _('Missing Quantity Definition Element Information'),
-                            field   = 'element'
-                        )
-                    )
+                    self._missing(N_('Quantity [Kind]'), page_name, _('Missing Quantity Definition Element Information'), 'element')
                 else:
                     if any(not ev.get('symbol') for ev in ivalue['element'].values()):
-                        self.err.append(
-                            self._error(
-                                section = N_('Quantity [Kind]'),
-                                page    = page_name,
-                                message = _('Missing Quantity Definition Symbol'),
-                                field   = 'element'
-                            )
-                        )
+                        self._missing(N_('Quantity [Kind]'), page_name, _('Missing Quantity Definition Symbol'), 'element')
                     if any(not ev.get('quantity') for ev in ivalue['element'].values()):
-                        self.err.append(
-                            self._error(
-                                section = N_('Quantity [Kind]'),
-                                page    = page_name,
-                                message = _('Missing Quantity Definition Quantity'),
-                                field   = 'element'
-                            )
-                        )
+                        self._missing(N_('Quantity [Kind]'), page_name, _('Missing Quantity Definition Quantity'), 'element')
                     self._check_element_symbols(ivalue, N_('Quantity [Kind]'), page_name)
 
             if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["label"]:

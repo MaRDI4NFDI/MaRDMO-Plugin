@@ -64,8 +64,10 @@ def export(project):
     catalog = str(project.catalog)
     _, prepare_class, check_method = main._CATALOG_PREPARE_MAP[catalog.rsplit('/', 1)[1]]
     messages = getattr(Checks(), check_method)(project=project, data=answers, catalog=catalog)
-    if messages:
-        return {'messages': report_lines(messages)}
+    # Hints of portal items do not prevent the export (#167); they are kept with the payload
+    hints = [str(problem) for problem in messages if problem.hint]
+    if report_lines(messages):
+        return {'messages': report_lines(messages), 'hints': hints}
     prepare, made, init = prepare_class(), [], GeneratePayload.__init__
 
     def remember(self, *args, **kwargs):
@@ -79,7 +81,8 @@ def export(project):
     order = topological_order(dependency)
     position = {item: index for index, item in enumerate(order)}
     assert all(position[needed] < position[item] for item, needs in dependency.items() for needed in needs)
-    return json.loads(json.dumps({'messages': [], 'payload': payload, 'written': sorted(order)}, default=str))
+    return json.loads(json.dumps({'messages': [], 'hints': hints, 'payload': payload, 'written': sorted(order)},
+                                 default=str))
 
 
 def leaves(data, path=''):

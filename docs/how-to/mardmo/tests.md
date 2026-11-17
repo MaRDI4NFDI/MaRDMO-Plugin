@@ -168,15 +168,16 @@ announced with RDMO's `value_created`, so MaRDMO's handlers run; items are
 selected from the options their dropdown offers).  Then the preview runs as
 the user opens it: items on the portal already are reused ("Use this item"),
 and nothing may be left that prevents the export.  `tools/synthetic/complete.py`
-answers what MaRDMO asks of pages it filled (references of portal software,
-the data of portal data sets, ...) before that.
+answers what MaRDMO asks of the pages of created items it filled (Wikidata
+items with name and description only, items typed into a relation) before
+that; pages of portal items keep their gaps, which are hints (#167).
 
 | Test | What it checks |
 |---|---|
 | `tests/static/test_synthetic.py` | every question answered, every option chosen, options with text used with a text, every source of every dropdown (exceptions with reason in `UNAVAILABLE`); every relation of the documentation is a statement of the export, in the direction MaRDMO's `get_relations()` gives |
 | `tests/db/test_export.py` | the export as stored (golden files), as for every project in `tests/data/projects` |
 | `tests/db/test_synthetic_preview.py` | the preview as the user opens it: every page shown, the citations of the new publications looked up (recorded `preview_synthetic_*`), nothing that prevents the export |
-| `tests/db/test_marks.py` | the red marks, for every question |
+| `tests/db/test_marks.py` | the red marks and the blue hints, for every question |
 
 ### Build them again
 
@@ -265,7 +266,7 @@ browser shows, i.e. what CSS and JavaScript do.
 
 | File | Page |
 |---|---|
-| `test_duplicates.py` | the preview's box "Before you can export": the items already on the MaRDI Portal, the decision ("Use this item", "Redefine", the **i**), "Apply" |
+| `test_duplicates.py` | the preview's box "Before you export": the items already on the MaRDI Portal, the decision ("Use this item", "Redefine", the **i**), "Apply" |
 | `test_formulas.py` | formulas in the preview rendered by MathJax; one it cannot render shown as TeX |
 | `test_progress.py` | the progress page following an upload (`progress.js`, also in German, errors as text), the result page and its graph (cytoscape: nodes, filters, fullscreen), someone else's job |
 

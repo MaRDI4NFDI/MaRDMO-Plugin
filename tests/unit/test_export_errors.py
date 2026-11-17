@@ -67,7 +67,8 @@ def test_final_checks_report_invalid_values_and_symbols_together(payload, monkey
     monkeypatch.setattr(GeneratePayload, 'check_existing_relations', symbol)
     with pytest.raises(DocumentationProblem) as problem:
         payload.final_checks('https://portal.example.org/w/api.php')
-    assert problem.value.args == ('"formula", DOI: invalid', 'symbol a already stands for Q1')
+    # The existence check (with the symbols) runs first: values on the portal are not checked (#167)
+    assert problem.value.args == ('symbol a already stands for Q1', '"formula", DOI: invalid')
 
 
 def test_final_checks_stop_on_an_unreachable_portal(payload, monkeypatch):

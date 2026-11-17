@@ -32,6 +32,9 @@ class Gate:
     Attributes:
         problems:    :class:`~MaRDMO.problems.Problem` of the checks or, when
                      these found nothing, of the export's own checks.
+        hints:       What portal items of the documentation could have
+                     (:attr:`~MaRDMO.problems.Problem.hint`, #167); they do
+                     not prevent the export.
         unreachable: The MaRDI Portal did not answer a check (duplicates, TeX
                      check, the statements of existing items); the message.
         duplicates:  Items of the documentation are on the portal already
@@ -41,6 +44,7 @@ class Gate:
         payload:     The payload and the write order, when nothing was found.
     '''
     problems: list = field(default_factory=list)
+    hints: list = field(default_factory=list)
     unreachable: Optional[str] = None
     duplicates: bool = False
     internal: bool = False
@@ -49,7 +53,7 @@ class Gate:
 
     @property
     def clear(self):
-        '''Nothing prevents the export.'''
+        '''Nothing prevents the export (hints do not).'''
         return not (self.problems or self.unreachable or self.duplicates)
 
     @property
@@ -59,13 +63,28 @@ class Gate:
         *page* is the :class:`~MaRDMO.pages.PageRef` (``None`` for the
         export's own checks); the preview links it to the page.
         '''
-        groups = []
-        for problem in self.problems:
-            if groups and groups[-1][:2] == (problem.section, problem.page):
-                groups[-1][2].append(problem.message)
-            else:
-                groups.append((problem.section, problem.page, [problem.message]))
-        return groups
+        return _groups(self.problems)
+
+    @property
+    def hint_groups(self):
+        '''The hints by section and page, as :attr:`groups`.'''
+        return _groups(self.hints)
+
+    @property
+    def hint_items(self):
+        '''The number of portal items with hints.'''
+        return len({(hint.section, hint.page) for hint in self.hints})
+
+
+def _groups(problems):
+    '''*problems* by section and page, in their order: ``[(section, page, [messages])]``.'''
+    groups = []
+    for problem in problems:
+        if groups and groups[-1][:2] == (problem.section, problem.page):
+            groups[-1][2].append(problem.message)
+        else:
+            groups.append((problem.section, problem.page, [problem.message]))
+    return groups
 
 
 def run(project, answers, prepare_class, check_method, preview=False, duplicates=None):
@@ -84,8 +103,11 @@ def run(project, answers, prepare_class, check_method, preview=False, duplicates
         :class:`Gate`.
     '''
     checks = Checks()
-    gate = Gate(problems=list(getattr(checks, check_method)(
-        project=project, data=answers, catalog=str(project.catalog))))
+    # The statements of portal items with an invalid value are looked up (#167)
+    with check_limits(PREVIEW_RETRY_WAITS, PREVIEW_DEADLINE) if preview else nullcontext():
+        found = list(getattr(checks, check_method)(project=project, data=answers, catalog=str(project.catalog)))
+    gate = Gate(problems=[problem for problem in found if not problem.hint],
+                hints=[problem for problem in found if problem.hint])
     if checks.unreachable:
         gate.unreachable = checks.unreachable
     if duplicates is not None:

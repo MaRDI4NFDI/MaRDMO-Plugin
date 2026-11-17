@@ -29,11 +29,11 @@
     {% if gate and not gate.clear %}
         {# The export button stays, greyed out, until nothing prevents the export (#141, #152); why is its hover text #}
         {% if gate.duplicates %}
-            {% trans "Decide on the items already on the MaRDI Portal first (at the top, Before you can export); then the export is possible." as blocked %}
+            {% trans "Decide on the items already on the MaRDI Portal first (at the top, Before you export); then the export is possible." as blocked %}
         {% elif gate.unreachable %}
             {% trans "The MaRDI Portal is not reachable at the moment, so the documentation could not be checked completely. Please try again shortly." as blocked %}
         {% else %}
-            {% trans "Fix the points at the top (Before you can export), then open the preview again." as blocked %}
+            {% trans "Fix the points at the top (Before you export), then open the preview again." as blocked %}
         {% endif %}
         <p class="sr-only" id="export-blocked">{{ blocked }}</p>
     {% endif %}

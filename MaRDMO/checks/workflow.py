@@ -28,11 +28,7 @@ class WorkflowMixin:
             page_name = self._page('workflow', ikey, ivalue)
 
             if not ivalue.get('objective'):
-                self.err.append(self._error(
-                    N_('Interdisciplinary Workflow'), page_name,
-                    _('Missing Research Objective'),
-                    field='objective'
-                ))
+                self._missing(N_('Interdisciplinary Workflow'), page_name, _('Missing Research Objective'), 'objective')
 
             self._check_static(
                 data       = ivalue,
@@ -50,17 +46,9 @@ class WorkflowMixin:
 
             for pair in ivalue.get('model_task_pairs', []):
                 if pair['has_model'] and not pair['has_tasks']:
-                    self.err.append(self._error(
-                        N_('Interdisciplinary Workflow'), page_name,
-                        _('Missing Computational Task'),
-                        field='model_task_pairs'
-                    ))
+                    self._missing(N_('Interdisciplinary Workflow'), page_name, _('Missing Computational Task'), 'model_task_pairs')
                 elif pair['has_tasks'] and not pair['has_model']:
-                    self.err.append(self._error(
-                        N_('Interdisciplinary Workflow'), page_name,
-                        _('Missing Mathematical Model'),
-                        field='model_task_pairs'
-                    ))
+                    self._missing(N_('Interdisciplinary Workflow'), page_name, _('Missing Mathematical Model'), 'model_task_pairs')
 
             repro_fields = [
                 ('mathematical',    N_('Mathematical Reproducibility')),
@@ -71,11 +59,7 @@ class WorkflowMixin:
             ]
             for key, label in repro_fields:
                 if not ivalue.get(key):
-                    self.err.append(self._error(
-                        N_('Interdisciplinary Workflow'), page_name,
-                        _('Missing {item}').format(item=_(label)),
-                        field=key
-                    ))
+                    self._missing(N_('Interdisciplinary Workflow'), page_name, _('Missing {item}').format(item=_(label)), key)
 
     def step(self, project, data):
         '''Check Process Step documentation completeness.
@@ -106,10 +90,7 @@ class WorkflowMixin:
                 to_class   = N_('Output Data Set')
             )
             if not ivalue.get('RFRelatant'):
-                self.err.append(self._error(
-                    N_('Process Step'), page_name, _('Missing Academic Discipline'),
-                    field='RFRelatant'
-                ))
+                self._missing(N_('Process Step'), page_name, _('Missing Academic Discipline'), 'RFRelatant')
             else:
                 self._check_without_section_items(
                     items        = ivalue.get('RFRelatant', {}),
@@ -122,10 +103,7 @@ class WorkflowMixin:
             if ivalue.get('algorithm_software_pairs'):
                 for pair in ivalue['algorithm_software_pairs']:
                     if not pair['has_primary']:
-                        self.err.append(self._error(
-                            N_('Process Step'), page_name, _('Missing Algorithm'),
-                            field='algorithm_software_pairs'
-                        ))
+                        self._missing(N_('Process Step'), page_name, _('Missing Algorithm'), 'algorithm_software_pairs')
                     elif without_page(pair['primary']):
                         self.err.append(self._error(
                             N_('Process Step'), page_name,
@@ -133,11 +111,8 @@ class WorkflowMixin:
                             field='algorithm_software_pairs'
                         ))
                     if not pair['has_qualifier']:
-                        self.err.append(self._error(
-                            N_('Process Step'), page_name,
-                            _('Missing Software (Algorithm Path)'),
-                            field='algorithm_software_pairs'
-                        ))
+                        self._missing(N_('Process Step'), page_name, _('Missing Software (Algorithm Path)'),
+                                      'algorithm_software_pairs')
                     elif without_page([pair['qualifier']]):
                         self.err.append(self._error(
                             N_('Process Step'), page_name,
@@ -145,11 +120,8 @@ class WorkflowMixin:
                             field='algorithm_software_pairs'
                         ))
                     if not pair.get('hardware'):
-                        self.err.append(self._error(
-                            N_('Process Step'), page_name,
-                            _('Missing Hardware (Algorithm Path)'),
-                            field='algorithm_software_pairs'
-                        ))
+                        self._missing(N_('Process Step'), page_name, _('Missing Hardware (Algorithm Path)'),
+                                      'algorithm_software_pairs')
                     elif without_page([pair['hardware']]):
                         self.err.append(self._error(
                             N_('Process Step'), page_name,
@@ -157,11 +129,7 @@ class WorkflowMixin:
                             field='algorithm_software_pairs'
                         ))
                     if not pair.get('software_doc'):
-                        self.err.append(self._error(
-                            N_('Process Step'), page_name,
-                            _('Missing Software Requirements'),
-                            field='algorithm_software_pairs'
-                        ))
+                        self._missing(N_('Process Step'), page_name, _('Missing Software Requirements'), 'algorithm_software_pairs')
                     else:
                         self._check_doc_entries(
                             pair['software_doc'], options, page_name,
@@ -185,20 +153,11 @@ class WorkflowMixin:
                 )
                 for pair in ivalue['method_instrument_pairs']:
                     if not pair['has_primary']:
-                        self.err.append(self._error(
-                            N_('Process Step'), page_name, _('Missing Method'),
-                            field='method_instrument_pairs'
-                        ))
+                        self._missing(N_('Process Step'), page_name, _('Missing Method'), 'method_instrument_pairs')
                     if not pair['has_qualifier']:
-                        self.err.append(self._error(
-                            N_('Process Step'), page_name, _('Missing Instrument'),
-                            field='method_instrument_pairs'
-                        ))
+                        self._missing(N_('Process Step'), page_name, _('Missing Instrument'), 'method_instrument_pairs')
                     if not pair.get('method_doc'):
-                        self.err.append(self._error(
-                            N_('Process Step'), page_name, _('Missing Method Protocol'),
-                            field='method_instrument_pairs'
-                        ))
+                        self._missing(N_('Process Step'), page_name, _('Missing Method Protocol'), 'method_instrument_pairs')
                     else:
                         self._check_doc_entries(
                             pair['method_doc'], options, page_name,
@@ -219,10 +178,7 @@ class WorkflowMixin:
         for ikey, ivalue in data.get('algorithm', {}).items():
             page_name = self._page('algorithm', ikey, ivalue)
             if not ivalue.get('PRelatant'):
-                self.err.append(self._error(
-                    N_('Algorithm'), page_name, _('Missing Algorithmic Task'),
-                    field='PRelatant'
-                ))
+                self._missing(N_('Algorithm'), page_name, _('Missing Algorithmic Task'), 'PRelatant')
             else:
                 self._check_without_section_items(
                     items        = ivalue.get('PRelatant', {}),
@@ -266,7 +222,7 @@ class WorkflowMixin:
                 to_class   = N_('Software')
             )
             if not ivalue.get('reference'):
-                self.err.append(self._error(N_('Software'), page_name, _('Missing Reference'), field='reference'))
+                self._missing(N_('Software'), page_name, _('Missing Reference'), 'reference')
             else:
                 self._check_references(ivalue['reference'], 'Software', page_name, SOFTWARE_REFERENCE_CHECKS)
 
@@ -286,19 +242,14 @@ class WorkflowMixin:
 
             nodes = ivalue.get('nodes')
             if not nodes:
-                self.err.append(self._error(
-                    N_('Hardware'), page_name, _('Missing Number of Compute Nodes'),
-                    field='nodes'
-                ))
+                self._missing(N_('Hardware'), page_name, _('Missing Number of Compute Nodes'), 'nodes')
             elif problem := count_problem(nodes):
-                self.err.append(self._error(
-                    N_('Hardware'), page_name, _('Invalid Number of Compute Nodes: {problem}').format(problem=problem),
-                    field='nodes'
-                ))
+                self._invalid(N_('Hardware'), page_name,
+                              _('Invalid Number of Compute Nodes: {problem}').format(problem=problem), 'nodes', [nodes])
 
             cpu_entries = ivalue.get('cpu_entries', [])
             if not cpu_entries:
-                self.err.append(self._error(N_('Hardware'), page_name, _('Missing CPU'), field='cpu_entries'))
+                self._missing(N_('Hardware'), page_name, _('Missing CPU'), 'cpu_entries')
             else:
                 self._check_without_section_items(
                     items        = ivalue.get('cpu', {}),
@@ -310,29 +261,19 @@ class WorkflowMixin:
                 for entry in cpu_entries:
                     # Occurrence and cores are exported on the CPU model only
                     if not entry.get('id') and not entry.get('name'):
-                        self.err.append(self._error(N_('Hardware'), page_name, _('Missing CPU Model'), field='cpu_entries'))
+                        self._missing(N_('Hardware'), page_name, _('Missing CPU Model'), 'cpu_entries')
                     if not entry.get('count'):
-                        self.err.append(self._error(
-                            N_('Hardware'), page_name,
-                            _('Missing CPU Occurrence in Hardware'),
-                            field='cpu_entries'
-                        ))
+                        self._missing(N_('Hardware'), page_name, _('Missing CPU Occurrence in Hardware'), 'cpu_entries')
                     elif problem := count_problem(entry['count']):
-                        self.err.append(self._error(
-                            N_('Hardware'), page_name, _('Invalid CPU Occurrence: {problem}').format(problem=problem),
-                            field='cpu_entries'
-                        ))
+                        self._invalid(N_('Hardware'), page_name,
+                                      _('Invalid CPU Occurrence: {problem}').format(problem=problem), 'cpu_entries',
+                                      [entry['count']])
                     if not entry.get('cores'):
-                        self.err.append(self._error(
-                            N_('Hardware'), page_name,
-                            _('Missing Number of Processor Cores'),
-                            field='cpu_entries'
-                        ))
+                        self._missing(N_('Hardware'), page_name, _('Missing Number of Processor Cores'), 'cpu_entries')
                     elif problem := count_problem(entry['cores']):
-                        self.err.append(self._error(
-                            N_('Hardware'), page_name, _('Invalid Number of Processor Cores: {problem}').format(problem=problem),
-                            field='cpu_entries'
-                        ))
+                        self._invalid(N_('Hardware'), page_name,
+                                      _('Invalid Number of Processor Cores: {problem}').format(problem=problem),
+                                      'cpu_entries', [entry['cores']])
 
     def dataset(self, project, data):
         '''Check Data Set documentation completeness.
@@ -350,60 +291,46 @@ class WorkflowMixin:
             page_name = self._page('dataset', ikey, ivalue)
 
             if not ivalue.get('BinaryText'):
-                self.err.append(self._error(N_('Data Set'), page_name, _('Missing Data Set Type'), field='BinaryText'))
+                self._missing(N_('Data Set'), page_name, _('Missing Data Set Type'), 'BinaryText')
 
             if not ivalue.get('Proprietary'):
-                self.err.append(self._error(
-                    N_('Data Set'), page_name, _('Missing Data Set Proprietary'),
-                    field='Proprietary'
-                ))
+                self._missing(N_('Data Set'), page_name, _('Missing Data Set Proprietary'), 'Proprietary')
 
             if not ivalue.get('FileFormat'):
-                self.err.append(self._error(N_('Data Set'), page_name, _('Missing File Format'), field='FileFormat'))
+                self._missing(N_('Data Set'), page_name, _('Missing File Format'), 'FileFormat')
 
             size = ivalue.get('Size')
             if not size or not size[0]:
-                self.err.append(self._error(N_('Data Set'), page_name, _('Missing Data Size'), field='Size'))
+                self._missing(N_('Data Set'), page_name, _('Missing Data Size'), 'Size')
             elif not size[1]:
-                self.err.append(self._error(N_('Data Set'), page_name, _('Missing Data Size Value'), field='Size'))
+                self._missing(N_('Data Set'), page_name, _('Missing Data Size Value'), 'Size')
             elif problem := size_problem(size[1], integer=size[0] == options['items']):
-                self.err.append(self._error(
-                    N_('Data Set'), page_name, _('Invalid Data Size Value: {problem}').format(problem=problem),
-                    field='Size'
-                ))
+                self._invalid(N_('Data Set'), page_name, _('Invalid Data Size Value: {problem}').format(problem=problem),
+                              'Size', [size[1]])
 
             if not ivalue.get('ToPublish') or not ivalue['ToPublish'][0]:
-                self.err.append(self._error(
-                    N_('Data Set'), page_name, _('Missing Data Set Publication Statement'),
-                    field='ToPublish'
-                ))
+                self._missing(N_('Data Set'), page_name, _('Missing Data Set Publication Statement'), 'ToPublish')
             elif (
                 ivalue['ToPublish'][0] == options['YesText']
                 and len(ivalue['ToPublish']) > 1
                 and doi_problem(str(ivalue['ToPublish'][1] or ''))
             ):
-                self.err.append(self._error(
-                    N_('Data Set'), page_name,
-                    _('Invalid Publication DOI: {problem}').format(problem=doi_problem(str(ivalue['ToPublish'][1]))),
-                    field='ToPublish'
-                ))
+                self._invalid(N_('Data Set'), page_name,
+                              _('Invalid Publication DOI: {problem}').format(problem=doi_problem(str(ivalue['ToPublish'][1]))),
+                              'ToPublish', [ivalue['ToPublish'][1]])
 
             to_archive = ivalue.get('ToArchive')
             if not to_archive or not to_archive[0]:
-                self.err.append(self._error(
-                    N_('Data Set'), page_name, _('Missing Data Set Archival Statement'),
-                    field='ToArchive'
-                ))
+                self._missing(N_('Data Set'), page_name, _('Missing Data Set Archival Statement'), 'ToArchive')
             elif to_archive[0] == options['YesText']:
                 if not to_archive[1]:
-                    self.err.append(self._error(N_('Data Set'), page_name, _('Missing Archival Year'), field='ToArchive'))
+                    self._missing(N_('Data Set'), page_name, _('Missing Archival Year'), 'ToArchive')
                 else:
                     problem = archive_year_problem(to_archive[1])
                     if problem:
-                        self.err.append(self._error(
-                            N_('Data Set'), page_name, _('Invalid Archival Year: {problem}').format(problem=problem),
-                            field='ToArchive'
-                        ))
+                        self._invalid(N_('Data Set'), page_name,
+                                      _('Invalid Archival Year: {problem}').format(problem=problem), 'ToArchive',
+                                      [to_archive[1]])
 
     # -------------------------------------------------------------------------
     # Run method
