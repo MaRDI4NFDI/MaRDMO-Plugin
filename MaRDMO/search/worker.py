@@ -56,9 +56,13 @@ def _comment(text):
 
 
 def _item_qid(item):
-    '''Return the QID of a selected portal item (``"mardi:Q42"`` → ``"Q42"``), or ``None``.'''
-    qid = str(item.get('ID', '')).split(':')[-1]
-    return qid if _QID_RE.match(qid) else None
+    '''Return the QID of a selected portal item (``"mardi:Q42"`` → ``"Q42"``), or ``None``.
+
+    Only items of the MaRDI Portal: the QID of a Wikidata item (``"wikidata:Q42"``)
+    names another item on the portal, and an own item has none.
+    '''
+    source, _, qid = str(item.get('ID', '')).partition(':')
+    return qid if source == 'mardi' and _QID_RE.match(qid) else None
 
 
 def _run_query(answers, query):
