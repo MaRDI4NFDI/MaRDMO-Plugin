@@ -68,3 +68,26 @@ def test_which_verdicts_are_kept(portal, answer, asked_again):
     tex_check.check_formulas(['x'])
     tex_check.check_formulas(['x'])
     assert len(sent) == (2 if asked_again else 1)
+
+
+# --- The note in the preview -------------------------------------------------------------------
+
+@pytest.mark.parametrize('tex, hint', [
+    (r'T(0) = T_\mathrm{init}', r'\mathrm'),
+    (r'b_{\mathrm{B}} \equiv n_{\mathrm{B}}/m_{\mathrm{A}}', r'\mathrm'),
+    (r'x_{ \operatorname{max}} + y_\mathrm{a}', r'\mathrm, \operatorname'),
+    (r'c_T \, \mathrm{d}T = F \, \mathrm{d}t', None),            # \mathrm outside a subscript
+    (r'T(0) = T_{\text{init}}', None),
+])
+def test_failure_hint(tex, hint):
+    found = tex_check.failure_hint(tex)
+    assert (found is None) if hint is None else (f'on {hint} in a subscript' in found and r'\text{…}' in found)
+
+
+def test_the_preview_tells_a_failed_check_from_an_unreachable_portal():
+    from MaRDMO.templatetags.mardmo_tags import formula
+    failed = formula(r'T_\mathrm{init}', FAILED)
+    assert "TeX check failed on this formula; it is exported unchecked" in failed and r'\text{…}' in failed
+    assert 'not verified' not in failed
+    assert 'not verified by the MaRDI Portal' in formula(r'T_\mathrm{init}', UNAVAILABLE)
+    assert 'subscript' not in formula(r'\frac{a}{b}', FAILED)

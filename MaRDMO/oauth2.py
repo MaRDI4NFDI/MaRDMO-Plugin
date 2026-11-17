@@ -765,6 +765,22 @@ class OauthProviderMixin:
         '''
         request.session[self.get_session_key(key)] = data
 
+    def get_from_session(self, request, key):
+        '''Read (without removing) a value from the Django session.
+
+        RDMO's OAuth callback view (``rdmo.services.views.oauth_callback``)
+        calls it to find the provider that started the authorization: without
+        it the callback fails before :meth:`callback` runs.
+
+        Args:
+            request: Django HTTP request.
+            key:     Logical key name passed through :meth:`get_session_key`.
+
+        Returns:
+            The stored value, or ``None`` if the key is absent.
+        '''
+        return request.session.get(self.get_session_key(key), None)
+
     def pop_from_session(self, request, key):
         '''Remove and return a value from the Django session.
 

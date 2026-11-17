@@ -849,6 +849,14 @@ msgstr "Item ohne Seite"
 msgid "not verified by the MaRDI Portal"
 msgstr "nicht vom MaRDI Portal geprüft"
 
+#: MaRDMO/templatetags/mardmo_tags.py:166
+msgid "the MaRDI Portal's TeX check failed on this formula; it is exported unchecked"
+msgstr "die TeX-Prüfung des MaRDI Portals ist an dieser Formel gescheitert; sie wird ungeprüft exportiert"
+
+#: MaRDMO/tex_check.py:104
+msgid "the check fails on {commands} in a subscript; \\text{{…}} avoids that"
+msgstr "die Prüfung scheitert an {commands} in einem Index; \\text{{…}} vermeidet das"
+
 #: MaRDMO/templatetags/mardmo_tags.py:248
 msgid "publication"
 msgstr "Publikation"

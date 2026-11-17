@@ -28,7 +28,7 @@ from multiprocessing.pool import ThreadPool
 
 import requests
 from django.core.cache import cache
-from django.utils.translation import ngettext
+from django.utils.translation import gettext as _, ngettext
 
 from .constants import TEX_CHECK_URL
 from .helpers import commit_writes
@@ -84,6 +84,25 @@ def environment_hint(tex):
         '{environments} are not supported; supported environments are {supported}',
         len(unsupported),
     ).format(environments=', '.join(unsupported), supported=', '.join(SUPPORTED_ENVIRONMENTS))
+
+
+# A text command in a subscript (``T_\mathrm{init}``, ``x_{\operatorname{max}}``): the
+# portal's checker fails on it (HTTP 500), ``\text`` works (found 2026-11-17)
+_SUBSCRIPT_COMMAND_RE = re.compile(r'_\s*\{?\s*\\(mathrm|operatorname)\b')
+
+
+def failure_hint(tex):
+    '''Explain why the portal's checker may have failed on *tex* (:data:`FAILED`), or ``None``.
+
+    The checker fails (HTTP 500) on ``\\mathrm`` and ``\\operatorname`` in a
+    subscript, although the portal saves and renders such a formula; with
+    ``\\text`` the check works.
+    '''
+    commands = sorted(set(_SUBSCRIPT_COMMAND_RE.findall(tex or '')))
+    if not commands:
+        return None
+    return _('the check fails on {commands} in a subscript; \\text{{…}} avoids that').format(
+        commands=', '.join(f'\\{command}' for command in commands))
 
 
 def _cache_key(tex):

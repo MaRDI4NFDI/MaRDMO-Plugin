@@ -35,7 +35,7 @@ from ..getters import get_options
 from ..ids import is_own_item
 from ..pages import PageRef
 from ..validators import formula_comment_problem
-from ..tex_check import NOT_VERIFIED
+from ..tex_check import FAILED, NOT_VERIFIED, failure_hint
 
 register = template.Library()
 
@@ -152,12 +152,22 @@ def formula(tex, verdict=None):
     swallow the rest of the line); the browser fills ``mardmo-tex-hint`` with
     MathJax's explanation.  Other formulas are wrapped in ``mardmo-formula``,
     so the browser can show them as raw TeX if MathJax cannot render them.
-    Formulas that could not be checked get a note; multi-line formulas with a
+    Formulas that could not be checked get a note: the portal did not answer,
+    or its checker failed on the formula, which is exported unchecked (with
+    the likely cause and how to avoid it, :func:`~MaRDMO.tex_check.failure_hint`);
+    multi-line formulas with a
     ``%`` comment are shown as raw TeX (see
     :func:`~MaRDMO.validators.formula_comment_problem`).
     '''
     if formula_comment_problem(tex):
         return format_html('<code class="mardmo-tex">{}</code>', tex)
+    if verdict == FAILED:
+        hint = failure_hint(tex)
+        note = _("the MaRDI Portal's TeX check failed on this formula; it is exported unchecked")
+        return format_html(
+            '<span class="mardmo-formula" data-tex="{}">\\( {} \\)</span> '
+            '<span class="mardmo-note">({}{})</span>', tex, tex, note, f'; {hint}' if hint else ''
+        )
     if verdict in NOT_VERIFIED:
         return format_html(
             '<span class="mardmo-formula" data-tex="{}">\\( {} \\)</span> '
