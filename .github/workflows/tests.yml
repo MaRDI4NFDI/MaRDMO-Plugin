@@ -128,7 +128,10 @@ jobs:
           TEST_DB_PORT: ${{ matrix.port }}
         run: coverage run -m pytest ${{ matrix.image && '--allow-hosts=127.0.0.1' || '' }}
 
+      # Fails below fail_under (pyproject.toml); "shell: bash" sets pipefail, so
+      # the tail does not hide coverage's exit status
       - name: Coverage
+        shell: bash
         run: coverage report --skip-covered --sort=cover | tail -25
 
       # The pages in a real browser (tests/browser), once per pull request and

@@ -79,6 +79,11 @@ filterwarnings = [
 [tool.coverage.run]
 source = ["MaRDMO"]
 
+[tool.coverage.report]
+# The floor CI holds the coverage to (87 % on 2026-11-17, a little room for
+# the jobs that skip some tests); raise it with the coverage, never lower it
+fail_under = 85
+
 [tool.ruff]
 extend-exclude = ["dev-tests"]
 

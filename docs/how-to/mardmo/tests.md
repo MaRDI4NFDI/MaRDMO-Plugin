@@ -94,6 +94,11 @@ needs a questionnaire change gets a questionnaire branch of the same name.
 A test of the database jobs fails if the tests did not run on the database
 asked for, so a database job cannot pass on SQLite unnoticed.
 
+Every job fails if the coverage falls below `fail_under` in `pyproject.toml`
+(85 %; 87 % were reached).  Raise the floor when the coverage rises; never
+lower it to make a pull request pass.  Locally:
+`coverage run -m pytest && coverage report`.
+
 Besides, `live-check.yml` checks the MaRDI Portal and Wikidata every night
 (see [Live check](#live-check-does-the-portal-still-answer-as-recorded)).
 
