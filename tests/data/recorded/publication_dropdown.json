@@ -1,0 +1,305 @@
+[
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"10\"], [\"srnamespace\", \"120\"], [\"srsearch\", \"P27=10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2|haswbstatement:P27=10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":1},\"search\":[{\"ns\":120,\"title\":\"Item:Q4608560\",\"pageid\":6638143,\"size\":23719,\"wordcount\":11,\"snippet\":\"Deterministic Nonperiodic Flow\\nscientific article; zbMATH DE number 6851676\\nPublication:4608560\",\"timestamp\":\"2026-05-06T20:02:08Z\"}]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P27=10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2|P27=10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2",
+    "srnamespace": 120,
+    "srlimit": 10,
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"10\"], [\"srnamespace\", \"120\"], [\"srsearch\", \"haswbstatement:P27=10.1007/BF01386390\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":1},\"search\":[{\"ns\":120,\"title\":\"Item:Q78129\",\"pageid\":79366,\"size\":8647,\"wordcount\":24,\"snippet\":\"A note on two problems in connexion with graphs\\nscientific article; zbMATH DE number 3150490\\nA note on two problems in connexion with graphs\",\"timestamp\":\"2026-05-26T15:31:42Z\"}]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P27=10.1007/BF01386390",
+    "srnamespace": 120,
+    "srlimit": 10,
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"10\"], [\"srnamespace\", \"120\"], [\"srsearch\", \"haswbstatement:P27=10.1007/bf01386390\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":1},\"search\":[{\"ns\":120,\"title\":\"Item:Q78129\",\"pageid\":79366,\"size\":8647,\"wordcount\":24,\"snippet\":\"A note on two problems in connexion with graphs\\nscientific article; zbMATH DE number 3150490\\nA note on two problems in connexion with graphs\",\"timestamp\":\"2026-05-26T15:31:42Z\"}]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P27=10.1007/bf01386390",
+    "srnamespace": 120,
+    "srlimit": 10,
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"10\"], [\"srnamespace\", \"120\"], [\"srsearch\", \"haswbstatement:P27=10.21105/joss.02404\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":0},\"search\":[]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P27=10.21105/joss.02404",
+    "srnamespace": 120,
+    "srlimit": 10,
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"10\"], [\"srnamespace\", \"120\"], [\"srsearch\", \"haswbstatement:P27=10.9999/mardmo.tests.nowhere\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":0},\"search\":[]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P27=10.9999/mardmo.tests.nowhere",
+    "srnamespace": 120,
+    "srlimit": 10,
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q4608560\"], [\"languages\", \"en\"], [\"props\", \"descriptions|labels\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"entities\":{\"Q4608560\":{\"type\":\"item\",\"id\":\"Q4608560\",\"labels\":{\"en\":{\"language\":\"en\",\"value\":\"Deterministic Nonperiodic Flow\"}},\"descriptions\":{\"en\":{\"language\":\"en\",\"value\":\"scientific article; zbMATH DE number 6851676\"}}}},\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbgetentities",
+    "ids": "Q4608560",
+    "props": "labels|descriptions",
+    "languages": "en",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q78129\"], [\"languages\", \"en\"], [\"props\", \"descriptions|labels\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"entities\":{\"Q78129\":{\"type\":\"item\",\"id\":\"Q78129\",\"labels\":{\"en\":{\"language\":\"en\",\"value\":\"A note on two problems in connexion with graphs\"}},\"descriptions\":{\"en\":{\"language\":\"en\",\"value\":\"scientific article; zbMATH DE number 3150490\"}}}},\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbgetentities",
+    "ids": "Q78129",
+    "props": "labels|descriptions",
+    "languages": "en",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://www.wikidata.org/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"10\"], [\"srnamespace\", \"0\"], [\"srsearch\", \"haswbstatement:P356=10.1007/BF01386390\"]], null]",
+  "url": "https://www.wikidata.org/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":1},\"search\":[{\"ns\":0,\"title\":\"Q21694527\",\"pageid\":23733434,\"size\":21785,\"wordcount\":223,\"snippet\":\"A note on two problems in connexion with graphs\\nA note on two problems in connexion with graphs\\nA note on two problems in connexion with graphs\\nscientific\",\"timestamp\":\"2024-10-05T22:35:21Z\"}]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P356=10.1007/BF01386390",
+    "srnamespace": 0,
+    "srlimit": 10,
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://www.wikidata.org/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"10\"], [\"srnamespace\", \"0\"], [\"srsearch\", \"haswbstatement:P356=10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2\"]], null]",
+  "url": "https://www.wikidata.org/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":1},\"search\":[{\"ns\":0,\"title\":\"Q30053378\",\"pageid\":31667392,\"size\":21626,\"wordcount\":193,\"snippet\":\"Deterministic Nonperiodic Flow\\nDeterministic Nonperiodic Flow\\nDeterministic Nonperiodic Flow\\nwetenschappelijk artikel\\n\\u0645\\u0642\\u0627\\u0644\\u0629 \\u0639\\u0644\\u0645\\u064a\\u0629 (\\u0646\\u0634\\u0631\\u062a \\u0641\\u064a \\u0645\\u0627\\u0631\\u0633 1963)\\nartigo\",\"timestamp\":\"2025-06-21T07:52:53Z\"}]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P356=10.1175/1520-0469(1963)020<0130:DNF>2.0.CO;2",
+    "srnamespace": 0,
+    "srlimit": 10,
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://www.wikidata.org/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"10\"], [\"srnamespace\", \"0\"], [\"srsearch\", \"haswbstatement:P356=10.21105/JOSS.02404\"]], null]",
+  "url": "https://www.wikidata.org/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":1},\"search\":[{\"ns\":0,\"title\":\"Q106245557\",\"pageid\":101542423,\"size\":22113,\"wordcount\":207,\"snippet\":\"seg1d: A Python package for Automated segmentation of one-dimensional (1D) data\\nseg1d: A Python package for Automated segmentation of one-dimensional (1D)\",\"timestamp\":\"2026-07-31T19:01:37Z\"}]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P356=10.21105/JOSS.02404",
+    "srnamespace": 0,
+    "srlimit": 10,
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://www.wikidata.org/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"10\"], [\"srnamespace\", \"0\"], [\"srsearch\", \"haswbstatement:P356=10.9999/MARDMO.TESTS.NOWHERE\"]], null]",
+  "url": "https://www.wikidata.org/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":0},\"search\":[]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P356=10.9999/MARDMO.TESTS.NOWHERE",
+    "srnamespace": 0,
+    "srlimit": 10,
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://www.wikidata.org/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q106245557\"], [\"languages\", \"en\"], [\"props\", \"descriptions|labels\"]], null]",
+  "url": "https://www.wikidata.org/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"entities\":{\"Q106245557\":{\"type\":\"item\",\"id\":\"Q106245557\",\"labels\":{\"en\":{\"language\":\"en\",\"value\":\"seg1d: A Python package for Automated segmentation of one-dimensional (1D) data\"}},\"descriptions\":{\"en\":{\"language\":\"en\",\"value\":\"scientific article published on 21 August 2020\"}}}},\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbgetentities",
+    "ids": "Q106245557",
+    "props": "labels|descriptions",
+    "languages": "en",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://www.wikidata.org/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q21694527\"], [\"languages\", \"en\"], [\"props\", \"descriptions|labels\"]], null]",
+  "url": "https://www.wikidata.org/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"entities\":{\"Q21694527\":{\"type\":\"item\",\"id\":\"Q21694527\",\"labels\":{\"en\":{\"language\":\"en\",\"value\":\"A note on two problems in connexion with graphs\"}},\"descriptions\":{\"en\":{\"language\":\"en\",\"value\":\"scientific article published in December 1959\"}}}},\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbgetentities",
+    "ids": "Q21694527",
+    "props": "labels|descriptions",
+    "languages": "en",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://www.wikidata.org/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q30053378\"], [\"languages\", \"en\"], [\"props\", \"descriptions|labels\"]], null]",
+  "url": "https://www.wikidata.org/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"entities\":{\"Q30053378\":{\"type\":\"item\",\"id\":\"Q30053378\",\"labels\":{\"en\":{\"language\":\"en\",\"value\":\"Deterministic Nonperiodic Flow\"}},\"descriptions\":{\"en\":{\"language\":\"en\",\"value\":\"scientific article (publication date: March 1963)\"}}}},\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbgetentities",
+    "ids": "Q30053378",
+    "props": "labels|descriptions",
+    "languages": "en",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ }
+]

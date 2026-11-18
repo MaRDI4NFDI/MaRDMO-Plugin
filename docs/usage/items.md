@@ -69,8 +69,8 @@ For each of these:
   definition of a quantity (written with `\equiv`).
 
 An item that has a tab in your documentation already keeps it, also when it
-is from Wikidata.  Publications are the exception: their citation data is
-always looked up by their DOI.
+is from Wikidata.  A Wikidata publication also becomes the MaRDI Portal's if
+the portal has it by its DOI; one without DOI stays a Wikidata publication.
 
 ### Items without a tab
 
@@ -90,8 +90,8 @@ wait until it is filled in, then select **new item**.  The tab becomes a new
 item with the copied content; change its name and short description.
 Relations to the original item stay with it.
 
-Publications cannot be used as templates: a publication is either on the
-MaRDI Portal or Wikidata, or entered with its DOI.
+Publications cannot be used as templates: a publication is selected by its
+identifier.
 
 ## Copying and deleting tabs
 
@@ -109,11 +109,26 @@ Section"); link them to the right item again.
 
 ## Publications
 
-For a publication of your own, select **new item** and enter its DOI.  The
-preview looks up its citation (authors, journal, ...) and shows what the
-export creates.  Authors and journals that are not on the MaRDI Portal are
-created by the export; an author is created only with an ORCID iD or a
-zbMATH author ID.
+A publication is selected by its identifier, not by its title: type it with
+its prefix, for now `doi:` and the DOI (`doi:10.1007/BF01386390`; a pasted
+`https://doi.org/…` link after `doi:` works too).  The dropdown offers
+
+- the publication of the MaRDI Portal, if the portal has the DOI;
+- otherwise the publication of Wikidata, if Wikidata has it;
+- otherwise the DOI itself, marked **new**: a publication the export creates.
+
+An invalid DOI is offered as well, so that saving it says what is wrong with
+it; it is not saved.  For a new publication the field keeps `doi:…`, and
+MaRDMO looks up its citation (title, authors, journal, …) in the background
+from the MaRDI Portal, Wikidata, Crossref, DataCite, zbMATH and doi.org; you
+can go on with the interview meanwhile.  If none of them knows the DOI, the
+preview says so: check the DOI, or open the preview again later.  The
+preview shows what the export creates.  Authors and journals that are not
+on the MaRDI Portal are created by the export; an author is created only
+with an ORCID iD or a zbMATH author ID.
+
+The name and short description of a publication are those of its citation;
+you cannot change them.
 
 ## Items that are already on the MaRDI Portal
 
@@ -144,6 +159,14 @@ does):
   name and short description of a Wikidata item you selected elsewhere (the
   MaRDI Portal takes only one): rename yours, or select the Wikidata item.
   Then open the preview again.
+
+A publication with the DOI of a portal publication is that publication: it
+can only become the portal item (**Use this item**; its tab then shows the
+portal item, without the citation looked up before).  If its DOI is wrong,
+correct it on its tab.  A publication with the name and short description of
+a portal publication with another DOI is another publication; the portal
+takes only one item per name and description, and you cannot rename a
+publication, so MaRDMO cannot export it yet (the box says so).
 
 Authors and journals of publications are not listed: MaRDMO takes them from
 the citation and decides for them itself.

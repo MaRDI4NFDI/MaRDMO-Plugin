@@ -29,7 +29,10 @@ from rdmo.domain.models import Attribute
 from .constants import BASE_URI
 from .getters import get_mathmoddb, get_properties, get_url
 from .helpers import commit_writes, extract_parts, rank_by_search_term
-from .ids import NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, source_help, source_tag
+from .ids import (
+    DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, publication_doi,
+    source_help, source_tag,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -182,6 +185,9 @@ class PortalItems:
     label_failed: bool = False
     wikidata_failed: bool = False
     markers_failed: bool = False
+    # Publications by their DOI (#158, duplicates.look_up): {DOI in upper case: (QID, label, description)}
+    by_doi: dict = field(default_factory=dict)
+    doi_failed: bool = False
 
 
 def _sparql_literal(text):
@@ -525,6 +531,218 @@ def _cached_search(source, search, item_class, func):
             return []
         cache.set(key, results, SEARCH_CACHE_TIMEOUT)
     return results
+
+
+# Wikidata's DOI property (the portal's is "DOI" in properties.json)
+WIKIDATA_DOI = 'P356'
+# The MaRDI Portal has some DOIs with "<" and ">" percent-encoded, as imported
+# (10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2); it is searched for both
+# forms.  "#" (the check character of old DOIs, "…3.0.CO;2-#") is encoded in
+# links as well
+_PORTAL_ENCODED = (('<', '%3C'), ('>', '%3E'), ('#', '%23'))
+
+
+def portal_doi_forms(doi):
+    '''The forms in which the MaRDI Portal may have *doi*: as it is, and percent-encoded if that differs.'''
+    encoded = doi
+    for character, code in _PORTAL_ENCODED:
+        encoded = encoded.replace(character, code)
+    return [doi] if encoded == doi else [doi, encoded]
+
+
+def _portal_doi(stored):
+    '''A DOI as the MaRDI Portal has it, in upper case and decoded (:func:`portal_doi_forms`).'''
+    stored = stored.upper()
+    for character, code in _PORTAL_ENCODED:
+        stored = stored.replace(code, character)
+    return stored
+
+
+def _items_with_statement(source, statement):
+    '''Options ``{id, text}`` of the items of *source* (``mardi``, ``wikidata``) with *statement* (``P27=10.…``).
+
+    A search for the statement (``haswbstatement``, which ignores the case of
+    a DOI), then the items' English labels and descriptions.  Raises on
+    request errors (:func:`_cached_search` does not keep a failed search).
+    '''
+    api_url = get_url(source, 'api')
+    headers = {'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'}
+    found = request_with_retry(
+        'get', api_url, waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline(), headers=headers,
+        timeout=SEARCH_TIMEOUT,
+        params={'action': 'query', 'list': 'search', 'srsearch': f'haswbstatement:{statement}',
+                'srnamespace': 120 if source == 'mardi' else 0, 'srlimit': 10, 'format': 'json'},
+    )
+    found.raise_for_status()
+    qids = [hit['title'].rsplit(':', 1)[-1] for hit in found.json().get('query', {}).get('search', [])]
+    if not qids:
+        return []
+    entities = request_with_retry(
+        'get', api_url, waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline(), headers=headers,
+        timeout=SEARCH_TIMEOUT,
+        params={'action': 'wbgetentities', 'ids': '|'.join(qids), 'props': 'labels|descriptions',
+                'languages': 'en', 'format': 'json'},
+    )
+    entities.raise_for_status()
+    entities = entities.json().get('entities', {})
+    return [{'id': f'{source}:{qid}',
+             'text': item_text(entities.get(qid, {}).get('labels', {}).get('en', {}).get('value', qid),
+                               entities.get(qid, {}).get('descriptions', {}).get('en', {}).get(
+                                   'value', 'No Description Provided!'))}
+            for qid in qids]
+
+
+def find_publications(doi):
+    '''The publications with the DOI *doi*: ``(on the MaRDI Portal, on Wikidata)``, each a list of options.
+
+    Both are searched at once; results are reused for five minutes
+    (:func:`_cached_search`).  A source that does not answer finds nothing.
+    '''
+    statements = {'mardi': '|'.join(f"{get_properties()['DOI']}={form}" for form in portal_doi_forms(doi)),
+                  'wikidata': f'{WIKIDATA_DOI}={doi.upper()}'}
+    with ThreadPool(processes=2) as pool:
+        mardi, wikidata = pool.map(
+            lambda source: _cached_search(source, f'{DOI_PREFIX}{doi}', 'DOI',
+                                          lambda _: _items_with_statement(source, statements[source])),
+            ['mardi', 'wikidata'])
+    return mardi, wikidata
+
+
+def publication_options(search):
+    '''The options of the publication dropdown for *search*, the identifier with its prefix (#158).
+
+    Only an identifier is searched for (``doi:10.1000/x``), no title.  A
+    publication on the MaRDI Portal is offered as the portal item only (the
+    Wikidata item would be a duplicate), one only on Wikidata as the
+    Wikidata item; one found nowhere as a new publication: the option is
+    the identifier itself (ID ``new:doi:…``, tagged "new").  An identifier
+    that is not valid is offered too, without asking anyone: saving it is
+    refused with the reason (the pre-save validator), which the user would
+    not learn from an empty dropdown.
+    '''
+    from .validators import doi_problem  # pylint: disable=import-outside-toplevel
+    doi = publication_doi(search)
+    if not doi:
+        return []
+    new = [{'id': f'{NEW_DOI}{doi}', 'text': f'{DOI_PREFIX}{doi}', 'help': source_tag('new')}]
+    if doi_problem(doi):
+        return new
+    mardi, wikidata = find_publications(doi)
+    found = mardi or wikidata
+    return [{**option, 'help': source_help(option['id'])} for option in found] if found else new
+
+
+# The lookups of publication twins while a page is filled (#158): requests are
+# given up after this many seconds and retried once; wbgetentities takes at
+# most 50 items, a search for DOIS_PER_SEARCH DOIs finds at most 50 items
+TWIN_TIMEOUT = 10
+ENTITIES_PER_REQUEST = 50
+DOIS_PER_SEARCH = 20
+
+
+def _entities(source, qids, props, waits=(SEARCH_RETRY_WAIT,), deadline=None):
+    '''``{QID: entity}`` of *qids* on *source* (``wbgetentities``, English labels); raises on request errors.'''
+    entities = {}
+    for start in range(0, len(qids), ENTITIES_PER_REQUEST):
+        response = request_with_retry(
+            'get', get_url(source, 'api'), waits=waits, deadline=deadline, timeout=TWIN_TIMEOUT,
+            headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
+            params={'action': 'wbgetentities', 'ids': '|'.join(qids[start:start + ENTITIES_PER_REQUEST]),
+                    'props': props, 'languages': 'en', 'format': 'json'})
+        response.raise_for_status()
+        entities.update(response.json().get('entities', {}))
+    return entities
+
+
+def _claim_values(entity, prop):
+    '''The string values of the statements *prop* of *entity* (from ``wbgetentities``).'''
+    return [claim['mainsnak']['datavalue']['value'] for claim in entity.get('claims', {}).get(prop, [])
+            if claim.get('mainsnak', {}).get('snaktype') == 'value'
+            and isinstance(claim['mainsnak']['datavalue']['value'], str)]
+
+
+def _by_qid(qids):
+    '''*qids* (``Q1``) in the order of their numbers.'''
+    return sorted(qids, key=lambda qid: int(qid[1:]))
+
+
+def wikidata_dois(qids):
+    '''``{QID: DOI}`` of the Wikidata items *qids* that have a DOI (P356; the first one).
+
+    One ``wbgetentities`` request per :data:`ENTITIES_PER_REQUEST` items.  A
+    lookup that fails finds no DOIs.
+    '''
+    qids = sorted(set(qids))
+    if not qids:
+        return {}
+    try:
+        entities = _entities('wikidata', qids, 'claims')
+    except (requests.exceptions.RequestException, ValueError) as error:
+        logger.warning('Could not look up the DOIs of Wikidata publications: %s', error)
+        return {}
+    # Some have their DOI with a leading "/"
+    return {qid: dois[0].lstrip('/') for qid in qids if (dois := _claim_values(entities.get(qid, {}), WIKIDATA_DOI))}
+
+
+def find_publications_by_doi(dois, waits=(SEARCH_RETRY_WAIT,), deadline=None):
+    '''``{DOI in upper case: (QID, label, description)}`` of the MaRDI Portal's publications with *dois*.
+
+    One search (``haswbstatement`` with alternatives, which ignores the case
+    of a DOI; both forms of :func:`portal_doi_forms`) per
+    :data:`DOIS_PER_SEARCH` DOIs, then the items found, whose
+    DOIs say which DOI each one has.  Of several items with a DOI the one
+    with the lowest QID; items without English label are left out.
+
+    Raises:
+        requests.exceptions.RequestException, ValueError: if the portal did
+            not answer (the duplicate check must know).
+    '''
+    dois = sorted({doi.upper() for doi in dois if doi})
+    if not dois:
+        return {}
+    prop = get_properties()['DOI']
+    qids = set()
+    for start in range(0, len(dois), DOIS_PER_SEARCH):
+        statements = '|'.join(f'{prop}={form}' for doi in dois[start:start + DOIS_PER_SEARCH]
+                              for form in portal_doi_forms(doi))
+        response = request_with_retry(
+            'get', get_url('mardi', 'api'), waits=waits, deadline=deadline, timeout=TWIN_TIMEOUT,
+            headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
+            params={'action': 'query', 'list': 'search', 'srsearch': f'haswbstatement:{statements}',
+                    'srnamespace': 120, 'srlimit': 50, 'srprop': '', 'format': 'json'})
+        response.raise_for_status()
+        qids |= {hit['title'].rsplit(':', 1)[-1] for hit in response.json().get('query', {}).get('search', [])}
+    entities = _entities('mardi', _by_qid(qids), 'claims|labels|descriptions', waits, deadline) if qids else {}
+    wanted, found = set(dois), {}
+    for qid in _by_qid(entities):
+        entity = entities[qid]
+        label = entity.get('labels', {}).get('en', {}).get('value')
+        if not label:
+            continue
+        description = entity.get('descriptions', {}).get('en', {}).get('value', 'No Description Provided!')
+        for doi in _claim_values(entity, prop):
+            if _portal_doi(doi) in wanted:
+                found.setdefault(_portal_doi(doi), (qid, label, description))
+    return found
+
+
+def portal_publications_by_doi(dois):
+    ''':func:`find_publications_by_doi`, but a lookup that fails finds nothing (filling pages, #158).'''
+    try:
+        return find_publications_by_doi(dois)
+    except (requests.exceptions.RequestException, ValueError) as error:
+        logger.warning('Could not look up publications on the MaRDI Portal by DOI: %s', error)
+        return {}
+
+
+def portal_dois(qids, waits=(SEARCH_RETRY_WAIT,), deadline=None):
+    '''``{QID: {DOIs in upper case}}`` of the MaRDI Portal items *qids*; raises if the portal did not answer.'''
+    qids = _by_qid(set(qids))
+    if not qids:
+        return {}
+    prop = get_properties()['DOI']
+    entities = _entities('mardi', qids, 'claims', waits, deadline)
+    return {qid: {_portal_doi(doi) for doi in _claim_values(entities.get(qid, {}), prop)} for qid in qids}
 
 
 def _label_description(option):

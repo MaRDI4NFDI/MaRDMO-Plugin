@@ -9,6 +9,9 @@ before each, and writes the file::
     RECORD=1 pytest --force-enable-socket tests/db/test_hydration.py
 
 Recording only reads; it is for new tests or when the portal data changed.
+``RECORD=missing`` (with ``--force-enable-socket``) replays and sends only
+the requests a recording does not have, adding them to it: for a change
+that asks a little more, without recording everything again.
 A request is found again by method, URL, parameters and body; the order of
 the items in a SPARQL ``VALUES`` block and in ``ids=Q1|Q2`` does not count,
 because MaRDMO collects them in sets.  A recording holds the requests of all
@@ -16,6 +19,7 @@ tests that use it; recording again replaces it.  Each entry keeps the request
 as sent (``request``), so the live check (tests/live) can send it again.
 '''
 import json
+import os
 import re
 import threading
 import time
@@ -84,8 +88,24 @@ def replay(monkeypatch, names, missing):
     answers = load(names)
     path = FOLDER / f'{names[-1]}.json'
 
+    add = os.environ.get('RECORD') == 'missing'
+    lock = threading.Lock()
+
     def request(session, method, url, params=None, data=None, **kwargs):
-        entry = answers.get(key(method, url, params, data))
+        request_key = key(method, url, params, data)
+        entry = answers.get(request_key)
+        if entry is None and add:
+            # RECORD=missing: send it for real and add it to the last recording
+            time.sleep(PAUSE)
+            response = REAL_REQUEST(session, method, url, params=params, data=data, **kwargs)
+            entry = {'key': request_key, 'url': url, 'status': response.status_code,
+                     'content_type': response.headers.get('Content-Type', ''), 'body': response.text,
+                     'request': sent(method, params, data, kwargs.get('headers'))}
+            with lock:
+                stored = {item['key']: item for item in json.loads(path.read_text(encoding='utf-8'))}
+                stored[request_key] = answers[request_key] = entry
+                path.write_text(json.dumps(sorted(stored.values(), key=lambda item: item['key']), indent=1,
+                                           ensure_ascii=False) + '\n', encoding='utf-8')
         if entry is None:
             missing.append(f'{method.upper()} {url}')
             raise AssertionError(f'request not recorded in {path.name}: {method.upper()} {url} {params or ""}'

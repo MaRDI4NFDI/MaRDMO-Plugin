@@ -8,7 +8,7 @@ relation (MaRDMO adds their page, which is then filled here).  Every
 relation question gets an item of each source its dropdown offers: the
 documentation's own items, the MaRDI Portal, Wikidata, a typed new item.
 '''
-from .writer import New, Portal, Typed, Wikidata
+from .writer import Doi, New, Portal, Typed, Wikidata
 
 # Items of the MaRDI Portal and Wikidata; their dropdowns offer them (the build checks it)
 SIS_MODEL = Portal('Q6675171', 'susceptible infectious susceptible model')
@@ -31,8 +31,9 @@ SPREADING = Portal('Q6684648', 'spreading of infectious diseases')
 EPIDEMIC = Wikidata('Q44512', 'epidemic')
 EPIDEMIOLOGY = Portal('Q6684705', 'epidemiology')
 SCIENTIFIC_WORKFLOWS = Wikidata('Q120970377', 'scientific workflows')
-HEROIN_EPIDEMICS = Portal('Q2643268', 'Heroin epidemics, treatment and ODE modelling')
-HEROIN_EPIDEMICS_WIKIDATA = Wikidata('Q40923322', 'Heroin epidemics revisited')
+# Publications are selected by their DOI (#158)
+HEROIN_EPIDEMICS = Doi('10.1016/J.MBS.2006.10.008', 'mardi:Q2643268')      # Heroin epidemics, treatment and ODE modelling
+HEROIN_EPIDEMICS_WIKIDATA = Doi('10.1093/OXFORDJOURNALS.EPIREV.A036186', 'wikidata:Q40923322')  # Heroin epidemics revisited
 
 
 def synthetic(kind, letter):
@@ -293,12 +294,10 @@ def describe(doc):
     publication.block('publication-to-entity', {'entity-relation': 'uses', 'entity-relatant': [task_a, kind_a]})
     publication = doc.tab('publication', 'P2', HEROIN_EPIDEMICS_WIKIDATA)
     publication.block('publication-to-entity', {'entity-relation': 'documents', 'entity-relatant': [model_b, SIS_MODEL]})
-    # New publications: their DOI, the citation services give the rest.  The first is on
-    # Wikidata (the preview makes it the Wikidata item); the second nowhere yet (new, with
-    # five authors, four with ORCID iD, and its journal)
-    publication = doc.tab('publication', 'P3', New('seg1d', ''))
-    publication.answer('reference', ('doi', '10.21105/joss.02404'))
+    # Typed by their DOI: the first is on Wikidata only (the dropdown offers the Wikidata
+    # item); the second nowhere yet (new, the citation services give the rest: five authors,
+    # four with ORCID iD, and its journal)
+    publication = doc.tab('publication', 'P3', Doi('10.21105/joss.02404', 'wikidata:Q106245557'))
     publication.block('publication-to-entity', {'entity-relation': 'uses', 'entity-relatant': [quantity_b]})
-    publication = doc.tab('publication', 'P4', New('KIM', ''))
-    publication.answer('reference', ('doi', '10.21105/joss.11112'))
+    publication = doc.tab('publication', 'P4', Doi('10.21105/joss.11112'))
     publication.block('publication-to-entity', {'entity-relation': 'studies', 'entity-relatant': [model_c, task_b]})

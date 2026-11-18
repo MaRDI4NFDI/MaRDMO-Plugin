@@ -1,6 +1,6 @@
 '''The synthetic documentation of the interdisciplinary workflow catalog (see tools/synthetic/model.py).'''
 from . import complete
-from .writer import New, Portal, Typed, Wikidata
+from .writer import Doi, New, Portal, Typed, Wikidata
 
 EGYPTIAN_OBJECTS = Portal('Q6032641', 'Logical Data Analysis for Egyptian Objects')
 SCIENTIFIC_WORKFLOW_SYSTEM = Wikidata('Q7433829', 'scientific workflow system')
@@ -27,8 +27,9 @@ SORTING = Portal('Q6825656', 'Sorting items under a total order')
 BIN_PACKING = Wikidata('Q814581', 'bin packing problem')
 EPIDEMIOLOGY = Portal('Q6684705', 'epidemiology')
 SCIENTIFIC_WORKFLOWS = Wikidata('Q120970377', 'scientific workflows')
-HEROIN_EPIDEMICS = Portal('Q2643268', 'Heroin epidemics, treatment and ODE modelling')
-SEG1D_WIKIDATA = Wikidata('Q106245557', 'seg1d: A Python package for Automated segmentation of one-dimensional (1D) data')
+# Publications are selected by their DOI (#158)
+HEROIN_EPIDEMICS = Doi('10.1016/J.MBS.2006.10.008', 'mardi:Q2643268')      # Heroin epidemics, treatment and ODE modelling
+SEG1D_WIKIDATA = Doi('10.21105/joss.02404', 'wikidata:Q106245557')       # seg1d, only on Wikidata
 
 REPRODUCIBILITY = ('mathematical', 'result', 'runtime', 'original-platform', 'other-platform')
 
@@ -170,15 +171,13 @@ def describe(doc):
             'remaining-workflow-entity-relation': relation, 'remaining-workflow-entity-relatant': [relatant]})
     publication = doc.tab('publication', 'P2', SEG1D_WIKIDATA)
     publication.block('publication-to-algorithm', {'algorithm-relation': 'applies', 'algorithm-relatant': [algorithm_b]})
-    publication = doc.tab('publication', 'P3', New('GeoRacoon', ''))
-    publication.answer('reference', ('doi', '10.21105/joss.10797'))
+    publication = doc.tab('publication', 'P3', Doi('10.21105/joss.10797'))         # GeoRacoon, new
     publication.block('publication-to-remaining-workflow-entities', {
         'remaining-workflow-entity-relation': 'documents', 'remaining-workflow-entity-relatant': [datasets['B']]})
 
     # --- What the pages MaRDMO filled or added still need ---------------------------------
     complete.descriptions(doc, 'workflow', 'processstep', 'algorithm', 'software', 'hardware', 'dataset')
     complete.references(doc, 'software')
-    complete.publication_dois(doc)
     for page in doc.tabs('dataset'):
         complete.missing(page, {'binary-or-text': 'text', 'proprietary': 'no', 'file-format': 'CSV',
                                 'size': ('items', '100'), 'to-publish': 'no', 'to-archive': 'no'})

@@ -5,7 +5,7 @@ SELECT ?id ?label ?description
 
 WHERE {{
     
-    ?idraw wdt:{DOI} "{0}".
+    ?idraw wdt:{DOI} {0}.
     BIND(CONCAT("mardi:", STRAFTER(STR(?idraw), STR(wd:))) AS ?id)
        
     OPTIONAL {{

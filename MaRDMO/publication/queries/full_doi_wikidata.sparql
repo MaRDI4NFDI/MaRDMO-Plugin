@@ -13,7 +13,7 @@ WHERE {{
 
       SERVICE wdsubgraph:scholarly_articles {{
 
-        ?idraw wdt:P356 "{0}".
+        ?idraw wdt:P356 {0}.
         BIND(CONCAT("wikidata:", STRAFTER(STR(?idraw), STR(wd:))) AS ?id)
 
         ?idraw wdt:P356 ?reference.

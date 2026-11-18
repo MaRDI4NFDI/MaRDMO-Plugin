@@ -10,7 +10,7 @@ from rdmo.options.providers import Provider
 from .getters import get_items
 from .helpers import define_setup
 from .optionsets import PROVIDERS
-from .queries import query_sources, query_sources_with_user_additions
+from .queries import publication_options, query_sources, query_sources_with_user_additions
 
 
 class MaRDMOProvider(Provider):
@@ -35,6 +35,8 @@ class MaRDMOProvider(Provider):
         config = self.config
         if not search or len(search) < config.min_search:
             return []
+        if config.by_identifier:
+            return publication_options(search)
 
         items = get_items()
         item_class = ([items[name] for name in config.item_class] if isinstance(config.item_class, list)

@@ -348,16 +348,7 @@
    "": null,
    "a": null,
    "ab": null,
-   "abc": {
-    "function": "query_sources",
-    "item_class": [
-     "Q56751",
-     "Q56887"
-    ],
-    "not_found": true,
-    "search": "abc",
-    "sources": null
-   }
+   "abc": null
   },
   "label": "Options for Publication",
   "refresh": true,

@@ -8,7 +8,8 @@ from the first character (C, R), all others from three (six workflow
 providers searched from one before); the provider "Instrument", used by no
 option set, was removed.  The providers of related quantities and related
 quantity kinds offer only the user's own quantities of their class
-(answer_class).
+(answer_class).  Publications are selected by their identifier (#158): a
+text without its prefix searches nothing (``tests/db/test_publication_dropdown.py``).
 '''
 import json
 import os

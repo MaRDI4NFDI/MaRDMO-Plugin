@@ -1520,13 +1520,14 @@ class GeneratePayload:
 
         New and Wikidata items are duplicates if the portal holds an item with
         exactly their label and description (the portal's own rule), Wikidata
-        items also if a portal item has their Wikidata QID (P12), see
+        items also if a portal item has their Wikidata QID (P12), publications
+        also if one has their DOI (#158), see
         :func:`~MaRDMO.duplicates.look_up` (the preview lists the same).  The
         markers of the existing items are kept for :meth:`subject_markers`.
 
         Raises:
             DocumentationProblem: All duplicates, one line each.
-            PortalUnavailable: If the Wikidata QIDs could not be looked up; a
+            PortalUnavailable: If the Wikidata QIDs or DOIs could not be looked up; a
                 failed label lookup is only logged (the portal rejects exact
                 duplicates itself, and the export links those).
         """
@@ -1536,6 +1537,11 @@ class GeneratePayload:
         if found.wikidata_failed:
             raise PortalUnavailable(_(
                 "Could not check which Wikidata items already exist on the MaRDI Portal "
+                "(the portal did not answer). Nothing was exported; please try again later."
+            ))
+        if found.doi_failed:
+            raise PortalUnavailable(_(
+                "Could not check which publications already exist on the MaRDI Portal by their DOI "
                 "(the portal did not answer). Nothing was exported; please try again later."
             ))
         if found.label_failed:
@@ -1552,6 +1558,18 @@ class GeneratePayload:
                     "documentation; the MaRDI Portal takes only one item per label and description. Rename yours, "
                     "or select the Wikidata item."
                 ).format(name=name, description=description, qid=duplicate.other['ID'].split(':', 1)[-1]))
+            elif duplicate.rule == 'doi':
+                messages.append(_(
+                    "'{name}' has the DOI {doi}, which the MaRDI Portal has as {portal_qid}: it is this "
+                    "publication. Use the portal item (in the preview), or correct the DOI."
+                ).format(name=name or f"doi:{duplicate.item['doi']}", doi=duplicate.item['doi'],
+                         portal_qid=duplicate.qid))
+            elif duplicate.rule == 'other publication':
+                messages.append(_(
+                    "'{name}' ({description}) has the label and description of the publication {portal_qid} of "
+                    "the MaRDI Portal, which has another DOI; the portal takes only one item per label and "
+                    "description. MaRDMO cannot export this publication yet."
+                ).format(name=name, description=description, portal_qid=duplicate.qid))
             elif duplicate.rule == 'wikidata':
                 messages.append(_(
                     "'{name}' ({description}) is the Wikidata item {qid}, which exists on the MaRDI Portal as "

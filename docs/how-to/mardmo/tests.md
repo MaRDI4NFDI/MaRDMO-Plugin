@@ -214,7 +214,9 @@ reused, or an internal error of the export.  Things learned:
   of defining formulas (MaRDMO adds a page for every quantity of a Wikidata
   formula, recursively).
 - New publications need DOIs that are on neither the portal nor Wikidata
-  (recent ones); otherwise the preview makes them that item.
+  (recent ones); otherwise the dropdown offers that item.  The descriptions
+  select publications by their DOI (`Doi('10.…', 'mardi:Q…')`, or without an
+  item for a new one), as the user types it.
 
 ## Recordings: when the requests change
 
@@ -229,7 +231,11 @@ RECORD=1 QUESTIONNAIRE=../MaRDMO-Questionnaire/catalog pytest --force-enable-soc
 RECORD=1 GOLDEN=1 QUESTIONNAIRE=../MaRDMO-Questionnaire/catalog pytest --force-enable-socket tests/db/test_export.py
 ```
 
-Recording replaces the recordings the tests use.  When portal data changed,
+Recording replaces the recordings the tests use.  `RECORD=missing` (with
+`--force-enable-socket`) replays instead and sends only the requests a
+recording does not have, adding them to it (the last recording a test
+names): for a change that asks a little more, without recording everything
+again.  When portal data changed,
 also check the expected pages in `tests/db/test_hydration.py` (`PAGES`) and
 the diff of the golden files: they show what changed on the portal.
 

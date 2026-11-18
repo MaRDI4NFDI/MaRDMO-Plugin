@@ -4,11 +4,24 @@ Listens to RDMO model signals to keep publication-related questionnaire state
 consistent.  For example, cleans up dependent ``Value`` objects when a
 publication set entry is deleted.
 
+A publication is selected by its identifier (#158).  One of the MaRDI
+Portal or Wikidata is filled from there at once; a new one (``doi:…``) gets
+its DOI, and its citation is looked up in the background
+(:func:`lookup_publication`): Crossref, DataCite, zbMATH and doi.org take
+seconds, which the interview does not wait for.
+
 Provides:
 
 - :class:`Information` — signal receiver class with ``citation`` and
   ``publication_delete`` handler methods; routed via ``router.py``
+- :func:`lookup_publication` — the background lookup of a new publication
 '''
+import logging
+import threading
+from types import SimpleNamespace
+
+from django.db import connection, transaction
+from rdmo.projects.models import Project, Value
 
 from dataclasses import replace
 
@@ -23,7 +36,8 @@ from ..getters import (
 )
 from ..queries import query_sparql
 from ..adders import add_basics, add_references, add_relations_flexible
-from ..ids import is_portal_item
+from ..getters import get_options
+from ..ids import is_portal_item, is_user_id, publication_doi
 
 from .constants import (
     PROPS,
@@ -34,8 +48,14 @@ from .constants import (
     JOURNALS,
     AUTHORS
 )
-from .utils import clean_background_data
+from .utils import clean_background_data, get_citation
 from .models import Publication
+from .worker import best_citation, write_citation
+
+logger = logging.getLogger(__name__)
+
+# Every answer MaRDMO writes for a publication, besides its ID and relations
+BACKGROUND_DATA = ITEMINFOS | CITATIONINFOS | LANGUAGES | JOURNALS | AUTHORS
 
 # Publications per citation query
 CITATION_BATCH = 50
@@ -84,15 +104,20 @@ class Information:
         self.base                = BASE_URI
 
     def citation(self, instance):
-        '''Handle a Publication ID-field save: populate citation metadata from the
-        MaRDI Portal or Wikidata.
+        '''Handle a Publication ID-field save: populate citation metadata.
 
-        Extracts project, text, external_id, set_index, catalog, and snapshot
-        from *instance* and delegates to :meth:`fill_citation`.
+        A publication of the MaRDI Portal or Wikidata is filled from there
+        (:meth:`fill_citation`); a new one selected by its DOI (``doi:…``,
+        #158) gets its DOI and a lookup in the background
+        (:meth:`new_publication`).
 
         Args:
             instance: RDMO :class:`~rdmo.projects.models.Value` that was just saved.
         '''
+        doi = getattr(instance, 'mardmo_doi', None) or publication_doi(instance.text)
+        if doi and is_user_id(instance.external_id) and instance.snapshot is None:
+            self.new_publication(instance.project, instance.set_index, instance.external_id, doi)
+            return
         self.fill_citation(
             project     = instance.project,
             text        = instance.text,
@@ -101,6 +126,24 @@ class Information:
             catalog     = str(getattr(instance.project, 'catalog', '')),
             snapshot    = instance.snapshot,
         )
+
+    def new_publication(self, project, set_index, external_id, doi):
+        '''Give the new publication *set_index* its DOI and look up its citation in the background (#158).
+
+        The answers of a publication the page had before are removed; the DOI
+        is kept as the publication's reference (hidden, read by the checks and
+        the export).  The lookup starts once these answers are committed, so
+        it finds them (:func:`lookup_publication`).
+        '''
+        publication = self.questions["Publication"]
+        clean_background_data(key_dict=BACKGROUND_DATA, questions=publication, project=project,
+                              snapshot=None, set_index=set_index)
+        reference = f'{BASE_URI}{publication["Reference"]["uri"]}'
+        Value.objects.filter(project=project, snapshot=None, attribute__uri=reference, set_index=set_index).delete()
+        add_references(project=project, data=SimpleNamespace(reference={0: [get_options()['DOI'], doi]}),
+                       uri=reference, set_index=set_index)
+        project_id = project.pk
+        transaction.on_commit(lambda: start_lookup(project_id, set_index, external_id, doi))
 
     def fill_citation(self, project, text, external_id, set_index, catalog='', snapshot=None):
         '''Populate publication citation metadata from the MaRDI Portal or Wikidata.
@@ -175,6 +218,10 @@ class Information:
 
         # Structure the data
         data = Publication.from_query([row])
+        if source == 'wikidata':
+            # Some Wikidata publications have their DOI with a leading "/"; the user
+            # cannot correct it (a hidden answer), and the portal does not take it
+            data.reference = {index: [option, text.lstrip('/')] for index, (option, text) in data.reference.items()}
 
         add_references(
             project   = project,
@@ -220,3 +267,48 @@ class Information:
             snapshot  = instance.snapshot,
             set_index = instance.set_index
         )
+
+
+def start_lookup(project_id, set_index, external_id, doi):
+    '''Start :func:`lookup_publication` in a thread of its own (the interview does not wait for it).'''
+    threading.Thread(target=lookup_publication, args=(project_id, set_index, external_id, doi),
+                     daemon=True).start()
+
+
+def lookup_publication(project_id, set_index, external_id, doi):
+    '''Look up the citation of the new publication *set_index* by its DOI and write it (#158).
+
+    Asks every source (:func:`~.utils.get_citation`: the MaRDI Portal,
+    Wikidata, Crossref, DataCite, zbMATH, doi.org, ORCID for the authors),
+    then writes the citation of the most trusted one into the publication's
+    hidden answers (:func:`~.worker.write_citation`), not its ID nor any
+    relation.  Nothing is written if no source knows the publication, or if
+    the page has another publication by now (changed or deleted while the
+    lookup ran); the preview fills a missing citation later.  Runs in a
+    thread of its own: it closes its database connection at the end.
+    '''
+    try:
+        citations = get_citation(doi.upper())
+        data = best_citation(citations) if citations else None
+        if data is None:
+            logger.info('No source knows the publication %s', doi)
+            return
+        project = Project.objects.filter(pk=project_id).first()
+        publication = get_questions('publication')["Publication"]
+        unchanged = project is not None and Value.objects.filter(
+            project=project, snapshot=None, attribute__uri=f'{BASE_URI}{publication["ID"]["uri"]}',
+            set_prefix='', set_index=set_index, external_id=external_id,
+        ).exists() and Value.objects.filter(
+            project=project, snapshot=None, attribute__uri=f'{BASE_URI}{publication["Reference"]["uri"]}',
+            set_index=set_index, text=doi,
+        ).exists()
+        if not unchanged:
+            return
+        clean_background_data(key_dict=BACKGROUND_DATA, questions=publication, project=project,
+                              snapshot=None, set_index=set_index)
+        write_citation(project, set_index, data)
+    except Exception:  # pylint: disable=broad-exception-caught
+        # A thread of its own: nobody would see the error otherwise
+        logger.exception('Could not look up the publication %s', doi)
+    finally:
+        connection.close()

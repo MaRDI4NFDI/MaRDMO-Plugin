@@ -1,11 +1,11 @@
 {% load i18n mardmo_tags %}
 {# A publication as the export writes it: DOI, citation, what is new on the MaRDI Portal, authors and journal #}
+{# Problems with the DOI are marked at the ID, where it is given (#158) #}
 {% for reference in values.reference.values %}
     {% if reference.0 == option.DOI %}
         <b>DOI</b>: {{ reference.1 }} <br>
     {% endif %}
 {% endfor %}
-{% marks values "reference" as reference_marks %}{% if reference_marks %}{{ reference_marks }} <br>{% endif %}
 {% publication_info values as pub %}
 {% if pub.citation %}
     <b>{% translate "Citation" %}</b>: {{ pub.citation }} <br>

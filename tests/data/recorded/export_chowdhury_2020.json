@@ -1,5 +1,28 @@
 [
  {
+  "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"query\"], [\"format\", \"json\"], [\"list\", \"search\"], [\"srlimit\", \"50\"], [\"srnamespace\", \"120\"], [\"srprop\", \"\"], [\"srsearch\", \"P27=10.48550/ARXIV.2003.02573|haswbstatement:P27=10.1088/0031-9155/9/2/307\"]], null]",
+  "url": "https://portal.mardi4nfdi.de/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":0},\"search\":[]}}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "query",
+    "list": "search",
+    "srsearch": "haswbstatement:P27=10.1088/0031-9155/9/2/307|P27=10.48550/ARXIV.2003.02573",
+    "srnamespace": 120,
+    "srlimit": 50,
+    "srprop": "",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
   "key": "[\"GET\", \"https://portal.mardi4nfdi.de/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q106331|Q6534304|Q6673694|Q6673699|Q6673705|Q6673803|Q6673912|Q6674045\"], [\"props\", \"claims\"]], null]",
   "url": "https://portal.mardi4nfdi.de/w/api.php",
   "status": 200,

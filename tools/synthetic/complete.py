@@ -30,14 +30,6 @@ def references(doc, *sections, option='described-at-url', text='https://portal.m
                 page.answer('reference', (option, text))
 
 
-def publication_dois(doc):
-    '''Remove the leading "/" of DOIs some Wikidata publications have (portal publications keep theirs, #167).'''
-    for page in filter(created, doc.tabs('publication')):
-        for index, doi in enumerate(page.texts('reference')):
-            if doi.startswith('/'):
-                page.change('reference', doi.lstrip('/'), collection_index=index)
-
-
 def missing(page, answers, within=()):
     '''Answer each ``{question: answer}`` of *answers* the page has no answer to (pages of created items only).'''
     if not created(page):

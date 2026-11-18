@@ -41,7 +41,8 @@ rule serves all three places.
 | Long descriptions and other answers exported as text | No line breaks | No line breaks |
 | Data properties | No mutually exclusive pair (e.g. *linear* and *nonlinear*) | Same |
 | QUDT IDs | Starts with an uppercase letter, then letters, `_` or `-` | At least two characters |
-| DOIs (publications, references, documentation, data set publication) | A beginning of `10.NNNN/suffix`; links (`https://doi.org/…`) are rejected | Complete `10.NNNN/suffix` (sub-prefixes such as `10.1000.10/` allowed) |
+| DOIs (references, documentation, data set publication) | A beginning of `10.NNNN/suffix`; links (`https://doi.org/…`) are rejected | Complete `10.NNNN/suffix` (sub-prefixes such as `10.1000.10/` allowed) |
+| Publications (selected by their identifier, `doi:10.…`, #158) | A complete `10.NNNN/suffix` after `doi:` (a pasted link is reduced to the DOI); portal and Wikidata publications are not checked | Complete `10.NNNN/suffix` |
 | URLs (references, documentation) | No spaces or forbidden characters, a beginning of an allowed scheme, at most 500 characters | Additionally: an allowed scheme and a domain such as `example.org` |
 | swMATH IDs | Digits only; links are rejected | Same |
 | Archival year | Up to four digits | Exactly four digits |

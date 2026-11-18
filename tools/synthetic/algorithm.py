@@ -1,6 +1,6 @@
 '''The synthetic documentation of the algorithm catalog (see tools/synthetic/model.py for the idea).'''
 from . import complete
-from .writer import New, Portal, Typed, Wikidata
+from .writer import Doi, New, Portal, Typed, Wikidata
 
 QUICKSORT = Portal('Q6825489', 'Quicksort')
 THOMAS = Portal('Q6825618', 'Thomas algorithm')
@@ -18,8 +18,9 @@ MNIST = Wikidata('Q17069496', 'MNIST database')
 PYTHON = Portal('Q6230810', 'Python')
 FORTRAN = Portal('Q56773', 'Fortran')
 FORTRAN_90 = Wikidata('Q20754790', 'Fortran 90')
-HEROIN_EPIDEMICS = Portal('Q2643268', 'Heroin epidemics, treatment and ODE modelling')
-SEG1D_WIKIDATA = Wikidata('Q106245557', 'seg1d: A Python package for Automated segmentation of one-dimensional (1D) data')
+# Publications are selected by their DOI (#158)
+HEROIN_EPIDEMICS = Doi('10.1016/J.MBS.2006.10.008', 'mardi:Q2643268')      # Heroin epidemics, treatment and ODE modelling
+SEG1D_WIKIDATA = Doi('10.21105/joss.02404', 'wikidata:Q106245557')       # seg1d, only on Wikidata
 
 
 def synthetic(kind, letter):
@@ -115,15 +116,12 @@ def describe(doc):
                                                                'benchmark-or-software-relatant': [benchmark_a, HPL]})
     publication = doc.tab('publication', 'P2', SEG1D_WIKIDATA)
     publication.block('publication-to-algorithm', {'algorithm-relation': 'applies', 'algorithm-relatant': [algorithm_b]})
-    # New publications: one of arXiv, which the MaRDI Portal has already (the preview makes it
-    # the portal item); one nowhere yet (two authors with ORCID iD, its journal)
-    publication = doc.tab('publication', 'P3', New('Structure-Preserving Integrators', ''))
-    publication.answer('reference', ('doi', '10.48550/arXiv.2611.17256'))
+    # Typed by their DOI: one of arXiv, which the MaRDI Portal has already (the dropdown
+    # offers the portal item); one nowhere yet (new: two authors with ORCID iD, its journal)
+    publication = doc.tab('publication', 'P3', Doi('10.48550/arXiv.2611.17256', 'mardi:Q7433372'))
     publication.block('publication-to-algorithm', {'algorithm-relation': 'invents', 'algorithm-relatant': [algorithm_a]})
-    publication = doc.tab('publication', 'P4', New('pysqa', ''))
-    publication.answer('reference', ('doi', '10.21105/joss.10961'))
+    publication = doc.tab('publication', 'P4', Doi('10.21105/joss.10961'))
     publication.block('publication-to-benchmark-or-software', {'documents-uses-relation': 'documents',
                                                                'benchmark-or-software-relatant': [software_b]})
     complete.descriptions(doc, 'algorithm', 'problem', 'software', 'benchmark')
     complete.references(doc, 'software', 'benchmark')
-    complete.publication_dois(doc)

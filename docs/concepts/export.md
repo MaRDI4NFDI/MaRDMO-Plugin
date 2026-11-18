@@ -25,8 +25,12 @@ answers dict, and `prepare.preview()` pre-processes the data into display-ready
 structures for the template (e.g. paired algorithm–software entries, model–task
 pairs).
 
-Publications taken from Wikidata or entered by the user are looked up by their DOI
-(MaRDI Portal, Wikidata, Crossref, DataCite, zbMATH, doi.org, ORCID).  Up to three
+Publications taken from Wikidata or new ones (selected by their DOI) that have no
+citation yet (no title) are looked up by their DOI (MaRDI Portal, Wikidata,
+Crossref, DataCite, zbMATH, doi.org, ORCID); a new publication usually has its
+citation already, from the lookup in the background when it was selected (#158).
+The preview changes no ID: a publication on the portal is offered in the box
+"Items already on the MaRDI Portal" (by its DOI) instead.  Up to three
 publications are looked up at the same time, and the result for a DOI is kept in
 Django's cache for an hour, so clicking the preview again does not repeat the
 lookups.  A result is only kept if the MaRDI Portal and Wikidata answered and some
@@ -412,7 +416,7 @@ matching RDMO project Values in place:
   holding one of the item's `user:` IDs (pages, relations, inline items) gets
   `mardi:<QID>` and the text "Label (Description)".  The payload entry
   of the item carries these IDs (`user_ids`); only its `payload` is sent.
-- **Publications created from a DOI**: their ID question gets the new item, as
+- **New publications** (selected by their DOI): their ID question gets the new item, as
   for the other user-defined items.
 
 After the catalog update, a success page is rendered showing the exported data in
