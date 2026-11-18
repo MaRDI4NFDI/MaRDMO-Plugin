@@ -105,9 +105,13 @@ export changes IDs afterwards (see below).
 | `mardi:` / `wikidata:` → new item | the page is the template of a new item | a new `user:` ID |
 | any other change | another item | the selected item's ID |
 
-Publications are no templates: a publication is either on the portal or
-Wikidata, or the user's own and entered with its DOI.  Saving the ID of a
-publication page clears the data of the previous one.
+Publications are no templates: a publication is selected by its identifier
+(#158).  The dropdown offers a new publication as the DOI itself, the option
+`new:doi:<DOI>` with the text `doi:<DOI>`; saving it gives the page a
+`user:` ID (`ids.assign_id`) and keeps the text, and the DOI travels on the
+saved value to the publication handler (`value.mardmo_doi`), which stores it
+as the page's hidden reference.  Saving the ID of a publication page clears
+the data of the previous one.
 
 ## Deleting a page
 

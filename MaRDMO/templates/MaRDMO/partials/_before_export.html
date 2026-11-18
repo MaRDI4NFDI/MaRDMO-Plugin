@@ -48,9 +48,9 @@
         {% for row in duplicates.rows %}
             <li class="mardmo-duplicate" data-action="{{ row.action }}">
                 {% if row.duplicate.source == 'wikidata' %}
-                {% include "MaRDMO/partials/_item_card.html" with source="wikidata" label=row.duplicate.item.Name description=row.duplicate.item.Description %}
+                {% include "MaRDMO/partials/_item_card.html" with source="wikidata" label=row.name description=row.duplicate.item.Description %}
                 {% else %}
-                {% include "MaRDMO/partials/_item_card.html" with source="new" label=row.duplicate.item.Name description=row.duplicate.item.Description %}
+                {% include "MaRDMO/partials/_item_card.html" with source="new" label=row.name description=row.duplicate.item.Description %}
                 {% endif %}
                 <div class="mardmo-duplicate__details">
                     <div class="mardmo-duplicate__where">
@@ -71,6 +71,13 @@
                             <a href="{{ mardiURI }}{{ row.duplicate.qid }}" target="_blank" rel="noopener">{{ row.duplicate.qid }}</a>
                         {% endif %}
                     </div>
+                    {% if row.action == 'blocked' %}
+                    {# Another publication with the same label and description: nothing to decide (#158) #}
+                    <div class="mardmo-decision">
+                        <span class="mardmo-caption">{% translate "Your decision" %}</span>
+                        {% for reason in row.reasons %}<p>{{ reason }}</p>{% endfor %}
+                    </div>
+                    {% else %}
                     {% with number=forloop.counter %}
                     <fieldset class="mardmo-decision">
                         <legend class="mardmo-caption">{% translate "Your decision" %}</legend>
@@ -84,8 +91,11 @@
                                 <input type="radio" name="decision-{{ number }}" id="use-{{ number }}" value="use" class="mardmo-decision__use" disabled>
                                 <label for="use-{{ number }}" title="{% if row.reasons %}{{ row.reasons|join:' ' }}{% else %}{% translate 'This item cannot become the portal item.' %}{% endif %}">{% translate "Use this item" %}</label>
                                 {% endif %}
+                                {# A publication with the DOI of a portal item is that item: there is nothing to redefine (#158) #}
+                                {% if row.duplicate.rule != 'doi' %}
                                 <input type="radio" name="decision-{{ number }}" id="redefine-{{ number }}" value="redefine" class="mardmo-decision__redefine">
-                                <label for="redefine-{{ number }}" title="{% if row.action == 'replace' %}{% translate 'Redefine: go back to the interview and choose another item, or make it a new item.' %}{% elif row.duplicate.rule == 'documentation' %}{% translate 'Redefine: go back to the interview and give your item a new label and description, or select the Wikidata item there.' %}{% else %}{% translate 'Redefine: go back to the interview and give your item a new label and description.' %}{% endif %}">{% translate "Redefine" %}</label>
+                                <label for="redefine-{{ number }}" title="{% if row.duplicate.item.doi %}{% translate 'Redefine: go back to the interview and check the DOI of the publication.' %}{% elif row.action == 'replace' %}{% translate 'Redefine: go back to the interview and choose another item, or make it a new item.' %}{% elif row.duplicate.rule == 'documentation' %}{% translate 'Redefine: go back to the interview and give your item a new label and description, or select the Wikidata item there.' %}{% else %}{% translate 'Redefine: go back to the interview and give your item a new label and description.' %}{% endif %}">{% translate "Redefine" %}</label>
+                                {% endif %}
                             </span>
                             {% if row.action != 'reuse' %}
                             {# Why this item cannot be used, and what to do: on tap too (hover texts are not shown on touch screens) #}
@@ -94,7 +104,9 @@
                                 <div class="mardmo-why__text">
                                     {% for reason in row.reasons %}<p>{{ reason }}</p>{% endfor %}
                                     <p>
-                                    {% if row.action == 'rename' and row.duplicate.rule == 'documentation' %}
+                                    {% if row.duplicate.item.doi %}
+                                        {% translate "The name and description of a publication are those of its citation. Check its DOI on its page." %}
+                                    {% elif row.action == 'rename' and row.duplicate.rule == 'documentation' %}
                                         {% translate "Give your item a new label and description on its page, or select the Wikidata item there." %}
                                     {% elif row.action == 'replace' %}
                                         {% translate "Choose another item on its page, or make it a new item: the portal item is another kind of item, and a new name would not change its Wikidata QID." %}
@@ -120,7 +132,16 @@
                                class="btn btn-default btn-sm mardmo-button-link mardmo-decision__then mardmo-decision__then--redefine">{% translate "To interview" %}</a>
                         </div>
                     </fieldset>
+                    {% if row.duplicate.rule == 'doi' %}
+                    <p class="mardmo-note">
+                        {% blocktranslate trimmed with qid=row.duplicate.qid %}
+                        The MaRDI Portal has this DOI as {{ qid }}: it is this publication. If the DOI is wrong, correct it on the publication's page.
+                        {% endblocktranslate %}
+                        <a href="{% if row.locations %}{{ row.locations.0.url }}{% else %}{% url 'project_interview' project.pk %}{% endif %}" target="_blank" rel="noopener">{% translate "To interview" %}</a>
+                    </p>
+                    {% endif %}
                     {% endwith %}
+                    {% endif %}
                 </div>
             </li>
         {% endfor %}

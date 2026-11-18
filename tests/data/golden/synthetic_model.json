@@ -9688,7 +9688,7 @@
          "id": "P16"
         },
         "value": {
-         "content": "Item0000000087",
+         "content": "Item0000000086",
          "type": "value"
         }
        },
@@ -9698,7 +9698,7 @@
          "id": "P16"
         },
         "value": {
-         "content": "Item0000000088",
+         "content": "Item0000000087",
          "type": "value"
         }
        }
@@ -9862,9 +9862,9 @@
      []
     ],
     [
-     "P43",
-     "string",
-     "Cyril Donnelly",
+     "P16",
+     "wikibase-item",
+     "Item0000000086",
      []
     ],
     [
@@ -9874,9 +9874,9 @@
      []
     ],
     [
-     "P16",
-     "wikibase-item",
-     "Item0000000088",
+     "P43",
+     "string",
+     "Cyril Donnelly",
      []
     ]
    ],
@@ -10022,7 +10022,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000087": {
+  "Item0000000086": {
    "class": "Author",
    "description": "researcher ORCID ID = 0000-0003-3662-7203",
    "id": "",
@@ -10114,7 +10114,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items"
   },
-  "Item0000000088": {
+  "Item0000000087": {
    "class": "Author",
    "description": "",
    "id": "Q1890089",
@@ -10411,7 +10411,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:f957a3e0-2e49-546c-87e5-da32511bd954"
+    "user:f6d66a9c-3c50-50c9-a384-369f2118e7d3"
    ]
   },
   "Item0000000090": {
@@ -11645,7 +11645,7 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000088/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000087/statements"
   },
   "RELATION142": {
    "exists": "true",
@@ -11663,7 +11663,7 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000088/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000087/statements"
   },
   "RELATION143": {
    "exists": "true",
@@ -11681,7 +11681,7 @@
      }
     }
    },
-   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000088/statements"
+   "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items/Item0000000087/statements"
   },
   "RELATION144": {
    "exists": "true",
@@ -14144,8 +14144,8 @@
   "Item0000000081",
   "Item0000000084",
   "Item0000000085",
+  "Item0000000086",
   "Item0000000087",
-  "Item0000000088",
   "Item0000000089",
   "Item0000000090",
   "Item0000000091",

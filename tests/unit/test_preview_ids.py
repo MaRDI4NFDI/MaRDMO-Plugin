@@ -33,8 +33,12 @@ def checked(answers, *checks, catalog=CATALOG_MODEL):
 
 def test_own_publication_without_doi_is_marked():
     answers = checked({'publication': {0: {'ID': OWN, 'Name': 'p', 'Description': 'a paper'}}}, 'publication')
-    html = render_to_string('MaRDMO/partials/_publication.html', {'values': answers['publication'][0], 'option': {}})
+    # At the ID, where the DOI is given (#158)
+    html = render_to_string('MaRDMO/partials/_id.html', {'values': answers['publication'][0],
+                                                         'id': answers['publication'][0]['ID']})
     assert 'Missing Publication DOI' in html
+    assert 'Missing Publication DOI' not in render_to_string('MaRDMO/partials/_publication.html', {
+        'values': answers['publication'][0], 'option': {}})
 
 
 def test_own_formula_without_reference_is_marked_in_the_basics_catalog():
@@ -64,3 +68,38 @@ def test_own_page_with_the_name_and_description_of_an_earlier_one_is_marked():
         'values': answers['problem'][2], 'name': 'reaction rate'}))
     assert 'problem3: reaction rate' in html
     assert 'Same Name and Short Description as Page problem1' in html
+
+
+# --- New publications, selected by their DOI (#158) ----------------------------------------------
+
+def new_publication(doi, **answers):
+    from MaRDMO.getters import get_options  # noqa: PLC0415
+    return {'ID': OWN, 'reference': {0: [get_options()['DOI'], doi]}, **answers}
+
+
+def problems(entry):
+    '''The problems of *entry*, without those of its relations (every publication needs one).'''
+    return {field: [str(problem) for problem in found] for field, found in (entry.get('Problems') or {}).items()
+            if not field.startswith('Relation')}
+
+
+def test_a_new_publication_without_citation_is_marked_at_its_id():
+    answers = checked({'publication': {0: new_publication('10.1000/x')}}, 'id_name_description', 'publication')
+    # Its name and description come with the citation: no mark for them, the user cannot give them
+    assert problems(answers['publication'][0]) == {
+        'ID': ['No citation found for the DOI 10.1000/x: check the DOI, or open the preview again later']}
+    heading = text(render_to_string('MaRDMO/preview_model_basics.html', {'answers': answers, 'option': {}}))
+    assert 'doi:10.1000/x' in heading
+
+
+def test_a_new_publication_with_citation_is_not_marked():
+    answers = checked({'publication': {0: new_publication('10.1000/x', Name='seg1d', Description='scientific article')}},
+                      'id_name_description', 'publication')
+    assert problems(answers['publication'][0]) == {}
+
+
+def test_an_invalid_doi_is_marked_at_the_id():
+    answers = checked({'publication': {0: new_publication('11.1000/x', Name='p', Description='a paper')}},
+                      'publication')
+    assert list(problems(answers['publication'][0])) == ['ID']
+    assert 'Invalid Publication DOI' in problems(answers['publication'][0])['ID'][0]

@@ -22,6 +22,7 @@ Provides:
 '''
 
 import hashlib
+import json
 import logging
 import re
 from multiprocessing.pool import ThreadPool
@@ -302,17 +303,19 @@ def _lookup_citation(doi):
     choice = None
 
     # Define MaRDI Portal / Wikidata / MathAlgoDB SPARQL Queries
+    # The DOI as a SPARQL string: a quotation mark or backslash in it would end the string early
+    literal = json.dumps(doi)
     mardi_query = get_sparql_query(
         'publication/queries/full_doi_mardi.sparql'
     ).format(
-        doi,
+        literal,
         **get_items(),
         **get_properties()
     )
     wikidata_query = get_sparql_query(
         'publication/queries/full_doi_wikidata.sparql'
     ).format(
-        doi
+        literal
     )
 
     # Get Citation Data from MaRDI Portal / Wikidata / MathAlgoDB; a failed

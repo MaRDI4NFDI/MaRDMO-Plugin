@@ -425,6 +425,27 @@ def validate_doi(instance):
         })
 
 
+def validate_publication_id(instance):
+    '''Reject a publication typed by an identifier that is not valid (#158).
+
+    A publication is selected by its identifier with its prefix; the
+    dropdown offers an invalid one too, so that saving it gives the reason.
+    Publications of the MaRDI Portal and Wikidata (their label as text) are
+    not checked.
+
+    Raises:
+        ValidationError: when the text is a ``doi:`` identifier with a DOI
+            that is missing or not complete and valid.
+    '''
+    from .ids import publication_doi  # pylint: disable=import-outside-toplevel
+    doi = publication_doi(instance.text)
+    if doi is None:
+        return
+    problem = doi_problem(doi) if doi else gettext('DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)')
+    if problem:
+        raise ValidationError({'text': [gettext('Invalid DOI: {problem}').format(problem=problem)]})
+
+
 def validate_url(instance):
     '''Reject a URL that can never become valid while it is being typed.
 

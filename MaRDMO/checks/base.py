@@ -470,6 +470,10 @@ class ChecksBase:
                             field   = 'ID'
                         )
                     )
+                # A new publication has the name and description of its
+                # citation: publication() reports one without
+                if okey == 'publication' and is_own_item(ivalue.get('ID')) and not ivalue.get('Name'):
+                    continue
                 # The export does not change the name and description of a
                 # portal item: what is wrong with them is a hint there
                 if not ivalue.get('Name'):
@@ -547,7 +551,9 @@ class ChecksBase:
     def publication(self, project, data, catalog):
         '''Check Publication documentation completeness.
 
-        Flags user-defined publications that have no DOI reference.  In
+        Flags new publications without DOI, with an invalid one, or without
+        citation (none found for the DOI); on the ID answer, where the DOI is
+        given (#158).  In
         algorithm mode, at least one Algorithm or Benchmark/Software link is
         required; in model mode, a Mathematical Model Entity link is mandatory.
 
@@ -558,20 +564,31 @@ class ChecksBase:
         '''
         for ikey, ivalue in data.get('publication', {}).items():
             page_name = self._page('publication', ikey, ivalue)
-            if is_own_item(ivalue.get('ID')) and not ivalue.get('reference'):
+            # The DOI is the publication's ID answer (doi:10.…, #158), where it is marked
+            doi = find_reference(ivalue.get('reference'), get_options()['DOI'])
+            if is_own_item(ivalue.get('ID')) and not doi:
                 self.err.append(
                     self._error(
                         section = N_('Publication'),
                         page    = page_name,
                         message = _('Missing Publication DOI'),
-                        field   = 'reference'
+                        field   = 'ID'
                     )
                 )
-            doi = find_reference(ivalue.get('reference'), get_options()['DOI'])
             if doi and doi_problem(doi[1]):
                 self._invalid(N_('Publication'), page_name,
                               _('Invalid Publication DOI: {problem}').format(problem=doi_problem(doi[1])),
-                              'reference', [doi[1]])
+                              'ID', [doi[1]])
+            elif doi and is_own_item(ivalue.get('ID')) and not ivalue.get('Name'):
+                self.err.append(
+                    self._error(
+                        section = N_('Publication'),
+                        page    = page_name,
+                        message = _('No citation found for the DOI {doi}: check the DOI, '
+                                    'or open the preview again later').format(doi=doi[1]),
+                        field   = 'ID'
+                    )
+                )
 
             if catalog == CATALOG_ALGORITHM:
                 # Algorithm mode: optional links, but at least one required

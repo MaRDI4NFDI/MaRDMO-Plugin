@@ -1,6 +1,6 @@
 # Publication Retrieval
 
-Publication fields in MaRDMO can be filled in two ways: the user can select an existing item directly from the MaRDI Portal or Wikidata, or they can enter a **DOI** and let MaRDMO fetch the metadata automatically.  This page describes the DOI lookup path and how authors and journals are resolved.
+A publication is selected by its identifier (#158), for now its **DOI** typed as `doi:10.…`.  The dropdown (`queries.publication_options`) searches the MaRDI Portal and Wikidata for it at once (`haswbstatement`, which ignores the case of a DOI) and offers the portal publication if the portal has it, else the Wikidata publication, else the DOI itself as a new publication (`new:doi:<DOI>`, tagged *new*).  An invalid DOI is offered too, without a search: the pre-save validator (`validate_publication_id`) refuses it with the reason.  A new publication's citation is looked up in the background after it is saved (see [Handlers](handlers.md)), and by the preview if it is still missing.  This page describes the DOI lookup and how authors and journals are resolved.
 
 ## Source Cascade
 

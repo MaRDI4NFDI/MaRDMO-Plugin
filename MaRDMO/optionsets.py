@@ -40,6 +40,8 @@ class Search:
         min_search: Characters needed before searching: 1 where one-letter names
                     exist (programming languages and software: C, R), else 3 (a
                     single letter matches hundreds of items and slows the search).
+        by_identifier: Search by an identifier with its prefix instead of the
+                    label (publications: ``doi:10.…``, #158).
     '''
     label: str
     item_class: Union[str, list]
@@ -50,6 +52,7 @@ class Search:
     not_found: bool = True
     refresh: bool = False
     min_search: int = 3
+    by_identifier: bool = False
 
     @property
     def with_answers(self):
@@ -91,7 +94,8 @@ PROVIDERS = {
     'RelatedTaskWithoutCreation': Search('Options for related Tasks without Creation', 'computational task', answers=['task'], sources=['mardi']),
     'RelatedModelEntityWithoutCreation': Search('Options for related Model Entities without Creation', ['academic discipline', 'research problem', 'mathematical model', 'quantity', 'kind of quantity', 'formula', 'computational task'], answers=['field', 'problem', 'model', 'quantity', 'formulation', 'task'], sources=['mardi']),
     # publication
-    'Publication': Search('Options for Publication', ['publication', 'scholarly article'], refresh=True),
+    'Publication': Search('Options for Publication', ['publication', 'scholarly article'], refresh=True,
+                          by_identifier=True),
     # search
     'ResearchFieldMaRDIOnly': Search('Options for Research Fields (MaRDI Only)', ['academic discipline'], sources=['mardi'], not_found=False),
     'MathematicalModelMaRDIOnly': Search('Options for Mathematical Models (MaRDI Only)', ['mathematical model'], sources=['mardi'], not_found=False),

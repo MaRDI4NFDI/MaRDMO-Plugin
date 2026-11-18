@@ -9,7 +9,7 @@ from .model import (
     EPIDEMIC, HEROIN_EPIDEMICS, HEROIN_EPIDEMICS_WIKIDATA, KINETIC_SIMULATION, BLACK_SCHOLES, PARAMETER_ESTIMATION,
     SIS_INFECTIOUS, SIS_MODEL, SPREADING, STATIONARY_NAVIER_STOKES, WAVE_EQUATION, synthetic,
 )
-from .writer import New, Typed
+from .writer import Doi, Typed
 
 FORMULA_RELATIONS = ('assumes', 'contains', 'contains-analytical-solution', 'contains-boundary-condition',
                      'contains-computational-domain', 'contains-constraint-condition',
@@ -141,6 +141,5 @@ def describe(doc):
         publication.block('publication-to-entity', {'entity-relation': relation, 'entity-relatant': [relatant]})
     publication = doc.tab('publication', 'P2', HEROIN_EPIDEMICS_WIKIDATA)
     publication.block('publication-to-entity', {'entity-relation': 'documents', 'entity-relatant': [model_b, SIS_MODEL]})
-    publication = doc.tab('publication', 'P3', New('KIM', ''))
-    publication.answer('reference', ('doi', '10.21105/joss.11112'))
+    publication = doc.tab('publication', 'P3', Doi('10.21105/joss.11112'))         # KIM, new
     publication.block('publication-to-entity', {'entity-relation': 'uses', 'entity-relatant': [task_a]})

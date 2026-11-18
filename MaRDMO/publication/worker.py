@@ -23,7 +23,7 @@ from ..constants import BASE_URI
 from ..getters import get_items, get_options, get_properties, get_questions
 from ..helpers import commit_writes, date_precision, find_reference, value_editor
 from ..markers import MARKER_PROPERTIES, SECTION_MARKERS, allowed
-from ..ids import is_user_id, item_text
+from ..ids import is_user_id
 
 # Publications whose citation data is looked up at the same time
 CITATION_LOOKUPS_IN_PARALLEL = 3
@@ -51,6 +51,39 @@ def _single_line(text):
     return ' '.join(html.unescape(_FORMATTING_TAG_RE.sub('', text)).split())
 
 
+# The sources of a citation, in the order they are trusted
+CITATION_SOURCES = ('mardi', 'wikidata', 'crossref', 'datacite', 'zbmath', 'doi')
+
+
+def best_citation(citations):
+    '''The citation of the first source in :data:`CITATION_SOURCES` that knows the publication, or ``None``.
+
+    Args:
+        citations: The result of :func:`~.utils.get_citation` (``{source: Publication or None}``).
+    '''
+    return next((citations[source] for source in CITATION_SOURCES if citations.get(source)), None)
+
+
+def write_citation(project, set_index, data):
+    '''Write the citation *data* (:class:`~.models.Publication`) into the hidden answers of publication *set_index*.
+
+    Name, description, entry type, title, date, volume, issue, pages, and the
+    languages, journals and authors, each as one answer (metadata text on one
+    line, see :func:`_single_line`).  The preview writes them, and the lookup
+    of a new publication in the background (#158).
+    '''
+    questions = get_questions('publication')["Publication"]
+    for uri, data_key in (ITEMINFOS | CITATIONINFOS).items():
+        value_editor(project=project, uri=f'{BASE_URI}{questions[uri]["uri"]}',
+                     info={'text': _single_line(getattr(data, data_key)), 'set_index': set_index})
+    for parts, mapping in ((data.language, LANGUAGES), (data.journal, JOURNALS), (data.authors, AUTHORS)):
+        for idx, part in enumerate(parts):
+            for uri, data_key in mapping.items():
+                value_editor(project=project, uri=f'{BASE_URI}{questions[uri]["uri"]}',
+                             info={'text': _single_line(getattr(part, data_key)), 'collection_index': idx,
+                                   'set_index': set_index})
+
+
 class PublicationRetriever:
     '''Retrieve Metadata from MaRDI Portal, Wikidata, and other
        sources like Crossref, DataCite, zbMath, DOI, and ORCid for Workflow,
@@ -60,131 +93,44 @@ class PublicationRetriever:
     questions = get_questions('publication')
 
     def get_information(self, project, snapshot, answers):
-        '''Fetch and store citation metadata for all publications in *answers*.
+        '''Look up and store the citations that new and Wikidata publications are missing (#158).
 
-        Iterates over ``answers["publication"]``, skips entries without an ID,
-        then resolves
-        each publication via :func:`~.utils.get_citation` and writes the
-        resulting metadata fields (title, year, language, journal, authors,
-        etc.) back into the questionnaire.
+        The export creates both, with their citation.  A new publication
+        (``user:`` ID, selected by its DOI) gets it in the background when it
+        is selected; one whose lookup failed or has not finished, those of
+        imported projects, and the Wikidata publications (selected, or added
+        with a Wikidata item) get it here.  Publications of the MaRDI Portal
+        need none.  Nothing here changes the ID of a publication.
 
         Args:
             project:  RDMO project instance.
             snapshot: RDMO snapshot (``None`` for the current snapshot).
-            answers:  Top-level answers dict (mutated in place with citation data).
+            answers:  Top-level answers dict; the caller reads the answers
+                      again to show what was stored.
+
+        Returns:
+            *answers*, unchanged.
         '''
-
-        citations = self._lookup_citations(answers)
-
-        for key in answers.get('publication', {}):
-
-            # If ID is missing (not answered or deleted)
-            if not answers['publication'][key].get('ID'):
+        for key, citations in self._lookup_citations(answers).items():
+            data = best_citation(citations)
+            if data is None:
                 continue
-
-            #Clean potential old data...
             clean_background_data(
-                key_dict = CITATIONINFOS | LANGUAGES | JOURNALS | AUTHORS,
+                key_dict  = ITEMINFOS | CITATIONINFOS | LANGUAGES | JOURNALS | AUTHORS,
                 questions = self.questions["Publication"],
-                project = project,
-                snapshot = snapshot,
+                project   = project,
+                snapshot  = snapshot,
                 set_index = key
             )
-
-            #If User selected a Publication from Wikidata or entered an own one...
-            if answers['publication'][key]['ID'].startswith(('wikidata', 'user:')):
-
-                #...check if DOI is available.
-                if not answers['publication'][key].get('reference', {}).get(0, ['',''])[1]:
-                    continue
-
-                #Get the Citation of several ressource.
-                data_all = citations[key]
-
-                #If Publication available at MaRDI, Wikidata, Crossref, Datacite, zbMath or DOI...
-                if any(
-                    data_all.get(k)
-                    for k in ("mardi", "wikidata", "crossref", "datacite", "zbmath", "doi")
-                ):
-
-                    data = (
-                        data_all.get('mardi')
-                        or data_all.get("wikidata")
-                        or data_all.get("crossref")
-                        or data_all.get("datacite")
-                        or data_all.get("zbmath")
-                        or data_all.get("doi")
-                    )
-
-                    #...add data to Questionnaire and...
-                    if data_all.get('mardi') or data_all.get('wikidata'):
-                        value_editor(
-                            project = project,
-                            uri = f'{BASE_URI}{self.questions["Publication"]["ID"]["uri"]}',
-                            info = {
-                                'text': item_text(_single_line(data.label), _single_line(data.description)),
-                                'external_id': data.id,
-                                'set_index': key
-                            }
-                        )
-
-                    for uri, data_key in (ITEMINFOS|CITATIONINFOS).items():
-                        value_editor(
-                            project = project,
-                            uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
-                            info = {
-                                'text': _single_line(getattr(data, data_key)),
-                                'set_index': key
-                            }
-                        )
-                    for idx, language in enumerate(data.language):
-                        for uri, data_key in LANGUAGES.items():
-                            value_editor(
-                                project = project,
-                                uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
-                                info = {
-                                    'text': _single_line(getattr(language, data_key)),
-                                    'collection_index': idx, 
-                                    'set_index': key
-                                }
-                            )
-                    for idx, journal in enumerate(data.journal):
-                        for uri, data_key in JOURNALS.items():
-                            value_editor(
-                                project = project,
-                                uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
-                                info = {
-                                    'text': _single_line(getattr(journal, data_key)),
-                                    'collection_index': idx, 
-                                    'set_index': key
-                                }
-                            )
-                    for idx, author in enumerate(data.authors):
-                        for uri, data_key in AUTHORS.items():
-                            value_editor(
-                                project = project,
-                                uri = f'{BASE_URI}{self.questions["Publication"][uri]["uri"]}',
-                                info = {
-                                    'text': _single_line(getattr(author, data_key)),
-                                    'collection_index': idx, 
-                                    'set_index': key
-                                }
-                            )
-
-                    #...output dictionary.
-                    if data_all.get('mardi') or data_all.get('wikidata'):
-                        answers['publication'][key]['ID'] = data.id
-                    answers['publication'][key]['Name'] = _single_line(data.label)
-                    answers['publication'][key]['Description'] = _single_line(data.description)
-
+            write_citation(project, key, data)
         return answers
 
     @staticmethod
     def _lookup_citations(answers):
-        '''Look up the citation data of all publications that need it, in parallel.
+        '''Look up the citations of the new and Wikidata publications with a DOI and no citation yet, in parallel.
 
-        These are the publications from Wikidata or entered by the user
-        (``user:`` ID) that have a DOI.
+        Without citation means without title (a Wikidata publication has its
+        name and description already).
 
         Returns:
             Dict mapping the publication's set index to the result of
@@ -193,7 +139,8 @@ class PublicationRetriever:
         dois = {
             key: publication['reference'][0][1].upper()
             for key, publication in answers.get('publication', {}).items()
-            if (publication.get('ID') or '').startswith(('wikidata', 'user:'))
+            if (is_user_id(publication.get('ID')) or (publication.get('ID') or '').startswith('wikidata:'))
+            and not publication.get('title')
             and publication.get('reference', {}).get(0, ['', ''])[1]
         }
         if not dois:
@@ -202,6 +149,7 @@ class PublicationRetriever:
         with ThreadPool(min(CITATION_LOOKUPS_IN_PARALLEL, len(dois))) as pool:
             results = pool.map(get_citation, dois.values())
         return dict(zip(dois, results))
+
 
 class PublicationExport:
     '''Base class providing author, journal, and publication export helpers.

@@ -1091,7 +1091,26 @@ def unique_items(data, title = None):
                 if isinstance(value, dict):
                     search(value, PART_KINDS.get(key, kind))
     search(data)
+    _add_publication_dois(data, items, seen_items)
     return items, dependency
+
+
+def _add_publication_dois(data, items, seen_items):
+    '''Give the items of the publication pages of *data* their DOI (``doi``), if they have one (#158).
+
+    The duplicate check finds publications on the MaRDI Portal by it
+    (:func:`~MaRDMO.duplicates.look_up`).
+    '''
+    from .getters import get_options  # pylint: disable=import-outside-toplevel
+    option = get_options()['DOI']
+    for page in (data.get('publication') or {}).values():
+        if not isinstance(page, dict) or not page.get('ID'):
+            continue
+        doi = find_reference(page.get('reference'), option)
+        key = seen_items.get((*item_key(page['ID'], page.get('Name', ''), page.get('Description', '')),
+                              page.get('orcid', ''), page.get('zbmath', ''), page.get('issn', ''), None))
+        if doi and doi[1] and key:
+            items[key].setdefault('doi', doi[1])
 
 def process_question_dict(project, questions, get_answer):
     """Iterate through the nested questions dict and collect answers via *get_answer*.

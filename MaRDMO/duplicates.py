@@ -3,8 +3,9 @@
 The export creates the user's own items and the Wikidata items it uses.  One
 of them is a duplicate if the portal has an item with exactly its label and
 description (the portal's own rule), a Wikidata item also if a portal item
-has its Wikidata QID (P12); also an own item with the label and description
-of a Wikidata item of the same documentation (the portal takes only one).
+has its Wikidata QID (P12), a publication also if a portal item has its DOI
+(#158); also an own item with the label and description of a Wikidata item
+of the same documentation (the portal takes only one).
 :func:`look_up` finds them; the export stops at them
 (:meth:`~MaRDMO.payload.GeneratePayload.process_items`), the preview lists
 them at the top (:func:`preview_duplicates`), with the action the user can
@@ -21,6 +22,13 @@ take:
   new name would not change its Wikidata QID, so the user chooses another
   item or makes it a new one.
 - ``unknown``: the portal item's markers could not be looked up.
+- ``blocked``: a publication whose label and description a portal
+  publication with another DOI has: another publication, which the portal
+  does not take under this label and description (the user cannot change
+  them, they are its citation's).
+
+A publication with the DOI of a portal item is that item: the user uses it,
+or corrects the DOI.
 
 Authors and journals of publications are not shown: MaRDMO takes them from
 the citation, the user cannot change them.  :func:`_resolve_parts` decides
@@ -29,6 +37,8 @@ for them in the background.
 from dataclasses import dataclass, field
 import logging
 import time
+
+import requests
 
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -39,7 +49,7 @@ from .getters import get_items
 from .helpers import unique_items
 from .ids import id_attributes, is_own_item, item_text
 from .markers import PUBLICATION_MARKERS, SECTION_MARKERS, class_families, contradictions
-from .queries import find_portal_items, portal_labels
+from .queries import find_portal_items, find_publications_by_doi, portal_dois, portal_labels
 
 logger = logging.getLogger(__name__)
 
@@ -75,9 +85,12 @@ def item_source(value):
 class Duplicate:
     """An item the export would create that exists on the portal as *qid*.
 
-    *rule*: ``wikidata`` (same Wikidata QID), ``label`` (same label and
-    description), or ``documentation`` (same label and description as the
-    item *other* of the same documentation; *qid* is empty).
+    *rule*: ``wikidata`` (same Wikidata QID), ``doi`` (a publication with
+    the same DOI), ``label`` (same label and description), ``other
+    publication`` (a publication with the label and description of a portal
+    publication with another DOI), or ``documentation`` (same label and
+    description as the item *other* of the same documentation; *qid* is
+    empty).
     """
     item: dict
     source: str
@@ -121,25 +134,65 @@ def look_up(items, waits, deadline):
         items) and the :class:`Duplicate` items.
     """
     created = [(source, item) for source, item in items if source in CREATED]
+    documented = [(source, item) for source, item in created if not item.get('kind')]
+    by_doi, doi_failed = _by_doi(documented, waits, deadline)
     found = find_portal_items(
         pairs=[(item['Name'], item['Description']) for _, item in created],
         wikidata_qids=[item['ID'] for source, item in created if source == 'wikidata'],
-        marker_qids=[item['ID'] for source, item in items if source == 'mardi'],
+        marker_qids=[item['ID'] for source, item in items if source == 'mardi']
+                    + [f'mardi:{qid}' for qid, _, _ in by_doi.values()],
         waits=waits,
         deadline=deadline,
     )
-    documented = [(source, item) for source, item in created if not item.get('kind')]
+    found.by_doi, found.doi_failed = by_doi, doi_failed
     duplicates = []
     for source, item in documented:
         twin = found.by_wikidata.get(item['ID'].split(':', 1)[-1]) if source == 'wikidata' else None
+        same_doi = by_doi.get((item.get('doi') or '').upper())
         same = found.by_label.get((item['Name'], item['Description']))
         if twin:
             duplicates.append(Duplicate(item, source, twin, 'wikidata'))
+        elif same_doi:
+            duplicates.append(Duplicate(item, source, same_doi[0], 'doi'))
         elif same:
             duplicates.append(Duplicate(item, source, same, 'label'))
+    if not doi_failed:
+        found.doi_failed = _other_publications(duplicates, waits, deadline)
     duplicates += _same_in_documentation(documented, {id(duplicate.item) for duplicate in duplicates})
     _resolve_parts([(source, item) for source, item in created if item.get('kind')], found, waits, deadline)
     return found, duplicates
+
+
+def _by_doi(documented, waits, deadline):
+    """``({DOI: (QID, label, description)}, failed)``: the portal publications with the DOIs of *documented* (#158)."""
+    dois = {item['doi'] for _, item in documented if item.get('doi')}
+    if not dois:
+        return {}, False
+    try:
+        return find_publications_by_doi(dois, waits, deadline), False
+    except (requests.exceptions.RequestException, ValueError) as error:
+        logger.warning("Could not look up publications on the MaRDI Portal by DOI: %s", error)
+        return {}, True
+
+
+def _other_publications(duplicates, waits, deadline):
+    """Mark the label duplicates that are other publications (rule ``other publication``); ``True`` if that failed.
+
+    A publication with a DOI whose namesake on the portal has a DOI too (not
+    its own, else the DOI had found it) is another publication.
+    """
+    candidates = [duplicate for duplicate in duplicates if duplicate.rule == 'label' and duplicate.item.get('doi')]
+    if not candidates:
+        return False
+    try:
+        dois = portal_dois({duplicate.qid for duplicate in candidates}, waits, deadline)
+    except (requests.exceptions.RequestException, ValueError) as error:
+        logger.warning("Could not look up the DOIs of portal publications: %s", error)
+        return True
+    for duplicate in candidates:
+        if dois.get(duplicate.qid):
+            duplicate.rule = 'other publication'
+    return False
 
 
 def _same_in_documentation(documented, reported):
@@ -216,6 +269,8 @@ class Row:
     '''An item of the preview's "Items already on the MaRDI Portal" (in "Before you export").'''
     duplicate: Duplicate
     action: str
+    # The item's name; a publication without citation is named by its DOI (#158)
+    name: str = ''
     portal_label: str = ''
     portal_description: str = ''
     # {'class': [names], 'community': [...], 'profile': [...]} of the portal item
@@ -269,6 +324,10 @@ def decide(duplicate, found, sections, catalog):
 
     *sections*: ``{item ID: sections}`` (``marker_sections`` of the worker).
     '''
+    if duplicate.rule == 'other publication':
+        return 'blocked', [_('The publication {qid} of the MaRDI Portal has the same label and description, but '
+                             'another DOI: it is another publication, and the portal takes only one item per label '
+                             'and description. MaRDMO cannot export this publication yet.').format(qid=duplicate.qid)]
     if duplicate.rule == 'documentation':
         other = duplicate.other
         return 'rename', [_('The Wikidata item {qid} of this documentation has the same label and description, '
@@ -303,7 +362,7 @@ def preview_duplicates(project, answers, prepare):
     '''
     found, duplicates = look_up(documentation_items(answers), PREVIEW_RETRY_WAITS,
                                 time.monotonic() + PREVIEW_DEADLINE)
-    report = Report(failed=found.label_failed or found.wikidata_failed)
+    report = Report(failed=found.label_failed or found.wikidata_failed or found.doi_failed)
     if not duplicates:
         return report
     sections = prepare.marker_sections(answers)
@@ -312,12 +371,14 @@ def preview_duplicates(project, answers, prepare):
     places = locations(project, [identifier for duplicate in duplicates for identifier in item_ids(duplicate.item)])
     for duplicate in duplicates:
         action, reasons = decide(duplicate, found, sections, prepare.catalog)
-        label, description = labels.get(duplicate.qid) or (
+        by_doi = found.by_doi.get((duplicate.item.get('doi') or '').upper()) if duplicate.rule == 'doi' else None
+        label, description = labels.get(duplicate.qid) or (by_doi[1:] if by_doi else None) or (
             (duplicate.item['Name'], duplicate.item['Description']) if duplicate.rule == 'label' else ('', ''))
         portal = found.markers.get(duplicate.qid) or {}
         report.rows.append(Row(
             duplicate=duplicate,
             action=action,
+            name=duplicate.item['Name'] or (f"doi:{duplicate.item['doi']}" if duplicate.item.get('doi') else ''),
             portal_label=label,
             portal_description=description,
             portal_markers={kind: _names(qids) for kind, qids in portal.items()},
@@ -388,12 +449,35 @@ def reuse(project, duplicate, label, description):
         external_id=f'mardi:{duplicate.qid}', text=item_text(label, description))
     for page in pages:
         section = page.attribute.uri.rsplit('/', 1)[0]
+        if section.endswith('/publication'):
+            changed += _reuse_publication(project, page.set_index, label, description)
+            continue
         prefix = f'{page.set_prefix}|{page.set_index}' if page.set_prefix else str(page.set_index)
         for field_name, text in (('name', label), ('description', description)):
             changed += Value.objects.filter(
                 project=project, snapshot=None, attribute__uri=f'{section}/{field_name}', set_prefix=prefix,
             ).update(text=text)
     return changed
+
+
+def _reuse_publication(project, set_index, label, description):
+    """The publication page *set_index* becomes the portal item's: its name and description, no citation (#158).
+
+    A publication keeps these on its own tab (``set_prefix`` ``''``).  The
+    citation is the portal item's, so the one looked up for the new
+    publication (title, authors, journal, ...) is removed; the DOI stays.
+    """
+    # pylint: disable=import-outside-toplevel
+    from .constants import BASE_URI
+    from .getters import get_questions
+    from .publication.constants import AUTHORS, CITATIONINFOS, JOURNALS, LANGUAGES
+    questions = get_questions('publication')['Publication']
+    page = Value.objects.filter(project=project, snapshot=None, set_index=set_index)
+    changed = 0
+    for key, text in (('Name', label), ('Description', description)):
+        changed += page.filter(attribute__uri=f'{BASE_URI}{questions[key]["uri"]}', set_prefix='').update(text=text)
+    citation = [f'{BASE_URI}{questions[key]["uri"]}' for key in CITATIONINFOS | LANGUAGES | JOURNALS | AUTHORS]
+    return changed + page.filter(attribute__uri__in=citation).delete()[0]
 
 
 def same_duplicate(report_rows, item_id, qid):

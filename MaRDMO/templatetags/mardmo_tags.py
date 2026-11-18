@@ -32,7 +32,8 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, gettext_noop as N_, ngettext
 
 from ..getters import get_options
-from ..ids import is_own_item
+from ..helpers import find_reference
+from ..ids import DOI_PREFIX, is_own_item
 from ..pages import PageRef
 from ..validators import formula_comment_problem
 from ..tex_check import FAILED, NOT_VERIFIED, failure_hint
@@ -215,6 +216,19 @@ def _portal_status(identifier, creatable=True):
     if identifier.startswith('mardi:'):
         return 'portal', identifier.split(':', 1)[1]
     return ('new' if creatable else 'name only'), ''
+
+
+@register.simple_tag
+def publication_name(values):
+    '''The name of a publication page: that of its citation, else its DOI (``doi:10.…``, #158).
+
+    Usage: ``{% publication_name values as name %}``.  A new publication
+    has no name until its citation is found.
+    '''
+    if values.get('Name'):
+        return values['Name']
+    doi = find_reference(values.get('reference'), get_options()['DOI'])
+    return f'{DOI_PREFIX}{doi[1]}' if doi else ''
 
 
 @register.simple_tag

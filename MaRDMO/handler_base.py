@@ -116,6 +116,30 @@ def portal_twins(relatants, markers):
             for qid, (twin, portal, label) in lookup.items() if _fits(portal, markers)}
 
 
+def publication_twins(publications, visited=()):
+    '''*publications* with the Wikidata ones replaced by their portal items, where there is one (#158).
+
+    The portal item is the twin with the Wikidata QID (P12) that is a
+    publication, else the portal publication with the Wikidata item's DOI.
+    A Wikidata publication without DOI, or not on the portal, stays a
+    Wikidata publication; so does one already on a page (*visited*).  One
+    lookup each for all *publications*.
+    '''
+    from .markers import PUBLICATION_MARKERS  # pylint: disable=import-outside-toplevel
+    from .queries import portal_publications_by_doi, wikidata_dois  # pylint: disable=import-outside-toplevel
+    wikidata = [pub for pub in publications if (pub.id or '').startswith('wikidata:') and pub.id not in visited]
+    if not wikidata:
+        return list(publications)
+    twins = portal_twins(wikidata, (PUBLICATION_MARKERS['publication'], PUBLICATION_MARKERS['scholarly article']))
+    dois = wikidata_dois([pub.id.split(':', 1)[1] for pub in wikidata if pub.id not in twins])
+    found = portal_publications_by_doi(dois.values())
+    for qid, doi in dois.items():
+        if doi.upper() in found:
+            twin, label, description = found[doi.upper()]
+            twins[f'wikidata:{qid}'] = Relatant(f'mardi:{twin}', label, description)
+    return [twins.get(pub.id, pub) if pub.id not in visited else pub for pub in publications]
+
+
 def use_portal_twins(datas, fields, visited=()):
     '''Replace the Wikidata relatants of *datas* by their fitting portal twins (#166).
 
@@ -466,6 +490,9 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
     def _hydrate_publications(self, project, publications, catalog, visited):
         '''Register and hydrate related publications via the publication handler.
 
+        A Wikidata publication with a portal item (by its QID or its DOI)
+        becomes the portal item (:func:`publication_twins`).
+
         Args:
             project:      RDMO project instance.
             publications: Iterable of :class:`~MaRDMO.models.Relatant` items
@@ -483,7 +510,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         next_idx = max((e for e in existing if e is not None), default=-1) + 1
 
         entries = []
-        for pub in publications:
+        for pub in publication_twins(publications, visited):
             if pub.id in visited:
                 continue
             visited.add(pub.id)

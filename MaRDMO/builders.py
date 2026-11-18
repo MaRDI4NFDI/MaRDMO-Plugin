@@ -32,6 +32,7 @@ from .validators import (
     validate_data_size,
     validate_doi,
     validate_properties,
+    validate_publication_id,
     validate_qudt_id,
     validate_reference,
     validate_short_description,
@@ -264,7 +265,8 @@ def build_presave_validator_map():
       question URIs (model, formulation, quantity, task) in the model catalogs.
     - :func:`~MaRDMO.validators.validate_qudt_id` — for the Quantity reference
       URI in the full model catalog only.
-    - :func:`~MaRDMO.validators.validate_doi` — for the publication reference
+    - :func:`~MaRDMO.validators.validate_publication_id` — for the publication ID (by its identifier, #158)
+    - :func:`~MaRDMO.validators.validate_doi` — for the DOI of a data set to publish
       URIs in all catalogs and the data-set "to publish" DOI in the workflow
       catalog.
     - :func:`~MaRDMO.validators.validate_reference` — DOI, URL and swMATH ID
@@ -331,9 +333,9 @@ def build_presave_validator_map():
             # QUDT reference ID (quantity only)
             f'{base}{questions_model["Quantity"]["Reference"]["uri"]}':
                 validate_qudt_id,
-            # DOI reference (publication)
-            f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
-                validate_doi,
+            # Publication selected by its identifier (#158)
+            f'{base}{questions_publication["Publication"]["ID"]["uri"]}':
+                validate_publication_id,
         },
         CATALOG_MODEL_BASICS_NAME: {
             # Short description (Research Problem, Formulation, Task, Model only)
@@ -355,9 +357,9 @@ def build_presave_validator_map():
                 validate_properties,
             f'{base}{questions_model["Task"]["Properties"]["uri"]}':
                 validate_properties,
-            # DOI reference (publication)
-            f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
-                validate_doi,
+            # Publication selected by its identifier (#158)
+            f'{base}{questions_publication["Publication"]["ID"]["uri"]}':
+                validate_publication_id,
         },
         CATALOG_ALGORITHM_NAME: {
             # Short description
@@ -369,9 +371,9 @@ def build_presave_validator_map():
                 validate_short_description,
             f'{base}{questions_algorithm["Benchmark"]["Description"]["uri"]}':
                 validate_short_description,
-            # DOI reference (publication); DOI, URL or swMATH ID (software, benchmark)
-            f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
-                validate_doi,
+            # Publication selected by its identifier (#158); DOI, URL or swMATH ID (software, benchmark)
+            f'{base}{questions_publication["Publication"]["ID"]["uri"]}':
+                validate_publication_id,
             f'{base}{questions_algorithm["Software"]["Reference"]["uri"]}':
                 validate_reference,
             f'{base}{questions_algorithm["Benchmark"]["Reference"]["uri"]}':
@@ -404,9 +406,10 @@ def build_presave_validator_map():
                 validate_single_line,
             f'{base}{questions_workflow["Workflow"]["Other Platform"]["uri"]}':
                 validate_single_line,
-            # DOI reference (publication, DS to-publish); DOI, URL or swMATH ID (software, PS documentation)
-            f'{base}{questions_publication["Publication"]["Reference"]["uri"]}':
-                validate_doi,
+            # Publication selected by its identifier (#158); DOI (DS to-publish); DOI, URL or
+            # swMATH ID (software, PS documentation)
+            f'{base}{questions_publication["Publication"]["ID"]["uri"]}':
+                validate_publication_id,
             f'{base}{questions_workflow["Software"]["Reference"]["uri"]}':
                 validate_reference,
             f'{base}{questions_workflow["Process Step"]["Software-Documentation"]["uri"]}':

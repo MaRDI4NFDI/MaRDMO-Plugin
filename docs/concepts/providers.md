@@ -21,6 +21,8 @@ Providers are organised into three tiers of increasing capability.
 
 ### Tier 1 — Pure search
 
+The provider of publications is different (`Search.by_identifier`, #158): it searches by the identifier the user types with its prefix (`doi:10.…`), not by a title, and offers one publication: the portal's, else Wikidata's, else the DOI itself as a new one (see [Publications](publication.md)).  A text without prefix offers nothing.
+
 The simplest providers query the **MaRDI Portal**, or the **MaRDI Portal and Wikidata**, and return whatever matches.  A "new item" option is included in the ID dropdowns of pages, so the user can add an own item when no appropriate one exists.
 
 ### Tier 2 — Search + project items

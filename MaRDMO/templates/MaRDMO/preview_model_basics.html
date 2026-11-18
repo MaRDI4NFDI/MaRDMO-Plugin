@@ -98,7 +98,7 @@
 {% for values in answers.publication.values %}
 
     {# Include Publication Name #}
-    {% include "MaRDMO/partials/_name.html" with class="PUBLICATION" name=values.Name %}
+    {% publication_name values as name %}{% include "MaRDMO/partials/_name.html" with class="PUBLICATION" name=name %}
 
     {# Include Publication Short Description #}
     {% include "MaRDMO/partials/_short_description.html" with class="PUBLICATION" description=values.Description name=values.Name %}

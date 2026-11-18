@@ -48,7 +48,11 @@ import, e.g. the Laplace operator Q7276420 of the heat equation) fits as well, a
 class contradicts nothing.  One lookup per batch (`_twin_lookup()`, cached by
 `queries.find_portal_items`); a failed lookup keeps the Wikidata items, the preview then lists
 those on the portal.  A Wikidata item already on a page (`visited`) keeps its ID.  Publications
-are left out: their citation is looked up by DOI.
+have their own rule (`publication_twins()`, #158): the twin with the Wikidata
+QID that is a publication, else the portal publication with the Wikidata
+item's DOI (one `wbgetentities` request to Wikidata for the DOIs, one portal
+search for all of them, `queries.portal_publications_by_doi`); without DOI,
+or not on the portal, a Wikidata publication stays one.
 
 `_hydrate_relatants` and `_hydrate_qualifier_entities` then give every new page the name and
 description of its relatant (item type: the `item_type` of `_RelatantSpec.fill_method`) and fill
@@ -125,6 +129,16 @@ hold it for minutes:
   20 seconds and stops retrying after 45 seconds per batch.
 - The same rule (`queries.request_with_retry()`) retries the portal's TeX check
   once; the checks before an export retry twice (see [Export](export.md)).
+
+A new publication (selected by its DOI, #158) is saved at once: its handler
+(`publication.handlers.new_publication`) stores the DOI as the page's hidden
+reference and starts the citation lookup in a background thread once the
+answer is committed (`transaction.on_commit`), so the interview does not
+wait for the citation services.  The thread (`lookup_publication`) writes the
+citation into the page's hidden answers only if the page still has this
+publication and DOI, logs a failure, and closes its database connection.
+What it does not find, the preview looks up again
+(`PublicationRetriever.get_information`).
 
 The portal returns the values of a list column (relations, aliases, publications, …)
 in no fixed order.  `helpers.split_value()` sorts them, relatants thereby by ID, so

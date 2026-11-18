@@ -8,15 +8,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: MaRDMO/algorithm/constants.py:22 MaRDMO/checks/algorithm.py:32 MaRDMO/checks/algorithm.py:63 MaRDMO/checks/algorithm.py:70 MaRDMO/checks/workflow.py:231 MaRDMO/views.py:65
+#: MaRDMO/algorithm/constants.py:22 MaRDMO/checks/algorithm.py:32 MaRDMO/checks/algorithm.py:63 MaRDMO/checks/algorithm.py:70 MaRDMO/checks/workflow.py:187 MaRDMO/views.py:65
 msgid "Algorithmic Task"
 msgstr "Algorithmische Aufgabe"
 
-#: MaRDMO/checks/algorithm.py:31 MaRDMO/checks/algorithm.py:38 MaRDMO/checks/algorithm.py:45 MaRDMO/checks/base.py:535 MaRDMO/checks/base.py:563 MaRDMO/checks/workflow.py:223 MaRDMO/checks/workflow.py:230 MaRDMO/checks/workflow.py:238 MaRDMO/constants.py:66 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:22 MaRDMO/templates/MaRDMO/preview_workflow.html:93
+#: MaRDMO/checks/algorithm.py:31 MaRDMO/checks/algorithm.py:38 MaRDMO/checks/algorithm.py:45 MaRDMO/checks/base.py:601 MaRDMO/checks/base.py:623 MaRDMO/checks/workflow.py:181 MaRDMO/checks/workflow.py:186 MaRDMO/checks/workflow.py:194 MaRDMO/constants.py:66 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:22 MaRDMO/templates/MaRDMO/preview_workflow.html:93
 msgid "Algorithm"
 msgstr "Algorithmus"
 
-#: MaRDMO/checks/algorithm.py:39 MaRDMO/checks/algorithm.py:90 MaRDMO/checks/algorithm.py:97 MaRDMO/checks/algorithm.py:98 MaRDMO/checks/algorithm.py:103 MaRDMO/checks/algorithm.py:108 MaRDMO/checks/workflow.py:239 MaRDMO/checks/workflow.py:257 MaRDMO/checks/workflow.py:265 MaRDMO/checks/workflow.py:266 MaRDMO/checks/workflow.py:269 MaRDMO/constants.py:67 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:23 MaRDMO/templates/MaRDMO/preview_algorithm.html:19 MaRDMO/templates/MaRDMO/preview_algorithm.html:54 MaRDMO/templates/MaRDMO/preview_algorithm.html:72 MaRDMO/templates/MaRDMO/preview_workflow.html:109 MaRDMO/templates/MaRDMO/preview_workflow.html:117 MaRDMO/templates/MaRDMO/preview_workflow.html:135
+#: MaRDMO/checks/algorithm.py:39 MaRDMO/checks/algorithm.py:90 MaRDMO/checks/algorithm.py:97 MaRDMO/checks/algorithm.py:98 MaRDMO/checks/algorithm.py:103 MaRDMO/checks/algorithm.py:108 MaRDMO/checks/workflow.py:195 MaRDMO/checks/workflow.py:213 MaRDMO/checks/workflow.py:221 MaRDMO/checks/workflow.py:222 MaRDMO/checks/workflow.py:225 MaRDMO/constants.py:67 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:23 MaRDMO/templates/MaRDMO/preview_algorithm.html:19 MaRDMO/templates/MaRDMO/preview_algorithm.html:54 MaRDMO/templates/MaRDMO/preview_algorithm.html:72 MaRDMO/templates/MaRDMO/preview_workflow.html:109 MaRDMO/templates/MaRDMO/preview_workflow.html:117 MaRDMO/templates/MaRDMO/preview_workflow.html:135
 msgid "Software"
 msgstr "Software"
 
@@ -24,195 +24,199 @@ msgstr "Software"
 msgid "Benchmark"
 msgstr "Benchmark"
 
-#: MaRDMO/checks/algorithm.py:104 MaRDMO/checks/workflow.py:258 MaRDMO/views.py:68
+#: MaRDMO/checks/algorithm.py:104 MaRDMO/checks/workflow.py:214 MaRDMO/views.py:68
 msgid "Programming Language"
 msgstr "Programmiersprache"
 
-#: MaRDMO/checks/algorithm.py:108 MaRDMO/checks/algorithm.py:125 MaRDMO/checks/model.py:282 MaRDMO/checks/workflow.py:269
+#: MaRDMO/checks/algorithm.py:108 MaRDMO/checks/algorithm.py:125 MaRDMO/checks/model.py:263 MaRDMO/checks/workflow.py:225
 msgid "Missing Reference"
 msgstr "Referenz fehlt"
 
-#: MaRDMO/checks/base.py:27
+#: MaRDMO/checks/base.py:36
 msgid "Made with MaRDMO before 0.8.0, not supported (enter it in a new project)"
 msgstr "Mit MaRDMO vor 0.8.0 erstellt, nicht unterstützt (bitte in einem neuen Projekt erfassen)"
 
-#: MaRDMO/checks/base.py:54 MaRDMO/templates/MaRDMO/preview_algorithm.html:63 MaRDMO/templates/MaRDMO/preview_workflow.html:126
+#: MaRDMO/checks/base.py:63 MaRDMO/templates/MaRDMO/preview_algorithm.html:63 MaRDMO/templates/MaRDMO/preview_workflow.html:126
 msgid "swMath ID"
 msgstr "swMath-ID"
 
-#: MaRDMO/checks/base.py:55 MaRDMO/checks/base.py:61
+#: MaRDMO/checks/base.py:64 MaRDMO/checks/base.py:70
 msgid "Description URL"
 msgstr "Beschreibungs-URL"
 
-#: MaRDMO/checks/base.py:56 MaRDMO/checks/base.py:62
+#: MaRDMO/checks/base.py:65 MaRDMO/checks/base.py:71
 msgid "Repository URL"
 msgstr "Repository-URL"
 
-#: MaRDMO/checks/base.py:60 MaRDMO/templates/MaRDMO/preview_algorithm.html:92
+#: MaRDMO/checks/base.py:69 MaRDMO/templates/MaRDMO/preview_algorithm.html:92
 msgid "MORwiki ID"
 msgstr "MORwiki-ID"
 
-#: MaRDMO/checks/base.py:67 MaRDMO/checks/workflow.py:66 MaRDMO/templates/MaRDMO/preview_workflow.html:30
+#: MaRDMO/checks/base.py:76 MaRDMO/checks/workflow.py:54 MaRDMO/templates/MaRDMO/preview_workflow.html:30
 msgid "Mathematical Reproducibility"
 msgstr "Mathematische Reproduzierbarkeit"
 
-#: MaRDMO/checks/base.py:68 MaRDMO/checks/workflow.py:67 MaRDMO/templates/MaRDMO/preview_workflow.html:33
+#: MaRDMO/checks/base.py:77 MaRDMO/checks/workflow.py:55 MaRDMO/templates/MaRDMO/preview_workflow.html:33
 msgid "Runtime Reproducibility"
 msgstr "Reproduzierbarkeit der Laufzeit"
 
-#: MaRDMO/checks/base.py:69 MaRDMO/checks/workflow.py:68 MaRDMO/templates/MaRDMO/preview_workflow.html:36
+#: MaRDMO/checks/base.py:78 MaRDMO/checks/workflow.py:56 MaRDMO/templates/MaRDMO/preview_workflow.html:36
 msgid "Reproducibility of Results"
 msgstr "Reproduzierbarkeit der Ergebnisse"
 
-#: MaRDMO/checks/base.py:70 MaRDMO/templates/MaRDMO/preview_workflow.html:39
+#: MaRDMO/checks/base.py:79 MaRDMO/templates/MaRDMO/preview_workflow.html:39
 msgid "Reproducibility on original Hardware or Instrument"
 msgstr "Reproduzierbarkeit auf der ursprünglichen Hardware oder dem ursprünglichen Instrument"
 
-#: MaRDMO/checks/base.py:71 MaRDMO/templates/MaRDMO/preview_workflow.html:42
+#: MaRDMO/checks/base.py:80 MaRDMO/templates/MaRDMO/preview_workflow.html:42
 msgid "Reproducibility on other Hardware or Instrument"
 msgstr "Reproduzierbarkeit auf anderer Hardware oder anderen Instrumenten"
 
-#: MaRDMO/checks/base.py:129 MaRDMO/checks/base.py:292 MaRDMO/checks/workflow.py:76
+#: MaRDMO/checks/base.py:210 MaRDMO/checks/base.py:364 MaRDMO/checks/workflow.py:62
 msgid "Missing {item}"
 msgstr "{item} fehlt"
 
-#: MaRDMO/checks/base.py:138 MaRDMO/checks/base.py:160 MaRDMO/checks/base.py:319
+#: MaRDMO/checks/base.py:216 MaRDMO/checks/base.py:238 MaRDMO/checks/base.py:391
 msgid "Selected {item} not found in {item} Section"
 msgstr "{item}: ausgewählter Eintrag nicht im Abschnitt {item} gefunden"
 
-#: MaRDMO/checks/base.py:184
+#: MaRDMO/checks/base.py:262
 msgid "(unnamed)"
 msgstr "(ohne Namen)"
 
-#: MaRDMO/checks/base.py:188
+#: MaRDMO/checks/base.py:266
 msgid "Missing {item} Name ({label})"
 msgstr "{item}: Name fehlt ({label})"
 
-#: MaRDMO/checks/base.py:194
+#: MaRDMO/checks/base.py:272
 msgid "Missing {item} Short Description"
 msgstr "{item}: Kurzbeschreibung fehlt"
 
-#: MaRDMO/checks/base.py:195
+#: MaRDMO/checks/base.py:273
 msgid "{item} Short Description Too Long"
 msgstr "{item}: Kurzbeschreibung zu lang"
 
-#: MaRDMO/checks/base.py:196
+#: MaRDMO/checks/base.py:274
 msgid "Equal {item} Name and Short Description Forbidden"
 msgstr "{item}: Name und Kurzbeschreibung dürfen nicht gleich sein"
 
-#: MaRDMO/checks/base.py:219
+#: MaRDMO/checks/base.py:298
 msgid "{label} selected, but no {noun} provided!"
 msgstr "{label} ausgewählt, aber keine {noun} angegeben!"
 
-#: MaRDMO/checks/base.py:231
+#: MaRDMO/checks/base.py:310
 msgid "Invalid {label}: {problem}"
 msgstr "Ungültige Angabe {label}: {problem}"
 
-#: MaRDMO/checks/base.py:251
+#: MaRDMO/checks/base.py:330
 msgid "Value"
 msgstr "Wert"
 
-#: MaRDMO/checks/base.py:253 MaRDMO/checks/base.py:259 MaRDMO/checks/base.py:265 MaRDMO/checks/workflow.py:42 MaRDMO/checks/workflow.py:98 MaRDMO/checks/workflow.py:105 MaRDMO/checks/workflow.py:110 MaRDMO/checks/workflow.py:117 MaRDMO/checks/workflow.py:126 MaRDMO/checks/workflow.py:131 MaRDMO/checks/workflow.py:137 MaRDMO/checks/workflow.py:143 MaRDMO/checks/workflow.py:149 MaRDMO/checks/workflow.py:155 MaRDMO/checks/workflow.py:161 MaRDMO/checks/workflow.py:175 MaRDMO/checks/workflow.py:182 MaRDMO/checks/workflow.py:189 MaRDMO/checks/workflow.py:194 MaRDMO/checks/workflow.py:199 MaRDMO/views.py:66 MaRDMO/workflow/constants.py:21 MaRDMO/templates/MaRDMO/preview_workflow.html:56
+#: MaRDMO/checks/base.py:331 MaRDMO/checks/base.py:334 MaRDMO/checks/base.py:338 MaRDMO/checks/workflow.py:38 MaRDMO/checks/workflow.py:82 MaRDMO/checks/workflow.py:89 MaRDMO/checks/workflow.py:93 MaRDMO/checks/workflow.py:98 MaRDMO/checks/workflow.py:106 MaRDMO/checks/workflow.py:109 MaRDMO/checks/workflow.py:114 MaRDMO/checks/workflow.py:118 MaRDMO/checks/workflow.py:123 MaRDMO/checks/workflow.py:127 MaRDMO/checks/workflow.py:132 MaRDMO/checks/workflow.py:143 MaRDMO/checks/workflow.py:150 MaRDMO/checks/workflow.py:156 MaRDMO/checks/workflow.py:158 MaRDMO/checks/workflow.py:160 MaRDMO/views.py:66 MaRDMO/workflow/constants.py:21 MaRDMO/templates/MaRDMO/preview_workflow.html:56
 msgid "Process Step"
 msgstr "Prozessschritt"
 
-#: MaRDMO/checks/base.py:254
+#: MaRDMO/checks/base.py:332
 msgid "Missing {item} {label}"
 msgstr "{item}: {label} fehlt"
 
-#: MaRDMO/checks/base.py:260
+#: MaRDMO/checks/base.py:335
 msgid "Invalid {item} URL: {problem}"
 msgstr "{item}: ungültige URL: {problem}"
 
-#: MaRDMO/checks/base.py:266
+#: MaRDMO/checks/base.py:339
 msgid "Invalid {item} DOI: {problem}"
 msgstr "{item}: ungültige DOI: {problem}"
 
-#: MaRDMO/checks/base.py:299
+#: MaRDMO/checks/base.py:371
 msgid "Missing Relation Type ({item})"
 msgstr "Beziehungstyp fehlt ({item})"
 
-#: MaRDMO/checks/base.py:309
+#: MaRDMO/checks/base.py:381
 msgid "Missing Object Item ({item})"
 msgstr "Objekt der Beziehung fehlt ({item})"
 
-#: MaRDMO/checks/base.py:368
+#: MaRDMO/checks/base.py:440
 msgid "Same Item as Page {tab} (delete one of them)"
 msgstr "Dasselbe Item wie Seite {tab} (löschen Sie eine der beiden)"
 
-#: MaRDMO/checks/base.py:379
+#: MaRDMO/checks/base.py:451
 msgid "Same Name and Short Description as Page {tab}"
 msgstr "Gleicher Name und gleiche Kurzbeschreibung wie Seite {tab}"
 
-#: MaRDMO/checks/base.py:388
+#: MaRDMO/checks/base.py:460
 msgid "Missing ID"
 msgstr "ID fehlt"
 
-#: MaRDMO/checks/base.py:406
+#: MaRDMO/checks/base.py:480
 msgid "Missing Name"
 msgstr "Name fehlt"
 
-#: MaRDMO/checks/base.py:417
+#: MaRDMO/checks/base.py:484
 msgid "Missing Short Description"
 msgstr "Kurzbeschreibung fehlt"
 
-#: MaRDMO/checks/base.py:418
+#: MaRDMO/checks/base.py:485
 msgid "Short Description Too Long"
 msgstr "Kurzbeschreibung zu lang"
 
-#: MaRDMO/checks/base.py:419
+#: MaRDMO/checks/base.py:486
 msgid "Equal Name and Short Description Forbidden"
 msgstr "Name und Kurzbeschreibung dürfen nicht gleich sein"
 
-#: MaRDMO/checks/base.py:450
+#: MaRDMO/checks/base.py:514
 msgid "Procedure"
 msgstr "Vorgehen"
 
-#: MaRDMO/checks/base.py:450 MaRDMO/templates/MaRDMO/partials/_detailed_description.html:3
+#: MaRDMO/checks/base.py:514 MaRDMO/templates/MaRDMO/partials/_detailed_description.html:3
 msgid "Detailed Description"
 msgstr "Detaillierte Beschreibung"
 
-#: MaRDMO/checks/base.py:453 MaRDMO/templates/MaRDMO/partials/_doc_entries.html:5 MaRDMO/templates/MaRDMO/preview_model_basics.html:79
+#: MaRDMO/checks/base.py:517 MaRDMO/templates/MaRDMO/partials/_doc_entries.html:5 MaRDMO/templates/MaRDMO/preview_model_basics.html:79
 msgid "Reference"
 msgstr "Referenz"
 
-#: MaRDMO/checks/base.py:468
+#: MaRDMO/checks/base.py:529
 msgid "Line Breaks Not Allowed in {field}"
 msgstr "Zeilenumbrüche sind in {field} nicht erlaubt"
 
-#: MaRDMO/checks/base.py:510 MaRDMO/checks/base.py:520 MaRDMO/checks/base.py:534 MaRDMO/checks/base.py:542 MaRDMO/checks/base.py:549 MaRDMO/checks/base.py:562 MaRDMO/checks/base.py:570 MaRDMO/checks/base.py:578 MaRDMO/checks/base.py:585 MaRDMO/checks/base.py:597 MaRDMO/constants.py:69 MaRDMO/views.py:68 MaRDMO/workflow/constants.py:26
+#: MaRDMO/checks/base.py:572 MaRDMO/checks/base.py:579 MaRDMO/checks/base.py:585 MaRDMO/checks/base.py:600 MaRDMO/checks/base.py:608 MaRDMO/checks/base.py:613 MaRDMO/checks/base.py:622 MaRDMO/checks/base.py:630 MaRDMO/checks/base.py:638 MaRDMO/checks/base.py:643 MaRDMO/checks/base.py:651 MaRDMO/constants.py:69 MaRDMO/views.py:68 MaRDMO/workflow/constants.py:26
 msgid "Publication"
 msgstr "Publikation"
 
-#: MaRDMO/checks/base.py:512
+#: MaRDMO/checks/base.py:574
 msgid "Missing Publication DOI"
 msgstr "DOI der Publikation fehlt"
 
-#: MaRDMO/checks/base.py:522 MaRDMO/checks/workflow.py:387
+#: MaRDMO/checks/base.py:580 MaRDMO/checks/workflow.py:319
 msgid "Invalid Publication DOI: {problem}"
 msgstr "Ungültige DOI der Publikation: {problem}"
 
-#: MaRDMO/checks/base.py:543
+#: MaRDMO/checks/base.py:587
+msgid "No citation found for the DOI {doi}: check the DOI, or open the preview again later"
+msgstr "Keine Zitation zur DOI {doi} gefunden: prüfen Sie die DOI, oder öffnen Sie die Vorschau später erneut"
+
+#: MaRDMO/checks/base.py:609
 msgid "Benchmark/Software"
 msgstr "Benchmark/Software"
 
-#: MaRDMO/checks/base.py:551
+#: MaRDMO/checks/base.py:613
 msgid "Missing Algorithm, Benchmark, or Software"
 msgstr "Algorithmus, Benchmark oder Software fehlt"
 
-#: MaRDMO/checks/base.py:571 MaRDMO/templates/MaRDMO/preview_workflow.html:238
+#: MaRDMO/checks/base.py:631 MaRDMO/templates/MaRDMO/preview_workflow.html:238
 msgid "Hardware or Software"
 msgstr "Hardware oder Software"
 
-#: MaRDMO/checks/base.py:579
+#: MaRDMO/checks/base.py:639
 msgid "Interdisciplinary Workflow, Process Step, or Data Set"
 msgstr "Interdisziplinärer Workflow, Prozessschritt oder Datensatz"
 
-#: MaRDMO/checks/base.py:587
+#: MaRDMO/checks/base.py:644
 msgid "Missing Algorithm, Hardware/Software, or Workflow Entity"
 msgstr "Algorithmus, Hardware/Software oder Workflow-Entität fehlt"
 
-#: MaRDMO/checks/base.py:598
+#: MaRDMO/checks/base.py:652
 msgid "Mathematical Model Entity"
 msgstr "Entität des mathematischen Modells"
 
@@ -220,11 +224,11 @@ msgstr "Entität des mathematischen Modells"
 msgid "Invalid Formula {number}: {problem}"
 msgstr "Ungültige Formel {number}: {problem}"
 
-#: MaRDMO/checks/model.py:41
+#: MaRDMO/checks/model.py:42
 msgid "Invalid Formula {number}: rejected by the MaRDI Portal ({problem}), {hint}"
 msgstr "Ungültige Formel {number}: vom MaRDI Portal abgelehnt ({problem}), {hint}"
 
-#: MaRDMO/checks/model.py:42
+#: MaRDMO/checks/model.py:43
 msgid "see the preview for details"
 msgstr "Details in der Vorschau"
 
@@ -232,7 +236,7 @@ msgstr "Details in der Vorschau"
 msgid "Invalid Symbol \"{symbol}\": {problem}"
 msgstr "Ungültiges Symbol \"{symbol}\": {problem}"
 
-#: MaRDMO/checks/model.py:53
+#: MaRDMO/checks/model.py:54
 msgid "Invalid Symbol \"{symbol}\": rejected by the MaRDI Portal ({problem})"
 msgstr "Ungültiges Symbol \"{symbol}\": vom MaRDI Portal abgelehnt ({problem})"
 
@@ -240,391 +244,395 @@ msgstr "Ungültiges Symbol \"{symbol}\": vom MaRDI Portal abgelehnt ({problem})"
 msgid "Symbol \"{symbol}\" {problem}"
 msgstr "Symbol \"{symbol}\" {problem}"
 
-#: MaRDMO/checks/model.py:110
+#: MaRDMO/checks/model.py:109
 msgid "Inconsistent Properties ({a} and {b})"
 msgstr "Widersprüchliche Eigenschaften ({a} und {b})"
 
-#: MaRDMO/checks/model.py:111 MaRDMO/checks/model.py:111 MaRDMO/oauth2.py:409 MaRDMO/validators.py:636 MaRDMO/validators.py:637
+#: MaRDMO/checks/model.py:110 MaRDMO/checks/model.py:110 MaRDMO/oauth2.py:409 MaRDMO/validators.py:657 MaRDMO/validators.py:658
 msgid "label"
 msgstr "Label"
 
-#: MaRDMO/checks/model.py:134 MaRDMO/checks/model.py:141 MaRDMO/checks/model.py:148 MaRDMO/checks/model.py:154 MaRDMO/checks/model.py:168 MaRDMO/checks/model.py:181 MaRDMO/constants.py:61 MaRDMO/views.py:64
+#: MaRDMO/checks/model.py:133 MaRDMO/checks/model.py:140 MaRDMO/checks/model.py:147 MaRDMO/checks/model.py:153 MaRDMO/checks/model.py:165 MaRDMO/checks/model.py:173 MaRDMO/constants.py:61 MaRDMO/views.py:64
 msgid "Mathematical Model"
 msgstr "Mathematisches Modell"
 
-#: MaRDMO/checks/model.py:135 MaRDMO/checks/model.py:533 MaRDMO/checks/model.py:541 MaRDMO/model/constants.py:99 MaRDMO/views.py:64
+#: MaRDMO/checks/model.py:134 MaRDMO/checks/model.py:412 MaRDMO/checks/model.py:420 MaRDMO/model/constants.py:99 MaRDMO/views.py:64
 msgid "Research Problem"
 msgstr "Forschungsproblem"
 
-#: MaRDMO/checks/model.py:142 MaRDMO/checks/model.py:206 MaRDMO/checks/model.py:212 MaRDMO/checks/model.py:226 MaRDMO/checks/model.py:239 MaRDMO/checks/model.py:250 MaRDMO/constants.py:62 MaRDMO/views.py:64
+#: MaRDMO/checks/model.py:141 MaRDMO/checks/model.py:198 MaRDMO/checks/model.py:204 MaRDMO/checks/model.py:216 MaRDMO/checks/model.py:224 MaRDMO/checks/model.py:235 MaRDMO/constants.py:62 MaRDMO/views.py:64
 msgid "Computational Task"
 msgstr "Berechnungsaufgabe"
 
-#: MaRDMO/checks/model.py:155 MaRDMO/checks/model.py:213 MaRDMO/checks/model.py:273 MaRDMO/checks/model.py:280 MaRDMO/checks/model.py:294 MaRDMO/checks/model.py:304 MaRDMO/checks/model.py:314 MaRDMO/checks/model.py:320 MaRDMO/checks/model.py:325 MaRDMO/checks/model.py:337 MaRDMO/checks/model.py:346 MaRDMO/checks/model.py:352 MaRDMO/checks/model.py:358 MaRDMO/constants.py:63 MaRDMO/views.py:64
+#: MaRDMO/checks/model.py:154 MaRDMO/checks/model.py:205 MaRDMO/checks/model.py:258 MaRDMO/checks/model.py:263 MaRDMO/checks/model.py:270 MaRDMO/checks/model.py:278 MaRDMO/checks/model.py:286 MaRDMO/checks/model.py:287 MaRDMO/checks/model.py:290 MaRDMO/checks/model.py:295 MaRDMO/checks/model.py:297 MaRDMO/checks/model.py:298 MaRDMO/checks/model.py:304 MaRDMO/constants.py:63 MaRDMO/views.py:64
 msgid "Formula"
 msgstr "Formel"
 
-#: MaRDMO/checks/model.py:170
+#: MaRDMO/checks/model.py:165
 msgid "Missing Assumption (Mathematical Model Specialization)"
 msgstr "Annahme fehlt (Spezialisierung des mathematischen Modells)"
 
-#: MaRDMO/checks/model.py:183 MaRDMO/checks/model.py:241 MaRDMO/checks/model.py:306
+#: MaRDMO/checks/model.py:175 MaRDMO/checks/model.py:226 MaRDMO/checks/model.py:280
 msgid "Selected Formula not found in Section"
 msgstr "Ausgewählte Formel nicht im Abschnitt gefunden"
 
-#: MaRDMO/checks/model.py:228
+#: MaRDMO/checks/model.py:216
 msgid "Missing Assumption (Computational Task Specialization)"
 msgstr "Annahme fehlt (Spezialisierung der Berechnungsaufgabe)"
 
-#: MaRDMO/checks/model.py:251 MaRDMO/checks/model.py:494 MaRDMO/checks/model.py:500 MaRDMO/checks/model.py:507 MaRDMO/checks/model.py:513 MaRDMO/views.py:65 MaRDMO/templates/MaRDMO/partials/_in_defining_formula.html:15 MaRDMO/model/data/mapping.json
+#: MaRDMO/checks/model.py:236 MaRDMO/checks/model.py:373 MaRDMO/checks/model.py:379 MaRDMO/checks/model.py:386 MaRDMO/checks/model.py:392 MaRDMO/views.py:65 MaRDMO/templates/MaRDMO/partials/_in_defining_formula.html:15 MaRDMO/model/data/mapping.json
 msgid "Quantity"
 msgstr "Quantität"
 
-#: MaRDMO/checks/model.py:296
+#: MaRDMO/checks/model.py:270
 msgid "Missing Assumption (Formula Specialization)"
 msgstr "Annahme fehlt (Spezialisierung der Formel)"
 
-#: MaRDMO/checks/model.py:316
+#: MaRDMO/checks/model.py:286
 msgid "Missing Formula Formula"
 msgstr "Formel der Formel fehlt"
 
-#: MaRDMO/checks/model.py:327
+#: MaRDMO/checks/model.py:290
 msgid "Missing Formula Element Information"
 msgstr "Angaben zu den Formelsymbolen fehlen"
 
-#: MaRDMO/checks/model.py:339
+#: MaRDMO/checks/model.py:295
 msgid "Missing Formula Symbol"
 msgstr "Formelsymbol fehlt"
 
-#: MaRDMO/checks/model.py:348
+#: MaRDMO/checks/model.py:297
 msgid "Missing Formula Quantity"
 msgstr "Quantität des Formelsymbols fehlt"
 
-#: MaRDMO/checks/model.py:380 MaRDMO/checks/model.py:392 MaRDMO/checks/model.py:401 MaRDMO/checks/model.py:410 MaRDMO/checks/model.py:419 MaRDMO/checks/model.py:428 MaRDMO/checks/model.py:440 MaRDMO/checks/model.py:448 MaRDMO/checks/model.py:453 MaRDMO/checks/model.py:462 MaRDMO/checks/model.py:472 MaRDMO/checks/model.py:481 MaRDMO/checks/model.py:487 MaRDMO/constants.py:64
+#: MaRDMO/checks/model.py:324 MaRDMO/checks/model.py:329 MaRDMO/checks/model.py:331 MaRDMO/checks/model.py:335 MaRDMO/checks/model.py:337 MaRDMO/checks/model.py:341 MaRDMO/checks/model.py:348 MaRDMO/checks/model.py:353 MaRDMO/checks/model.py:356 MaRDMO/checks/model.py:360 MaRDMO/checks/model.py:363 MaRDMO/checks/model.py:365 MaRDMO/checks/model.py:366 MaRDMO/constants.py:64
 msgid "Quantity [Kind]"
 msgstr "Quantität [-sart]"
 
-#: MaRDMO/checks/model.py:382
+#: MaRDMO/checks/model.py:324
 msgid "Missing Quantity [Kind] Class"
 msgstr "Klasse der Quantität [-sart] fehlt"
 
-#: MaRDMO/checks/model.py:394
+#: MaRDMO/checks/model.py:329
 msgid "QUDT Quantity Kind ID selected, but no ID provided!"
 msgstr "QUDT-Quantitätsart-ID ausgewählt, aber keine ID angegeben!"
 
-#: MaRDMO/checks/model.py:403
+#: MaRDMO/checks/model.py:332
 msgid "Invalid QUDT Quantity Kind ID format: \"{value}\""
 msgstr "Ungültiges Format der QUDT-Quantitätsart-ID: \"{value}\""
 
-#: MaRDMO/checks/model.py:412
+#: MaRDMO/checks/model.py:335
 msgid "QUDT Constant ID selected, but no ID provided!"
 msgstr "QUDT-Konstanten-ID ausgewählt, aber keine ID angegeben!"
 
-#: MaRDMO/checks/model.py:421
+#: MaRDMO/checks/model.py:338
 msgid "Invalid QUDT Constant ID format: \"{value}\""
 msgstr "Ungültiges Format der QUDT-Konstanten-ID: \"{value}\""
 
-#: MaRDMO/checks/model.py:430
+#: MaRDMO/checks/model.py:342
 msgid "QUDT Quantity Kind ID limited to Quantity Kinds!"
 msgstr "Die QUDT-Quantitätsart-ID gibt es nur für Quantitätsarten!"
 
-#: MaRDMO/checks/model.py:442
+#: MaRDMO/checks/model.py:349
 msgid "QUDT Constant ID limited to Quantities!"
 msgstr "Die QUDT-Konstanten-ID gibt es nur für Quantitäten!"
 
-#: MaRDMO/checks/model.py:455
+#: MaRDMO/checks/model.py:357
 msgid "Inconsistent Quantity Definition (missing \\equiv)"
 msgstr "Widersprüchliche Definition der Quantität (\\equiv fehlt)"
 
-#: MaRDMO/checks/model.py:464
+#: MaRDMO/checks/model.py:360
 msgid "Missing Quantity Definition Element Information"
 msgstr "Angaben zu den Symbolen der Quantitätsdefinition fehlen"
 
-#: MaRDMO/checks/model.py:474
+#: MaRDMO/checks/model.py:363
 msgid "Missing Quantity Definition Symbol"
 msgstr "Symbol der Quantitätsdefinition fehlt"
 
-#: MaRDMO/checks/model.py:483
+#: MaRDMO/checks/model.py:365
 msgid "Missing Quantity Definition Quantity"
 msgstr "Quantität eines Symbols der Quantitätsdefinition fehlt"
 
-#: MaRDMO/checks/model.py:542 MaRDMO/checks/model.py:564 MaRDMO/checks/workflow.py:118 MaRDMO/constants.py:65 MaRDMO/views.py:67
+#: MaRDMO/checks/model.py:421 MaRDMO/checks/model.py:443 MaRDMO/checks/workflow.py:99 MaRDMO/constants.py:65 MaRDMO/views.py:67
 msgid "Academic Discipline"
 msgstr "Akademische Disziplin"
 
-#: MaRDMO/checks/model.py:593
+#: MaRDMO/checks/model.py:472
 msgid "The TeX check of the MaRDI Portal did not answer for some formulas."
 msgstr "Die TeX-Prüfung des MaRDI Portals hat für einige Formeln nicht geantwortet."
 
-#: MaRDMO/checks/workflow.py:32 MaRDMO/checks/workflow.py:41 MaRDMO/checks/workflow.py:48 MaRDMO/checks/workflow.py:54 MaRDMO/checks/workflow.py:60 MaRDMO/checks/workflow.py:75 MaRDMO/workflow/constants.py:20 MaRDMO/templates/MaRDMO/preview_workflow.html:3
+#: MaRDMO/checks/workflow.py:31 MaRDMO/checks/workflow.py:37 MaRDMO/checks/workflow.py:44 MaRDMO/checks/workflow.py:49 MaRDMO/checks/workflow.py:51 MaRDMO/checks/workflow.py:62 MaRDMO/workflow/constants.py:20 MaRDMO/templates/MaRDMO/preview_workflow.html:3
 msgid "Interdisciplinary Workflow"
 msgstr "Interdisziplinärer Workflow"
 
-#: MaRDMO/checks/workflow.py:33
+#: MaRDMO/checks/workflow.py:31
 msgid "Missing Research Objective"
 msgstr "Forschungsziel fehlt"
 
-#: MaRDMO/checks/workflow.py:55
+#: MaRDMO/checks/workflow.py:49
 msgid "Missing Computational Task"
 msgstr "Berechnungsaufgabe fehlt"
 
-#: MaRDMO/checks/workflow.py:61
+#: MaRDMO/checks/workflow.py:51
 msgid "Missing Mathematical Model"
 msgstr "Mathematisches Modell fehlt"
 
-#: MaRDMO/checks/workflow.py:69
+#: MaRDMO/checks/workflow.py:57
 msgid "Reproducibility on Original Platform"
 msgstr "Reproduzierbarkeit auf der ursprünglichen Plattform"
 
-#: MaRDMO/checks/workflow.py:70
+#: MaRDMO/checks/workflow.py:58
 msgid "Reproducibility on Other Platform"
 msgstr "Reproduzierbarkeit auf anderen Plattformen"
 
-#: MaRDMO/checks/workflow.py:99
+#: MaRDMO/checks/workflow.py:83
 msgid "Input Data Set"
 msgstr "Eingabe-Datensatz"
 
-#: MaRDMO/checks/workflow.py:106
+#: MaRDMO/checks/workflow.py:90
 msgid "Output Data Set"
 msgstr "Ausgabe-Datensatz"
 
-#: MaRDMO/checks/workflow.py:110
+#: MaRDMO/checks/workflow.py:93
 msgid "Missing Academic Discipline"
 msgstr "Akademische Disziplin fehlt"
 
-#: MaRDMO/checks/workflow.py:126
+#: MaRDMO/checks/workflow.py:106
 msgid "Missing Algorithm"
 msgstr "Algorithmus fehlt"
 
-#: MaRDMO/checks/workflow.py:132
+#: MaRDMO/checks/workflow.py:110
 msgid "Selected Algorithm not found in Algorithm Section"
 msgstr "Ausgewählter Algorithmus nicht im Abschnitt Algorithmus gefunden"
 
-#: MaRDMO/checks/workflow.py:138
+#: MaRDMO/checks/workflow.py:114
 msgid "Missing Software (Algorithm Path)"
 msgstr "Software fehlt (Algorithmus-Pfad)"
 
-#: MaRDMO/checks/workflow.py:144
+#: MaRDMO/checks/workflow.py:119
 msgid "Selected Software not found in Software Section"
 msgstr "Ausgewählte Software nicht im Abschnitt Software gefunden"
 
-#: MaRDMO/checks/workflow.py:150
+#: MaRDMO/checks/workflow.py:123
 msgid "Missing Hardware (Algorithm Path)"
 msgstr "Hardware fehlt (Algorithmus-Pfad)"
 
-#: MaRDMO/checks/workflow.py:156
+#: MaRDMO/checks/workflow.py:128
 msgid "Selected Hardware not found in Hardware Section"
 msgstr "Ausgewählte Hardware nicht im Abschnitt Hardware gefunden"
 
-#: MaRDMO/checks/workflow.py:162
+#: MaRDMO/checks/workflow.py:132
 msgid "Missing Software Requirements"
 msgstr "Software-Anforderungen fehlen"
 
-#: MaRDMO/checks/workflow.py:168
+#: MaRDMO/checks/workflow.py:136
 msgid "Software Requirements"
 msgstr "Software-Anforderungen"
 
-#: MaRDMO/checks/workflow.py:176
+#: MaRDMO/checks/workflow.py:144
 msgid "Method"
 msgstr "Methode"
 
-#: MaRDMO/checks/workflow.py:183
+#: MaRDMO/checks/workflow.py:151
 msgid "Instrument"
 msgstr "Instrument"
 
-#: MaRDMO/checks/workflow.py:189
+#: MaRDMO/checks/workflow.py:156
 msgid "Missing Method"
 msgstr "Methode fehlt"
 
-#: MaRDMO/checks/workflow.py:194
+#: MaRDMO/checks/workflow.py:158
 msgid "Missing Instrument"
 msgstr "Instrument fehlt"
 
-#: MaRDMO/checks/workflow.py:199
+#: MaRDMO/checks/workflow.py:160
 msgid "Missing Method Protocol"
 msgstr "Methodenprotokoll fehlt"
 
-#: MaRDMO/checks/workflow.py:205
+#: MaRDMO/checks/workflow.py:164
 msgid "Method Protocol"
 msgstr "Methodenprotokoll"
 
-#: MaRDMO/checks/workflow.py:223
+#: MaRDMO/checks/workflow.py:181
 msgid "Missing Algorithmic Task"
 msgstr "Algorithmische Aufgabe fehlt"
 
-#: MaRDMO/checks/workflow.py:290 MaRDMO/checks/workflow.py:295 MaRDMO/checks/workflow.py:301 MaRDMO/checks/workflow.py:306 MaRDMO/checks/workflow.py:313 MaRDMO/checks/workflow.py:316 MaRDMO/checks/workflow.py:322 MaRDMO/checks/workflow.py:327 MaRDMO/checks/workflow.py:333 MaRDMO/views.py:66 MaRDMO/workflow/constants.py:24 MaRDMO/templates/MaRDMO/preview_workflow.html:143
+#: MaRDMO/checks/workflow.py:245 MaRDMO/checks/workflow.py:247 MaRDMO/checks/workflow.py:252 MaRDMO/checks/workflow.py:257 MaRDMO/checks/workflow.py:264 MaRDMO/checks/workflow.py:266 MaRDMO/checks/workflow.py:268 MaRDMO/checks/workflow.py:272 MaRDMO/checks/workflow.py:274 MaRDMO/views.py:66 MaRDMO/workflow/constants.py:24 MaRDMO/templates/MaRDMO/preview_workflow.html:143
 msgid "Hardware"
 msgstr "Hardware"
 
-#: MaRDMO/checks/workflow.py:290
+#: MaRDMO/checks/workflow.py:245
 msgid "Missing Number of Compute Nodes"
 msgstr "Anzahl der Rechenknoten fehlt"
 
-#: MaRDMO/checks/workflow.py:295
+#: MaRDMO/checks/workflow.py:248
 msgid "Invalid Number of Compute Nodes: {problem}"
 msgstr "Ungültige Anzahl der Rechenknoten: {problem}"
 
-#: MaRDMO/checks/workflow.py:301
+#: MaRDMO/checks/workflow.py:252
 msgid "Missing CPU"
 msgstr "CPU fehlt"
 
-#: MaRDMO/checks/workflow.py:307 MaRDMO/templates/MaRDMO/preview_workflow.html:162
+#: MaRDMO/checks/workflow.py:258 MaRDMO/templates/MaRDMO/preview_workflow.html:162
 msgid "CPU"
 msgstr "CPU"
 
-#: MaRDMO/checks/workflow.py:313
+#: MaRDMO/checks/workflow.py:264
 msgid "Missing CPU Model"
 msgstr "CPU-Modell fehlt"
 
-#: MaRDMO/checks/workflow.py:317
+#: MaRDMO/checks/workflow.py:266
 msgid "Missing CPU Occurrence in Hardware"
 msgstr "Anzahl der CPU in der Hardware fehlt"
 
-#: MaRDMO/checks/workflow.py:322
+#: MaRDMO/checks/workflow.py:269
 msgid "Invalid CPU Occurrence: {problem}"
 msgstr "Ungültige Anzahl der CPU: {problem}"
 
-#: MaRDMO/checks/workflow.py:328
+#: MaRDMO/checks/workflow.py:272
 msgid "Missing Number of Processor Cores"
 msgstr "Anzahl der Prozessorkerne fehlt"
 
-#: MaRDMO/checks/workflow.py:333
+#: MaRDMO/checks/workflow.py:275
 msgid "Invalid Number of Processor Cores: {problem}"
 msgstr "Ungültige Anzahl der Prozessorkerne: {problem}"
 
-#: MaRDMO/checks/workflow.py:353 MaRDMO/checks/workflow.py:357 MaRDMO/checks/workflow.py:362 MaRDMO/checks/workflow.py:366 MaRDMO/checks/workflow.py:368 MaRDMO/checks/workflow.py:371 MaRDMO/checks/workflow.py:377 MaRDMO/checks/workflow.py:386 MaRDMO/checks/workflow.py:394 MaRDMO/checks/workflow.py:399 MaRDMO/checks/workflow.py:404 MaRDMO/workflow/constants.py:25 MaRDMO/templates/MaRDMO/preview_workflow.html:177
+#: MaRDMO/checks/workflow.py:294 MaRDMO/checks/workflow.py:297 MaRDMO/checks/workflow.py:300 MaRDMO/checks/workflow.py:304 MaRDMO/checks/workflow.py:306 MaRDMO/checks/workflow.py:308 MaRDMO/checks/workflow.py:312 MaRDMO/checks/workflow.py:318 MaRDMO/checks/workflow.py:324 MaRDMO/checks/workflow.py:327 MaRDMO/checks/workflow.py:331 MaRDMO/workflow/constants.py:25 MaRDMO/templates/MaRDMO/preview_workflow.html:177
 msgid "Data Set"
 msgstr "Datensatz"
 
-#: MaRDMO/checks/workflow.py:353
+#: MaRDMO/checks/workflow.py:294
 msgid "Missing Data Set Type"
 msgstr "Art des Datensatzes fehlt"
 
-#: MaRDMO/checks/workflow.py:357
+#: MaRDMO/checks/workflow.py:297
 msgid "Missing Data Set Proprietary"
 msgstr "Angabe, ob der Datensatz proprietär ist, fehlt"
 
-#: MaRDMO/checks/workflow.py:362
+#: MaRDMO/checks/workflow.py:300
 msgid "Missing File Format"
 msgstr "Dateiformat fehlt"
 
-#: MaRDMO/checks/workflow.py:366
+#: MaRDMO/checks/workflow.py:304
 msgid "Missing Data Size"
 msgstr "Größe des Datensatzes fehlt"
 
-#: MaRDMO/checks/workflow.py:368
+#: MaRDMO/checks/workflow.py:306
 msgid "Missing Data Size Value"
 msgstr "Wert der Größe des Datensatzes fehlt"
 
-#: MaRDMO/checks/workflow.py:371
+#: MaRDMO/checks/workflow.py:308
 msgid "Invalid Data Size Value: {problem}"
 msgstr "Ungültige Größe des Datensatzes: {problem}"
 
-#: MaRDMO/checks/workflow.py:377
+#: MaRDMO/checks/workflow.py:312
 msgid "Missing Data Set Publication Statement"
 msgstr "Angabe zur Veröffentlichung des Datensatzes fehlt"
 
-#: MaRDMO/checks/workflow.py:394
+#: MaRDMO/checks/workflow.py:324
 msgid "Missing Data Set Archival Statement"
 msgstr "Angabe zur Archivierung des Datensatzes fehlt"
 
-#: MaRDMO/checks/workflow.py:399
+#: MaRDMO/checks/workflow.py:327
 msgid "Missing Archival Year"
 msgstr "Archivierungsjahr fehlt"
 
-#: MaRDMO/checks/workflow.py:404
+#: MaRDMO/checks/workflow.py:332
 msgid "Invalid Archival Year: {problem}"
 msgstr "Ungültiges Archivierungsjahr: {problem}"
 
-#: MaRDMO/duplicates.py:256
+#: MaRDMO/duplicates.py:311
 msgid "Its class on the MaRDI Portal is {portal}; MaRDMO would give it the class {ours}."
 msgstr "Seine Klasse auf dem MaRDI Portal ist {portal}; MaRDMO würde ihm die Klasse {ours} geben."
 
-#: MaRDMO/duplicates.py:259
+#: MaRDMO/duplicates.py:314
 msgid "It belongs to {portal}; MaRDMO would add {ours}."
 msgstr "Es gehört zu {portal}; MaRDMO würde {ours} hinzufügen."
 
-#: MaRDMO/duplicates.py:262
+#: MaRDMO/duplicates.py:317
 msgid "Its profile type is {portal}; MaRDMO would add {ours}."
 msgstr "Sein Profiltyp ist {portal}; MaRDMO würde {ours} hinzufügen."
 
-#: MaRDMO/duplicates.py:274
+#: MaRDMO/duplicates.py:328
+msgid "The publication {qid} of the MaRDI Portal has the same label and description, but another DOI: it is another publication, and the portal takes only one item per label and description. MaRDMO cannot export this publication yet."
+msgstr "Die Publikation {qid} des MaRDI Portals hat dasselbe Label und dieselbe Beschreibung, aber eine andere DOI: Sie ist eine andere Publikation, und das Portal nimmt nur ein Item pro Label und Beschreibung an. MaRDMO kann diese Publikation noch nicht exportieren."
+
+#: MaRDMO/duplicates.py:333
 msgid "The Wikidata item {qid} of this documentation has the same label and description, and the MaRDI Portal takes only one item per label and description. Rename yours, or select the Wikidata item."
 msgstr "Das Wikidata-Item {qid} dieser Dokumentation hat dasselbe Label und dieselbe Beschreibung, und das MaRDI Portal nimmt nur ein Item pro Label und Beschreibung an. Benennen Sie Ihres um oder wählen Sie das Wikidata-Item."
 
-#: MaRDMO/duplicates.py:279
+#: MaRDMO/duplicates.py:338
 msgid "The markers of the portal item could not be looked up."
 msgstr "Die Kennzeichen des Portal-Items konnten nicht abgefragt werden."
 
-#: MaRDMO/main.py:129
+#: MaRDMO/main.py:130
 msgid "Something changed since the preview. Open the preview again, fix the points it lists, then export."
 msgstr "Seit der Vorschau hat sich etwas geändert. Öffnen Sie die Vorschau erneut, beheben Sie die aufgeführten Punkte und exportieren Sie dann."
 
-#: MaRDMO/main.py:131
+#: MaRDMO/main.py:132
 msgid "The MaRDI Portal is not reachable at the moment, so the documentation could not be checked completely. Nothing was exported; please try again shortly."
 msgstr "Das MaRDI Portal ist im Moment nicht erreichbar, daher konnte die Dokumentation nicht vollständig geprüft werden. Es wurde nichts exportiert; bitte versuchen Sie es in Kürze erneut."
 
-#: MaRDMO/main.py:180
+#: MaRDMO/main.py:181
 msgid "Export to MaRDI Portal"
 msgstr "Zum MaRDI Portal exportieren"
 
-#: MaRDMO/main.py:189 MaRDMO/main.py:370
+#: MaRDMO/main.py:190 MaRDMO/main.py:374
 msgid "Catalog Error"
 msgstr "Katalogfehler"
 
-#: MaRDMO/main.py:190
+#: MaRDMO/main.py:191
 msgid "The catalog is not supported by the MaRDMO Plugin."
 msgstr "Der Katalog wird vom MaRDMO-Plugin nicht unterstützt."
 
-#: MaRDMO/main.py:212
+#: MaRDMO/main.py:213
 msgid "Missing Credentials"
 msgstr "Zugangsdaten fehlen"
 
-#: MaRDMO/main.py:213
+#: MaRDMO/main.py:214
 msgid "Credentials for MaRDI Portal are missing!"
 msgstr "Die Zugangsdaten für das MaRDI Portal fehlen!"
 
-#: MaRDMO/main.py:225 MaRDMO/main.py:395
+#: MaRDMO/main.py:226 MaRDMO/main.py:399
 msgid "Unknown catalog"
 msgstr "Unbekannter Katalog"
 
-#: MaRDMO/main.py:226 MaRDMO/main.py:396
+#: MaRDMO/main.py:227 MaRDMO/main.py:400
 msgid "Cannot handle this catalog type."
 msgstr "Dieser Katalogtyp kann nicht verarbeitet werden."
 
-#: MaRDMO/main.py:254
+#: MaRDMO/main.py:255
 msgid "MaRDI Portal not reachable"
 msgstr "MaRDI Portal nicht erreichbar"
 
-#: MaRDMO/main.py:260
+#: MaRDMO/main.py:261
 msgid "Export not possible"
 msgstr "Export nicht möglich"
 
-#: MaRDMO/main.py:264
+#: MaRDMO/main.py:265
 msgid "Incomplete or Inconsistent Documentation"
 msgstr "Unvollständige oder widersprüchliche Dokumentation"
 
-#: MaRDMO/main.py:363
+#: MaRDMO/main.py:367
 msgid "Query MaRDI Portal"
 msgstr "MaRDI Portal abfragen"
 
-#: MaRDMO/main.py:371
+#: MaRDMO/main.py:375
 msgid "The catalog is not supported by the MaRDMO Query Plugin."
 msgstr "Der Katalog wird vom MaRDMO-Abfrage-Plugin nicht unterstützt."
 
-#: MaRDMO/main.py:413
+#: MaRDMO/main.py:417
 msgid "Workflow(s)"
 msgstr "Workflow(s)"
 
-#: MaRDMO/main.py:415
+#: MaRDMO/main.py:419
 msgid "Mathematical Model(s)"
 msgstr "Mathematische(s) Modell(e)"
 
-#: MaRDMO/main.py:417
+#: MaRDMO/main.py:421
 msgid "Algorithm(s)"
 msgstr "Algorithmus/Algorithmen"
 
-#: MaRDMO/main.py:419
+#: MaRDMO/main.py:423
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -632,7 +640,7 @@ msgstr "Unbekannt"
 msgid "author"
 msgstr "Autor/in"
 
-#: MaRDMO/oauth2.py:86 MaRDMO/templatetags/mardmo_tags.py:250
+#: MaRDMO/oauth2.py:86 MaRDMO/templatetags/mardmo_tags.py:286
 msgid "journal"
 msgstr "Zeitschrift"
 
@@ -749,51 +757,63 @@ msgstr "Das MaRDI Portal war nicht erreichbar (keine Antwort nach mehreren Versu
 msgid "The MaRDI Portal rejected the request (HTTP 422): %(reason)s"
 msgstr "Das MaRDI Portal hat die Anfrage abgelehnt (HTTP 422): %(reason)s"
 
-#: MaRDMO/payload.py:356
-msgid "Missing Item in Statement!"
-msgstr "Item in der Aussage fehlt!"
-
-#: MaRDMO/payload.py:358
-msgid "All Items need to have a 'Name' and 'Description'!"
-msgstr "Alle Items brauchen einen 'Namen' und eine 'Beschreibung'!"
-
-#: MaRDMO/payload.py:480
-msgid "\"{item}\", {property}: invalid number (\"{value}\")"
-msgstr "\"{item}\", {property}: ungültige Zahl (\"{value}\")"
-
-#: MaRDMO/payload.py:486
-msgid "\"{item}\", {property}: invalid date (\"{value}\")"
-msgstr "\"{item}\", {property}: ungültiges Datum (\"{value}\")"
-
-#: MaRDMO/payload.py:554
-msgid "\"{owner}\": refers to an item that is not part of the export ({key}); nothing was exported, please report this to the MaRDMO developers"
-msgstr "\"{owner}\": verweist auf ein Item, das nicht Teil des Exports ist ({key}); es wurde nichts exportiert, bitte melden Sie das den MaRDMO-Entwicklern"
-
-#: MaRDMO/payload.py:675
+#: MaRDMO/payload.py:184
 msgid "Could not check which statements already exist on the MaRDI Portal (API not reachable). Nothing was exported; please try again later."
 msgstr "Es konnte nicht geprüft werden, welche Aussagen es auf dem MaRDI Portal schon gibt (API nicht erreichbar). Es wurde nichts exportiert; bitte versuchen Sie es später erneut."
 
-#: MaRDMO/payload.py:677
+#: MaRDMO/payload.py:186
 msgid "Could not check which formulas already exist on the MaRDI Portal (API not reachable). Nothing was exported; please try again later."
 msgstr "Es konnte nicht geprüft werden, welche Formeln es auf dem MaRDI Portal schon gibt (API nicht erreichbar). Es wurde nichts exportiert; bitte versuchen Sie es später erneut."
 
-#: MaRDMO/payload.py:902
+#: MaRDMO/payload.py:416
+msgid "Missing Item in Statement!"
+msgstr "Item in der Aussage fehlt!"
+
+#: MaRDMO/payload.py:419
+msgid "All Items need to have a 'Name' and 'Description'!"
+msgstr "Alle Items brauchen einen 'Namen' und eine 'Beschreibung'!"
+
+#: MaRDMO/payload.py:545
+msgid "\"{item}\", {property}: invalid number (\"{value}\")"
+msgstr "\"{item}\", {property}: ungültige Zahl (\"{value}\")"
+
+#: MaRDMO/payload.py:551
+msgid "\"{item}\", {property}: invalid date (\"{value}\")"
+msgstr "\"{item}\", {property}: ungültiges Datum (\"{value}\")"
+
+#: MaRDMO/payload.py:629
+msgid "\"{owner}\": refers to an item that is not part of the export ({key}); nothing was exported, please report this to the MaRDMO developers"
+msgstr "\"{owner}\": verweist auf ein Item, das nicht Teil des Exports ist ({key}); es wurde nichts exportiert, bitte melden Sie das den MaRDMO-Entwicklern"
+
+#: MaRDMO/payload.py:938
 msgid "\"{label}\" ({qid}): on the MaRDI Portal the symbol {symbol} already stands for {other}. MaRDMO cannot change this: use that quantity for the symbol, or correct it on the MaRDI Portal."
 msgstr "\"{label}\" ({qid}): Auf dem MaRDI Portal steht das Symbol {symbol} schon für {other}. MaRDMO kann das nicht ändern: Verwenden Sie diese Quantität für das Symbol oder korrigieren Sie es auf dem MaRDI Portal."
 
-#: MaRDMO/payload.py:1466
+#: MaRDMO/payload.py:1539
 msgid "Could not check which Wikidata items already exist on the MaRDI Portal (the portal did not answer). Nothing was exported; please try again later."
 msgstr "Es konnte nicht geprüft werden, welche Wikidata-Items es auf dem MaRDI Portal schon gibt (das Portal hat nicht geantwortet). Es wurde nichts exportiert; bitte versuchen Sie es später erneut."
 
-#: MaRDMO/payload.py:1479
+#: MaRDMO/payload.py:1544
+msgid "Could not check which publications already exist on the MaRDI Portal by their DOI (the portal did not answer). Nothing was exported; please try again later."
+msgstr "Es konnte nicht über ihre DOI geprüft werden, welche Publikationen es auf dem MaRDI Portal schon gibt (das Portal hat nicht geantwortet). Es wurde nichts exportiert; bitte versuchen Sie es später erneut."
+
+#: MaRDMO/payload.py:1557
 msgid "'{name}' ({description}) has the label and description of the Wikidata item {qid} of this documentation; the MaRDI Portal takes only one item per label and description. Rename yours, or select the Wikidata item."
 msgstr "'{name}' ({description}) hat das Label und die Beschreibung des Wikidata-Items {qid} dieser Dokumentation; das MaRDI Portal nimmt nur ein Item pro Label und Beschreibung an. Benennen Sie Ihres um oder wählen Sie das Wikidata-Item."
 
-#: MaRDMO/payload.py:1485
+#: MaRDMO/payload.py:1563
+msgid "'{name}' has the DOI {doi}, which the MaRDI Portal has as {portal_qid}: it is this publication. Use the portal item (in the preview), or correct the DOI."
+msgstr "'{name}' hat die DOI {doi}, die das MaRDI Portal als {portal_qid} hat: Es ist diese Publikation. Verwenden Sie das Portal-Item (in der Vorschau), oder korrigieren Sie die DOI."
+
+#: MaRDMO/payload.py:1569
+msgid "'{name}' ({description}) has the label and description of the publication {portal_qid} of the MaRDI Portal, which has another DOI; the portal takes only one item per label and description. MaRDMO cannot export this publication yet."
+msgstr "'{name}' ({description}) hat das Label und die Beschreibung der Publikation {portal_qid} des MaRDI Portals, die eine andere DOI hat; das Portal nimmt nur ein Item pro Label und Beschreibung an. MaRDMO kann diese Publikation noch nicht exportieren."
+
+#: MaRDMO/payload.py:1575
 msgid "'{name}' ({description}) is the Wikidata item {qid}, which exists on the MaRDI Portal as {portal_qid}. Use the portal item, or choose another item or make it a new item."
 msgstr "'{name}' ({description}) ist das Wikidata-Item {qid}, das es auf dem MaRDI Portal als {portal_qid} gibt. Verwenden Sie das Portal-Item, oder wählen Sie ein anderes Item oder machen Sie es zu einem neuen Item."
 
-#: MaRDMO/payload.py:1491
+#: MaRDMO/payload.py:1581
 msgid "An item ({qid}) with the label '{name}' and description '{description}' already exists on the MaRDI Portal. Use the portal item, or rename yours."
 msgstr "Ein Item ({qid}) mit dem Label '{name}' und der Beschreibung '{description}' gibt es auf dem MaRDI Portal schon. Verwenden Sie das Portal-Item oder benennen Sie Ihres um."
 
@@ -801,77 +821,77 @@ msgstr "Ein Item ({qid}) mit dem Label '{name}' und der Beschreibung '{descripti
 msgid "Export"
 msgstr "Export"
 
-#: MaRDMO/pipeline.py:94
+#: MaRDMO/pipeline.py:116
 msgid "Could not check which items are on the MaRDI Portal already."
 msgstr "Es konnte nicht geprüft werden, welche Items es auf dem MaRDI Portal schon gibt."
 
-#: MaRDMO/pipeline.py:106
+#: MaRDMO/pipeline.py:128
 msgid "The MaRDI Portal did not answer."
 msgstr "Das MaRDI Portal hat nicht geantwortet."
 
-#: MaRDMO/pipeline.py:116
+#: MaRDMO/pipeline.py:140
 msgid "The new items could not be put in an order of creation ({items}); nothing was exported, please report this to the MaRDMO developers"
 msgstr "Die neuen Items konnten nicht in eine Reihenfolge zum Anlegen gebracht werden ({items}); es wurde nichts exportiert, bitte melden Sie das den MaRDMO-Entwicklern"
 
-#: MaRDMO/problems.py:19
+#: MaRDMO/problems.py:24
 msgid "Following aspects prevented the export:"
 msgstr "Folgende Punkte haben den Export verhindert:"
 
-#: MaRDMO/problems.py:41
+#: MaRDMO/problems.py:48
 msgid "{section} (Page {tab}): {message}"
 msgstr "{section} (Seite {tab}): {message}"
 
-#: MaRDMO/templatetags/mardmo_tags.py:40
+#: MaRDMO/templatetags/mardmo_tags.py:44
 msgid "kilobyte"
 msgstr "Kilobyte"
 
-#: MaRDMO/templatetags/mardmo_tags.py:40
+#: MaRDMO/templatetags/mardmo_tags.py:44
 msgid "megabyte"
 msgstr "Megabyte"
 
-#: MaRDMO/templatetags/mardmo_tags.py:40
+#: MaRDMO/templatetags/mardmo_tags.py:44
 msgid "gigabyte"
 msgstr "Gigabyte"
 
-#: MaRDMO/templatetags/mardmo_tags.py:40
+#: MaRDMO/templatetags/mardmo_tags.py:44
 msgid "terabyte"
 msgstr "Terabyte"
 
-#: MaRDMO/templatetags/mardmo_tags.py:40
+#: MaRDMO/templatetags/mardmo_tags.py:44
 msgid "items"
 msgstr "Einträge"
 
-#: MaRDMO/templatetags/mardmo_tags.py:88
+#: MaRDMO/templatetags/mardmo_tags.py:99
 msgid "item without page"
 msgstr "Item ohne Seite"
 
-#: MaRDMO/templatetags/mardmo_tags.py:152
-msgid "not verified by the MaRDI Portal"
-msgstr "nicht vom MaRDI Portal geprüft"
-
-#: MaRDMO/templatetags/mardmo_tags.py:166
+#: MaRDMO/templatetags/mardmo_tags.py:167
 msgid "the MaRDI Portal's TeX check failed on this formula; it is exported unchecked"
 msgstr "die TeX-Prüfung des MaRDI Portals ist an dieser Formel gescheitert; sie wird ungeprüft exportiert"
 
-#: MaRDMO/tex_check.py:104
-msgid "the check fails on {commands} in a subscript; \\text{{…}} avoids that"
-msgstr "die Prüfung scheitert an {commands} in einem Index; \\text{{…}} vermeidet das"
+#: MaRDMO/templatetags/mardmo_tags.py:175
+msgid "not verified by the MaRDI Portal"
+msgstr "nicht vom MaRDI Portal geprüft"
 
-#: MaRDMO/templatetags/mardmo_tags.py:248
+#: MaRDMO/templatetags/mardmo_tags.py:284
 msgid "publication"
 msgstr "Publikation"
 
-#: MaRDMO/templatetags/mardmo_tags.py:253
+#: MaRDMO/templatetags/mardmo_tags.py:289
 msgid "{count} author"
 msgid_plural "{count} authors"
 msgstr[0] "{count} Autor/in"
 msgstr[1] "{count} Autor/innen"
 
-#: MaRDMO/tex_check.py:67
+#: MaRDMO/tex_check.py:83
 msgid "{environments} is not supported; supported environments are {supported}"
 msgid_plural "{environments} are not supported; supported environments are {supported}"
 msgstr[0] "{environments} wird nicht unterstützt; unterstützte Umgebungen sind {supported}"
 msgstr[1] "{environments} werden nicht unterstützt; unterstützte Umgebungen sind {supported}"
+
+#: MaRDMO/tex_check.py:104
+msgid "the check fails on {commands} in a subscript; \\text{{…}} avoids that"
+msgstr "die Prüfung scheitert an {commands} in einem Index; \\text{{…}} vermeidet das"
 
 #: MaRDMO/validators.py:104
 msgid "URL must start with http:// or https://"
@@ -905,7 +925,7 @@ msgstr "Die URL braucht eine Domain wie example.org"
 msgid "Enter only the DOI (e.g. 10.1000/xyz123), not the link"
 msgstr "Geben Sie nur die DOI ein (z. B. 10.1000/xyz123), nicht den Link"
 
-#: MaRDMO/validators.py:195
+#: MaRDMO/validators.py:195 MaRDMO/validators.py:444
 msgid "DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)"
 msgstr "Die DOI muss die Form 10.XXXX/Suffix haben (z. B. 10.1000/xyz123)"
 
@@ -953,55 +973,59 @@ msgstr "Geben Sie nur die DOI ein (z. B. 10.1000/xyz123), nicht den Link."
 msgid "Invalid DOI. Expected format: 10.XXXX/suffix (e.g. 10.1000/xyz123)."
 msgstr "Ungültige DOI. Erwartetes Format: 10.XXXX/Suffix (z. B. 10.1000/xyz123)."
 
-#: MaRDMO/validators.py:482
+#: MaRDMO/validators.py:446
+msgid "Invalid DOI: {problem}"
+msgstr "Ungültige DOI: {problem}"
+
+#: MaRDMO/validators.py:503
 msgid "must be a whole number (e.g. 4)"
 msgstr "muss eine ganze Zahl sein (z. B. 4)"
 
-#: MaRDMO/validators.py:484
+#: MaRDMO/validators.py:505
 msgid "must be at least 1"
 msgstr "muss mindestens 1 sein"
 
-#: MaRDMO/validators.py:486
+#: MaRDMO/validators.py:507
 msgid "must not start with 0 (e.g. 8 instead of 08)"
 msgstr "darf nicht mit 0 beginnen (z. B. 8 statt 08)"
 
-#: MaRDMO/validators.py:503
+#: MaRDMO/validators.py:524
 msgid "use a dot as decimal separator (e.g. 1.5)"
 msgstr "verwenden Sie einen Punkt als Dezimaltrennzeichen (z. B. 1.5)"
 
-#: MaRDMO/validators.py:506
+#: MaRDMO/validators.py:527
 msgid "must not start with 0 (e.g. 7.5 instead of 07.5)"
 msgstr "darf nicht mit 0 beginnen (z. B. 7.5 statt 07.5)"
 
-#: MaRDMO/validators.py:507
+#: MaRDMO/validators.py:528
 msgid "must be a number (e.g. 12 or 1.5)"
 msgstr "muss eine Zahl sein (z. B. 12 oder 1.5)"
 
-#: MaRDMO/validators.py:509
+#: MaRDMO/validators.py:530
 msgid "must be greater than 0"
 msgstr "muss größer als 0 sein"
 
-#: MaRDMO/validators.py:525
+#: MaRDMO/validators.py:546
 msgid "Enter a whole number of at least 1 without leading zeros (e.g. 4)."
 msgstr "Geben Sie eine ganze Zahl von mindestens 1 ohne führende Nullen ein (z. B. 4)."
 
-#: MaRDMO/validators.py:547
+#: MaRDMO/validators.py:568
 msgid "Enter the number of items as a whole number of at least 1 (e.g. 250)."
 msgstr "Geben Sie die Anzahl der Einträge als ganze Zahl von mindestens 1 ein (z. B. 250)."
 
-#: MaRDMO/validators.py:551
+#: MaRDMO/validators.py:572
 msgid "Use a dot as decimal separator (e.g. 1.5)."
 msgstr "Verwenden Sie einen Punkt als Dezimaltrennzeichen (z. B. 1.5)."
 
-#: MaRDMO/validators.py:553
+#: MaRDMO/validators.py:574
 msgid "Enter the size as a number (e.g. 12 or 1.5)."
 msgstr "Geben Sie die Größe als Zahl ein (z. B. 12 oder 1.5)."
 
-#: MaRDMO/validators.py:574
+#: MaRDMO/validators.py:595
 msgid "Archival year must be a 4-digit year (e.g. 2030)."
 msgstr "Das Archivierungsjahr muss eine vierstellige Jahreszahl sein (z. B. 2030)."
 
-#: MaRDMO/validators.py:633
+#: MaRDMO/validators.py:654
 msgid "Inconsistent properties: {a} and {b} cannot both be selected."
 msgstr "Widersprüchliche Eigenschaften: {a} und {b} können nicht beide ausgewählt werden."
 
@@ -1109,7 +1133,7 @@ msgstr "Dieser Export kann keine Portal-Items verwenden."
 msgid "The item is not, or no longer, a duplicate of this portal item."
 msgstr "Das Item ist kein Duplikat dieses Portal-Items (mehr)."
 
-#: MaRDMO/views.py:431 MaRDMO/templates/MaRDMO/partials/_before_export.html:77
+#: MaRDMO/views.py:431 MaRDMO/templates/MaRDMO/partials/_before_export.html:92
 msgid "This item cannot become the portal item."
 msgstr "Dieses Item kann nicht zum Portal-Item werden."
 
@@ -1186,13 +1210,27 @@ msgstr "Zum"
 msgid "Alias"
 msgstr "Alias"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:5
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:6
 msgid "Before you export"
 msgstr "Bevor Sie exportieren"
 
 #: MaRDMO/templates/MaRDMO/partials/_before_export.html:9
 msgid "Nothing prevents the export"
 msgstr "Nichts verhindert den Export"
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:10
+#, python-format
+msgid "%(counter)s item is already on the MaRDI Portal"
+msgid_plural "%(counter)s items are already on the MaRDI Portal"
+msgstr[0] "%(counter)s Item gibt es schon auf dem MaRDI Portal"
+msgstr[1] "%(counter)s Items gibt es schon auf dem MaRDI Portal"
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:16
+#, python-format
+msgid "%(counter)s point to fix in the documentation"
+msgid_plural "%(counter)s points to fix in the documentation"
+msgstr[0] "%(counter)s Punkt ist in der Dokumentation zu beheben"
+msgstr[1] "%(counter)s Punkte sind in der Dokumentation zu beheben"
 
 #: MaRDMO/templates/MaRDMO/partials/_before_export.html:22
 #, python-format
@@ -1201,127 +1239,126 @@ msgid_plural "%(counter)s portal items could be completed"
 msgstr[0] "%(counter)s Item des Portals könnte ergänzt werden"
 msgstr[1] "%(counter)s Items des Portals könnten ergänzt werden"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:150
-msgid "Portal items you could complete (optional)"
-msgstr "Items des Portals, die Sie ergänzen könnten (optional)"
-
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:152
-msgid "These items are on the MaRDI Portal already and lack something, or have a value the portal should not have. The export does not need it: you can export as it is. What you add in the interview is added to the portal item."
-msgstr "Diese Items gibt es auf dem MaRDI Portal schon, und ihnen fehlt etwas, oder sie haben einen Wert, den das Portal nicht haben sollte. Der Export braucht das nicht: Sie können so exportieren. Was Sie im Interview ergänzen, wird dem Item des Portals hinzugefügt."
-
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:8
-#, python-format
-msgid "%(counter)s item is already on the MaRDI Portal"
-msgid_plural "%(counter)s items are already on the MaRDI Portal"
-msgstr[0] "%(counter)s Item gibt es schon auf dem MaRDI Portal"
-msgstr[1] "%(counter)s Items gibt es schon auf dem MaRDI Portal"
-
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:14
-#, python-format
-msgid "%(counter)s point to fix in the documentation"
-msgid_plural "%(counter)s points to fix in the documentation"
-msgstr[0] "%(counter)s Punkt ist in der Dokumentation zu beheben"
-msgstr[1] "%(counter)s Punkte sind in der Dokumentation zu beheben"
-
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:24
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:32
 msgid "Items already on the MaRDI Portal"
 msgstr "Items, die es auf dem MaRDI Portal schon gibt"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:28
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:36
 msgid "MaRDMO could not check which items are on the MaRDI Portal already (the portal did not answer). Please try again shortly."
 msgstr "MaRDMO konnte nicht prüfen, welche Items es auf dem MaRDI Portal schon gibt (das Portal hat nicht geantwortet). Bitte versuchen Sie es in Kürze erneut."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:34
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:42
 msgid "The export would create these items, but the MaRDI Portal has them already. Check the portal item, then decide for each: use the portal item, or redefine yours."
 msgstr "Der Export würde diese Items anlegen, aber das MaRDI Portal hat sie schon. Prüfen Sie das Item des Portals und entscheiden Sie dann für jedes: das Item des Portals verwenden oder Ihres neu definieren."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:49
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:57
 msgid "In the interview"
 msgstr "Im Interview"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:53
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:61
 msgid "relations only"
 msgstr "nur in Beziehungen"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:57
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:65
 msgid "On the MaRDI Portal"
 msgstr "Auf dem MaRDI Portal"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:59
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:67
 msgid "not yet; please check the Wikidata item of this documentation:"
 msgstr "noch nicht; bitte prüfen Sie das Wikidata-Item dieser Dokumentation:"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:62
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:70
 msgid "Please check:"
 msgstr "Bitte prüfen:"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:68
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:77 MaRDMO/templates/MaRDMO/partials/_before_export.html:83
 msgid "Your decision"
 msgstr "Ihre Entscheidung"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:74
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:89
 msgid "Use this item: it replaces your item and all its relations."
 msgstr "Dieses Item verwenden: Es ersetzt Ihr Item und alle seine Beziehungen."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:74 MaRDMO/templates/MaRDMO/partials/_before_export.html:77
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:89 MaRDMO/templates/MaRDMO/partials/_before_export.html:92
 msgid "Use this item"
 msgstr "Dieses Item verwenden"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:80
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
+msgid "Redefine: go back to the interview and check the DOI of the publication."
+msgstr "Neu definieren: Prüfen Sie im Interview die DOI der Publikation."
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
 msgid "Redefine: go back to the interview and choose another item, or make it a new item."
 msgstr "Neu definieren: Wählen Sie im Interview ein anderes Item oder legen Sie ein neues Item an."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:80
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
 msgid "Redefine: go back to the interview and give your item a new label and description, or select the Wikidata item there."
 msgstr "Neu definieren: Geben Sie Ihrem Item im Interview ein neues Label und eine neue Beschreibung, oder wählen Sie dort das Wikidata-Item."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:80
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
 msgid "Redefine: go back to the interview and give your item a new label and description."
 msgstr "Neu definieren: Geben Sie Ihrem Item im Interview ein neues Label und eine neue Beschreibung."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:80
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
 msgid "Redefine"
 msgstr "Neu definieren"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:85 MaRDMO/templates/MaRDMO/partials/_before_export.html:85
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:103 MaRDMO/templates/MaRDMO/partials/_before_export.html:103
 msgid "Why can this item not be used?"
 msgstr "Warum lässt sich dieses Item nicht verwenden?"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:90
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:108
+msgid "The name and description of a publication are those of its citation. Check its DOI on its page."
+msgstr "Name und Beschreibung einer Publikation sind die ihrer Zitation. Prüfen Sie ihre DOI auf ihrer Seite."
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:110
 msgid "Give your item a new label and description on its page, or select the Wikidata item there."
 msgstr "Geben Sie Ihrem Item auf seiner Seite ein neues Label und eine neue Beschreibung, oder wählen Sie dort das Wikidata-Item."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:92
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:112
 msgid "Choose another item on its page, or make it a new item: the portal item is another kind of item, and a new name would not change its Wikidata QID."
 msgstr "Wählen Sie auf seiner Seite ein anderes Item oder legen Sie ein neues Item an: Das Item des Portals ist eine andere Art von Item, und ein neuer Name würde seine Wikidata-QID nicht ändern."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:94
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:114
 msgid "Give your item a new label and description on its page, or open the preview again later: then the portal item may be usable."
 msgstr "Geben Sie Ihrem Item auf seiner Seite ein neues Label und eine neue Beschreibung, oder öffnen Sie die Vorschau später erneut: Dann lässt sich das Item des Portals vielleicht verwenden."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:96
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:116
 msgid "Give your item a new label and description on its page."
 msgstr "Geben Sie Ihrem Item auf seiner Seite ein neues Label und eine neue Beschreibung."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:108
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:128
 msgid "Apply"
 msgstr "Übernehmen"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:112 MaRDMO/templates/MaRDMO/partials/_before_export.html:139
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:132 MaRDMO/templates/MaRDMO/partials/_before_export.html:140 MaRDMO/templates/MaRDMO/partials/_before_export.html:168 MaRDMO/templates/MaRDMO/partials/_before_export.html:195
 msgid "To interview"
 msgstr "Zum Interview"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:126
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:137
+#, python-format
+msgid "The MaRDI Portal has this DOI as %(qid)s: it is this publication. If the DOI is wrong, correct it on the publication's page."
+msgstr "Das MaRDI Portal hat diese DOI als %(qid)s: Es ist diese Publikation. Ist die DOI falsch, korrigieren Sie sie auf der Seite der Publikation."
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:155
 msgid "Errors, inconsistencies and incomplete documentation"
 msgstr "Fehler, Widersprüche und unvollständige Dokumentation"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:130 MaRDMO/templates/MaRDMO/preview.html:34
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:159 MaRDMO/templates/MaRDMO/preview.html:34
 msgid "The MaRDI Portal is not reachable at the moment, so the documentation could not be checked completely. Please try again shortly."
 msgstr "Das MaRDI Portal ist im Moment nicht erreichbar, daher konnte die Dokumentation nicht vollständig geprüft werden. Bitte versuchen Sie es in Kürze erneut."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:134
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:163
 msgid "Fix these points in the interview, then open the preview again."
 msgstr "Beheben Sie diese Punkte im Interview und öffnen Sie dann die Vorschau erneut."
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:183
+msgid "Portal items you could complete (optional)"
+msgstr "Items des Portals, die Sie ergänzen könnten (optional)"
+
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:185
+msgid "These items are on the MaRDI Portal already and lack something, or have a value the portal should not have. The export does not need it: you can export as it is. What you add in the interview is added to the portal item."
+msgstr "Diese Items gibt es auf dem MaRDI Portal schon, und ihnen fehlt etwas, oder sie haben einen Wert, den das Portal nicht haben sollte. Der Export braucht das nicht: Sie können so exportieren. Was Sie im Interview ergänzen, wird dem Item des Portals hinzugefügt."
 
 #: MaRDMO/templates/MaRDMO/partials/_defining_formula.html:3
 msgid "Defining formulations"

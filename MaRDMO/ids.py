@@ -15,6 +15,7 @@ with the old one (see :func:`assign_id`); after an export,
 :func:`~MaRDMO.helpers.replace_ids` gives them the item's new portal ID.
 '''
 import uuid
+from urllib.parse import unquote
 
 from django.db.models import Q
 from rdmo.projects.models import Value
@@ -26,6 +27,14 @@ NOT_FOUND = 'not found'
 # Text of the option NOT_FOUND in the ID dropdown of a page
 NEW_ITEM = 'new item'
 SOURCES = ('user', 'mardi', 'wikidata')
+
+# A publication is selected by its identifier with a prefix (#158); for now the DOI.
+# The option of a new publication has the ID NEW_DOI + DOI, which the router turns
+# into a user: ID (assign_id)
+DOI_PREFIX = 'doi:'
+NEW_DOI = 'new:doi:'
+# Links to a DOI that are dropped when pasted after the prefix
+_DOI_LINKS = ('https://doi.org/', 'http://doi.org/', 'https://dx.doi.org/', 'http://dx.doi.org/', 'doi.org/')
 
 # Attribute URIs of the answers that hold an item's ID (see id_attributes)
 _ID_ATTRIBUTES = set()
@@ -96,7 +105,9 @@ def assign_id(value):
     '''Give the answer *value*, before it is saved, a real ID.
 
     "not found" (the option "new item", or the typed label of a relation)
-    becomes a new ``user:`` ID: a new item.  On the ID of a page
+    becomes a new ``user:`` ID: a new item, and so does the option of a new
+    publication (``new:doi:<DOI>``, #158), whose DOI is kept on the answer
+    (``mardmo_doi``) for the handler.  On the ID of a page
     (:func:`id_attributes`) an answer that has a ``user:`` ID already keeps
     it, so selecting "new item" again does not make a new item; a portal
     item switched to "new item" is the template of a new one.  A relation
@@ -111,6 +122,11 @@ def assign_id(value):
     Args:
         value: Unsaved :class:`~rdmo.projects.models.Value` of a MaRDMO catalog.
     '''
+    if (value.external_id or '').startswith(NEW_DOI):
+        # A new publication by its DOI (#158): a user: ID like "new item"; the DOI
+        # goes on to the handler with the answer (publication.handlers)
+        value.mardmo_doi = value.external_id[len(NEW_DOI):]
+        value.external_id = NOT_FOUND
     if value.external_id != NOT_FOUND:
         return
     if value.attribute.uri in id_attributes() and value.pk:
@@ -119,6 +135,26 @@ def assign_id(value):
             value.external_id = old
             return
     value.external_id = new_user_id()
+
+
+def publication_doi(text):
+    '''The DOI of the identifier *text* typed for a publication (``doi:10.1000/x``), or ``None``.
+
+    The prefix is required (case does not matter); spaces around and a link
+    pasted after the prefix (``doi:https://doi.org/10.1000/x``) are dropped.
+    A link is percent-encoded (``%3C`` for ``<``, ``%23`` for ``#`` in old
+    DOIs): its DOI is decoded.  The DOI itself is not checked:
+    :func:`~MaRDMO.validators.doi_problem` does.
+    '''
+    prefix, separator, rest = (text or '').strip().partition(':')
+    if not separator or prefix.strip().lower() != DOI_PREFIX[:-1]:
+        return None
+    doi = rest.strip()
+    for link in _DOI_LINKS:
+        if doi.lower().startswith(link):
+            doi = unquote(doi[len(link):].strip())
+            break
+    return doi
 
 
 def item_key(identifier, name, description):

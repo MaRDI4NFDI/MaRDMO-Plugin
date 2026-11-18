@@ -9,8 +9,9 @@ item selected on a page fills it and adds the pages of its relations, a
 new item typed into a relation gets a page of its own.
 
 Items are selected from the options of the question's provider, searched
-by their label, as the user would: a portal item the search does not offer
-(another class, say) cannot be selected and stops the build.
+by their label (publications by their DOI), as the user would: a portal
+item the search does not offer (another class, say) cannot be selected and
+stops the build.
 
     doc = Documentation(project, catalog)
     model = doc.tab('model', 'MM1', New('MaRDMO synthetic model A', 'synthetic model'))
@@ -28,7 +29,7 @@ from rdmo.options.models import Option
 from rdmo.projects.models import Value
 from rdmo.projects.signals import value_created, value_updated
 
-from MaRDMO.ids import NEW_ITEM, NOT_FOUND
+from MaRDMO.ids import DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND
 from MaRDMO.router import PRESAVE_VALIDATOR_MAP
 
 from .catalog import DOMAIN, OPTIONS, Catalog
@@ -65,6 +66,22 @@ class Wikidata:
     @property
     def id(self):
         return f'wikidata:{self.qid}'
+
+
+@dataclass
+class Doi:
+    '''A publication, selected by its DOI as the user types it (``doi:10.…``, #158).
+
+    *found* is the item the dropdown offers for it (``mardi:Q…`` or
+    ``wikidata:Q…``); ``None`` for a new publication (the option is the DOI
+    itself).
+    '''
+    doi: str
+    found: Optional[str] = None
+
+    @property
+    def id(self):
+        return self.found or f'{NEW_DOI}{self.doi}'
 
 
 @dataclass
@@ -116,7 +133,8 @@ class Documentation:
         '''A new page (tab *name*) of *section* for *item* (:class:`New`, :class:`Portal`, :class:`Wikidata`).
 
         A new item gets its name and short description as the user types them;
-        a new publication gets them from its citation (its DOI, see :meth:`Tab.answer`).
+        a publication is selected by its DOI (:class:`Doi`), a new one gets
+        them from its citation.
         '''
         page = self.catalog.page(section)
         index = self._next_tab(section)
@@ -370,6 +388,8 @@ class Tab:
             search, wanted = item.label, (NOT_FOUND, item.label)
         elif isinstance(item, Tab):
             search, wanted = item.label, (item.id, None)
+        elif isinstance(item, Doi):
+            search, wanted = f'{DOI_PREFIX}{item.doi}', (item.id, None)
         else:
             search, wanted = item.search or item.label, (item.id, None)
         options = self.doc.options(question, search)
