@@ -4,7 +4,8 @@ On every ``value_created`` or ``value_updated`` signal the post-save router chec
 whether the project's catalog is a MaRDMO catalog and, if so, looks up the
 saved attribute URI in ``HANDLER_MAP`` to call the matching handler method; a
 page's saved name or description also goes to the answers that refer to its
-item (:func:`~MaRDMO.ids.sync_text`).  Only the interview sends these signals,
+item (:func:`~MaRDMO.ids.sync_text`), and when a tab gets another item, the
+answers that referred to the old one follow it (:func:`~MaRDMO.ids.follow_tab`).  Only the interview sends these signals,
 so hydration and imports are not synced (their texts come with them).
 
 On every Django ``post_delete`` signal on ``Value`` the post-delete router does the
@@ -48,7 +49,7 @@ from django.core.signals import request_finished, request_started
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 from django.urls import Resolver404, resolve
-from rdmo.projects.models import Value
+from rdmo.projects.models import Project, Value
 from rdmo.projects.signals import value_created, value_updated
 from .constants import (
     CATALOG_MODEL_NAME,
@@ -57,7 +58,7 @@ from .constants import (
     CATALOG_WORKFLOW_NAME,
 )
 from .helpers import batched_writes, is_internal_write
-from .ids import assign_id, id_attributes, remove_references, sync_text
+from .ids import assign_id, follow_tab, give_copies_their_ids, id_attributes, is_tab_id, remove_references, sync_text
 from .builders import (
     build_post_save_handler_set,
     build_post_delete_handler_set,
@@ -107,10 +108,31 @@ def _remember_request_path(sender, environ=None, scope=None, **kwargs):  # pylin
     _request_path.set(path)
 
 
+# RDMO's "Copy tab" and taking over a tab from another project
+_COPY_SET_VIEW = 'v1-projects:project-value-copy-set'
+
+
 @receiver(request_finished)
 def _forget_request_path(sender, **kwargs):  # pylint: disable=unused-argument
-    '''Clear the stored request path once the response is finished.'''
+    '''Clear the stored request path once the response is finished.
+
+    After RDMO copied a tab, the copies of own items first get IDs of their
+    own (:func:`~MaRDMO.ids.give_copies_their_ids`, #186): RDMO writes the
+    copy without signals, and this is the first moment MaRDMO can act.
+    '''
+    path = _request_path.get()
     _request_path.set(None)
+    if not path:
+        return
+    try:
+        match = resolve(path)
+    except Resolver404:
+        return
+    if match.view_name != _COPY_SET_VIEW:
+        return
+    project = Project.objects.filter(pk=match.kwargs.get('parent_lookup_project')).select_related('catalog').first()
+    if project is not None and str(project.catalog).endswith(_MARDMO_CATALOGS):
+        give_copies_their_ids(project.pk)
 
 
 def _is_interview_save():
@@ -173,6 +195,10 @@ def mardmo_router_post_save(sender, instance, update_fields=None, **kwargs):  # 
     # saves a cleared text too, so this also covers clearing)
     if attr_uri.endswith(('/name', '/description')):
         sync_text(instance)
+
+    # A tab is the item: its links follow when its item changes (#186)
+    if is_tab_id(instance):
+        follow_tab(instance)
 
     handler = HANDLER_MAP.get(catalog_name, {}).get(attr_uri)
     if handler:

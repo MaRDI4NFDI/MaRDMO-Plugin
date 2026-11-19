@@ -67,13 +67,19 @@ def page_refs(data, sections):
     '''``{ID: PageRef}`` of the pages of *sections* in *data*, searched in this order.
 
     Of two pages with one ID (a copied tab) the first is taken, as the checks
-    name it.
+    name it.  A tab is also found by its placeholder (``tab:<section>:<n>``).
     '''
+    from .ids import tab_placeholder  # pylint: disable=import-outside-toplevel
     refs = {}
     for section in sections:
         for index, entry in (data.get(section) or {}).items():
-            if isinstance(entry, dict) and entry.get('ID'):
+            if not isinstance(entry, dict):
+                continue
+            if entry.get('ID'):
                 refs.setdefault(entry['ID'], page_ref(section, index, entry))
+            # The links of a tab whose item was cleared (#186) refer to the tab; the
+            # checks report its missing ID
+            refs[tab_placeholder(section, index)] = page_ref(section, index, entry)
     return refs
 
 

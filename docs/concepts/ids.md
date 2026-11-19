@@ -94,16 +94,41 @@ and description anyway.
 
 ## When the ID of a page changes
 
-Switching a page to another item changes no other answer: relations stay
-with the old item, and the checks report those whose item has no page left.
-The user decides once whether an item is on the portal or Wikidata; only the
-export changes IDs afterwards (see below).
+A tab is the item (#186): when the interview saves another item for a tab,
+every answer that referred to its previous item refers to the new one
+(`MaRDMO.ids.follow_tab`), whatever the switch: an own item found on the MaRDI
+Portal or Wikidata, a Wikidata item and its portal twin, a correction, or a
+portal item made the template of a new item.  The answers get the new ID, and
+for a portal or Wikidata item the text of the option chosen; a new item keeps
+the name and description of the tab, so the texts stay.  Links on tabs of
+portal items move too: the export adds them to those portal items.
 
-| Change | Meaning | ID of the page |
-|---|---|---|
-| `user:` → new item | selected again | keeps its `user:` ID |
-| `mardi:` / `wikidata:` → new item | the page is the template of a new item | a new `user:` ID |
-| any other change | another item | the selected item's ID |
+| Change | Meaning | ID of the tab | Links |
+|---|---|---|---|
+| `user:` → new item | selected again | keeps its `user:` ID | stay |
+| `mardi:` / `wikidata:` → new item | the tab is the template of a new item | a new `user:` ID | follow |
+| any other change | another item | the selected item's ID | follow |
+
+Several tabs with one item (a copied portal item, or the same item selected
+twice) share its links: they belong to the first of these tabs (the lowest
+set index; RDMO numbers a new or copied tab after the last one).  Switching
+that tab takes them along; switching a later tab, or a tab of another
+section with the item, moves nothing.
+
+Clearing the item of a tab keeps its links with the tab: they get its
+placeholder `tab:<section>:<set index>`, and the item chosen there next takes
+them.  Meanwhile preview and checks show them as links to the tab, and the
+tab is reported without ID, which stops the export.
+
+The content of a tab is kept on a switch, and what the new item brings is
+added (as with "Use this item" in the preview).  A wrong pick is best
+corrected by deleting the tab and adding a new one.
+
+A tab's ID never takes another `user:` ID than its own (`ids.assign_id`): the
+ID dropdowns do not offer the project's own items, so such a save can only be
+the interview sending an old ID again.  Only saves through the interview move
+links: imports, snapshot rollbacks and MaRDMO's own writes do not, and "Use
+this item" and the export change the IDs themselves (see below).
 
 Publications are no templates: a publication is selected by its identifier
 (#158).  The dropdown offers a new publication as the DOI itself, the option
@@ -122,10 +147,13 @@ A relation row (relation type, targets and assumptions of one block) whose
 last target is removed loses its relation type and assumptions too; a row
 with other targets keeps them.
 
+A tab whose item was cleared takes the links on its placeholder along.  This
+matters: RDMO gives the number of a deleted last tab to the next new one.
+
 Nothing is removed
 
 - when only the ID of a page is cleared (the tab is still there, another
-  item may be selected next);
+  item may be selected next; the links wait on its placeholder);
 - when another page still has the item's ID (a copied tab, see below): the
   relations now refer to that page;
 - in the usage blocks of a process step (algorithm with software and
@@ -137,15 +165,22 @@ opened again.
 
 ## Copied tabs
 
-"Copy tab" copies a page with its ID, so the copy is the same item as the
-original; MaRDMO does not change it (RDMO writes the copy without signals).
-Checks and preview report both pages as one item ("Same Item as Page …",
-naming the first page), since the export would merge them.  Deleting either
-page leaves the relations with the other one, which has the item's ID.
+"Copy tab" (and taking over a tab from another project) copies a tab with
+its ID: RDMO writes the copy with `bulk_create`, without signals.  At the end
+of the copy request (the router remembers its path,
+`MaRDMO.ids.give_copies_their_ids`) every tab of a section with the `user:`
+ID of an earlier tab gets a new one: a copy of an own item is a new item,
+and the links stay with the original (the first tab; RDMO numbers a copy
+after the last tab).  The interview shows the copy's old ID until the page
+is loaded again; if it sends it back, `assign_id` keeps the copy's own.
+Checks and preview report a copy whose name and short description are
+still the original's ("Same Name and Short Description as Page …").
 
-A copy of a portal or Wikidata item becomes a new item by choosing "new
-item" as its ID (a template, see above).  A copy of an own item stays the
-same item; delete one of them.
+A copy of a MaRDI Portal or Wikidata item keeps its ID: the tab shows that
+item.  Checks and preview report both tabs as one item ("Same Item as Page
+…", naming the first), since the export would merge them; the links belong
+to the first.  Deleting the original leaves them with the copy, which has
+the item's ID.
 
 ## In the export
 

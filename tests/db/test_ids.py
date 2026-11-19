@@ -68,8 +68,8 @@ def test_portal_ids_are_kept(model):
 
 @pytest.mark.parametrize('new, text', [('mardi:Q1', 'alpha (a quantity) [mardi]'),
                                        ('wikidata:Q1', 'alpha (a quantity) [wikidata]')])
-def test_a_page_switched_to_a_portal_item_moves_nothing(model, new, text):
-    '''The user decides once whether an item is on the portal; relations stay with the own item.'''
+def test_a_page_switched_outside_the_interview_moves_nothing(model, new, text):
+    '''Saved as an import does (no interview): relations stay; the interview moves them (test_tab_is_the_item.py).'''
     page = saved(model, 'quantity/id', 'not found')
     user_id = page.external_id
     save(model, answer('formulation/element/quantity', 'alpha (a quantity)', external_id=user_id, set_prefix='0'))
@@ -80,7 +80,7 @@ def test_a_page_switched_to_a_portal_item_moves_nothing(model, new, text):
     assert model.values.get(attribute__uri__endswith='element/quantity').external_id == user_id
 
 
-def test_a_wikidata_page_switched_to_the_portal_moves_nothing(model):
+def test_a_wikidata_page_switched_to_the_portal_outside_the_interview_moves_nothing(model):
     page = saved(model, 'quantity/id', 'wikidata:Q1', text='alpha (a quantity) [wikidata]')
     save(model, answer('formulation/element/quantity', 'alpha (a quantity) [wikidata]', external_id='wikidata:Q1',
                        set_prefix='0'))
@@ -91,8 +91,8 @@ def test_a_wikidata_page_switched_to_the_portal_moves_nothing(model):
     assert model.values.get(attribute__uri__endswith='element/quantity').external_id == 'wikidata:Q1'
 
 
-def test_a_portal_item_used_as_template_keeps_its_references(model):
-    '''The page becomes a new item ("new item"); the model may still contain the old one.'''
+def test_a_portal_item_used_as_template_outside_the_interview_keeps_its_references(model):
+    '''Saved as an import does: the page becomes a new item, relations stay (the interview moves them).'''
     page = saved(model, 'formulation/id', 'mardi:Q1', text='old formula (a formula) [mardi]')
     save(model, answer('model/formulation-relatant', 'old formula (a formula) [mardi]', external_id='mardi:Q1',
                        set_prefix='0'))

@@ -140,6 +140,10 @@ publication and DOI, logs a failure, and closes its database connection.
 What it does not find, the preview looks up again
 (`PublicationRetriever.get_information`).
 
+RDMO copies a tab without signals, so a handler never sees the copy.  The router
+acts when the copy request has finished (`request_finished`, by the request path it
+remembers): copies of own items get IDs of their own (see [Item IDs](ids.md)).
+
 The portal returns the values of a list column (relations, aliases, publications, …)
 in no fixed order.  `helpers.split_value()` sorts them, relatants thereby by ID, so
 adding the same item twice fills the same pages in the same order.

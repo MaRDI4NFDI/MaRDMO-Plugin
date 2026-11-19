@@ -83,29 +83,53 @@ instrument); a generic name such as *microscope* stands for any item of its
 kind.  The same name is the same item: if it is on the MaRDI Portal
 already, the export asks you to select it.
 
+## A tab is the item
+
+Every relation you make links to a tab, and it stays with that tab whatever
+you later choose as its item: a new item, a MaRDI Portal item or a Wikidata
+item.
+
 ## Using an item as a template
 
 To start from an existing item of the MaRDI Portal: select it on a new tab,
 wait until it is filled in, then select **new item**.  The tab becomes a new
-item with the copied content; change its name and short description.
-Relations to the original item stay with it.
+item with the copied content; change its name and short description.  The
+relations to the tab stay with it, now with the new item.  To keep the
+portal item as it is and make a new one from it, copy its tab first and
+change the copy (see below).
 
 Publications cannot be used as templates: a publication is selected by its
 identifier.
 
 ## Copying and deleting tabs
 
-- **Copy tab** copies the item: both tabs are the same item, and the preview
-  and the checks report "Same Item as Page ...".  Delete one of them.
+- **Copy tab** makes a new item from the tab: change the copy's name and
+  short description (the preview and the checks report a copy whose name
+  and short description are still the original's).  The relations stay
+  with the original.  A copy of a MaRDI Portal or Wikidata item is still
+  that item ("Same Item as Page ..."): make the copy a new item, or choose
+  another item for it.  Until you open the copy's page again, its first
+  question still shows the original's ID; that changes nothing.
 - **Delete tab** removes the item and every relation to it.  A relation
-  question that was only filled with this item is emptied.
+  question that was only filled with this item is emptied.  Delete the copy,
+  not the original, if you want to keep the relations; the copy is the tab
+  added last.  A copy of a portal item that is left after deleting its
+  original takes the relations over.
 
 ## Switching an item to another one
 
-Selecting a different item in the first question of a tab does not change
-the relations to the old one.  If no tab is left for the old item, the
-checks report the relations to it ("Selected ... not found in ...
-Section"); link them to the right item again.
+Selecting a different item in the first question of a tab takes the
+relations to the tab along: they now refer to the new item.  This also holds
+for relations on tabs of MaRDI Portal items: the export adds them to those
+portal items.  If two tabs have the same item, the relations belong to the
+first of them.  While the first question of a tab is empty, its relations
+wait for the next item chosen there; the checks report the tab without ID
+meanwhile.
+
+The content of the tab stays, and what the newly chosen item brings is
+added.  If you picked the wrong item, delete the tab and add a new one
+rather than choosing another item on it: the wrong item's content and the
+tabs MaRDMO added for it would stay.
 
 ## Publications
 
