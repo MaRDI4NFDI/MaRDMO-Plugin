@@ -443,7 +443,18 @@ class ChecksBase:
                     )
                 elif is_own_item(ivalue.get('ID')) and ivalue.get('Name'):
                     same = own.setdefault((ivalue['Name'], ivalue.get('Description') or ''), page_name)
-                    if same != page_name:
+                    # Publications with the same name and description are one publication (other
+                    # ones got their DOI in the description, helpers.distinguish_publications, #183)
+                    if same != page_name and okey == 'publication':
+                        self.err.append(
+                            self._error(
+                                section = section_map[okey],
+                                page    = page_name,
+                                message = _('Same Publication as Page {tab} (delete one of them)').format(tab=same.tab),
+                                field   = 'ID'
+                            )
+                        )
+                    elif same != page_name:
                         self.err.append(
                             self._error(
                                 section = section_map[okey],

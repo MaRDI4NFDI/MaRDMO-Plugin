@@ -4,8 +4,9 @@ A publication is the portal item with its DOI, whatever their labels: the
 preview lists it with "Use this item" only (there is nothing to redefine;
 a wrong DOI is corrected on its page), and the export stops at it.  A
 publication with the label and description of a portal publication with
-another DOI is another publication, which the portal does not take under
-this label: nothing to decide, MaRDMO cannot export it yet.  The portal
+another DOI is another publication: it is created with its DOI in the
+description (#183), which the preview says; if the portal has exactly that
+label and description, it is that item.  The portal
 has Hestenes and Stiefel's conjugate gradients as Q5814205 and Q6824795
 (the lower QID is used) and Dijkstra's note as Q78129; the DOI searches
 and DOIs were recorded (``publication_duplicates``), the lookups by label
@@ -89,16 +90,16 @@ def test_the_preview_lists_a_publication_with_the_doi_of_a_portal_item(model, cl
     html = preview_page(client, model)
     listed = rows(html)
     # seg1d is not on the portal; the new publication named as Dijkstra's is another publication
-    assert {name: attribute(row, 'data-action') for name, row in listed.items()} == {
-        HESTENES[1]: 'reuse', DIJKSTRA[0]: 'blocked'}
+    assert {name: attribute(row, 'data-action') for name, row in listed.items()} == {HESTENES[1]: 'reuse'}
     hestenes = listed[HESTENES[1]]
     assert [label for label, _ in links(element(hestenes, cls='mardmo-duplicate__portal'))] == ['Q5814205']
     # Only "Use this item": nothing to redefine, a wrong DOI is corrected on its page
     assert elements(hestenes, tag='input', cls='mardmo-decision__use')
     assert not elements(hestenes, tag='input', cls='mardmo-decision__redefine')
     assert 'The MaRDI Portal has this DOI as Q5814205: it is this publication.' in text(hestenes)
-    other = listed[DIJKSTRA[0]]
-    assert not elements(other, tag='input') and 'another DOI: it is another publication' in text(other)
+    # Created with its DOI in the description
+    assert (f'Created as: {DIJKSTRA[0]} ({DIJKSTRA[1]} (DOI {OTHER_DOI})) — the MaRDI Portal has another '
+            'publication with this title and description') in text(html)
 
 
 def test_use_the_portal_publication(model, client, found):
@@ -115,10 +116,22 @@ def test_use_the_portal_publication(model, client, found):
     assert model.values.get(attribute__uri=f'{BASE_URI}domain/publication/reference', set_index=0).text == HESTENES[0]
 
 
-def test_a_blocked_publication_cannot_be_used(model, client, found):
-    response = client.post(f'/services/reuse/{model.pk}/', {'format': 'wikibase', 'item': 'user:other', 'qid': 'Q78129'})
-    assert 'another DOI' in response.content.decode()
-    assert model.values.get(attribute__uri=f'{BASE_URI}domain/publication/id', set_index=2).external_id == 'user:other'
+def test_another_publication_is_created_with_its_doi_in_the_description(found):
+    payload = GeneratePayload('https://portal.mardi4nfdi.de', user_items={})
+    (source, item), = items((DIJKSTRA[0], OTHER_DOI))
+    item['Description'] = DIJKSTRA[1]
+    payload._find_on_portal([(source, None, 'Item0', item)])
+    assert item['create_as'] == f'{DIJKSTRA[1]} (DOI {OTHER_DOI})'
+
+
+def test_a_portal_item_with_that_description_is_the_publication(model, client, found, monkeypatch):
+    created = (DIJKSTRA[0], f'{DIJKSTRA[1]} (DOI {OTHER_DOI})')
+    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda pairs=(), **kwargs: PortalItems(
+        by_label={pair: qid for pair, qid in {DIJKSTRA: 'Q78129', created: 'Q7'}.items() if pair in pairs},
+        markers={'Q5814205': PUBLICATION, 'Q78129': PUBLICATION, 'Q7': PUBLICATION}))
+    listed = rows(preview_page(client, model))
+    assert attribute(listed[DIJKSTRA[0]], 'data-action') == 'reuse'
+    assert [label for label, _ in links(element(listed[DIJKSTRA[0]], cls='mardmo-duplicate__portal'))] == ['Q7']
 
 
 def items(*publications):

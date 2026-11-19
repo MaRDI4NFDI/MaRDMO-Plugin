@@ -71,13 +71,6 @@
                             <a href="{{ mardiURI }}{{ row.duplicate.qid }}" target="_blank" rel="noopener">{{ row.duplicate.qid }}</a>
                         {% endif %}
                     </div>
-                    {% if row.action == 'blocked' %}
-                    {# Another publication with the same label and description: nothing to decide (#158) #}
-                    <div class="mardmo-decision">
-                        <span class="mardmo-caption">{% translate "Your decision" %}</span>
-                        {% for reason in row.reasons %}<p>{{ reason }}</p>{% endfor %}
-                    </div>
-                    {% else %}
                     {% with number=forloop.counter %}
                     <fieldset class="mardmo-decision">
                         <legend class="mardmo-caption">{% translate "Your decision" %}</legend>
@@ -141,7 +134,6 @@
                     </p>
                     {% endif %}
                     {% endwith %}
-                    {% endif %}
                 </div>
             </li>
         {% endfor %}

@@ -103,3 +103,44 @@ def test_an_invalid_doi_is_marked_at_the_id():
                       'publication')
     assert list(problems(answers['publication'][0])) == ['ID']
     assert 'Invalid Publication DOI' in problems(answers['publication'][0])['ID'][0]
+
+
+# --- Publications with the same name and description (#183) ---------------------------------------
+
+def same_named(*pages):
+    '''Publication pages ``{index: answers}`` named "Introduction" (scientific article), with *pages* ``(ID, DOI)``.'''
+    from MaRDMO.helpers import distinguish_publications, link_to_pages  # noqa: PLC0415
+    answers = {'publication': {index: new_publication(doi, ID=identifier, Name='Introduction',
+                                                      Description='scientific article') if doi else
+                               {'ID': identifier, 'Name': 'Introduction', 'Description': 'scientific article'}
+                               for index, (identifier, doi) in enumerate(pages)},
+               'model': {0: {'ID': 'user:model', 'Name': 'm', 'Description': 'a model',
+                             'RelationP': {0: {'ID': 'user:second', 'Name': 'Introduction',
+                                               'Description': 'scientific article'}}}}}
+    return link_to_pages(distinguish_publications(answers))
+
+
+def test_other_publications_with_the_same_name_get_their_doi_in_the_description():
+    answers = same_named((OWN, '10.1000/a'), ('user:second', '10.1000/b'), ('wikidata:Q1', None))
+    assert [page['Description'] for page in answers['publication'].values()] == [
+        'scientific article', 'scientific article (DOI 10.1000/b)', 'scientific article (Wikidata QID Q1)']
+    # Relations follow their page; the export makes three items of them
+    assert answers['model'][0]['RelationP'][0]['Description'] == 'scientific article (DOI 10.1000/b)'
+    from MaRDMO.helpers import unique_items  # noqa: PLC0415
+    items, _ = unique_items({'publication': answers['publication']})
+    assert len(items) == 3
+
+
+def test_pages_of_one_publication_keep_their_description_and_are_marked():
+    answers = same_named((OWN, '10.1000/a'), ('user:second', '10.1000/A'))
+    assert {page['Description'] for page in answers['publication'].values()} == {'scientific article'}
+    checked_answers = checked({'publication': answers['publication']}, 'id_name_description')
+    assert problems(checked_answers['publication'][1]) == {
+        'ID': ['Same Publication as Page publication1 (delete one of them)']}
+
+
+def test_the_preview_says_why_a_description_has_its_doi():
+    answers = same_named((OWN, '10.1000/a'), ('user:second', '10.1000/b'))
+    html = text(render_to_string('MaRDMO/partials/_publication.html', {'values': answers['publication'][1],
+                                                                       'option': {}}))
+    assert 'another publication of this documentation has the same title and description' in html

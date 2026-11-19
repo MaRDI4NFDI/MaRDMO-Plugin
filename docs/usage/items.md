@@ -164,9 +164,13 @@ A publication with the DOI of a portal publication is that publication: it
 can only become the portal item (**Use this item**; its tab then shows the
 portal item, without the citation looked up before).  If its DOI is wrong,
 correct it on its tab.  A publication with the name and short description of
-a portal publication with another DOI is another publication; the portal
-takes only one item per name and description, and you cannot rename a
-publication, so MaRDMO cannot export it yet (the box says so).
+a portal publication with another DOI is another publication: the portal
+takes only one item per name and description, so the export creates it with
+its DOI in the short description ("… (DOI 10.…)"), and the preview says so
+at the publication.  The same holds for two publications of your
+documentation with the same name and short description: every one but the
+first gets its DOI in it (a Wikidata publication without DOI its Wikidata
+QID).  Two tabs with the same DOI are one publication: delete one of them.
 
 Authors and journals of publications are not listed: MaRDMO takes them from
 the citation and decides for them itself.

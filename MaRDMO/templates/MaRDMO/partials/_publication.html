@@ -10,6 +10,11 @@
 {% if pub.citation %}
     <b>{% translate "Citation" %}</b>: {{ pub.citation }} <br>
 {% endif %}
+{% if values.CreatedAs %}
+    <b>{% translate "Created as" %}</b>: {{ values.Name }} ({{ values.CreatedAs }}) &mdash; {% translate "the MaRDI Portal has another publication with this title and description" %} <br>
+{% elif values.Distinguished %}
+    <b>{% translate "Short description with its identifier" %}</b>: {% translate "another publication of this documentation has the same title and description" %} <br>
+{% endif %}
 {% if pub.on_portal %}
     <b>MaRDI Portal</b>: {% translate "already there, nothing is added to it" %} <br>
 {% elif pub.new %}
