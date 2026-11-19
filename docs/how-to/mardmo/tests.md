@@ -277,12 +277,17 @@ browser shows, i.e. what CSS and JavaScript do.
 
 | File | Page |
 |---|---|
+| `test_dropdown.py` | a dropdown of RDMO's interview: source badge, label and description in the open list, not the plain text (fails if RDMO stops rendering an option's help as HTML); the stored answer and the filled field plain |
 | `test_duplicates.py` | the preview's box "Before you export": the items already on the MaRDI Portal, the decision ("Use this item", "Redefine", the **i**), "Apply" |
 | `test_formulas.py` | formulas in the preview rendered by MathJax; one it cannot render shown as TeX |
 | `test_progress.py` | the progress page following an upload (`progress.js`, also in German, errors as text), the result page and its graph (cytoscape: nodes, filters, fullscreen), someone else's job |
 
 The pages come from a live server on the test database; the portal and the
 upload are faked (the progress tests write what the upload's thread writes).
+RDMO's interview sends several requests at once, which would share the
+test's database connection in parallel threads: interview tests use
+`interview_as`, whose server (`OneRequestAtATime`) answers one request after
+another and closes each connection.
 Locally they are opt-in:
 
 ```bash
