@@ -165,15 +165,22 @@ opened again.
 
 ## Copied tabs
 
-"Copy tab" copies a page with its ID, so the copy is the same item as the
-original; MaRDMO does not change it (RDMO writes the copy without signals).
-Checks and preview report both pages as one item ("Same Item as Page …",
-naming the first page), since the export would merge them.  Deleting either
-page leaves the relations with the other one, which has the item's ID.
+"Copy tab" (and taking over a tab from another project) copies a tab with
+its ID: RDMO writes the copy with `bulk_create`, without signals.  At the end
+of the copy request (the router remembers its path,
+`MaRDMO.ids.give_copies_their_ids`) every tab of a section with the `user:`
+ID of an earlier tab gets a new one: a copy of an own item is a new item,
+and the links stay with the original (the first tab; RDMO numbers a copy
+after the last tab).  The interview shows the copy's old ID until the page
+is loaded again; if it sends it back, `assign_id` keeps the copy's own.
+Checks and preview report a copy whose name and short description are
+still the original's ("Same Name and Short Description as Page …").
 
-A copy of a portal or Wikidata item becomes a new item by choosing "new
-item" as its ID (a template, see above).  A copy of an own item stays the
-same item; delete one of them.
+A copy of a MaRDI Portal or Wikidata item keeps its ID: the tab shows that
+item.  Checks and preview report both tabs as one item ("Same Item as Page
+…", naming the first), since the export would merge them; the links belong
+to the first.  Deleting the original leaves them with the copy, which has
+the item's ID.
 
 ## In the export
 

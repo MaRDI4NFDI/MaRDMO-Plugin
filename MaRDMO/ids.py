@@ -217,6 +217,36 @@ def follow_tab(value):
     return links.update(external_id=new)
 
 
+def give_copies_their_ids(project_id):
+    '''Give the copies of own items in project *project_id* IDs of their own (#186).
+
+    Called after RDMO copied a tab, or took one over from another project:
+    RDMO writes the copied answers without signals, so the copy has the ID
+    of its original.  A copy of an own item is a new item: every tab of a
+    section with the ``user:`` ID of an earlier tab gets a new one; the
+    links stay with the original (the first tab).  A copy of a MaRDI Portal
+    or Wikidata item keeps its ID: it shows that item, and the checks report
+    both tabs as one item until the user decides.  Written with
+    ``update()``; the interview shows the copy's old ID until the page is
+    loaded again, and :func:`assign_id` keeps the new one if it sends the
+    old one back.
+
+    Returns:
+        The number of tabs that got a new ID.
+    '''
+    seen, copies = set(), []
+    for pk, attribute, external_id in (
+            Value.objects.filter(project=project_id, snapshot=None, set_prefix='',
+                                 attribute__uri__in=tab_id_attributes(), external_id__startswith='user:')
+            .order_by('attribute_id', 'set_index', 'pk').values_list('pk', 'attribute_id', 'external_id')):
+        if (attribute, external_id) in seen:
+            copies.append(pk)
+        seen.add((attribute, external_id))
+    for pk in copies:
+        Value.objects.filter(pk=pk).update(external_id=new_user_id())
+    return len(copies)
+
+
 def publication_doi(text):
     '''The DOI of the identifier *text* typed for a publication (``doi:10.1000/x``), or ``None``.
 
