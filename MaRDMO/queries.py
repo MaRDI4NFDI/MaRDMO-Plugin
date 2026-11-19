@@ -31,7 +31,7 @@ from .getters import get_mathmoddb, get_properties, get_url
 from .helpers import commit_writes, extract_parts, rank_by_search_term
 from .ids import (
     DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, publication_doi,
-    source_help, source_tag,
+    option_help,
 )
 
 logger = logging.getLogger(__name__)
@@ -624,12 +624,12 @@ def publication_options(search):
     doi = publication_doi(search)
     if not doi:
         return []
-    new = [{'id': f'{NEW_DOI}{doi}', 'text': f'{DOI_PREFIX}{doi}', 'help': source_tag('new')}]
+    new = [{'id': f'{NEW_DOI}{doi}', 'text': f'{DOI_PREFIX}{doi}', 'help': option_help(NEW_DOI, f'{DOI_PREFIX}{doi}')}]
     if doi_problem(doi):
         return new
     mardi, wikidata = find_publications(doi)
     found = mardi or wikidata
-    return [{**option, 'help': source_help(option['id'])} for option in found] if found else new
+    return [{**option, 'help': option_help(option['id'], option['text'])} for option in found] if found else new
 
 
 # The lookups of publication twins while a page is filled (#158): requests are
@@ -827,7 +827,7 @@ def query_sources(search, item_class=None, sources=None, not_found=True):
 
     options.sort(key=lambda opt: rank_by_search_term(opt, search))
     # The source is shown grey in the open dropdown, not stored (#103)
-    options = [{**option, 'help': source_help(option['id'])} for option in options]
+    options = [{**option, 'help': option_help(option['id'], option['text'])} for option in options]
 
     if not_found:
         options = [{'id': NOT_FOUND, 'text': NEW_ITEM}] + options
@@ -889,7 +889,7 @@ def query_sources_with_user_additions(search, project, setup):
     # Add creation option if needed
     if setup['creation']:
         if not any(option['id'] == NOT_FOUND and option['text'] == search for option in options):
-            options.insert(0, {'id': NOT_FOUND, 'text': search, 'help': source_tag('new')})
+            options.insert(0, {'id': NOT_FOUND, 'text': search, 'help': option_help(NOT_FOUND, search)})
 
     return options
 
@@ -908,7 +908,7 @@ def query_user_entries(project, setup):
 
     Returns:
         List of ``{"id": …, "text": "Label (Description)", "help": source tag}``
-        options (:func:`~MaRDMO.ids.source_help`).
+        options (:func:`~MaRDMO.ids.option_help`).
     '''
     uris = {
         f'{BASE_URI}domain/{query_attribute}/{question}': (query_attribute, question)
@@ -952,7 +952,8 @@ def query_user_entries(project, setup):
         item_id = entry['id'].external_id
         # Only the sources the dropdown does not search
         if item_id.split(':', 1)[0] not in setup['sources']:
-            options.append({'id': item_id, 'text': item_text(label, description), 'help': source_help(item_id)})
+            options.append({'id': item_id, 'text': item_text(label, description),
+                            'help': option_help(item_id, item_text(label, description))})
     return options
 
 def query_api_per_class(search_term: str, item_class, raise_errors: bool = False) -> list[dict]:

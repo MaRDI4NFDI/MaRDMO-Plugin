@@ -1,4 +1,4 @@
-'''The source of an option is a grey tag in its help, not part of the text (#103).'''
+'''The source of an option is shown in its help (a badge, #103, #142), not part of the text.'''
 from types import SimpleNamespace
 
 import pytest
@@ -7,13 +7,15 @@ import MaRDMO.queries as queries
 from MaRDMO.adders import add_entities
 from MaRDMO.constants import BASE_URI
 from MaRDMO.helpers import relation_exists
+from MaRDMO.ids import option_help
 from MaRDMO.models import Relatant
 from MaRDMO.providers import MaRDMOProvider
 from tests.db.conftest import answer, save
 
 
-def tag(name):
-    return f'<strong class="text-muted">[{name}]</strong>'
+def tag(identifier, text):
+    '''The help of the option *identifier* with *text* (its layout, see tests/unit/test_option_help.py).'''
+    return option_help(identifier, text)
 
 
 MARDI = [{'id': 'mardi:Q1', 'text': 'alpha (first)'}]
@@ -31,8 +33,8 @@ def portal(monkeypatch):
 def test_portal_and_wikidata_options_carry_their_source_in_the_help(portal):
     assert queries.query_sources('alpha', 'Q1') == [
         {'id': 'not found', 'text': 'new item'},
-        {'id': 'mardi:Q1', 'text': 'alpha (first)', 'help': tag('mardi')},
-        {'id': 'wikidata:Q2', 'text': 'alpha (second)', 'help': tag('wikidata')}]
+        {'id': 'mardi:Q1', 'text': 'alpha (first)', 'help': tag('mardi:Q1', 'alpha (first)')},
+        {'id': 'wikidata:Q2', 'text': 'alpha (second)', 'help': tag('wikidata:Q2', 'alpha (second)')}]
 
 
 def test_the_cached_search_results_stay_as_they_are(portal):
@@ -60,13 +62,13 @@ def options(project, key, search, monkeypatch):
 def test_the_projects_items_are_offered_with_their_own_id_and_source(model, monkeypatch):
     '''The Wikidata item keeps its ID without a tag in its text; both items are offered.'''
     assert options(model, 'RelatedQuantityWithoutCreation', 'alpha', monkeypatch) == [
-        {'id': 'user:a', 'text': 'alpha (second)', 'help': tag('project')},
-        {'id': 'wikidata:Q2', 'text': 'alpha (second)', 'help': tag('wikidata')}]
+        {'id': 'user:a', 'text': 'alpha (second)', 'help': tag('user:a', 'alpha (second)')},
+        {'id': 'wikidata:Q2', 'text': 'alpha (second)', 'help': tag('wikidata:Q2', 'alpha (second)')}]
 
 
 def test_a_new_item_in_a_relation_is_tagged_new(model, monkeypatch):
     assert options(model, 'RelatedQuantityOrQuantityKindWithCreation', 'gamma', monkeypatch) == [
-        {'id': 'not found', 'text': 'gamma', 'help': tag('new')}]
+        {'id': 'not found', 'text': 'gamma', 'help': tag('not found', 'gamma')}]
 
 
 def test_a_page_made_for_a_portal_item_has_no_tag(project):

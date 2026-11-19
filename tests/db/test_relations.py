@@ -8,6 +8,7 @@ from MaRDMO.checks.base import OLD_PROJECT
 from MaRDMO.constants import BASE_URI
 from MaRDMO.ids import is_user_id
 from MaRDMO.providers import MaRDMOProvider
+from MaRDMO.ids import option_help
 import MaRDMO.queries as queries
 from tests.db.conftest import answer, save
 
@@ -114,7 +115,7 @@ def test_dropdown_offers_own_items_with_the_id_of_their_page(project, monkeypatc
     provider = MaRDMOProvider('RelatedResearchProblemWithCreation', '', 'MaRDMO.providers.MaRDMOProvider')
     options = provider.get_options(model, search='reaction')
     assert {'id': 'user:1', 'text': 'reaction rate (rate of a reaction)',
-            'help': '<strong class="text-muted">[project]</strong>'} in options
+            'help': option_help('user:1', 'reaction rate (rate of a reaction)')} in options
 
 
 def test_relation_without_id_is_reported_as_made_before_0_8_0(project, monkeypatch):

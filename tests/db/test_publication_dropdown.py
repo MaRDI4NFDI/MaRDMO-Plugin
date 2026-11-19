@@ -13,7 +13,7 @@ import pytest
 from rdmo.options.models import OptionSet
 from rdmo.projects.models import Membership
 
-from MaRDMO.ids import publication_doi
+from MaRDMO.ids import option_help, publication_doi
 
 DIJKSTRA = '10.1007/BF01386390'           # on the portal (Q78129) and on Wikidata (Q21694527)
 SEG1D = '10.21105/joss.02404'             # only on Wikidata (Q106245557)
@@ -59,17 +59,17 @@ def options(project, client, django_user_model, portal):
 
 def test_a_publication_on_the_portal_is_offered_as_the_portal_item_only(options):
     found = options(f'doi:{DIJKSTRA}')
-    assert [(identifier, '[mardi]' in tag) for identifier, _, tag in found] == [('mardi:Q78129', True)]
+    assert [(identifier, '>mardi<' in tag) for identifier, _, tag in found] == [('mardi:Q78129', True)]
     assert 'two problems in connexion with graphs' in found[0][1]
 
 
 def test_a_publication_only_on_wikidata_is_the_wikidata_item(options):
     (identifier, text, tag), = options(f'doi:{SEG1D}')
-    assert identifier == 'wikidata:Q106245557' and '[wikidata]' in tag and text.startswith('seg1d')
+    assert identifier == 'wikidata:Q106245557' and '>wikidata<' in tag and text.startswith('seg1d')
 
 
 def test_a_publication_found_nowhere_is_new(options):
-    assert options(f'doi:{NOWHERE}') == [(f'new:doi:{NOWHERE}', f'doi:{NOWHERE}', '<strong class="text-muted">[new]</strong>')]
+    assert options(f'doi:{NOWHERE}') == [(f'new:doi:{NOWHERE}', f'doi:{NOWHERE}', option_help('new:doi:', f'doi:{NOWHERE}'))]
 
 
 def test_the_case_of_a_doi_does_not_matter(options):
@@ -78,7 +78,7 @@ def test_the_case_of_a_doi_does_not_matter(options):
 
 def test_an_invalid_doi_is_offered_without_a_search(options, monkeypatch):
     monkeypatch.setattr('MaRDMO.queries.find_publications', lambda doi: pytest.fail('searched'))
-    assert options('doi:11.1000/x') == [('new:doi:11.1000/x', 'doi:11.1000/x', '<strong class="text-muted">[new]</strong>')]
+    assert options('doi:11.1000/x') == [('new:doi:11.1000/x', 'doi:11.1000/x', option_help('new:doi:', 'doi:11.1000/x'))]
 
 
 @pytest.mark.parametrize('typed', [DIJKSTRA, 'A note on two problems', 'doi:'])
