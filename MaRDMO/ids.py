@@ -113,15 +113,21 @@ def assign_id(value):
     item switched to "new item" is the template of a new one.  A relation
     only refers to an item: choosing "new" again is another new item.
 
-    No other answer changes: a page switched to another item (own, portal
-    or Wikidata) leaves the relations with the old one, and the checks
-    report those without page.  The user decides once whether an item is
-    on the portal; afterwards only the export changes IDs (see
-    :func:`~MaRDMO.helpers.replace_ids`).
+    The ID answer of a tab remembers its previous ID (``mardmo_old_id``):
+    when the interview changes it, the answers that referred to the old
+    item follow the tab (:func:`follow_tab`, #186).  It never takes another
+    ``user:`` ID than its own: the ID dropdowns do not offer the project's
+    own items, so that can only be the interview sending a copied tab's old
+    ID again after MaRDMO gave the copy its own.
 
     Args:
         value: Unsaved :class:`~rdmo.projects.models.Value` of a MaRDMO catalog.
     '''
+    if is_tab_id(value) and value.pk:
+        old = Value.objects.filter(pk=value.pk).values_list('external_id', flat=True).first()
+        value.mardmo_old_id = old
+        if is_user_id(old) and is_user_id(value.external_id) and value.external_id != old:
+            value.external_id = old
     if (value.external_id or '').startswith(NEW_DOI):
         # A new publication by its DOI (#158): a user: ID like "new item"; the DOI
         # goes on to the handler with the answer (publication.handlers)
@@ -135,6 +141,51 @@ def assign_id(value):
             value.external_id = old
             return
     value.external_id = new_user_id()
+
+
+def tab_id_attributes():
+    '''Return the attribute URIs of the ID answers of tabs (``<section>/id``).'''
+    return {uri for uri in id_attributes() if uri.endswith('/id')}
+
+
+def is_tab_id(value):
+    '''Return ``True`` if *value* is the ID answer of a tab (the item of a page).'''
+    return value.set_prefix == '' and value.attribute.uri in tab_id_attributes()
+
+
+def follow_tab(value):
+    '''Let the answers that referred to the previous item of a tab refer to its new one (#186).
+
+    Called when the interview saved the ID answer *value* of a tab with
+    another item: a tab is the item, so its links follow it, whatever the
+    switch (own item, MaRDI Portal, Wikidata; also a portal item made a new
+    item from it).  The answers get the new ID, and for a portal or Wikidata
+    item the text of the option chosen; a new item keeps the name and
+    description of the tab, so the texts stay.  Written with ``update()``:
+    an interview open on another page can still save them.
+
+    Several tabs with the old item (a copied portal item, or the same item
+    selected twice): its links belong to the first of them, so they follow
+    only that one; a later tab, or a tab of another section, moves nothing.
+    Saves outside the interview (imports, MaRDMO's own writes, snapshot
+    rollbacks) do not call this.
+
+    Returns:
+        The number of answers that now refer to the new item.
+    '''
+    old, new = getattr(value, 'mardmo_old_id', None), value.external_id
+    if not is_item_id(old) or not is_item_id(new) or old == new:
+        return 0
+    others = Value.objects.filter(project=value.project_id, snapshot=None, set_prefix='',
+                                  attribute__uri__in=tab_id_attributes(), external_id=old).exclude(pk=value.pk)
+    if (others.filter(attribute=value.attribute, set_index__lt=value.set_index).exists()
+            or others.exclude(attribute=value.attribute).exists()):
+        return 0
+    links = Value.objects.filter(project=value.project_id, snapshot=None, external_id=old).exclude(
+        attribute__uri__in=id_attributes())
+    if is_portal_item(new) and value.text:
+        return links.update(external_id=new, text=value.text)
+    return links.update(external_id=new)
 
 
 def publication_doi(text):

@@ -94,16 +94,36 @@ and description anyway.
 
 ## When the ID of a page changes
 
-Switching a page to another item changes no other answer: relations stay
-with the old item, and the checks report those whose item has no page left.
-The user decides once whether an item is on the portal or Wikidata; only the
-export changes IDs afterwards (see below).
+A tab is the item (#186): when the interview saves another item for a tab,
+every answer that referred to its previous item refers to the new one
+(`MaRDMO.ids.follow_tab`), whatever the switch: an own item found on the MaRDI
+Portal or Wikidata, a Wikidata item and its portal twin, a correction, or a
+portal item made the template of a new item.  The answers get the new ID, and
+for a portal or Wikidata item the text of the option chosen; a new item keeps
+the name and description of the tab, so the texts stay.  Links on tabs of
+portal items move too: the export adds them to those portal items.
 
-| Change | Meaning | ID of the page |
-|---|---|---|
-| `user:` → new item | selected again | keeps its `user:` ID |
-| `mardi:` / `wikidata:` → new item | the page is the template of a new item | a new `user:` ID |
-| any other change | another item | the selected item's ID |
+| Change | Meaning | ID of the tab | Links |
+|---|---|---|---|
+| `user:` → new item | selected again | keeps its `user:` ID | stay |
+| `mardi:` / `wikidata:` → new item | the tab is the template of a new item | a new `user:` ID | follow |
+| any other change | another item | the selected item's ID | follow |
+
+Several tabs with one item (a copied portal item, or the same item selected
+twice) share its links: they belong to the first of these tabs (the lowest
+set index; RDMO numbers a new or copied tab after the last one).  Switching
+that tab takes them along; switching a later tab, or a tab of another
+section with the item, moves nothing.
+
+The content of a tab is kept on a switch, and what the new item brings is
+added (as with "Use this item" in the preview).  A wrong pick is best
+corrected by deleting the tab and adding a new one.
+
+A tab's ID never takes another `user:` ID than its own (`ids.assign_id`): the
+ID dropdowns do not offer the project's own items, so such a save can only be
+the interview sending an old ID again.  Only saves through the interview move
+links: imports, snapshot rollbacks and MaRDMO's own writes do not, and "Use
+this item" and the export change the IDs themselves (see below).
 
 Publications are no templates: a publication is selected by its identifier
 (#158).  The dropdown offers a new publication as the DOI itself, the option
