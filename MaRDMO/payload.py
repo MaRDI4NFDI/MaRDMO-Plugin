@@ -1564,12 +1564,6 @@ class GeneratePayload:
                     "publication. Use the portal item (in the preview), or correct the DOI."
                 ).format(name=name or f"doi:{duplicate.item['doi']}", doi=duplicate.item['doi'],
                          portal_qid=duplicate.qid))
-            elif duplicate.rule == 'other publication':
-                messages.append(_(
-                    "'{name}' ({description}) has the label and description of the publication {portal_qid} of "
-                    "the MaRDI Portal, which has another DOI; the portal takes only one item per label and "
-                    "description. MaRDMO cannot export this publication yet."
-                ).format(name=name, description=description, portal_qid=duplicate.qid))
             elif duplicate.rule == 'wikidata':
                 messages.append(_(
                     "'{name}' ({description}) is the Wikidata item {qid}, which exists on the MaRDI Portal as "

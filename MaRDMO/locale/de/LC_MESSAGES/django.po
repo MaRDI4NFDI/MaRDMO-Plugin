@@ -12,7 +12,7 @@ msgstr ""
 msgid "Algorithmic Task"
 msgstr "Algorithmische Aufgabe"
 
-#: MaRDMO/checks/algorithm.py:31 MaRDMO/checks/algorithm.py:38 MaRDMO/checks/algorithm.py:45 MaRDMO/checks/base.py:601 MaRDMO/checks/base.py:623 MaRDMO/checks/workflow.py:181 MaRDMO/checks/workflow.py:186 MaRDMO/checks/workflow.py:194 MaRDMO/constants.py:66 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:22 MaRDMO/templates/MaRDMO/preview_workflow.html:93
+#: MaRDMO/checks/algorithm.py:31 MaRDMO/checks/algorithm.py:38 MaRDMO/checks/algorithm.py:45 MaRDMO/checks/base.py:612 MaRDMO/checks/base.py:634 MaRDMO/checks/workflow.py:181 MaRDMO/checks/workflow.py:186 MaRDMO/checks/workflow.py:194 MaRDMO/constants.py:66 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:22 MaRDMO/templates/MaRDMO/preview_workflow.html:93
 msgid "Algorithm"
 msgstr "Algorithmus"
 
@@ -140,83 +140,87 @@ msgstr "Objekt der Beziehung fehlt ({item})"
 msgid "Same Item as Page {tab} (delete one of them)"
 msgstr "Dasselbe Item wie Seite {tab} (löschen Sie eine der beiden)"
 
-#: MaRDMO/checks/base.py:451
+#: MaRDMO/checks/base.py:453
+msgid "Same Publication as Page {tab} (delete one of them)"
+msgstr "Dieselbe Publikation wie Seite {tab} (löschen Sie eine der beiden)"
+
+#: MaRDMO/checks/base.py:462
 msgid "Same Name and Short Description as Page {tab}"
 msgstr "Gleicher Name und gleiche Kurzbeschreibung wie Seite {tab}"
 
-#: MaRDMO/checks/base.py:460
+#: MaRDMO/checks/base.py:471
 msgid "Missing ID"
 msgstr "ID fehlt"
 
-#: MaRDMO/checks/base.py:480
+#: MaRDMO/checks/base.py:491
 msgid "Missing Name"
 msgstr "Name fehlt"
 
-#: MaRDMO/checks/base.py:484
+#: MaRDMO/checks/base.py:495
 msgid "Missing Short Description"
 msgstr "Kurzbeschreibung fehlt"
 
-#: MaRDMO/checks/base.py:485
+#: MaRDMO/checks/base.py:496
 msgid "Short Description Too Long"
 msgstr "Kurzbeschreibung zu lang"
 
-#: MaRDMO/checks/base.py:486
+#: MaRDMO/checks/base.py:497
 msgid "Equal Name and Short Description Forbidden"
 msgstr "Name und Kurzbeschreibung dürfen nicht gleich sein"
 
-#: MaRDMO/checks/base.py:514
+#: MaRDMO/checks/base.py:525
 msgid "Procedure"
 msgstr "Vorgehen"
 
-#: MaRDMO/checks/base.py:514 MaRDMO/templates/MaRDMO/partials/_detailed_description.html:3
+#: MaRDMO/checks/base.py:525 MaRDMO/templates/MaRDMO/partials/_detailed_description.html:3
 msgid "Detailed Description"
 msgstr "Detaillierte Beschreibung"
 
-#: MaRDMO/checks/base.py:517 MaRDMO/templates/MaRDMO/partials/_doc_entries.html:5 MaRDMO/templates/MaRDMO/preview_model_basics.html:79
+#: MaRDMO/checks/base.py:528 MaRDMO/templates/MaRDMO/partials/_doc_entries.html:5 MaRDMO/templates/MaRDMO/preview_model_basics.html:79
 msgid "Reference"
 msgstr "Referenz"
 
-#: MaRDMO/checks/base.py:529
+#: MaRDMO/checks/base.py:540
 msgid "Line Breaks Not Allowed in {field}"
 msgstr "Zeilenumbrüche sind in {field} nicht erlaubt"
 
-#: MaRDMO/checks/base.py:572 MaRDMO/checks/base.py:579 MaRDMO/checks/base.py:585 MaRDMO/checks/base.py:600 MaRDMO/checks/base.py:608 MaRDMO/checks/base.py:613 MaRDMO/checks/base.py:622 MaRDMO/checks/base.py:630 MaRDMO/checks/base.py:638 MaRDMO/checks/base.py:643 MaRDMO/checks/base.py:651 MaRDMO/constants.py:69 MaRDMO/views.py:68 MaRDMO/workflow/constants.py:26
+#: MaRDMO/checks/base.py:583 MaRDMO/checks/base.py:590 MaRDMO/checks/base.py:596 MaRDMO/checks/base.py:611 MaRDMO/checks/base.py:619 MaRDMO/checks/base.py:624 MaRDMO/checks/base.py:633 MaRDMO/checks/base.py:641 MaRDMO/checks/base.py:649 MaRDMO/checks/base.py:654 MaRDMO/checks/base.py:662 MaRDMO/constants.py:69 MaRDMO/views.py:68 MaRDMO/workflow/constants.py:26
 msgid "Publication"
 msgstr "Publikation"
 
-#: MaRDMO/checks/base.py:574
+#: MaRDMO/checks/base.py:585
 msgid "Missing Publication DOI"
 msgstr "DOI der Publikation fehlt"
 
-#: MaRDMO/checks/base.py:580 MaRDMO/checks/workflow.py:319
+#: MaRDMO/checks/base.py:591 MaRDMO/checks/workflow.py:319
 msgid "Invalid Publication DOI: {problem}"
 msgstr "Ungültige DOI der Publikation: {problem}"
 
-#: MaRDMO/checks/base.py:587
+#: MaRDMO/checks/base.py:598
 msgid "No citation found for the DOI {doi}: check the DOI, or open the preview again later"
 msgstr "Keine Zitation zur DOI {doi} gefunden: prüfen Sie die DOI, oder öffnen Sie die Vorschau später erneut"
 
-#: MaRDMO/checks/base.py:609
+#: MaRDMO/checks/base.py:620
 msgid "Benchmark/Software"
 msgstr "Benchmark/Software"
 
-#: MaRDMO/checks/base.py:613
+#: MaRDMO/checks/base.py:624
 msgid "Missing Algorithm, Benchmark, or Software"
 msgstr "Algorithmus, Benchmark oder Software fehlt"
 
-#: MaRDMO/checks/base.py:631 MaRDMO/templates/MaRDMO/preview_workflow.html:238
+#: MaRDMO/checks/base.py:642 MaRDMO/templates/MaRDMO/preview_workflow.html:238
 msgid "Hardware or Software"
 msgstr "Hardware oder Software"
 
-#: MaRDMO/checks/base.py:639
+#: MaRDMO/checks/base.py:650
 msgid "Interdisciplinary Workflow, Process Step, or Data Set"
 msgstr "Interdisziplinärer Workflow, Prozessschritt oder Datensatz"
 
-#: MaRDMO/checks/base.py:644
+#: MaRDMO/checks/base.py:655
 msgid "Missing Algorithm, Hardware/Software, or Workflow Entity"
 msgstr "Algorithmus, Hardware/Software oder Workflow-Entität fehlt"
 
-#: MaRDMO/checks/base.py:652
+#: MaRDMO/checks/base.py:663
 msgid "Mathematical Model Entity"
 msgstr "Entität des mathematischen Modells"
 
@@ -540,99 +544,95 @@ msgstr "Archivierungsjahr fehlt"
 msgid "Invalid Archival Year: {problem}"
 msgstr "Ungültiges Archivierungsjahr: {problem}"
 
-#: MaRDMO/duplicates.py:311
+#: MaRDMO/duplicates.py:325
 msgid "Its class on the MaRDI Portal is {portal}; MaRDMO would give it the class {ours}."
 msgstr "Seine Klasse auf dem MaRDI Portal ist {portal}; MaRDMO würde ihm die Klasse {ours} geben."
 
-#: MaRDMO/duplicates.py:314
+#: MaRDMO/duplicates.py:328
 msgid "It belongs to {portal}; MaRDMO would add {ours}."
 msgstr "Es gehört zu {portal}; MaRDMO würde {ours} hinzufügen."
 
-#: MaRDMO/duplicates.py:317
+#: MaRDMO/duplicates.py:331
 msgid "Its profile type is {portal}; MaRDMO would add {ours}."
 msgstr "Sein Profiltyp ist {portal}; MaRDMO würde {ours} hinzufügen."
 
-#: MaRDMO/duplicates.py:328
-msgid "The publication {qid} of the MaRDI Portal has the same label and description, but another DOI: it is another publication, and the portal takes only one item per label and description. MaRDMO cannot export this publication yet."
-msgstr "Die Publikation {qid} des MaRDI Portals hat dasselbe Label und dieselbe Beschreibung, aber eine andere DOI: Sie ist eine andere Publikation, und das Portal nimmt nur ein Item pro Label und Beschreibung an. MaRDMO kann diese Publikation noch nicht exportieren."
-
-#: MaRDMO/duplicates.py:333
+#: MaRDMO/duplicates.py:343
 msgid "The Wikidata item {qid} of this documentation has the same label and description, and the MaRDI Portal takes only one item per label and description. Rename yours, or select the Wikidata item."
 msgstr "Das Wikidata-Item {qid} dieser Dokumentation hat dasselbe Label und dieselbe Beschreibung, und das MaRDI Portal nimmt nur ein Item pro Label und Beschreibung an. Benennen Sie Ihres um oder wählen Sie das Wikidata-Item."
 
-#: MaRDMO/duplicates.py:338
+#: MaRDMO/duplicates.py:348
 msgid "The markers of the portal item could not be looked up."
 msgstr "Die Kennzeichen des Portal-Items konnten nicht abgefragt werden."
 
-#: MaRDMO/main.py:130
+#: MaRDMO/main.py:131
 msgid "Something changed since the preview. Open the preview again, fix the points it lists, then export."
 msgstr "Seit der Vorschau hat sich etwas geändert. Öffnen Sie die Vorschau erneut, beheben Sie die aufgeführten Punkte und exportieren Sie dann."
 
-#: MaRDMO/main.py:132
+#: MaRDMO/main.py:133
 msgid "The MaRDI Portal is not reachable at the moment, so the documentation could not be checked completely. Nothing was exported; please try again shortly."
 msgstr "Das MaRDI Portal ist im Moment nicht erreichbar, daher konnte die Dokumentation nicht vollständig geprüft werden. Es wurde nichts exportiert; bitte versuchen Sie es in Kürze erneut."
 
-#: MaRDMO/main.py:181
+#: MaRDMO/main.py:182
 msgid "Export to MaRDI Portal"
 msgstr "Zum MaRDI Portal exportieren"
 
-#: MaRDMO/main.py:190 MaRDMO/main.py:374
+#: MaRDMO/main.py:191 MaRDMO/main.py:377
 msgid "Catalog Error"
 msgstr "Katalogfehler"
 
-#: MaRDMO/main.py:191
+#: MaRDMO/main.py:192
 msgid "The catalog is not supported by the MaRDMO Plugin."
 msgstr "Der Katalog wird vom MaRDMO-Plugin nicht unterstützt."
 
-#: MaRDMO/main.py:213
+#: MaRDMO/main.py:214
 msgid "Missing Credentials"
 msgstr "Zugangsdaten fehlen"
 
-#: MaRDMO/main.py:214
+#: MaRDMO/main.py:215
 msgid "Credentials for MaRDI Portal are missing!"
 msgstr "Die Zugangsdaten für das MaRDI Portal fehlen!"
 
-#: MaRDMO/main.py:226 MaRDMO/main.py:399
+#: MaRDMO/main.py:227 MaRDMO/main.py:402
 msgid "Unknown catalog"
 msgstr "Unbekannter Katalog"
 
-#: MaRDMO/main.py:227 MaRDMO/main.py:400
+#: MaRDMO/main.py:228 MaRDMO/main.py:403
 msgid "Cannot handle this catalog type."
 msgstr "Dieser Katalogtyp kann nicht verarbeitet werden."
 
-#: MaRDMO/main.py:255
+#: MaRDMO/main.py:256
 msgid "MaRDI Portal not reachable"
 msgstr "MaRDI Portal nicht erreichbar"
 
-#: MaRDMO/main.py:261
+#: MaRDMO/main.py:262
 msgid "Export not possible"
 msgstr "Export nicht möglich"
 
-#: MaRDMO/main.py:265
+#: MaRDMO/main.py:266
 msgid "Incomplete or Inconsistent Documentation"
 msgstr "Unvollständige oder widersprüchliche Dokumentation"
 
-#: MaRDMO/main.py:367
+#: MaRDMO/main.py:370
 msgid "Query MaRDI Portal"
 msgstr "MaRDI Portal abfragen"
 
-#: MaRDMO/main.py:375
+#: MaRDMO/main.py:378
 msgid "The catalog is not supported by the MaRDMO Query Plugin."
 msgstr "Der Katalog wird vom MaRDMO-Abfrage-Plugin nicht unterstützt."
 
-#: MaRDMO/main.py:417
+#: MaRDMO/main.py:420
 msgid "Workflow(s)"
 msgstr "Workflow(s)"
 
-#: MaRDMO/main.py:419
+#: MaRDMO/main.py:422
 msgid "Mathematical Model(s)"
 msgstr "Mathematische(s) Modell(e)"
 
-#: MaRDMO/main.py:421
+#: MaRDMO/main.py:424
 msgid "Algorithm(s)"
 msgstr "Algorithmus/Algorithmen"
 
-#: MaRDMO/main.py:423
+#: MaRDMO/main.py:426
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -806,14 +806,10 @@ msgid "'{name}' has the DOI {doi}, which the MaRDI Portal has as {portal_qid}: i
 msgstr "'{name}' hat die DOI {doi}, die das MaRDI Portal als {portal_qid} hat: Es ist diese Publikation. Verwenden Sie das Portal-Item (in der Vorschau), oder korrigieren Sie die DOI."
 
 #: MaRDMO/payload.py:1569
-msgid "'{name}' ({description}) has the label and description of the publication {portal_qid} of the MaRDI Portal, which has another DOI; the portal takes only one item per label and description. MaRDMO cannot export this publication yet."
-msgstr "'{name}' ({description}) hat das Label und die Beschreibung der Publikation {portal_qid} des MaRDI Portals, die eine andere DOI hat; das Portal nimmt nur ein Item pro Label und Beschreibung an. MaRDMO kann diese Publikation noch nicht exportieren."
-
-#: MaRDMO/payload.py:1575
 msgid "'{name}' ({description}) is the Wikidata item {qid}, which exists on the MaRDI Portal as {portal_qid}. Use the portal item, or choose another item or make it a new item."
 msgstr "'{name}' ({description}) ist das Wikidata-Item {qid}, das es auf dem MaRDI Portal als {portal_qid} gibt. Verwenden Sie das Portal-Item, oder wählen Sie ein anderes Item oder machen Sie es zu einem neuen Item."
 
-#: MaRDMO/payload.py:1581
+#: MaRDMO/payload.py:1575
 msgid "An item ({qid}) with the label '{name}' and description '{description}' already exists on the MaRDI Portal. Use the portal item, or rename yours."
 msgstr "Ein Item ({qid}) mit dem Label '{name}' und der Beschreibung '{description}' gibt es auf dem MaRDI Portal schon. Verwenden Sie das Portal-Item oder benennen Sie Ihres um."
 
@@ -1053,7 +1049,7 @@ msgstr "Experimentelle Ausrüstung"
 msgid "Author"
 msgstr "Autor/in"
 
-#: MaRDMO/views.py:68 MaRDMO/templates/MaRDMO/partials/_publication.html:28
+#: MaRDMO/views.py:68 MaRDMO/templates/MaRDMO/partials/_publication.html:33
 msgid "Journal"
 msgstr "Zeitschrift"
 
@@ -1133,7 +1129,7 @@ msgstr "Dieser Export kann keine Portal-Items verwenden."
 msgid "The item is not, or no longer, a duplicate of this portal item."
 msgstr "Das Item ist kein Duplikat dieses Portal-Items (mehr)."
 
-#: MaRDMO/views.py:431 MaRDMO/templates/MaRDMO/partials/_before_export.html:92
+#: MaRDMO/views.py:431 MaRDMO/templates/MaRDMO/partials/_before_export.html:85
 msgid "This item cannot become the portal item."
 msgstr "Dieses Item kann nicht zum Portal-Item werden."
 
@@ -1271,92 +1267,92 @@ msgstr "noch nicht; bitte prüfen Sie das Wikidata-Item dieser Dokumentation:"
 msgid "Please check:"
 msgstr "Bitte prüfen:"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:77 MaRDMO/templates/MaRDMO/partials/_before_export.html:83
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:76
 msgid "Your decision"
 msgstr "Ihre Entscheidung"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:89
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:82
 msgid "Use this item: it replaces your item and all its relations."
 msgstr "Dieses Item verwenden: Es ersetzt Ihr Item und alle seine Beziehungen."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:89 MaRDMO/templates/MaRDMO/partials/_before_export.html:92
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:82 MaRDMO/templates/MaRDMO/partials/_before_export.html:85
 msgid "Use this item"
 msgstr "Dieses Item verwenden"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:90
 msgid "Redefine: go back to the interview and check the DOI of the publication."
 msgstr "Neu definieren: Prüfen Sie im Interview die DOI der Publikation."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:90
 msgid "Redefine: go back to the interview and choose another item, or make it a new item."
 msgstr "Neu definieren: Wählen Sie im Interview ein anderes Item oder legen Sie ein neues Item an."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:90
 msgid "Redefine: go back to the interview and give your item a new label and description, or select the Wikidata item there."
 msgstr "Neu definieren: Geben Sie Ihrem Item im Interview ein neues Label und eine neue Beschreibung, oder wählen Sie dort das Wikidata-Item."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:90
 msgid "Redefine: go back to the interview and give your item a new label and description."
 msgstr "Neu definieren: Geben Sie Ihrem Item im Interview ein neues Label und eine neue Beschreibung."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:97
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:90
 msgid "Redefine"
 msgstr "Neu definieren"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:103 MaRDMO/templates/MaRDMO/partials/_before_export.html:103
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:96 MaRDMO/templates/MaRDMO/partials/_before_export.html:96
 msgid "Why can this item not be used?"
 msgstr "Warum lässt sich dieses Item nicht verwenden?"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:108
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:101
 msgid "The name and description of a publication are those of its citation. Check its DOI on its page."
 msgstr "Name und Beschreibung einer Publikation sind die ihrer Zitation. Prüfen Sie ihre DOI auf ihrer Seite."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:110
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:103
 msgid "Give your item a new label and description on its page, or select the Wikidata item there."
 msgstr "Geben Sie Ihrem Item auf seiner Seite ein neues Label und eine neue Beschreibung, oder wählen Sie dort das Wikidata-Item."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:112
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:105
 msgid "Choose another item on its page, or make it a new item: the portal item is another kind of item, and a new name would not change its Wikidata QID."
 msgstr "Wählen Sie auf seiner Seite ein anderes Item oder legen Sie ein neues Item an: Das Item des Portals ist eine andere Art von Item, und ein neuer Name würde seine Wikidata-QID nicht ändern."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:114
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:107
 msgid "Give your item a new label and description on its page, or open the preview again later: then the portal item may be usable."
 msgstr "Geben Sie Ihrem Item auf seiner Seite ein neues Label und eine neue Beschreibung, oder öffnen Sie die Vorschau später erneut: Dann lässt sich das Item des Portals vielleicht verwenden."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:116
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:109
 msgid "Give your item a new label and description on its page."
 msgstr "Geben Sie Ihrem Item auf seiner Seite ein neues Label und eine neue Beschreibung."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:128
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:121
 msgid "Apply"
 msgstr "Übernehmen"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:132 MaRDMO/templates/MaRDMO/partials/_before_export.html:140 MaRDMO/templates/MaRDMO/partials/_before_export.html:168 MaRDMO/templates/MaRDMO/partials/_before_export.html:195
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:125 MaRDMO/templates/MaRDMO/partials/_before_export.html:133 MaRDMO/templates/MaRDMO/partials/_before_export.html:160 MaRDMO/templates/MaRDMO/partials/_before_export.html:187
 msgid "To interview"
 msgstr "Zum Interview"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:137
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:130
 #, python-format
 msgid "The MaRDI Portal has this DOI as %(qid)s: it is this publication. If the DOI is wrong, correct it on the publication's page."
 msgstr "Das MaRDI Portal hat diese DOI als %(qid)s: Es ist diese Publikation. Ist die DOI falsch, korrigieren Sie sie auf der Seite der Publikation."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:155
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:147
 msgid "Errors, inconsistencies and incomplete documentation"
 msgstr "Fehler, Widersprüche und unvollständige Dokumentation"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:159 MaRDMO/templates/MaRDMO/preview.html:34
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:151 MaRDMO/templates/MaRDMO/preview.html:34
 msgid "The MaRDI Portal is not reachable at the moment, so the documentation could not be checked completely. Please try again shortly."
 msgstr "Das MaRDI Portal ist im Moment nicht erreichbar, daher konnte die Dokumentation nicht vollständig geprüft werden. Bitte versuchen Sie es in Kürze erneut."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:163
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:155
 msgid "Fix these points in the interview, then open the preview again."
 msgstr "Beheben Sie diese Punkte im Interview und öffnen Sie dann die Vorschau erneut."
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:183
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:175
 msgid "Portal items you could complete (optional)"
 msgstr "Items des Portals, die Sie ergänzen könnten (optional)"
 
-#: MaRDMO/templates/MaRDMO/partials/_before_export.html:185
+#: MaRDMO/templates/MaRDMO/partials/_before_export.html:177
 msgid "These items are on the MaRDI Portal already and lack something, or have a value the portal should not have. The export does not need it: you can export as it is. What you add in the interview is added to the portal item."
 msgstr "Diese Items gibt es auf dem MaRDI Portal schon, und ihnen fehlt etwas, oder sie haben einen Wert, den das Portal nicht haben sollte. Der Export braucht das nicht: Sie können so exportieren. Was Sie im Interview ergänzen, wird dem Item des Portals hinzugefügt."
 
@@ -1396,7 +1392,7 @@ msgstr "Beschreibung"
 msgid "project"
 msgstr "Projekt"
 
-#: MaRDMO/templates/MaRDMO/partials/_item_card.html:4 MaRDMO/templates/MaRDMO/partials/_publication.html:24 MaRDMO/templates/MaRDMO/partials/_publication.html:29
+#: MaRDMO/templates/MaRDMO/partials/_item_card.html:4 MaRDMO/templates/MaRDMO/partials/_publication.html:29 MaRDMO/templates/MaRDMO/partials/_publication.html:34
 msgid "new"
 msgstr "neu"
 
@@ -1413,29 +1409,45 @@ msgid "Citation"
 msgstr "Zitation"
 
 #: MaRDMO/templates/MaRDMO/partials/_publication.html:14
+msgid "Created as"
+msgstr "Angelegt als"
+
+#: MaRDMO/templates/MaRDMO/partials/_publication.html:14
+msgid "the MaRDI Portal has another publication with this title and description"
+msgstr "das MaRDI Portal hat eine andere Publikation mit diesem Titel und dieser Beschreibung"
+
+#: MaRDMO/templates/MaRDMO/partials/_publication.html:16
+msgid "Short description with its identifier"
+msgstr "Kurzbeschreibung mit ihrem Identifikator"
+
+#: MaRDMO/templates/MaRDMO/partials/_publication.html:16
+msgid "another publication of this documentation has the same title and description"
+msgstr "eine andere Publikation dieser Dokumentation hat denselben Titel und dieselbe Beschreibung"
+
+#: MaRDMO/templates/MaRDMO/partials/_publication.html:19
 msgid "already there, nothing is added to it"
 msgstr "schon vorhanden, es wird nichts hinzugefügt"
 
-#: MaRDMO/templates/MaRDMO/partials/_publication.html:16
+#: MaRDMO/templates/MaRDMO/partials/_publication.html:21
 msgid "New on the MaRDI Portal"
 msgstr "Neu auf dem MaRDI Portal"
 
-#: MaRDMO/templates/MaRDMO/partials/_publication.html:16
+#: MaRDMO/templates/MaRDMO/partials/_publication.html:21
 #, python-format
 msgid "%(counter)s author as name only"
 msgid_plural "%(counter)s authors as name only"
 msgstr[0] "%(counter)s Autor/in nur mit Namen"
 msgstr[1] "%(counter)s Autor/innen nur mit Namen"
 
-#: MaRDMO/templates/MaRDMO/partials/_publication.html:20
+#: MaRDMO/templates/MaRDMO/partials/_publication.html:25
 msgid "Authors and journal"
 msgstr "Autor/innen und Zeitschrift"
 
-#: MaRDMO/templates/MaRDMO/partials/_publication.html:24
+#: MaRDMO/templates/MaRDMO/partials/_publication.html:29
 msgid "name only"
 msgstr "nur Name"
 
-#: MaRDMO/templates/MaRDMO/partials/_publication.html:33
+#: MaRDMO/templates/MaRDMO/partials/_publication.html:38
 msgid "Language"
 msgstr "Sprache"
 

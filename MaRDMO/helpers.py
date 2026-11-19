@@ -602,6 +602,54 @@ def pages_by_id(data):
     return pages
 
 
+def distinguish_publications(data):
+    '''Give publications with the name and description of another publication of *data* their own (#183).
+
+    The name and description of a publication are its citation's, and the
+    user cannot change them; two publications may have the same (a short
+    title, a description such as "scientific article published in 2020").
+    The export would make them one item, and the MaRDI Portal takes only one
+    item per name and description.  So every one but the first of a name
+    and description gets its DOI in the description ("… (DOI 10.…)"), a
+    Wikidata publication without DOI its Wikidata QID.  Pages with the same
+    DOI (or ID) are one publication and keep theirs (the checks report
+    them); publications of the MaRDI Portal are not changed.  Runs before
+    :func:`link_to_pages`, so the relations to them follow.
+
+    Args:
+        data: Top-level answers dict; mutated in place (``Description``,
+              and ``Distinguished`` on the pages changed).
+
+    Returns:
+        *data*.
+    '''
+    from .getters import get_options  # pylint: disable=import-outside-toplevel
+    option = get_options()['DOI']
+    groups = {}
+    for index in sorted(data.get('publication') or {}):
+        page = data['publication'][index]
+        if isinstance(page, dict) and page.get('ID') and page.get('Name') and not page['ID'].startswith('mardi:'):
+            groups.setdefault((page['Name'], page.get('Description') or ''), []).append(page)
+    for (_, description), pages in groups.items():
+        first = None
+        for page in pages:
+            doi = find_reference(page.get('reference'), option)
+            if doi and doi[1]:
+                identifier = ('DOI', doi[1])
+            elif page['ID'].startswith('wikidata:'):
+                identifier = ('Wikidata QID', page['ID'].split(':', 1)[1])
+            else:
+                identifier = None
+            same = identifier[1].upper() if identifier else page['ID']
+            if first is None or same == first:
+                first = same if first is None else first
+                continue
+            if identifier:
+                page['Description'] = f'{description} ({identifier[0]} {identifier[1]})'
+                page['Distinguished'] = True
+    return data
+
+
 def link_to_pages(data):
     '''Give every answer that refers to an item page the page's name and description.
 

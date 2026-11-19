@@ -40,6 +40,7 @@ from .getters import (
 from .helpers import (
     batched_writes,
     describe_items_without_page,
+    distinguish_publications,
     link_to_pages,
     process_question_dict,
     topological_order
@@ -325,6 +326,8 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         # name and description (IDs, #100), own items without page a generic
         # one (#129)
         add_tab_names(self.project, answers)
+        # Publications with the name and description of another one get their DOI in it (#183)
+        distinguish_publications(answers)
         link_to_pages(answers)
         describe_items_without_page(answers)
 
