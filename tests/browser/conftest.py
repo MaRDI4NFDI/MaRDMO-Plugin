@@ -16,6 +16,7 @@ import pytest
 from django.db import connections
 from django.contrib.staticfiles.handlers import StaticFilesHandler
 from django.test import Client
+from django.core.servers.basehttp import ThreadedWSGIServer
 from django.test.testcases import LiveServerThread
 
 from MaRDMO.store import SESSION_JOBS_KEY
@@ -54,15 +55,41 @@ def pytest_collection_modifyitems(config, items):
                 item.add_marker(pytest.mark.skip(reason=reason))
 
 
-@pytest.fixture
-def server(db, settings):
-    '''The URL of a live server on the test's database connection.'''
+class OneRequestAtATime(ThreadedWSGIServer):
+    '''A live server that answers one request after another, each on a connection of its own.
+
+    RDMO's interview sends several requests at once; in a thread each, they
+    would share the test's database connection at the same time.  Here the
+    server thread answers them in turn (it has the test's connection), and
+    closes every connection after its answer (HTTP/1.0), so a connection the
+    browser keeps open does not hold up the next request.
+    '''
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.RequestHandlerClass = type('Closing', (self.RequestHandlerClass,), {'protocol_version': 'HTTP/1.0'})
+
+    def process_request(self, request, client_address):
+        try:
+            self.finish_request(request, client_address)
+        except Exception:  # pylint: disable=broad-exception-caught
+            self.handle_error(request, client_address)
+        finally:
+            self.shutdown_request(request)
+
+
+class InterviewServerThread(LiveServerThread):
+    server_class = OneRequestAtATime
+
+
+def live_server(settings, thread_class=LiveServerThread):
+    '''Start a live server (*thread_class*) on the test's database connection; yield its URL.'''
     settings.ALLOWED_HOSTS = ['localhost']
     # The connection itself, not django.db.connection (a proxy to the thread's own)
     connection = connections['default']
     connection.inc_thread_sharing()
     # The static files from the apps (RDMO's and MaRDMO's styles), as StaticLiveServerTestCase
-    thread = LiveServerThread('localhost', StaticFilesHandler, connections_override={'default': connection}, port=0)
+    thread = thread_class('localhost', StaticFilesHandler, connections_override={'default': connection}, port=0)
     thread.daemon = True
     thread.start()
     thread.is_ready.wait()
@@ -71,6 +98,18 @@ def server(db, settings):
     yield f'http://localhost:{thread.port}'
     thread.terminate()
     connection.dec_thread_sharing()
+
+
+@pytest.fixture
+def server(db, settings):
+    '''The URL of a live server on the test's database connection.'''
+    yield from live_server(settings)
+
+
+@pytest.fixture
+def interview_server(db, settings):
+    '''The URL of a live server for RDMO's interview (:class:`OneRequestAtATime`).'''
+    yield from live_server(settings, InterviewServerThread)
 
 
 @pytest.fixture(scope='session')
@@ -85,14 +124,8 @@ def browser():
         launched.close()
 
 
-@pytest.fixture
-def page_as(browser, server):
-    '''``page_as(user, jobs=(), language='en')``: a browser page logged in as *user*.
-
-    It has the session cookie of Django's test client; *jobs* are export
-    jobs of this session (as if it had started them), *language* is the
-    browser's language.
-    '''
+def pages(browser, server):
+    '''``(open_page, contexts)``: :func:`page_as` for *server*.'''
     contexts = []
 
     def open_page(user, jobs=(), language='en'):
@@ -107,7 +140,27 @@ def page_as(browser, server):
                               'url': server}])
         contexts.append(context)
         return context.new_page()
+    return open_page, contexts
 
+
+@pytest.fixture
+def interview_as(browser, interview_server):
+    ''':func:`page_as` on the :func:`interview_server`: for pages of RDMO's interview.'''
+    open_page, contexts = pages(browser, interview_server)
+    yield open_page
+    for context in contexts:
+        context.close()
+
+
+@pytest.fixture
+def page_as(browser, server):
+    '''``page_as(user, jobs=(), language='en')``: a browser page logged in as *user*.
+
+    It has the session cookie of Django's test client; *jobs* are export
+    jobs of this session (as if it had started them), *language* is the
+    browser's language.
+    '''
+    open_page, contexts = pages(browser, server)
     yield open_page
     for context in contexts:
         context.close()

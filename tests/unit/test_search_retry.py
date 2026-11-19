@@ -4,6 +4,7 @@ import requests
 
 import MaRDMO.queries as queries
 from MaRDMO.getters import get_items, get_url
+from MaRDMO.ids import option_help
 
 SEARCH = {'query': {'search': [{'title': 'Item:Q1'}]}}
 ENTITIES = {'entities': {'Q1': {'labels': {'en': {'value': 'alpha'}}, 'descriptions': {'en': {'value': 'first'}}}}}
@@ -91,14 +92,14 @@ def test_a_second_failure_shows_no_results_and_is_not_cached(monkeypatch):
     portal = Portal(monkeypatch, Response(503), Response(503), Response(body=SEARCH), Response(body=ENTITIES))
     assert queries.query_sources('alpha', get_items()['quantity'], sources=['mardi'], not_found=False) == []
     assert queries.query_sources('alpha', get_items()['quantity'], sources=['mardi'], not_found=False) == [
-        {'id': 'mardi:Q1', 'text': 'alpha (first)', 'help': '<strong class="text-muted">[mardi]</strong>'}]
+        {'id': 'mardi:Q1', 'text': 'alpha (first)', 'help': option_help('mardi:Q1', 'alpha (first)')}]
     assert portal.requests == ['query', 'query', 'query', 'wbgetentities']
 
 
 def test_the_wikidata_search_is_retried_too(monkeypatch):
     portal = Portal(monkeypatch, requests.exceptions.ConnectionError(), Response(body=WIKIDATA))
     assert queries.query_sources('alpha', [], sources=['wikidata'], not_found=False) == [
-        {'id': 'wikidata:Q2', 'text': 'alpha (second)', 'help': '<strong class="text-muted">[wikidata]</strong>'}]
+        {'id': 'wikidata:Q2', 'text': 'alpha (second)', 'help': option_help('wikidata:Q2', 'alpha (second)')}]
     assert portal.requests == ['wbsearchentities', 'wbsearchentities']
 
 
