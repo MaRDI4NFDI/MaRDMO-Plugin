@@ -54,7 +54,11 @@ def test_the_options_show_badge_label_and_description(interview, interview_as):
     assert shown == [['new item'], ['mardimass', 'property of matter'], ['wikidatamass', 'property of physical bodies']]
     assert options.nth(1).locator('.mardmo-option span').first.inner_text() == 'mardi'
 
-    options.nth(2).click()
+    # The field shows the choice at once; the answer is stored by the request that follows
+    with page.expect_response(lambda response: '/values/' in response.url
+                              and response.request.method in ('POST', 'PUT'), timeout=30000) as saved:
+        options.nth(2).click()
+    assert saved.value.ok
     page.wait_for_function(
         "document.querySelector('.react-select__single-value')?.innerText === 'mass (property of physical bodies)'",
         timeout=30000)
