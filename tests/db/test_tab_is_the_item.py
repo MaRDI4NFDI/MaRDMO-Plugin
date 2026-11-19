@@ -139,3 +139,58 @@ def test_saves_outside_the_interview_move_nothing(doc):
     value.external_id, value.text = PORTAL_MASS
     value.save()
     assert set(links(doc).values()) == {('user:mass', 'mass (physical quantity)')}
+
+
+# --- Clearing a tab's item (the links stay with the tab) -----------------------------------------
+
+CLEARED = ('', '')
+PARKED = ('tab:quantity:0', 'mass (physical quantity)')
+
+
+def test_a_cleared_tab_keeps_its_links(doc, client):
+    choose(client, doc, CLEARED)
+    assert set(links(doc).values()) == {PARKED}
+
+
+@pytest.mark.parametrize('item', [PORTAL_MASS, WIKIDATA_MASS])
+def test_the_item_chosen_after_clearing_takes_the_links(doc, client, item):
+    choose(client, doc, CLEARED)
+    choose(client, doc, item)
+    assert set(links(doc).values()) == {item}
+
+
+def test_a_new_item_chosen_after_clearing_takes_the_links(doc, client):
+    choose(client, doc, CLEARED)
+    new = choose(client, doc, ('not found', 'new item'))['external_id']
+    assert is_user_id(new) and new != MASS[0]
+    assert set(links(doc).values()) == {(new, PARKED[1])}
+
+
+def test_clearing_a_later_tab_with_the_item_keeps_the_links_with_the_first(doc, client):
+    choose(client, doc, PORTAL_MASS)
+    two_tabs(doc, PORTAL_MASS)
+    choose(client, doc, CLEARED, index=1)
+    assert set(links(doc).values()) == {PORTAL_MASS}
+
+
+def test_deleting_a_cleared_tab_removes_its_links(doc, client):
+    '''RDMO gives the number of a deleted last tab to the next new one: nothing may be left for it.'''
+    choose(client, doc, CLEARED)
+    tab = doc.values.get(attribute__uri=uri('quantity'), set_prefix='', set_index=0)
+    assert client.delete(API.format(doc.pk) + f'{tab.pk}/set/').status_code == 204
+    assert not doc.values.filter(external_id=PARKED[0]).exists()
+    assert not doc.values.filter(attribute__uri__in=[uri('task/quantity-relatant'),
+                                                     uri('formulation/element/quantity')]).exists()
+
+
+def test_the_checks_report_the_tab_without_item_not_the_links(doc, client, monkeypatch):
+    from MaRDMO import main  # noqa: PLC0415
+    from MaRDMO.checks import Checks  # noqa: PLC0415
+    monkeypatch.setattr('MaRDMO.model.worker.annotate_formulas', lambda answers: None)
+    choose(client, doc, CLEARED)
+    provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
+    provider.project, provider.snapshot = doc, None
+    answers = provider.get_post_data()[0]
+    messages = [str(message) for message in Checks().run_model(project=doc, data=answers, catalog=str(doc.catalog))]
+    assert any('Q1' in message and 'Missing ID' in message for message in messages)
+    assert not any('Selected Quantity not found' in message for message in messages)

@@ -115,6 +115,11 @@ set index; RDMO numbers a new or copied tab after the last one).  Switching
 that tab takes them along; switching a later tab, or a tab of another
 section with the item, moves nothing.
 
+Clearing the item of a tab keeps its links with the tab: they get its
+placeholder `tab:<section>:<set index>`, and the item chosen there next takes
+them.  Meanwhile preview and checks show them as links to the tab, and the
+tab is reported without ID, which stops the export.
+
 The content of a tab is kept on a switch, and what the new item brings is
 added (as with "Use this item" in the preview).  A wrong pick is best
 corrected by deleting the tab and adding a new one.
@@ -142,10 +147,13 @@ A relation row (relation type, targets and assumptions of one block) whose
 last target is removed loses its relation type and assumptions too; a row
 with other targets keeps them.
 
+A tab whose item was cleared takes the links on its placeholder along.  This
+matters: RDMO gives the number of a deleted last tab to the next new one.
+
 Nothing is removed
 
 - when only the ID of a page is cleared (the tab is still there, another
-  item may be selected next);
+  item may be selected next; the links wait on its placeholder);
 - when another page still has the item's ID (a copied tab, see below): the
   relations now refer to that page;
 - in the usage blocks of a process step (algorithm with software and

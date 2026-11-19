@@ -153,6 +153,25 @@ def is_tab_id(value):
     return value.set_prefix == '' and value.attribute.uri in tab_id_attributes()
 
 
+# The ID of the links of a tab whose item was cleared: tab:<section>:<set index>
+PLACEHOLDER_PREFIX = 'tab:'
+
+
+def tab_placeholder(section, set_index):
+    '''The ID the links of tab *set_index* of *section* get while it has no item (#186).'''
+    return f'{PLACEHOLDER_PREFIX}{section}:{set_index}'
+
+
+def is_placeholder(identifier):
+    '''Return ``True`` if *identifier* is the :func:`tab_placeholder` of a tab without item.'''
+    return bool(identifier) and identifier.startswith(PLACEHOLDER_PREFIX)
+
+
+def _placeholder_of(value):
+    '''The :func:`tab_placeholder` of the tab whose ID answer is *value*.'''
+    return tab_placeholder(value.attribute.uri.rsplit('/', 2)[-2], value.set_index)
+
+
 def follow_tab(value):
     '''Let the answers that referred to the previous item of a tab refer to its new one (#186).
 
@@ -170,11 +189,21 @@ def follow_tab(value):
     Saves outside the interview (imports, MaRDMO's own writes, snapshot
     rollbacks) do not call this.
 
+    A tab whose item is cleared keeps its links on its
+    :func:`tab_placeholder`, and the item chosen next takes them; deleting
+    the tab removes them (:func:`remove_references`).
+
     Returns:
         The number of answers that now refer to the new item.
     '''
     old, new = getattr(value, 'mardmo_old_id', None), value.external_id
-    if not is_item_id(old) or not is_item_id(new) or old == new:
+    if old == new:
+        return 0
+    if is_item_id(old) and not new:
+        new = _placeholder_of(value)                    # cleared: the tab keeps its links
+    elif not old and is_item_id(new):
+        old = _placeholder_of(value)                    # chosen after clearing
+    elif not (is_item_id(old) and is_item_id(new)):
         return 0
     others = Value.objects.filter(project=value.project_id, snapshot=None, set_prefix='',
                                   attribute__uri__in=tab_id_attributes(), external_id=old).exclude(pk=value.pk)
@@ -251,15 +280,21 @@ def remove_references(value):
     tab is gone too (the tab was deleted, not only its ID cleared) and no
     other page has the item's ID (e.g. a copied tab), every answer in the
     project with this ID is deleted: relations, assumptions, publication
-    relations.  A relation row left without target loses its relation type
-    and assumptions too.
+    relations; for a tab without item, those on its placeholder
+    (:func:`follow_tab`).  A relation row left without target loses its
+    relation type and assumptions too.
 
     Args:
         value: Deleted :class:`~rdmo.projects.models.Value` of a page's ID question.
     '''
     identifier = value.external_id
-    if not is_item_id(identifier) or not value.attribute.uri.endswith('/id'):
+    if not value.attribute.uri.endswith('/id'):
         return
+    if not is_item_id(identifier):
+        # A tab without item: its links are on its placeholder (follow_tab)
+        if not is_tab_id(value):
+            return
+        identifier = _placeholder_of(value)
     project = value.project_id
     tab = Value.objects.filter(project=project, snapshot=None, attribute__uri=value.attribute.uri[:-len('/id')],
                                set_prefix=value.set_prefix, set_index=value.set_index)
