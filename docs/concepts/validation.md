@@ -141,6 +141,18 @@ explanation as a note, e.g. *Missing close brace*
 (`partials/_mathjax_errors.html`).  Formulas that MathJax itself cannot
 render are shown the same way instead of MathJax's error box.
 
+**In the interview**, the TeX of the formula and symbol questions is rendered
+below their fields while it is typed (`MaRDMO/js/math-preview.js`, with
+MaRDMO's MathJax).  The questionnaire marks these questions by an empty
+`<span class="mardmo-math">` in their help; MaRDMO's template of the
+interview page extends RDMO's (`templates/projects/project_interview.html`)
+by the script, which loads MathJax only on a page with a marked question.
+What MathJax cannot render is shown with its message, as a hint only: the
+portal's TeX check decides, in the checks and the preview.  The script
+depends on how RDMO draws its fields (`.interview-question`,
+`.interview-input`); a change in RDMO can make it render nothing, but it
+cannot break the interview.
+
 **Environments.**  The checker only answers *syntax error*, also for
 environments it does not support, although KaTeX and MathJax render them.  When
 a rejected formula contains such an environment, MaRDMO names it and lists the

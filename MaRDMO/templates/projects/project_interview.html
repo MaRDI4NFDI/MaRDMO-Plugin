@@ -1,0 +1,18 @@
+{% extends "projects/project_interview.html" %}
+{% load i18n static %}
+{% comment %}
+RDMO's interview page, with MaRDMO's preview of LaTeX below the formula and
+symbol questions (MaRDMO/js/math-preview.js).  It extends RDMO's template of
+the same name, so the rest of the page is RDMO's own; MaRDMO is listed before
+RDMO in INSTALLED_APPS, so this one is found first.  The script does nothing
+on a page without such questions (marked in the questionnaire by an empty
+<span class="mardmo-math"> in their help) and loads MathJax only then.
+{% endcomment %}
+
+{% block js %}
+    {{ block.super }}
+    {% include "MaRDMO/partials/_mathjax_safe_config.html" %}
+    <script src="{% static 'MaRDMO/js/math-preview.js' %}"
+            data-mathjax="{% static 'MaRDMO/js/mathjax/es5/tex-mml-chtml.js' %}"
+            data-text-error="{% translate 'MathJax cannot show this formula:' %}" defer></script>
+{% endblock %}
