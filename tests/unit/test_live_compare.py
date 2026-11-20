@@ -1,5 +1,5 @@
 '''The live check compares answers by structure, and sends only reading requests (tests/live, #93).'''
-from MaRDMO.constants import TEX_CHECK_URL
+from MaRDMO.constants import TEX_CHECK_URL, WIKIDATA
 from tests.live.test_portal import compare, read_only, recorded
 
 API = 'https://portal.mardi4nfdi.de/w/api.php'
@@ -28,6 +28,8 @@ def test_only_reading_requests_are_sent():
     assert read_only(API, {'method': 'GET', 'params': {'action': 'wbsearchentities'}, 'data': None})
     assert read_only('https://query.portal.mardi4nfdi.de/sparql', {'method': 'POST', 'params': {}, 'data': 'q'})
     assert read_only(TEX_CHECK_URL, {'method': 'POST', 'params': {}, 'data': {'q': 'x'}})
+    assert read_only(WIKIDATA['qlever'], {'method': 'POST', 'params': {}, 'data': 'q'})
+    assert not read_only('https://qlever.dev/api/other', {'method': 'POST', 'params': {}, 'data': 'q'})
     assert not read_only(API, {'method': 'POST', 'params': {'action': 'wbeditentity'}, 'data': {}})
     assert not read_only(API, {'method': 'GET', 'params': {'action': 'wbeditentity'}, 'data': None})
     assert read_only('https://api.crossref.org/works/10.1/x', {'method': 'GET', 'params': {}, 'data': None})
@@ -45,6 +47,7 @@ def test_every_recorded_request_is_kept_and_reading():
 
 def test_sparql_queries_are_kept_with_their_content_type():
     '''Sent without it, the query service answers 405.'''
-    queries = [entry['request'] for _, entry in recorded() if entry['url'].endswith('/sparql')]
+    queries = [entry['request'] for _, entry in recorded()
+               if entry['url'].endswith('/sparql') or entry['url'] == WIKIDATA['qlever']]
     assert queries and all(request['headers'].get('Content-Type', '').startswith('application/sparql-query')
                            for request in queries)

@@ -1,0 +1,70 @@
+[
+ {
+  "key": "[\"POST\", \"https://qlever.dev/api/wikidata\", [], \"PREFIX wd: <http://www.wikidata.org/entity/> PREFIX wdt: <http://www.wikidata.org/prop/direct/> SELECT DISTINCT ?item WHERE { VALUES ?item { wd:Q11423 wd:Q21155124 wd:Q642141 } { ?item wdt:P31 ?class . } UNION { ?item wdt:P279 ?class . } ?class wdt:P279* ?root . VALUES ?root { wd:Q7397 } }\"]",
+  "url": "https://qlever.dev/api/wikidata",
+  "status": 200,
+  "content_type": "application/sparql-results+json",
+  "body": "{\"head\":{\"vars\":[\"item\"]},\"results\":{\"bindings\":[{\"item\":{\"type\":\"uri\",\"value\":\"http://www.wikidata.org/entity/Q21155124\"}},{\"item\":{\"type\":\"uri\",\"value\":\"http://www.wikidata.org/entity/Q642141\"}}]},\"meta\":{\"query-time-ms\":210,\"result-size-total\":2,\"warnings\":[]}}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "PREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nSELECT DISTINCT ?item WHERE {\n  VALUES ?item { wd:Q11423 wd:Q21155124 wd:Q642141 }\n  { ?item wdt:P31 ?class . } UNION { ?item wdt:P279 ?class . }\n  ?class wdt:P279* ?root .\n  VALUES ?root { wd:Q7397 }\n}",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://qlever.dev/api/wikidata\", [], \"PREFIX wd: <http://www.wikidata.org/entity/> PREFIX wdt: <http://www.wikidata.org/prop/direct/> SELECT DISTINCT ?item WHERE { VALUES ?item { wd:Q762045 wd:Q937 } ?item wdt:P31 ?class . ?class wdt:P279* ?noise . VALUES ?noise { wd:Q5 } }\"]",
+  "url": "https://qlever.dev/api/wikidata",
+  "status": 200,
+  "content_type": "application/sparql-results+json",
+  "body": "{\"head\":{\"vars\":[\"item\"]},\"results\":{\"bindings\":[{\"item\":{\"type\":\"uri\",\"value\":\"http://www.wikidata.org/entity/Q937\"}}]},\"meta\":{\"query-time-ms\":94,\"result-size-total\":1,\"warnings\":[]}}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "PREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nSELECT DISTINCT ?item WHERE {\n  VALUES ?item { wd:Q762045 wd:Q937 }\n  ?item wdt:P31 ?class .\n  ?class wdt:P279* ?noise .\n  VALUES ?noise { wd:Q5 }\n}",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://query-main.wikidata.org/sparql\", [], \"SELECT DISTINCT ?item WHERE { VALUES ?item { wd:Q11423 wd:Q21155124 wd:Q642141 } { ?item wdt:P31 ?class . } UNION { ?item wdt:P279 ?class . } ?class wdt:P279* ?root . hint:Prior hint:gearing \\\"forward\\\" . VALUES ?root { wd:Q7397 } }\"]",
+  "url": "https://query-main.wikidata.org/sparql",
+  "status": 200,
+  "content_type": "application/sparql-results+json;charset=utf-8",
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"item\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"http://www.wikidata.org/entity/Q642141\"\n      }\n    }, {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"http://www.wikidata.org/entity/Q21155124\"\n      }\n    } ]\n  }\n}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "SELECT DISTINCT ?item WHERE {\n  VALUES ?item { wd:Q11423 wd:Q21155124 wd:Q642141 }\n  { ?item wdt:P31 ?class . } UNION { ?item wdt:P279 ?class . }\n  ?class wdt:P279* ?root . hint:Prior hint:gearing \"forward\" .\n  VALUES ?root { wd:Q7397 }\n}",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://query-main.wikidata.org/sparql\", [], \"SELECT DISTINCT ?item WHERE { VALUES ?item { wd:Q762045 wd:Q937 } ?item wdt:P31 ?class . ?class wdt:P279* ?noise . hint:Prior hint:gearing \\\"forward\\\" . VALUES ?noise { wd:Q5 } }\"]",
+  "url": "https://query-main.wikidata.org/sparql",
+  "status": 200,
+  "content_type": "application/sparql-results+json;charset=utf-8",
+  "body": "{\n  \"head\" : {\n    \"vars\" : [ \"item\" ]\n  },\n  \"results\" : {\n    \"bindings\" : [ {\n      \"item\" : {\n        \"type\" : \"uri\",\n        \"value\" : \"http://www.wikidata.org/entity/Q937\"\n      }\n    } ]\n  }\n}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "SELECT DISTINCT ?item WHERE {\n  VALUES ?item { wd:Q762045 wd:Q937 }\n  ?item wdt:P31 ?class .\n  ?class wdt:P279* ?noise . hint:Prior hint:gearing \"forward\" .\n  VALUES ?noise { wd:Q5 }\n}",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ }
+]

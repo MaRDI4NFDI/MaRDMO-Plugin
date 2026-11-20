@@ -27,7 +27,7 @@ import pytest
 import requests
 
 from MaRDMO import queries
-from MaRDMO.constants import TEX_CHECK_URL
+from MaRDMO.constants import TEX_CHECK_URL, WIKIDATA
 from MaRDMO.getters import get_items, get_url
 from tests.support.recordings import FOLDER, REAL_REQUEST
 
@@ -53,13 +53,14 @@ def read_only(url, request):
 
     The wiki APIs (``api.php``) only with reading actions; other GET requests
     (Crossref, DataCite, doi.org, zbMATH, ORCID) read; POST only to SPARQL
-    and the TeX check.
+    (including QLever's Wikidata endpoint, which has no ``/sparql``) and the
+    TeX check.
     '''
     if request['method'] == 'GET':
         if url.endswith('/api.php'):
             return request['params'].get('action') in API_ACTIONS
         return '/rest.php/wikibase/' not in url
-    return url.endswith('/sparql') or url == TEX_CHECK_URL
+    return url.endswith('/sparql') or url in (TEX_CHECK_URL, WIKIDATA['qlever'])
 
 
 def compare(recorded_value, live_value, path=''):
