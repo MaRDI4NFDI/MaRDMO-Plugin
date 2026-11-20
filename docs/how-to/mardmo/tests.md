@@ -280,7 +280,7 @@ browser shows, i.e. what CSS and JavaScript do.
 | `test_dropdown.py` | a dropdown of RDMO's interview: source badge, label and description in the open list, not the plain text (fails if RDMO stops rendering an option's help as HTML); the stored answer and the filled field plain |
 | `test_duplicates.py` | the preview's box "Before you export": the items already on the MaRDI Portal, the decision ("Use this item", "Redefine", the **i**), "Apply" |
 | `test_formulas.py` | formulas in the preview rendered by MathJax; one it cannot render shown as TeX |
-| `test_math_preview.py` | the formula and symbol questions of RDMO's interview: the TeX typed rendered below the field (also with a TeX extension MathJax loads on demand), MathJax's message for TeX it cannot render, nothing for other questions |
+| `test_math_preview.py` | the formula and symbol questions of RDMO's interview: the TeX typed rendered below the field (also with a TeX extension MathJax loads on demand), the portal's verdict (answered by the browser): its message, the checker's form for a shorthand such as `\R`, nothing without a verdict; MathJax's message for TeX it cannot render; no error while typing, the error after a pause or on leaving the field, no request per key; nothing for other questions |
 | `test_progress.py` | the progress page following an upload (`progress.js`, also in German, errors as text), the result page and its graph (cytoscape: nodes, filters, fullscreen), someone else's job |
 
 The pages come from a live server on the test database; the portal and the

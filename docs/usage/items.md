@@ -34,10 +34,10 @@ nothing.  An item that was merged into another one is offered as that item.
 
 Formulas and symbols are entered in LaTeX, without `$...$` or `\(...\)`.
 What you type is shown rendered below the field, so you can see whether it
-reads as intended.  A note below the field means MathJax cannot render it.
-Whether the MaRDI Portal accepts a formula is checked by the portal itself,
-in the documentation checks and the preview; it accepts less than MathJax
-renders (e.g. not `gather` or `align*`).
+reads as intended.  When you stop typing, MaRDMO asks the MaRDI Portal
+whether it accepts the formula; a note below the field means it does not
+(it accepts less than LaTeX, e.g. not `gather` or `align*`), or that the
+formula cannot be shown at all.  What you typed is never changed.
 
 ## Changing the name or short description
 

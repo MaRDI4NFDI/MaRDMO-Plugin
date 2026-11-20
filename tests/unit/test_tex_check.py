@@ -91,3 +91,39 @@ def test_the_preview_tells_a_failed_check_from_an_unreachable_portal():
     assert 'not verified' not in failed
     assert 'not verified by the MaRDI Portal' in formula(r'T_\mathrm{init}', UNAVAILABLE)
     assert 'subscript' not in formula(r'\frac{a}{b}', FAILED)
+
+
+# --- One formula typed into the interview (#190) -------------------------------------------------
+
+def test_a_formula_typed_is_checked_as_exported_and_with_the_same_cache(portal):
+    answers, sent = portal
+    answers[r'\R + x'] = Answer(200, r'{"success": true, "checked": "\\mathbb{R}+x"}')
+    # The checker's form, for rendering what MathJax cannot render as typed
+    assert tex_check.check_formula(r'\R + x') == {'state': tex_check.VALID, 'message': '',
+                                                   'checked': r'\mathbb{R}+x'}
+    # Checked on one line, as exported: a formula on two lines is the same
+    assert tex_check.check_formula('\\R +\nx\n')['checked'] == r'\mathbb{R}+x'
+    # The preview and the export do not ask again
+    assert tex_check.check_formulas([r'\R + x']) == {r'\R + x': None}
+    assert sent == [r'\R + x']
+
+
+def test_a_formula_the_portal_rejects_has_its_message_and_the_environment_explained(portal):
+    answers, _ = portal
+    answers[r'\begin{gather} a \end{gather}'] = Answer(400, '{"message": "syntax error"}')
+    result = tex_check.check_formula(r'\begin{gather} a \end{gather}')
+    assert result['state'] == tex_check.INVALID and result['checked'] == ''
+    assert result['message'].startswith('syntax error (gather is not supported; supported environments are aligned')
+
+
+@pytest.mark.parametrize('answer', [Answer(503, 'Service Unavailable'), Answer(500, CRASH),
+                                    requests.exceptions.ConnectTimeout('timed out')])
+def test_without_a_verdict_nothing_for_the_user(portal, answer):
+    answers, _ = portal
+    answers['x'] = answer
+    assert tex_check.check_formula('x') == {'state': tex_check.UNVERIFIED, 'message': '', 'checked': ''}
+
+
+def test_nothing_to_check(portal):
+    _, sent = portal
+    assert tex_check.check_formula('  \n ')['state'] == tex_check.VALID and sent == []

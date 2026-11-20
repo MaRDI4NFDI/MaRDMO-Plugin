@@ -8,6 +8,7 @@ the documentation checker.  The checker only gives a valid/invalid verdict
 Provides:
 
 - :func:`check_formulas`   — portal verdict for a set of formulas (parallel, cached)
+- :func:`check_formula`    — the verdict on one formula as typed in the interview (#190)
 - :func:`collect_formulas` — all formulas and symbols of a model answers dict
 - :func:`annotate_formulas` — store the verdicts next to the formulas for the preview
 - :func:`environment_hint` — explanation for a rejection caused by an unsupported environment
@@ -109,6 +110,11 @@ def _cache_key(tex):
     return _CACHE_PREFIX + hashlib.sha1(tex.encode('utf-8')).hexdigest()
 
 
+def _checked_key(tex):
+    '''Where the checker's form of a valid *tex* is kept (its ``checked``, #190).'''
+    return _CACHE_PREFIX + 'checked_' + hashlib.sha1(tex.encode('utf-8')).hexdigest()
+
+
 def _failed(tex, response):
     logger.warning("TeX check failed on %r: HTTP %s: %s", tex, response.status_code, response.text[:200])
     cache.set(_cache_key(tex), FAILED, _FAILED_TIMEOUT)
@@ -133,12 +139,15 @@ def _check_one(tex):
         return UNAVAILABLE
     if response.status_code == 200:
         try:
-            valid = response.json().get('success') is True
+            body = response.json()
         except ValueError:
-            valid = False
-        if not valid:
+            body = {}
+        if body.get('success') is not True:
             return _failed(tex, response)
         cache.set(_cache_key(tex), _VALID, _CACHE_TIMEOUT)
+        # The checker's form, rendered where MathJax cannot render the formula as typed (#190)
+        if isinstance(body.get('checked'), str):
+            cache.set(_checked_key(tex), body['checked'], _CACHE_TIMEOUT)
         return None
     if response.status_code == 400:
         try:
@@ -186,6 +195,37 @@ def check_formulas(formulas):
     with ThreadPool(processes=min(len(unique), _MAX_THREADS)) as pool:
         verdicts = pool.map(_check_one, unique)
     return dict(zip(unique, verdicts))
+
+
+VALID, INVALID, UNVERIFIED = 'valid', 'invalid', 'unverified'
+'''States of a formula checked while it is typed (:func:`check_formula`).'''
+
+
+def check_formula(tex):
+    '''The portal's verdict on one formula as typed in the interview (#190).
+
+    Checked as exported, on one line, with :func:`check_formulas` (so with its
+    cache: a formula checked while it is typed is not asked again by the
+    preview, the checks or the export).
+
+    Returns:
+        ``{'state': …, 'message': …, 'checked': …}``: :data:`VALID` with the
+        checker's form of the formula (``checked``, if the checker gave one);
+        :data:`INVALID` with its message, and the explanation of an
+        unsupported environment if there is one; :data:`UNVERIFIED` if the
+        checker could not be reached or failed on the formula (no verdict,
+        nothing for the user).
+    '''
+    one_line = normalize_formula(tex) if isinstance(tex, str) else ''
+    if not one_line:
+        return {'state': VALID, 'message': '', 'checked': ''}
+    result = check_formulas([one_line]).get(one_line)
+    if result is None:
+        return {'state': VALID, 'message': '', 'checked': cache.get(_checked_key(one_line)) or ''}
+    if result in NOT_VERIFIED:
+        return {'state': UNVERIFIED, 'message': '', 'checked': ''}
+    hint = environment_hint(one_line)
+    return {'state': INVALID, 'message': f'{result} ({hint})' if hint else result, 'checked': ''}
 
 
 def _formula_entries(answers):

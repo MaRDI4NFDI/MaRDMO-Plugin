@@ -1,0 +1,36 @@
+[
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"\\\\begin{gather} a \\\\end{gather}\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 400,
+  "content_type": "application/json",
+  "body": "{\"message\":\"unknown function \\\"\\\\begin{gather}\\\"\",\"httpCode\":400,\"httpReason\":\"Bad Request\"}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "\\begin{gather} a \\end{gather}"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex\", [], [[\"q\", \"x \\\\in \\\\R\"]]]",
+  "url": "https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{\"success\":true,\"checked\":\"x\\\\in \\\\mathbb {R} \",\"requiredPackages\":[],\"identifiers\":[\"x\",\"\\\\mathbb{R}\"],\"endsWithDot\":false}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": {
+    "q": "x \\in \\R"
+   },
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ }
+]

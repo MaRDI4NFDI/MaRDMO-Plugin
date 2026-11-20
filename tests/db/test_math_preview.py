@@ -20,3 +20,7 @@ def test_the_interview_page_is_rdmos_with_maRDMOs_script(project, client, django
     # RDMO's static tag adds its version (?v=…)
     assert re.search(r'data-mathjax="[^"]*MaRDMO/js/mathjax/es5/tex-mml-chtml\.js(\?[^"]*)?"', html)
     assert 'data-text-error="MathJax cannot show this formula:"' in html
+    # Where it asks for the portal's verdict, with the page's CSRF token
+    assert 'data-tex-check="/services/tex-check/"' in html
+    assert re.search(r'data-csrf="[A-Za-z0-9]{32,}"', html)
+    assert 'data-text-portal="The MaRDI Portal does not accept this formula:"' in html

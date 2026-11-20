@@ -143,15 +143,36 @@ render are shown the same way instead of MathJax's error box.
 
 **In the interview**, the TeX of the formula and symbol questions is rendered
 below their fields while it is typed (`MaRDMO/js/math-preview.js`, with
-MaRDMO's MathJax).  The questionnaire marks these questions by an empty
-`<span class="mardmo-math">` in their help; MaRDMO's template of the
+MaRDMO's MathJax; #190).  The questionnaire marks these questions by an
+empty `<span class="mardmo-math">` in their help; MaRDMO's template of the
 interview page extends RDMO's (`templates/projects/project_interview.html`)
 by the script, which loads MathJax only on a page with a marked question.
-What MathJax cannot render is shown with its message, as a hint only: the
-portal's TeX check decides, in the checks and the preview.  The script
-depends on how RDMO draws its fields (`.interview-question`,
-`.interview-input`); a change in RDMO can make it render nothing, but it
-cannot break the interview.
+The field is only read.
+
+After a pause in typing (a second), the script asks MaRDMO's view
+`tex_check` (`services/tex-check/`, POST, for logged-in users with the CSRF
+token of the page) for the portal's verdict.  It comes from the same check
+and cache as above (`tex_check.check_formula`): a formula checked while it
+is typed is not sent again by the checks, the preview or the export.
+
+- **The portal does not accept it:** its message below the rendering, with
+  the explanation of an unsupported environment.
+- **It accepts it, but MathJax cannot render it as typed** (a shorthand of
+  the checker such as `\R`): the checker's form of the formula is rendered
+  instead (its `checked`, kept with the verdict); the field keeps what was
+  typed.  Unknown commands are errors in the interview, not red text as in
+  the preview, so that a typo such as `\fracc` gets a message.
+- **No verdict** (the portal is not reachable, or its checker failed):
+  nothing for the user; the rendering only notes it (`data-check="unverified"`),
+  the server logs it.  Without a verdict, MathJax's message is shown for
+  TeX it cannot render.
+
+Errors appear only when the user stops typing (after almost two seconds)
+or leaves the field; while typing, the last formula that could be rendered
+stays, dimmed, so that a half-typed `\begin{align}` does not show an
+error.  The script depends on how RDMO draws its fields
+(`.interview-question`, `.interview-input`); a change in RDMO can make it
+render nothing, but it cannot break the interview.
 
 **Environments.**  The checker only answers *syntax error*, also for
 environments it does not support, although KaTeX and MathJax render them.  When
