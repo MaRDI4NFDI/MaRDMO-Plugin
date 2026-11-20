@@ -30,6 +30,15 @@ MaRDI Portal, `wikidata:Q42` for one of Wikidata.  The list then offers that
 item only, if it is of the kind the question asks for; otherwise it offers
 nothing.  An item that was merged into another one is offered as that item.
 
+## Formulas and symbols
+
+Formulas and symbols are entered in LaTeX, without `$...$` or `\(...\)`.
+What you type is shown rendered below the field, so you can see whether it
+reads as intended.  A note below the field means MathJax cannot render it.
+Whether the MaRDI Portal accepts a formula is checked by the portal itself,
+in the documentation checks and the preview; it accepts less than MathJax
+renders (e.g. not `gather` or `align*`).
+
 ## Changing the name or short description
 
 Name and short description are always changed in their own questions on

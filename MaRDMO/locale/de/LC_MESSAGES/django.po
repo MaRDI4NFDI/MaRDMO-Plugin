@@ -12,15 +12,15 @@ msgstr ""
 msgid "Algorithmic Task"
 msgstr "Algorithmische Aufgabe"
 
-#: MaRDMO/checks/algorithm.py:31 MaRDMO/checks/algorithm.py:38 MaRDMO/checks/algorithm.py:45 MaRDMO/checks/base.py:612 MaRDMO/checks/base.py:634 MaRDMO/checks/workflow.py:181 MaRDMO/checks/workflow.py:186 MaRDMO/checks/workflow.py:194 MaRDMO/constants.py:66 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:22 MaRDMO/templates/MaRDMO/preview_workflow.html:93
+#: MaRDMO/checks/algorithm.py:31 MaRDMO/checks/algorithm.py:38 MaRDMO/checks/algorithm.py:45 MaRDMO/checks/base.py:612 MaRDMO/checks/base.py:634 MaRDMO/checks/workflow.py:181 MaRDMO/checks/workflow.py:186 MaRDMO/checks/workflow.py:194 MaRDMO/constants.py:69 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:22 MaRDMO/templates/MaRDMO/preview_workflow.html:93
 msgid "Algorithm"
 msgstr "Algorithmus"
 
-#: MaRDMO/checks/algorithm.py:39 MaRDMO/checks/algorithm.py:90 MaRDMO/checks/algorithm.py:97 MaRDMO/checks/algorithm.py:98 MaRDMO/checks/algorithm.py:103 MaRDMO/checks/algorithm.py:108 MaRDMO/checks/workflow.py:195 MaRDMO/checks/workflow.py:213 MaRDMO/checks/workflow.py:221 MaRDMO/checks/workflow.py:222 MaRDMO/checks/workflow.py:225 MaRDMO/constants.py:67 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:23 MaRDMO/templates/MaRDMO/preview_algorithm.html:19 MaRDMO/templates/MaRDMO/preview_algorithm.html:54 MaRDMO/templates/MaRDMO/preview_algorithm.html:72 MaRDMO/templates/MaRDMO/preview_workflow.html:109 MaRDMO/templates/MaRDMO/preview_workflow.html:117 MaRDMO/templates/MaRDMO/preview_workflow.html:135
+#: MaRDMO/checks/algorithm.py:39 MaRDMO/checks/algorithm.py:90 MaRDMO/checks/algorithm.py:97 MaRDMO/checks/algorithm.py:98 MaRDMO/checks/algorithm.py:103 MaRDMO/checks/algorithm.py:108 MaRDMO/checks/workflow.py:195 MaRDMO/checks/workflow.py:213 MaRDMO/checks/workflow.py:221 MaRDMO/checks/workflow.py:222 MaRDMO/checks/workflow.py:225 MaRDMO/constants.py:70 MaRDMO/views.py:65 MaRDMO/workflow/constants.py:23 MaRDMO/templates/MaRDMO/preview_algorithm.html:19 MaRDMO/templates/MaRDMO/preview_algorithm.html:54 MaRDMO/templates/MaRDMO/preview_algorithm.html:72 MaRDMO/templates/MaRDMO/preview_workflow.html:109 MaRDMO/templates/MaRDMO/preview_workflow.html:117 MaRDMO/templates/MaRDMO/preview_workflow.html:135
 msgid "Software"
 msgstr "Software"
 
-#: MaRDMO/checks/algorithm.py:64 MaRDMO/checks/algorithm.py:91 MaRDMO/checks/algorithm.py:125 MaRDMO/constants.py:68 MaRDMO/views.py:65
+#: MaRDMO/checks/algorithm.py:64 MaRDMO/checks/algorithm.py:91 MaRDMO/checks/algorithm.py:125 MaRDMO/constants.py:71 MaRDMO/views.py:65
 msgid "Benchmark"
 msgstr "Benchmark"
 
@@ -184,7 +184,7 @@ msgstr "Referenz"
 msgid "Line Breaks Not Allowed in {field}"
 msgstr "Zeilenumbrüche sind in {field} nicht erlaubt"
 
-#: MaRDMO/checks/base.py:583 MaRDMO/checks/base.py:590 MaRDMO/checks/base.py:596 MaRDMO/checks/base.py:611 MaRDMO/checks/base.py:619 MaRDMO/checks/base.py:624 MaRDMO/checks/base.py:633 MaRDMO/checks/base.py:641 MaRDMO/checks/base.py:649 MaRDMO/checks/base.py:654 MaRDMO/checks/base.py:662 MaRDMO/constants.py:69 MaRDMO/views.py:68 MaRDMO/workflow/constants.py:26
+#: MaRDMO/checks/base.py:583 MaRDMO/checks/base.py:590 MaRDMO/checks/base.py:596 MaRDMO/checks/base.py:611 MaRDMO/checks/base.py:619 MaRDMO/checks/base.py:624 MaRDMO/checks/base.py:633 MaRDMO/checks/base.py:641 MaRDMO/checks/base.py:649 MaRDMO/checks/base.py:654 MaRDMO/checks/base.py:662 MaRDMO/constants.py:72 MaRDMO/views.py:68 MaRDMO/workflow/constants.py:26
 msgid "Publication"
 msgstr "Publikation"
 
@@ -256,7 +256,7 @@ msgstr "Widersprüchliche Eigenschaften ({a} und {b})"
 msgid "label"
 msgstr "Label"
 
-#: MaRDMO/checks/model.py:133 MaRDMO/checks/model.py:140 MaRDMO/checks/model.py:147 MaRDMO/checks/model.py:153 MaRDMO/checks/model.py:165 MaRDMO/checks/model.py:173 MaRDMO/constants.py:61 MaRDMO/views.py:64
+#: MaRDMO/checks/model.py:133 MaRDMO/checks/model.py:140 MaRDMO/checks/model.py:147 MaRDMO/checks/model.py:153 MaRDMO/checks/model.py:165 MaRDMO/checks/model.py:173 MaRDMO/constants.py:64 MaRDMO/views.py:64
 msgid "Mathematical Model"
 msgstr "Mathematisches Modell"
 
@@ -264,11 +264,11 @@ msgstr "Mathematisches Modell"
 msgid "Research Problem"
 msgstr "Forschungsproblem"
 
-#: MaRDMO/checks/model.py:141 MaRDMO/checks/model.py:198 MaRDMO/checks/model.py:204 MaRDMO/checks/model.py:216 MaRDMO/checks/model.py:224 MaRDMO/checks/model.py:235 MaRDMO/constants.py:62 MaRDMO/views.py:64
+#: MaRDMO/checks/model.py:141 MaRDMO/checks/model.py:198 MaRDMO/checks/model.py:204 MaRDMO/checks/model.py:216 MaRDMO/checks/model.py:224 MaRDMO/checks/model.py:235 MaRDMO/constants.py:65 MaRDMO/views.py:64
 msgid "Computational Task"
 msgstr "Berechnungsaufgabe"
 
-#: MaRDMO/checks/model.py:154 MaRDMO/checks/model.py:205 MaRDMO/checks/model.py:258 MaRDMO/checks/model.py:263 MaRDMO/checks/model.py:270 MaRDMO/checks/model.py:278 MaRDMO/checks/model.py:286 MaRDMO/checks/model.py:287 MaRDMO/checks/model.py:290 MaRDMO/checks/model.py:295 MaRDMO/checks/model.py:297 MaRDMO/checks/model.py:298 MaRDMO/checks/model.py:304 MaRDMO/constants.py:63 MaRDMO/views.py:64
+#: MaRDMO/checks/model.py:154 MaRDMO/checks/model.py:205 MaRDMO/checks/model.py:258 MaRDMO/checks/model.py:263 MaRDMO/checks/model.py:270 MaRDMO/checks/model.py:278 MaRDMO/checks/model.py:286 MaRDMO/checks/model.py:287 MaRDMO/checks/model.py:290 MaRDMO/checks/model.py:295 MaRDMO/checks/model.py:297 MaRDMO/checks/model.py:298 MaRDMO/checks/model.py:304 MaRDMO/constants.py:66 MaRDMO/views.py:64
 msgid "Formula"
 msgstr "Formel"
 
@@ -308,7 +308,7 @@ msgstr "Formelsymbol fehlt"
 msgid "Missing Formula Quantity"
 msgstr "Quantität des Formelsymbols fehlt"
 
-#: MaRDMO/checks/model.py:324 MaRDMO/checks/model.py:329 MaRDMO/checks/model.py:331 MaRDMO/checks/model.py:335 MaRDMO/checks/model.py:337 MaRDMO/checks/model.py:341 MaRDMO/checks/model.py:348 MaRDMO/checks/model.py:353 MaRDMO/checks/model.py:356 MaRDMO/checks/model.py:360 MaRDMO/checks/model.py:363 MaRDMO/checks/model.py:365 MaRDMO/checks/model.py:366 MaRDMO/constants.py:64
+#: MaRDMO/checks/model.py:324 MaRDMO/checks/model.py:329 MaRDMO/checks/model.py:331 MaRDMO/checks/model.py:335 MaRDMO/checks/model.py:337 MaRDMO/checks/model.py:341 MaRDMO/checks/model.py:348 MaRDMO/checks/model.py:353 MaRDMO/checks/model.py:356 MaRDMO/checks/model.py:360 MaRDMO/checks/model.py:363 MaRDMO/checks/model.py:365 MaRDMO/checks/model.py:366 MaRDMO/constants.py:67
 msgid "Quantity [Kind]"
 msgstr "Quantität [-sart]"
 
@@ -356,7 +356,7 @@ msgstr "Symbol der Quantitätsdefinition fehlt"
 msgid "Missing Quantity Definition Quantity"
 msgstr "Quantität eines Symbols der Quantitätsdefinition fehlt"
 
-#: MaRDMO/checks/model.py:421 MaRDMO/checks/model.py:443 MaRDMO/checks/workflow.py:99 MaRDMO/constants.py:65 MaRDMO/views.py:67
+#: MaRDMO/checks/model.py:421 MaRDMO/checks/model.py:443 MaRDMO/checks/workflow.py:99 MaRDMO/constants.py:68 MaRDMO/views.py:67
 msgid "Academic Discipline"
 msgstr "Akademische Disziplin"
 
@@ -1891,6 +1891,10 @@ msgstr "Das Portal hat nicht geantwortet oder die Abfrage abgelehnt. Bitte versu
 #: MaRDMO/templates/MaRDMO/search_results.html:19
 msgid "in MaRDI Portal!"
 msgstr "im MaRDI Portal!"
+
+#: MaRDMO/templates/projects/project_interview.html:17
+msgid "MathJax cannot show this formula:"
+msgstr "MathJax kann diese Formel nicht darstellen:"
 
 #: MaRDMO/model/data/mapping.json
 msgid "approximates"
