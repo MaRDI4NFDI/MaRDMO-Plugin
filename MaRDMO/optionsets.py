@@ -56,7 +56,8 @@ WIKIDATA_ROOTS = {
     'software': ['Q7397'],                                     # software
     'programming language': ['Q9143'],                         # programming language
     'computer hardware': ['Q3966', 'Q68'],                     # computer hardware, computer
-    'CPU model': ['Q122967152', 'Q5297'],                      # CPU model, microprocessor
+    # CPU model, microprocessor, system on a chip (most ARM processors, e.g. Raspberry Pi's)
+    'CPU model': ['Q122967152', 'Q5297', 'Q610398'],
     'data set': ['Q1172284'],                                  # data set
     'method': [                                                # experimental and measuring methods
         'Q1924397',    # measurement technique
