@@ -39,8 +39,13 @@ class MaRDMOProvider(Provider):
             return publication_options(search)
 
         items = get_items()
-        item_class = ([items[name] for name in config.item_class] if isinstance(config.item_class, list)
-                      else items[config.item_class])
+        # On the portal, the classes with a MaRDI profile are searched by it
+        # (most software has no class), the others by class (#170)
+        without_profile = config.classes_without_profile
+        item_class = ([items[name] for name in without_profile] if isinstance(config.item_class, list)
+                      else items[without_profile[0]]) if without_profile else None
+        profiles = [items[name] for name in config.profiles] or None
+        exclude = [items[name] for name in config.excluded_classes] or None
         sources = config.search_sources
         # The Wikidata hits must be at or below these classes, or not of these (#170)
         on_wikidata = 'wikidata' in (sources or ['wikidata'])
@@ -58,6 +63,8 @@ class MaRDMOProvider(Provider):
                     answer_class = config.answer_class,
                     roots = roots,
                     noise = noise,
+                    profiles = profiles,
+                    exclude = exclude,
                 ),
             )
         return query_sources(
@@ -67,5 +74,7 @@ class MaRDMOProvider(Provider):
             not_found = config.not_found,
             roots = roots,
             noise = noise,
+            profiles = profiles,
+            exclude = exclude,
         )
 

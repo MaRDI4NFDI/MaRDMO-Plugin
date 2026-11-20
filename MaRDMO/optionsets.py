@@ -72,6 +72,28 @@ WIKIDATA_ROOTS = {
     ],
     'research workflow': ['Q115682347'],                       # research workflow
 }
+# The MaRDI profile of each item class (names of data/items.json): the portal
+# is searched by the profiles of a row's classes, as the portal's own search
+# does it, since many items have only the profile (most software, R and Julia
+# packages); the curated items (MathModDB, MathAlgoDB) all have it.  Classes
+# without a profile are searched by class.  A profile of several classes
+# leaves out the items of the classes a row does not search
+# (Search.excluded_classes)
+PROFILES = {
+    'mathematical model': 'MaRDI model profile',
+    'formula': 'MaRDI formula profile',
+    'quantity': 'MaRDI quantity profile',
+    'kind of quantity': 'MaRDI quantity profile',
+    'academic discipline': 'MaRDI research field profile',
+    'research problem': 'MaRDI research problem profile',
+    'computational task': 'MaRDI task profile',
+    'algorithmic task': 'MaRDI task profile',
+    'algorithm': 'MaRDI algorithm profile',
+    'software': 'MaRDI software profile',
+    'data set': 'MaRDI data set profile',
+    'research workflow': 'MaRDI workflow profile',
+}
+
 # Item classes Wikidata has nothing for: their providers search the portal only
 NO_WIKIDATA = {'process step'}
 # Item classes no Wikidata class fits (research problems are phenomena,
@@ -191,6 +213,27 @@ class Search:
     def classes(self):
         '''The item class names, as a list.'''
         return [self.item_class] if isinstance(self.item_class, str) else list(self.item_class)
+
+    @property
+    def profiles(self):
+        '''The MaRDI profiles of the classes (names, sorted): the portal is searched by them.'''
+        return sorted({PROFILES[name] for name in self.classes if name in PROFILES})
+
+    @property
+    def classes_without_profile(self):
+        '''The classes without a MaRDI profile: searched on the portal by class.'''
+        return [name for name in self.classes if name not in PROFILES]
+
+    @property
+    def excluded_classes(self):
+        '''The classes that share a profile of the row but are not searched by it (names, sorted).
+
+        The algorithmic tasks' dropdown leaves out computational tasks, which
+        have the same profile; one of quantities and quantity kinds leaves
+        out nothing.  An item without a class but with the profile is found.
+        '''
+        return sorted({name for name, profile in PROFILES.items()
+                       if profile in self.profiles and name not in self.classes})
 
     @property
     def search_sources(self):

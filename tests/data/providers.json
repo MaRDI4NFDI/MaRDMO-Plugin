@@ -5,10 +5,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q127020",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q6503323"
+    ],
     "roots": [
      "Q8366"
     ],
@@ -26,12 +30,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q127020"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q6503323"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -49,10 +55,16 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": [
+     "Q6534247"
+    ],
     "function": "query_sources",
-    "item_class": "Q6775701",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q6534272"
+    ],
     "roots": [
      "Q3435924"
     ],
@@ -70,12 +82,16 @@
    "a": null,
    "ab": null,
    "abc": {
-    "function": "query_sources",
-    "item_class": [
-     "Q6775701"
+    "exclude": [
+     "Q6534247"
     ],
+    "function": "query_sources",
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q6534272"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -93,10 +109,12 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
     "item_class": "Q6825282",
     "noise": null,
     "not_found": true,
+    "profiles": null,
     "roots": [
      "Q816747"
     ],
@@ -114,12 +132,16 @@
    "a": null,
    "ab": null,
    "abc": {
-    "function": "query_sources",
-    "item_class": [
-     "Q6534247"
+    "exclude": [
+     "Q6775701"
     ],
+    "function": "query_sources",
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q6534272"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -137,10 +159,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q56885",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q5984635"
+    ],
     "roots": [
      "Q1172284"
     ],
@@ -158,12 +184,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q56885"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q5984635"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -181,12 +209,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q96183"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q5981696"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -204,10 +234,12 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
     "item_class": "Q56583",
     "noise": null,
     "not_found": true,
+    "profiles": null,
     "roots": [
      "Q3966",
      "Q68"
@@ -226,12 +258,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
     "item_class": [
      "Q56583"
     ],
     "noise": null,
     "not_found": false,
+    "profiles": null,
     "roots": null,
     "search": "abc",
     "sources": [
@@ -249,12 +283,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
     "item_class": [
      "Q77076"
     ],
     "noise": null,
     "not_found": false,
+    "profiles": null,
     "roots": null,
     "search": "abc",
     "sources": [
@@ -272,10 +308,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q96183",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q5981696"
+    ],
     "roots": [
      "Q11345",
      "Q1339342",
@@ -299,10 +339,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q68663",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q6534270"
+    ],
     "roots": [
      "Q486902"
     ],
@@ -320,12 +364,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q68663"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q6534270"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -343,10 +389,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q68663",
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q6534270"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -364,12 +414,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
     "item_class": [
      "Q68669"
     ],
     "noise": null,
     "not_found": false,
+    "profiles": null,
     "roots": null,
     "search": "abc",
     "sources": [
@@ -387,10 +439,12 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
     "item_class": "Q6486603",
     "noise": null,
     "not_found": true,
+    "profiles": null,
     "roots": null,
     "search": "abc",
     "sources": [
@@ -419,13 +473,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q6534237",
-     "Q6534245"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q6534271"
+    ],
     "roots": [
      "Q1058681",
      "Q110653654",
@@ -450,13 +505,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q6534237",
-     "Q6534245"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q6534271"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -479,10 +535,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": [
-      "Q127020"
-     ],
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6503323"
+     ],
      "query_attributes": [
       "algorithm"
      ],
@@ -509,8 +567,12 @@
     "setup": {
      "answer_class": null,
      "creation": false,
-     "item_class": "Q127020",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6503323"
+     ],
      "query_attributes": [
       "algorithm"
      ],
@@ -537,8 +599,14 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": "Q6775701",
+     "exclude": [
+      "Q6534247"
+     ],
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534272"
+     ],
      "query_attributes": [
       "problem"
      ],
@@ -565,8 +633,14 @@
     "setup": {
      "answer_class": null,
      "creation": false,
-     "item_class": "Q6775701",
+     "exclude": [
+      "Q6534247"
+     ],
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534272"
+     ],
      "query_attributes": [
       "problem"
      ],
@@ -591,11 +665,14 @@
     "setup": {
      "answer_class": null,
      "creation": false,
+     "exclude": null,
      "item_class": [
-      "Q6825282",
-      "Q56614"
+      "Q6825282"
      ],
      "noise": null,
+     "profiles": [
+      "Q5976450"
+     ],
      "query_attributes": [
       "benchmark",
       "software"
@@ -613,11 +690,14 @@
     "setup": {
      "answer_class": null,
      "creation": false,
+     "exclude": null,
      "item_class": [
-      "Q6825282",
-      "Q56614"
+      "Q6825282"
      ],
      "noise": null,
+     "profiles": [
+      "Q5976450"
+     ],
      "query_attributes": [
       "benchmark",
       "software"
@@ -635,11 +715,14 @@
     "setup": {
      "answer_class": null,
      "creation": false,
+     "exclude": null,
      "item_class": [
-      "Q6825282",
-      "Q56614"
+      "Q6825282"
      ],
      "noise": null,
+     "profiles": [
+      "Q5976450"
+     ],
      "query_attributes": [
       "benchmark",
       "software"
@@ -667,8 +750,10 @@
     "setup": {
      "answer_class": null,
      "creation": true,
+     "exclude": null,
      "item_class": "Q6825282",
      "noise": null,
+     "profiles": null,
      "query_attributes": [
       "benchmark"
      ],
@@ -695,10 +780,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
+     "exclude": null,
      "item_class": [
       "Q7171486"
      ],
      "noise": null,
+     "profiles": null,
      "query_attributes": null,
      "query_id": "",
      "roots": [
@@ -724,8 +811,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": "Q56885",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q5984635"
+     ],
      "query_attributes": [
       "dataset"
      ],
@@ -750,11 +841,14 @@
     "setup": {
      "answer_class": null,
      "creation": false,
+     "exclude": null,
      "item_class": [
-      "Q56583",
-      "Q56614"
+      "Q56583"
      ],
      "noise": null,
+     "profiles": [
+      "Q5976450"
+     ],
      "query_attributes": [
       "hardware",
       "software"
@@ -772,11 +866,14 @@
     "setup": {
      "answer_class": null,
      "creation": false,
+     "exclude": null,
      "item_class": [
-      "Q56583",
-      "Q56614"
+      "Q56583"
      ],
      "noise": null,
+     "profiles": [
+      "Q5976450"
+     ],
      "query_attributes": [
       "hardware",
       "software"
@@ -794,11 +891,14 @@
     "setup": {
      "answer_class": null,
      "creation": false,
+     "exclude": null,
      "item_class": [
-      "Q56583",
-      "Q56614"
+      "Q56583"
      ],
      "noise": null,
+     "profiles": [
+      "Q5976450"
+     ],
      "query_attributes": [
       "hardware",
       "software"
@@ -826,10 +926,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
+     "exclude": null,
      "item_class": [
       "Q56583"
      ],
      "noise": null,
+     "profiles": null,
      "query_attributes": [
       "hardware"
      ],
@@ -857,8 +959,10 @@
     "setup": {
      "answer_class": null,
      "creation": true,
+     "exclude": null,
      "item_class": "Q77076",
      "noise": null,
+     "profiles": null,
      "query_attributes": null,
      "query_id": "",
      "roots": [
@@ -886,8 +990,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": "Q96183",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q5981696"
+     ],
      "query_attributes": [
       "formulation"
      ],
@@ -920,8 +1028,12 @@
     "setup": {
      "answer_class": null,
      "creation": false,
-     "item_class": "Q96183",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q5981696"
+     ],
      "query_attributes": [
       "formulation"
      ],
@@ -948,8 +1060,12 @@
     "setup": {
      "answer_class": null,
      "creation": false,
-     "item_class": "Q68663",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534270"
+     ],
      "query_attributes": [
       "model"
      ],
@@ -976,10 +1092,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
+     "exclude": null,
      "item_class": [
       "Q68669"
      ],
      "noise": null,
+     "profiles": null,
      "query_attributes": null,
      "query_id": "",
      "roots": [
@@ -1007,16 +1125,19 @@
     "setup": {
      "answer_class": null,
      "creation": false,
-     "item_class": [
-      "Q60231",
-      "Q6534292",
-      "Q68663",
-      "Q6534237",
-      "Q6534245",
-      "Q96183",
-      "Q6534247"
+     "exclude": [
+      "Q6775701"
      ],
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q5981696",
+      "Q6534270",
+      "Q6534271",
+      "Q6534268",
+      "Q6534269",
+      "Q6534272"
+     ],
      "query_attributes": [
       "field",
       "problem",
@@ -1046,10 +1167,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
+     "exclude": null,
      "item_class": [
       "Q56422"
      ],
      "noise": null,
+     "profiles": null,
      "query_attributes": null,
      "query_id": "",
      "roots": [
@@ -1064,10 +1187,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
+     "exclude": null,
      "item_class": [
       "Q56422"
      ],
      "noise": null,
+     "profiles": null,
      "query_attributes": null,
      "query_id": "",
      "roots": [
@@ -1082,10 +1207,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
+     "exclude": null,
      "item_class": [
       "Q56422"
      ],
      "noise": null,
+     "profiles": null,
      "query_attributes": null,
      "query_id": "",
      "roots": [
@@ -1110,8 +1237,14 @@
     "setup": {
      "answer_class": "QuantityKind",
      "creation": false,
-     "item_class": "Q6534245",
+     "exclude": [
+      "Q6534237"
+     ],
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534271"
+     ],
      "query_attributes": [
       "quantity"
      ],
@@ -1138,11 +1271,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": [
-      "Q6534237",
-      "Q6534245"
-     ],
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534271"
+     ],
      "query_attributes": [
       "quantity"
      ],
@@ -1176,8 +1310,14 @@
     "setup": {
      "answer_class": "Quantity",
      "creation": false,
-     "item_class": "Q6534237",
+     "exclude": [
+      "Q6534245"
+     ],
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534271"
+     ],
      "query_attributes": [
       "quantity"
      ],
@@ -1204,8 +1344,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": "Q60231",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534268"
+     ],
      "query_attributes": [
       "field"
      ],
@@ -1232,8 +1376,12 @@
     "setup": {
      "answer_class": null,
      "creation": false,
-     "item_class": "Q60231",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534268"
+     ],
      "query_attributes": [
       "field"
      ],
@@ -1260,7 +1408,8 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": "Q6534292",
+     "exclude": null,
+     "item_class": null,
      "noise": [
       "Q5",
       "Q202444",
@@ -1319,6 +1468,9 @@
       "Q4167836",
       "Q13406463"
      ],
+     "profiles": [
+      "Q6534269"
+     ],
      "query_attributes": [
       "problem"
      ],
@@ -1343,8 +1495,12 @@
     "setup": {
      "answer_class": null,
      "creation": false,
-     "item_class": "Q6534292",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534269"
+     ],
      "query_attributes": [
       "problem"
      ],
@@ -1369,8 +1525,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": "Q56614",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q5976450"
+     ],
      "query_attributes": [
       "software"
      ],
@@ -1387,8 +1547,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": "Q56614",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q5976450"
+     ],
      "query_attributes": [
       "software"
      ],
@@ -1405,8 +1569,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": "Q56614",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q5976450"
+     ],
      "query_attributes": [
       "software"
      ],
@@ -1433,10 +1601,12 @@
     "setup": {
      "answer_class": null,
      "creation": true,
+     "exclude": null,
      "item_class": [
       "Q6486603"
      ],
      "noise": null,
+     "profiles": null,
      "query_attributes": [
       "processstep"
      ],
@@ -1463,8 +1633,14 @@
     "setup": {
      "answer_class": null,
      "creation": true,
-     "item_class": "Q6534247",
+     "exclude": [
+      "Q6775701"
+     ],
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534272"
+     ],
      "query_attributes": [
       "task"
      ],
@@ -1491,8 +1667,14 @@
     "setup": {
      "answer_class": null,
      "creation": false,
-     "item_class": "Q6534247",
+     "exclude": [
+      "Q6775701"
+     ],
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534272"
+     ],
      "query_attributes": [
       "task"
      ],
@@ -1519,12 +1701,15 @@
     "setup": {
      "answer_class": null,
      "creation": false,
+     "exclude": null,
      "item_class": [
-      "Q68657",
-      "Q6486603",
-      "Q56885"
+      "Q6486603"
      ],
      "noise": null,
+     "profiles": [
+      "Q5984635",
+      "Q6534216"
+     ],
      "query_attributes": [
       "workflow",
       "processstep",
@@ -1553,8 +1738,12 @@
     "setup": {
      "answer_class": null,
      "creation": false,
-     "item_class": "Q68657",
+     "exclude": null,
+     "item_class": null,
      "noise": null,
+     "profiles": [
+      "Q6534216"
+     ],
      "query_attributes": [
       "workflow"
      ],
@@ -1576,12 +1765,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q60231"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q6534268"
+    ],
     "roots": [
      "Q1047113"
     ],
@@ -1599,12 +1790,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q60231"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q6534268"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -1622,8 +1815,9 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q6534292",
+    "item_class": null,
     "noise": [
      "Q5",
      "Q202444",
@@ -1683,6 +1877,9 @@
      "Q13406463"
     ],
     "not_found": true,
+    "profiles": [
+     "Q6534269"
+    ],
     "roots": null,
     "search": "abc",
     "sources": null
@@ -1698,12 +1895,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q6534292"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q6534269"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -1719,10 +1918,14 @@
   "calls": {
    "": null,
    "a": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q56614",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q5976450"
+    ],
     "roots": [
      "Q7397"
     ],
@@ -1730,10 +1933,14 @@
     "sources": null
    },
    "ab": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q56614",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q5976450"
+    ],
     "roots": [
      "Q7397"
     ],
@@ -1741,10 +1948,14 @@
     "sources": null
    },
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q56614",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q5976450"
+    ],
     "roots": [
      "Q7397"
     ],
@@ -1760,12 +1971,14 @@
   "calls": {
    "": null,
    "a": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q56614"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q5976450"
+    ],
     "roots": null,
     "search": "a",
     "sources": [
@@ -1773,12 +1986,14 @@
     ]
    },
    "ab": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q56614"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q5976450"
+    ],
     "roots": null,
     "search": "ab",
     "sources": [
@@ -1786,12 +2001,14 @@
     ]
    },
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": [
-     "Q56614"
-    ],
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q5976450"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -1809,10 +2026,16 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": [
+     "Q6775701"
+    ],
     "function": "query_sources",
-    "item_class": "Q6534247",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q6534272"
+    ],
     "roots": [
      "Q140136486"
     ],
@@ -1830,10 +2053,16 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": [
+     "Q6775701"
+    ],
     "function": "query_sources",
-    "item_class": "Q6534247",
+    "item_class": null,
     "noise": null,
     "not_found": false,
+    "profiles": [
+     "Q6534272"
+    ],
     "roots": null,
     "search": "abc",
     "sources": [
@@ -1851,10 +2080,14 @@
    "a": null,
    "ab": null,
    "abc": {
+    "exclude": null,
     "function": "query_sources",
-    "item_class": "Q68657",
+    "item_class": null,
     "noise": null,
     "not_found": true,
+    "profiles": [
+     "Q6534216"
+    ],
     "roots": [
      "Q115682347"
     ],

@@ -418,7 +418,7 @@ def basic_list(value):
     ]
 
 def define_setup(query_attributes, creation=False, query_id='', sources=None, item_class=None,
-                 answer_class=None, roots=None, noise=None):
+                 answer_class=None, roots=None, noise=None, profiles=None, exclude=None):
     """Build a query-setup dict used by provider ``get_options`` methods.
 
     Args:
@@ -438,6 +438,10 @@ def define_setup(query_attributes, creation=False, query_id='', sources=None, it
                           below (``None``: not filtered, #170).
         noise:            Wikidata classes the Wikidata hits must not be
                           instances of, where no roots fit (``None``: none).
+        profiles:         QIDs of MaRDI profiles whose items the portal
+                          search finds too (``None``: none).
+        exclude:          QIDs of classes whose items the portal search
+                          leaves out (``None``: none).
 
     Returns:
         Dict consumed by :func:`~MaRDMO.queries.query_sources_with_user_additions`.
@@ -451,6 +455,8 @@ def define_setup(query_attributes, creation=False, query_id='', sources=None, it
         'answer_class': answer_class,
         'roots': roots,
         'noise': noise,
+        'profiles': profiles,
+        'exclude': exclude,
     }
 
 def nested_set(data, path, entry):
