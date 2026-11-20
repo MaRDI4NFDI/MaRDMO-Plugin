@@ -10,7 +10,9 @@ from rdmo.options.providers import Provider
 from .getters import get_items
 from .helpers import define_setup
 from .optionsets import PROVIDERS
-from .queries import publication_options, query_sources, query_sources_with_user_additions
+from .queries import (
+    item_by_id, publication_options, query_sources, query_sources_with_user_additions, typed_item_id,
+)
 
 
 class MaRDMOProvider(Provider):
@@ -29,6 +31,7 @@ class MaRDMOProvider(Provider):
         Args:
             project: RDMO project instance (its items of the user's own are offered).
             search:  Search text; nothing is searched below the row's ``min_search`` characters.
+                     ``mardi:Q…`` or ``wikidata:Q…`` offers that item, if it fits.
             user:    Requesting user (unused).
             site:    Current site (unused).
         '''
@@ -51,6 +54,14 @@ class MaRDMOProvider(Provider):
         on_wikidata = 'wikidata' in (sources or ['wikidata'])
         roots = config.wikidata_roots if on_wikidata else None
         noise = config.wikidata_noise if on_wikidata else None
+        # mardi:Q… or wikidata:Q…: that item, if it fits the dropdown (#170)
+        typed = typed_item_id(search)
+        if typed:
+            source, qid = typed
+            if source not in (sources or ['mardi', 'wikidata']):
+                return []
+            return item_by_id(source, qid, classes=[items[name] for name in config.classes], profiles=profiles,
+                              exclude=exclude, roots=roots, noise=noise)
         if config.with_answers:
             return query_sources_with_user_additions(
                 search = search,

@@ -16,6 +16,7 @@ Provides helpers for:
 import hashlib
 import json
 import logging
+import re
 import threading
 import time
 from contextlib import contextmanager
@@ -1179,3 +1180,67 @@ def _classes(entity, instance_of):
     '''The QIDs of the classes (*instance_of* statements) of a ``wbgetentities`` *entity*.'''
     return {claim['mainsnak'].get('datavalue', {}).get('value', {}).get('id')
             for claim in entity.get('claims', {}).get(instance_of, [])}
+
+
+# A search text that names an item, ``mardi:Q123`` or ``wikidata:Q42``; the
+# prefix in any case, spaces around the colon allowed (#170)
+TYPED_ITEM_ID = re.compile(r'\s*(mardi|wikidata)\s*:\s*(q[1-9][0-9]*)\s*', re.IGNORECASE)
+
+
+def typed_item_id(search):
+    '''``(source, QID)`` if *search* names an item (:data:`TYPED_ITEM_ID`), else ``None``.'''
+    match = TYPED_ITEM_ID.fullmatch(search or '')
+    return (match[1].lower(), match[2].upper()) if match else None
+
+
+def item_by_id(source, qid, classes=None, profiles=None, exclude=None, roots=None, noise=None):
+    '''The option of the item *qid* of *source* named in a dropdown, if it fits it; ``[]`` otherwise (#170).
+
+    The item fits as a search hit would: on the portal if it is of one of
+    *classes* or has one of *profiles* and is not of a class of *exclude*; on
+    Wikidata if it is at or below *roots* or not of a class of *noise*
+    (:mod:`~MaRDMO.class_check`; if the check fails, as unfiltered hits do).
+    A merged item is offered as the item it was merged into; an item that
+    does not exist is not offered.
+
+    Args:
+        source:   ``'mardi'`` or ``'wikidata'``.
+        qid:      The item's QID.
+        classes:  QIDs of the dropdown's portal classes (all of them).
+        profiles: QIDs of the MaRDI profiles of its classes.
+        exclude:  QIDs of classes whose items it leaves out.
+        roots:    Wikidata classes its Wikidata hits must be at or below.
+        noise:    Instead of *roots*: Wikidata classes they must not be instances of.
+
+    Returns:
+        ``[option]`` or ``[]``.
+    '''
+    try:
+        entities = _entities(source, [qid], 'labels|descriptions|claims' if source == 'mardi'
+                             else 'labels|descriptions', deadline=search_deadline())
+    except (requests.exceptions.RequestException, ValueError) as e:
+        logger.error("Lookup of %s:%s failed: %s", source, qid, e)
+        return []
+    entity = entities.get(qid) or next(iter(entities.values()), {})
+    if not entity or 'missing' in entity:
+        return []
+    # wbgetentities answers a merged item with the one it was merged into
+    target = entity.get('id', qid)
+
+    if source == 'mardi':
+        properties = get_properties()
+        found = _classes(entity, properties['instance of'])
+        if not (found & set(classes or []) or _classes(entity, properties['MaRDI profile type']) & set(profiles or [])):
+            return []
+        if found & set(exclude or []):
+            return []
+    elif roots is not None or noise is not None:
+        from .class_check import wikidata_matches  # it uses this module
+        matches = wikidata_matches([target], roots=roots, noise=None if roots is not None else noise)
+        if matches is not None and not matches.get(target):
+            return []
+
+    label = entity.get('labels', {}).get('en', {}).get('value', target)
+    description = entity.get('descriptions', {}).get('en', {}).get('value', 'No Description Provided!')
+    item_id, text = f'{source}:{target}', item_text(label, description)
+    return [{'id': item_id, 'text': text, 'help': option_help(item_id, text)}]
