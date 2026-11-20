@@ -418,7 +418,7 @@ def basic_list(value):
     ]
 
 def define_setup(query_attributes, creation=False, query_id='', sources=None, item_class=None,
-                 answer_class=None, roots=None):
+                 answer_class=None, roots=None, noise=None):
     """Build a query-setup dict used by provider ``get_options`` methods.
 
     Args:
@@ -436,6 +436,8 @@ def define_setup(query_attributes, creation=False, query_id='', sources=None, it
                           the user's own quantities must have (optional).
         roots:            Wikidata classes the Wikidata hits must be at or
                           below (``None``: not filtered, #170).
+        noise:            Wikidata classes the Wikidata hits must not be
+                          instances of, where no roots fit (``None``: none).
 
     Returns:
         Dict consumed by :func:`~MaRDMO.queries.query_sources_with_user_additions`.
@@ -448,6 +450,7 @@ def define_setup(query_attributes, creation=False, query_id='', sources=None, it
         'item_class': item_class,
         'answer_class': answer_class,
         'roots': roots,
+        'noise': noise,
     }
 
 def nested_set(data, path, entry):

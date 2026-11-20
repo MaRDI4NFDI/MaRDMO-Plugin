@@ -40,6 +40,15 @@ def test_the_noise_query_asks_for_instances_of_a_noise_class_or_its_subclasses()
     query = class_check.query_noise(['Q1'], ['Q5', 'Q11424'])
     assert '?item wdt:P31 ?class .' in query and 'P279 ?class' not in query
     assert '?class wdt:P279* ?noise .' in query and 'VALUES ?noise { wd:Q11424 wd:Q5 }' in query
+    assert 'dateModified' not in query
+
+
+def test_on_wikidatas_endpoint_an_item_it_does_not_know_is_noise_too():
+    '''Scholarly articles are not in its main graph; an item without a class is.'''
+    query = class_check.query_noise(['Q1'], ['Q5'], wikidata=True)
+    assert 'OPTIONAL { ?item schema:dateModified ?modified . }' in query
+    assert 'FILTER(!BOUND(?modified) || BOUND(?noise))' in query
+    assert '?class wdt:P279* ?noise . hint:Prior hint:gearing "forward" .' in query
 
 
 def test_qlever_answers_and_wikidata_is_not_asked(monkeypatch):

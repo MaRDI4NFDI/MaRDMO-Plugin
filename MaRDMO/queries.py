@@ -764,22 +764,24 @@ def _label_description(option):
     return label.strip().lower(), description.strip()
 
 
-def wikidata_hits(hits, roots):
+def wikidata_hits(hits, roots, noise=None):
     '''The Wikidata search *hits* that are at or below *roots*, in their order (#170).
 
-    Without *roots*, or if the check of their classes fails, the first
-    :data:`WIKIDATA_HITS` hits, unfiltered, as before the check.
+    With *noise* instead of *roots*, those that are not an instance of one of
+    its classes.  Without either, or if the check of their classes fails,
+    the first :data:`WIKIDATA_HITS` hits, unfiltered, as before the check.
     '''
-    if roots is None:
+    if roots is None and noise is None:
         return hits[:WIKIDATA_HITS]
     from .class_check import wikidata_matches  # it uses this module
-    matches = wikidata_matches([hit['id'] for hit in hits if 'id' in hit], roots=roots)
+    matches = wikidata_matches([hit['id'] for hit in hits if 'id' in hit], roots=roots,
+                               noise=None if roots is not None else noise)
     if matches is None:
         return hits[:WIKIDATA_HITS]
     return [hit for hit in hits if matches.get(hit.get('id'))]
 
 
-def query_sources(search, item_class=None, sources=None, not_found=True, roots=None):
+def query_sources(search, item_class=None, sources=None, not_found=True, roots=None, noise=None):
     '''Query one or more knowledge-graph sources for items matching *search*.
 
     Queries the requested sources in parallel (results are cached for five
@@ -800,6 +802,8 @@ def query_sources(search, item_class=None, sources=None, not_found=True, roots=N
         roots:      Wikidata classes the Wikidata hits must be at or below
                     (:func:`wikidata_hits`); ``None``: Wikidata is searched by
                     label only, as before.
+        noise:      Instead of *roots* (where no class fits): Wikidata classes
+                    the Wikidata hits must not be instances of.
 
     Returns:
         List of ``{"id": …, "text": "Label (Description)", "help": source tag}``
@@ -818,7 +822,7 @@ def query_sources(search, item_class=None, sources=None, not_found=True, roots=N
         source_functions['wikidata'] = lambda s: wikidata_hits(_cached_search(
             'wikidata', s, None, lambda t: query_api(get_url('wikidata', 'api'), t, raise_errors=True,
                                                      waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline(),
-                                                     limit=WIKIDATA_FILTERED_HITS)), roots)
+                                                     limit=WIKIDATA_FILTERED_HITS)), roots, noise)
 
     # Runs on every autocomplete search; close the pool so threads do not pile up
     with ThreadPool(processes=len(source_functions)) as pool:
@@ -885,6 +889,8 @@ def query_sources_with_user_additions(search, project, setup):
                    quantities without a class yet are offered too
                  * ``roots``            – Wikidata classes the Wikidata hits
                    must be at or below (``None``: not filtered)
+                 * ``noise``            – instead of roots: Wikidata classes
+                   the Wikidata hits must not be instances of
 
     Returns:
         List of ``{"id": …, "text": …}`` option dicts.
@@ -900,6 +906,7 @@ def query_sources_with_user_additions(search, project, setup):
             sources=setup['sources'],
             not_found=False,
             roots=setup.get('roots'),
+            noise=setup.get('noise'),
         )
     except (requests.exceptions.RequestException, KeyError, ValueError, TypeError) as e:
         logger.error("Query sources failed: %s", e)

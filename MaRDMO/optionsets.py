@@ -74,8 +74,79 @@ WIKIDATA_ROOTS = {
 }
 # Item classes Wikidata has nothing for: their providers search the portal only
 NO_WIKIDATA = {'process step'}
-# Item classes no Wikidata class fits; their Wikidata hits are not filtered yet
-UNFILTERED = {'research problem'}
+# Item classes no Wikidata class fits (research problems are phenomena,
+# processes, …): their Wikidata hits are filtered by WIKIDATA_NOISE instead
+NOISE_FILTERED = {'research problem'}
+# What is never a research problem: an item that is an instance of one of
+# these classes or of a subclass is left out.  Deliberately narrow classes
+# (a broad one like "work" or "concept" would leave out real ones); measured
+# against the research problems' Wikidata twins on the portal, none of which
+# is left out (dev-tests/spikes/wikidata_noise.py)
+WIKIDATA_NOISE = [
+    # people and names
+    'Q5',          # human
+    'Q202444',     # given name
+    'Q101352',     # family name
+    'Q28640',      # profession
+    'Q12737077',   # occupation
+    # living things and molecules
+    'Q16521',      # taxon
+    'Q7187',       # gene
+    'Q8054',       # protein
+    # writings
+    'Q47461344',   # written work
+    'Q13442814',   # scholarly article
+    'Q7725634',    # literary work
+    'Q571',        # book
+    'Q1980247',    # chapter
+    'Q3331189',    # version, edition or translation
+    'Q1266946',    # thesis
+    'Q13433827',   # encyclopedia article
+    'Q212971',     # Request for Comments
+    'Q10870555',   # report
+    'Q1002697',    # periodical
+    'Q5633421',    # scientific journal
+    'Q737498',     # academic journal
+    'Q41298',      # magazine
+    'Q253623',     # patent
+    'Q43305660',   # United States patent
+    'Q30612',      # clinical trial
+    # works of art and media
+    'Q11424',      # film
+    'Q5398426',    # television series
+    'Q21191270',   # television series episode
+    'Q2431196',    # audiovisual work
+    'Q482994',     # album
+    'Q134556',     # single
+    'Q7366',       # song
+    'Q7302866',    # audio track
+    'Q7889',       # video game
+    'Q7397',       # software
+    'Q35127',      # website
+    'Q3305213',    # painting
+    'Q860861',     # sculpture
+    'Q2668072',    # collection
+    # places and things
+    'Q486972',     # human settlement
+    'Q79007',      # street
+    'Q41176',      # building
+    'Q13226383',   # facility
+    'Q4022',       # river
+    'Q8502',       # mountain
+    'Q3863',       # asteroid
+    'Q11446',      # ship
+    # organizations and events
+    'Q43229',      # organization
+    'Q4830453',    # business
+    'Q31855',      # research institute
+    'Q3918',       # university
+    'Q2020153',    # academic conference
+    'Q618779',     # award
+    # Wikimedia pages
+    'Q4167410',    # Wikimedia disambiguation page
+    'Q4167836',    # Wikimedia category
+    'Q13406463',   # Wikimedia list article
+]
 
 
 @dataclass(frozen=True)
@@ -129,16 +200,30 @@ class Search:
         return self.sources
 
     @property
+    def noise_filtered(self):
+        '''Whether the Wikidata hits are filtered by :data:`WIKIDATA_NOISE` instead of roots.
+
+        No row has a class filtered by noise together with one that has roots
+        (tests/unit/test_wikidata_roots.py); such a row would be filtered by noise.
+        '''
+        return any(name in NOISE_FILTERED for name in self.classes)
+
+    @property
     def wikidata_roots(self):
-        '''The Wikidata classes the hits must be at or below (sorted); ``None``: not filtered.
+        '''The Wikidata classes the hits must be at or below (sorted); ``None``: no roots.
 
         The roots of all classes of the row; a class Wikidata has nothing for
-        adds none.  Unfiltered if one of the classes is not filtered.
+        adds none.  None where the hits are filtered by noise.
         '''
-        if any(name in UNFILTERED for name in self.classes):
+        if self.noise_filtered:
             return None
         roots = {root for name in self.classes if name not in NO_WIKIDATA for root in WIKIDATA_ROOTS[name]}
         return sorted(roots) or None
+
+    @property
+    def wikidata_noise(self):
+        '''The Wikidata classes the hits must not be instances of; ``None``: not filtered by noise.'''
+        return WIKIDATA_NOISE if self.noise_filtered else None
 
 
 PROVIDERS = {

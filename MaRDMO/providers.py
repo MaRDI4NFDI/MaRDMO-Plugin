@@ -42,8 +42,10 @@ class MaRDMOProvider(Provider):
         item_class = ([items[name] for name in config.item_class] if isinstance(config.item_class, list)
                       else items[config.item_class])
         sources = config.search_sources
-        # The Wikidata hits must be at or below these classes (#170)
-        roots = config.wikidata_roots if 'wikidata' in (sources or ['wikidata']) else None
+        # The Wikidata hits must be at or below these classes, or not of these (#170)
+        on_wikidata = 'wikidata' in (sources or ['wikidata'])
+        roots = config.wikidata_roots if on_wikidata else None
+        noise = config.wikidata_noise if on_wikidata else None
         if config.with_answers:
             return query_sources_with_user_additions(
                 search = search,
@@ -55,6 +57,7 @@ class MaRDMOProvider(Provider):
                     item_class = item_class,
                     answer_class = config.answer_class,
                     roots = roots,
+                    noise = noise,
                 ),
             )
         return query_sources(
@@ -63,5 +66,6 @@ class MaRDMOProvider(Provider):
             sources = sources,
             not_found = config.not_found,
             roots = roots,
+            noise = noise,
         )
 

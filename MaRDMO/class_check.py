@@ -66,13 +66,27 @@ def query_roots(qids, roots, wikidata=False):
 
 
 def query_noise(qids, noise, wikidata=False):
-    '''The query for the *qids* that are an instance of a class of *noise* or of one of its subclasses.'''
-    gearing = ' hint:Prior hint:gearing "forward" .' if wikidata else ''
+    '''The query for the *qids* that are an instance of a class of *noise* or of one of its subclasses.
+
+    Wikidata's main endpoint (*wikidata*) does not have scholarly articles
+    at all: they are in a graph of their own.  There an item the endpoint
+    does not know (it has no modification date) counts as noise too; an
+    item without a class it knows does not.
+    '''
+    if not wikidata:
+        return (f'SELECT DISTINCT ?item WHERE {{\n'
+                f'  {_values("item", qids)}\n'
+                f'  ?item wdt:P31 ?class .\n'
+                f'  ?class wdt:P279* ?noise .\n'
+                f'  {_values("noise", noise)}\n'
+                f'}}')
     return (f'SELECT DISTINCT ?item WHERE {{\n'
             f'  {_values("item", qids)}\n'
-            f'  ?item wdt:P31 ?class .\n'
-            f'  ?class wdt:P279* ?noise .{gearing}\n'
-            f'  {_values("noise", noise)}\n'
+            f'  OPTIONAL {{ ?item schema:dateModified ?modified . }}\n'
+            f'  OPTIONAL {{ ?item wdt:P31 ?class .\n'
+            f'             ?class wdt:P279* ?noise . hint:Prior hint:gearing "forward" .\n'
+            f'             {_values("noise", noise)} }}\n'
+            f'  FILTER(!BOUND(?modified) || BOUND(?noise))\n'
             f'}}')
 
 
