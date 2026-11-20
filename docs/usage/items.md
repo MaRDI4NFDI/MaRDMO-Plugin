@@ -16,6 +16,20 @@ to search the MaRDI Portal and Wikidata:
 - **The item does not exist**: select **new item**.  Then enter its **Name**
   and **Short Description** in the questions below.
 
+The list offers only items of the kind the question asks for: software in
+a software question, formulas in a formula question, and so on, from the
+MaRDI Portal and from Wikidata.  Research problems are an exception: no
+Wikidata class fits them, so the list offers everything from Wikidata that
+is not plainly something else (a person, a publication, a film, a place,
+...).  Process steps are searched on the MaRDI Portal only.
+
+### If the item is not in the list
+
+Type its ID with the prefix of its source: `mardi:Q123` for an item of the
+MaRDI Portal, `wikidata:Q42` for one of Wikidata.  The list then offers that
+item only, if it is of the kind the question asks for; otherwise it offers
+nothing.  An item that was merged into another one is offered as that item.
+
 ## Changing the name or short description
 
 Name and short description are always changed in their own questions on
@@ -30,8 +44,8 @@ renaming an existing one.
 ## Linking items
 
 In a relation question ("contains formula", "uses software", ...) type a few
-characters and choose from the list.  A grey tag in the open list shows where
-each entry comes from:
+characters and choose from the list, or type an item's ID as above.  A
+coloured tag in the open list shows where each entry comes from:
 
 | Tag | Meaning |
 |---|---|
@@ -157,8 +171,8 @@ you cannot change them.
 ## Items that are already on the MaRDI Portal
 
 The dropdowns offer only MaRDI Portal items of the kind a question asks for.
-An item may exist on the portal anyway: with another class or none (e.g.
-imported from Wikidata), or not among the results.  The export would create
+An item may exist on the portal anyway: with another class and profile or
+none (e.g. imported from Wikidata), or not among the results.  The export would create
 it a second time, so the preview lists such items at the top, in the box
 **Before you export** under **Items already on the MaRDI Portal**, and
 the export button stays disabled until none is left.  Each item shows its
