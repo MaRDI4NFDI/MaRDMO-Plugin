@@ -14,11 +14,68 @@ this module must not import RDMO or MaRDMO models::
 
 Item classes are names of ``data/items.json`` (a list: several classes);
 they are looked up when searching, so the provider's Wikibase is used.
+Wikidata hits are filtered by the classes of :data:`WIKIDATA_ROOTS` (#170).
 '''
 from dataclasses import dataclass
 from typing import Optional, Union
 
 from django.utils.translation import gettext_lazy as _
+
+# The Wikidata classes of each item class (#170): a dropdown offers only the
+# Wikidata items that are an instance or subclass of something at or below
+# them.  They are Wikidata's, the same for every portal.  Mathematical
+# operators are quantities in MathModDB, so the quantity providers offer them.
+QUANTITY_ROOTS = [
+    'Q309314',     # quantity
+    'Q110653654',  # kind of quantity
+    'Q131030',     # operator
+    'Q1058681',    # differential operator
+    'Q186509',     # mathematical constant
+    'Q719375',     # operand
+    'Q200726',     # probability distribution
+    'Q11348',      # function
+]
+WIKIDATA_ROOTS = {
+    'mathematical model': ['Q486902'],                         # mathematical model
+    'formula': [
+        'Q976981',     # formula
+        'Q6498784',    # mathematical expression
+        'Q11345',      # equation
+        'Q214070',     # physical law
+        'Q408891',     # scientific law
+        'Q18382796',   # boundary condition
+        'Q1339342',    # empirical relationship
+    ],
+    'quantity': QUANTITY_ROOTS,
+    'kind of quantity': QUANTITY_ROOTS,
+    'academic discipline': ['Q1047113'],                       # field of study
+    'computational task': ['Q140136486'],                      # computational task
+    'algorithm': ['Q8366'],                                    # algorithm
+    'algorithmic task': ['Q3435924'],                          # computational problem
+    'benchmark': ['Q816747'],                                  # benchmark
+    'software': ['Q7397'],                                     # software
+    'programming language': ['Q9143'],                         # programming language
+    'computer hardware': ['Q3966', 'Q68'],                     # computer hardware, computer
+    'CPU model': ['Q122967152', 'Q5297'],                      # CPU model, microprocessor
+    'data set': ['Q1172284'],                                  # data set
+    'method': [                                                # experimental and measuring methods
+        'Q1924397',    # measurement technique
+        'Q4751159',    # analytical chemical technique
+        'Q3247516',    # lab technique
+        'Q3331334',    # experimentation
+    ],
+    'research tool': [
+        'Q110994345',  # research tool
+        'Q3099911',    # scientific instrument
+        'Q2041172',    # measuring instrument
+        'Q1751850',    # optical instrument
+    ],
+    'research workflow': ['Q115682347'],                       # research workflow
+}
+# Item classes Wikidata has nothing for: their providers search the portal only
+NO_WIKIDATA = {'process step'}
+# Item classes no Wikidata class fits; their Wikidata hits are not filtered yet
+UNFILTERED = {'research problem'}
 
 
 @dataclass(frozen=True)
@@ -58,6 +115,30 @@ class Search:
     def with_answers(self):
         '''Whether the search includes the project's own items (and creation).'''
         return self.answers is not None or self.creation
+
+    @property
+    def classes(self):
+        '''The item class names, as a list.'''
+        return [self.item_class] if isinstance(self.item_class, str) else list(self.item_class)
+
+    @property
+    def search_sources(self):
+        '''The sources searched: without Wikidata if it has nothing for any of the classes.'''
+        if all(name in NO_WIKIDATA for name in self.classes):
+            return [source for source in (self.sources or ['mardi', 'wikidata']) if source != 'wikidata']
+        return self.sources
+
+    @property
+    def wikidata_roots(self):
+        '''The Wikidata classes the hits must be at or below (sorted); ``None``: not filtered.
+
+        The roots of all classes of the row; a class Wikidata has nothing for
+        adds none.  Unfiltered if one of the classes is not filtered.
+        '''
+        if any(name in UNFILTERED for name in self.classes):
+            return None
+        roots = {root for name in self.classes if name not in NO_WIKIDATA for root in WIKIDATA_ROOTS[name]}
+        return sorted(roots) or None
 
 
 PROVIDERS = {

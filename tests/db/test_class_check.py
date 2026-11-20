@@ -6,7 +6,9 @@ answers' format would show here.
 import pytest
 
 import MaRDMO.class_check as class_check
+import MaRDMO.queries as queries
 from MaRDMO.constants import WIKIDATA
+from MaRDMO.optionsets import PROVIDERS
 
 SOFTWARE = ['Q7397']
 # LAPACK and OpenBLAS are software, mass is not
@@ -34,6 +36,17 @@ def qlever_down(monkeypatch):
     def without_qlever(query, endpoint, **kwargs):
         return None if endpoint == WIKIDATA['qlever'] else query_sparql(query, endpoint, **kwargs)
     monkeypatch.setattr(class_check.queries, 'query_sparql', without_qlever)
+
+
+def test_the_software_dropdown_offers_wikidata_software_only(portal):
+    '''Wikidata's 50 hits for MATLAB are mostly places and people named Matlab; software stays.'''
+    portal('class_check')
+    options = queries.query_sources('MATLAB', sources=['wikidata'], not_found=False,
+                                    roots=PROVIDERS['Software'].wikidata_roots)
+    texts = [option['text'] for option in options]
+    assert any(text.startswith('MATLAB (') for text in texts), texts
+    assert not any('Upazila' in text or 'Abdullayev' in text for text in texts), texts
+    assert all(option['id'].startswith('wikidata:') for option in options)
 
 
 def test_wikidata_tells_the_same_if_qlever_fails(portal, qlever_down):

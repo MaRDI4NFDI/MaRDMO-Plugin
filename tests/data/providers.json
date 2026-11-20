@@ -8,6 +8,9 @@
     "function": "query_sources",
     "item_class": "Q127020",
     "not_found": true,
+    "roots": [
+     "Q8366"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -27,6 +30,7 @@
      "Q127020"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -46,6 +50,9 @@
     "function": "query_sources",
     "item_class": "Q6775701",
     "not_found": true,
+    "roots": [
+     "Q3435924"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -65,6 +72,7 @@
      "Q6775701"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -84,6 +92,9 @@
     "function": "query_sources",
     "item_class": "Q6825282",
     "not_found": true,
+    "roots": [
+     "Q816747"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -103,6 +114,7 @@
      "Q6534247"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -122,6 +134,9 @@
     "function": "query_sources",
     "item_class": "Q56885",
     "not_found": true,
+    "roots": [
+     "Q1172284"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -141,6 +156,7 @@
      "Q56885"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -162,6 +178,7 @@
      "Q96183"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -181,6 +198,10 @@
     "function": "query_sources",
     "item_class": "Q56583",
     "not_found": true,
+    "roots": [
+     "Q3966",
+     "Q68"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -200,6 +221,7 @@
      "Q56583"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -221,6 +243,7 @@
      "Q77076"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -240,6 +263,15 @@
     "function": "query_sources",
     "item_class": "Q96183",
     "not_found": true,
+    "roots": [
+     "Q11345",
+     "Q1339342",
+     "Q18382796",
+     "Q214070",
+     "Q408891",
+     "Q6498784",
+     "Q976981"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -257,6 +289,9 @@
     "function": "query_sources",
     "item_class": "Q68663",
     "not_found": true,
+    "roots": [
+     "Q486902"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -276,6 +311,7 @@
      "Q68663"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -295,6 +331,7 @@
     "function": "query_sources",
     "item_class": "Q68663",
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -316,6 +353,7 @@
      "Q68669"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -335,8 +373,11 @@
     "function": "query_sources",
     "item_class": "Q6486603",
     "not_found": true,
+    "roots": null,
     "search": "abc",
-    "sources": null
+    "sources": [
+     "mardi"
+    ]
    }
   },
   "label": "Options for Process Step",
@@ -366,6 +407,16 @@
      "Q6534245"
     ],
     "not_found": true,
+    "roots": [
+     "Q1058681",
+     "Q110653654",
+     "Q11348",
+     "Q131030",
+     "Q186509",
+     "Q200726",
+     "Q309314",
+     "Q719375"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -386,6 +437,7 @@
      "Q6534245"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -414,6 +466,9 @@
       "algorithm"
      ],
      "query_id": "",
+     "roots": [
+      "Q8366"
+     ],
      "sources": null
     }
    }
@@ -438,6 +493,7 @@
       "algorithm"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -464,6 +520,9 @@
       "problem"
      ],
      "query_id": "",
+     "roots": [
+      "Q3435924"
+     ],
      "sources": null
     }
    }
@@ -488,6 +547,7 @@
       "problem"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -516,6 +576,7 @@
       "software"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -536,6 +597,7 @@
       "software"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -556,6 +618,7 @@
       "software"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -582,6 +645,9 @@
       "benchmark"
      ],
      "query_id": "",
+     "roots": [
+      "Q816747"
+     ],
      "sources": null
     }
    }
@@ -606,6 +672,10 @@
      ],
      "query_attributes": null,
      "query_id": "",
+     "roots": [
+      "Q122967152",
+      "Q5297"
+     ],
      "sources": null
     }
    }
@@ -630,6 +700,9 @@
       "dataset"
      ],
      "query_id": "",
+     "roots": [
+      "Q1172284"
+     ],
      "sources": null
     }
    }
@@ -656,6 +729,7 @@
       "software"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -676,6 +750,7 @@
       "software"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -696,6 +771,7 @@
       "software"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -724,6 +800,10 @@
       "hardware"
      ],
      "query_id": "",
+     "roots": [
+      "Q3966",
+      "Q68"
+     ],
      "sources": null
     }
    }
@@ -746,6 +826,12 @@
      "item_class": "Q77076",
      "query_attributes": null,
      "query_id": "",
+     "roots": [
+      "Q110994345",
+      "Q1751850",
+      "Q2041172",
+      "Q3099911"
+     ],
      "sources": null
     }
    }
@@ -770,6 +856,15 @@
       "formulation"
      ],
      "query_id": "",
+     "roots": [
+      "Q11345",
+      "Q1339342",
+      "Q18382796",
+      "Q214070",
+      "Q408891",
+      "Q6498784",
+      "Q976981"
+     ],
      "sources": null
     }
    }
@@ -794,6 +889,7 @@
       "formulation"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -820,6 +916,7 @@
       "model"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -846,6 +943,12 @@
      ],
      "query_attributes": null,
      "query_id": "",
+     "roots": [
+      "Q1924397",
+      "Q3247516",
+      "Q3331334",
+      "Q4751159"
+     ],
      "sources": null
     }
    }
@@ -883,6 +986,7 @@
       "task"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -907,6 +1011,9 @@
      ],
      "query_attributes": null,
      "query_id": "",
+     "roots": [
+      "Q9143"
+     ],
      "sources": null
     }
    },
@@ -921,6 +1028,9 @@
      ],
      "query_attributes": null,
      "query_id": "",
+     "roots": [
+      "Q9143"
+     ],
      "sources": null
     }
    },
@@ -935,6 +1045,9 @@
      ],
      "query_attributes": null,
      "query_id": "",
+     "roots": [
+      "Q9143"
+     ],
      "sources": null
     }
    }
@@ -959,6 +1072,7 @@
       "quantity"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -988,6 +1102,16 @@
       "quantity"
      ],
      "query_id": "",
+     "roots": [
+      "Q1058681",
+      "Q110653654",
+      "Q11348",
+      "Q131030",
+      "Q186509",
+      "Q200726",
+      "Q309314",
+      "Q719375"
+     ],
      "sources": null
     }
    }
@@ -1012,6 +1136,7 @@
       "quantity"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -1038,6 +1163,9 @@
       "field"
      ],
      "query_id": "",
+     "roots": [
+      "Q1047113"
+     ],
      "sources": null
     }
    }
@@ -1062,6 +1190,7 @@
       "field"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -1088,6 +1217,7 @@
       "problem"
      ],
      "query_id": "",
+     "roots": null,
      "sources": null
     }
    }
@@ -1112,6 +1242,7 @@
       "problem"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -1136,6 +1267,9 @@
       "software"
      ],
      "query_id": "",
+     "roots": [
+      "Q7397"
+     ],
      "sources": null
     }
    },
@@ -1150,6 +1284,9 @@
       "software"
      ],
      "query_id": "",
+     "roots": [
+      "Q7397"
+     ],
      "sources": null
     }
    },
@@ -1164,6 +1301,9 @@
       "software"
      ],
      "query_id": "",
+     "roots": [
+      "Q7397"
+     ],
      "sources": null
     }
    }
@@ -1190,7 +1330,10 @@
       "processstep"
      ],
      "query_id": "",
-     "sources": null
+     "roots": null,
+     "sources": [
+      "mardi"
+     ]
     }
    }
   },
@@ -1214,6 +1357,9 @@
       "task"
      ],
      "query_id": "",
+     "roots": [
+      "Q140136486"
+     ],
      "sources": null
     }
    }
@@ -1238,6 +1384,7 @@
       "task"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -1270,6 +1417,7 @@
       "dataset"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -1296,6 +1444,7 @@
       "workflow"
      ],
      "query_id": "",
+     "roots": null,
      "sources": [
       "mardi"
      ]
@@ -1317,6 +1466,9 @@
      "Q60231"
     ],
     "not_found": true,
+    "roots": [
+     "Q1047113"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -1336,6 +1488,7 @@
      "Q60231"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -1355,6 +1508,7 @@
     "function": "query_sources",
     "item_class": "Q6534292",
     "not_found": true,
+    "roots": null,
     "search": "abc",
     "sources": null
    }
@@ -1374,6 +1528,7 @@
      "Q6534292"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -1391,6 +1546,9 @@
     "function": "query_sources",
     "item_class": "Q56614",
     "not_found": true,
+    "roots": [
+     "Q7397"
+    ],
     "search": "a",
     "sources": null
    },
@@ -1398,6 +1556,9 @@
     "function": "query_sources",
     "item_class": "Q56614",
     "not_found": true,
+    "roots": [
+     "Q7397"
+    ],
     "search": "ab",
     "sources": null
    },
@@ -1405,6 +1566,9 @@
     "function": "query_sources",
     "item_class": "Q56614",
     "not_found": true,
+    "roots": [
+     "Q7397"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -1422,6 +1586,7 @@
      "Q56614"
     ],
     "not_found": false,
+    "roots": null,
     "search": "a",
     "sources": [
      "mardi"
@@ -1433,6 +1598,7 @@
      "Q56614"
     ],
     "not_found": false,
+    "roots": null,
     "search": "ab",
     "sources": [
      "mardi"
@@ -1444,6 +1610,7 @@
      "Q56614"
     ],
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -1463,6 +1630,9 @@
     "function": "query_sources",
     "item_class": "Q6534247",
     "not_found": true,
+    "roots": [
+     "Q140136486"
+    ],
     "search": "abc",
     "sources": null
    }
@@ -1480,6 +1650,7 @@
     "function": "query_sources",
     "item_class": "Q6534247",
     "not_found": false,
+    "roots": null,
     "search": "abc",
     "sources": [
      "mardi"
@@ -1499,6 +1670,9 @@
     "function": "query_sources",
     "item_class": "Q68657",
     "not_found": true,
+    "roots": [
+     "Q115682347"
+    ],
     "search": "abc",
     "sources": null
    }

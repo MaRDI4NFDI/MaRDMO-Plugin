@@ -44,6 +44,10 @@ SEARCH_CACHE_TIMEOUT = 5 * 60
 # (search_deadline): the request occupies an RDMO worker all the while
 SEARCH_TIMEOUT = 5
 SEARCH_RETRY_WAIT = 0.5
+# Hits of a Wikidata label search: 10 shown unfiltered; 50 asked for where
+# they are filtered by their classes, which leaves out most of them (#170)
+WIKIDATA_HITS = 10
+WIKIDATA_FILTERED_HITS = 50
 
 # A SPARQL query is given up after this many seconds and retried once on a
 # timeout, a connection error or one of these answers, after the portal's
@@ -326,10 +330,11 @@ def portal_labels(qids, waits=(), deadline=None):
     return labels
 
 
-def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, waits=(), deadline=None):
+def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, waits=(), deadline=None,
+              limit=WIKIDATA_HITS):
     '''Search a Wikibase API endpoint for items whose label matches *search_term*.
 
-    Uses the ``wbsearchentities`` action with ``limit=10``.
+    Uses the ``wbsearchentities`` action with at most *limit* hits (at most 50).
 
     Args:
         api_url:      Full URL of the Wikibase API endpoint.
@@ -340,6 +345,7 @@ def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, 
         waits:        Pauses before retries (see :func:`request_with_retry`);
                       ``()`` searches once.
         deadline:     :func:`time.monotonic` value after which no retry starts.
+        limit:        Number of hits asked for.
 
     Returns:
         List of raw Wikibase search-result dicts; empty list on any error
@@ -356,7 +362,7 @@ def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, 
                 'format': 'json',
                 'language': 'en',
                 'type': 'item',
-                'limit': 10,
+                'limit': limit,
                 'search': search_term
             },
             headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
@@ -758,7 +764,22 @@ def _label_description(option):
     return label.strip().lower(), description.strip()
 
 
-def query_sources(search, item_class=None, sources=None, not_found=True):
+def wikidata_hits(hits, roots):
+    '''The Wikidata search *hits* that are at or below *roots*, in their order (#170).
+
+    Without *roots*, or if the check of their classes fails, the first
+    :data:`WIKIDATA_HITS` hits, unfiltered, as before the check.
+    '''
+    if roots is None:
+        return hits[:WIKIDATA_HITS]
+    from .class_check import wikidata_matches  # it uses this module
+    matches = wikidata_matches([hit['id'] for hit in hits if 'id' in hit], roots=roots)
+    if matches is None:
+        return hits[:WIKIDATA_HITS]
+    return [hit for hit in hits if matches.get(hit.get('id'))]
+
+
+def query_sources(search, item_class=None, sources=None, not_found=True, roots=None):
     '''Query one or more knowledge-graph sources for items matching *search*.
 
     Queries the requested sources in parallel (results are cached for five
@@ -772,11 +793,13 @@ def query_sources(search, item_class=None, sources=None, not_found=True):
         search:     Free-text search string.
         item_class: QID string or list of QID strings used for class-filtered
                     search on MaRDI (e.g. ``"Q42"`` or ``["Q42", "Q43"]``).
-                    Wikidata is always searched by label/description only.
         sources:    List of source keys to query; defaults to
                     ``["mardi", "wikidata"]``.
         not_found:  If ``True`` (default), prepends the option ``{"id": "not found",
                     "text": "new item"}`` to the option list.
+        roots:      Wikidata classes the Wikidata hits must be at or below
+                    (:func:`wikidata_hits`); ``None``: Wikidata is searched by
+                    label only, as before.
 
     Returns:
         List of ``{"id": …, "text": "Label (Description)", "help": source tag}``
@@ -790,9 +813,12 @@ def query_sources(search, item_class=None, sources=None, not_found=True):
         source_functions['mardi'] = lambda s: _cached_search(
             'mardi', s, item_class, lambda t: query_api_per_class(t, item_class, raise_errors=True))
     if 'wikidata' in sources:
-        source_functions['wikidata'] = lambda s: _cached_search(
+        # One search for all dropdowns (its first hits are those of a shorter
+        # one); each filters them by its classes, in parallel with the portal
+        source_functions['wikidata'] = lambda s: wikidata_hits(_cached_search(
             'wikidata', s, None, lambda t: query_api(get_url('wikidata', 'api'), t, raise_errors=True,
-                                                     waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline()))
+                                                     waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline(),
+                                                     limit=WIKIDATA_FILTERED_HITS)), roots)
 
     # Runs on every autocomplete search; close the pool so threads do not pile up
     with ThreadPool(processes=len(source_functions)) as pool:
@@ -857,6 +883,8 @@ def query_sources_with_user_additions(search, project, setup):
                  * ``answer_class``     – MathModDB class key (``Quantity`` or
                    ``QuantityKind``) the user's own quantities must have;
                    quantities without a class yet are offered too
+                 * ``roots``            – Wikidata classes the Wikidata hits
+                   must be at or below (``None``: not filtered)
 
     Returns:
         List of ``{"id": …, "text": …}`` option dicts.
@@ -871,6 +899,7 @@ def query_sources_with_user_additions(search, project, setup):
             item_class=setup['item_class'],
             sources=setup['sources'],
             not_found=False,
+            roots=setup.get('roots'),
         )
     except (requests.exceptions.RequestException, KeyError, ValueError, TypeError) as e:
         logger.error("Query sources failed: %s", e)
