@@ -16,6 +16,10 @@
 
 ::: MaRDMO.queries
 
+## Class Check
+
+::: MaRDMO.class_check
+
 ## Duplicates
 
 ::: MaRDMO.duplicates

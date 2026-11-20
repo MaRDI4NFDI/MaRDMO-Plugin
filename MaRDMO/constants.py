@@ -33,6 +33,9 @@ WIKIDATA = {
     'entity': 'https://www.wikidata.org/entity/',
     'api':    'https://www.wikidata.org/w/api.php',
     'sparql': 'https://query-main.wikidata.org/sparql',
+    # QLever (University of Freiburg): Wikidata, updated live; it answers the
+    # class checks of the dropdowns much faster (#170)
+    'qlever': 'https://qlever.dev/api/wikidata',
 }
 
 DOI_BASE_URL             = 'https://doi.org/'

@@ -10,7 +10,9 @@ from rdmo.options.providers import Provider
 from .getters import get_items
 from .helpers import define_setup
 from .optionsets import PROVIDERS
-from .queries import publication_options, query_sources, query_sources_with_user_additions
+from .queries import (
+    item_by_id, publication_options, query_sources, query_sources_with_user_additions, typed_item_id,
+)
 
 
 class MaRDMOProvider(Provider):
@@ -29,6 +31,7 @@ class MaRDMOProvider(Provider):
         Args:
             project: RDMO project instance (its items of the user's own are offered).
             search:  Search text; nothing is searched below the row's ``min_search`` characters.
+                     ``mardi:Q…`` or ``wikidata:Q…`` offers that item, if it fits.
             user:    Requesting user (unused).
             site:    Current site (unused).
         '''
@@ -39,8 +42,26 @@ class MaRDMOProvider(Provider):
             return publication_options(search)
 
         items = get_items()
-        item_class = ([items[name] for name in config.item_class] if isinstance(config.item_class, list)
-                      else items[config.item_class])
+        # On the portal, the classes with a MaRDI profile are searched by it
+        # (most software has no class), the others by class (#170)
+        without_profile = config.classes_without_profile
+        item_class = ([items[name] for name in without_profile] if isinstance(config.item_class, list)
+                      else items[without_profile[0]]) if without_profile else None
+        profiles = [items[name] for name in config.profiles] or None
+        exclude = [items[name] for name in config.excluded_classes] or None
+        sources = config.search_sources
+        # The Wikidata hits must be at or below these classes, or not of these (#170)
+        on_wikidata = 'wikidata' in (sources or ['wikidata'])
+        roots = config.wikidata_roots if on_wikidata else None
+        noise = config.wikidata_noise if on_wikidata else None
+        # mardi:Q… or wikidata:Q…: that item, if it fits the dropdown (#170)
+        typed = typed_item_id(search)
+        if typed:
+            source, qid = typed
+            if source not in (sources or ['mardi', 'wikidata']):
+                return []
+            return item_by_id(source, qid, classes=[items[name] for name in config.classes], profiles=profiles,
+                              exclude=exclude, roots=roots, noise=noise)
         if config.with_answers:
             return query_sources_with_user_additions(
                 search = search,
@@ -48,15 +69,23 @@ class MaRDMOProvider(Provider):
                 setup = define_setup(
                     query_attributes = config.answers,
                     creation = config.creation,
-                    sources = config.sources,
+                    sources = sources,
                     item_class = item_class,
                     answer_class = config.answer_class,
+                    roots = roots,
+                    noise = noise,
+                    profiles = profiles,
+                    exclude = exclude,
                 ),
             )
         return query_sources(
             search = search,
             item_class = item_class,
-            sources = config.sources,
+            sources = sources,
             not_found = config.not_found,
+            roots = roots,
+            noise = noise,
+            profiles = profiles,
+            exclude = exclude,
         )
 

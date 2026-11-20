@@ -10,16 +10,19 @@ Provides helpers for:
 * ``query_sources`` / ``query_sources_with_user_additions`` – combined
   MaRDI + Wikidata search with optional user-defined entries
 * ``query_api_per_class`` – class-filtered full-text search on the MaRDI portal
+* ``query_api_per_profile`` – search of the MaRDI portal by MaRDI profile (faceted search)
 * ``http_session`` – shared HTTP session for all requests to external services
 '''
 import hashlib
 import json
 import logging
+import re
 import threading
 import time
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
+from itertools import zip_longest
 from multiprocessing.pool import ThreadPool
 
 import requests
@@ -44,6 +47,10 @@ SEARCH_CACHE_TIMEOUT = 5 * 60
 # (search_deadline): the request occupies an RDMO worker all the while
 SEARCH_TIMEOUT = 5
 SEARCH_RETRY_WAIT = 0.5
+# Hits of a Wikidata label search: 10 shown unfiltered; 50 asked for where
+# they are filtered by their classes, which leaves out most of them (#170)
+WIKIDATA_HITS = 10
+WIKIDATA_FILTERED_HITS = 50
 
 # A SPARQL query is given up after this many seconds and retried once on a
 # timeout, a connection error or one of these answers, after the portal's
@@ -326,10 +333,11 @@ def portal_labels(qids, waits=(), deadline=None):
     return labels
 
 
-def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, waits=(), deadline=None):
+def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, waits=(), deadline=None,
+              limit=WIKIDATA_HITS):
     '''Search a Wikibase API endpoint for items whose label matches *search_term*.
 
-    Uses the ``wbsearchentities`` action with ``limit=10``.
+    Uses the ``wbsearchentities`` action with at most *limit* hits (at most 50).
 
     Args:
         api_url:      Full URL of the Wikibase API endpoint.
@@ -340,6 +348,7 @@ def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, 
         waits:        Pauses before retries (see :func:`request_with_retry`);
                       ``()`` searches once.
         deadline:     :func:`time.monotonic` value after which no retry starts.
+        limit:        Number of hits asked for.
 
     Returns:
         List of raw Wikibase search-result dicts; empty list on any error
@@ -356,7 +365,7 @@ def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, 
                 'format': 'json',
                 'language': 'en',
                 'type': 'item',
-                'limit': 10,
+                'limit': limit,
                 'search': search_term
             },
             headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
@@ -758,7 +767,25 @@ def _label_description(option):
     return label.strip().lower(), description.strip()
 
 
-def query_sources(search, item_class=None, sources=None, not_found=True):
+def wikidata_hits(hits, roots, noise=None):
+    '''The Wikidata search *hits* that are at or below *roots*, in their order (#170).
+
+    With *noise* instead of *roots*, those that are not an instance of one of
+    its classes.  Without either, or if the check of their classes fails,
+    the first :data:`WIKIDATA_HITS` hits, unfiltered, as before the check.
+    '''
+    if roots is None and noise is None:
+        return hits[:WIKIDATA_HITS]
+    from .class_check import wikidata_matches  # it uses this module
+    matches = wikidata_matches([hit['id'] for hit in hits if 'id' in hit], roots=roots,
+                               noise=None if roots is not None else noise)
+    if matches is None:
+        return hits[:WIKIDATA_HITS]
+    return [hit for hit in hits if matches.get(hit.get('id'))]
+
+
+def query_sources(search, item_class=None, sources=None, not_found=True, roots=None, noise=None, profiles=None,
+                  exclude=None):
     '''Query one or more knowledge-graph sources for items matching *search*.
 
     Queries the requested sources in parallel (results are cached for five
@@ -771,12 +798,21 @@ def query_sources(search, item_class=None, sources=None, not_found=True):
     Args:
         search:     Free-text search string.
         item_class: QID string or list of QID strings used for class-filtered
-                    search on MaRDI (e.g. ``"Q42"`` or ``["Q42", "Q43"]``).
-                    Wikidata is always searched by label/description only.
+                    search on MaRDI (e.g. ``"Q42"`` or ``["Q42", "Q43"]``);
+                    the classes without a MaRDI profile, where *profiles* is given.
         sources:    List of source keys to query; defaults to
                     ``["mardi", "wikidata"]``.
         not_found:  If ``True`` (default), prepends the option ``{"id": "not found",
                     "text": "new item"}`` to the option list.
+        roots:      Wikidata classes the Wikidata hits must be at or below
+                    (:func:`wikidata_hits`); ``None``: Wikidata is searched by
+                    label only, as before.
+        noise:      Instead of *roots* (where no class fits): Wikidata classes
+                    the Wikidata hits must not be instances of.
+        profiles:   QIDs of MaRDI profiles whose items are searched on the
+                    portal (:func:`query_api_per_profile`), in parallel with
+                    the class search of *item_class* if there is one.
+        exclude:    QIDs of classes whose items the profile search leaves out.
 
     Returns:
         List of ``{"id": …, "text": "Label (Description)", "help": source tag}``
@@ -787,17 +823,33 @@ def query_sources(search, item_class=None, sources=None, not_found=True):
 
     source_functions = {}
     if 'mardi' in sources:
-        source_functions['mardi'] = lambda s: _cached_search(
-            'mardi', s, item_class, lambda t: query_api_per_class(t, item_class, raise_errors=True))
+        if item_class or not profiles:
+            source_functions['mardi'] = lambda s: _cached_search(
+                'mardi', s, item_class, lambda t: query_api_per_class(t, item_class, raise_errors=True))
+        if profiles:
+            # The items with a profile (most have no class), in parallel (#170);
+            # the cached results depend on the classes left out, too
+            scope = list(profiles) + [f'not:{qid}' for qid in exclude or []]
+            source_functions['mardi-profiles'] = lambda s: _cached_search(
+                'mardi-profiles', s, scope, lambda t: query_api_per_profile(t, profiles, exclude, raise_errors=True))
     if 'wikidata' in sources:
-        source_functions['wikidata'] = lambda s: _cached_search(
+        # One search for all dropdowns (its first hits are those of a shorter
+        # one); each filters them by its classes, in parallel with the portal
+        source_functions['wikidata'] = lambda s: wikidata_hits(_cached_search(
             'wikidata', s, None, lambda t: query_api(get_url('wikidata', 'api'), t, raise_errors=True,
-                                                     waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline()))
+                                                     waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline(),
+                                                     limit=WIKIDATA_FILTERED_HITS)), roots, noise)
 
     # Runs on every autocomplete search; close the pool so threads do not pile up
     with ThreadPool(processes=len(source_functions)) as pool:
         results = pool.map(lambda func: func(search), source_functions.values())
     results_dict = dict(zip(source_functions.keys(), results))
+    if 'mardi-profiles' in results_dict:
+        # Taken in turns, so that the first 25 have hits of both searches
+        merged = {}
+        for pair in zip_longest(results_dict.get('mardi', []), results_dict.pop('mardi-profiles')):
+            merged.update({option['id']: option for option in pair if option and option['id'] not in merged})
+        results_dict['mardi'] = list(merged.values())
 
     options = []
     for source in sources:
@@ -857,6 +909,12 @@ def query_sources_with_user_additions(search, project, setup):
                  * ``answer_class``     – MathModDB class key (``Quantity`` or
                    ``QuantityKind``) the user's own quantities must have;
                    quantities without a class yet are offered too
+                 * ``roots``            – Wikidata classes the Wikidata hits
+                   must be at or below (``None``: not filtered)
+                 * ``noise``            – instead of roots: Wikidata classes
+                   the Wikidata hits must not be instances of
+                 * ``profiles``, ``exclude`` – MaRDI profiles whose items the
+                   portal search finds too, classes whose items it leaves out
 
     Returns:
         List of ``{"id": …, "text": …}`` option dicts.
@@ -871,6 +929,10 @@ def query_sources_with_user_additions(search, project, setup):
             item_class=setup['item_class'],
             sources=setup['sources'],
             not_found=False,
+            roots=setup.get('roots'),
+            noise=setup.get('noise'),
+            profiles=setup.get('profiles'),
+            exclude=setup.get('exclude'),
         )
     except (requests.exceptions.RequestException, KeyError, ValueError, TypeError) as e:
         logger.error("Query sources failed: %s", e)
@@ -981,12 +1043,10 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
 
     instance_of  = get_properties()['instance of']
     class_filter = '|'.join(f'{instance_of}={qid}' for qid in item_class)
-    api_url      = get_url('mardi', 'api')
-
     try:
         search_resp = request_with_retry(
             'get',
-            api_url,
+            get_url('mardi', 'api'),
             waits=(SEARCH_RETRY_WAIT,),
             deadline=search_deadline(),
             params={
@@ -1009,21 +1069,82 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
             raise
         return []
 
-    if not hits:
+    return _portal_options([hit['title'].removeprefix('Item:') for hit in hits], raise_errors)
+
+
+def query_api_per_profile(search_term, profiles, exclude=None, raise_errors=False):
+    '''Search the MaRDI portal for items with one of the MaRDI *profiles* (#170).
+
+    The portal's faceted search (``haswbfacet:<profile type>=QID``, several
+    as alternatives) finds the profile pages, also of the many items without
+    a class (most software); each page names its item (page property
+    ``wikibase_item``).  The values of the profile type are not indexed for
+    ``haswbstatement``, so this is the portal's own way.  Items of a class of
+    *exclude* (another class with the same profile) are left out.
+
+    Args:
+        search_term: Free-text search string (appended with ``*`` for prefix matching).
+        profiles:    QIDs of MaRDI profiles.
+        exclude:     QIDs of classes whose items are left out.
+        raise_errors: Raise request errors instead of returning an empty list.
+
+    Returns:
+        Option dicts as :func:`query_api_per_class` returns them.
+    '''
+    profile_type = get_properties()['MaRDI profile type']
+    facets = ' '.join(f'haswbfacet:{profile_type}={qid}' for qid in profiles)
+    try:
+        response = request_with_retry(
+            'get',
+            get_url('mardi', 'api'),
+            waits=(SEARCH_RETRY_WAIT,),
+            deadline=search_deadline(),
+            params={
+                'action':       'query',
+                'generator':    'search',
+                'gsrsearch':    f'{search_term}* {facets}',
+                'gsrnamespace': 0,
+                'gsrlimit':     50,
+                'prop':         'pageprops',
+                'ppprop':       'wikibase_item',
+                'format':       'json',
+            },
+            headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
+            timeout=SEARCH_TIMEOUT,
+        )
+        response.raise_for_status()
+        pages = response.json().get('query', {}).get('pages', {}).values()
+    except requests.exceptions.RequestException as e:
+        logger.error("Profile-based MaRDI search failed: %s", e)
+        if raise_errors:
+            raise
         return []
 
-    qids = [hit['title'].removeprefix('Item:') for hit in hits]
+    # In the order of the search; a page without an item is left out
+    ranked = sorted(pages, key=lambda page: page.get('index', 0))
+    qids = list(dict.fromkeys(page['pageprops']['wikibase_item'] for page in ranked
+                              if page.get('pageprops', {}).get('wikibase_item')))
+    return _portal_options(qids, raise_errors, exclude)
 
+
+def _portal_options(qids, raise_errors=False, exclude=None):
+    '''The options of the portal items *qids*, with their English labels and descriptions.
+
+    With *exclude*, their classes are fetched too, and the items of one of
+    these classes are left out.
+    '''
+    if not qids:
+        return []
     try:
         entity_resp = request_with_retry(
             'get',
-            api_url,
+            get_url('mardi', 'api'),
             waits=(SEARCH_RETRY_WAIT,),
             deadline=search_deadline(),
             params={
                 'action':    'wbgetentities',
                 'ids':       '|'.join(qids),
-                'props':     'labels|descriptions',
+                'props':     'labels|descriptions|claims' if exclude else 'labels|descriptions',
                 'languages': 'en',
                 'format':    'json',
             },
@@ -1038,9 +1159,12 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
             raise
         return []
 
+    instance_of = get_properties()['instance of']
     results = []
     for qid in qids:
         entity      = entities.get(qid, {})
+        if exclude and _classes(entity, instance_of) & set(exclude):
+            continue
         label       = entity.get('labels',       {}).get('en', {}).get('value', qid)
         description = entity.get('descriptions', {}).get('en', {}).get('value',
                                                                         'No Description Provided!')
@@ -1050,3 +1174,73 @@ def query_api_per_class(search_term: str, item_class, raise_errors: bool = False
         })
 
     return results
+
+
+def _classes(entity, instance_of):
+    '''The QIDs of the classes (*instance_of* statements) of a ``wbgetentities`` *entity*.'''
+    return {claim['mainsnak'].get('datavalue', {}).get('value', {}).get('id')
+            for claim in entity.get('claims', {}).get(instance_of, [])}
+
+
+# A search text that names an item, ``mardi:Q123`` or ``wikidata:Q42``; the
+# prefix in any case, spaces around the colon allowed (#170)
+TYPED_ITEM_ID = re.compile(r'\s*(mardi|wikidata)\s*:\s*(q[1-9][0-9]*)\s*', re.IGNORECASE)
+
+
+def typed_item_id(search):
+    '''``(source, QID)`` if *search* names an item (:data:`TYPED_ITEM_ID`), else ``None``.'''
+    match = TYPED_ITEM_ID.fullmatch(search or '')
+    return (match[1].lower(), match[2].upper()) if match else None
+
+
+def item_by_id(source, qid, classes=None, profiles=None, exclude=None, roots=None, noise=None):
+    '''The option of the item *qid* of *source* named in a dropdown, if it fits it; ``[]`` otherwise (#170).
+
+    The item fits as a search hit would: on the portal if it is of one of
+    *classes* or has one of *profiles* and is not of a class of *exclude*; on
+    Wikidata if it is at or below *roots* or not of a class of *noise*
+    (:mod:`~MaRDMO.class_check`; if the check fails, as unfiltered hits do).
+    A merged item is offered as the item it was merged into; an item that
+    does not exist is not offered.
+
+    Args:
+        source:   ``'mardi'`` or ``'wikidata'``.
+        qid:      The item's QID.
+        classes:  QIDs of the dropdown's portal classes (all of them).
+        profiles: QIDs of the MaRDI profiles of its classes.
+        exclude:  QIDs of classes whose items it leaves out.
+        roots:    Wikidata classes its Wikidata hits must be at or below.
+        noise:    Instead of *roots*: Wikidata classes they must not be instances of.
+
+    Returns:
+        ``[option]`` or ``[]``.
+    '''
+    try:
+        entities = _entities(source, [qid], 'labels|descriptions|claims' if source == 'mardi'
+                             else 'labels|descriptions', deadline=search_deadline())
+    except (requests.exceptions.RequestException, ValueError) as e:
+        logger.error("Lookup of %s:%s failed: %s", source, qid, e)
+        return []
+    entity = entities.get(qid) or next(iter(entities.values()), {})
+    if not entity or 'missing' in entity:
+        return []
+    # wbgetentities answers a merged item with the one it was merged into
+    target = entity.get('id', qid)
+
+    if source == 'mardi':
+        properties = get_properties()
+        found = _classes(entity, properties['instance of'])
+        if not (found & set(classes or []) or _classes(entity, properties['MaRDI profile type']) & set(profiles or [])):
+            return []
+        if found & set(exclude or []):
+            return []
+    elif roots is not None or noise is not None:
+        from .class_check import wikidata_matches  # it uses this module
+        matches = wikidata_matches([target], roots=roots, noise=None if roots is not None else noise)
+        if matches is not None and not matches.get(target):
+            return []
+
+    label = entity.get('labels', {}).get('en', {}).get('value', target)
+    description = entity.get('descriptions', {}).get('en', {}).get('value', 'No Description Provided!')
+    item_id, text = f'{source}:{target}', item_text(label, description)
+    return [{'id': item_id, 'text': text, 'help': option_help(item_id, text)}]

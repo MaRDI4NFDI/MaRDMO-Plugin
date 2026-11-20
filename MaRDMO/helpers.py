@@ -418,7 +418,7 @@ def basic_list(value):
     ]
 
 def define_setup(query_attributes, creation=False, query_id='', sources=None, item_class=None,
-                 answer_class=None):
+                 answer_class=None, roots=None, noise=None, profiles=None, exclude=None):
     """Build a query-setup dict used by provider ``get_options`` methods.
 
     Args:
@@ -434,6 +434,14 @@ def define_setup(query_attributes, creation=False, query_id='', sources=None, it
                           restrict the MaRDI class-based search.
         answer_class:     MathModDB class key (``Quantity`` or ``QuantityKind``)
                           the user's own quantities must have (optional).
+        roots:            Wikidata classes the Wikidata hits must be at or
+                          below (``None``: not filtered, #170).
+        noise:            Wikidata classes the Wikidata hits must not be
+                          instances of, where no roots fit (``None``: none).
+        profiles:         QIDs of MaRDI profiles whose items the portal
+                          search finds too (``None``: none).
+        exclude:          QIDs of classes whose items the portal search
+                          leaves out (``None``: none).
 
     Returns:
         Dict consumed by :func:`~MaRDMO.queries.query_sources_with_user_additions`.
@@ -445,6 +453,10 @@ def define_setup(query_attributes, creation=False, query_id='', sources=None, it
         'sources': sources,
         'item_class': item_class,
         'answer_class': answer_class,
+        'roots': roots,
+        'noise': noise,
+        'profiles': profiles,
+        'exclude': exclude,
     }
 
 def nested_set(data, path, entry):

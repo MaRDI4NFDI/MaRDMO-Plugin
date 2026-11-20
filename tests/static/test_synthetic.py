@@ -37,9 +37,12 @@ def answers(name):
 
 
 def sources(provider):
-    '''The sources of items the dropdown *provider* offers: ``mardi``, ``wikidata``, ``user``.'''
+    '''The sources of items the dropdown *provider* offers: ``mardi``, ``wikidata``, ``user``.
+
+    The sources it searches: not Wikidata where it has nothing for the class (process steps, #170).
+    '''
     search = PROVIDERS[provider]
-    offered = set(search.sources or ('mardi', 'wikidata'))
+    offered = set(search.search_sources or ('mardi', 'wikidata'))
     if search.not_found or search.with_answers:
         offered.add('user')
     return offered

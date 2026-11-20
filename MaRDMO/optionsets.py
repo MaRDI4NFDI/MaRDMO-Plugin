@@ -14,11 +14,161 @@ this module must not import RDMO or MaRDMO models::
 
 Item classes are names of ``data/items.json`` (a list: several classes);
 they are looked up when searching, so the provider's Wikibase is used.
+Wikidata hits are filtered by the classes of :data:`WIKIDATA_ROOTS` (#170).
 '''
 from dataclasses import dataclass
 from typing import Optional, Union
 
 from django.utils.translation import gettext_lazy as _
+
+# The Wikidata classes of each item class (#170): a dropdown offers only the
+# Wikidata items that are an instance or subclass of something at or below
+# them.  They are Wikidata's, the same for every portal.  Mathematical
+# operators are quantities in MathModDB, so the quantity providers offer them.
+QUANTITY_ROOTS = [
+    'Q309314',     # quantity
+    'Q110653654',  # kind of quantity
+    'Q131030',     # operator
+    'Q1058681',    # differential operator
+    'Q186509',     # mathematical constant
+    'Q719375',     # operand
+    'Q200726',     # probability distribution
+    'Q11348',      # function
+]
+WIKIDATA_ROOTS = {
+    'mathematical model': ['Q486902'],                         # mathematical model
+    'formula': [
+        'Q976981',     # formula
+        'Q6498784',    # mathematical expression
+        'Q11345',      # equation
+        'Q214070',     # physical law
+        'Q408891',     # scientific law
+        'Q18382796',   # boundary condition
+        'Q1339342',    # empirical relationship
+    ],
+    'quantity': QUANTITY_ROOTS,
+    'kind of quantity': QUANTITY_ROOTS,
+    'academic discipline': ['Q1047113'],                       # field of study
+    'computational task': ['Q140136486'],                      # computational task
+    'algorithm': ['Q8366'],                                    # algorithm
+    'algorithmic task': ['Q3435924'],                          # computational problem
+    'benchmark': ['Q816747'],                                  # benchmark
+    'software': ['Q7397'],                                     # software
+    'programming language': ['Q9143'],                         # programming language
+    'computer hardware': ['Q3966', 'Q68'],                     # computer hardware, computer
+    'CPU model': ['Q122967152', 'Q5297'],                      # CPU model, microprocessor
+    'data set': ['Q1172284'],                                  # data set
+    'method': [                                                # experimental and measuring methods
+        'Q1924397',    # measurement technique
+        'Q4751159',    # analytical chemical technique
+        'Q3247516',    # lab technique
+        'Q3331334',    # experimentation
+    ],
+    'research tool': [
+        'Q110994345',  # research tool
+        'Q3099911',    # scientific instrument
+        'Q2041172',    # measuring instrument
+        'Q1751850',    # optical instrument
+    ],
+    'research workflow': ['Q115682347'],                       # research workflow
+}
+# The MaRDI profile of each item class (names of data/items.json): the portal
+# is searched by the profiles of a row's classes, as the portal's own search
+# does it, since many items have only the profile (most software, R and Julia
+# packages); the curated items (MathModDB, MathAlgoDB) all have it.  Classes
+# without a profile are searched by class.  A profile of several classes
+# leaves out the items of the classes a row does not search
+# (Search.excluded_classes)
+PROFILES = {
+    'mathematical model': 'MaRDI model profile',
+    'formula': 'MaRDI formula profile',
+    'quantity': 'MaRDI quantity profile',
+    'kind of quantity': 'MaRDI quantity profile',
+    'academic discipline': 'MaRDI research field profile',
+    'research problem': 'MaRDI research problem profile',
+    'computational task': 'MaRDI task profile',
+    'algorithmic task': 'MaRDI task profile',
+    'algorithm': 'MaRDI algorithm profile',
+    'software': 'MaRDI software profile',
+    'data set': 'MaRDI data set profile',
+    'research workflow': 'MaRDI workflow profile',
+}
+
+# Item classes Wikidata has nothing for: their providers search the portal only
+NO_WIKIDATA = {'process step'}
+# Item classes no Wikidata class fits (research problems are phenomena,
+# processes, …): their Wikidata hits are filtered by WIKIDATA_NOISE instead
+NOISE_FILTERED = {'research problem'}
+# What is never a research problem: an item that is an instance of one of
+# these classes or of a subclass is left out.  Deliberately narrow classes
+# (a broad one like "work" or "concept" would leave out real ones); measured
+# against the research problems' Wikidata twins on the portal, none of which
+# is left out (dev-tests/spikes/wikidata_noise.py)
+WIKIDATA_NOISE = [
+    # people and names
+    'Q5',          # human
+    'Q202444',     # given name
+    'Q101352',     # family name
+    'Q28640',      # profession
+    'Q12737077',   # occupation
+    # living things and molecules
+    'Q16521',      # taxon
+    'Q7187',       # gene
+    'Q8054',       # protein
+    # writings
+    'Q47461344',   # written work
+    'Q13442814',   # scholarly article
+    'Q7725634',    # literary work
+    'Q571',        # book
+    'Q1980247',    # chapter
+    'Q3331189',    # version, edition or translation
+    'Q1266946',    # thesis
+    'Q13433827',   # encyclopedia article
+    'Q212971',     # Request for Comments
+    'Q10870555',   # report
+    'Q1002697',    # periodical
+    'Q5633421',    # scientific journal
+    'Q737498',     # academic journal
+    'Q41298',      # magazine
+    'Q253623',     # patent
+    'Q43305660',   # United States patent
+    'Q30612',      # clinical trial
+    # works of art and media
+    'Q11424',      # film
+    'Q5398426',    # television series
+    'Q21191270',   # television series episode
+    'Q2431196',    # audiovisual work
+    'Q482994',     # album
+    'Q134556',     # single
+    'Q7366',       # song
+    'Q7302866',    # audio track
+    'Q7889',       # video game
+    'Q7397',       # software
+    'Q35127',      # website
+    'Q3305213',    # painting
+    'Q860861',     # sculpture
+    'Q2668072',    # collection
+    # places and things
+    'Q486972',     # human settlement
+    'Q79007',      # street
+    'Q41176',      # building
+    'Q13226383',   # facility
+    'Q4022',       # river
+    'Q8502',       # mountain
+    'Q3863',       # asteroid
+    'Q11446',      # ship
+    # organizations and events
+    'Q43229',      # organization
+    'Q4830453',    # business
+    'Q31855',      # research institute
+    'Q3918',       # university
+    'Q2020153',    # academic conference
+    'Q618779',     # award
+    # Wikimedia pages
+    'Q4167410',    # Wikimedia disambiguation page
+    'Q4167836',    # Wikimedia category
+    'Q13406463',   # Wikimedia list article
+]
 
 
 @dataclass(frozen=True)
@@ -58,6 +208,65 @@ class Search:
     def with_answers(self):
         '''Whether the search includes the project's own items (and creation).'''
         return self.answers is not None or self.creation
+
+    @property
+    def classes(self):
+        '''The item class names, as a list.'''
+        return [self.item_class] if isinstance(self.item_class, str) else list(self.item_class)
+
+    @property
+    def profiles(self):
+        '''The MaRDI profiles of the classes (names, sorted): the portal is searched by them.'''
+        return sorted({PROFILES[name] for name in self.classes if name in PROFILES})
+
+    @property
+    def classes_without_profile(self):
+        '''The classes without a MaRDI profile: searched on the portal by class.'''
+        return [name for name in self.classes if name not in PROFILES]
+
+    @property
+    def excluded_classes(self):
+        '''The classes that share a profile of the row but are not searched by it (names, sorted).
+
+        The algorithmic tasks' dropdown leaves out computational tasks, which
+        have the same profile; one of quantities and quantity kinds leaves
+        out nothing.  An item without a class but with the profile is found.
+        '''
+        return sorted({name for name, profile in PROFILES.items()
+                       if profile in self.profiles and name not in self.classes})
+
+    @property
+    def search_sources(self):
+        '''The sources searched: without Wikidata if it has nothing for any of the classes.'''
+        if all(name in NO_WIKIDATA for name in self.classes):
+            return [source for source in (self.sources or ['mardi', 'wikidata']) if source != 'wikidata']
+        return self.sources
+
+    @property
+    def noise_filtered(self):
+        '''Whether the Wikidata hits are filtered by :data:`WIKIDATA_NOISE` instead of roots.
+
+        No row has a class filtered by noise together with one that has roots
+        (tests/unit/test_wikidata_roots.py); such a row would be filtered by noise.
+        '''
+        return any(name in NOISE_FILTERED for name in self.classes)
+
+    @property
+    def wikidata_roots(self):
+        '''The Wikidata classes the hits must be at or below (sorted); ``None``: no roots.
+
+        The roots of all classes of the row; a class Wikidata has nothing for
+        adds none.  None where the hits are filtered by noise.
+        '''
+        if self.noise_filtered:
+            return None
+        roots = {root for name in self.classes if name not in NO_WIKIDATA for root in WIKIDATA_ROOTS[name]}
+        return sorted(roots) or None
+
+    @property
+    def wikidata_noise(self):
+        '''The Wikidata classes the hits must not be instances of; ``None``: not filtered by noise.'''
+        return WIKIDATA_NOISE if self.noise_filtered else None
 
 
 PROVIDERS = {

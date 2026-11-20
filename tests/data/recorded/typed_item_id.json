@@ -1,0 +1,78 @@
+[
+ {
+  "key": "[\"GET\", \"https://www.wikidata.org/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q11423\"], [\"languages\", \"en\"], [\"props\", \"descriptions|labels\"]], null]",
+  "url": "https://www.wikidata.org/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"entities\":{\"Q11423\":{\"type\":\"item\",\"id\":\"Q11423\",\"labels\":{\"en\":{\"language\":\"en\",\"value\":\"mass\"}},\"descriptions\":{\"en\":{\"language\":\"en\",\"value\":\"property of matter to resist changes of the state of motion and to attract other bodies\"}}}},\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbgetentities",
+    "ids": "Q11423",
+    "props": "labels|descriptions",
+    "languages": "en",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"GET\", \"https://www.wikidata.org/w/api.php\", [[\"action\", \"wbgetentities\"], [\"format\", \"json\"], [\"ids\", \"Q169478\"], [\"languages\", \"en\"], [\"props\", \"descriptions|labels\"]], null]",
+  "url": "https://www.wikidata.org/w/api.php",
+  "status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "body": "{\"entities\":{\"Q169478\":{\"type\":\"item\",\"id\":\"Q169478\",\"labels\":{\"en\":{\"language\":\"en\",\"value\":\"MATLAB\"}},\"descriptions\":{\"en\":{\"language\":\"en\",\"value\":\"numerical computing environment\"}}}},\"success\":1}",
+  "request": {
+   "method": "GET",
+   "params": {
+    "action": "wbgetentities",
+    "ids": "Q169478",
+    "props": "labels|descriptions",
+    "languages": "en",
+    "format": "json"
+   },
+   "data": null,
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://qlever.dev/api/wikidata\", [], \"PREFIX wd: <http://www.wikidata.org/entity/> PREFIX wdt: <http://www.wikidata.org/prop/direct/> SELECT DISTINCT ?item WHERE { VALUES ?item { wd:Q11423 } { ?item wdt:P31 ?class . } UNION { ?item wdt:P279 ?class . } ?class wdt:P279* ?root . VALUES ?root { wd:Q7397 } }\"]",
+  "url": "https://qlever.dev/api/wikidata",
+  "status": 200,
+  "content_type": "application/sparql-results+json",
+  "body": "{\"head\":{\"vars\":[\"item\"]},\"results\":{\"bindings\":[]},\"meta\":{\"query-time-ms\":1770,\"result-size-total\":0,\"warnings\":[]}}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "PREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nSELECT DISTINCT ?item WHERE {\n  VALUES ?item { wd:Q11423 }\n  { ?item wdt:P31 ?class . } UNION { ?item wdt:P279 ?class . }\n  ?class wdt:P279* ?root .\n  VALUES ?root { wd:Q7397 }\n}",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ },
+ {
+  "key": "[\"POST\", \"https://qlever.dev/api/wikidata\", [], \"PREFIX wd: <http://www.wikidata.org/entity/> PREFIX wdt: <http://www.wikidata.org/prop/direct/> SELECT DISTINCT ?item WHERE { VALUES ?item { wd:Q169478 } { ?item wdt:P31 ?class . } UNION { ?item wdt:P279 ?class . } ?class wdt:P279* ?root . VALUES ?root { wd:Q7397 } }\"]",
+  "url": "https://qlever.dev/api/wikidata",
+  "status": 200,
+  "content_type": "application/sparql-results+json",
+  "body": "{\"head\":{\"vars\":[\"item\"]},\"results\":{\"bindings\":[{\"item\":{\"type\":\"uri\",\"value\":\"http://www.wikidata.org/entity/Q169478\"}}]},\"meta\":{\"query-time-ms\":984,\"result-size-total\":1,\"warnings\":[]}}",
+  "request": {
+   "method": "POST",
+   "params": {},
+   "data": "PREFIX wd: <http://www.wikidata.org/entity/>\nPREFIX wdt: <http://www.wikidata.org/prop/direct/>\nSELECT DISTINCT ?item WHERE {\n  VALUES ?item { wd:Q169478 }\n  { ?item wdt:P31 ?class . } UNION { ?item wdt:P279 ?class . }\n  ?class wdt:P279* ?root .\n  VALUES ?root { wd:Q7397 }\n}",
+   "headers": {
+    "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
+    "Content-Type": "application/sparql-query; charset=UTF-8",
+    "Accept": "application/sparql-results+json"
+   }
+  }
+ }
+]
