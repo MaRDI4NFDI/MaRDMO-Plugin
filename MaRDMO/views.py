@@ -1,6 +1,6 @@
 '''Django views for the MaRDMO plugin.
 
-Provides the three AJAX endpoints used by the questionnaire frontend to
+Provides the endpoints used by the questionnaire frontend to
 communicate with background workers, plus the ``render_preview`` helper
 used by export providers to build HTML previews.
 
@@ -10,6 +10,7 @@ Provides:
 - ``show_progress``  — HTML view that renders a live progress page for a running task
 - ``show_success``   — HTML view that renders the completed-task result page
 - ``reuse_portal_item`` — POST endpoint of the preview's "Use this item" (#141)
+- ``check_tex``      — POST endpoint: the portal's verdict on a formula typed into the interview (#190)
 - ``render_preview`` — helper that renders a Jinja2 template with questionnaire answers
 
 Success page (``show_success``)
@@ -435,3 +436,31 @@ def reuse_portal_item(request, project_id):
     reuse(project, row.duplicate, row.portal_label, row.portal_description)
     # Back to the box at the top: the preview runs its checks again, the item is no longer listed
     return redirect(reverse('project_export', args=[project.pk, export_format]) + '#before-export')
+
+
+# Longer texts are no formulas typed into the interview; they are not sent to the portal
+TEX_CHECK_MAX_LENGTH = 4000
+
+
+@login_required
+@require_POST
+def check_tex(request):
+    """The MaRDI Portal's verdict on a formula typed into the interview (#190).
+
+    The interview's script (``MaRDMO/js/math-preview.js``) posts ``tex``
+    after a pause in typing.  The verdict comes from the portal's TeX check,
+    as for the checks and the export, and with their cache
+    (:func:`~MaRDMO.tex_check.check_formula`).  Only for logged-in users and
+    with Django's CSRF token: the interview has both; the URL is not a way
+    to the portal's checker for anyone else.
+
+    Returns:
+        JSON ``{"state": "valid" | "invalid" | "unverified", "message": …,
+        "checked": …}``; HTTP 400 without a formula or for a text too long.
+    """
+    from .tex_check import check_formula
+
+    tex = request.POST.get('tex', '')
+    if not tex.strip() or len(tex) > TEX_CHECK_MAX_LENGTH:
+        return JsonResponse({'error': 'tex'}, status=400)
+    return JsonResponse(check_formula(tex))
