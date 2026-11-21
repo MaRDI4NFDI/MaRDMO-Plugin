@@ -4,6 +4,10 @@
 
 ::: MaRDMO.main
 
+## Catalogs (table)
+
+::: MaRDMO.catalogs
+
 ## OAuth2
 
 ::: MaRDMO.oauth2

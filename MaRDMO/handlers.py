@@ -9,6 +9,7 @@ entity in the questionnaire section.
 '''
 
 from .adders import add_entities, add_new_entities
+from .catalogs import ALGORITHM, MODEL, WORKFLOW, catalog_of
 from .helpers import extract_parts
 from .ids import is_item_id
 from .models import Relatant
@@ -69,29 +70,12 @@ _WORKFLOW_PREFIX_TO_FILL = {
     'PS': ('Process Step', '_fill_process_step_batch'),
 }
 
-# Dispatch table: catalog suffix → (get_uri_prefix_map_fn, prefix_map, get_info_fn)
+# Dispatch table: kind of catalog (MaRDMO.catalogs) → (get_uri_prefix_map_fn, prefix_map, get_info_fn)
 # All catalogs accept both 'mardi' and 'wikidata' as hydration sources.
-_CATALOG_DISPATCH = {
-    'mardmo-model-catalog': (
-        get_uri_prefix_map_model,
-        _MODEL_PREFIX_TO_FILL,
-        _get_model_info
-    ),
-    'mardmo-model-basics-catalog': (
-        get_uri_prefix_map_model,
-        _MODEL_PREFIX_TO_FILL,
-        _get_model_info
-    ),
-    'mardmo-interdisciplinary-workflow-catalog': (
-        get_uri_prefix_map_workflow,
-        _WORKFLOW_PREFIX_TO_FILL,
-        _get_workflow_info
-    ),
-    'mardmo-algorithm-catalog': (
-        get_uri_prefix_map_algorithm,
-        _ALGO_PREFIX_TO_FILL,
-        _get_algo_info
-    ),
+_KIND_DISPATCH = {
+    MODEL:     (get_uri_prefix_map_model,     _MODEL_PREFIX_TO_FILL,    _get_model_info),
+    WORKFLOW:  (get_uri_prefix_map_workflow,  _WORKFLOW_PREFIX_TO_FILL, _get_workflow_info),
+    ALGORITHM: (get_uri_prefix_map_algorithm, _ALGO_PREFIX_TO_FILL,     _get_algo_info),
 }
 
 
@@ -119,9 +103,8 @@ class Information:  # pylint: disable=too-few-public-methods
             instance: RDMO Value instance carrying ``project``, ``text``,
                       ``external_id``, and ``attribute`` attributes.
         '''
-        catalog_key = str(instance.project.catalog).rsplit('/', maxsplit=1)[-1]
-
-        dispatch = _CATALOG_DISPATCH.get(catalog_key)
+        catalog = catalog_of(instance.project)
+        dispatch = _KIND_DISPATCH.get(catalog.kind) if catalog else None
         if dispatch is None:
             return
         get_uri_prefix_map, prefix_map, get_info = dispatch
@@ -172,5 +155,5 @@ class Information:  # pylint: disable=too-few-public-methods
             question_id       = config["question_id"],
             item_type         = item_type,
             batch_fill_method = batch_fn,
-            catalog           = catalog_key,
+            catalog           = catalog.name,
         )

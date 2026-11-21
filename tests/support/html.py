@@ -20,7 +20,7 @@ from html.parser import HTMLParser
 from django.template.loader import render_to_string
 
 from MaRDMO import main
-from MaRDMO.constants import CATALOG_TEMPLATE_MAP
+from MaRDMO.catalogs import catalog_of
 from MaRDMO.getters import get_item_url
 
 PREVIEW_URL = '/projects/{}/export/wikibase/'
@@ -180,8 +180,7 @@ def rendered_preview(project, step=None):
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = project, None
     answers, options = provider.get_post_data(step) if step else provider.get_post_data()
-    slug = str(project.catalog).rsplit('/', 1)[1]
-    html = render_to_string(CATALOG_TEMPLATE_MAP[slug], {
+    html = render_to_string(catalog_of(project).template, {
         'answers': answers, 'option': options, 'title': project.title,
         'mardiURI': get_item_url('mardi'), 'wikidataURI': get_item_url('wikidata')})
     return answers, html

@@ -35,3 +35,21 @@ catalog.  The numbered fields are explained in the sections that follow.
 ```
 
 **⑥ Sections** — Add existing sections to this catalog or create new ones (see [How to Create a New Section](add-section.md)).
+
+## In MaRDMO
+
+A catalog of the questionnaire is a MaRDMO catalog if `MaRDMO/catalogs.py`
+has an entry for it: its name (the URI path), its kind (model, algorithm,
+workflow or search), the question set it is answered with, the template of
+its preview, the class that prepares its export and the method that checks
+it, and whether it has only part of the questions of its question set (as
+the model basics).  The preview, the export, the interview's handlers and
+the checks look the catalog up there.
+
+A documenting catalog also needs its rows in the tables keyed by catalog:
+the handlers of its questions and their validators (`MaRDMO/builders.py`)
+and the relations of its publications
+(`MaRDMO/publication/constants.py`, `ROUTING`).  `tests/unit/test_catalogs.py`
+names what is missing: a catalog of the questionnaire without entry, a
+template or class that does not exist, or a table without a row for a
+catalog.

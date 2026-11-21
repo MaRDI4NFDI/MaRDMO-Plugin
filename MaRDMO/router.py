@@ -51,12 +51,7 @@ from django.dispatch import receiver
 from django.urls import Resolver404, resolve
 from rdmo.projects.models import Project, Value
 from rdmo.projects.signals import value_created, value_updated
-from .constants import (
-    CATALOG_MODEL_NAME,
-    CATALOG_MODEL_BASICS_NAME,
-    CATALOG_ALGORITHM_NAME,
-    CATALOG_WORKFLOW_NAME,
-)
+from .catalogs import catalog_of
 from .helpers import batched_writes, is_internal_write
 from .ids import assign_id, follow_tab, give_copies_their_ids, id_attributes, is_tab_id, remove_references, sync_text
 from .builders import (
@@ -69,20 +64,10 @@ HANDLER_MAP           = build_post_save_handler_set()
 DELETE_HANDLER_MAP    = build_post_delete_handler_set()
 PRESAVE_VALIDATOR_MAP = build_presave_validator_map()
 
-_MARDMO_CATALOGS = (
-    CATALOG_MODEL_NAME,
-    CATALOG_MODEL_BASICS_NAME,
-    CATALOG_ALGORITHM_NAME,
-    CATALOG_WORKFLOW_NAME,
-)
-
-
 def _catalog_name(instance):
-    '''Return the short catalog slug for *instance*, or ``None`` if not a MaRDMO catalog.'''
-    catalog = getattr(instance.project, "catalog", None)
-    if not catalog or not str(catalog).endswith(_MARDMO_CATALOGS):
-        return None
-    return str(catalog).rsplit("/", maxsplit=1)[-1]
+    '''Return the name of *instance*'s catalog if it is a documenting MaRDMO catalog, else ``None``.'''
+    catalog = catalog_of(instance.project)
+    return catalog.name if catalog and catalog.documents else None
 
 
 # Path of the request handled in the current context, set by request_started
@@ -131,7 +116,7 @@ def _forget_request_path(sender, **kwargs):  # pylint: disable=unused-argument
     if match.view_name != _COPY_SET_VIEW:
         return
     project = Project.objects.filter(pk=match.kwargs.get('parent_lookup_project')).select_related('catalog').first()
-    if project is not None and str(project.catalog).endswith(_MARDMO_CATALOGS):
+    if project is not None and getattr(catalog_of(project), 'documents', False):
         give_copies_their_ids(project.pk)
 
 

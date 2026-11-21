@@ -18,10 +18,7 @@ from django.utils.translation import gettext as _, gettext_noop as N_
 from ..model.constants import SECTION_MAP as SECTION_MAP_MODEL
 from ..algorithm.constants import SECTION_MAP as SECTION_MAP_ALGO
 from ..workflow.constants import SECTION_MAP as SECTION_MAP_WORKFLOW
-from ..constants import (
-    CATALOG_ALGORITHM, CATALOG_MODEL,
-    CATALOG_MODEL_BASICS, CATALOG_WORKFLOW,
-)
+from ..catalogs import ALGORITHM, MODEL, WORKFLOW, catalog_of
 from ..getters import get_mathmoddb, get_mathalgodb
 from ..getters import get_options
 from ..helpers import find_reference
@@ -103,6 +100,12 @@ def _snak_texts(snak):
     if 'id' in value:
         return {value['id']}
     return set()
+
+
+def _kind(catalog):
+    '''The kind of *catalog* (a catalog URI, :mod:`MaRDMO.catalogs`), or ``None`` if it is not MaRDMO's.'''
+    entry = catalog_of(catalog)
+    return entry.kind if entry else None
 
 
 class ChecksBase:
@@ -405,16 +408,17 @@ class ChecksBase:
             data:    Top-level answers dict.
             catalog: Active catalog URI suffix.
         '''
-        if catalog == CATALOG_ALGORITHM:
+        kind = _kind(catalog)
+        if kind == ALGORITHM:
             section_map = SECTION_MAP_ALGO
             okeys = ('algorithm', 'problem', 'software', 'benchmark', 'publication')
-        elif catalog in (CATALOG_MODEL, CATALOG_MODEL_BASICS):
+        elif kind == MODEL:
             section_map = SECTION_MAP_MODEL
             okeys = (
                 'model', 'formulation', 'quantity', 'task',
                 'problem', 'field', 'publication'
             )
-        elif catalog == CATALOG_WORKFLOW:
+        elif kind == WORKFLOW:
             section_map = SECTION_MAP_WORKFLOW
             okeys = (
                 'workflow', 'processstep', 'algorithm', 'software',
@@ -510,10 +514,11 @@ class ChecksBase:
             data:    Top-level answers dict.
             catalog: Active catalog URI suffix.
         '''
-        if catalog in (CATALOG_MODEL, CATALOG_MODEL_BASICS):
+        kind = _kind(catalog)
+        if kind == MODEL:
             section_map = SECTION_MAP_MODEL
             okeys = ('field', 'problem', 'model', 'formulation', 'quantity', 'task')
-        elif catalog == CATALOG_WORKFLOW:
+        elif kind == WORKFLOW:
             section_map = SECTION_MAP_WORKFLOW
             okeys = ('workflow',)
         else:
@@ -601,7 +606,7 @@ class ChecksBase:
                     )
                 )
 
-            if catalog == CATALOG_ALGORITHM:
+            if _kind(catalog) == ALGORITHM:
                 # Algorithm mode: optional links, but at least one required
                 if ivalue.get('RelationA') or ivalue.get('RelationBS'):
                     self._check_flexible(
@@ -623,7 +628,7 @@ class ChecksBase:
                 else:
                     self._missing(N_('Publication'), page_name, _('Missing Algorithm, Benchmark, or Software'),
                                   'RelationA')
-            elif catalog == CATALOG_WORKFLOW:
+            elif _kind(catalog) == WORKFLOW:
                 # Workflow mode: at least one of Algorithm, Hardware/Software, or Entity required
                 if ivalue.get('RelationA') or ivalue.get('RelationHS') or ivalue.get('RelationP'):
                     self._check_flexible(

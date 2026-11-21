@@ -51,14 +51,6 @@ ISSN_BASE_URL            = 'http://www.issn.cc/'
 # all instances, since the check does not depend on the target portal's data
 TEX_CHECK_URL            = 'https://portal.mardi4nfdi.de/w/rest.php/math/v0/check/tex'
 
-# Mapping from catalog slug to preview template
-CATALOG_TEMPLATE_MAP = {
-    CATALOG_MODEL_NAME:        'MaRDMO/preview_model.html',
-    CATALOG_MODEL_BASICS_NAME: 'MaRDMO/preview_model_basics.html',
-    CATALOG_ALGORITHM_NAME:    'MaRDMO/preview_algorithm.html',
-    CATALOG_WORKFLOW_NAME:     'MaRDMO/preview_workflow.html',
-}
-
 #MaRDMO Section Mapt (Base)
 SECTION_MAP_BASE = {
     'model':       N_('Mathematical Model'),

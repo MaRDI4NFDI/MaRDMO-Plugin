@@ -26,7 +26,8 @@ from django.template.loader import render_to_string
 
 from MaRDMO import main
 from MaRDMO.checks import Checks
-from MaRDMO.constants import BASE_URI, CATALOG_TEMPLATE_MAP
+from MaRDMO.catalogs import catalog_of
+from MaRDMO.constants import BASE_URI
 from MaRDMO.problems import attach
 from tests.db.conftest import select
 from tests.db.test_export import imported
@@ -70,11 +71,11 @@ def _compare(documentation, language):
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = documentation, None
     answers, options = provider.get_post_data()
-    slug = str(documentation.catalog).rsplit('/', 1)[1]
-    problems = getattr(Checks(), main._CATALOG_PREPARE_MAP[slug][2])(
+    catalog = catalog_of(documentation)
+    problems = getattr(Checks(), catalog.check)(
         project=documentation, data=answers, catalog=str(documentation.catalog))
     attach(answers, problems)
-    page = render_to_string(CATALOG_TEMPLATE_MAP[slug], {'answers': answers, 'option': options, 'title': 'x'})
+    page = render_to_string(catalog.template, {'answers': answers, 'option': options, 'title': 'x'})
     wrong = []
     for problem in problems:
         if language == 'de' and problem.section not in GERMAN:
