@@ -13,6 +13,7 @@ Provides:
   (model + algorithm + workflow + publication)
 '''
 
+from .catalogs import DOCUMENTING
 from .constants import (
     BASE_URI,
     CATALOG_MODEL_NAME,
@@ -236,20 +237,8 @@ def build_post_delete_handler_set():
 
     pub_set_uri = f"{base}{questions_publication['Publication']['uri']}"
 
-    return {
-        CATALOG_MODEL_NAME: {
-            pub_set_uri: publication.publication_delete,
-        },
-        CATALOG_MODEL_BASICS_NAME: {
-            pub_set_uri: publication.publication_delete,
-        },
-        CATALOG_ALGORITHM_NAME: {
-            pub_set_uri: publication.publication_delete,
-        },
-        CATALOG_WORKFLOW_NAME: {
-            pub_set_uri: publication.publication_delete,
-        },
-    }
+    # Every documenting catalog has publications
+    return {name: {pub_set_uri: publication.publication_delete} for name in DOCUMENTING}
 
 
 def build_presave_validator_map():
