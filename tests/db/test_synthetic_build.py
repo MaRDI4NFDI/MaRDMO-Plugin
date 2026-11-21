@@ -29,6 +29,7 @@ from rdmo.projects.serializers.export import ProjectSerializer
 from rdmo.questions.models import Catalog as RDMOCatalog
 
 from MaRDMO import main, pipeline, queries
+from MaRDMO.catalogs import catalog_of
 from MaRDMO.duplicates import preview_duplicates, reuse
 from MaRDMO.problems import report_lines
 from tools.synthetic.catalog import Catalog
@@ -68,7 +69,8 @@ def preview(project):
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = project, None
     answers, _ = provider.get_post_data('preview')
-    _, prepare_class, check = main._CATALOG_PREPARE_MAP[str(project.catalog).rsplit('/', 1)[1]]
+    catalog = catalog_of(project)
+    prepare_class, check = catalog.prepare_class, catalog.check
     found = preview_duplicates(project, answers, prepare_class())
     return found, pipeline.run(project, answers, prepare_class, check, preview=True, duplicates=found)
 

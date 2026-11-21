@@ -22,14 +22,8 @@ from django.utils.translation import gettext_lazy as _
 
 from rdmo.projects.exports import Export
 
+from .catalogs import SEARCH, catalog_of
 from .duplicates import preview_duplicates
-from .constants import (
-    CATALOG_TEMPLATE_MAP,
-    CATALOG_MODEL_NAME,
-    CATALOG_MODEL_BASICS_NAME,
-    CATALOG_ALGORITHM_NAME,
-    CATALOG_WORKFLOW_NAME,
-)
 from .getters import (
     catalog_questions,
     get_answers,
@@ -51,20 +45,15 @@ from .problems import attach as attach_problems, report_lines
 from . import pipeline
 from .views import render_preview
 
-from .model.worker import PrepareModel
-
-from .algorithm.worker import PrepareAlgorithm
-
-from .workflow.worker import PrepareWorkflow
 from .search.worker import search
 from .publication.worker import PublicationRetriever
 
-_CATALOG_PREPARE_MAP = {
-    CATALOG_MODEL_NAME:        ('model',     PrepareModel,     'run_model'),
-    CATALOG_MODEL_BASICS_NAME: ('model',     PrepareModel,     'run_model'),
-    CATALOG_ALGORITHM_NAME:    ('algorithm', PrepareAlgorithm, 'run_algorithm'),
-    CATALOG_WORKFLOW_NAME:     ('workflow',  PrepareWorkflow,  'run_workflow'),
-}
+
+def _documenting(project):
+    '''The :class:`~MaRDMO.catalogs.Catalog` of *project* if it documents items, else ``None``.'''
+    catalog = catalog_of(project)
+    return catalog if catalog and catalog.documents else None
+
 
 class BaseMaRDMOExportProvider(OauthProviderMixin, Export, ABC):
     '''Base export provider wiring MaRDMO to the MaRDI Portal OAuth2 flow.
@@ -161,12 +150,11 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
             unsupported catalogs.
         '''
 
-        catalog_slug = str(self.project.catalog).rsplit('/', 1)[-1]
-        template = CATALOG_TEMPLATE_MAP.get(catalog_slug)
+        catalog = _documenting(self.project)
 
-        if template:
+        if catalog:
             answers, options = self.get_post_data('preview')
-            __, prepare_class, check_method = _CATALOG_PREPARE_MAP[catalog_slug]
+            prepare_class, check_method = catalog.prepare_class, catalog.check
             # Items that are on the MaRDI Portal already, at the top (#141)
             duplicates = preview_duplicates(self.project, answers, prepare_class())
             # Everything the export checks, so a clean preview exports (#152)
@@ -176,7 +164,7 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
             attach_problems(answers, gate.problems + gate.hints)
             return render_preview(
                 self=self,
-                template=template,
+                template=catalog.template,
                 answers=answers,
                 option=options,
                 submit_label=_('Export to MaRDI Portal'),
@@ -217,9 +205,9 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                 status=200
             )
 
-        catalog_slug = str(self.project.catalog).rsplit('/', 1)[-1]
+        catalog = _documenting(self.project)
 
-        if catalog_slug not in _CATALOG_PREPARE_MAP:
+        if not catalog:
             return render(
                 self.request,
                 'core/error.html',
@@ -230,9 +218,9 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
                 status=400
             )
 
-        return self._submit_catalog(catalog_slug)
+        return self._submit_catalog(catalog)
 
-    def _submit_catalog(self, catalog_slug):
+    def _submit_catalog(self, catalog):
         '''Check the documentation once more and submit it for any supported catalog.
 
         Runs what the preview ran (:func:`~MaRDMO.pipeline.run`): the
@@ -242,15 +230,14 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         for the authenticated upload.
 
         Args:
-            catalog_slug: Trailing slug of the active catalog URI.
+            catalog: The project's :class:`~MaRDMO.catalogs.Catalog`.
 
         Returns:
             HTTP response — either an error page or a redirect to the OAuth
             authorization flow.
         '''
         answers, __ = self.get_post_data()
-        __, prepare_class, check_method = _CATALOG_PREPARE_MAP[catalog_slug]
-        gate = pipeline.run(self.project, answers, prepare_class, check_method)
+        gate = pipeline.run(self.project, answers, catalog.prepare_class, catalog.check)
         if gate.unreachable:
             return render(self.request, 'core/error.html', {
                 'title': _('MaRDI Portal not reachable'),
@@ -292,10 +279,9 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         '''
         options = get_options()
 
-        catalog_slug = str(self.project.catalog).rsplit('/', 1)[-1]
-        question_set, prepare_class, _check_method = _CATALOG_PREPARE_MAP[catalog_slug]
-        questions = get_questions(question_set) | get_questions('publication')
-        if catalog_slug == CATALOG_MODEL_BASICS_NAME:
+        catalog = catalog_of(self.project)
+        questions = get_questions(catalog.questions) | get_questions('publication')
+        if catalog.subset:
             # The basics catalog shares the model's questions but has fewer (#168)
             questions = catalog_questions(questions, self.project.catalog)
         answers = process_question_dict(
@@ -331,7 +317,7 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         link_to_pages(answers)
         describe_items_without_page(answers)
 
-        prepare = prepare_class()
+        prepare = catalog.prepare_class()
         answers = prepare.preview(answers)
 
         return answers, options
@@ -360,7 +346,7 @@ class MaRDMOQueryProvider(Export):
             HTTP response rendering ``MaRDMO/preview_search.html``, or an error
             page if the active catalog is not the search catalog.
         '''
-        if str(self.project.catalog).endswith('mardmo-search-catalog'):
+        if getattr(catalog_of(self.project), 'kind', None) == SEARCH:
             answers, options = self.get_post_data()
             return render_preview(
                 self = self,
@@ -392,7 +378,7 @@ class MaRDMOQueryProvider(Export):
         if 'cancel' in self.request.POST:
             return redirect('project', self.project.id)
 
-        if str(self.project.catalog).endswith('mardmo-search-catalog'):
+        if getattr(catalog_of(self.project), 'kind', None) == SEARCH:
             return self.submit_mardmo_search()
 
         return render(

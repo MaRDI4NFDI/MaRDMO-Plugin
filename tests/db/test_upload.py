@@ -16,6 +16,7 @@ from types import SimpleNamespace
 import pytest
 
 from MaRDMO import main
+from MaRDMO.catalogs import catalog_of
 from MaRDMO.helpers import topological_order
 from MaRDMO.store import _progress_store
 from tests.db.test_export import DOCUMENTATIONS, imported
@@ -48,7 +49,7 @@ def export(project):
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = project, None
     answers, _ = provider.get_post_data()
-    _, prepare_class, _ = main._CATALOG_PREPARE_MAP[str(project.catalog).rsplit('/', 1)[1]]
+    prepare_class = catalog_of(project).prepare_class
     payload, dependency = prepare_class().export(answers, 'https://portal.mardi4nfdi.de')
     return provider, payload, dependency
 

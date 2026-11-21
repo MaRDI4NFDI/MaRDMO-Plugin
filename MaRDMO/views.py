@@ -407,7 +407,8 @@ def reuse_portal_item(request, project_id):
         A redirect to the preview's box "Before you export", or an error page.
     """
     from .duplicates import preview_duplicates, reuse, same_duplicate
-    from .main import _CATALOG_PREPARE_MAP, MaRDMOExportProvider
+    from .catalogs import catalog_of
+    from .main import MaRDMOExportProvider
 
     project = get_object_or_404(Project, pk=project_id)
     if not request.user.has_perm('projects.change_value_object', project):
@@ -417,13 +418,13 @@ def reuse_portal_item(request, project_id):
 
     export_format = request.POST.get('format', '')
     provider = get_plugin('PROJECT_EXPORTS', export_format)
-    catalog = str(project.catalog).rsplit('/', 1)[-1]
-    if not isinstance(provider, MaRDMOExportProvider) or catalog not in _CATALOG_PREPARE_MAP:
+    catalog = catalog_of(project)
+    if not isinstance(provider, MaRDMOExportProvider) or not (catalog and catalog.documents):
         return _refuse(request, _('This export cannot use portal items.'))
 
     provider.request, provider.project, provider.snapshot = request, project, None
     answers, _options = provider.get_post_data()
-    prepare = _CATALOG_PREPARE_MAP[catalog][1]()
+    prepare = catalog.prepare_class()
     row = same_duplicate(preview_duplicates(project, answers, prepare).rows,
                          request.POST.get('item', ''), request.POST.get('qid', ''))
     if row is None:
