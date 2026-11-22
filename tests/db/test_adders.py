@@ -1,7 +1,7 @@
-'''Data properties written into a page when an item is filled in (adders.add_properties).'''
+'''Data properties written into a page when an item is filled in (model.handlers.add_properties).'''
 from types import SimpleNamespace
 
-from MaRDMO.adders import add_properties
+from MaRDMO.model.handlers import add_properties
 from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_mathmoddb
 from tests.db.conftest import answer, save

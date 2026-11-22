@@ -72,6 +72,26 @@ class Relatant:
         )
 
 @dataclass
+class Usage:
+    '''An item used with a qualifier item and hardware, given as fields (not as text).
+
+    The shared hydration and adders write its qualifier and hardware items
+    from these fields; a :class:`Relatant` gives its qualifiers as text
+    (:func:`~MaRDMO.values.process_qualifier`).  The workflow's process steps
+    use it (:class:`~MaRDMO.workflow.models.ProcessStepUsage`).
+    '''
+    id: Optional[str]
+    label: Optional[str]
+    description: Optional[str]
+    qualifier: Optional[str]
+    qualifier_label: Optional[str]
+    qualifier_description: Optional[str]
+    hardware: Optional[str]
+    hardware_label: Optional[str]
+    hardware_description: Optional[str]
+
+
+@dataclass
 class RelatantWithClass:
     '''Data Class For Relatant Items With Class'''
     id: Optional[str]

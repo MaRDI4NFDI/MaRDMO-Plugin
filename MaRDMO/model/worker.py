@@ -26,14 +26,14 @@ from ..ids import unique_items
 from ..relations import map_entity, resolve_relations
 from ..payload import GeneratePayload
 
-from ..publication.worker import CatalogExport
+from ..export.worker import CatalogExport
 from ..tex_check import annotate_formulas
 
 class PrepareModel(CatalogExport):
     '''Prepare Mathematical Model answers for preview rendering and MaRDI Portal export.
 
     Inherits the exports all catalogs share from
-    :class:`~MaRDMO.publication.worker.CatalogExport` and extends them
+    :class:`~MaRDMO.export.worker.CatalogExport` and extends them
     with model-specific relation mapping, property conflict detection, and
     Wikibase payload generation.
     '''

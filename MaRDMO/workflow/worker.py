@@ -23,14 +23,14 @@ from ..relations import collect_items_without_section, resolve_relations
 from ..payload import GeneratePayload
 from ..payload.bodies import quantity_amount
 
-from ..publication.worker import CatalogExport
+from ..export.worker import CatalogExport
 
 
 class PrepareWorkflow(CatalogExport):
     '''Prepare interdisciplinary workflow answers for preview and export.
 
     Inherits the exports all catalogs share from
-    :class:`~MaRDMO.publication.worker.CatalogExport` and extends them
+    :class:`~MaRDMO.export.worker.CatalogExport` and extends them
     with workflow-specific relation mapping and Wikibase payload generation.
     '''
     catalog = 'workflow'

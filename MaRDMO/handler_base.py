@@ -18,7 +18,7 @@ from typing import Any
 from rdmo.domain.models import Attribute
 
 from .constants import ALGORITHM_PROPS, SOFTWARE_PROPS
-from .models import Algorithm, Relatant, Software
+from .models import Algorithm, Relatant, Software, Usage
 from .getters import (
     get_items,
     get_properties,
@@ -32,7 +32,6 @@ from .values import process_qualifier
 from .writes import value_editor
 from .ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
-from .workflow.models import ProcessStepUsage
 from .sources.http import query_sparql, query_sparql_parts
 from .publication.handlers import Information
 from .queries import find_portal_items, portal_labels, portal_publications_by_doi, wikidata_dois
@@ -442,7 +441,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
                 if not qualifier:
                     continue
 
-                if isinstance(relatant, ProcessStepUsage):
+                if isinstance(relatant, Usage):
                     source = qualifier.split(':')[0]
                     qualifier_items = [{
                         'id': qualifier,

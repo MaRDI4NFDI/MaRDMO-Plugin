@@ -7,7 +7,7 @@ from MaRDMO.getters import get_items, get_properties
 from MaRDMO.markers import SECTION_MARKERS, allowed, contradictions
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.portal_errors import DuplicateOnPortal, handle_policy_violation
-from MaRDMO.publication.worker import CatalogExport
+from MaRDMO.export.worker import CatalogExport
 from MaRDMO.queries import PortalItems, find_portal_items
 from MaRDMO.upload import Upload
 
