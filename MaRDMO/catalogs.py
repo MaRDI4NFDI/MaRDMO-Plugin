@@ -27,6 +27,12 @@ CATALOG_PACKAGES = ('model', 'algorithm', 'workflow', 'search')
 '''The packages of MaRDMO's catalogs; each has a module ``catalog.py`` with its :class:`Registration`.'''
 
 
+def _imported(path):
+    '''The object at the import path *path* (``MaRDMO.model.handlers.Information``).'''
+    module, _, name = path.rpartition('.')
+    return getattr(import_module(module), name)
+
+
 @dataclass(frozen=True)
 class Catalog:
     '''One of MaRDMO's catalogs.
@@ -63,21 +69,55 @@ class Catalog:
     @cached_property
     def prepare_class(self):
         '''The class of :attr:`worker`, imported when first used.'''
-        module, _, name = self.worker.rpartition('.')
-        return getattr(import_module(module), name)
+        return _imported(self.worker)
 
 
 @dataclass(frozen=True)
 class Registration:
     '''What a catalog package declares about itself (its ``catalog.py``, ``REGISTRATION``).
 
+    The questions are named by ``(question set, question)`` of the package's
+    question set (:attr:`question_set`); classes and functions by their import
+    path, loaded when first used.
+
     Attributes:
-        catalogs:  Its catalog entries (:class:`Catalog`).
-        questions: ``{question set: path of its questions.json}``, relative
-                   to the MaRDMO package.
+        catalogs:    Its catalog entries (:class:`Catalog`).
+        questions:   ``{question set: path of its questions.json}``, relative
+                     to the MaRDMO package.
+        information: Import path of its handler class (the hydration of its items).
+        handlers:    The questions with a handler of that class: ``{question: method}``.
+        relations:   The relation questions, handled by the general relation
+                     handler (:meth:`MaRDMO.handlers.Information.relation`).
+        validators:  The pre-save validators: ``{validator: [question, …]}``.
+        targets:     Import path of the function that maps the attribute URI
+                     of a relation question to the section of its items
+                     (``{'question_set', 'question_id', 'prefix'}``).
+        fills:       ``{section prefix: (item type, fill method of the handler class)}``:
+                     how a related item of a portal or Wikidata is filled in.
     '''
     catalogs: tuple
     questions: dict = field(default_factory=dict)
+    information: str = ''
+    handlers: dict = field(default_factory=dict)
+    relations: tuple = ()
+    validators: dict = field(default_factory=dict)
+    targets: str = ''
+    fills: dict = field(default_factory=dict)
+
+    @property
+    def question_set(self):
+        '''The question set its tables refer to (the first of :attr:`questions`), or ``None``.'''
+        return next(iter(self.questions), None)
+
+    @cached_property
+    def information_class(self):
+        '''The class of :attr:`information`, imported when first used.'''
+        return _imported(self.information)
+
+    @cached_property
+    def relation_targets(self):
+        '''The function of :attr:`targets`, imported when first used.'''
+        return _imported(self.targets)
 
 
 @lru_cache(maxsize=None)
@@ -94,6 +134,11 @@ def catalogs():
 def documenting():
     '''The names of the catalogs that document items (all but the search).'''
     return tuple(name for name, catalog in catalogs().items() if catalog.documents)
+
+
+def registration_of(catalog):
+    '''The :class:`Registration` that declares the :class:`Catalog` *catalog*.'''
+    return next(registration for registration in registrations() if catalog in registration.catalogs)
 
 
 def catalog_of(project_or_catalog):
