@@ -6,7 +6,7 @@ Where the export happens, from the answers to the portal:
 |---|---|
 | Read the answers, add pages and IDs | `main`, `project.answers`, `getters`, `pages`, `ids` |
 | Check and preview | `checks`, `pipeline`, `views` |
-| Build the payload | the catalog's `worker`, `payload` (`bodies`, `claims`, `validation`) |
+| Build the payload | the catalog's `worker` on `export.worker`, `payload` (`bodies`, `claims`, `validation`) |
 | Authorize | `oauth2` |
 | Post it, report what went wrong | `upload`, `portal_errors` |
 | Write the new IDs back | `ids` (`replace_ids`), `writes` |
@@ -15,13 +15,14 @@ Every request to an external service (MaRDI Portal, Wikidata, the citation
 services) goes through `sources.http`: one session, retries, time limits.
 
 Shared utilities (values, relations, ordering, properties) are listed under
-[Utilities](utilities.md).
+[Utilities](utilities.md).  The catalogs declare themselves (`catalog.py` of each catalog package, see
+[Catalogs](#catalogs-registry) and [How to add a catalog](../how-to/rdmo/add-catalog.md#in-mardmo)).
 
 ## Main
 
 ::: MaRDMO.main
 
-## Catalogs (table)
+## Catalogs (registry)
 
 ::: MaRDMO.catalogs
 
@@ -32,6 +33,10 @@ Shared utilities (values, relations, ordering, properties) are listed under
 ## Upload
 
 ::: MaRDMO.upload
+
+## Export Base
+
+::: MaRDMO.export.worker
 
 ## Portal Errors
 

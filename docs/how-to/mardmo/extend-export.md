@@ -54,16 +54,17 @@ of `preview_relations` in `<submodule>/constants.py`) and is printed as it is:
 
 ## 3. Validation
 
-**File:** `checks/model.py`, `checks/algorithm.py`, or `checks/workflow.py`
+**File:** `model/checks.py`, `algorithm/checks.py`, or `workflow/checks.py`
 
-The `Checks` class (`checks/__init__.py`) composes three mixins, each exposing one
-entry-point method:
+Each catalog has its checks class, a subclass of `ChecksBase`
+(`checks/base.py`), which its catalog entry names; its method `run` is the
+entry point:
 
 | Method | Catalog scope |
 |---|---|
-| `Checks.run_model(project, data, catalog)` | Model catalog |
-| `Checks.run_algorithm(project, data, catalog)` | Algorithm catalog |
-| `Checks.run_workflow(project, data, catalog)` | Workflow catalog |
+| `ModelChecks.run(project, data, catalog)` | Model catalogs (full and basics) |
+| `AlgorithmChecks.run(project, data, catalog)` | Algorithm catalog |
+| `WorkflowChecks.run(project, data, catalog)` | Workflow catalog |
 
 These methods validate the collected answers for completeness and consistency and
 return a list of `MaRDMO.problems.Problem` (section, page, message, field), made

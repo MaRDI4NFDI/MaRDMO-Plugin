@@ -1,14 +1,28 @@
-'''Workflow Documentation check mixin.'''
+'''The checks of the workflow catalog, on the shared :class:`~MaRDMO.checks.base.ChecksBase`.'''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
-from ..constants import CATALOG_WORKFLOW
+from .constants import SECTION_MAP
+from .catalog import CATALOG_WORKFLOW
 from ..getters import get_options
-from .base import SOFTWARE_REFERENCE_CHECKS, without_page
+from ..checks.base import ChecksBase, SOFTWARE_REFERENCE_CHECKS, without_page
 from ..validators import archive_year_problem, count_problem, doi_problem, size_problem
 
 
-class WorkflowMixin:
+class WorkflowChecks(ChecksBase):
     '''Checks for Interdisciplinary Workflow catalog entries.'''
+
+    section_map = SECTION_MAP
+    page_sections = ('workflow', 'processstep', 'algorithm', 'software', 'hardware', 'dataset', 'publication')
+    long_text_sections = ('workflow',)
+    long_text_labels = {'workflow': N_('Procedure')}
+    # Workflow textarea answers besides the procedure: answer key -> field label
+    long_text_fields = {'workflow': {
+        'mathematical':     N_('Mathematical Reproducibility'),
+        'runtime':          N_('Runtime Reproducibility'),
+        'result':           N_('Reproducibility of Results'),
+        'originalplatform': N_('Reproducibility on original Hardware or Instrument'),
+        'otherplatform':    N_('Reproducibility on other Hardware or Instrument'),
+    }}
 
     # -------------------------------------------------------------------------
     # Workflow Documentation Checks
@@ -336,7 +350,7 @@ class WorkflowMixin:
     # Run method
     # -------------------------------------------------------------------------
 
-    def run_workflow(self, project, data, catalog=None):
+    def run(self, project, data, catalog=None):
         '''Run all workflow-catalog checks and return the collected error list.
 
         Executes, in order: ID/Name/Description, single-line text, workflow, process step,
@@ -361,3 +375,35 @@ class WorkflowMixin:
         self.dataset(project, data)
         self.publication(project, data, CATALOG_WORKFLOW)
         return self._finalise()
+
+    def _publication_relations(self, ivalue, page_name):
+        '''Check the relations of the publication *ivalue* (page *page_name*) the workflow catalog requires.'''
+        # Workflow mode: at least one of Algorithm, Hardware/Software, or Entity required
+        if ivalue.get('RelationA') or ivalue.get('RelationHS') or ivalue.get('RelationP'):
+            self._check_flexible(
+                data       = ivalue,
+                page_name  = page_name,
+                relation   = 'RelationA',
+                from_class = N_('Publication'),
+                to_class   = N_('Algorithm'),
+                optional   = True
+            )
+            self._check_flexible(
+                data       = ivalue,
+                page_name  = page_name,
+                relation   = 'RelationHS',
+                from_class = N_('Publication'),
+                to_class   = N_('Hardware or Software'),
+                optional   = True
+            )
+            self._check_flexible(
+                data       = ivalue,
+                page_name  = page_name,
+                relation   = 'RelationP',
+                from_class = N_('Publication'),
+                to_class   = N_('Interdisciplinary Workflow, Process Step, or Data Set'),
+                optional   = True
+            )
+        else:
+            self._missing(N_('Publication'), page_name,
+                          _('Missing Algorithm, Hardware/Software, or Workflow Entity'), 'RelationA')

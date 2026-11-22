@@ -25,7 +25,6 @@ from rdmo.projects.imports import RDMOXMLImport
 
 from MaRDMO import main
 from MaRDMO.catalogs import catalog_of
-from MaRDMO.checks import Checks
 from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_url
 from MaRDMO.ordering import is_cyclic, topological_order
@@ -64,8 +63,8 @@ def export(project):
     answers, _ = provider.get_post_data()
     catalog = str(project.catalog)
     entry = catalog_of(catalog)
-    prepare_class, check_method = entry.prepare_class, entry.check
-    messages = getattr(Checks(), check_method)(project=project, data=answers, catalog=catalog)
+    prepare_class = entry.prepare_class
+    messages = entry.checks_class().run(project=project, data=answers, catalog=catalog)
     # Hints of portal items do not prevent the export (#167); they are kept with the payload
     hints = [str(problem) for problem in messages if problem.hint]
     if report_lines(messages):

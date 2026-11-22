@@ -21,11 +21,11 @@ from .utils import get_option_text_pair, get_size
 
 from ..getters import get_options
 from ..values import split_value
-from ..models import QueryBatch, Relatant
+from ..models import QueryBatch, Relatant, Usage
 
 
 @dataclass
-class ProcessStepUsage:
+class ProcessStepUsage(Usage):
     '''Usage of an algorithm or method in a process step.
 
     Covers both algorithm-in-process-step (qualifier=software, hardware=hardware)
@@ -33,15 +33,6 @@ class ProcessStepUsage:
     Parsed from a fixed-position 11-field ``||``-delimited main block followed
     by an optional ``>|<``-separated parameters section.
     '''
-    id: Optional[str]
-    label: Optional[str]
-    description: Optional[str]
-    qualifier: Optional[str]
-    qualifier_label: Optional[str]
-    qualifier_description: Optional[str]
-    hardware: Optional[str]
-    hardware_label: Optional[str]
-    hardware_description: Optional[str]
     parameters: Optional[str]
     doi: list
     url: list

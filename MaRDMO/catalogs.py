@@ -1,33 +1,36 @@
-'''MaRDMO's catalogs: one entry each, with what the code needs to know about it (#138).
+'''MaRDMO's catalogs: each declares itself, the shared code looks it up here (#198).
 
-A catalog of the questionnaire is a MaRDMO catalog if it has an entry here;
-everything else (the preview, the export, the handlers of the interview, the
-checks) looks the catalog up here instead of comparing its URI.  A new
-catalog needs one entry, and the tables keyed by catalog
-(:mod:`MaRDMO.builders`, :data:`MaRDMO.publication.constants.ROUTING`)
-need its rows; ``tests/unit/test_catalogs.py`` names what is missing.
+A catalog is a package (``model``, ``algorithm``, ``workflow``, ``search``)
+whose module ``catalog.py`` declares its :class:`Registration`: its catalog
+entries (:class:`Catalog`) and its question set.  The registry
+(:data:`CATALOG_PACKAGES`, :func:`registrations`) loads these declarations
+when first needed, as Django loads the apps of ``INSTALLED_APPS``; the shared
+code names no catalog.  A catalog of the questionnaire is a MaRDMO catalog
+if a registration has an entry for it (:func:`catalog_of`).
+``tests/unit/test_catalogs.py`` names what a declaration is missing.
 
 The workers are given by their import path and loaded when first used: the
 router and the provider settings import this module early, before the
 workers can be imported.
 '''
-from dataclasses import dataclass
-from functools import cached_property
+from dataclasses import dataclass, field
+from functools import cached_property, lru_cache
 from importlib import import_module
 from typing import Optional
 
-from .constants import (
-    BASE_URI,
-    CATALOG_ALGORITHM_NAME,
-    CATALOG_MODEL_BASICS_NAME,
-    CATALOG_MODEL_NAME,
-    CATALOG_WORKFLOW_NAME,
-)
+from .constants import BASE_URI
 
 MODEL, ALGORITHM, WORKFLOW, SEARCH = 'model', 'algorithm', 'workflow', 'search'
 '''The kinds of catalogs: what is documented (or searched) with it.'''
 
-CATALOG_SEARCH_NAME = 'mardmo-search-catalog'
+CATALOG_PACKAGES = ('model', 'algorithm', 'workflow', 'search')
+'''The packages of MaRDMO's catalogs; each has a module ``catalog.py`` with its :class:`Registration`.'''
+
+
+def _imported(path):
+    '''The object at the import path *path* (``MaRDMO.model.handlers.Information``).'''
+    module, _, name = path.rpartition('.')
+    return getattr(import_module(module), name)
 
 
 @dataclass(frozen=True)
@@ -41,7 +44,8 @@ class Catalog:
         template:   The template of its preview.
         worker:     Import path of the class that prepares the export
                     (``MaRDMO.model.worker.PrepareModel``); empty for the search.
-        check:      The method of :class:`~MaRDMO.checks.Checks` that checks it.
+        check:      Import path of its checks, a subclass of
+                    :class:`~MaRDMO.checks.base.ChecksBase` (``MaRDMO.model.checks.ModelChecks``).
         subset:     It has only part of the questions of its question set
                     (model basics, #168): the answers are read for its own.
     '''
@@ -66,25 +70,86 @@ class Catalog:
     @cached_property
     def prepare_class(self):
         '''The class of :attr:`worker`, imported when first used.'''
-        module, _, name = self.worker.rpartition('.')
-        return getattr(import_module(module), name)
+        return _imported(self.worker)
+
+    @cached_property
+    def checks_class(self):
+        '''The class of :attr:`check`, imported when first used.'''
+        return _imported(self.check)
 
 
-CATALOGS = {catalog.name: catalog for catalog in (
-    Catalog(CATALOG_MODEL_NAME, MODEL, 'model', 'MaRDMO/preview_model.html',
-            'MaRDMO.model.worker.PrepareModel', 'run_model'),
-    Catalog(CATALOG_MODEL_BASICS_NAME, MODEL, 'model', 'MaRDMO/preview_model_basics.html',
-            'MaRDMO.model.worker.PrepareModel', 'run_model', subset=True),
-    Catalog(CATALOG_ALGORITHM_NAME, ALGORITHM, 'algorithm', 'MaRDMO/preview_algorithm.html',
-            'MaRDMO.algorithm.worker.PrepareAlgorithm', 'run_algorithm'),
-    Catalog(CATALOG_WORKFLOW_NAME, WORKFLOW, 'workflow', 'MaRDMO/preview_workflow.html',
-            'MaRDMO.workflow.worker.PrepareWorkflow', 'run_workflow'),
-    Catalog(CATALOG_SEARCH_NAME, SEARCH, None, 'MaRDMO/preview_search.html'),
-)}
-'''MaRDMO's catalogs by name.'''
+@dataclass(frozen=True)
+class Registration:
+    '''What a catalog package declares about itself (its ``catalog.py``, ``REGISTRATION``).
 
-DOCUMENTING = tuple(name for name, catalog in CATALOGS.items() if catalog.documents)
-'''The names of the catalogs that document items (all but the search).'''
+    The questions are named by ``(question set, question)`` of the package's
+    question set (:attr:`question_set`); classes and functions by their import
+    path, loaded when first used.
+
+    Attributes:
+        catalogs:    Its catalog entries (:class:`Catalog`).
+        questions:   ``{question set: path of its questions.json}``, relative
+                     to the MaRDMO package.
+        information: Import path of its handler class (the hydration of its items).
+        handlers:    The questions with a handler of that class: ``{question: method}``.
+        relations:   The relation questions, handled by the general relation
+                     handler (:meth:`MaRDMO.handlers.Information.relation`).
+        validators:  The pre-save validators: ``{validator: [question, …]}``.
+        targets:     Import path of the function that maps the attribute URI
+                     of a relation question to the section of its items
+                     (``{'question_set', 'question_id', 'prefix'}``).
+        fills:       ``{section prefix: (item type, fill method of the handler class)}``:
+                     how a related item of a portal or Wikidata is filled in.
+        routing:     The relations a publication of its catalogs can have
+                     (:func:`MaRDMO.publication.constants.routing`): rules with the
+                     ``classes`` of the related items, the relation types
+                     (``props``, ``relation``) and the answer (``relatant``).
+    '''
+    catalogs: tuple
+    questions: dict = field(default_factory=dict)
+    information: str = ''
+    handlers: dict = field(default_factory=dict)
+    relations: tuple = ()
+    validators: dict = field(default_factory=dict)
+    targets: str = ''
+    fills: dict = field(default_factory=dict)
+    routing: tuple = ()
+
+    @property
+    def question_set(self):
+        '''The question set its tables refer to (the first of :attr:`questions`), or ``None``.'''
+        return next(iter(self.questions), None)
+
+    @cached_property
+    def information_class(self):
+        '''The class of :attr:`information`, imported when first used.'''
+        return _imported(self.information)
+
+    @cached_property
+    def relation_targets(self):
+        '''The function of :attr:`targets`, imported when first used.'''
+        return _imported(self.targets)
+
+
+@lru_cache(maxsize=None)
+def registrations():
+    '''The :class:`Registration` of every package of :data:`CATALOG_PACKAGES`, loaded when first needed.'''
+    return tuple(import_module(f'{__package__}.{package}.catalog').REGISTRATION for package in CATALOG_PACKAGES)
+
+
+def catalogs():
+    '''MaRDMO's catalogs by name: the entries of all registrations.'''
+    return {catalog.name: catalog for registration in registrations() for catalog in registration.catalogs}
+
+
+def documenting():
+    '''The names of the catalogs that document items (all but the search).'''
+    return tuple(name for name, catalog in catalogs().items() if catalog.documents)
+
+
+def registration_of(catalog):
+    '''The :class:`Registration` that declares the :class:`Catalog` *catalog*.'''
+    return next(registration for registration in registrations() if catalog in registration.catalogs)
 
 
 def catalog_of(project_or_catalog):
@@ -92,4 +157,4 @@ def catalog_of(project_or_catalog):
     catalog = getattr(project_or_catalog, 'catalog', project_or_catalog)
     if catalog is None:
         return None
-    return CATALOGS.get(str(catalog).rsplit('/', 1)[-1])
+    return catalogs().get(str(catalog).rsplit('/', 1)[-1])

@@ -14,15 +14,15 @@
 
 ## Algorithm
 
-::: MaRDMO.checks.algorithm
+::: MaRDMO.algorithm.checks
 
 ## Model
 
-::: MaRDMO.checks.model
+::: MaRDMO.model.checks
 
 ## Workflow
 
-::: MaRDMO.checks.workflow
+::: MaRDMO.workflow.checks
 
 ## TeX Check
 

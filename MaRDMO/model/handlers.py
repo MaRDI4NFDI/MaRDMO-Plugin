@@ -6,6 +6,7 @@ and _fill from BaseInformation (MaRDMO/handler_base.py).
 All SPARQL and write logic lives in the _fill_*_batch methods.
 '''
 
+import itertools
 import logging
 from dataclasses import replace
 from functools import partial
@@ -13,7 +14,7 @@ from functools import partial
 from rdmo.options.models import Option
 
 from . import models
-from .constants import props, relatant_uris, relation_uris
+from .constants import data_properties_check, props, qudt_reference_ids, relatant_uris, relation_uris
 
 from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, twin_fields, use_portal_twins
 from ..constants import BASE_URI
@@ -21,11 +22,11 @@ from ..getters import (
     get_mathmoddb,
     get_questions,
 )
+from ..patterns import QUDT_ID_STRICT_RE
 from ..writes import value_editor
 from ..ids import item_text
 from ..adders import (
     add_basics,
-    add_properties,
     add_references,
     add_relations_flexible,
     add_relations_static,
@@ -87,6 +88,62 @@ TWINS = {
     'model': {'problem': props['MM2RP'], 'formulation': props['MM2MF'], 'task': props['MM2T'],
               'model': props['Model']},
 }
+
+
+def add_properties(project, data, uri, set_prefix):
+    '''Write the data-property option values from *data.properties* into the questionnaire.
+
+    Iterates over the ``{index: [option_uri, …]}`` mapping in
+    ``data.properties`` and calls :func:`~MaRDMO.writes.value_editor` for
+    each entry at ``set_index=0``.  Properties already in the question keep
+    their line; the others fill the first free lines.
+
+    Entries whose option URI belongs to a mutually exclusive pair (as defined
+    by ``data_properties_check``) are silently skipped — the entire conflicting
+    pair is dropped because it cannot be determined which side is correct.  The
+    documentation checker will report the missing properties at export time.
+
+    Args:
+        project:    RDMO project instance.
+        data:       Dataclass instance with a ``properties`` attribute.
+        uri:        Attribute URI of the data-property collection question.
+        set_prefix: Set-prefix of the parent entity page.
+    '''
+    incoming_uris = {value[0] for value in data.properties.values()}
+    mathmoddb = get_mathmoddb()
+    conflict = set()
+    for key_a, key_b in data_properties_check:
+        entry_a = mathmoddb.get(key=key_a)
+        entry_b = mathmoddb.get(key=key_b)
+        if entry_a and entry_b:
+            if entry_a['url'] in incoming_uris and entry_b['url'] in incoming_uris:
+                conflict.add(entry_a['url'])
+                conflict.add(entry_b['url'])
+
+    # The question is a list of dropdowns: properties already in the list
+    # (from the user or an earlier filling, maybe with empty lines) stay
+    # where they are, new ones take the first free lines
+    present = dict(project.values.filter(
+        snapshot=None, attribute__uri=uri, set_prefix=str(set_prefix), set_index=0,
+    ).values_list('option__uri', 'collection_index'))
+    free = (idx for idx in itertools.count() if idx not in present.values())
+    for _, value in sorted(data.properties.items()):
+        if value[0] in conflict or value[0] in present:
+            continue
+        value_editor(
+            project = project,
+            uri  = uri,
+            info = {
+                'option': Option.objects.get(uri=value[0]),
+                'collection_index': next(free),
+                'set_index': 0,
+                'set_prefix': set_prefix
+            }
+        )
+
+
+# A quantity's QUDT references are written only in their exact form
+_QUDT_FORMATS = {key: QUDT_ID_STRICT_RE for key in qudt_reference_ids}
 
 
 class Information(BaseInformation):
@@ -375,7 +432,7 @@ class Information(BaseInformation):
                            set_prefix=set_index)
             add_references(project=project, data=data,
                            uri=f'{self.base}{quantity["Reference"]["uri"]}',
-                           set_prefix=set_index)
+                           set_prefix=set_index, formats=_QUDT_FORMATS)
 
             write_defining_formula(project, quantity, data, set_index)
 

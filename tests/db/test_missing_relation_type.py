@@ -5,7 +5,7 @@ The checks crashed on it (``None['url']``) instead of reporting it.
 import pytest
 
 from MaRDMO import main
-from MaRDMO.checks import Checks
+from MaRDMO.model.checks import ModelChecks
 from tests.db.conftest import answer, save
 
 
@@ -23,13 +23,13 @@ def page(section, index, identifier, name):
 ])
 def test_a_missing_relation_type_is_reported(project, monkeypatch, section, relatant, name):
     monkeypatch.setattr('MaRDMO.model.worker.annotate_formulas', lambda answers: None)
-    monkeypatch.setattr('MaRDMO.checks.model.check_formulas', lambda formulas: {})
+    monkeypatch.setattr('MaRDMO.model.checks.check_formulas', lambda formulas: {})
     documentation = project('mardmo-model-catalog')
     save(documentation, *page(section, 0, 'user:general', 'general'), *page(section, 1, 'user:special', 'special'),
          answer(relatant, 'special (a special)', external_id='user:special', set_prefix='0'))
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = documentation, None
     answers, _ = provider.get_post_data()
-    messages = [str(m) for m in Checks().run_model(project=documentation, data=answers,
+    messages = [str(m) for m in ModelChecks().run(project=documentation, data=answers,
                                                    catalog=str(documentation.catalog))]
     assert f'{name} (Page {section} 1): Missing Relation Type ({name})' in messages, messages

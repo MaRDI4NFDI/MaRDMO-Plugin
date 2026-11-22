@@ -1,5 +1,11 @@
 '''The markers MaRDMO gives the items it exports: class, community, profile type (#141).
 
+Also the further classes of exported items: the data properties of
+MathModDB items (:func:`get_data_properties`) and the reproducibility of
+workflows (:data:`REPRODUCIBILITY`).  These are the MaRDI Portal's
+vocabulary, shared by the catalogs: the workflow catalog uses the markers of
+models and algorithms too.
+
 An existing item of the MaRDI Portal gets only the markers it lacks and that
 do not contradict the ones it has, so it never ends up with a second MaRDMO
 class, community or profile type.  A class contradicts if the item has a
@@ -9,13 +15,91 @@ source software*) do not count.
 from dataclasses import dataclass
 from functools import lru_cache
 
-from .getters import get_items
-from .model.utils import get_data_properties
-from .workflow.constants import IRREPRODUCIBILITY, REPRODUCIBILITY
+from .getters import get_items, get_mathmoddb
+
+# Key-Item Map for Class-Independent Data Properties
+INDEPENDENT_PROPERTIES = [
+    ('is_ordinary_differential_equation',   'ordinary differential equation'),
+    ('is_partial_differential_equation',    'partial differential equation'),
+    ('is_stochastic_differential_equation', 'stochastic differential equation'),
+    ('is_integro_differential_equation',    'integro-differential equation'),
+    ('is_chemical_constant',                'chemical constant'),
+    ('is_mathematical_constant',            'mathematical constant'),
+    ('is_physical_constant',                'physical constant'),
+]
+
+# Key-Item Map for Class-Dependent Data Properties
+DEPENDENT_PROPERTIES = [
+    ('is_deterministic',     'deterministic'),
+    ('is_stochastic',        'probabilistic'),
+    ('is_dimensional',       'dimensional'),
+    ('is_dimensionless',     'dimensionless'),
+    ('is_dynamic',           'dynamic'),
+    ('is_static',            'static'),
+    ('is_linear',            'linear'),
+    ('is_not_linear',        'nonlinear'),
+    ('is_space_continuous',  'continuous-space'),
+    ('is_space_discrete',    'discrete-space'),
+    ('is_time_continuous',   'continuous-time'),
+    ('is_time_discrete',     'discrete-time'),
+]
+
+
+def get_data_properties(item_type):
+    """Return a URL→QID mapping of data properties for the given *item_type*.
+
+    Combines class-independent properties (the same for all entity types) with
+    class-dependent properties whose Wikibase item QID is suffixed with the
+    *item_type* string (e.g. ``"linear model"`` → ``"linear quantity"``).
+
+    Args:
+        item_type: Entity class string, e.g. ``"model"``, ``"task"``,
+                   ``"quantity"``, or ``"quantity kind"``.
+
+    Returns:
+        Dict mapping MathModDB property URL to Wikibase item QID.
+    """
+
+    # Get MathModDB Mapping and Items
+    mathmoddb = get_mathmoddb()
+    items = get_items()
+
+    # Add class-independent Properties
+    properties = {
+        mathmoddb.get(key=k)["url"]: items.get(label)
+        for k, label in INDEPENDENT_PROPERTIES
+    }
+
+    # Add class-dependent Properties
+    properties.update({
+        mathmoddb.get(key=k)["url"]: items.get(f'{label} {item_type}')
+        for k, label in DEPENDENT_PROPERTIES
+    })
+
+    return properties
+
+
+# The classes of the reproducibility aspects of a workflow (names in items.json)
+REPRODUCIBILITY = {
+    'mathematical':    'mathematically reproducible research workflow',
+    'runtime':         'runtime reproducible research workflow',
+    'result':          'result reproducible research workflow',
+    'originalplatform': 'original platform reproducible research workflow',
+    'otherplatform':   'cross-platform reproducible research workflow',
+}
+
+IRREPRODUCIBILITY = {
+    'mathematical':    'mathematically irreproducible research workflow',
+    'runtime':         'runtime irreproducible research workflow',
+    'result':          'result irreproducible research workflow',
+    'originalplatform': 'original platform irreproducible research workflow',
+    'otherplatform':   'cross-platform irreproducible research workflow',
+}
+
 
 # Main class of a section (name in items.json): its other classes, and the
 # item types of its data-property classes (e.g. "linear model", see
-# model.utils.get_data_properties)
+# get_data_properties)
 FAMILIES = {
     'academic discipline': ((), ()),
     'research problem': ((), ()),

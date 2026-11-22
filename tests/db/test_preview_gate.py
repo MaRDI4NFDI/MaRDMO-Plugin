@@ -58,16 +58,16 @@ def test_an_unreachable_portal_asks_to_try_again(white, client, monkeypatch):
 
 
 def test_an_unanswered_tex_check_asks_to_try_again(white, client, monkeypatch):
-    monkeypatch.setattr('MaRDMO.checks.model.check_formulas',
+    monkeypatch.setattr('MaRDMO.model.checks.check_formulas',
                         lambda formulas: {tex: 'unavailable' for tex in formulas})
-    monkeypatch.setattr('MaRDMO.checks.model.UNAVAILABLE', 'unavailable')
+    monkeypatch.setattr('MaRDMO.model.checks.UNAVAILABLE', 'unavailable')
     html = preview_page(client, white)
     assert 'The TeX check of the MaRDI Portal did not answer' in text(html) and export_button(html) == 'disabled'
 
 
 def test_a_formula_the_tex_check_fails_on_passes_unverified(white, client, monkeypatch):
     '''The checker fails on a formula (e.g. HTTP 500 for valid TeX, #165): no dead end, a note.'''
-    monkeypatch.setattr('MaRDMO.checks.model.check_formulas', lambda formulas: {tex: 'failed' for tex in formulas})
+    monkeypatch.setattr('MaRDMO.model.checks.check_formulas', lambda formulas: {tex: 'failed' for tex in formulas})
     monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {tex: 'failed' for tex in formulas})
     html = preview_page(client, white)
     assert not elements(html, id='before-export') and export_button(html) == 'enabled'

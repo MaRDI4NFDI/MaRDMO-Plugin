@@ -11,8 +11,9 @@ from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership
 
 from MaRDMO import main
-from MaRDMO.checks import Checks
-from MaRDMO.constants import BASE_URI, CATALOG_MODEL
+from MaRDMO.model.checks import ModelChecks
+from MaRDMO.constants import BASE_URI
+from MaRDMO.model.catalog import CATALOG_MODEL
 from tests.db.conftest import answer, save
 
 
@@ -64,7 +65,7 @@ def relation(model):
 
 def messages_of(model):
     answers = answers_of(model)
-    return [str(m) for m in Checks().run_model(project=model, data=answers, catalog=str(model.catalog))]
+    return [str(m) for m in ModelChecks().run(project=model, data=answers, catalog=str(model.catalog))]
 
 
 def test_a_copy_of_an_own_item_gets_an_id_of_its_own(model, client):
@@ -144,7 +145,7 @@ def test_the_first_of_two_pages_with_one_id_is_the_item():
     answers = {'quantity': {index: {**entry, 'Tab': f'QQK{index + 1}'} for index, entry in enumerate([
         {'ID': 'mardi:Q1', 'Name': 'a'}, {'ID': 'mardi:Q1', 'Name': 'a'},
         {'ID': 'user:1', 'Name': 'b', 'Description': 'c'}, {'ID': 'user:1', 'Name': 'b', 'Description': 'c'}])}}
-    checks = Checks()
+    checks = ModelChecks()
     checks.id_name_description(None, answers, CATALOG_MODEL)
     same = {problem.page.tab: problem.message for problem in checks.err if 'Same' in problem.message}
     assert same == {'QQK2': 'Same Item as Page QQK1 (delete one of them)',

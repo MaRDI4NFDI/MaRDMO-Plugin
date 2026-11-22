@@ -1,27 +1,14 @@
 '''Package-wide constants of MaRDMO.
 
-Defines the RDMO base URI, catalog name slugs (:data:`CATALOG_MODEL_NAME` etc.),
-derived catalog URIs and the shared section-name map (:data:`SECTION_MAP_BASE`).
+Defines the RDMO base URI and the shared section-name map (:data:`SECTION_MAP_BASE`);
+the names of the catalogs are their packages' (``model/catalog.py`` etc.).
 Where a questionnaire value goes in the answers: :mod:`MaRDMO.rules`.
 '''
 
 from django.utils.translation import gettext_noop as N_
 
-
 #RDMO BASE URI
 BASE_URI = 'https://rdmo.mardi4nfdi.de/terms/'
-
-# MaRDMO Catalog name slugs
-CATALOG_MODEL_NAME        = 'mardmo-model-catalog'
-CATALOG_MODEL_BASICS_NAME = 'mardmo-model-basics-catalog'
-CATALOG_ALGORITHM_NAME    = 'mardmo-algorithm-catalog'
-CATALOG_WORKFLOW_NAME     = 'mardmo-interdisciplinary-workflow-catalog'
-
-# MaRDMO Catalog URIs
-CATALOG_MODEL        = f'{BASE_URI}questions/{CATALOG_MODEL_NAME}'
-CATALOG_MODEL_BASICS = f'{BASE_URI}questions/{CATALOG_MODEL_BASICS_NAME}'
-CATALOG_ALGORITHM    = f'{BASE_URI}questions/{CATALOG_ALGORITHM_NAME}'
-CATALOG_WORKFLOW     = f'{BASE_URI}questions/{CATALOG_WORKFLOW_NAME}'
 
 # Wikidata endpoint URLs (internal — not user-configurable)
 WIKIDATA = {

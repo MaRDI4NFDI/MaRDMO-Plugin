@@ -17,23 +17,19 @@ Provides:
 - ``add_new_entities``       — write newly user-created entities into the questionnaire
 - ``add_relations_static``   — write relation values using a fixed property-to-question mapping
 - ``add_relations_flexible`` — write relation values using a dynamic property-to-question mapping
-- ``add_properties``         — write data-property values; drops mutually exclusive pairs
-- ``add_references``         — write external-reference values; skips malformed QUDT IDs
+- ``add_references``         — write external-reference values; skips those in a wrong format
 '''
 
-import itertools
 
 from rdmo.options.models import Option
 
 from .constants import BASE_URI
-from .getters import get_mathmoddb, get_options
+from .getters import get_options
 from .project.answers import get_id
 from .values import extract_parts, process_qualifier
 from .writes import value_editor
 from .ids import NEW_ITEM, item_text
-from .model.constants import data_properties_check, qudt_reference_ids
-from .patterns import QUDT_ID_STRICT_RE
-from .workflow.models import ProcessStepUsage
+from .models import Usage
 
 def add_basics(project, text, questions, item_type, index = (None, None)):
     '''Parse the ID-question text and write label/description into the questionnaire.
@@ -268,7 +264,7 @@ def add_relations_static(project, data, props, index, statement):
                 continue
 
             # Add Assumption
-            if statement.get('platform') and isinstance(value, ProcessStepUsage):
+            if statement.get('platform') and isinstance(value, Usage):
                 index['idx'] += 1
                 inner_idx = 0
                 assumption_index = index['idx']
@@ -485,68 +481,17 @@ def add_relations_flexible(project, data, props, index, statement):
         if used:
             index['idx'] += 1
 
-def add_properties(project, data, uri, set_prefix):
-    '''Write the data-property option values from *data.properties* into the questionnaire.
-
-    Iterates over the ``{index: [option_uri, …]}`` mapping in
-    ``data.properties`` and calls :func:`~MaRDMO.writes.value_editor` for
-    each entry at ``set_index=0``.  Properties already in the question keep
-    their line; the others fill the first free lines.
-
-    Entries whose option URI belongs to a mutually exclusive pair (as defined
-    by ``data_properties_check``) are silently skipped — the entire conflicting
-    pair is dropped because it cannot be determined which side is correct.  The
-    documentation checker will report the missing properties at export time.
-
-    Args:
-        project:    RDMO project instance.
-        data:       Dataclass instance with a ``properties`` attribute.
-        uri:        Attribute URI of the data-property collection question.
-        set_prefix: Set-prefix of the parent entity page.
-    '''
-    incoming_uris = {value[0] for value in data.properties.values()}
-    mathmoddb = get_mathmoddb()
-    conflict = set()
-    for key_a, key_b in data_properties_check:
-        entry_a = mathmoddb.get(key=key_a)
-        entry_b = mathmoddb.get(key=key_b)
-        if entry_a and entry_b:
-            if entry_a['url'] in incoming_uris and entry_b['url'] in incoming_uris:
-                conflict.add(entry_a['url'])
-                conflict.add(entry_b['url'])
-
-    # The question is a list of dropdowns: properties already in the list
-    # (from the user or an earlier filling, maybe with empty lines) stay
-    # where they are, new ones take the first free lines
-    present = dict(project.values.filter(
-        snapshot=None, attribute__uri=uri, set_prefix=str(set_prefix), set_index=0,
-    ).values_list('option__uri', 'collection_index'))
-    free = (idx for idx in itertools.count() if idx not in present.values())
-    for _, value in sorted(data.properties.items()):
-        if value[0] in conflict or value[0] in present:
-            continue
-        value_editor(
-            project = project,
-            uri  = uri,
-            info = {
-                'option': Option.objects.get(uri=value[0]),
-                'collection_index': next(free),
-                'set_index': 0,
-                'set_prefix': set_prefix
-            }
-        )
-
-def add_references(project, data, uri, set_index = 0, set_prefix = None):
+def add_references(project, data, uri, set_index = 0, set_prefix = None, formats=None):
     '''Write the reference entries from *data.reference* into the questionnaire.
 
     Does nothing when ``data.reference`` is empty.  Each entry in the
     ``{collection_index: [option_uri, text]}`` mapping is stored as an option
     value at the given *set_index* / *set_prefix*.
 
-    For QUDT reference options (quantity kind ID or constant ID), the text is
-    validated against ``^[A-Z][a-zA-Z_\\-]+$`` and silently skipped when it
-    does not match.  The documentation checker will report the missing reference
-    at export time.
+    A reference of an option in *formats* whose text does not match its
+    pattern is silently skipped (e.g. the QUDT IDs of a quantity, see
+    ``model/handlers.py``).  The documentation checker will report the
+    missing reference at export time.
 
     Args:
         project:    RDMO project instance.
@@ -554,16 +499,18 @@ def add_references(project, data, uri, set_index = 0, set_prefix = None):
         uri:        Attribute URI of the reference collection question.
         set_index:  Set-index of the parent entity page (default ``0``).
         set_prefix: Set-prefix of the parent entity page (optional).
+        formats:    ``{option key: compiled pattern}`` the text of a reference
+                    of that option must match (optional).
     '''
     if not data.reference:
         return
 
     options = get_options()
-    qudt_option_uris = {options[k] for k in qudt_reference_ids if k in options}
+    patterns = {options[key]: pattern for key, pattern in (formats or {}).items() if key in options}
 
     for key, value in data.reference.items():
         option_uri, text = value[0], value[1]
-        if option_uri in qudt_option_uris and not QUDT_ID_STRICT_RE.match(text or ''):
+        if option_uri in patterns and not patterns[option_uri].match(text or ''):
             continue
         value_editor(
             project = project,

@@ -2,83 +2,28 @@
 
 Provides :class:`Information`, whose :meth:`~Information.relation` method is
 called whenever a relation value is saved to any MaRDMO questionnaire.  It
-dispatches to the appropriate sub-handler (:mod:`~MaRDMO.model.handlers`,
-:mod:`~MaRDMO.algorithm.handlers`, or :mod:`~MaRDMO.workflow.handlers`)
-based on the active project catalog, then registers and hydrates the related
-entity in the questionnaire section.
+looks up the declaration of the project's catalog
+(:class:`~MaRDMO.catalogs.Registration`: where the related items go, how
+they are filled in, by which handler class), then registers and hydrates the
+related entity in the questionnaire section.
 '''
 
 from .adders import add_entities, add_new_entities
-from .catalogs import ALGORITHM, MODEL, WORKFLOW, catalog_of
+from .catalogs import catalog_of, registration_of
 from .values import extract_parts
 from .ids import is_item_id
 from .models import Relatant
 
-from .algorithm.constants import get_uri_prefix_map as get_uri_prefix_map_algorithm
-from .model.constants import get_uri_prefix_map as get_uri_prefix_map_model
-from .workflow.constants import get_uri_prefix_map as get_uri_prefix_map_workflow
-
-# The handlers of the catalogs, one instance each, created when first used
-# (a mutable dict, so no global statement is needed).  The shared code still
-# names the catalogs here; once the catalogs register themselves, the
-# registry replaces these imports.
+# The handler of each catalog, one instance per handler class, created when
+# first used (a mutable dict, so no global statement is needed)
 _INFO_CACHE: dict = {}
 
 
-def _get_model_info():
-    '''Return the singleton :class:`~MaRDMO.model.handlers.Information` instance.'''
-    if 'model' not in _INFO_CACHE:
-        from .model.handlers import Information as M  # pylint: disable=import-outside-toplevel
-        _INFO_CACHE['model'] = M()
-    return _INFO_CACHE['model']
-
-
-def _get_algo_info():
-    '''Return the singleton :class:`~MaRDMO.algorithm.handlers.Information` instance.'''
-    if 'algo' not in _INFO_CACHE:
-        from .algorithm.handlers import Information as A  # pylint: disable=import-outside-toplevel
-        _INFO_CACHE['algo'] = A()
-    return _INFO_CACHE['algo']
-
-
-def _get_workflow_info():
-    '''Return the singleton :class:`~MaRDMO.workflow.handlers.Information` instance.'''
-    if 'workflow' not in _INFO_CACHE:
-        from .workflow.handlers import Information as W  # pylint: disable=import-outside-toplevel
-        _INFO_CACHE['workflow'] = W()
-    return _INFO_CACHE['workflow']
-
-
-# Map prefix → (item_type, batch_method_name) per catalog family.
-_MODEL_PREFIX_TO_FILL = {
-    'AD':  ('Research Field',          '_fill_field_batch'),
-    'RP':  ('Research Problem',        '_fill_problem_batch'),
-    'CT':  ('Task',                    '_fill_task_batch'),
-    'F':   ('Mathematical Formulation','_fill_formulation_batch'),
-    'QQK': ('Quantity',                '_fill_quantity_batch'),
-}
-
-_ALGO_PREFIX_TO_FILL = {
-    'AT': ('Problem',   '_fill_problem_batch'),
-    'S':  ('Software',  '_fill_software_batch'),
-    'B':  ('Benchmark', '_fill_benchmark_batch'),
-}
-
-_WORKFLOW_PREFIX_TO_FILL = {
-    'A':  ('Algorithm',    '_fill_algorithm_batch'),
-    'DS': ('Data Set',     '_fill_data_set_batch'),
-    'S':  ('Software',     '_fill_software_batch'),
-    'HW': ('Hardware',     '_fill_hardware_batch'),
-    'PS': ('Process Step', '_fill_process_step_batch'),
-}
-
-# Dispatch table: kind of catalog (MaRDMO.catalogs) → (get_uri_prefix_map_fn, prefix_map, get_info_fn)
-# All catalogs accept both 'mardi' and 'wikidata' as hydration sources.
-_KIND_DISPATCH = {
-    MODEL:     (get_uri_prefix_map_model,     _MODEL_PREFIX_TO_FILL,    _get_model_info),
-    WORKFLOW:  (get_uri_prefix_map_workflow,  _WORKFLOW_PREFIX_TO_FILL, _get_workflow_info),
-    ALGORITHM: (get_uri_prefix_map_algorithm, _ALGO_PREFIX_TO_FILL,     _get_algo_info),
-}
+def _information(registration):
+    '''Return the handler (an instance of the class the *registration* names) of its catalog.'''
+    if registration.information not in _INFO_CACHE:
+        _INFO_CACHE[registration.information] = registration.information_class()
+    return _INFO_CACHE[registration.information]
 
 
 class Information:  # pylint: disable=too-few-public-methods
@@ -91,7 +36,7 @@ class Information:  # pylint: disable=too-few-public-methods
     def relation(self, instance):
         '''Handle a saved relation value by registering and hydrating the entity.
 
-        Dispatches on the project's catalog to the appropriate sub-handler, then,
+        Looks up the declaration of the project's catalog, then,
         by the ID the relation holds:
 
         1. Adds the related entity to the correct questionnaire section: an
@@ -106,10 +51,9 @@ class Information:  # pylint: disable=too-few-public-methods
                       ``external_id``, and ``attribute`` attributes.
         '''
         catalog = catalog_of(instance.project)
-        dispatch = _KIND_DISPATCH.get(catalog.kind) if catalog else None
-        if dispatch is None:
+        registration = registration_of(catalog) if catalog else None
+        if registration is None or not registration.fills:
             return
-        get_uri_prefix_map, prefix_map, get_info = dispatch
 
         if not instance.text or not is_item_id(instance.external_id):
             return
@@ -117,7 +61,7 @@ class Information:  # pylint: disable=too-few-public-methods
         source = instance.external_id.split(':', 1)[0]
         # A new item's text is its label as typed (#129)
         label, description, _ = (instance.text, '', '') if source == 'user' else extract_parts(instance.text)
-        config = get_uri_prefix_map()[instance.attribute.uri]
+        config = registration.relation_targets()[instance.attribute.uri]
         datas  = [Relatant.from_triple(instance.external_id, label, description)]
 
         # --- Step 1: add entity to questionnaire section ---
@@ -142,12 +86,12 @@ class Information:  # pylint: disable=too-few-public-methods
         if source not in ('mardi', 'wikidata'):
             return
 
-        entry = prefix_map.get(config["prefix"])
+        entry = registration.fills.get(config["prefix"])
         if not entry:
             return
         item_type, batch_method_name = entry
 
-        info     = get_info()
+        info     = _information(registration)
         batch_fn = getattr(info, batch_method_name)
 
         info.fill_entity(

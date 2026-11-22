@@ -19,13 +19,13 @@ from ..ids import unique_items
 from ..relations import collect_items_without_section, resolve_relations
 from ..payload import GeneratePayload
 
-from ..publication.worker import CatalogExport
+from ..export.worker import CatalogExport
 
 class PrepareAlgorithm(CatalogExport):
     '''Prepare Algorithm documentation answers for preview rendering and MaRDI Portal export.
 
     Inherits the exports all catalogs share from
-    :class:`~MaRDMO.publication.worker.CatalogExport` and extends them
+    :class:`~MaRDMO.export.worker.CatalogExport` and extends them
     with algorithm-specific relation mapping and Wikibase payload generation.
     '''
     catalog = 'algorithm'

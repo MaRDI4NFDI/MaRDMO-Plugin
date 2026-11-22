@@ -19,7 +19,7 @@ PROJECT = SimpleNamespace(catalog='https://example.org/questions/mardmo-model-ca
 class Checks:
     problems, unreachable = [], None
 
-    def run_model(self, project, data, catalog):
+    def run(self, project, data, catalog):
         return list(Checks.problems)
 
 
@@ -38,12 +38,11 @@ def worker(raises=None, cyclic=False, seen=None):
 @pytest.fixture(autouse=True)
 def checks(monkeypatch):
     Checks.problems, Checks.unreachable = [], None
-    monkeypatch.setattr(pipeline, 'Checks', Checks)
     monkeypatch.setattr(pipeline, 'get_url', lambda *args: 'https://portal.example.org')
 
 
 def run(prepare, **kwargs):
-    return pipeline.run(PROJECT, {'formulation': {}}, prepare, 'run_model', **kwargs)
+    return pipeline.run(PROJECT, {'formulation': {}}, prepare, Checks, **kwargs)
 
 
 def test_problem_reads_as_the_checks_always_did():
@@ -122,9 +121,9 @@ def test_failed_duplicate_lookup_is_unreachable():
 def test_the_preview_uses_its_limits_and_a_copy():
     seen = []
     answers = {'formulation': {0: {'Name': 'a'}}}
-    pipeline.run(PROJECT, answers, worker(seen=seen), 'run_model', preview=True)
+    pipeline.run(PROJECT, answers, worker(seen=seen), Checks, preview=True)
     exported, waits, deadline = seen[0]
     assert exported == answers and exported is not answers
     assert waits == pipeline.PREVIEW_RETRY_WAITS
-    pipeline.run(PROJECT, answers, worker(seen=seen), 'run_model')
+    pipeline.run(PROJECT, answers, worker(seen=seen), Checks)
     assert seen[1][1] == EXPORT_RETRY_WAITS and seen[1][2] - deadline > EXPORT_CHECK_DEADLINE - pipeline.PREVIEW_DEADLINE - 5

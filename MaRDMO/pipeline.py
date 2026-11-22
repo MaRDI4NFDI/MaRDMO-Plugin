@@ -13,7 +13,6 @@ from typing import Optional
 
 from django.utils.translation import gettext as _, gettext_noop as N_
 
-from .checks import Checks
 from .duplicates import PREVIEW_DEADLINE, PREVIEW_RETRY_WAITS
 from .getters import get_url
 from .ordering import cycle_groups, is_cyclic
@@ -87,14 +86,14 @@ def _groups(problems):
     return groups
 
 
-def run(project, answers, prepare_class, check_method, preview=False, duplicates=None):
+def run(project, answers, prepare_class, checks_class, preview=False, duplicates=None):
     '''Run the checks and, if they pass, the export's own checks on a copy of *answers*.
 
     Args:
         project:       The RDMO project.
         answers:       The answers of ``get_post_data`` (not changed).
         prepare_class: The catalog's worker (``PrepareModel`` ...).
-        check_method:  Its check (``'run_model'`` ...).
+        checks_class:  Its checks (``ModelChecks`` ...).
         preview:       Use the preview's shorter limits for the portal requests.
         duplicates:    The preview's :class:`~MaRDMO.duplicates.Report`; with
                        rows, the export's checks are not run.
@@ -102,10 +101,10 @@ def run(project, answers, prepare_class, check_method, preview=False, duplicates
     Returns:
         :class:`Gate`.
     '''
-    checks = Checks()
+    checks = checks_class()
     # The statements of portal items with an invalid value are looked up (#167)
     with check_limits(PREVIEW_RETRY_WAITS, PREVIEW_DEADLINE) if preview else nullcontext():
-        found = list(getattr(checks, check_method)(project=project, data=answers, catalog=str(project.catalog)))
+        found = list(checks.run(project=project, data=answers, catalog=str(project.catalog)))
     gate = Gate(problems=[problem for problem in found if not problem.hint],
                 hints=[problem for problem in found if problem.hint])
     if checks.unreachable:

@@ -41,7 +41,7 @@ from ..ids import is_portal_item, is_user_id, publication_doi
 
 from .constants import (
     PROPS,
-    ROUTING,
+    routing,
     ITEMINFOS,
     CITATIONINFOS,
     LANGUAGES,
@@ -236,7 +236,7 @@ class Information:
         catalog_slug = catalog.rsplit('/', 1)[-1]
         items        = get_items()
 
-        for rule in ROUTING.get(catalog_slug, []):
+        for rule in routing().get(catalog_slug, []):
             class_set = {f"mardi:{items[c]}" for c in rule['classes']}
             add_relations_flexible(
                 project   = project,

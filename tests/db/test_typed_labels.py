@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import pytest
 
 from MaRDMO import main
-from MaRDMO.checks import Checks
+from MaRDMO.algorithm.checks import AlgorithmChecks
 from MaRDMO.pages import describe_items_without_page
 from MaRDMO.values import basic_dict
 from tests.db.conftest import answer, save
@@ -78,6 +78,6 @@ def test_preview_and_export_send_one_language_with_the_generic_description(softw
 
 def test_the_checks_do_not_ask_for_its_description(software):
     answers = answers_of(software)
-    messages = [str(m) for m in Checks().run_algorithm(project=software, data=answers,
+    messages = [str(m) for m in AlgorithmChecks().run(project=software, data=answers,
                                                        catalog=str(software.catalog))]
     assert not any('Programming Language' in message for message in messages)

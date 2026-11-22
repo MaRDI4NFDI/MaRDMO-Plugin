@@ -13,28 +13,27 @@ Provides:
 
 from .constants import (
     data_properties_check,
-    DEPENDENT_PROPERTIES,
-    INDEPENDENT_PROPERTIES,
     preview_relations,
     preview_map_general,
     preview_map_quantity,
     get_relations,
 )
-from .utils import get_data_properties, map_entity_quantity
+from .utils import map_entity_quantity
+from ..markers import DEPENDENT_PROPERTIES, INDEPENDENT_PROPERTIES, get_data_properties
 
 from ..getters import get_items, get_mathmoddb, get_properties, get_publication_mapping, get_url
 from ..ids import unique_items
 from ..relations import map_entity, resolve_relations
 from ..payload import GeneratePayload
 
-from ..publication.worker import CatalogExport
+from ..export.worker import CatalogExport
 from ..tex_check import annotate_formulas
 
 class PrepareModel(CatalogExport):
     '''Prepare Mathematical Model answers for preview rendering and MaRDI Portal export.
 
     Inherits the exports all catalogs share from
-    :class:`~MaRDMO.publication.worker.CatalogExport` and extends them
+    :class:`~MaRDMO.export.worker.CatalogExport` and extends them
     with model-specific relation mapping, property conflict detection, and
     Wikibase payload generation.
     '''

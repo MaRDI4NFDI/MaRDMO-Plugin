@@ -9,8 +9,9 @@ portal's statements are given here.
 '''
 import pytest
 
-from MaRDMO.checks import Checks
-from MaRDMO.constants import CATALOG_ALGORITHM
+from MaRDMO.algorithm.checks import AlgorithmChecks
+from MaRDMO.workflow.checks import WorkflowChecks
+from MaRDMO.algorithm.catalog import CATALOG_ALGORITHM
 from MaRDMO.getters import get_options
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.problems import Problem, report_lines
@@ -47,29 +48,29 @@ def doi(text):
 
 @pytest.mark.parametrize('identifier, hint', [(PORTAL, True), (OWN, False), (WIKIDATA, False)])
 def test_what_an_item_lacks_is_a_hint_for_portal_items_only(identifier, hint):
-    assert found(Checks(), software(identifier), 'software') == [('Missing Reference', hint)]
+    assert found(AlgorithmChecks(), software(identifier), 'software') == [('Missing Reference', hint)]
 
 
 def test_an_invalid_value_the_portal_item_has_is_a_hint(claims):
-    assert found(Checks(), software(PORTAL, **doi('not-a-doi')), 'software') == [
+    assert found(AlgorithmChecks(), software(PORTAL, **doi('not-a-doi')), 'software') == [
         ('Invalid DOI: DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)', True)]
     assert claims == [['Q5']]
 
 
 def test_an_invalid_value_the_user_added_to_a_portal_item_is_a_problem(claims):
-    assert found(Checks(), software(PORTAL, **doi('also-not-a-doi')), 'software') == [
+    assert found(AlgorithmChecks(), software(PORTAL, **doi('also-not-a-doi')), 'software') == [
         ('Invalid DOI: DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)', False)]
 
 
 def test_an_invalid_value_of_an_own_item_is_a_problem_without_lookup(claims):
-    assert found(Checks(), software(OWN, **doi('not-a-doi')), 'software') == [
+    assert found(AlgorithmChecks(), software(OWN, **doi('not-a-doi')), 'software') == [
         ('Invalid DOI: DOI must have the form 10.XXXX/suffix (e.g. 10.1000/xyz123)', False)]
     assert claims == []
 
 
 def test_amounts_are_compared_as_the_portal_has_them(claims):
     '''The portal has "+8.5", the hardware page "8.5" (no integer): a hint.'''
-    checks = Checks()
+    checks = WorkflowChecks()
     checks.hardware(None, {'hardware': {0: {'ID': PORTAL, 'Name': 'cluster', 'Description': 'a cluster', 'Tab': 'HW1',
                                             'nodes': '8.5', 'cpu_entries': [{'id': 'mardi:Q9', 'count': '1',
                                                                              'cores': '4'}]}}})
@@ -81,13 +82,13 @@ def test_a_portal_that_does_not_answer_keeps_the_hint_and_the_export_waiting(mon
     def fail(*args, **kwargs):
         raise PortalUnavailable('not reachable')
     monkeypatch.setattr('MaRDMO.checks.base.fetch_claims', fail)
-    checks = Checks()
+    checks = AlgorithmChecks()
     assert found(checks, software(PORTAL, **doi('not-a-doi')), 'software')[0][1] is True
     assert checks.unreachable == 'not reachable'
 
 
 def test_a_broken_structure_is_a_problem_also_for_portal_items():
-    checks = Checks()
+    checks = AlgorithmChecks()
     page = checks._page('algorithm', 0, {'ID': PORTAL, 'Name': 'a', 'Tab': 'A1'})
     checks._check_flexible({'RelationA': {0: {'relation': None, 'relatant': 'mardi:Q1'}}}, page, 'RelationA',
                            'Algorithm')
@@ -95,7 +96,7 @@ def test_a_broken_structure_is_a_problem_also_for_portal_items():
 
 
 def test_the_name_and_description_of_a_portal_item_are_hints():
-    checks = Checks()
+    checks = AlgorithmChecks()
     checks.id_name_description(None, {'software': {0: {'ID': PORTAL, 'Name': 'BT', 'Tab': 'S1'}}},
                                CATALOG_ALGORITHM)
     assert [(problem.message, problem.hint) for problem in checks.err] == [('Missing Short Description', True)]

@@ -1,13 +1,13 @@
-'''Model Documentation check mixin.'''
+'''The checks of the model catalogs (full and basics), on the shared :class:`~MaRDMO.checks.base.ChecksBase`.'''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
-from ..model.constants import (
+from .constants import (
     data_properties_check,
     SECTION_MAP as SECTION_MAP_MODEL,
 )
-from ..constants import CATALOG_MODEL, CATALOG_MODEL_BASICS
+from .catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..ids import is_own_item
-from .base import without_page
+from ..checks.base import ChecksBase, without_page
 from ..patterns import QUDT_ID_STRICT_RE
 from ..tex_check import NOT_VERIFIED, UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
 from ..validators import (
@@ -15,8 +15,12 @@ from ..validators import (
 )
 
 
-class ModelMixin:
+class ModelChecks(ChecksBase):
     '''Checks for Mathematical Model catalog entries.'''
+
+    section_map = SECTION_MAP_MODEL
+    page_sections = ('model', 'formulation', 'quantity', 'task', 'problem', 'field', 'publication')
+    long_text_sections = ('field', 'problem', 'model', 'formulation', 'quantity', 'task')
 
     # -------------------------------------------------------------------------
     # Model Documentation Checks
@@ -25,8 +29,8 @@ class ModelMixin:
     def _check_formula_syntax(self, ivalue, section, page_name):
         '''Append an error for every formula or symbol the portal's TeX checker rejects.
 
-        Uses the verdicts collected in :meth:`run_model`; formulas the checker
-        could not answer are not reported here: ``run_model`` sets
+        Uses the verdicts collected in :meth:`run`; formulas the checker
+        could not answer are not reported here: ``run`` sets
         ``unreachable``, and the export waits until the checker answers.
         '''
         verdicts = getattr(self, '_tex_verdicts', {})
@@ -447,7 +451,7 @@ class ModelMixin:
     # Run method
     # -------------------------------------------------------------------------
 
-    def run_model(self, project, data, catalog):
+    def run(self, project, data, catalog):
         '''Run all model-catalog checks and return the collected error list.
 
         Executes, in order: ID/Name/Description, single-line text, data properties, model, task,
@@ -481,3 +485,15 @@ class ModelMixin:
         self.field(project, data, catalog)
         self.publication(project, data, catalog)
         return self._finalise()
+
+    def _publication_relations(self, ivalue, page_name):
+        '''Check the relations of the publication *ivalue* (page *page_name*) the model catalog requires.'''
+        # Model mode: mandatory link to a model entity
+        self._check_flexible(
+            data       = ivalue,
+            page_name  = page_name,
+            relation   = 'RelationP',
+            from_class = N_('Publication'),
+            to_class   = N_('Mathematical Model Entity'),
+            optional   = False
+        )

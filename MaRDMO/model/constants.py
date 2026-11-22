@@ -62,33 +62,6 @@ data_properties_per_class = {
     ]
 }
 
-# Key-Item Map for Class-Independent Data Properties
-INDEPENDENT_PROPERTIES = [
-    ('is_ordinary_differential_equation',   'ordinary differential equation'),
-    ('is_partial_differential_equation',    'partial differential equation'),
-    ('is_stochastic_differential_equation', 'stochastic differential equation'),
-    ('is_integro_differential_equation',    'integro-differential equation'),
-    ('is_chemical_constant',                'chemical constant'),
-    ('is_mathematical_constant',            'mathematical constant'),
-    ('is_physical_constant',                'physical constant'),
-]
-
-# Key-Item Map for Class-Dependent Data Properties
-DEPENDENT_PROPERTIES = [
-    ('is_deterministic',     'deterministic'),
-    ('is_stochastic',        'probabilistic'),
-    ('is_dimensional',       'dimensional'),
-    ('is_dimensionless',     'dimensionless'),
-    ('is_dynamic',           'dynamic'),
-    ('is_static',            'static'),
-    ('is_linear',            'linear'),
-    ('is_not_linear',        'nonlinear'),
-    ('is_space_continuous',  'continuous-space'),
-    ('is_space_discrete',    'discrete-space'),
-    ('is_time_continuous',   'continuous-time'),
-    ('is_time_discrete',     'discrete-time'),
-]
-
 # QUDT Reference IDs
 qudt_reference_ids = [
     'qudt_quantitykind_id',

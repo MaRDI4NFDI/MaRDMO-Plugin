@@ -9,7 +9,7 @@ QUDT identifier patterns
   (:mod:`~MaRDMO.validators`).  Accepts a single uppercase letter so that
   incremental typing is not rejected before the user has finished.
 - :data:`QUDT_ID_STRICT_RE` — strict, used in the documentation checker
-  (:mod:`~MaRDMO.checks.model`) and portal importer (:mod:`~MaRDMO.adders`).
+  (:mod:`~MaRDMO.model.checks`) and portal importer (:mod:`~MaRDMO.adders`).
   Requires at least two characters so that a lone capital letter is flagged as
   incomplete.
 
@@ -20,7 +20,7 @@ DOI patterns
   character (``1``, ``10``, ``10.``, ``10.1234``, ``10.1234/``,
   ``10.1234/suffix``) so the user is not blocked while still typing.
 - :data:`DOI_STRICT_RE` — strict, used in the documentation checker
-  (:mod:`~MaRDMO.checks.workflow`).  Requires the complete
+  (:mod:`~MaRDMO.workflow.checks`).  Requires the complete
   ``10.NNNN/suffix`` form.
 
 Single-line text pattern

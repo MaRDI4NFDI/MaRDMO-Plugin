@@ -9,6 +9,7 @@ source for the shared publication-role → Wikibase-property mapping used by
 the model, algorithm, and workflow ``get_relations()`` functions.
 '''
 
+from ..catalogs import registrations
 from ..getters import get_items, get_properties, get_publication_mapping
 
 
@@ -64,71 +65,16 @@ PROPS = {
     'P2IWE': ['analyzes', 'applies', 'documents', 'invents', 'studies', 'surveys', 'uses'],
 }
 
-ROUTING = {
-    'mardmo-model-catalog': [
-        {
-            'props': 'P2ME',
-            'classes': [
-                'mathematical model', 'computational task', 'formula',
-                'research problem', 'academic discipline', 'quantity', 'kind of quantity',
-            ],
-            'mapping': 'publication_mapping',
-            'relation': 'P2ME',
-            'relatant': 'ModelEntityRelatant',
-        },
-    ],
-    'mardmo-model-basics-catalog': [
-        {
-            'props': 'P2ME',
-            'classes': [
-                'mathematical model', 'computational task', 'formula',
-                'research problem', 'academic discipline', 'quantity', 'kind of quantity',
-            ],
-            'mapping': 'publication_mapping',
-            'relation': 'P2ME',
-            'relatant': 'ModelEntityRelatant',
-        },
-    ],
-    'mardmo-algorithm-catalog': [
-        {
-            'props': 'P2A',
-            'classes': ['algorithm'],
-            'mapping': 'publication_mapping',
-            'relation': 'P2A',
-            'relatant': 'ARelatant',
-        },
-        {
-            'props': 'P2BS',
-            'classes': ['software', 'benchmark'],
-            'mapping': 'publication_mapping',
-            'relation': 'P2BS',
-            'relatant': 'BSRelatant',
-        },
-    ],
-    'mardmo-interdisciplinary-workflow-catalog': [
-        {
-            'props': 'P2A',
-            'classes': ['algorithm'],
-            'mapping': 'publication_mapping',
-            'relation': 'P2A',
-            'relatant': 'ARelatant',
-        },
-        {
-            'props': 'P2BS',
-            'classes': ['software', 'computer hardware'],
-            'mapping': 'publication_mapping',
-            'relation': 'P2BS',
-            'relatant': 'HSRelatant',
-        },
-        {
-            'props': 'P2IWE',
-            'classes': ['research workflow', 'process step', 'data set'],
-            'mapping': 'publication_mapping',
-            'relation': 'P2IWE',
-            'relatant': 'IWERelatant',
-        },
-    ],
-}
+
+def routing():
+    '''The relations a publication can have, per catalog: ``{catalog name: [rule, …]}``.
+
+    Each catalog declares its rules (:attr:`~MaRDMO.catalogs.Registration.routing`):
+    which classes of items a publication of it can be related to, by which
+    relation types (:data:`PROPS`) and in which answer.
+    '''
+    return {catalog.name: list(registration.routing) for registration in registrations()
+            for catalog in registration.catalogs if registration.routing}
 
 # URI mappings for item infos
 # The name is the label: a publication referenced by its MaRDI Portal or

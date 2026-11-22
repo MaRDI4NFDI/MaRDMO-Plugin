@@ -15,10 +15,6 @@ marked with ``N_`` so that the catalog has them (see :mod:`MaRDMO.problems`).
 '''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
-from ..model.constants import SECTION_MAP as SECTION_MAP_MODEL
-from ..algorithm.constants import SECTION_MAP as SECTION_MAP_ALGO
-from ..workflow.constants import SECTION_MAP as SECTION_MAP_WORKFLOW
-from ..catalogs import ALGORITHM, MODEL, WORKFLOW, catalog_of
 from ..getters import get_mathalgodb, get_mathmoddb, get_options, get_url
 from ..properties import find_reference
 from ..ids import NOT_FOUND, is_own_item
@@ -70,16 +66,6 @@ BENCHMARK_REFERENCE_CHECKS = (
     ('SOURCECODE_URL',  N_('Repository URL'),  'URL'),
 )
 
-# Workflow textarea answers besides the procedure: answer key -> field label
-_WORKFLOW_SINGLE_LINE_FIELDS = {
-    'mathematical':     N_('Mathematical Reproducibility'),
-    'runtime':          N_('Runtime Reproducibility'),
-    'result':           N_('Reproducibility of Results'),
-    'originalplatform': N_('Reproducibility on original Hardware or Instrument'),
-    'otherplatform':    N_('Reproducibility on other Hardware or Instrument'),
-}
-
-
 def _normalized(value):
     '''*value* as the statements of the portal have it: text without surrounding spaces and leading "+".'''
     return str(value).strip().lstrip('+')
@@ -104,14 +90,28 @@ def _snak_texts(snak):
     return set()
 
 
-def _kind(catalog):
-    '''The kind of *catalog* (a catalog URI, :mod:`MaRDMO.catalogs`), or ``None`` if it is not MaRDMO's.'''
-    entry = catalog_of(catalog)
-    return entry.kind if entry else None
-
-
 class ChecksBase:
-    '''Core infrastructure: registry init, error helpers, shared checks, and publication.'''
+    '''Core infrastructure: registry init, error helpers, shared checks, and publication.
+
+    The checks of a catalog are a subclass (``model/checks.py`` etc., named by
+    its :class:`~MaRDMO.catalogs.Catalog`) with a method ``run`` and these
+    class attributes, which the shared checks read:
+
+    - ``section_map``: section of the answers → its name in the messages;
+    - ``page_sections``: the sections whose pages need ID, Name and Description;
+    - ``long_text_sections``: the sections whose long texts must be single lines;
+    - ``long_text_labels``: section → the name of its long description, if not
+      "Detailed Description";
+    - ``long_text_fields``: section → further single-line answers ``{key: name}``;
+
+    and the method :meth:`_publication_relations`.
+    '''
+
+    section_map = {}
+    page_sections = ()
+    long_text_sections = ()
+    long_text_labels = {}
+    long_text_fields = {}
 
     def __init__(self):
         '''Initialise with ontology registries and an empty error list.'''
@@ -406,24 +406,7 @@ class ChecksBase:
             data:    Top-level answers dict.
             catalog: Active catalog URI suffix.
         '''
-        kind = _kind(catalog)
-        if kind == ALGORITHM:
-            section_map = SECTION_MAP_ALGO
-            okeys = ('algorithm', 'problem', 'software', 'benchmark', 'publication')
-        elif kind == MODEL:
-            section_map = SECTION_MAP_MODEL
-            okeys = (
-                'model', 'formulation', 'quantity', 'task',
-                'problem', 'field', 'publication'
-            )
-        elif kind == WORKFLOW:
-            section_map = SECTION_MAP_WORKFLOW
-            okeys = (
-                'workflow', 'processstep', 'algorithm', 'software',
-                'hardware', 'dataset', 'publication'
-            )
-        else:
-            return
+        section_map, okeys = self.section_map, self.page_sections
 
         for okey, ovalue in data.items():
             if okey not in okeys:
@@ -512,28 +495,19 @@ class ChecksBase:
             data:    Top-level answers dict.
             catalog: Active catalog URI suffix.
         '''
-        kind = _kind(catalog)
-        if kind == MODEL:
-            section_map = SECTION_MAP_MODEL
-            okeys = ('field', 'problem', 'model', 'formulation', 'quantity', 'task')
-        elif kind == WORKFLOW:
-            section_map = SECTION_MAP_WORKFLOW
-            okeys = ('workflow',)
-        else:
-            return
+        section_map, okeys = self.section_map, self.long_text_sections
         for okey in okeys:
             if not data.get(okey):
                 continue
             for ikey, ivalue in data[okey].items():
-                long_label = N_('Procedure') if okey == 'workflow' else N_('Detailed Description')
+                long_label = self.long_text_labels.get(okey, N_('Detailed Description'))
                 fields = [(long_label, text, 'descriptionLong') for text in ivalue.get('descriptionLong', {}).values()]
                 if isinstance(ivalue.get('reference'), str):
                     fields.append((N_('Reference'), ivalue['reference'], 'reference'))
-                if okey == 'workflow':
-                    for key, label in _WORKFLOW_SINGLE_LINE_FIELDS.items():
-                        for answer in ivalue.get(key, {}).values():
-                            if answer and len(answer) > 1:
-                                fields.append((label, answer[1], key))
+                for key, label in self.long_text_fields.get(okey, {}).items():
+                    for answer in ivalue.get(key, {}).values():
+                        if answer and len(answer) > 1:
+                            fields.append((label, answer[1], key))
                 flagged = set()
                 for label, text, line_field in fields:
                     if label in flagged or not (isinstance(text, str) and LINE_BREAK_RE.search(text)):
@@ -604,68 +578,11 @@ class ChecksBase:
                     )
                 )
 
-            if _kind(catalog) == ALGORITHM:
-                # Algorithm mode: optional links, but at least one required
-                if ivalue.get('RelationA') or ivalue.get('RelationBS'):
-                    self._check_flexible(
-                        data       = ivalue,
-                        page_name  = page_name,
-                        relation   = 'RelationA',
-                        from_class = N_('Publication'),
-                        to_class   = N_('Algorithm'),
-                        optional   = True
-                    )
-                    self._check_flexible(
-                        data       = ivalue,
-                        page_name  = page_name,
-                        relation   = 'RelationBS',
-                        from_class = N_('Publication'),
-                        to_class   = N_('Benchmark/Software'),
-                        optional   = True
-                    )
-                else:
-                    self._missing(N_('Publication'), page_name, _('Missing Algorithm, Benchmark, or Software'),
-                                  'RelationA')
-            elif _kind(catalog) == WORKFLOW:
-                # Workflow mode: at least one of Algorithm, Hardware/Software, or Entity required
-                if ivalue.get('RelationA') or ivalue.get('RelationHS') or ivalue.get('RelationP'):
-                    self._check_flexible(
-                        data       = ivalue,
-                        page_name  = page_name,
-                        relation   = 'RelationA',
-                        from_class = N_('Publication'),
-                        to_class   = N_('Algorithm'),
-                        optional   = True
-                    )
-                    self._check_flexible(
-                        data       = ivalue,
-                        page_name  = page_name,
-                        relation   = 'RelationHS',
-                        from_class = N_('Publication'),
-                        to_class   = N_('Hardware or Software'),
-                        optional   = True
-                    )
-                    self._check_flexible(
-                        data       = ivalue,
-                        page_name  = page_name,
-                        relation   = 'RelationP',
-                        from_class = N_('Publication'),
-                        to_class   = N_('Interdisciplinary Workflow, Process Step, or Data Set'),
-                        optional   = True
-                    )
-                else:
-                    self._missing(N_('Publication'), page_name,
-                                  _('Missing Algorithm, Hardware/Software, or Workflow Entity'), 'RelationA')
-            else:
-                # Model mode: mandatory link to a model entity
-                self._check_flexible(
-                    data       = ivalue,
-                    page_name  = page_name,
-                    relation   = 'RelationP',
-                    from_class = N_('Publication'),
-                    to_class   = N_('Mathematical Model Entity'),
-                    optional   = False
-                )
+            self._publication_relations(ivalue, page_name)
+
+    def _publication_relations(self, ivalue, page_name):
+        '''Check the relations of the publication *ivalue* (page *page_name*) the catalog requires.'''
+        raise NotImplementedError
 
     def _finalise(self):
         '''Return the problems, sorted by their text (the order of the error page).
