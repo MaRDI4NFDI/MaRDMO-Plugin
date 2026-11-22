@@ -144,7 +144,7 @@ lists it under *Before you export*; nothing else is needed for the preview.
 reporting them.  For references, `PublicationExport._add_references` removes
 leading and trailing whitespace before the statement is added.
 
-**Final check.**  **File:** `payload.py`, `GeneratePayload.validate_identifiers()`
+**Final check.**  **File:** `payload/validation.py`, `invalid_values()` (called by `GeneratePayload.validate_identifiers()`)
 — add the property to the values checked before anything is posted:
 
 ```python

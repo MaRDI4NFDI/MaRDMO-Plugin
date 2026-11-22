@@ -1,5 +1,19 @@
 # Entry Points
 
+Where the export happens, from the answers to the portal:
+
+| Step | Module |
+|---|---|
+| Read the answers, add pages and IDs | `main`, `getters`, `pages`, `ids` |
+| Check and preview | `checks`, `pipeline`, `views` |
+| Build the payload | the catalog's `worker`, `payload` (`bodies`, `claims`, `validation`) |
+| Authorize | `oauth2` |
+| Post it, report what went wrong | `upload`, `portal_errors` |
+| Write the new IDs back | `ids` (`replace_ids`), `writes` |
+
+Shared utilities (values, relations, ordering, properties) are listed under
+[Utilities](utilities.md).
+
 ## Main
 
 ::: MaRDMO.main
@@ -11,6 +25,14 @@
 ## OAuth2
 
 ::: MaRDMO.oauth2
+
+## Upload
+
+::: MaRDMO.upload
+
+## Portal Errors
+
+::: MaRDMO.portal_errors
 
 ## Store
 

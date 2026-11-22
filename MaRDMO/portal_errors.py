@@ -98,8 +98,9 @@ def locate_rejected_value(key, jsons, path):
                or ``['statement', 'qualifiers', '0', 'value', 'content']``.
 
     Raises:
-        KeyError, IndexError, ValueError, TypeError: if the path does not
-        match the payload; the caller then falls back to the generic message.
+        ValueError: If the path does not match the payload (or KeyError,
+            IndexError, TypeError); :func:`explain_error` then falls back to
+            the generic message.
     '''
     entry = jsons[key]
     if key.startswith('Item') and path[0] == 'item':

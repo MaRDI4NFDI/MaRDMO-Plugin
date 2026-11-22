@@ -55,7 +55,7 @@ nav:
           - Checks: reference/checks.md
           - Payload: reference/payload.md
           - Data Access: reference/data.md
-          - Utilities: reference/helpers.md
+          - Utilities: reference/utilities.md
           - Question Configuration: reference/questions.md
       - Submodules:
           - Model: reference/model.md
