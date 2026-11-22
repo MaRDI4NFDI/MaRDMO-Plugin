@@ -12,7 +12,8 @@ from rdmo.projects.models import Membership
 
 from MaRDMO import main
 from MaRDMO.checks import Checks
-from MaRDMO.constants import BASE_URI, CATALOG_MODEL
+from MaRDMO.constants import BASE_URI
+from MaRDMO.model.catalog import CATALOG_MODEL
 from tests.db.conftest import answer, save
 
 

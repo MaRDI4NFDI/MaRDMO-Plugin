@@ -1,33 +1,30 @@
-'''MaRDMO's catalogs: one entry each, with what the code needs to know about it (#138).
+'''MaRDMO's catalogs: each declares itself, the shared code looks it up here (#198).
 
-A catalog of the questionnaire is a MaRDMO catalog if it has an entry here;
-everything else (the preview, the export, the handlers of the interview, the
-checks) looks the catalog up here instead of comparing its URI.  A new
-catalog needs one entry, and the tables keyed by catalog
-(:mod:`MaRDMO.builders`, :data:`MaRDMO.publication.constants.ROUTING`)
-need its rows; ``tests/unit/test_catalogs.py`` names what is missing.
+A catalog is a package (``model``, ``algorithm``, ``workflow``, ``search``)
+whose module ``catalog.py`` declares its :class:`Registration`: its catalog
+entries (:class:`Catalog`) and its question set.  The registry
+(:data:`CATALOG_PACKAGES`, :func:`registrations`) loads these declarations
+when first needed, as Django loads the apps of ``INSTALLED_APPS``; the shared
+code names no catalog.  A catalog of the questionnaire is a MaRDMO catalog
+if a registration has an entry for it (:func:`catalog_of`).
+``tests/unit/test_catalogs.py`` names what a declaration is missing.
 
 The workers are given by their import path and loaded when first used: the
 router and the provider settings import this module early, before the
 workers can be imported.
 '''
-from dataclasses import dataclass
-from functools import cached_property
+from dataclasses import dataclass, field
+from functools import cached_property, lru_cache
 from importlib import import_module
 from typing import Optional
 
-from .constants import (
-    BASE_URI,
-    CATALOG_ALGORITHM_NAME,
-    CATALOG_MODEL_BASICS_NAME,
-    CATALOG_MODEL_NAME,
-    CATALOG_WORKFLOW_NAME,
-)
+from .constants import BASE_URI
 
 MODEL, ALGORITHM, WORKFLOW, SEARCH = 'model', 'algorithm', 'workflow', 'search'
 '''The kinds of catalogs: what is documented (or searched) with it.'''
 
-CATALOG_SEARCH_NAME = 'mardmo-search-catalog'
+CATALOG_PACKAGES = ('model', 'algorithm', 'workflow', 'search')
+'''The packages of MaRDMO's catalogs; each has a module ``catalog.py`` with its :class:`Registration`.'''
 
 
 @dataclass(frozen=True)
@@ -70,21 +67,33 @@ class Catalog:
         return getattr(import_module(module), name)
 
 
-CATALOGS = {catalog.name: catalog for catalog in (
-    Catalog(CATALOG_MODEL_NAME, MODEL, 'model', 'MaRDMO/preview_model.html',
-            'MaRDMO.model.worker.PrepareModel', 'run_model'),
-    Catalog(CATALOG_MODEL_BASICS_NAME, MODEL, 'model', 'MaRDMO/preview_model_basics.html',
-            'MaRDMO.model.worker.PrepareModel', 'run_model', subset=True),
-    Catalog(CATALOG_ALGORITHM_NAME, ALGORITHM, 'algorithm', 'MaRDMO/preview_algorithm.html',
-            'MaRDMO.algorithm.worker.PrepareAlgorithm', 'run_algorithm'),
-    Catalog(CATALOG_WORKFLOW_NAME, WORKFLOW, 'workflow', 'MaRDMO/preview_workflow.html',
-            'MaRDMO.workflow.worker.PrepareWorkflow', 'run_workflow'),
-    Catalog(CATALOG_SEARCH_NAME, SEARCH, None, 'MaRDMO/preview_search.html'),
-)}
-'''MaRDMO's catalogs by name.'''
+@dataclass(frozen=True)
+class Registration:
+    '''What a catalog package declares about itself (its ``catalog.py``, ``REGISTRATION``).
 
-DOCUMENTING = tuple(name for name, catalog in CATALOGS.items() if catalog.documents)
-'''The names of the catalogs that document items (all but the search).'''
+    Attributes:
+        catalogs:  Its catalog entries (:class:`Catalog`).
+        questions: ``{question set: path of its questions.json}``, relative
+                   to the MaRDMO package.
+    '''
+    catalogs: tuple
+    questions: dict = field(default_factory=dict)
+
+
+@lru_cache(maxsize=None)
+def registrations():
+    '''The :class:`Registration` of every package of :data:`CATALOG_PACKAGES`, loaded when first needed.'''
+    return tuple(import_module(f'{__package__}.{package}.catalog').REGISTRATION for package in CATALOG_PACKAGES)
+
+
+def catalogs():
+    '''MaRDMO's catalogs by name: the entries of all registrations.'''
+    return {catalog.name: catalog for registration in registrations() for catalog in registration.catalogs}
+
+
+def documenting():
+    '''The names of the catalogs that document items (all but the search).'''
+    return tuple(name for name, catalog in catalogs().items() if catalog.documents)
 
 
 def catalog_of(project_or_catalog):
@@ -92,4 +101,4 @@ def catalog_of(project_or_catalog):
     catalog = getattr(project_or_catalog, 'catalog', project_or_catalog)
     if catalog is None:
         return None
-    return CATALOGS.get(str(catalog).rsplit('/', 1)[-1])
+    return catalogs().get(str(catalog).rsplit('/', 1)[-1])

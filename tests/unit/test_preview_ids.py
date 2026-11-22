@@ -2,7 +2,7 @@
 from django.template.loader import render_to_string
 
 from MaRDMO.checks import Checks
-from MaRDMO.constants import CATALOG_MODEL, CATALOG_MODEL_BASICS
+from MaRDMO.model.catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
 from MaRDMO.problems import attach
 from tests.support.html import text
 

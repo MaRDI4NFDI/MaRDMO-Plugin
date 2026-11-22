@@ -1,7 +1,7 @@
 '''Algorithm Documentation check mixin.'''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
-from ..constants import CATALOG_ALGORITHM
+from ..algorithm.catalog import CATALOG_ALGORITHM
 from .base import BENCHMARK_REFERENCE_CHECKS, SOFTWARE_REFERENCE_CHECKS
 
 

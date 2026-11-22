@@ -39,15 +39,13 @@ class MaRDMOConfig(AppConfig):
         lookups throughout the plugin.
         '''
 
+        from .catalogs import registrations
         from .getters import get_data
 
-        self.questions = {
-            'algorithm': get_data('algorithm/data/questions.json'),
-            'model': get_data('model/data/questions.json'),
-            'publication': get_data('publication/data/questions.json'),
-            'workflow': get_data('workflow/data/questions.json'),
-            'search': get_data('search/data/questions.json'),
-        }
+        # The publication's questions belong to every catalog; the others are the catalogs' own
+        self.questions = {'publication': get_data('publication/data/questions.json')}
+        for registration in registrations():
+            self.questions.update({key: get_data(path) for key, path in registration.questions.items()})
         self.mathmoddb          = get_data('model/data/mapping.json')
         self.mathalgodb         = get_data('algorithm/data/mapping.json')
         self.publication_mapping = get_data('publication/data/mapping.json')

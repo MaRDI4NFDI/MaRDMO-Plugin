@@ -19,7 +19,7 @@ Provides:
 - ``build_presave_validator_map``   — pre-save validation dispatch dict
 '''
 
-from .catalogs import CATALOGS, DOCUMENTING
+from .catalogs import catalogs, documenting
 from .constants import BASE_URI
 from .getters import get_questions
 from .model.handlers import Information as ModelInformation
@@ -203,7 +203,7 @@ def _uri(questions, question_set, question):
 
 def _per_catalog(maps):
     '''``{catalog name: map}`` from ``{question set: map}``: each catalog the map of its question set.'''
-    return {name: dict(maps[CATALOGS[name].questions]) for name in DOCUMENTING}
+    return {name: dict(maps[catalogs()[name].questions]) for name in documenting()}
 
 
 def build_post_save_handler_set():
@@ -238,7 +238,7 @@ def build_post_delete_handler_set():
     """
     publication = PublicationInformation()
     pub_set_uri = f"{BASE_URI}{get_questions('publication')['Publication']['uri']}"
-    return {name: {pub_set_uri: publication.publication_delete} for name in DOCUMENTING}
+    return {name: {pub_set_uri: publication.publication_delete} for name in documenting()}
 
 
 def build_presave_validator_map():

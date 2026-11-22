@@ -10,7 +10,7 @@ portal's statements are given here.
 import pytest
 
 from MaRDMO.checks import Checks
-from MaRDMO.constants import CATALOG_ALGORITHM
+from MaRDMO.algorithm.catalog import CATALOG_ALGORITHM
 from MaRDMO.getters import get_options
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.problems import Problem, report_lines

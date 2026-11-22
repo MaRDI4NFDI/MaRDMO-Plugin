@@ -5,7 +5,7 @@ from ..model.constants import (
     data_properties_check,
     SECTION_MAP as SECTION_MAP_MODEL,
 )
-from ..constants import CATALOG_MODEL, CATALOG_MODEL_BASICS
+from ..model.catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..ids import is_own_item
 from .base import without_page
 from ..patterns import QUDT_ID_STRICT_RE
