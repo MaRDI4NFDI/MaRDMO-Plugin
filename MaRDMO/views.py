@@ -53,6 +53,9 @@ from .store import (
     _unregister_job_for_session,
     _job_belongs_to_session,
 )
+from .duplicates import preview_duplicates, reuse, same_duplicate
+from .catalogs import catalog_of
+from .tex_check import check_formula
 
 
 @login_required
@@ -191,9 +194,6 @@ def reuse_portal_item(request, project_id):
     Returns:
         A redirect to the preview's box "Before you export", or an error page.
     """
-    from .duplicates import preview_duplicates, reuse, same_duplicate
-    from .catalogs import catalog_of
-
     project = get_object_or_404(Project, pk=project_id)
     if not request.user.has_perm('projects.change_value_object', project):
         return render(request, 'core/error.html',
@@ -243,8 +243,6 @@ def check_tex(request):
         JSON ``{"state": "valid" | "invalid" | "unverified", "message": …,
         "checked": …}``; HTTP 400 without a formula or for a text too long.
     """
-    from .tex_check import check_formula
-
     tex = request.POST.get('tex', '')
     if not tex.strip() or len(tex) > TEX_CHECK_MAX_LENGTH:
         return JsonResponse({'error': 'tex'}, status=400)

@@ -45,8 +45,8 @@ def portal(monkeypatch):
         asked.append(sorted(wikidata_qids))
         return PortalItems(by_wikidata={'Q29996': 'Q1', 'Q25428': 'Q2', 'Q25358': None},
                            markers={'Q1': QUANTITY, 'Q2': SOFTWARE})
-    monkeypatch.setattr('MaRDMO.queries.find_portal_items', find)
-    monkeypatch.setattr('MaRDMO.queries.portal_labels',
+    monkeypatch.setattr('MaRDMO.handler_base.find_portal_items', find)
+    monkeypatch.setattr('MaRDMO.handler_base.portal_labels',
                         lambda qids, **kwargs: {'Q1': ('electric current', 'rate of flow of electric charge')})
     return asked
 
@@ -58,7 +58,7 @@ def test_only_fitting_twins_replace_wikidata_items(portal):
 
 
 def test_a_failed_lookup_keeps_the_wikidata_items(monkeypatch):
-    monkeypatch.setattr('MaRDMO.queries.find_portal_items', lambda **kwargs: PortalItems(wikidata_failed=True))
+    monkeypatch.setattr('MaRDMO.handler_base.find_portal_items', lambda **kwargs: PortalItems(wikidata_failed=True))
     data = models.MathematicalFormulation(contains_quantity=[CURRENT, RESISTANCE])
     use_portal_twins([data], twin_fields('model', TWINS['formulation']))
     assert data.contains_quantity == [CURRENT, RESISTANCE]
@@ -130,8 +130,8 @@ def twins(monkeypatch):
         asked.append(sorted(wikidata_qids))
         return PortalItems(by_wikidata={qid: portal[qid][0] if qid in portal else None for qid in wikidata_qids},
                            markers={twin: markers for twin, markers, _ in portal.values()})
-    monkeypatch.setattr('MaRDMO.queries.find_portal_items', find)
-    monkeypatch.setattr('MaRDMO.queries.portal_labels', lambda qids, **kwargs: {
+    monkeypatch.setattr('MaRDMO.handler_base.find_portal_items', find)
+    monkeypatch.setattr('MaRDMO.handler_base.portal_labels', lambda qids, **kwargs: {
         twin: label for twin, _, label in portal.values() if twin in qids})
     return asked
 

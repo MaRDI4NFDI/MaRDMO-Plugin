@@ -43,7 +43,7 @@ from django.utils.translation import gettext, gettext_lazy as _, gettext_noop as
 from rest_framework.exceptions import ValidationError
 
 from .getters import get_mathmoddb, get_options
-from .ids import is_own_item
+from .ids import is_own_item, publication_doi
 from .model.constants import data_properties_check
 from .patterns import (
     DOI_RE, DOI_STRICT_RE, LINE_BREAK_RE, QUDT_ID_RE, SWMATH_ID_RE,
@@ -437,7 +437,6 @@ def validate_publication_id(instance):
         ValidationError: when the text is a ``doi:`` identifier with a DOI
             that is missing or not complete and valid.
     '''
-    from .ids import publication_doi  # pylint: disable=import-outside-toplevel
     doi = publication_doi(instance.text)
     if doi is None:
         return

@@ -18,8 +18,10 @@ from .algorithm.constants import get_uri_prefix_map as get_uri_prefix_map_algori
 from .model.constants import get_uri_prefix_map as get_uri_prefix_map_model
 from .workflow.constants import get_uri_prefix_map as get_uri_prefix_map_workflow
 
-# Lazy singletons – avoid circular imports and repeated instantiation.
-# Using a mutable dict so no global statement is needed.
+# The handlers of the catalogs, one instance each, created when first used
+# (a mutable dict, so no global statement is needed).  The shared code still
+# names the catalogs here; once the catalogs register themselves, the
+# registry replaces these imports.
 _INFO_CACHE: dict = {}
 
 

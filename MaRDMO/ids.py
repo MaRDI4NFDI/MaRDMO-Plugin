@@ -168,11 +168,6 @@ def tab_placeholder(section, set_index):
     return f'{PLACEHOLDER_PREFIX}{section}:{set_index}'
 
 
-def is_placeholder(identifier):
-    '''Return ``True`` if *identifier* is the :func:`tab_placeholder` of a tab without item.'''
-    return bool(identifier) and identifier.startswith(PLACEHOLDER_PREFIX)
-
-
 def _placeholder_of(value):
     '''The :func:`tab_placeholder` of the tab whose ID answer is *value*.'''
     return tab_placeholder(value.attribute.uri.rsplit('/', 2)[-2], value.set_index)

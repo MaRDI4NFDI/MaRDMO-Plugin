@@ -8,7 +8,7 @@ import pytest
 from django.test import Client
 from django.urls import reverse
 
-import MaRDMO.tex_check as tex_check
+import MaRDMO.views as views
 from MaRDMO.views import TEX_CHECK_MAX_LENGTH
 
 URL = '/services/tex-check/'
@@ -22,7 +22,7 @@ def checked(monkeypatch):
     def check_formula(tex):
         asked.append(tex)
         return {'state': 'valid', 'message': '', 'checked': tex}
-    monkeypatch.setattr(tex_check, 'check_formula', check_formula)
+    monkeypatch.setattr(views, 'check_formula', check_formula)
     return asked
 
 

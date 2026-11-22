@@ -40,6 +40,7 @@ from .values import extract_parts
 from .ids import (
     DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, publication_doi,
 )
+from .validators import doi_problem
 
 logger = logging.getLogger(__name__)
 
@@ -377,7 +378,6 @@ def publication_options(search):
     refused with the reason (the pre-save validator), which the user would
     not learn from an empty dropdown.
     '''
-    from .validators import doi_problem  # pylint: disable=import-outside-toplevel
     doi = publication_doi(search)
     if not doi:
         return []

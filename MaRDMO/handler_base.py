@@ -12,7 +12,10 @@ simply uses the default catalog='' everywhere.
 '''
 
 from dataclasses import dataclass, replace
+from functools import partial
 from typing import Any
+
+from rdmo.domain.models import Attribute
 
 from .constants import ALGORITHM_PROPS, SOFTWARE_PROPS
 from .models import Algorithm, Relatant, Software
@@ -31,6 +34,9 @@ from .ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .workflow.models import ProcessStepUsage
 from .sources.http import query_sparql, query_sparql_parts
+from .publication.handlers import Information
+from .queries import find_portal_items, portal_labels, portal_publications_by_doi, wikidata_dois
+from .markers import contradictions, PUBLICATION_MARKERS, SECTION_MARKERS
 
 # Lazy singleton – instantiated on first use so that the Django app registry
 # is guaranteed to be ready (publication.handlers imports rdmo ORM models).
@@ -40,7 +46,6 @@ _PUB_INFO: list = []
 def _get_pub_info():
     '''Return the singleton :class:`~MaRDMO.publication.handlers.Information` instance.'''
     if not _PUB_INFO:
-        from .publication.handlers import Information  # pylint: disable=import-outside-toplevel
         _PUB_INFO.append(Information())
     return _PUB_INFO[0]
 
@@ -85,7 +90,6 @@ def _twin_lookup(qids):
     :func:`~MaRDMO.queries.find_portal_items`); a lookup that fails finds no
     twins.
     '''
-    from .queries import find_portal_items, portal_labels# pylint: disable=import-outside-toplevel
     if not qids:
         return {}
     found = find_portal_items(wikidata_qids=sorted(qids))
@@ -101,7 +105,6 @@ def _fits(portal, markers):
     The rule of the preview's "Use this item" (#141): classes MaRDMO does
     not use contradict nothing.
     '''
-    from .markers import contradictions  # pylint: disable=import-outside-toplevel
     return any(not contradictions(marker, portal) for marker in markers)
 
 
@@ -126,8 +129,6 @@ def publication_twins(publications, visited=()):
     Wikidata publication; so does one already on a page (*visited*).  One
     lookup each for all *publications*.
     '''
-    from .markers import PUBLICATION_MARKERS  # pylint: disable=import-outside-toplevel
-    from .queries import portal_publications_by_doi, wikidata_dois# pylint: disable=import-outside-toplevel
     wikidata = [pub for pub in publications if (pub.id or '').startswith('wikidata:') and pub.id not in visited]
     if not wikidata:
         return list(publications)
@@ -188,7 +189,6 @@ def twin_fields(catalog, table):
     :data:`~MaRDMO.markers.SECTION_MARKERS`); a tuple of sections fits
     any of them (e.g. quantity and quantity kind).
     '''
-    from .markers import SECTION_MARKERS  # pylint: disable=import-outside-toplevel
     markers = SECTION_MARKERS[catalog]
     return {attribute: tuple(markers[name] for name in ((section,) if isinstance(section, str) else section))
             for section, attributes in table.items() for attribute in attributes}
@@ -339,7 +339,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         Returns:
             Set of external ID strings (e.g. ``{'mardi:Q42', 'wikidata:Q7'}``).
         '''
-        from rdmo.domain.models import Attribute  # pylint: disable=import-outside-toplevel
         id_uris = [
             f'{self.base}{self.questions[k]["ID"]["uri"]}'
             for k in self._ENTITY_KEYS
@@ -542,7 +541,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
             catalog:  Active catalog URI suffix (default ``""``).
             visited:  Set of external IDs already processed (mutated to avoid cycles).
         '''
-        from functools import partial  # pylint: disable=import-outside-toplevel
 
         if not items:
             return
@@ -632,7 +630,6 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
             catalog:  Active catalog URI suffix (default ``""``).
             visited:  Set of external IDs already processed (mutated to avoid cycles).
         '''
-        from functools import partial  # pylint: disable=import-outside-toplevel
 
         if not items:
             return
