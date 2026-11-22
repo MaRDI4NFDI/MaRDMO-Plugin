@@ -7,6 +7,7 @@ do; "exists" is set as the existence check would.
 import pytest
 
 from MaRDMO.payload import GeneratePayload
+from MaRDMO.payload.claims import same_meaning
 
 CONTAINS, USES, ROLE, SYMBOL, PLATFORM, ASSUMES = 'P1', 'P2', 'P10', 'P11', 'P12', 'P20'
 SUBJECT, OBJECT = 'Item0000000001', 'Item0000000002'
@@ -155,7 +156,7 @@ def test_role_referring_to_a_new_item_is_a_new_statement(payload):
 def test_claims_that_cannot_be_fetched_stop_the_export(payload, monkeypatch):
     import requests
 
-    import MaRDMO.payload as module
+    import MaRDMO.payload.claims as module
 
     def unreachable(*args, **kwargs):
         raise requests.exceptions.ConnectionError('offline')
@@ -280,4 +281,4 @@ def test_one_of_two_platforms_is_another_usage(payload):
     ({(PLATFORM, 'Q40')}, {(PLATFORM, 'Q40'), (PLATFORM, 'Q41')}, False),
 ])
 def test_same_meaning(entry, portal_statement, same):
-    assert GeneratePayload._same_meaning(entry, portal_statement, ROLE) is same
+    assert same_meaning(entry, portal_statement, ROLE) is same

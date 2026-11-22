@@ -8,9 +8,9 @@ around :attr:`~MaRDMO.apps.MaRDMOConfig` attributes or
 
 Provides:
 
-- ``get_mathmoddb``              — return a :class:`~.helpers.PropertyRegistry` for MathModDB
-- ``get_mathalgodb``             — return a :class:`~.helpers.PropertyRegistry` for MathAlgoDB
-- ``get_publication_mapping``    — return a :class:`~.helpers.PropertyRegistry` for shared publication roles
+- ``get_mathmoddb``              — return a :class:`~.properties.PropertyRegistry` for MathModDB
+- ``get_mathalgodb``             — return a :class:`~.properties.PropertyRegistry` for MathAlgoDB
+- ``get_publication_mapping``    — return a :class:`~.properties.PropertyRegistry` for shared publication roles
 - ``get_options``                — return the RDMO options dict from the app config
 - ``get_items``                  — return the Wikibase items dict from the app config
 - ``get_properties``             — return the Wikibase properties dict from the app config
@@ -36,12 +36,14 @@ from rdmo.domain.models import Attribute
 
 from .constants import BASE_URI, WIKIDATA
 from .constants import flag_dict
-from .helpers import PropertyRegistry, get_attribute, nested_set
+from .properties import PropertyRegistry
+from .values import nested_set
+from .writes import get_attribute
 def get_mathmoddb():
-    '''Return a :class:`~.helpers.PropertyRegistry` for the MathModDB ontology.
+    '''Return a :class:`~.properties.PropertyRegistry` for the MathModDB ontology.
 
     Returns:
-        :class:`~.helpers.PropertyRegistry` wrapping
+        :class:`~.properties.PropertyRegistry` wrapping
         :attr:`~MaRDMO.apps.MaRDMOConfig.mathmoddb`.
     '''
     return PropertyRegistry(
@@ -49,10 +51,10 @@ def get_mathmoddb():
     )
 
 def get_mathalgodb():
-    '''Return a :class:`~.helpers.PropertyRegistry` for the MathAlgoDB ontology.
+    '''Return a :class:`~.properties.PropertyRegistry` for the MathAlgoDB ontology.
 
     Returns:
-        :class:`~.helpers.PropertyRegistry` wrapping
+        :class:`~.properties.PropertyRegistry` wrapping
         :attr:`~MaRDMO.apps.MaRDMOConfig.mathalgodb`.
     '''
     return PropertyRegistry(
@@ -60,10 +62,10 @@ def get_mathalgodb():
     )
 
 def get_publication_mapping():
-    '''Return a :class:`~.helpers.PropertyRegistry` for the shared publication role options.
+    '''Return a :class:`~.properties.PropertyRegistry` for the shared publication role options.
 
     Returns:
-        :class:`~.helpers.PropertyRegistry` wrapping
+        :class:`~.properties.PropertyRegistry` wrapping
         :attr:`~MaRDMO.apps.MaRDMOConfig.publication_mapping`.
     '''
     return PropertyRegistry(
@@ -299,7 +301,7 @@ def get_answers(project, val, config):
     Iterates over all :class:`~rdmo.projects.models.Value` objects for the
     attribute described by *config*, determines the appropriate path in *val*
     via a :data:`~.constants.flag_dict` handler, and calls
-    :func:`~.helpers.nested_set` to write the entry.
+    :func:`~.values.nested_set` to write the entry.
 
     Args:
         project: RDMO project instance.

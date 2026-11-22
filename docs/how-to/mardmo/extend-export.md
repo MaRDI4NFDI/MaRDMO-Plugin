@@ -150,7 +150,7 @@ Qualifiers are either *meaning* or *additive* qualifiers (see
 [Qualifier Merge](../../concepts/export.md#qualifier-merge)): a statement that
 exists on the MaRDI Portal with the same meaning gets the missing additive
 qualifiers instead of being written again.  A new qualifier is additive unless it
-is listed in `_MEANING_QUALIFIERS` in `payload.py`.  A qualifier that makes a
+is listed in `MEANING_QUALIFIERS` in `payload/claims.py`.  A qualifier that makes a
 statement a different one (like a role or a platform) belongs there, and the
-property of its statements in `_MEANING_PROPERTIES`; the static test
+property of its statements in `MEANING_PROPERTIES`; the static test
 `tests/static/test_meaning_qualifiers.py` checks this for roles and platforms.

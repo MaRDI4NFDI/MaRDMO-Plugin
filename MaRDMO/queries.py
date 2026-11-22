@@ -31,7 +31,8 @@ from rdmo.domain.models import Attribute
 
 from .constants import BASE_URI
 from .getters import get_mathmoddb, get_properties, get_url
-from .helpers import commit_writes, extract_parts, rank_by_search_term
+from .values import extract_parts
+from .writes import commit_writes
 from .ids import (
     DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, publication_doi,
     option_help,
@@ -97,7 +98,7 @@ def http_session():
 
     Reusing the session keeps connections open, so repeated requests to the
     same service skip the connection setup.  MaRDMO's pending writes are
-    committed first (see :func:`~MaRDMO.helpers.batched_writes`), so no
+    committed first (see :func:`~MaRDMO.writes.batched_writes`), so no
     transaction stays open while waiting for the answer.
     '''
     commit_writes()
@@ -790,7 +791,7 @@ def query_sources(search, item_class=None, sources=None, not_found=True, roots=N
 
     Queries the requested sources in parallel (results are cached for five
     minutes, see :func:`_cached_search`), merges the results, and sorts them by
-    relevance to *search* using :func:`~.helpers.rank_by_search_term`.
+    relevance to *search* using :func:`~.queries.rank_by_search_term`.
     A Wikidata result with the same label and description as a MaRDI result
     is left out: it is the same item, and the export would ask the user to
     select the MaRDI one.
@@ -1244,3 +1245,36 @@ def item_by_id(source, qid, classes=None, profiles=None, exclude=None, roots=Non
     description = entity.get('descriptions', {}).get('en', {}).get('value', 'No Description Provided!')
     item_id, text = f'{source}:{target}', item_text(label, description)
     return [{'id': item_id, 'text': text, 'help': option_help(item_id, text)}]
+
+
+def rank_by_search_term(option, term):
+    '''Return a numeric sort key indicating how well *option* matches *term*.
+
+    Lower values sort first (better match):
+
+    * 0 – label is exact match
+    * 1 – label starts with term
+    * 2 – label contains term
+    * 3 – description contains term
+    * 4 – no match
+
+    Args:
+        option: Option dict with a ``text`` field in
+                ``"Label (Description)"`` format.
+        term:   Search string entered by the user.
+
+    Returns:
+        Integer rank value 0–4.
+    '''
+    label, desc, _ = extract_parts(option['text'])
+    label_lower = label.lower()
+    term_lower  = term.lower()
+    if label_lower == term_lower:
+        return 0
+    if label_lower.startswith(term_lower):
+        return 1
+    if term_lower in label_lower:
+        return 2
+    if term_lower in desc.lower():
+        return 3
+    return 4

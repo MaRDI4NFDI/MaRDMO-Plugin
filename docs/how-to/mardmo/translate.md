@@ -42,7 +42,7 @@ has them, and translated where they are shown (`str(Problem)`, the list
 articles and adjective endings (*{item} fehlt*, not *Fehlender {item}*).
 
 **The upload** runs in a thread of its own, which has the default language;
-`oauth2.in_language` runs it in the language of the request.
+`upload.in_language` runs it in the language of the request.
 
 **Templates.**  `{% load i18n %}`, then `{% translate "Short Description" %}`;
 with values `{% blocktranslate trimmed with kind=values.QorQK %}Definition of

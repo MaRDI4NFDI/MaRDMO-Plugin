@@ -11,7 +11,7 @@ Provides:
 - ``rule_0`` … ``rule_19`` — individual rule implementations
 '''
 
-from .helpers import basic_dict, basic_list
+from .values import basic_dict, basic_list
 
 def rule_0(value, attribute, config, _prefix_idx):
     '''Handle flag-combo 0: ``[key1, key2]`` path, raw attribute value.

@@ -23,7 +23,8 @@ from .constants import (
 from .utils import get_data_properties, map_entity_quantity
 
 from ..getters import get_items, get_mathmoddb, get_properties, get_publication_mapping, get_url
-from ..helpers import entity_relations, map_entity, unique_items
+from ..ids import unique_items
+from ..relations import entity_relations, map_entity
 from ..payload import GeneratePayload
 
 from ..publication.worker import PublicationExport

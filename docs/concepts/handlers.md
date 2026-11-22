@@ -103,7 +103,7 @@ listed in the [README of the split queries](https://github.com/MaRDI4NFDI/MaRDMO
 ## Database Writes and Network Requests
 
 Selecting a large item writes hundreds of values.  The router therefore runs every
-handler inside `helpers.batched_writes()`:
+handler inside `writes.batched_writes()`:
 
 - On PostgreSQL and MySQL, the writes of `value_editor()` are collected in one
   transaction, which is committed before every request to an external service and
@@ -145,7 +145,7 @@ acts when the copy request has finished (`request_finished`, by the request path
 remembers): copies of own items get IDs of their own (see [Item IDs](ids.md)).
 
 The portal returns the values of a list column (relations, aliases, publications, …)
-in no fixed order.  `helpers.split_value()` sorts them, relatants thereby by ID, so
+in no fixed order.  `values.split_value()` sorts them, relatants thereby by ID, so
 adding the same item twice fills the same pages in the same order.
 
 ## Pre-Save Validation
@@ -159,7 +159,7 @@ to reject the value; RDMO then shows the message below the question in the
 interview.
 
 Only answers saved through the interview are validated.  Writes made by the
-handlers themselves run inside `helpers.internal_write()` and skip these
+handlers themselves run inside `writes.internal_write()` and skip these
 validators, so importing an item never fails because of a pre-save rule;
 imported data is checked before the export instead.  The rules, the
 places where they are applied, and the exceptions are described in

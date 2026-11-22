@@ -200,7 +200,7 @@ preview, the checks and the export like all other data:
   rule existed; rejecting them would make the import fail halfway.
 - **MaRDMO's own writes** — values written by the handlers when an item is
   imported from the MaRDI Portal or Wikidata, and the IDs written back after an
-  export.  These run inside `helpers.internal_write()`, which also covers
+  export.  These run inside `writes.internal_write()`, which also covers
   handler writes during an interview request.
 - **Snapshots** — creating a snapshot copies values, rolling back restores them;
   both were valid when they were saved.

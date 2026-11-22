@@ -137,7 +137,7 @@ The export creates new items after the items they refer to and breaks cycles
 | Test | Checks |
 |---|---|
 | `tests/unit/test_cycles.py` | hand-made cases and seeded random graphs of up to 1000 items and 10000 references: no cycle left, every item after the items it refers to, every statement arrives exactly once (in its item or afterwards), only statements that closed a cycle come afterwards, the same result for every order of the items, and the time |
-| `tests/db/test_upload.py` | for every project of `tests/data/projects`: every reference of a new item (also in qualifiers) is a dependency, and the real upload (`_background_post`) against a fake portal that rejects any `Item…` placeholder left writes every statement |
+| `tests/db/test_upload.py` | for every project of `tests/data/projects`: every reference of a new item (also in qualifiers) is a dependency, and the real upload (`Upload.run`) against a fake portal that rejects any `Item…` placeholder left writes every statement |
 | `tests/unit/test_cycles_real.py` | the checks of `test_cycles` on the relation graphs of real portal models, algorithms and the workflow, every item made new (`tests/data/cycles`, written by `dev-tests/cycles_real.py`, which hydrates them read-only from the portal) |
 
 ## Red marks: the preview shows the problems of the checks

@@ -18,11 +18,10 @@ from ..getters import (
     get_publication_mapping,
     get_url
 )
-from ..helpers import (
-    collect_items_without_section, entity_relations, entity_relations_grouped,
-    unique_items,
-)
-from ..payload import GeneratePayload, quantity_amount
+from ..ids import unique_items
+from ..relations import collect_items_without_section, entity_relations, entity_relations_grouped
+from ..payload import GeneratePayload
+from ..payload.bodies import quantity_amount
 
 from ..publication.worker import PublicationExport
 
@@ -48,7 +47,7 @@ class PrepareWorkflow(PublicationExport):
         '''Enrich the answers dict with derived display structures for the preview template.
 
         First iterates over :data:`~MaRDMO.workflow.constants.preview_relations` and calls
-        :func:`~MaRDMO.helpers.entity_relations` for each entry to resolve cross-entity
+        :func:`~MaRDMO.relations.entity_relations` for each entry to resolve cross-entity
         relation labels (e.g. Workflow → Process Step) into the ``answers`` dict — the same
         pattern used by the model and algorithm preview workers.
 

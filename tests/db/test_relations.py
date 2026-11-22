@@ -141,7 +141,7 @@ def check_messages(project):
 
 def test_relations_show_the_current_name_of_their_page():
     '''Name and description come from the page with the relation's ID, not from the text it was saved with.'''
-    from MaRDMO.helpers import link_to_pages
+    from MaRDMO.pages import link_to_pages
     answers = {'problem': {0: {'ID': 'user:1', 'Name': 'reaction rate', 'Description': 'rate of a reaction'}},
                'model': {0: {'ID': 'user:m', 'Name': 'a model', 'Description': 'a model',
                              'RPRelatant': {0: {'ID': 'user:1', 'Name': 'old name', 'Description': ''}}}}}

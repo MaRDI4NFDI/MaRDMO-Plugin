@@ -16,7 +16,7 @@ from django.utils.translation import gettext as _, gettext_noop as N_
 from .checks import Checks
 from .duplicates import PREVIEW_DEADLINE, PREVIEW_RETRY_WAITS
 from .getters import get_url
-from .helpers import cycle_groups, is_cyclic
+from .ordering import cycle_groups, is_cyclic
 from .payload import DocumentationProblem, PortalUnavailable
 from .problems import Problem
 from .queries import check_limits

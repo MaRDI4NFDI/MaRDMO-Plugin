@@ -28,7 +28,7 @@ from MaRDMO.catalogs import catalog_of
 from MaRDMO.checks import Checks
 from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_url
-from MaRDMO.helpers import is_cyclic, topological_order
+from MaRDMO.ordering import is_cyclic, topological_order
 from MaRDMO.ids import is_user_id, part_id
 from MaRDMO.payload import GeneratePayload
 from MaRDMO.problems import report_lines

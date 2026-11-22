@@ -19,7 +19,7 @@ from rdmo.projects.models import Membership
 from MaRDMO.constants import BASE_URI
 from MaRDMO.duplicates import look_up
 from MaRDMO.getters import get_items
-from MaRDMO.helpers import unique_items
+from MaRDMO.ids import unique_items
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.queries import PortalItems
 from tests.db.conftest import answer, save

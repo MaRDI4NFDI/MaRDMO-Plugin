@@ -11,7 +11,7 @@ import threading
 import pytest
 from django.utils import translation
 
-from MaRDMO.oauth2 import in_language
+from MaRDMO.upload import in_language
 from tests.db.conftest import without_description
 from tests.support.html import element, export_button, export_page, preview_page, text
 

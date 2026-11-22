@@ -2,7 +2,7 @@
 
 The existence check also finds a portal statement with a role or
 platform for one without; merge_qualifiers checks found statements of
-_MEANING_PROPERTIES again.  A relation with a role on another property
+MEANING_PROPERTIES again.  A relation with a role on another property
 would slip through, so it has to be added there.
 '''
 import re
@@ -13,7 +13,7 @@ import pytest
 from MaRDMO.algorithm.constants import get_relations as algorithm_relations
 from MaRDMO.getters import get_properties
 from MaRDMO.model.constants import get_relations as model_relations
-from MaRDMO.payload import _MEANING_PROPERTIES
+from MaRDMO.payload.claims import MEANING_PROPERTIES
 from MaRDMO.workflow.constants import get_relations as workflow_relations
 
 PACKAGE = Path(__file__).parents[2] / 'MaRDMO'
@@ -22,7 +22,7 @@ PACKAGE = Path(__file__).parents[2] / 'MaRDMO'
 @pytest.fixture
 def rechecked():
     properties = get_properties()
-    return {properties[name] for name in _MEANING_PROPERTIES}
+    return {properties[name] for name in MEANING_PROPERTIES}
 
 
 @pytest.mark.parametrize('relations', [model_relations, algorithm_relations, workflow_relations],
@@ -41,4 +41,4 @@ def test_platforms_are_qualifiers_of_uses():
     assert platforms
     for position in platforms:
         verb = re.search(r'verb\s*=\s*self\.properties\["([^"]+)"\]', source[position:])
-        assert verb and verb.group(1) in _MEANING_PROPERTIES
+        assert verb and verb.group(1) in MEANING_PROPERTIES

@@ -21,7 +21,7 @@ from ..getters import (
     get_mathmoddb,
     get_questions,
 )
-from ..helpers import value_editor
+from ..writes import value_editor
 from ..ids import item_text
 from ..adders import (
     add_basics,

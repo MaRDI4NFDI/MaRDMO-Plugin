@@ -1,8 +1,8 @@
-'''IDs of new portal items written back into the project after an export (helpers.replace_ids).'''
+'''IDs of new portal items written back into the project after an export (ids.replace_ids).'''
 import pytest
 
 from MaRDMO.constants import BASE_URI
-from MaRDMO.helpers import replace_ids
+from MaRDMO.ids import replace_ids
 from tests.db.conftest import answer, save
 
 

@@ -8,7 +8,7 @@ still list those must be replaced by :data:`MaRDMO.optionsets.OPTIONSET_PROVIDER
 from rdmo.options.providers import Provider
 
 from .getters import get_items
-from .helpers import define_setup
+
 from .optionsets import PROVIDERS
 from .queries import (
     item_by_id, publication_options, query_sources, query_sources_with_user_additions, typed_item_id,
@@ -89,3 +89,45 @@ class MaRDMOProvider(Provider):
             exclude = exclude,
         )
 
+
+def define_setup(query_attributes, creation=False, query_id='', sources=None, item_class=None,
+                 answer_class=None, roots=None, noise=None, profiles=None, exclude=None):
+    """Build a query-setup dict used by provider ``get_options`` methods.
+
+    Args:
+        query_attributes: List of questionnaire attribute keys whose existing
+                          values are surfaced as user-defined options.
+        creation:         If ``True``, a "create new" option is prepended when
+                          the search term is not found.
+        query_id:         Identifier passed through to the query (optional).
+        sources:          List of external sources to search (e.g.
+                          ``['mardi', 'wikidata']``).  ``None`` defaults to
+                          both sources inside the query helper.
+        item_class:       Wikibase QID string or list of QID strings used to
+                          restrict the MaRDI class-based search.
+        answer_class:     MathModDB class key (``Quantity`` or ``QuantityKind``)
+                          the user's own quantities must have (optional).
+        roots:            Wikidata classes the Wikidata hits must be at or
+                          below (``None``: not filtered, #170).
+        noise:            Wikidata classes the Wikidata hits must not be
+                          instances of, where no roots fit (``None``: none).
+        profiles:         QIDs of MaRDI profiles whose items the portal
+                          search finds too (``None``: none).
+        exclude:          QIDs of classes whose items the portal search
+                          leaves out (``None``: none).
+
+    Returns:
+        Dict consumed by :func:`~MaRDMO.queries.query_sources_with_user_additions`.
+    """
+    return {
+        'creation': creation,
+        'query_attributes': query_attributes,
+        'query_id': query_id,
+        'sources': sources,
+        'item_class': item_class,
+        'answer_class': answer_class,
+        'roots': roots,
+        'noise': noise,
+        'profiles': profiles,
+        'exclude': exclude,
+    }

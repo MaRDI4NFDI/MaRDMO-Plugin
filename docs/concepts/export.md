@@ -262,7 +262,7 @@ and a dependency graph:
   statements of the existing items the `RELATION` entries belong to
   (`wbgetentities`, 50 items per request) and marks every entry whose
   statement, with the same value and all its qualifiers, is there already
-  (`exists_in_claims()`).  Values are compared by datatype: items by QID,
+  (`payload.claims.exists_in_claims()`).  Values are compared by datatype: items by QID,
   text and formulas (LaTeX) as stored, monolingual text with its language,
   quantities by amount and unit, dates by time and precision.  If the
   statements cannot be fetched, the export is aborted, since posting without
@@ -344,7 +344,7 @@ checks) builds these dependencies from the statements of the new items (#164).
 New items that refer to each other in a cycle cannot be ordered, and such cycles are
 common: relations are stored on the other item ("approximates" is "approximated by"
 there, "component of" is "has component", "contained in" is "contains").  The cycles
-are the strongly connected groups of the graph (`helpers.cycle_groups`).  Of each
+are the strongly connected groups of the graph (`ordering.cycle_groups`).  Of each
 group, the item with the fewest statements to the other items of the group (ties: the
 lower key) gets these statements afterwards: as `RELATION` entries on the item key,
 qualifiers included, posted after all items like the statements on portal items.  What
@@ -363,11 +363,11 @@ payload of a documentation is always the same.  Should a cycle remain (a bug),
 session and redirects the user to the MaRDI Portal OAuth2 authorisation endpoint.
 After the user approves the access, the portal redirects back to the MaRDMO callback
 URL.  `callback()` validates the CSRF state token, exchanges the authorisation code
-for an access token, and launches the background upload.
+for an access token, and launches the background upload (`upload.Upload`).
 
 ### 9. Background Upload
 
-The upload runs in a **daemon thread** so the browser can display a live progress
+The upload (`upload.Upload.run()`) runs in a **daemon thread** so the browser can display a live progress
 page immediately.  Progress and results are kept in Django's cache, so the progress
 page works regardless of which server process handles the request.  The upload proceeds in two phases:
 
@@ -387,7 +387,7 @@ instead of writing it again.
 
 #### Error Handling
 
-The upload layer handles MaRDI Portal communication errors gracefully:
+The upload layer handles MaRDI Portal communication errors gracefully (the messages: `portal_errors`):
 
 | Condition | Behaviour |
 |---|---|

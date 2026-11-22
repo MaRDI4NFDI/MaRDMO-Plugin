@@ -21,7 +21,9 @@ from .utils import clean_background_data, get_citation
 
 from ..constants import BASE_URI
 from ..getters import get_items, get_options, get_properties, get_questions
-from ..helpers import commit_writes, date_precision, find_reference, value_editor
+from ..properties import find_reference
+from ..values import date_precision
+from ..writes import commit_writes, value_editor
 from ..markers import MARKER_PROPERTIES, SECTION_MARKERS, allowed
 from ..ids import is_user_id
 

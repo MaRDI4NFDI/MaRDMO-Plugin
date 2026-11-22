@@ -43,7 +43,7 @@ dropdown showed.
   programming languages, CPU models, methods and instruments, and in the
   workflow catalog research fields and algorithmic tasks.  Preview, checks
   and export give it the generic description of its kind
-  (`MaRDMO.helpers.describe_items_without_page`; not stored in the project):
+  (`MaRDMO.pages.describe_items_without_page`; not stored in the project):
 
     | Item | Description |
     |---|---|
@@ -58,7 +58,7 @@ dropdown showed.
     on the MaRDI Portal if it is there already (the user then selects it).
 
 Preview, checks and export find the page of a relation by its ID and use the
-page's name and description (`MaRDMO.helpers.link_to_pages`), so a page
+page's name and description (`MaRDMO.pages.link_to_pages`), so a page
 renamed later is shown and exported with its new name.  A relation to an own
 item whose page is not there is reported ("Selected … not found in …
 Section"), as are two own pages of a section with the same name and
@@ -188,7 +188,7 @@ The user's own items with the same name and description are one item: the
 same new programming language on two software pages is created once.  The
 export item keeps the `user:` IDs it stands for (`user_ids`, not sent to the
 portal); afterwards every answer with one of them gets the new `mardi:` ID
-and the text "Label (Description)" (`MaRDMO.helpers.replace_ids`).
+and the text "Label (Description)" (`MaRDMO.ids.replace_ids`).
 Answers with the ID of an exported Wikidata item get its new `mardi:` ID too.
 
 ## Using a portal item instead

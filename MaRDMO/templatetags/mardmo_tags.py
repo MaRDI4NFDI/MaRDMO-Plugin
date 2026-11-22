@@ -32,7 +32,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, gettext_noop as N_, ngettext
 
 from ..getters import get_options
-from ..helpers import find_reference
+from ..properties import find_reference
 from ..ids import DOI_PREFIX, is_own_item
 from ..pages import PageRef
 from ..validators import formula_comment_problem
