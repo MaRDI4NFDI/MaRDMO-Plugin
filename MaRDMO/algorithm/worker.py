@@ -110,10 +110,7 @@ class PrepareAlgorithm(PublicationExport):
             payload = payload,
             benchmarks = data.get("benchmark", {})
         )
-        self._export_programming_languages(
-            payload = payload,
-            programminglanguages = data.get("programminglanguage", {})
-        )
+        self._export_plain(payload, data, 'programminglanguage')
         self._export_authors(
             payload = payload,
             publications = data.get("publication", {})

@@ -153,6 +153,18 @@ class PublicationRetriever:
         return dict(zip(dois, results))
 
 
+# Items entered on a page without a page of their own, exported with their class
+# and markers only: {answer key (also the section of the markers): class}
+PLAIN_ITEMS = {
+    'programminglanguage': 'Programming Language',
+    'cpu': 'CPU Model',
+    'method': 'Experimental Method',
+    'instrument': 'Experimental Equipment',
+    'algorithmictask': 'Algorithmic Task',
+    'academicdiscipline': 'Academic Discipline',
+}
+
+
 class PublicationExport:
     '''Base class providing author, journal, and publication export helpers.
 
@@ -160,8 +172,8 @@ class PublicationExport:
     :class:`~MaRDMO.algorithm.worker.PrepareAlgorithm` and
     :class:`~MaRDMO.workflow.worker.PrepareWorkflow`.  Holds the shared
     Wikibase vocabulary and the private ``_export_*`` helpers that build
-    publication-related payload entries, and the export of programming
-    languages (algorithm and workflow catalogs).
+    publication-related payload entries, and the export of the plain items
+    (:data:`PLAIN_ITEMS`, algorithm and workflow catalogs).
     '''
 
     # The worker's key in markers.SECTION_MARKERS
@@ -172,18 +184,26 @@ class PublicationExport:
         self.properties = get_properties()
         self.items = get_items()
 
-    def _export_programming_languages(self, payload, programminglanguages: dict):
-        '''Export each programming language item collected from software sections.'''
-        for entry in programminglanguages.values():
-            if not entry.get("ID"):
-                continue
+    def _export_plain(self, payload, data, *keys):
+        '''Export the plain items of *data* under *keys*, in this order: their class and markers.
 
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Programming Language')
+        Args:
+            payload: :class:`~MaRDMO.payload.GeneratePayload` instance.
+            data:    Top-level answers dict.
+            keys:    Keys of :data:`PLAIN_ITEMS` (e.g. ``'programminglanguage'``,
+                     collected from the software pages).
+        '''
+        for key in keys:
+            for entry in data.get(key, {}).values():
+                if not entry.get("ID"):
+                    continue
 
-            self._add_common_metadata(payload, 'programminglanguage')
+                payload.get_item_key(
+                    value = entry
+                )
+                payload.set_class(PLAIN_ITEMS[key])
+
+                self._add_common_metadata(payload, key)
 
     def _add_common_metadata(self, payload, section, description_long=False):
         '''Add the markers of *section* to the current subject, and optionally its long description.

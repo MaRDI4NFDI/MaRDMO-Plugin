@@ -238,30 +238,8 @@ class PrepareWorkflow(PublicationExport):
             payload  = payload,
             datasets = data.get('dataset', {}),
         )
-        self._export_cpus(
-            payload = payload,
-            cpus    = data.get('cpu', {}),
-        )
-        self._export_programming_languages(
-            payload              = payload,
-            programminglanguages = data.get('programminglanguage', {}),
-        )
-        self._export_methods(
-            payload = payload,
-            methods = data.get('method', {}),
-        )
-        self._export_instruments(
-            payload     = payload,
-            instruments = data.get('instrument', {}),
-        )
-        self._export_algorithmic_tasks(
-            payload           = payload,
-            algorithmic_tasks = data.get('algorithmictask', {}),
-        )
-        self._export_academic_disciplines(
-            payload              = payload,
-            academic_disciplines = data.get('academicdiscipline', {}),
-        )
+        self._export_plain(payload, data, 'cpu', 'programminglanguage', 'method', 'instrument', 'algorithmictask',
+                           'academicdiscipline')
         self._export_authors(
             payload      = payload,
             publications = data.get('publication', {}),
@@ -766,68 +744,3 @@ class PrepareWorkflow(PublicationExport):
                         object_and_type = [self.items["research data archiving"], "wikibase-item"],
                         qualifier = qualifier,
                     )
-
-    def _export_cpus(self, payload, cpus: dict):
-        '''Export each CPU item collected from hardware sections.'''
-        for entry in cpus.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('CPU Model')
-
-            self._add_common_metadata(payload, 'cpu')
-
-    def _export_methods(self, payload, methods: dict):
-        '''Export each experimental method item collected from process-step sections.'''
-        for entry in methods.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Experimental Method')
-
-            self._add_common_metadata(payload, 'method')
-
-    def _export_instruments(self, payload, instruments: dict):
-        '''Export each instrument item collected from process-step sections.'''
-        for entry in instruments.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Experimental Equipment')
-
-            self._add_common_metadata(payload, 'instrument')
-
-    def _export_algorithmic_tasks(self, payload, algorithmic_tasks: dict):
-        '''Export each algorithmic task item collected from algorithm sections.'''
-        for entry in algorithmic_tasks.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Algorithmic Task')
-
-            self._add_common_metadata(payload, 'algorithmictask')
-
-    def _export_academic_disciplines(self, payload, academic_disciplines: dict):
-        '''Export each academic discipline item collected from process-step sections.'''
-        for entry in academic_disciplines.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Academic Discipline')
-
-            self._add_common_metadata(payload, 'academicdiscipline')
