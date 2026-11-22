@@ -49,6 +49,23 @@ def test_what_an_entry_names_exists(name):
         assert catalog.kind == SEARCH and not catalog.worker
 
 
+@pytest.mark.parametrize('registration', [registration for registration in registrations()
+                                          if any(catalog.documents for catalog in registration.catalogs)],
+                         ids=lambda registration: registration.question_set)
+def test_a_documenting_declaration_is_complete(registration):
+    '''Handler class, relation targets, fills and routing; every method and question it names exists.'''
+    assert registration.information and registration.targets and registration.fills and registration.routing
+    information = registration.information_class
+    for method in [*registration.handlers.values(), *(fill for _, fill in registration.fills.values())]:
+        assert callable(getattr(information, method, None)), method
+    assert callable(registration.relation_targets)
+    questions = get_questions(registration.question_set)
+    named = [*registration.handlers, *registration.relations,
+             *(question for found in registration.validators.values() for question in found)]
+    for question_set, question in named:
+        assert question in questions.get(question_set, {}), (question_set, question)
+
+
 def test_the_tables_keyed_by_catalog_have_a_row_for_each():
     from MaRDMO.builders import (build_post_delete_handler_set, build_post_save_handler_set,
                                  build_presave_validator_map)

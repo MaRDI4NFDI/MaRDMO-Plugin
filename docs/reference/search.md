@@ -2,6 +2,9 @@
 
 ::: MaRDMO.search
 
+## Declaration
+::: MaRDMO.search.catalog
+
 ## SPARQL
 ::: MaRDMO.search.sparql
 

@@ -172,7 +172,7 @@ data processing happens.
 
 `get_post_data()` re-collects the answers dict (submit mode — without publication
 retrieval), and `MaRDMO.pipeline.run` runs what the preview ran.
-`Checks.run_X()` validates the collected answers for completeness and
+The catalog's checks (`ModelChecks.run()` …) validate the collected answers for completeness and
 consistency, including the value formats described in
 [Validation](validation.md) and, for the detailed model catalog, the formula
 check against the MaRDI Portal's TeX checker.  A formula the TeX checker does

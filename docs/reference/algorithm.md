@@ -2,6 +2,9 @@
 
 ::: MaRDMO.algorithm
 
+## Declaration
+::: MaRDMO.algorithm.catalog
+
 ## Handlers
 ::: MaRDMO.algorithm.handlers
 

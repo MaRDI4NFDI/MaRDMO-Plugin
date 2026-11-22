@@ -87,17 +87,20 @@ def validate_swmath(instance):
         raise ValidationError({'text': [problem]})
 ```
 
-**File:** `builders.py` — register the validator for each question in
-`VALIDATORS`, under the question set of its catalog:
+**File:** the catalog's `catalog.py` (e.g. `algorithm/catalog.py`) — register
+the validator for each question in the declaration's `validators`:
 
 ```python
-'algorithm': {
+REGISTRATION = Registration(
     ...
-    validate_reference: [
-        ('Software', 'Reference'),
-        ('Benchmark', 'Reference'),
-    ],
-},
+    validators={
+        ...
+        validate_reference: [
+            ('Software', 'Reference'),
+            ('Benchmark', 'Reference'),
+        ],
+    },
+)
 ```
 
 Each attribute URI can have only one validator per catalog.  If a question
@@ -113,8 +116,8 @@ skip pre-save validation and are checked by the steps below.
 
 ## Step 4 — Documentation check
 
-**File:** `checks/base.py`, `checks/model.py`, `checks/algorithm.py` or
-`checks/workflow.py` — call the same rule and add a problem naming the section,
+**File:** `checks/base.py` (shared), or the catalog's `model/checks.py`,
+`algorithm/checks.py` or `workflow/checks.py` — call the same rule and add a problem naming the section,
 the page, the problem and the field (the answer it belongs to).  For references
 this happens in `ChecksBase._check_references`:
 

@@ -38,19 +38,33 @@ catalog.  The numbered fields are explained in the sections that follow.
 
 ## In MaRDMO
 
-A catalog of the questionnaire is a MaRDMO catalog if `MaRDMO/catalogs.py`
-has an entry for it: its name (the URI path), its kind (model, algorithm,
-workflow or search), the question set it is answered with, the template of
-its preview, the class that prepares its export and the method that checks
-it, and whether it has only part of the questions of its question set (as
-the model basics).  The preview, the export, the interview's handlers and
-the checks look the catalog up there.
+A catalog is a package of MaRDMO (`model`, `algorithm`, `workflow`,
+`search`), and the shared code names none of them: each package declares
+itself in its module `catalog.py` (`REGISTRATION`, a
+`MaRDMO.catalogs.Registration`), and the registry finds the packages listed
+in `CATALOG_PACKAGES` (`MaRDMO/catalogs.py`), as Django finds the apps of
+`INSTALLED_APPS`.  A new catalog is therefore a new package with its
+`catalog.py`, and one line in `CATALOG_PACKAGES`.
 
-A documenting catalog also needs its rows in the tables keyed by catalog:
-the handlers and validators of its questions, by its question set
-(`MaRDMO/builders.py`: `INFORMATION`, `HANDLERS`, `RELATIONS`, `VALIDATORS`)
-and the relations of its publications
-(`MaRDMO/publication/constants.py`, `ROUTING`).  `tests/unit/test_catalogs.py`
-names what is missing: a catalog of the questionnaire without entry, a
-template or class that does not exist, or a table without a row for a
-catalog.
+The declaration holds:
+
+| Field | What |
+|---|---|
+| `catalogs` | its catalog entries (`Catalog`): the name (the URI path), the kind (model, algorithm, workflow or search), the question set, the template of its preview, the class that prepares its export (`worker.py`), the class that checks it (`checks.py`), and whether it has only part of the questions of its question set (as the model basics) |
+| `questions` | its question set and the path of its `questions.json` |
+| `information` | its handler class (`handlers.py`): fills in an item selected in the interview |
+| `handlers` | the questions with a handler of that class |
+| `relations` | the relation questions, handled by the general relation handler |
+| `validators` | the pre-save validators of its questions |
+| `targets`, `fills` | where related items go, and how an item of the MaRDI Portal or Wikidata is filled in |
+| `routing` | the relations a publication of the catalog can have |
+
+The questions are named by `(question set, question)` of its `questions.json`,
+classes and functions by their import path.  What several catalogs share
+lives outside the packages: the publications, the markers of the portal's
+item kinds (`markers.py`), the export of algorithms and software
+(`export/worker.py`) and the shared checks (`checks/base.py`).
+
+`tests/unit/test_catalogs.py` names what is missing: a catalog of the
+questionnaire without declaration, a template or class that does not exist,
+or a declaration without a required part.

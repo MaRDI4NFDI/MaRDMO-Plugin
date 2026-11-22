@@ -2,6 +2,9 @@
 
 ::: MaRDMO.workflow
 
+## Declaration
+::: MaRDMO.workflow.catalog
+
 ## Handlers
 ::: MaRDMO.workflow.handlers
 
