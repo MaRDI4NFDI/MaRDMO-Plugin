@@ -16,7 +16,7 @@ from .constants import get_relations, preview_relations
 from ..constants import BENCHMARK_REFERENCES, SOFTWARE_REFERENCES
 from ..getters import get_items, get_mathalgodb, get_properties, get_publication_mapping, get_url
 from ..ids import unique_items
-from ..relations import collect_items_without_section, entity_relations
+from ..relations import collect_items_without_section, resolve_relations
 from ..payload import GeneratePayload
 
 from ..publication.worker import PublicationExport
@@ -50,24 +50,7 @@ class PrepareAlgorithm(PublicationExport):
         '''
 
         # Prepare Relations for Preview
-        for relation in preview_relations:
-            entity_relations(
-                data = answers,
-                idx = {
-                    'from': relation['from_idx'],
-                    'to': relation['to_idx']
-                },
-                entity = {
-                    'relation': relation['relation'],
-                    'old_name': relation['old_name'],
-                    'new_name': relation['new_name']
-                },
-                assumption = False,
-                mapping = (
-                    self.publication_mapping if relation.get('mapping') == 'publication'
-                    else self.mathalgodb
-                )
-            )
+        resolve_relations(answers, preview_relations, {'publication': self.publication_mapping}, self.mathalgodb)
 
         # Collect inline items that have no dedicated questionnaire section
         answers['programminglanguage'] = collect_items_without_section(

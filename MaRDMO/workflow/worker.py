@@ -19,7 +19,7 @@ from ..getters import (
     get_url
 )
 from ..ids import unique_items
-from ..relations import collect_items_without_section, entity_relations, entity_relations_grouped
+from ..relations import collect_items_without_section, resolve_relations
 from ..payload import GeneratePayload
 from ..payload.bodies import quantity_amount
 
@@ -46,10 +46,9 @@ class PrepareWorkflow(PublicationExport):
     def preview(self, answers):
         '''Enrich the answers dict with derived display structures for the preview template.
 
-        First iterates over :data:`~MaRDMO.workflow.constants.preview_relations` and calls
-        :func:`~MaRDMO.relations.entity_relations` for each entry to resolve cross-entity
-        relation labels (e.g. Workflow → Process Step) into the ``answers`` dict — the same
-        pattern used by the model and algorithm preview workers.
+        First resolves the relations of :data:`~MaRDMO.workflow.constants.preview_relations`
+        (:func:`~MaRDMO.relations.resolve_relations`, e.g. Workflow → Process Step) in the
+        ``answers`` dict, as the model and algorithm preview workers do.
 
         Then builds ``model_task_pairs`` — an ordered list of dicts with keys ``model``,
         ``tasks``, ``has_model``, and ``has_tasks`` — for every workflow in the project
@@ -75,26 +74,8 @@ class PrepareWorkflow(PublicationExport):
         '''
 
         # Prepare Relations for Preview
-        for relation in preview_relations:
-            fn = entity_relations_grouped if relation.get('grouped') else entity_relations
-            fn(
-                data = answers,
-                idx = {
-                    'from': relation['from_idx'],
-                    'to': relation['to_idx']
-                },
-                entity = {
-                    'relation': relation['relation'],
-                    'old_name': relation['old_name'],
-                    'new_name': relation['new_name']
-                },
-                assumption = False,
-                mapping = (
-                    self.mathmoddb           if relation.get('mapping') == 'mathmoddb'
-                    else self.publication_mapping if relation.get('mapping') == 'publication'
-                    else self.mathalgodb
-                )
-            )
+        resolve_relations(answers, preview_relations,
+                          {'mathmoddb': self.mathmoddb, 'publication': self.publication_mapping}, self.mathalgodb)
 
         for wf_data in answers.get('workflow', {}).values():
             models = wf_data.get('model', {})
