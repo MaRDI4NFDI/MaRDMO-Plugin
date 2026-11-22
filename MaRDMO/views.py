@@ -16,7 +16,7 @@ Provides:
 Success page (``show_success``)
 --------------------------------
 After a successful portal export the success page presents two views of the
-exported data, switchable via tab buttons:
+exported data (built by :mod:`MaRDMO.success`), switchable via tab buttons:
 
 **List view** — every newly created MaRDI Portal item, grouped by class, with
 all its statements shown as ``property → value`` lines.  Values that are
@@ -34,40 +34,26 @@ toggle individual node classes, literal/existing-item layers, and individual
 edge properties.
 '''
 
-from collections import defaultdict
-
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils.translation import gettext as _, gettext_noop as N_
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_GET, require_POST
 
 from rdmo.core.plugins import get_plugin
 from rdmo.projects.models import Project
 
-from .constants import (DOI_BASE_URL, ISSN_BASE_URL, MORWIKI_BASE_URL, ORCID_BASE_URL,
-                        QUDT_CONSTANT_URL, QUDT_QUANTITYKIND_URL, SWMATH_BASE_URL,
-                        WIKIDATA, ZBMATH_AUTHOR_BASE_URL)
 from . import VERSION
 from .getters import get_item_url
 from .pages import interview_urls
-from .validators import url_problem
+from .success import CLASS_ORDER, group_by_class, result_graph, split_statements
 from .store import (
     _progress_store,
     clear_progress,
     _unregister_job_for_session,
     _job_belongs_to_session,
 )
-
-# Classes of the items on the success page, in this order; others follow
-CLASS_ORDER = [
-    N_('Mathematical Model'), N_('Research Problem'), N_('Formula'), N_('Computational Task'),
-    N_('Quantity'), N_('Algorithm'), N_('Algorithmic Task'), N_('Software'), N_('Benchmark'),
-    N_('Workflow'), N_('Process Step'), N_('Hardware'), N_('CPU Model'), N_('Dataset'),
-    N_('Experimental Method'), N_('Experimental Equipment'), N_('Academic Discipline'),
-    N_('Programming Language'), N_('Publication'), N_('Author'), N_('Journal'),
-]
 
 
 @login_required
@@ -149,166 +135,11 @@ def show_success(request, job_id):
     clear_progress(job_id)
     _unregister_job_for_session(request, job_id)
 
-    # Group ids by class in a fixed display order
-    grouped = defaultdict(list)
-    for cls, name, qid in job_data["ids"]:
-        grouped[cls].append({'name': name, 'qid': qid})
-    # Split statements: those on newly created items vs. those on existing items
     created_qids = {qid for cls, name, qid in job_data["ids"]}
-
-    _SKIP_PROPS = {'community', 'MaRDI profile type'}
-
-    def _obj_url(prop, obj, obj_qid):
-        """Return a clickable external URL for *obj* based on its property name.
-
-        Returns an empty string when *obj_qid* is set (the object is already a
-        portal item and needs no external URL) or when the property is not one
-        of the known identifier/URL properties.
-        """
-        if obj_qid:
-            return ''
-        if prop == 'Wikidata QID':
-            return f'{WIKIDATA["entity"]}{obj}'
-        if prop == 'DOI':
-            return f'{DOI_BASE_URL}{obj}'
-        if prop == 'swMath work ID':
-            return f'{SWMATH_BASE_URL}{obj}'
-        if prop == 'MORwiki ID':
-            return f'{MORWIKI_BASE_URL}{obj}'
-        if prop in ('described at URL', 'source code repository URL', 'URL'):
-            # User-entered URL: only http(s) may become a link (no javascript: etc.)
-            return obj if not url_problem(obj) else ''
-        if prop == 'QUDT quantity kind ID':
-            return f'{QUDT_QUANTITYKIND_URL}{obj}'
-        if prop == 'QUDT constant ID':
-            return f'{QUDT_CONSTANT_URL}{obj}'
-        if prop == 'ORCID iD':
-            return f'{ORCID_BASE_URL}{obj}'
-        if prop == 'zbMATH author ID':
-            return f'{ZBMATH_AUTHOR_BASE_URL}{obj}'
-        if prop == 'ISSN':
-            return f'{ISSN_BASE_URL}{obj}'
-        return ''
-
-    stmt_map = defaultdict(list)
-    relation_stmts = []
-    # Standard statements (community, profile type) are not listed; those
-    # added to existing items are counted, so the page never says "nothing"
-    standard_added = 0
-    for stmt in job_data.get("statements", []):
-        subj, subj_qid, prop, obj, obj_qid = stmt[0], stmt[1], stmt[2], stmt[3], stmt[4]
-        qualifiers  = stmt[5] if len(stmt) > 5 else []
-        unit_label  = stmt[6] if len(stmt) > 6 else ''
-        unit_qid    = stmt[7] if len(stmt) > 7 else ''
-        # True: the statement was on the portal already, only qualifiers were added
-        qualifiers_added = stmt[8] if len(stmt) > 8 else False
-        obj_url = _obj_url(prop, obj, obj_qid)
-        for q in qualifiers:
-            q['obj_url'] = _obj_url(q['prop'], q['obj'], q.get('obj_qid', ''))
-        if prop in _SKIP_PROPS:
-            if subj_qid not in created_qids:
-                standard_added += 1
-            continue
-        if subj_qid in created_qids:
-            stmt_map[subj_qid].append(
-                {'prop': prop, 'obj': obj, 'obj_qid': obj_qid, 'obj_url': obj_url,
-                 'qualifiers': qualifiers, 'unit_label': unit_label, 'unit_qid': unit_qid}
-            )
-        else:
-            relation_stmts.append({
-                'subject': subj, 'subject_qid': subj_qid,
-                'prop': prop, 'obj': obj, 'obj_qid': obj_qid, 'obj_url': obj_url,
-                'qualifiers': qualifiers, 'unit_label': unit_label, 'unit_qid': unit_qid,
-                'qualifiers_added': qualifiers_added,
-            })
-
-    # Attach statements to each item and group by class
-    items_by_class = defaultdict(list)
-    for cls, name, qid in job_data["ids"]:
-        items_by_class[cls].append({'name': name, 'qid': qid, 'stmts': stmt_map.get(qid, [])})
-
-    grouped_ids = [
-        (cls, items_by_class[cls]) for cls in CLASS_ORDER if cls in items_by_class
-    ] + [
-        (cls, items) for cls, items in items_by_class.items() if cls not in CLASS_ORDER
-    ]
-
+    by_item, relation_stmts, standard_added = split_statements(job_data, created_qids)
+    grouped_ids = group_by_class(job_data["ids"], by_item)
     mardi_uri = get_item_url('mardi')
-
-    # Build graph data for Cytoscape
-    graph_nodes = {}
-    graph_edges = []
-    _lit_idx = 0
-
-    def _add_item_node(qid, label, node_type, cls=''):
-        """Insert or upgrade a node entry in *graph_nodes*.
-
-        *node_type* ``'new'`` always wins over ``'item'``; an existing ``'new'``
-        node is never overwritten by an ``'item'`` entry for the same QID.
-        """
-        if not qid:
-            return
-        existing = graph_nodes.get(qid)
-        # 'new' always wins; only insert 'item' if the node isn't already known
-        if existing is None or (node_type == 'new' and existing['node_type'] != 'new'):
-            graph_nodes[qid] = {
-                'id': qid, 'label': label,
-                'node_type': node_type, 'cls': cls,
-                'url': mardi_uri + qid,
-            }
-
-    def _get_obj_node(obj_qid, obj_label, obj_url=''):
-        """Return the graph node ID for a statement object, creating the node if needed.
-
-        If *obj_qid* is set the object is a portal item (circle node).  Otherwise
-        a fresh literal node (rectangle) is created with an auto-incremented ID
-        and optional *obj_url* for click-through linking.
-        """
-        nonlocal _lit_idx
-        if obj_qid:
-            _add_item_node(obj_qid, obj_label, 'item')
-            return obj_qid
-        nid = f'_lit_{_lit_idx}'
-        _lit_idx += 1
-        graph_nodes[nid] = {
-            'id': nid, 'label': obj_label, 'node_type': 'literal', 'cls': '', 'url': obj_url,
-        }
-        return nid
-
-    for cls, items in grouped_ids:
-        for item in items:
-            qid = item['qid']
-            _add_item_node(qid, item['name'], 'new', cls)
-            for s in item['stmts']:
-                obj_nid = _get_obj_node(s['obj_qid'], s['obj'], s.get('obj_url', ''))
-                graph_edges.append({
-                    'source': qid, 'target': obj_nid,
-                    'label': s['prop'], 'qualifiers': s.get('qualifiers', []),
-                })
-                if s.get('unit_qid'):
-                    _add_item_node(s['unit_qid'], s['unit_label'], 'item')
-                    graph_edges.append({
-                        'source': obj_nid, 'target': s['unit_qid'],
-                        'label': 'unit', 'qualifiers': [],
-                    })
-
-    for r in relation_stmts:
-        subj_qid = r['subject_qid']
-        if subj_qid:
-            _add_item_node(subj_qid, r['subject'], 'item')
-            obj_nid = _get_obj_node(r['obj_qid'], r['obj'], r.get('obj_url', ''))
-            graph_edges.append({
-                'source': subj_qid, 'target': obj_nid,
-                'label': r['prop'], 'qualifiers': r.get('qualifiers', []),
-            })
-            if r.get('unit_qid'):
-                _add_item_node(r['unit_qid'], r['unit_label'], 'item')
-                graph_edges.append({
-                    'source': obj_nid, 'target': r['unit_qid'],
-                    'label': 'unit', 'qualifiers': [],
-                })
-
-    graph_data = {'nodes': list(graph_nodes.values()), 'edges': graph_edges}
+    graph_data = result_graph(grouped_ids, relation_stmts, mardi_uri)
 
     return render(
         request,
@@ -340,6 +171,7 @@ def show_success(request, job_id):
             },
         },
     )
+
 
 def render_preview(self, template, answers, option, submit_label, duplicates=None, gate=None):
     """Render the documentation preview page.
