@@ -73,3 +73,7 @@ Shared utilities (values, relations, ordering, properties) are listed under
 ## Views
 
 ::: MaRDMO.views
+
+## Result Page
+
+::: MaRDMO.success

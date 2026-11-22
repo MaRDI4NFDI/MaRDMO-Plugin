@@ -1,26 +1,26 @@
-'''Factory function that builds the attribute-URI-to-handler dispatch map.
+'''The handlers and validators of the questions, by attribute URI, for the router.
 
-The router (``router.py``) needs to know which handler method to call for each
-RDMO attribute URI that arrives in a signal. This module assembles that map once
-at startup by resolving question URIs from the RDMO database and pairing them
-with the appropriate ``Information`` handler methods from each sub-package.
+The router (``router.py``) calls a handler after a value of a question is
+saved or deleted, and a validator before it is saved.  This module builds
+the maps ``{catalog name: {attribute URI: handler or validator}}`` once at
+startup from the tables below, which name the questions by
+``(question set, question)`` of the catalog's ``questions.json``.
+
+The tables are keyed by question set (``model``, ``algorithm``,
+``workflow``); a catalog gets the maps of its question set
+(:attr:`~MaRDMO.catalogs.Catalog.questions`), so the model basics catalog
+those of the model catalog: it has part of its questions, with the same
+handlers and validators.  Every catalog also gets the publication's.
 
 Provides:
 
 - ``build_post_save_handler_set``   — post-save dispatch dict (all catalogs)
 - ``build_post_delete_handler_set`` — post-delete dispatch dict (all catalogs)
 - ``build_presave_validator_map``   — pre-save validation dispatch dict
-  (model + algorithm + workflow + publication)
 '''
 
-from .catalogs import DOCUMENTING
-from .constants import (
-    BASE_URI,
-    CATALOG_MODEL_NAME,
-    CATALOG_MODEL_BASICS_NAME,
-    CATALOG_ALGORITHM_NAME,
-    CATALOG_WORKFLOW_NAME,
-)
+from .catalogs import CATALOGS, DOCUMENTING
+from .constants import BASE_URI
 from .getters import get_questions
 from .model.handlers import Information as ModelInformation
 from .algorithm.handlers import Information as AlgorithmInformation
@@ -40,383 +40,219 @@ from .validators import (
     validate_single_line,
 )
 
+INFORMATION = {
+    'model': ModelInformation,
+    'algorithm': AlgorithmInformation,
+    'workflow': WorkflowInformation,
+}
+'''The handler class of each question set.'''
+
+HANDLERS = {
+    'model': {
+        ('Research Field', 'ID'): 'field',
+        ('Research Problem', 'ID'): 'problem',
+        ('Quantity', 'ID'): 'quantity',
+        ('Mathematical Formulation', 'ID'): 'formulation',
+        ('Task', 'ID'): 'task',
+        ('Mathematical Model', 'ID'): 'model',
+    },
+    'algorithm': {
+        ('Benchmark', 'ID'): 'benchmark',
+        ('Software', 'ID'): 'software',
+        ('Problem', 'ID'): 'problem',
+        ('Algorithm', 'ID'): 'algorithm',
+    },
+    'workflow': {
+        ('Workflow', 'ID'): 'workflow',
+        ('Algorithm', 'ID'): 'algorithm',
+        ('Workflow', 'Model'): 'model',
+        ('Software', 'ID'): 'software',
+        ('Hardware', 'ID'): 'hardware',
+        ('Hardware', 'CPU'): 'processor_cores',
+        ('Data Set', 'ID'): 'data_set',
+        ('Process Step', 'ID'): 'process_step',
+    },
+}
+'''The questions with a handler of their question set's class: ``{(question set, question): method}``.'''
+
+RELATIONS = {
+    'model': [
+        ('Task', 'QRelatant'),
+        ('Task', 'MFRelatant'),
+        ('Mathematical Formulation', 'Element Quantity'),
+        ('Quantity', 'Element Quantity'),
+        ('Mathematical Model', 'MFRelatant'),
+        ('Mathematical Model', 'Assumption'),
+        ('Task', 'Assumption'),
+        ('Mathematical Formulation', 'Assumption'),
+        ('Mathematical Formulation', 'MFRelatant'),
+        ('Research Problem', 'RFRelatant'),
+        ('Mathematical Model', 'RPRelatant'),
+        ('Mathematical Model', 'TRelatant'),
+    ],
+    'algorithm': [
+        ('Problem', 'BRelatant'),
+        ('Software', 'BRelatant'),
+        ('Algorithm', 'PRelatant'),
+        ('Algorithm', 'SRelatant'),
+        ('Software', 'Dependency'),
+    ],
+    'workflow': [
+        ('Process Step', 'Algorithm'),
+        ('Process Step', 'Hardware'),
+        ('Process Step', 'Input'),
+        ('Process Step', 'Output'),
+        ('Workflow', 'PSRelatant'),
+        ('Process Step', 'Software'),
+        ('Algorithm', 'SRelatant'),
+        ('Software', 'Dependency'),
+    ],
+}
+'''The relation questions: the general handler (:meth:`~MaRDMO.handlers.Information.relation`) fetches the item.'''
+
+VALIDATORS = {
+    'model': {
+        validate_short_description: [
+            ('Research Field', 'Description'),
+            ('Research Problem', 'Description'),
+            ('Quantity', 'Description'),
+            ('Mathematical Formulation', 'Description'),
+            ('Task', 'Description'),
+            ('Mathematical Model', 'Description'),
+        ],
+        validate_single_line: [
+            ('Research Field', 'Long Description'),
+            ('Research Problem', 'Long Description'),
+            ('Quantity', 'Long Description'),
+            ('Mathematical Formulation', 'Long Description'),
+            ('Task', 'Long Description'),
+            ('Mathematical Model', 'Long Description'),
+            ('Mathematical Formulation', 'Reference'),
+        ],
+        validate_properties: [
+            ('Mathematical Model', 'Properties'),
+            ('Mathematical Formulation', 'Properties'),
+            ('Quantity', 'Properties'),
+            ('Task', 'Properties'),
+        ],
+        validate_qudt_id: [
+            ('Quantity', 'Reference'),
+        ],
+    },
+    'algorithm': {
+        validate_short_description: [
+            ('Algorithm', 'Description'),
+            ('Problem', 'Description'),
+            ('Software', 'Description'),
+            ('Benchmark', 'Description'),
+        ],
+        validate_reference: [
+            ('Software', 'Reference'),
+            ('Benchmark', 'Reference'),
+        ],
+    },
+    'workflow': {
+        validate_short_description: [
+            ('Workflow', 'Description'),
+            ('Algorithm', 'Description'),
+            ('Software', 'Description'),
+            ('Hardware', 'Description'),
+            ('Data Set', 'Description'),
+            ('Process Step', 'Description'),
+        ],
+        validate_single_line: [
+            ('Workflow', 'Long Description'),
+            ('Workflow', 'Mathematical'),
+            ('Workflow', 'Runtime'),
+            ('Workflow', 'Result'),
+            ('Workflow', 'Original Platform'),
+            ('Workflow', 'Other Platform'),
+        ],
+        validate_reference: [
+            ('Software', 'Reference'),
+            ('Process Step', 'Software-Documentation'),
+            ('Process Step', 'Method-Documentation'),
+        ],
+        validate_doi: [
+            ('Data Set', 'To Publish'),
+        ],
+        validate_archive_year: [
+            ('Data Set', 'To Archive'),
+        ],
+        validate_data_size: [
+            ('Data Set', 'Size'),
+        ],
+        validate_count: [
+            ('Hardware', 'Nodes'),
+            ('Hardware', 'Number of CPU'),
+            ('Hardware', 'Cores'),
+        ],
+    },
+}
+'''The validators of the questions of each question set: ``{validator: [(question set, question), …]}``.
+
+The publication ID of every catalog is checked by
+:func:`~MaRDMO.validators.validate_publication_id` (#158).
+'''
+
+
+def _uri(questions, question_set, question):
+    '''The attribute URI of *question* in *question_set* of *questions* (``questions.json``).'''
+    return f'{BASE_URI}{questions[question_set][question]["uri"]}'
+
+
+def _per_catalog(maps):
+    '''``{catalog name: map}`` from ``{question set: map}``: each catalog the map of its question set.'''
+    return {name: dict(maps[CATALOGS[name].questions]) for name in DOCUMENTING}
+
+
 def build_post_save_handler_set():
-    """Build and return the post-save attribute-URI-to-handler dispatch set.
+    """Build the post-save map ``{catalog name: {attribute URI: handler}}``.
 
-    Loads question URI configurations from the RDMO database for all four
-    catalogs (model, algorithm, workflow, publication), instantiates the
-    corresponding ``Information`` handler objects, and maps each relevant
-    attribute URI to the correct handler method.
-
-    Returns:
-        dict: Nested mapping of the form
-        ``{catalog_slug: {absolute_attribute_uri: handler_method}}``.
-        Each inner dict is passed to the router so that incoming
-        ``value_created`` / ``value_updated`` signals can be dispatched
-        without any per-signal lookups.
+    The handlers of :data:`HANDLERS`, the general relation handler for
+    :data:`RELATIONS`, and the publication's citation lookup for the
+    publication ID, per catalog.  The router dispatches the
+    ``value_created`` / ``value_updated`` signals with it.
     """
-
-    base = BASE_URI
-    handler_map = {}
-
-    # Questions
-    questions_model = get_questions('model')
-    questions_algorithm = get_questions('algorithm')
-    questions_workflow = get_questions('workflow')
-    questions_publication = get_questions('publication')
-
-    # Information Classes
-    model = ModelInformation()
-    algorithm = AlgorithmInformation()
-    workflow = WorkflowInformation()
     publication = PublicationInformation()
     general = GeneralInformation()
-
-    # Model handlers
-    handler_map.update({
-        CATALOG_MODEL_NAME: {
-            f"{base}{questions_model['Research Field']['ID']['uri']}":
-                model.field,
-            f"{base}{questions_model['Research Problem']['ID']['uri']}":
-                model.problem,
-            f"{base}{questions_model['Quantity']['ID']['uri']}":
-                model.quantity,
-            f"{base}{questions_model['Mathematical Formulation']['ID']['uri']}":
-                model.formulation,
-            f"{base}{questions_model['Task']['ID']['uri']}":
-                model.task,
-            f"{base}{questions_model['Mathematical Model']['ID']['uri']}":
-                model.model,
-            f'{base}{questions_model["Task"]["QRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Task"]["MFRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Formulation"]["Element Quantity"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Quantity"]["Element Quantity"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Model"]["MFRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Model"]["Assumption"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Task"]["Assumption"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Formulation"]["Assumption"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Formulation"]["MFRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Research Problem"]["RFRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Model"]["RPRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Model"]["TRelatant"]["uri"]}':
-                general.relation,
-            f"{base}{questions_publication['Publication']['ID']['uri']}":
-                publication.citation,
-        }
-    })
-
-    # Model handlers
-    handler_map.update({
-        CATALOG_MODEL_BASICS_NAME: {
-            f"{base}{questions_model['Research Problem']['ID']['uri']}":
-                model.problem,
-            f"{base}{questions_model['Task']['ID']['uri']}":
-                model.task,
-            f"{base}{questions_model['Mathematical Model']['ID']['uri']}":
-                model.model,
-            f"{base}{questions_model['Mathematical Formulation']['ID']['uri']}":
-                model.formulation,
-            f'{base}{questions_model["Mathematical Model"]["RPRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Model"]["TRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Model"]["MFRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Model"]["Assumption"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Task"]["MFRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Task"]["Assumption"]["uri"]}':
-                general.relation,
-            f'{base}{questions_model["Mathematical Formulation"]["Assumption"]["uri"]}':
-                general.relation,
-            f"{base}{questions_publication['Publication']['ID']['uri']}":
-                publication.citation,
-        }
-    })
-
-    # Algorithm handlers
-    handler_map.update({
-        CATALOG_ALGORITHM_NAME: {
-            f"{base}{questions_algorithm['Benchmark']['ID']['uri']}":
-                algorithm.benchmark,
-            f"{base}{questions_algorithm['Software']['ID']['uri']}":
-                algorithm.software,
-            f"{base}{questions_algorithm['Problem']['ID']['uri']}":
-                algorithm.problem,
-            f"{base}{questions_algorithm['Algorithm']['ID']['uri']}":
-                algorithm.algorithm,
-            f'{base}{questions_algorithm["Problem"]["BRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_algorithm["Software"]["BRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_algorithm["Algorithm"]["PRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_algorithm["Algorithm"]["SRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_algorithm["Software"]["Dependency"]["uri"]}':
-                general.relation,
-            f"{base}{questions_publication['Publication']['ID']['uri']}":
-                publication.citation,
-        }
-    })
-
-    # Workflow handlers
-    handler_map.update({
-        CATALOG_WORKFLOW_NAME: {
-            f"{base}{questions_workflow['Workflow']['ID']['uri']}":
-                workflow.workflow,
-            f"{base}{questions_workflow['Algorithm']['ID']['uri']}":
-                workflow.algorithm,
-            f"{base}{questions_workflow['Workflow']['Model']['uri']}":
-                workflow.model,
-            f"{base}{questions_workflow['Software']['ID']['uri']}":
-                workflow.software,
-            f"{base}{questions_workflow['Hardware']['ID']['uri']}":
-                workflow.hardware,
-            f"{base}{questions_workflow['Hardware']['CPU']['uri']}":
-                workflow.processor_cores,
-            f"{base}{questions_workflow['Data Set']['ID']['uri']}":
-                workflow.data_set,
-            f"{base}{questions_workflow['Process Step']['ID']['uri']}":
-                workflow.process_step,
-            f'{base}{questions_workflow["Process Step"]["Algorithm"]["uri"]}':
-                general.relation,
-            f'{base}{questions_workflow["Process Step"]["Hardware"]["uri"]}':
-                general.relation,
-            f'{base}{questions_workflow["Process Step"]["Input"]["uri"]}':
-                general.relation,
-            f'{base}{questions_workflow["Process Step"]["Output"]["uri"]}':
-                general.relation,
-            f'{base}{questions_workflow["Workflow"]["PSRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_workflow["Process Step"]["Software"]["uri"]}':
-                general.relation,
-            f'{base}{questions_workflow["Algorithm"]["SRelatant"]["uri"]}':
-                general.relation,
-            f'{base}{questions_workflow["Software"]["Dependency"]["uri"]}':
-                general.relation,
-            f"{base}{questions_publication['Publication']['ID']['uri']}":
-                publication.citation,
-        }
-    })
-
-    return handler_map
+    citation = _uri(get_questions('publication'), 'Publication', 'ID')
+    maps = {}
+    for key, information_class in INFORMATION.items():
+        questions = get_questions(key)
+        information = information_class()
+        handlers = {_uri(questions, *question): getattr(information, method)
+                    for question, method in HANDLERS[key].items()}
+        handlers.update({_uri(questions, *question): general.relation for question in RELATIONS[key]})
+        handlers[citation] = publication.citation
+        maps[key] = handlers
+    return _per_catalog(maps)
 
 
 def build_post_delete_handler_set():
-    """Build and return the post-delete attribute-URI-to-handler dispatch set.
+    """Build the post-delete map ``{catalog name: {attribute URI: handler}}``.
 
-    Covers:
-
-    - Publication catalog: when a Publication value set is deleted, the dependent
-      citation values are cleaned up via
-      :meth:`~MaRDMO.publication.handlers.Information.publication_delete`.
-
-    Returns:
-        dict: Nested mapping of the form
-        ``{catalog_slug: {absolute_attribute_uri: handler_method}}``,
-        structured identically to the map returned by
-        :func:`build_post_save_handler_set`.
+    When a publication page is deleted, its citation values are cleaned up
+    (:meth:`~MaRDMO.publication.handlers.Information.publication_delete`);
+    every documenting catalog has publications.
     """
-
-    base = BASE_URI
-    questions_publication = get_questions('publication')
     publication = PublicationInformation()
-
-    pub_set_uri = f"{base}{questions_publication['Publication']['uri']}"
-
-    # Every documenting catalog has publications
+    pub_set_uri = f"{BASE_URI}{get_questions('publication')['Publication']['uri']}"
     return {name: {pub_set_uri: publication.publication_delete} for name in DOCUMENTING}
 
 
 def build_presave_validator_map():
-    """Build and return the pre-save attribute-URI-to-validator dispatch map.
+    """Build the pre-save map ``{catalog name: {attribute URI: validator}}`` from :data:`VALIDATORS`.
 
-    Maps each attribute URI that requires pre-save validation to the appropriate
-    validator function from :mod:`MaRDMO.validators`.  Registered validators:
-
-    - :func:`~MaRDMO.validators.validate_short_description` — for all entity
-      ``Description`` question URIs across all catalogs (max
-      :data:`~MaRDMO.validators.SHORT_DESCRIPTION_MAX_LENGTH` characters).
-    - :func:`~MaRDMO.validators.validate_properties` — for the four data-property
-      question URIs (model, formulation, quantity, task) in the model catalogs.
-    - :func:`~MaRDMO.validators.validate_qudt_id` — for the Quantity reference
-      URI in the full model catalog only.
-    - :func:`~MaRDMO.validators.validate_publication_id` — for the publication ID (by its identifier, #158)
-    - :func:`~MaRDMO.validators.validate_doi` — for the DOI of a data set to publish
-      URIs in all catalogs and the data-set "to publish" DOI in the workflow
-      catalog.
-    - :func:`~MaRDMO.validators.validate_reference` — DOI, URL and swMATH ID
-      check for the software/benchmark references and the process-step
-      documentation.
-    - :func:`~MaRDMO.validators.validate_archive_year` — for the data-set
-      "to archive" year in the workflow catalog.
-    - :func:`~MaRDMO.validators.validate_data_size` and
-      :func:`~MaRDMO.validators.validate_count` — for the data-set size and
-      the hardware counts (nodes, CPUs, cores) in the workflow catalog.
-    - :func:`~MaRDMO.validators.validate_single_line` — for all textarea
-      answers exported as text statements (long descriptions, formula
-      reference, workflow procedure, reproducibility comments).
-
-    Returns:
-        dict: Nested mapping of the form
-        ``{catalog_slug: {absolute_attribute_uri: validator_fn}}``.
+    Each attribute URI has one validator per catalog; a question that needs
+    several combines them in one function (as
+    :func:`~MaRDMO.validators.validate_reference` does).
     """
-    base = BASE_URI
-    questions_model       = get_questions('model')
-    questions_algorithm   = get_questions('algorithm')
-    questions_workflow    = get_questions('workflow')
-    questions_publication = get_questions('publication')
-
-    return {
-        CATALOG_MODEL_NAME: {
-            # Short description (all 6 entity types)
-            f'{base}{questions_model["Research Field"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_model["Research Problem"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_model["Quantity"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_model["Mathematical Formulation"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_model["Task"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_model["Mathematical Model"]["Description"]["uri"]}':
-                validate_short_description,
-            # Single-line textarea answers
-            f'{base}{questions_model["Research Field"]["Long Description"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_model["Research Problem"]["Long Description"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_model["Quantity"]["Long Description"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_model["Mathematical Formulation"]["Long Description"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_model["Task"]["Long Description"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_model["Mathematical Model"]["Long Description"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_model["Mathematical Formulation"]["Reference"]["uri"]}':
-                validate_single_line,
-            # Data properties (model, formulation, quantity, task)
-            f'{base}{questions_model["Mathematical Model"]["Properties"]["uri"]}':
-                validate_properties,
-            f'{base}{questions_model["Mathematical Formulation"]["Properties"]["uri"]}':
-                validate_properties,
-            f'{base}{questions_model["Quantity"]["Properties"]["uri"]}':
-                validate_properties,
-            f'{base}{questions_model["Task"]["Properties"]["uri"]}':
-                validate_properties,
-            # QUDT reference ID (quantity only)
-            f'{base}{questions_model["Quantity"]["Reference"]["uri"]}':
-                validate_qudt_id,
-            # Publication selected by its identifier (#158)
-            f'{base}{questions_publication["Publication"]["ID"]["uri"]}':
-                validate_publication_id,
-        },
-        CATALOG_MODEL_BASICS_NAME: {
-            # Short description (Research Problem, Formulation, Task, Model only)
-            f'{base}{questions_model["Research Problem"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_model["Mathematical Formulation"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_model["Task"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_model["Mathematical Model"]["Description"]["uri"]}':
-                validate_short_description,
-            # Single-line textarea answers (no long descriptions in basics catalog)
-            f'{base}{questions_model["Mathematical Formulation"]["Reference"]["uri"]}':
-                validate_single_line,
-            # Data properties (no Quantity in basics catalog)
-            f'{base}{questions_model["Mathematical Model"]["Properties"]["uri"]}':
-                validate_properties,
-            f'{base}{questions_model["Mathematical Formulation"]["Properties"]["uri"]}':
-                validate_properties,
-            f'{base}{questions_model["Task"]["Properties"]["uri"]}':
-                validate_properties,
-            # Publication selected by its identifier (#158)
-            f'{base}{questions_publication["Publication"]["ID"]["uri"]}':
-                validate_publication_id,
-        },
-        CATALOG_ALGORITHM_NAME: {
-            # Short description
-            f'{base}{questions_algorithm["Algorithm"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_algorithm["Problem"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_algorithm["Software"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_algorithm["Benchmark"]["Description"]["uri"]}':
-                validate_short_description,
-            # Publication selected by its identifier (#158); DOI, URL or swMATH ID (software, benchmark)
-            f'{base}{questions_publication["Publication"]["ID"]["uri"]}':
-                validate_publication_id,
-            f'{base}{questions_algorithm["Software"]["Reference"]["uri"]}':
-                validate_reference,
-            f'{base}{questions_algorithm["Benchmark"]["Reference"]["uri"]}':
-                validate_reference,
-        },
-        CATALOG_WORKFLOW_NAME: {
-            # Short description
-            f'{base}{questions_workflow["Workflow"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_workflow["Algorithm"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_workflow["Software"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_workflow["Hardware"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_workflow["Data Set"]["Description"]["uri"]}':
-                validate_short_description,
-            f'{base}{questions_workflow["Process Step"]["Description"]["uri"]}':
-                validate_short_description,
-            # Single-line textarea answers (procedure, reproducibility comments)
-            f'{base}{questions_workflow["Workflow"]["Long Description"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_workflow["Workflow"]["Mathematical"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_workflow["Workflow"]["Runtime"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_workflow["Workflow"]["Result"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_workflow["Workflow"]["Original Platform"]["uri"]}':
-                validate_single_line,
-            f'{base}{questions_workflow["Workflow"]["Other Platform"]["uri"]}':
-                validate_single_line,
-            # Publication selected by its identifier (#158); DOI (DS to-publish); DOI, URL or
-            # swMATH ID (software, PS documentation)
-            f'{base}{questions_publication["Publication"]["ID"]["uri"]}':
-                validate_publication_id,
-            f'{base}{questions_workflow["Software"]["Reference"]["uri"]}':
-                validate_reference,
-            f'{base}{questions_workflow["Process Step"]["Software-Documentation"]["uri"]}':
-                validate_reference,
-            f'{base}{questions_workflow["Process Step"]["Method-Documentation"]["uri"]}':
-                validate_reference,
-            f'{base}{questions_workflow["Data Set"]["To Publish"]["uri"]}':
-                validate_doi,
-            f'{base}{questions_workflow["Data Set"]["To Archive"]["uri"]}':
-                validate_archive_year,
-            f'{base}{questions_workflow["Data Set"]["Size"]["uri"]}':
-                validate_data_size,
-            # Counts (hardware)
-            f'{base}{questions_workflow["Hardware"]["Nodes"]["uri"]}':
-                validate_count,
-            f'{base}{questions_workflow["Hardware"]["Number of CPU"]["uri"]}':
-                validate_count,
-            f'{base}{questions_workflow["Hardware"]["Cores"]["uri"]}':
-                validate_count,
-        },
-    }
+    publication_id = _uri(get_questions('publication'), 'Publication', 'ID')
+    maps = {}
+    for key, validators in VALIDATORS.items():
+        questions = get_questions(key)
+        maps[key] = {_uri(questions, *question): validator
+                     for validator, found in validators.items() for question in found}
+        maps[key][publication_id] = validate_publication_id
+    return _per_catalog(maps)
