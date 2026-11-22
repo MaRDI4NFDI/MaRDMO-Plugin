@@ -12,7 +12,7 @@ import re
 import requests
 from django.utils.translation import gettext as _
 
-from ..queries import check_waits, request_with_retry
+from ..sources.http import check_waits, request_with_retry
 from .errors import DocumentationProblem, PortalUnavailable
 
 _logger = logging.getLogger(__name__)

@@ -3,8 +3,9 @@ import pytest
 import requests
 
 import MaRDMO.queries as queries
+import MaRDMO.sources.http as http
 from MaRDMO.getters import get_items, get_url
-from MaRDMO.ids import option_help
+from MaRDMO.queries import option_help
 
 SEARCH = {'query': {'search': [{'title': 'Item:Q1'}]}}
 ENTITIES = {'entities': {'Q1': {'labels': {'en': {'value': 'alpha'}}, 'descriptions': {'en': {'value': 'first'}}}}}
@@ -29,9 +30,9 @@ class Portal:
     def __init__(self, monkeypatch, *answers, takes=0.0):
         self.answers, self.requests, self.timeouts = list(answers), [], []
         self.now, self.takes = 1000.0, takes
-        monkeypatch.setattr(queries, 'http_session', lambda: self)
-        # A clock of MaRDMO's queries only: threads and pytest keep the real one
-        monkeypatch.setattr(queries, 'time', self)
+        monkeypatch.setattr(http, 'http_session', lambda: self)
+        # A clock of MaRDMO's requests only: threads and pytest keep the real one
+        monkeypatch.setattr(http, 'time', self)
 
     def monotonic(self):
         return self.now

@@ -19,7 +19,7 @@ from .getters import get_url
 from .ordering import cycle_groups, is_cyclic
 from .payload import DocumentationProblem, PortalUnavailable
 from .problems import Problem
-from .queries import check_limits
+from .sources.http import check_limits
 
 # The section of the problems the export's own checks find (they have no page)
 EXPORT_SECTION = N_('Export')

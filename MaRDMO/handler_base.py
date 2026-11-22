@@ -17,7 +17,6 @@ from typing import Any
 from .constants import ALGORITHM_PROPS, SOFTWARE_PROPS
 from .models import Algorithm, Relatant, Software
 from .getters import (
-    get_id,
     get_items,
     get_properties,
     get_sparql_query,
@@ -25,12 +24,13 @@ from .getters import (
     get_sparql_query_parts,
     get_url,
 )
+from .project.answers import get_id
 from .values import process_qualifier
 from .writes import value_editor
 from .ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .workflow.models import ProcessStepUsage
-from .queries import query_sparql, query_sparql_parts
+from .sources.http import query_sparql, query_sparql_parts
 
 # Lazy singleton – instantiated on first use so that the Django app registry
 # is guaranteed to be ready (publication.handlers imports rdmo ORM models).
@@ -85,7 +85,7 @@ def _twin_lookup(qids):
     :func:`~MaRDMO.queries.find_portal_items`); a lookup that fails finds no
     twins.
     '''
-    from .queries import find_portal_items, portal_labels  # pylint: disable=import-outside-toplevel
+    from .queries import find_portal_items, portal_labels# pylint: disable=import-outside-toplevel
     if not qids:
         return {}
     found = find_portal_items(wikidata_qids=sorted(qids))
@@ -127,7 +127,7 @@ def publication_twins(publications, visited=()):
     lookup each for all *publications*.
     '''
     from .markers import PUBLICATION_MARKERS  # pylint: disable=import-outside-toplevel
-    from .queries import portal_publications_by_doi, wikidata_dois  # pylint: disable=import-outside-toplevel
+    from .queries import portal_publications_by_doi, wikidata_dois# pylint: disable=import-outside-toplevel
     wikidata = [pub for pub in publications if (pub.id or '').startswith('wikidata:') and pub.id not in visited]
     if not wikidata:
         return list(publications)

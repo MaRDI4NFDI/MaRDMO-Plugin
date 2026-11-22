@@ -2,7 +2,6 @@
 import pytest
 import requests
 
-import MaRDMO.class_check as class_check
 import MaRDMO.queries as queries
 from MaRDMO.getters import get_items, get_properties
 from MaRDMO.providers import MaRDMOProvider
@@ -84,7 +83,7 @@ def matches(monkeypatch):
     def use(answer):
         def wikidata_matches(items, roots=None, noise=None, deadline=None):
             return None if answer is None else {item: answer for item in items}
-        monkeypatch.setattr(class_check, 'wikidata_matches', wikidata_matches)
+        monkeypatch.setattr(queries, 'wikidata_matches', wikidata_matches)
     return use
 
 

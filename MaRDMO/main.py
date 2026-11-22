@@ -10,6 +10,7 @@ Provides:
   documentation catalogs.
 - :class:`MaRDMOQueryProvider` — "Query MaRDI Portal" button; handles the
   search-catalog preview and result rendering without requiring OAuth2.
+- :func:`render_preview` — the preview page of both providers.
 '''
 
 from abc import ABC
@@ -24,21 +25,16 @@ from rdmo.projects.exports import Export
 
 from .catalogs import SEARCH, catalog_of
 from .duplicates import preview_duplicates
-from .getters import (
-    catalog_questions,
-    get_answers,
-    get_options,
-    get_questions,
-    get_url
-)
+from . import VERSION
+from .getters import catalog_questions, get_item_url, get_options, get_questions, get_url
+from .project.answers import get_answers, process_question_dict
 from .ordering import topological_order
 from .pages import describe_items_without_page, distinguish_publications, link_to_pages
 from .writes import batched_writes
 from .oauth2 import OauthProviderMixin
-from .pages import add_tab_names
+from .pages import add_tab_names, interview_urls
 from .problems import attach as attach_problems, report_lines
 from . import pipeline
-from .views import render_preview
 
 from .search.worker import search
 from .publication.worker import PublicationRetriever
@@ -48,6 +44,52 @@ def _documenting(project):
     '''The :class:`~MaRDMO.catalogs.Catalog` of *project* if it documents items, else ``None``.'''
     catalog = catalog_of(project)
     return catalog if catalog and catalog.documents else None
+
+
+def render_preview(self, template, answers, option, submit_label, duplicates=None, gate=None):
+    """Render the documentation preview page.
+
+    Args:
+        self:       Export provider instance with ``request``, ``ExportForm``,
+                    ``project`` and ``key`` attributes.
+        template:   Template name (relative path) to include in the preview.
+        answers:    Prepared answers dict passed to the template context.
+        option:     Option string controlling template behaviour (passed to context).
+        duplicates: :class:`~MaRDMO.duplicates.Report` of the items that are on
+                    the MaRDI Portal already; shown at the top, and while it has
+                    rows the export button is disabled (#141).
+        gate:       :class:`~MaRDMO.pipeline.Gate` of the checks; while it is
+                    not clear the export button is disabled (#152).
+
+    Returns:
+        HTTP 200 response rendering ``MaRDMO/preview.html``.
+    """
+    return render(
+        self.request,
+        'MaRDMO/preview.html',
+        {
+            'form': self.ExportForm(),
+            'include_file': template,
+            'include_params': {
+                'title': self.project.title
+            },
+            'answers': answers,
+            'option': option,
+            'submit_label': submit_label,
+            'duplicates': duplicates,
+            'gate': gate,
+            # The interview pages of the problems' pages, linked in "Before you export"
+            'interview': interview_urls(self.project, {problem.page.section for problem in gate.problems + gate.hints
+                                                       if problem.page is not None}) if gate else {},
+            'project': self.project,
+            'export_format': getattr(self, 'key', ''),
+            'mardiURI': get_item_url('mardi'),
+            'wikidataURI': get_item_url('wikidata'),
+            # Appended to the stylesheet URL so browsers reload it after an update
+            'mardmo_version': VERSION,
+        },
+        status=200
+    )
 
 
 class BaseMaRDMOExportProvider(OauthProviderMixin, Export, ABC):
@@ -439,53 +481,3 @@ class MaRDMOQueryProvider(Export):
         )
 
         return search(answers, options), options
-
-
-def process_question_dict(project, questions, get_answer):
-    """Iterate through the nested questions dict and collect answers via *get_answer*.
-
-    Walks every group in *questions*, skips group-level ``"uri"`` entries,
-    fills in optional config defaults, then delegates each question config to
-    *get_answer* to populate and return the answers dict.
-
-    Args:
-        project:    RDMO project instance.
-        questions:  Nested questions dict as loaded from ``questions.json``.
-        get_answer: Callable ``(project, answers, config) → answers`` that
-                    extracts a single question's answer and merges it into
-                    the running *answers* dict.
-
-    Returns:
-        Flat answers dict built by successive *get_answer* calls.
-    """
-    answers = {}
-
-    for group in questions.values():
-        for sub_key, config in group.items():
-            if sub_key == "uri":
-                continue  # Skip the group-level URI
-
-            if not isinstance(config, dict) or "uri" not in config:
-                continue  # Skip invalid or metadata-only entries
-
-            # Fill in optional/default values
-            config = {
-                "key1": config.get("key1"),
-                "key2": config.get("key2"),
-                "key3": config.get("key3"),
-                "uri": config["uri"],
-                "set_prefix": config.get("set_prefix", False),
-                "set_index": config.get("set_index", False),
-                "collection_index": config.get("collection_index", False),
-                "external_id": config.get("external_id", False),
-                "option_text": config.get("option_text", False),
-            }
-
-            # Call the injected function
-            answers = get_answer(
-                project,
-                answers,
-                config
-            )
-
-    return answers

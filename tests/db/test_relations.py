@@ -8,7 +8,7 @@ from MaRDMO.checks.base import OLD_PROJECT
 from MaRDMO.constants import BASE_URI
 from MaRDMO.ids import is_user_id
 from MaRDMO.providers import MaRDMOProvider
-from MaRDMO.ids import option_help
+from MaRDMO.queries import option_help
 import MaRDMO.queries as queries
 from tests.db.conftest import answer, save
 

@@ -168,7 +168,7 @@ class ChecksBase:
         from ..getters import get_url
         from ..payload import PortalUnavailable
         from ..payload.claims import fetch_claims
-        from ..queries import check_deadline
+        from ..sources.http import check_deadline
         qid = item.split(':', 1)[1]
         try:
             claims = fetch_claims([qid], get_url('mardi', 'api'), check_deadline(), 'statements', self._claims)

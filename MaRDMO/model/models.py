@@ -30,7 +30,7 @@ from .constants import data_properties_per_class, qudt_reference_ids
 from ..getters import get_items, get_mathmoddb, get_options, get_properties, get_url
 from ..values import split_value
 from ..models import QueryBatch, Relatant, RelatantWithClass, RelatantWithQualifier
-from ..queries import http_session
+from ..sources.http import http_session
 
 logger = logging.getLogger(__name__)
 

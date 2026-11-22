@@ -25,7 +25,7 @@ import re
 from dataclasses import dataclass
 
 from ..getters import get_item_url, get_items, get_properties, get_url
-from ..queries import query_sparql, sparql_string
+from ..sources.http import query_sparql, sparql_string
 from .sparql import (
     QUERY_BASE_WORKFLOW_SEARCH,
     WF_RESEARCH_OBJ_SPARQL,

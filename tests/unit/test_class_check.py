@@ -13,7 +13,7 @@ class Endpoints:
     def __init__(self, monkeypatch, qlever=(), wikidata=()):
         self.answers = {WIKIDATA['qlever']: qlever, WIKIDATA['sparql']: wikidata}
         self.calls = []
-        monkeypatch.setattr(class_check.queries, 'query_sparql', self)
+        monkeypatch.setattr(class_check.http, 'query_sparql', self)
 
     def __call__(self, query, endpoint, strict=False, waits=(), deadline=None):
         self.calls.append((endpoint, query, deadline))

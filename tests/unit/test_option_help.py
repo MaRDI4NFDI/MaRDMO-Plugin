@@ -9,7 +9,8 @@ import re
 
 import pytest
 
-from MaRDMO.ids import NEW_DOI, NEW_ITEM, NOT_FOUND, option_help
+from MaRDMO.ids import NEW_DOI, NEW_ITEM, NOT_FOUND
+from MaRDMO.queries import option_help
 
 
 def shown(help_html):
