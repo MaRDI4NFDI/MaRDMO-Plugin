@@ -35,8 +35,8 @@ from django.conf import settings
 from rdmo.domain.models import Attribute
 
 from .constants import BASE_URI, WIKIDATA
-from .constants import flag_dict
 from .properties import PropertyRegistry
+from .rules import route
 from .values import nested_set
 from .writes import get_attribute
 def get_mathmoddb():
@@ -300,7 +300,7 @@ def get_answers(project, val, config):
 
     Iterates over all :class:`~rdmo.projects.models.Value` objects for the
     attribute described by *config*, determines the appropriate path in *val*
-    via a :data:`~.constants.flag_dict` handler, and calls
+    with :func:`~.rules.route`, and calls
     :func:`~.values.nested_set` to write the entry.
 
     Args:
@@ -341,15 +341,6 @@ def get_answers(project, val, config):
         if value.set_prefix:
             prefix_idx = int(value.set_prefix.split('|')[0])
 
-        # Set Flags
-        flags = (
-                 bool(config["set_prefix"]),
-                 bool(config["set_index"]),
-                 bool(config["collection_index"]),
-                 bool(config["external_id"]),
-                 bool(config["option_text"]),
-                )
-
         # Set Attribute
         attribute = 'option_uri' if value.option else 'text' if value.text else None
 
@@ -357,11 +348,8 @@ def get_answers(project, val, config):
             # Ignore if not Attribute Set
             continue
 
-        # Get Flag Combo Handler
-        handler = flag_dict[flags]
-
         # Get Entry and Path
-        entry, path = handler(value, attribute, config, prefix_idx)
+        entry, path = route(value, attribute, config, prefix_idx)
 
         # Generate nested Dict Entry
         nested_set(data=val,

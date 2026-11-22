@@ -1,9 +1,9 @@
 # Question Configuration Reference
 
 MaRDMO extracts interview answers from RDMO by reading each registered question's
-configuration from `<submodule>/data/questions.json` and routing the value through
-a rule function determined by five boolean flags.  This page documents the
-configuration fields and the complete flag-to-rule mapping.
+configuration from `<submodule>/data/questions.json` and placing the value in the
+answers by its keys and five boolean flags.  This page documents the
+configuration fields and how the flags make the path.
 
 ---
 
@@ -27,55 +27,32 @@ Omitted boolean fields default to `false`.
 
 ---
 
-## Flag combinations and resulting paths
+## Flags and resulting paths
 
-The five boolean flags `(set_prefix, set_index, collection_index, external_id, option_text)`
-are read from the question config at runtime and used to look up the correct extraction
-rule in `flag_dict` (defined in `constants.py`).
+`rules.route()` turns a value of a question into its entry and the path of the
+entry in the answers dict.
 
-The **entry type** column describes what is stored at the resulting path:
+**The path** is built from these parts, in this order, each only if its flag
+(or key) is set:
 
-- **raw** — `value.option_uri` if an option was selected, otherwise `value.text`
-- **list** — a `[option_uri, text]` pair from `basic_list(value)`
-- **dict** — an entity reference dict `{ID, Name, Description}` from `basic_dict(value)`
-- **ext_id** — `value.external_id`
+1. `key1`
+2. `prefix_idx`, the set prefix (`set_prefix`)
+3. `key2`
+4. `set_index` (`set_index`)
+5. `coll_index`, the collection index (`collection_index`)
+6. `key3`
 
-### Raw entries
+Without a set prefix the set index comes before `key2`: the question is on a
+page of its own (`[key1, set_index, key2]`).  With one, the set index is a block
+within the page (`[key1, prefix_idx, key2, set_index]`).
 
-| set_prefix | set_index | coll_index | ext_id | opt_text | Rule | Resulting path |
-|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| ✗ | ✗ | ✗ | ✗ | ✗ | 0 | `[key1, key2]` |
-| ✓ | ✗ | ✗ | ✗ | ✗ | 1 | `[key1, prefix_idx, key2]` |
-| ✗ | ✓ | ✗ | ✗ | ✗ | 2 | `[key1, set_index, key2]` |
-| ✗ | ✗ | ✓ | ✗ | ✗ | 10 | `[key1, key2, coll_index]` |
-| ✓ | ✓ | ✗ | ✗ | ✗ | 3 | `[key1, prefix_idx, key2, set_index]` (+ `key3`) |
-| ✗ | ✓ | ✓ | ✗ | ✗ | 4 | `[key1, set_index, key2, coll_index]` (+ `key3`) |
-| ✓ | ✗ | ✓ | ✗ | ✗ | 5 | `[key1, prefix_idx, key2, coll_index]` |
-| ✓ | ✓ | ✓ | ✗ | ✗ | 19 | `[key1, prefix_idx, key2, set_index, coll_index]` |
+**The entry** stored at the path:
 
-### External ID entries
+- `option_text`: the pair `[option_uri, text]`
+- `external_id`: the item `{ID, Name, Description}`; for the ID question of a
+  page (`set_index` and `external_id` only) just its `external_id`
+- otherwise the value: `value.option_uri` if an option was selected, else `value.text`
 
-| set_prefix | set_index | coll_index | ext_id | opt_text | Rule | Resulting path |
-|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| ✗ | ✓ | ✗ | ✓ | ✗ | 12 | `[key1, set_index, key2]` |
-
-### Dict entries (`{ID, Name, Description}`)
-
-| set_prefix | set_index | coll_index | ext_id | opt_text | Rule | Resulting path |
-|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| ✗ | ✗ | ✗ | ✓ | ✗ | 9 | `[key1]` |
-| ✗ | ✗ | ✓ | ✓ | ✗ | 11 | `[key1, key2, coll_index]` |
-| ✓ | ✓ | ✗ | ✓ | ✗ | 13 | `[key1, prefix_idx, key2, set_index]` (+ `key3`) |
-| ✓ | ✗ | ✓ | ✓ | ✗ | 14 | `[key1, prefix_idx, key2, coll_index]` |
-| ✓ | ✓ | ✓ | ✓ | ✗ | 15 | `[key1, prefix_idx, key2, set_index, coll_index]` |
-
-### List entries (`[option_uri, text]`)
-
-| set_prefix | set_index | coll_index | ext_id | opt_text | Rule | Resulting path |
-|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| ✓ | ✗ | ✗ | ✗ | ✓ | 7 | `[key1, prefix_idx, key2]` |
-| ✗ | ✓ | ✗ | ✗ | ✓ | 8 | `[key1, set_index, key2]` |
-| ✓ | ✓ | ✗ | ✗ | ✓ | 16 | `[key1, prefix_idx, key2, set_index]` (+ `key3`) |
-| ✓ | ✗ | ✓ | ✗ | ✓ | 17 | `[key1, prefix_idx, key2, coll_index]` |
-| ✗ | ✓ | ✓ | ✗ | ✓ | 18 | `[key1, set_index, key2, coll_index]` (+ `key3`) |
-| ✓ | ✓ | ✓ | ✗ | ✓ | 6 | `[key1, prefix_idx, key2, set_index, coll_index]` |
+Only the flag combinations the questions use are allowed (`rules.ALLOWED`); a
+question with another one is an error (`tests/unit/test_rules.py` checks all
+questions).
