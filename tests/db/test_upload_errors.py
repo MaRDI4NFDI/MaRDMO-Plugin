@@ -1,6 +1,6 @@
 '''The upload when the MaRDI Portal does not simply accept (#138).
 
-The real upload (oauth2._background_post) posts a small export (two new
+The real upload (upload.Upload.run) posts a small export (two new
 items, a statement on the first) to a portal that answers from a script:
 rate limits, refusals, server errors, timeouts, rejected values, an item
 that exists already.  What the user reads afterwards is the progress
@@ -13,8 +13,9 @@ from types import SimpleNamespace
 import pytest
 import requests
 
-from MaRDMO import main
+from MaRDMO.portal_errors import extract_error_message
 from MaRDMO.store import _progress_store
+from MaRDMO.upload import Upload, retry_after_seconds
 
 URI = 'https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items'
 OK = 'ok'
@@ -70,15 +71,13 @@ class Portal:
 def upload(db, monkeypatch):
     '''Upload the export to a portal with the given script; returns ``(result, portal, slept)``.'''
     slept = []
-    monkeypatch.setattr('MaRDMO.oauth2.time.sleep', slept.append)
+    monkeypatch.setattr('MaRDMO.upload.time.sleep', slept.append)
 
     def run(*script):
-        provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
-        provider._session = Portal(*script)
-        payload = export()
-        provider._background_post(SimpleNamespace(build_absolute_uri=lambda path: path), 'token', payload,
-                                  ['Item0000000002', 'Item0000000001'], 'job', None)
-        return _progress_store['job'], provider._session, slept
+        upload = Upload('job', {'Authorization': 'Bearer token'}, Portal(*script))
+        upload.run(SimpleNamespace(build_absolute_uri=lambda path: path), export(),
+                   ['Item0000000002', 'Item0000000001'], None)
+        return _progress_store['job'], upload.session, slept
     return run
 
 
@@ -147,7 +146,7 @@ def test_an_error_in_a_statement_keeps_the_created_items(upload):
 @pytest.mark.parametrize('header, seconds', [('12', 12), ('soon', 5), ('600', 60), ('0', 1)])
 def test_retry_after(header, seconds):
     response = SimpleNamespace(headers={'Retry-After': header})
-    assert main.MaRDMOExportProvider._retry_after_seconds(response) == seconds
+    assert retry_after_seconds(response) == seconds
 
 
 @pytest.mark.parametrize('body, text', [
@@ -156,6 +155,5 @@ def test_retry_after(header, seconds):
     ({'code': 'some-code', 'context': {'a': 1}}, 'some-code (a: 1)'),
 ])
 def test_error_messages_of_both_apis(body, text):
-    provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     response = SimpleNamespace(json=lambda: body, text=json.dumps(body))
-    assert provider._extract_error_message(response) == text
+    assert extract_error_message(response) == text

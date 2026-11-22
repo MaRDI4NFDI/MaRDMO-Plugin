@@ -4,11 +4,12 @@ import pytest
 import MaRDMO.queries as queries
 from MaRDMO.duplicates import Duplicate, decide, item_source, look_up
 from MaRDMO.getters import get_items, get_properties
-from MaRDMO.oauth2 import DuplicateOnPortal, OauthProviderMixin
 from MaRDMO.markers import SECTION_MARKERS, allowed, contradictions
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
+from MaRDMO.portal_errors import DuplicateOnPortal, handle_policy_violation
 from MaRDMO.publication.worker import PublicationExport
 from MaRDMO.queries import PortalItems, find_portal_items
+from MaRDMO.upload import Upload
 
 ITEMS = get_items()
 
@@ -313,7 +314,7 @@ class Response:
 def test_a_portal_duplicate_at_upload_stops_the_export(cls, kind):
     jsons = {'Item1': {'id': '', 'label': 'mass', 'description': 'physical quantity', 'class': cls}}
     with pytest.raises(DuplicateOnPortal) as error:
-        OauthProviderMixin()._handle_policy_violation(Response(), 'Item1', jsons)
+        handle_policy_violation(Response(), 'Item1', jsons)
     assert (error.value.qid, error.value.part) == ('Q77', kind)
     assert jsons['Item1']['id'] == ''
 
@@ -335,27 +336,26 @@ def test_the_message_says_what_to_do():
 
 def test_the_job_stores_the_message(monkeypatch):
     stored = {}
-    monkeypatch.setattr('MaRDMO.oauth2._progress_store', stored)
+    monkeypatch.setattr('MaRDMO.upload._progress_store', stored)
     jsons = {'Item1': {'id': '', 'label': 'mass', 'description': 'physical quantity',
                        'payload': {'item': {'labels': {'en': 'mass'}}}, 'statements': []}}
-    OauthProviderMixin()._finish_job(None, 'job', None, jsons, jsons,
-                                     DuplicateOnPortal('mass', 'physical quantity', 'Q77'), 0, 1)
+    Upload('job', {}).finish(None, None, jsons, jsons, DuplicateOnPortal('mass', 'physical quantity', 'Q77'), 0, 1)
     assert stored['job']['phase'] == 'error' and 'Nothing was sent' in stored['job']['error']
 
 
 def test_a_failed_finish_still_stores_a_message(monkeypatch):
     """If writing the result fails, the progress page still gets text, not the exception."""
     stored = {}
-    monkeypatch.setattr('MaRDMO.oauth2._progress_store', stored)
-    monkeypatch.setattr('MaRDMO.oauth2.connection', type('Connection', (), {'close': staticmethod(lambda: None)}))
-    mixin = OauthProviderMixin()
+    monkeypatch.setattr('MaRDMO.upload._progress_store', stored)
+    monkeypatch.setattr('MaRDMO.upload.connection', type('Connection', (), {'close': staticmethod(lambda: None)}))
+    upload = Upload('job', {})
 
-    def refuse(key, jsons, token):
+    def refuse(key, jsons):
         raise DuplicateOnPortal('mass', 'physical quantity', 'Q77')
 
     def broken(*args, **kwargs):
         raise RuntimeError('finishing failed')
-    monkeypatch.setattr(mixin, '_post_data', refuse)
-    monkeypatch.setattr(mixin, '_finish_job', broken)
-    mixin._background_post(None, 'token', {'Item1': {'id': ''}}, ['Item1'], 'job', None)
+    monkeypatch.setattr(upload, 'post_data', refuse)
+    monkeypatch.setattr(upload, 'finish', broken)
+    upload.run(None, {'Item1': {'id': ''}}, ['Item1'], None)
     assert isinstance(stored['job']['error'], str) and 'Q77' in stored['job']['error']

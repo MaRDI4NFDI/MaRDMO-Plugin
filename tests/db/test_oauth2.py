@@ -86,14 +86,17 @@ def test_the_export_goes_through_the_portal_login_to_the_result(white, client, t
 
     # The upload, as the thread runs it
     fake = Portal()
-    monkeypatch.setattr('MaRDMO.oauth2.requests.Session', lambda: fake)
-    monkeypatch.setattr('MaRDMO.oauth2.time.sleep', lambda seconds: None)
+    sent, post = [], fake.request
+    fake.request = lambda method, url, **kwargs: sent.append(kwargs.get('headers')) or post(method, url, **kwargs)
+    monkeypatch.setattr('MaRDMO.upload.requests.Session', lambda: fake)
+    monkeypatch.setattr('MaRDMO.upload.time.sleep', lambda seconds: None)
     # The thread closes its own database connection at the end; run in the test's thread it
     # would close the test's (PostgreSQL and MariaDB refuse queries after that, SQLite reconnects)
-    monkeypatch.setattr('MaRDMO.oauth2.connection', SimpleNamespace(close=lambda: None))
+    monkeypatch.setattr('MaRDMO.upload.connection', SimpleNamespace(close=lambda: None))
     (target, args), = threads
-    assert args[1] == 'token'
     target(*args)
+    # with the user's token
+    assert sent and all(headers == {'Authorization': 'Bearer token'} for headers in sent)
     assert _progress_store[job]['phase'] == 'done', _progress_store[job].get('error')
     assert len(fake.items) == _progress_store[job]['counts']['items_created'] > 0
 
