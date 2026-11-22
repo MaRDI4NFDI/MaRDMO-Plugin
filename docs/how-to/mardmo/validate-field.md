@@ -87,19 +87,24 @@ def validate_swmath(instance):
         raise ValidationError({'text': [problem]})
 ```
 
-**File:** `builders.py` — register the validator for each question and catalog
-in `build_presave_validator_map()`:
+**File:** `builders.py` — register the validator for each question in
+`VALIDATORS`, under the question set of its catalog:
 
 ```python
-f'{base}{questions_algorithm["Software"]["Reference"]["uri"]}':
-    validate_reference,
+'algorithm': {
+    ...
+    validate_reference: [
+        ('Software', 'Reference'),
+        ('Benchmark', 'Reference'),
+    ],
+},
 ```
 
 Each attribute URI can have only one validator per catalog.  If a question
 needs several (references accept DOIs, URLs and swMATH IDs), combine them in
 one function that calls the individual validators, as `validate_reference` does.
-Remember the model catalogs: the full and the basic catalog are registered
-separately.
+The model basics catalog uses the validators of the model catalog (its
+question set).
 
 You do not need to handle imported data: values written by MaRDMO's handlers
 skip pre-save validation and are checked by the steps below.

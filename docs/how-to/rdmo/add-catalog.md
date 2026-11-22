@@ -47,7 +47,8 @@ the model basics).  The preview, the export, the interview's handlers and
 the checks look the catalog up there.
 
 A documenting catalog also needs its rows in the tables keyed by catalog:
-the handlers of its questions and their validators (`MaRDMO/builders.py`)
+the handlers and validators of its questions, by its question set
+(`MaRDMO/builders.py`: `INFORMATION`, `HANDLERS`, `RELATIONS`, `VALIDATORS`)
 and the relations of its publications
 (`MaRDMO/publication/constants.py`, `ROUTING`).  `tests/unit/test_catalogs.py`
 names what is missing: a catalog of the questionnaire without entry, a
