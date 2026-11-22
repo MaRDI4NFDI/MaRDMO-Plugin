@@ -78,7 +78,7 @@ _SOFTWARE = {
 _DISCIPLINE = Markers('academic discipline', 'MathModDB', 'MaRDI research field profile')
 
 # The markers the export gives the items of each section: {catalog: {section: Markers}}.
-# The workers read them from here (PublicationExport._add_common_metadata), the
+# The workers read them from here (CatalogExport._add_common_metadata), the
 # preview decides with them whether a portal item may be reused (duplicates.py).
 SECTION_MARKERS = {
     'model': {

@@ -7,7 +7,7 @@ from MaRDMO.getters import get_items, get_properties
 from MaRDMO.markers import SECTION_MARKERS, allowed, contradictions
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.portal_errors import DuplicateOnPortal, handle_policy_violation
-from MaRDMO.publication.worker import PublicationExport
+from MaRDMO.publication.worker import CatalogExport
 from MaRDMO.queries import PortalItems, find_portal_items
 from MaRDMO.upload import Upload
 
@@ -94,7 +94,7 @@ def test_existing_items_get_only_missing_markers_that_do_not_contradict(markers,
     assert allowed(kind, value, markers) is expected
 
 
-class Worker(PublicationExport):
+class Worker(CatalogExport):
     catalog = 'model'
 
 

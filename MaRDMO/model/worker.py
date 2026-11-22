@@ -24,17 +24,17 @@ from .utils import get_data_properties, map_entity_quantity
 
 from ..getters import get_items, get_mathmoddb, get_properties, get_publication_mapping, get_url
 from ..ids import unique_items
-from ..relations import entity_relations, map_entity
+from ..relations import map_entity, resolve_relations
 from ..payload import GeneratePayload
 
-from ..publication.worker import PublicationExport
+from ..publication.worker import CatalogExport
 from ..tex_check import annotate_formulas
 
-class PrepareModel(PublicationExport):
+class PrepareModel(CatalogExport):
     '''Prepare Mathematical Model answers for preview rendering and MaRDI Portal export.
 
-    Inherits publication export helpers from
-    :class:`~MaRDMO.publication.worker.PublicationExport` and extends them
+    Inherits the exports all catalogs share from
+    :class:`~MaRDMO.publication.worker.CatalogExport` and extends them
     with model-specific relation mapping, property conflict detection, and
     Wikibase payload generation.
     '''
@@ -75,24 +75,7 @@ class PrepareModel(PublicationExport):
             )
 
         # Prepare Relations for Preview
-        for relation in preview_relations:
-            entity_relations(
-                data = answers,
-                idx = {
-                    'from': relation['from_idx'],
-                    'to': relation['to_idx']
-                },
-                entity = {
-                    'relation': relation['relation'],
-                    'old_name': relation['old_name'],
-                    'new_name': relation['new_name']
-                },
-                assumption = relation['assumption'],
-                mapping = (
-                    self.publication_mapping if relation.get('mapping') == 'publication'
-                    else self.mathmoddb
-                )
-            )
+        resolve_relations(answers, preview_relations, {'publication': self.publication_mapping}, self.mathmoddb)
 
         # Quantity Type as Label
         for quantity in answers.get("quantity", {}).values():

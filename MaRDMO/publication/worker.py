@@ -8,8 +8,8 @@ Provides:
 
 - :class:`PublicationRetriever` — fetches citation metadata for a DOI and
   writes the results into the questionnaire via the adders module
-- :class:`PublicationExport`    — base class for catalog-specific export
-  workers that package questionnaire answers for portal submission
+- :class:`CatalogExport`        — base class of the catalogs' export
+  workers: what they export alike (publications, algorithms, software, …)
 '''
 
 import html
@@ -19,7 +19,7 @@ from multiprocessing.pool import ThreadPool
 from .constants import ITEMINFOS, CITATIONINFOS, JOURNALS, AUTHORS, LANGUAGES
 from .utils import clean_background_data, get_citation
 
-from ..constants import BASE_URI
+from ..constants import BASE_URI, SOFTWARE_REFERENCES
 from ..getters import get_items, get_options, get_properties, get_questions
 from ..properties import find_reference
 from ..values import date_precision
@@ -153,15 +153,27 @@ class PublicationRetriever:
         return dict(zip(dois, results))
 
 
-class PublicationExport:
-    '''Base class providing author, journal, and publication export helpers.
+# Items entered on a page without a page of their own, exported with their class
+# and markers only: {answer key (also the section of the markers): class}
+PLAIN_ITEMS = {
+    'programminglanguage': 'Programming Language',
+    'cpu': 'CPU Model',
+    'method': 'Experimental Method',
+    'instrument': 'Experimental Equipment',
+    'algorithmictask': 'Algorithmic Task',
+    'academicdiscipline': 'Academic Discipline',
+}
+
+
+class CatalogExport:
+    '''Base class of the export workers of the catalogs: what they export alike.
 
     Subclassed by :class:`~MaRDMO.model.worker.PrepareModel`,
     :class:`~MaRDMO.algorithm.worker.PrepareAlgorithm` and
     :class:`~MaRDMO.workflow.worker.PrepareWorkflow`.  Holds the shared
-    Wikibase vocabulary and the private ``_export_*`` helpers that build
-    publication-related payload entries, and the export of programming
-    languages (algorithm and workflow catalogs).
+    Wikibase vocabulary, the markers, the export of authors, journals and
+    publications, and, for the algorithm and workflow catalogs, of
+    algorithms, software and the plain items (:data:`PLAIN_ITEMS`).
     '''
 
     # The worker's key in markers.SECTION_MARKERS
@@ -172,18 +184,125 @@ class PublicationExport:
         self.properties = get_properties()
         self.items = get_items()
 
-    def _export_programming_languages(self, payload, programminglanguages: dict):
-        '''Export each programming language item collected from software sections.'''
-        for entry in programminglanguages.values():
+    def _export_plain(self, payload, data, *keys):
+        '''Export the plain items of *data* under *keys*, in this order: their class and markers.
+
+        Args:
+            payload: :class:`~MaRDMO.payload.GeneratePayload` instance.
+            data:    Top-level answers dict.
+            keys:    Keys of :data:`PLAIN_ITEMS` (e.g. ``'programminglanguage'``,
+                     collected from the software pages).
+        '''
+        for key in keys:
+            for entry in data.get(key, {}).values():
+                if not entry.get("ID"):
+                    continue
+
+                payload.get_item_key(
+                    value = entry
+                )
+                payload.set_class(PLAIN_ITEMS[key])
+
+                self._add_common_metadata(payload, key)
+
+    def _export_algorithms(self, payload, algorithms: dict, intra_class=False):
+        '''Export each algorithm item (algorithm and workflow catalogs).
+
+        Sets the class and markers of an algorithm and links it to its
+        algorithmic tasks via solved-by (reverse) and to the implementing
+        software via implemented-by.
+
+        Args:
+            payload:     :class:`~MaRDMO.payload.GeneratePayload` instance.
+            algorithms:  The ``algorithm`` section of the answers.
+            intra_class: Also export the algorithm-to-algorithm relations
+                         (the algorithm catalog has them, the workflow catalog not).
+        '''
+        for entry in algorithms.values():
             if not entry.get("ID"):
                 continue
 
             payload.get_item_key(
                 value = entry
             )
-            payload.set_class('Programming Language')
+            payload.set_class('Algorithm')
 
-            self._add_common_metadata(payload, 'programminglanguage')
+            self._add_common_metadata(payload, 'algorithm')
+
+            payload.add_single_relation(
+                statement = {
+                    'relation': self.properties["solved by"],
+                    'relatant': "PRelatant"
+                },
+                reverse = True
+            )
+
+            payload.add_single_relation(
+                statement = {
+                    'relation': self.properties["implemented by"],
+                    'relatant': "SRelatant"
+                }
+            )
+
+            if intra_class:
+                payload.add_multiple_relation(
+                    statement = {
+                        'relation': "IntraClassRelation",
+                        'relatant': "IntraClassElement"
+                    }
+                )
+
+    def _export_softwares(self, payload, softwares: dict, algo_software_keys: set, tested_by=False):
+        '''Export each software item (algorithm and workflow catalogs).
+
+        Software linked to an algorithm via "implemented by" receives community
+        MathAlgoDB and the MaRDI software profile; all other software receives
+        only the profile.  Then its programming languages, dependencies and
+        references.
+
+        Args:
+            payload:            :class:`~MaRDMO.payload.GeneratePayload` instance.
+            softwares:          The ``software`` section of the answers.
+            algo_software_keys: The software implementing an algorithm
+                                (:meth:`_implementing_software`).
+            tested_by:          Also export the benchmarks it is tested by
+                                (the algorithm catalog has them, the workflow catalog not).
+        '''
+        for entry in softwares.values():
+            if not entry.get("ID"):
+                continue
+
+            payload.get_item_key(
+                value = entry
+            )
+            payload.set_class('Software')
+
+            self._add_common_metadata(payload, self._software_section(entry, algo_software_keys))
+
+            if tested_by:
+                payload.add_single_relation(
+                    statement = {
+                        'relation': self.properties["tested by"],
+                        'relatant': "BRelatant"
+                    },
+                    reverse = True
+                )
+
+            payload.add_single_relation(
+                statement = {
+                    'relation': self.properties["programmed in"],
+                    'relatant': "programminglanguage"
+                }
+            )
+
+            payload.add_single_relation(
+                statement = {
+                    'relation': self.properties["depends on software"],
+                    'relatant': "dependency"
+                }
+            )
+
+            self._add_references(payload, entry.get('reference'), SOFTWARE_REFERENCES)
 
     def _add_common_metadata(self, payload, section, description_long=False):
         '''Add the markers of *section* to the current subject, and optionally its long description.

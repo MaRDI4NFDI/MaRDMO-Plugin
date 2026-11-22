@@ -8,7 +8,6 @@ MaRDI Portal Wikibase instance.
 
 from .constants import get_relations, preview_relations, REPRODUCIBILITY, IRREPRODUCIBILITY
 
-from ..constants import SOFTWARE_REFERENCES
 from ..getters import (
     get_items,
     get_mathalgodb,
@@ -19,18 +18,18 @@ from ..getters import (
     get_url
 )
 from ..ids import unique_items
-from ..relations import collect_items_without_section, entity_relations, entity_relations_grouped
+from ..relations import collect_items_without_section, resolve_relations
 from ..payload import GeneratePayload
 from ..payload.bodies import quantity_amount
 
-from ..publication.worker import PublicationExport
+from ..publication.worker import CatalogExport
 
 
-class PrepareWorkflow(PublicationExport):
+class PrepareWorkflow(CatalogExport):
     '''Prepare interdisciplinary workflow answers for preview and export.
 
-    Inherits publication export helpers from
-    :class:`~MaRDMO.publication.worker.PublicationExport` and extends them
+    Inherits the exports all catalogs share from
+    :class:`~MaRDMO.publication.worker.CatalogExport` and extends them
     with workflow-specific relation mapping and Wikibase payload generation.
     '''
     catalog = 'workflow'
@@ -46,10 +45,9 @@ class PrepareWorkflow(PublicationExport):
     def preview(self, answers):
         '''Enrich the answers dict with derived display structures for the preview template.
 
-        First iterates over :data:`~MaRDMO.workflow.constants.preview_relations` and calls
-        :func:`~MaRDMO.relations.entity_relations` for each entry to resolve cross-entity
-        relation labels (e.g. Workflow → Process Step) into the ``answers`` dict — the same
-        pattern used by the model and algorithm preview workers.
+        First resolves the relations of :data:`~MaRDMO.workflow.constants.preview_relations`
+        (:func:`~MaRDMO.relations.resolve_relations`, e.g. Workflow → Process Step) in the
+        ``answers`` dict, as the model and algorithm preview workers do.
 
         Then builds ``model_task_pairs`` — an ordered list of dicts with keys ``model``,
         ``tasks``, ``has_model``, and ``has_tasks`` — for every workflow in the project
@@ -75,26 +73,8 @@ class PrepareWorkflow(PublicationExport):
         '''
 
         # Prepare Relations for Preview
-        for relation in preview_relations:
-            fn = entity_relations_grouped if relation.get('grouped') else entity_relations
-            fn(
-                data = answers,
-                idx = {
-                    'from': relation['from_idx'],
-                    'to': relation['to_idx']
-                },
-                entity = {
-                    'relation': relation['relation'],
-                    'old_name': relation['old_name'],
-                    'new_name': relation['new_name']
-                },
-                assumption = False,
-                mapping = (
-                    self.mathmoddb           if relation.get('mapping') == 'mathmoddb'
-                    else self.publication_mapping if relation.get('mapping') == 'publication'
-                    else self.mathalgodb
-                )
-            )
+        resolve_relations(answers, preview_relations,
+                          {'mathmoddb': self.mathmoddb, 'publication': self.publication_mapping}, self.mathalgodb)
 
         for wf_data in answers.get('workflow', {}).values():
             models = wf_data.get('model', {})
@@ -257,30 +237,8 @@ class PrepareWorkflow(PublicationExport):
             payload  = payload,
             datasets = data.get('dataset', {}),
         )
-        self._export_cpus(
-            payload = payload,
-            cpus    = data.get('cpu', {}),
-        )
-        self._export_programming_languages(
-            payload              = payload,
-            programminglanguages = data.get('programminglanguage', {}),
-        )
-        self._export_methods(
-            payload = payload,
-            methods = data.get('method', {}),
-        )
-        self._export_instruments(
-            payload     = payload,
-            instruments = data.get('instrument', {}),
-        )
-        self._export_algorithmic_tasks(
-            payload           = payload,
-            algorithmic_tasks = data.get('algorithmictask', {}),
-        )
-        self._export_academic_disciplines(
-            payload              = payload,
-            academic_disciplines = data.get('academicdiscipline', {}),
-        )
+        self._export_plain(payload, data, 'cpu', 'programminglanguage', 'method', 'instrument', 'algorithmictask',
+                           'academicdiscipline')
         self._export_authors(
             payload      = payload,
             publications = data.get('publication', {}),
@@ -544,72 +502,6 @@ class PrepareWorkflow(PublicationExport):
                 statement = {'relation': self.properties["field of work"], 'relatant': "RFRelatant"}
             )
 
-    def _export_algorithms(self, payload, algorithms: dict):
-        '''Export each algorithm item.
-
-        Sets instance of: algorithm (community: MathAlgoDB, profile: MaRDI
-        algorithm profile), links to its algorithmic tasks via solved-by
-        (reverse) and to implementing software via implemented-by.
-        No algorithm-to-algorithm intra-class relations are exported for the
-        workflow catalog.
-        '''
-        for entry in algorithms.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(value=entry)
-            payload.set_class('Algorithm')
-
-            self._add_common_metadata(payload, 'algorithm')
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["solved by"],
-                    'relatant': "PRelatant"
-                },
-                reverse = True
-            )
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["implemented by"],
-                    'relatant': "SRelatant"
-                }
-            )
-
-    def _export_softwares(self, payload, softwares: dict, algo_software_keys: set):
-        '''Export each software item.
-
-        Software linked to an algorithm via "implemented by" receives community
-        MathAlgoDB and the MaRDI software profile; all other software receives
-        only the profile.  No benchmark (tested-by) relation is exported for
-        the workflow catalog.
-        '''
-        for entry in softwares.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(value=entry)
-            payload.set_class('Software')
-
-            self._add_common_metadata(payload, self._software_section(entry, algo_software_keys))
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["programmed in"],
-                    'relatant': "programminglanguage"
-                }
-            )
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["depends on software"],
-                    'relatant': "dependency"
-                }
-            )
-
-            self._add_references(payload, entry.get('reference'), SOFTWARE_REFERENCES)
-
     def _export_hardwares(self, payload, hardwares: dict):
         '''Export each hardware item.
 
@@ -785,68 +677,3 @@ class PrepareWorkflow(PublicationExport):
                         object_and_type = [self.items["research data archiving"], "wikibase-item"],
                         qualifier = qualifier,
                     )
-
-    def _export_cpus(self, payload, cpus: dict):
-        '''Export each CPU item collected from hardware sections.'''
-        for entry in cpus.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('CPU Model')
-
-            self._add_common_metadata(payload, 'cpu')
-
-    def _export_methods(self, payload, methods: dict):
-        '''Export each experimental method item collected from process-step sections.'''
-        for entry in methods.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Experimental Method')
-
-            self._add_common_metadata(payload, 'method')
-
-    def _export_instruments(self, payload, instruments: dict):
-        '''Export each instrument item collected from process-step sections.'''
-        for entry in instruments.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Experimental Equipment')
-
-            self._add_common_metadata(payload, 'instrument')
-
-    def _export_algorithmic_tasks(self, payload, algorithmic_tasks: dict):
-        '''Export each algorithmic task item collected from algorithm sections.'''
-        for entry in algorithmic_tasks.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Algorithmic Task')
-
-            self._add_common_metadata(payload, 'algorithmictask')
-
-    def _export_academic_disciplines(self, payload, academic_disciplines: dict):
-        '''Export each academic discipline item collected from process-step sections.'''
-        for entry in academic_disciplines.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Academic Discipline')
-
-            self._add_common_metadata(payload, 'academicdiscipline')

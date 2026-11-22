@@ -67,7 +67,7 @@ def build_new_value(from_entry, entity, key, resolved, assumption, mapping):
     return new_value
 
 
-def entity_relations(data, idx, entity, assumption, mapping):
+def entity_relations(data, idx, entity, assumption, mapping, grouped=False):
     """Resolve cross-entity relations and write processed entries into *data*.
 
     For every source entity in ``data[idx['from']]``, iterates over its raw
@@ -76,6 +76,10 @@ def entity_relations(data, idx, entity, assumption, mapping):
     ``entity['new_name']``.  Handles both flat (single relatant) and nested
     (multiple relatants per relation) structures.
 
+    An entry equal to one already written is left out, unless *grouped*:
+    grouped structures (the workflow's) hold the same item (e.g. the same
+    own item, the same platform software) at several set indices.
+
     Args:
         data:       Top-level answers dict; mutated in place.
         idx:        Dict with keys ``from`` (source type) and ``to`` (list of
@@ -83,6 +87,7 @@ def entity_relations(data, idx, entity, assumption, mapping):
         entity:     Dict with keys ``relation``, ``old_name`` and ``new_name``.
         assumption: Boolean controlling assumption qualifier attachment.
         mapping:    :class:`~MaRDMO.properties.PropertyRegistry` for relation type lookup.
+        grouped:    Write every entry, also one equal to an entry already written.
     """
     refs = page_refs(data, check_list(idx.get('to')))
 
@@ -115,54 +120,45 @@ def entity_relations(data, idx, entity, assumption, mapping):
                     )
 
                     # Add Process Item to Dict
-                    if new_value not in entity_values.values():
+                    if grouped or new_value not in entity_values.values():
                         entity_values[f"{key}|{key2}"] = new_value
             else:
                 #Handle flat dicts
                 resolved = refs.get(values.get('ID'), values.get('ID'))
                 # Build new Item Value
                 new_value = build_new_value(from_entry, entity, key, resolved, assumption, mapping)
-                if new_value not in entity_values.values():
+                if grouped or new_value not in entity_values.values():
                     entity_values[key] = new_value
 
-def entity_relations_grouped(data, idx, entity, assumption, mapping):
-    """Resolve cross-entity relations without value-level deduplication.
 
-    Identical to :func:`entity_relations` except that every resolved entry is
-    always written, even when its value already appears under a different key.
-    This is required for grouped structures where the same external ID (e.g.
-    the same own item) or the same platform software legitimately occurs at
-    multiple set-indices.
+def resolve_relations(data, relations, mappings, default):
+    """Resolve the relations of a catalog's preview table in *data* (:func:`entity_relations` per row).
 
     Args:
-        data:       Top-level answers dict; mutated in place.
-        idx:        Dict with keys ``from`` and ``to``.
-        entity:     Dict with keys ``relation``, ``old_name`` and ``new_name``.
-        assumption: Boolean controlling assumption qualifier attachment.
-        mapping:    :class:`~MaRDMO.properties.PropertyRegistry` for relation type lookup.
+        data:      Top-level answers dict; mutated in place.
+        relations: The catalog's ``preview_relations``: rows with ``from_idx``,
+                   ``to_idx``, ``relation``, ``old_name``, ``new_name`` and
+                   optionally ``assumption``, ``grouped`` and ``mapping``.
+        mappings:  ``{name: PropertyRegistry}`` for the rows' ``mapping``.
+        default:   The :class:`~MaRDMO.properties.PropertyRegistry` of rows
+                   without (or with another) ``mapping``.
     """
-    refs = page_refs(data, check_list(idx.get('to')))
-
-    for from_entry in data.get(idx.get('from'), {}).values():
-        relation_keys = from_entry.get(entity['relation'], {}).keys()
-        old_name_keys = from_entry.get(entity['old_name'], {}).keys()
-        for key in relation_keys | old_name_keys:
-            values = from_entry.get(entity['old_name'], {}).get(key, {})
-            entity_values = from_entry.setdefault(entity['new_name'], {})
-            if not is_flat(values):
-                for key2 in from_entry[entity['old_name']][key]:
-                    value = from_entry[entity['old_name']][key][key2]
-                    resolved = refs.get(value.get('ID'), value.get('ID')) if value else None
-                    new_value = build_new_value(
-                        from_entry, entity, key, resolved, assumption, mapping
-                    )
-                    entity_values[f"{key}|{key2}"] = new_value
-            else:
-                resolved = refs.get(values.get('ID'), values.get('ID'))
-                new_value = build_new_value(
-                    from_entry, entity, key, resolved, assumption, mapping
-                )
-                entity_values[key] = new_value
+    for relation in relations:
+        entity_relations(
+            data = data,
+            idx = {
+                'from': relation['from_idx'],
+                'to': relation['to_idx']
+            },
+            entity = {
+                'relation': relation['relation'],
+                'old_name': relation['old_name'],
+                'new_name': relation['new_name']
+            },
+            assumption = relation.get('assumption', False),
+            mapping = mappings.get(relation.get('mapping'), default),
+            grouped = relation.get('grouped', False),
+        )
 
 
 def map_entity(data, idx, entity):

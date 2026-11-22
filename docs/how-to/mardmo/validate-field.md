@@ -141,7 +141,7 @@ lists it under *Before you export*; nothing else is needed for the preview.
 ## Step 5 — Export
 
 **Normalise** values whose problems never change their meaning, instead of
-reporting them.  For references, `PublicationExport._add_references` removes
+reporting them.  For references, `CatalogExport._add_references` removes
 leading and trailing whitespace before the statement is added.
 
 **Final check.**  **File:** `payload/validation.py`, `invalid_values()` (called by `GeneratePayload.validate_identifiers()`)

@@ -1,16 +1,12 @@
-'''Package-wide constants and the answer-routing flag map for MaRDMO.
+'''Package-wide constants of MaRDMO.
 
 Defines the RDMO base URI, catalog name slugs (:data:`CATALOG_MODEL_NAME` etc.),
-derived catalog URIs, the shared section-name map (:data:`SECTION_MAP_BASE`),
-and :data:`flag_dict` — a mapping from five-tuple boolean flags to the
-corresponding :mod:`~MaRDMO.rules` function used by
-:func:`~MaRDMO.getters.get_answers` to route each questionnaire value into
-the correct position in the answers dict.
+derived catalog URIs and the shared section-name map (:data:`SECTION_MAP_BASE`).
+Where a questionnaire value goes in the answers: :mod:`MaRDMO.rules`.
 '''
 
 from django.utils.translation import gettext_noop as N_
 
-from . import rules
 
 #RDMO BASE URI
 BASE_URI = 'https://rdmo.mardi4nfdi.de/terms/'
@@ -99,27 +95,3 @@ software_reference_ids = [
     'DESCRIPTION_URL',
     'SOURCECODE_URL',
 ]
-
-# Tuple fields: (set_prefix, set_index, collection_index, external_id, option_text)
-flag_dict = {
-    (False, False, False, False, False): rules.rule_0,
-    (True, False, False, False, False): rules.rule_1,
-    (False, True, False, False, False): rules.rule_2,
-    (True, True, False, False, False): rules.rule_3,
-    (False, True, True, False, False): rules.rule_4,
-    (True, False, True, False, False): rules.rule_5,
-    (True, True, True, False, False): rules.rule_19,
-    (True, True, True, False, True): rules.rule_6,
-    (True, False, False, False, True): rules.rule_7,
-    (False, True, False, False, True): rules.rule_8,
-    (False, False, False, True, False): rules.rule_9,
-    (False, False, True, False, False): rules.rule_10,
-    (False, False, True, True, False): rules.rule_11,
-    (False, True, False, True, False): rules.rule_12,
-    (True, True, False, True, False): rules.rule_13,
-    (True, False, True, True, False): rules.rule_14,
-    (True, True, True, True, False): rules.rule_15,
-    (True, True, False, False, True): rules.rule_16,
-    (True, False, True, False, True): rules.rule_17,
-    (False, True, True, False, True): rules.rule_18,
-}
