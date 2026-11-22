@@ -13,19 +13,19 @@ Provides:
 
 from .constants import get_relations, preview_relations
 
-from ..constants import BENCHMARK_REFERENCES, SOFTWARE_REFERENCES
+from ..constants import BENCHMARK_REFERENCES
 from ..getters import get_items, get_mathalgodb, get_properties, get_publication_mapping, get_url
 from ..ids import unique_items
 from ..relations import collect_items_without_section, resolve_relations
 from ..payload import GeneratePayload
 
-from ..publication.worker import PublicationExport
+from ..publication.worker import CatalogExport
 
-class PrepareAlgorithm(PublicationExport):
+class PrepareAlgorithm(CatalogExport):
     '''Prepare Algorithm documentation answers for preview rendering and MaRDI Portal export.
 
-    Inherits publication export helpers from
-    :class:`~MaRDMO.publication.worker.PublicationExport` and extends them
+    Inherits the exports all catalogs share from
+    :class:`~MaRDMO.publication.worker.CatalogExport` and extends them
     with algorithm-specific relation mapping and Wikibase payload generation.
     '''
     catalog = 'algorithm'
@@ -95,6 +95,7 @@ class PrepareAlgorithm(PublicationExport):
         self._export_algorithms(
             payload = payload,
             algorithms = data.get("algorithm", {}),
+            intra_class = True,
         )
         self._export_problems(
             payload = payload,
@@ -105,6 +106,7 @@ class PrepareAlgorithm(PublicationExport):
             payload = payload,
             softwares = data.get("software", {}),
             algo_software_keys = algo_software_keys,
+            tested_by = True,
         )
         self._export_benchmarks(
             payload = payload,
@@ -142,40 +144,6 @@ class PrepareAlgorithm(PublicationExport):
         yield from self._software_entries(data)
         yield from self._publication_entries(data)
 
-    def _export_algorithms(self, payload, algorithms: dict):
-        for entry in algorithms.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Algorithm')
-
-            self._add_common_metadata(payload, 'algorithm')
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["solved by"],
-                    'relatant': "PRelatant"
-                },
-                reverse = True
-            )
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["implemented by"],
-                    'relatant': "SRelatant"
-                }
-            )
-
-            payload.add_multiple_relation(
-                statement = {
-                    'relation': "IntraClassRelation",
-                    'relatant': "IntraClassElement"
-                }
-            )
-
     def _export_problems(self, payload, problems: dict):
         for entry in problems.values():
             if not entry.get("ID"):
@@ -202,42 +170,6 @@ class PrepareAlgorithm(PublicationExport):
                     'relatant': "IntraClassElement"
                 }
             )
-
-    def _export_softwares(self, payload, softwares: dict, algo_software_keys: set):
-        for entry in softwares.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(
-                value = entry
-            )
-            payload.set_class('Software')
-
-            self._add_common_metadata(payload, self._software_section(entry, algo_software_keys))
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["tested by"],
-                    'relatant': "BRelatant"
-                },
-                reverse = True
-            )
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["programmed in"],
-                    'relatant': "programminglanguage"
-                }
-            )
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["depends on software"],
-                    'relatant': "dependency"
-                }
-            )
-
-            self._add_references(payload, entry.get('reference'), SOFTWARE_REFERENCES)
 
     def _export_benchmarks(self, payload, benchmarks: dict):
         for entry in benchmarks.values():

@@ -8,7 +8,6 @@ MaRDI Portal Wikibase instance.
 
 from .constants import get_relations, preview_relations, REPRODUCIBILITY, IRREPRODUCIBILITY
 
-from ..constants import SOFTWARE_REFERENCES
 from ..getters import (
     get_items,
     get_mathalgodb,
@@ -23,14 +22,14 @@ from ..relations import collect_items_without_section, resolve_relations
 from ..payload import GeneratePayload
 from ..payload.bodies import quantity_amount
 
-from ..publication.worker import PublicationExport
+from ..publication.worker import CatalogExport
 
 
-class PrepareWorkflow(PublicationExport):
+class PrepareWorkflow(CatalogExport):
     '''Prepare interdisciplinary workflow answers for preview and export.
 
-    Inherits publication export helpers from
-    :class:`~MaRDMO.publication.worker.PublicationExport` and extends them
+    Inherits the exports all catalogs share from
+    :class:`~MaRDMO.publication.worker.CatalogExport` and extends them
     with workflow-specific relation mapping and Wikibase payload generation.
     '''
     catalog = 'workflow'
@@ -502,72 +501,6 @@ class PrepareWorkflow(PublicationExport):
             payload.add_single_relation(
                 statement = {'relation': self.properties["field of work"], 'relatant': "RFRelatant"}
             )
-
-    def _export_algorithms(self, payload, algorithms: dict):
-        '''Export each algorithm item.
-
-        Sets instance of: algorithm (community: MathAlgoDB, profile: MaRDI
-        algorithm profile), links to its algorithmic tasks via solved-by
-        (reverse) and to implementing software via implemented-by.
-        No algorithm-to-algorithm intra-class relations are exported for the
-        workflow catalog.
-        '''
-        for entry in algorithms.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(value=entry)
-            payload.set_class('Algorithm')
-
-            self._add_common_metadata(payload, 'algorithm')
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["solved by"],
-                    'relatant': "PRelatant"
-                },
-                reverse = True
-            )
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["implemented by"],
-                    'relatant': "SRelatant"
-                }
-            )
-
-    def _export_softwares(self, payload, softwares: dict, algo_software_keys: set):
-        '''Export each software item.
-
-        Software linked to an algorithm via "implemented by" receives community
-        MathAlgoDB and the MaRDI software profile; all other software receives
-        only the profile.  No benchmark (tested-by) relation is exported for
-        the workflow catalog.
-        '''
-        for entry in softwares.values():
-            if not entry.get("ID"):
-                continue
-
-            payload.get_item_key(value=entry)
-            payload.set_class('Software')
-
-            self._add_common_metadata(payload, self._software_section(entry, algo_software_keys))
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["programmed in"],
-                    'relatant': "programminglanguage"
-                }
-            )
-
-            payload.add_single_relation(
-                statement = {
-                    'relation': self.properties["depends on software"],
-                    'relatant': "dependency"
-                }
-            )
-
-            self._add_references(payload, entry.get('reference'), SOFTWARE_REFERENCES)
 
     def _export_hardwares(self, payload, hardwares: dict):
         '''Export each hardware item.
