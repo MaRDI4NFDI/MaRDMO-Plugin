@@ -44,7 +44,8 @@ class Catalog:
         template:   The template of its preview.
         worker:     Import path of the class that prepares the export
                     (``MaRDMO.model.worker.PrepareModel``); empty for the search.
-        check:      The method of :class:`~MaRDMO.checks.Checks` that checks it.
+        check:      Import path of its checks, a subclass of
+                    :class:`~MaRDMO.checks.base.ChecksBase` (``MaRDMO.model.checks.ModelChecks``).
         subset:     It has only part of the questions of its question set
                     (model basics, #168): the answers are read for its own.
     '''
@@ -70,6 +71,11 @@ class Catalog:
     def prepare_class(self):
         '''The class of :attr:`worker`, imported when first used.'''
         return _imported(self.worker)
+
+    @cached_property
+    def checks_class(self):
+        '''The class of :attr:`check`, imported when first used.'''
+        return _imported(self.check)
 
 
 @dataclass(frozen=True)

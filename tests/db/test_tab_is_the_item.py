@@ -185,12 +185,12 @@ def test_deleting_a_cleared_tab_removes_its_links(doc, client):
 
 def test_the_checks_report_the_tab_without_item_not_the_links(doc, client, monkeypatch):
     from MaRDMO import main  # noqa: PLC0415
-    from MaRDMO.checks import Checks  # noqa: PLC0415
+    from MaRDMO.model.checks import ModelChecks  # noqa: PLC0415
     monkeypatch.setattr('MaRDMO.model.worker.annotate_formulas', lambda answers: None)
     choose(client, doc, CLEARED)
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = doc, None
     answers = provider.get_post_data()[0]
-    messages = [str(message) for message in Checks().run_model(project=doc, data=answers, catalog=str(doc.catalog))]
+    messages = [str(message) for message in ModelChecks().run(project=doc, data=answers, catalog=str(doc.catalog))]
     assert any('Q1' in message and 'Missing ID' in message for message in messages)
     assert not any('Selected Quantity not found' in message for message in messages)

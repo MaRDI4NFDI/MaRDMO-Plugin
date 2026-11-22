@@ -7,7 +7,7 @@ and without a message.
 import pytest
 from django.template.loader import render_to_string
 
-from MaRDMO.checks import Checks
+from MaRDMO.workflow.checks import WorkflowChecks
 from MaRDMO.problems import attach
 from MaRDMO.workflow.worker import PrepareWorkflow
 from tests.support.html import elements, text
@@ -17,7 +17,7 @@ SOFTWARE = {'ID': 'mardi:Q1', 'Name': 'solver', 'Description': 'a solver'}
 
 @pytest.fixture
 def checks():
-    return Checks()
+    return WorkflowChecks()
 
 
 def hardware(cpu=None):

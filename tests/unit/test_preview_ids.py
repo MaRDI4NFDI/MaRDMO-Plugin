@@ -1,7 +1,7 @@
 '''The preview shows the user's own items (``user:`` ID) as own items: no ID, and what they still need.'''
 from django.template.loader import render_to_string
 
-from MaRDMO.checks import Checks
+from MaRDMO.model.checks import ModelChecks
 from MaRDMO.model.catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
 from MaRDMO.problems import attach
 from tests.support.html import text
@@ -25,7 +25,7 @@ def checked(answers, *checks, catalog=CATALOG_MODEL):
         for index, entry in pages.items():
             entry.setdefault('Tab', f'{section}{index + 1}')
             entry.setdefault('Anchor', f'page-{section}-{index}')
-    runner = Checks()
+    runner = ModelChecks()
     for check in checks:
         getattr(runner, check)(None, answers, catalog)
     return attach(answers, runner.err)

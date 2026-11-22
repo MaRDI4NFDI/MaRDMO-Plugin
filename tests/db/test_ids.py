@@ -4,7 +4,7 @@ from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership
 
 from MaRDMO import main
-from MaRDMO.checks import Checks
+from MaRDMO.model.checks import ModelChecks
 from MaRDMO.checks.base import OLD_PROJECT
 from MaRDMO.constants import BASE_URI
 from MaRDMO.ids import id_attributes, is_user_id
@@ -150,4 +150,4 @@ def check_messages(project):
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = project, None
     answers, _ = provider.get_post_data()
-    return [str(message) for message in Checks().run_model(project=project, data=answers, catalog=str(project.catalog))]
+    return [str(message) for message in ModelChecks().run(project=project, data=answers, catalog=str(project.catalog))]

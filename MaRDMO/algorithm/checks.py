@@ -1,12 +1,16 @@
-'''Algorithm Documentation check mixin.'''
+'''The checks of the algorithm catalog, on the shared :class:`~MaRDMO.checks.base.ChecksBase`.'''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
-from ..algorithm.catalog import CATALOG_ALGORITHM
-from .base import BENCHMARK_REFERENCE_CHECKS, SOFTWARE_REFERENCE_CHECKS
+from .constants import SECTION_MAP
+from .catalog import CATALOG_ALGORITHM
+from ..checks.base import ChecksBase, BENCHMARK_REFERENCE_CHECKS, SOFTWARE_REFERENCE_CHECKS
 
 
-class AlgorithmMixin:
+class AlgorithmChecks(ChecksBase):
     '''Checks for Algorithm catalog entries.'''
+
+    section_map = SECTION_MAP
+    page_sections = ('algorithm', 'problem', 'software', 'benchmark', 'publication')
 
     # -------------------------------------------------------------------------
     # Algorithm Documentation Checks
@@ -130,7 +134,7 @@ class AlgorithmMixin:
     # Run method
     # -------------------------------------------------------------------------
 
-    def run_algorithm(self, project, data, catalog=None):
+    def run(self, project, data, catalog=None):
         '''Run all algorithm-catalog checks and return the collected error list.
 
         Executes, in order: ID/Name/Description, algorithm, algorithmic task,
@@ -153,3 +157,27 @@ class AlgorithmMixin:
         self.benchmark(project, data)
         self.publication(project, data, catalog)
         return self._finalise()
+
+    def _publication_relations(self, ivalue, page_name):
+        '''Check the relations of the publication *ivalue* (page *page_name*) the algorithm catalog requires.'''
+        # Algorithm mode: optional links, but at least one required
+        if ivalue.get('RelationA') or ivalue.get('RelationBS'):
+            self._check_flexible(
+                data       = ivalue,
+                page_name  = page_name,
+                relation   = 'RelationA',
+                from_class = N_('Publication'),
+                to_class   = N_('Algorithm'),
+                optional   = True
+            )
+            self._check_flexible(
+                data       = ivalue,
+                page_name  = page_name,
+                relation   = 'RelationBS',
+                from_class = N_('Publication'),
+                to_class   = N_('Benchmark/Software'),
+                optional   = True
+            )
+        else:
+            self._missing(N_('Publication'), page_name, _('Missing Algorithm, Benchmark, or Software'),
+                          'RelationA')

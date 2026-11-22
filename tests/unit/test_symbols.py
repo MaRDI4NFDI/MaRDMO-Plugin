@@ -8,7 +8,7 @@ import pytest
 from django.template.loader import render_to_string
 
 import MaRDMO.model.handlers as handlers
-from MaRDMO.checks import Checks
+from MaRDMO.model.checks import ModelChecks
 from MaRDMO.pages import PageRef
 from MaRDMO.problems import attach
 from MaRDMO.models import Relatant
@@ -62,7 +62,7 @@ def test_missing_symbol_or_quantity_is_left_to_the_other_checks():
 
 
 def checks_for(page):
-    checks = Checks()
+    checks = ModelChecks()
     checks._check_element_symbols(page, 'Formula', PageRef('formulation', 0, 'f', 'F1'))
     return checks.err
 
@@ -90,7 +90,7 @@ def test_preview_shows_the_symbols_problems_of_the_check():
         1: {'symbol': 'a', 'quantity': PRESSURE, 'Info': {'Type': 'Quantity', 'Name': 'pressure', 'ID': 'mardi:Q11',
                                                          'Description': 'force'}},
         2: {'symbol': 'b'}}}
-    checks = Checks()
+    checks = ModelChecks()
     checks._check_element_symbols(page, 'Formula', PageRef('formulation', 0, '', 'F1'))
     attach({'formulation': {0: page}}, checks.err)
     html = render_to_string('MaRDMO/partials/_in_defining_formula.html', {'element': page['element'], 'values': page})

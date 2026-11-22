@@ -17,7 +17,7 @@ CATALOG_WORKFLOW = f'{BASE_URI}questions/{CATALOG_WORKFLOW_NAME}'
 REGISTRATION = Registration(
     catalogs=(
         Catalog(CATALOG_WORKFLOW_NAME, WORKFLOW, 'workflow', 'MaRDMO/preview_workflow.html',
-                'MaRDMO.workflow.worker.PrepareWorkflow', 'run_workflow'),
+                'MaRDMO.workflow.worker.PrepareWorkflow', 'MaRDMO.workflow.checks.WorkflowChecks'),
     ),
     questions={'workflow': 'workflow/data/questions.json'},
     information='MaRDMO.workflow.handlers.Information',

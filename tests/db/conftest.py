@@ -102,7 +102,7 @@ def white(project, portal, client, django_user_model, monkeypatch):
     '''white_2006, imported, with an owner logged in; offline and without duplicates on the portal.'''
     from tests.db.test_export import imported
     monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
-    monkeypatch.setattr('MaRDMO.checks.model.check_formulas', lambda formulas: {})
+    monkeypatch.setattr('MaRDMO.model.checks.check_formulas', lambda formulas: {})
     # The preview looks up the publication; the recorded portal has no answers for it
     monkeypatch.setattr('MaRDMO.publication.worker.PublicationRetriever.get_information',
                         lambda self, project, snapshot, answers: answers)

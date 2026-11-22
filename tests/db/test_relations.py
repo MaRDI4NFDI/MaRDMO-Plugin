@@ -3,7 +3,8 @@ import pytest
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership
 
-from MaRDMO.checks import Checks
+from MaRDMO.model.checks import ModelChecks
+from MaRDMO.workflow.checks import WorkflowChecks
 from MaRDMO.checks.base import OLD_PROJECT
 from MaRDMO.constants import BASE_URI
 from MaRDMO.ids import is_user_id
@@ -135,7 +136,7 @@ def check_messages(project):
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = project, None
     answers, _ = provider.get_post_data()
-    return [str(message) for message in Checks().run_model(project=project, data=answers,
+    return [str(message) for message in ModelChecks().run(project=project, data=answers,
                                                            catalog=str(project.catalog))]
 
 
@@ -186,5 +187,5 @@ def test_new_field_of_a_process_step_is_not_an_old_project(interview):
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = workflow, None
     answers, _ = provider.get_post_data()
-    messages = [str(m) for m in Checks().run_workflow(project=workflow, data=answers, catalog=str(workflow.catalog))]
+    messages = [str(m) for m in WorkflowChecks().run(project=workflow, data=answers, catalog=str(workflow.catalog))]
     assert not any(OLD_PROJECT in message for message in messages)

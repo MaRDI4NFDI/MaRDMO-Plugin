@@ -9,7 +9,7 @@ CATALOG_ALGORITHM = f'{BASE_URI}questions/{CATALOG_ALGORITHM_NAME}'
 REGISTRATION = Registration(
     catalogs=(
         Catalog(CATALOG_ALGORITHM_NAME, ALGORITHM, 'algorithm', 'MaRDMO/preview_algorithm.html',
-                'MaRDMO.algorithm.worker.PrepareAlgorithm', 'run_algorithm'),
+                'MaRDMO.algorithm.worker.PrepareAlgorithm', 'MaRDMO.algorithm.checks.AlgorithmChecks'),
     ),
     questions={'algorithm': 'algorithm/data/questions.json'},
     information='MaRDMO.algorithm.handlers.Information',

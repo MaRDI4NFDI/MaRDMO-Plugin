@@ -9,8 +9,8 @@ from pathlib import Path
 import pytest
 from django.template.loader import get_template
 
+from MaRDMO.checks.base import ChecksBase
 from MaRDMO.catalogs import CATALOG_PACKAGES, SEARCH, catalog_of, catalogs, documenting, registrations
-from MaRDMO.checks import Checks
 from MaRDMO.constants import BASE_URI
 from MaRDMO.model.catalog import CATALOG_MODEL_BASICS_NAME, CATALOG_MODEL_NAME
 from MaRDMO.getters import get_questions
@@ -44,7 +44,7 @@ def test_what_an_entry_names_exists(name):
     if catalog.documents:
         assert get_questions(catalog.questions)
         assert hasattr(catalog.prepare_class, 'export')
-        assert callable(getattr(Checks(), catalog.check))
+        assert issubclass(catalog.checks_class, ChecksBase)
     else:
         assert catalog.kind == SEARCH and not catalog.worker
 

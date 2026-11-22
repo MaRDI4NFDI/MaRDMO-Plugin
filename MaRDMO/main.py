@@ -191,11 +191,11 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
 
         if catalog:
             answers, options = self.get_post_data('preview')
-            prepare_class, check_method = catalog.prepare_class, catalog.check
+            prepare_class, checks_class = catalog.prepare_class, catalog.checks_class
             # Items that are on the MaRDI Portal already, at the top (#141)
             duplicates = preview_duplicates(self.project, answers, prepare_class())
             # Everything the export checks, so a clean preview exports (#152)
-            gate = pipeline.run(self.project, answers, prepare_class, check_method,
+            gate = pipeline.run(self.project, answers, prepare_class, checks_class,
                                 preview=True, duplicates=duplicates)
             # The red marks of the pages are these problems (#152), the blue ones the hints (#167)
             attach_problems(answers, gate.problems + gate.hints)
@@ -274,7 +274,7 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
             authorization flow.
         '''
         answers, __ = self.get_post_data()
-        gate = pipeline.run(self.project, answers, catalog.prepare_class, catalog.check)
+        gate = pipeline.run(self.project, answers, catalog.prepare_class, catalog.checks_class)
         if gate.unreachable:
             return render(self.request, 'core/error.html', {
                 'title': _('MaRDI Portal not reachable'),

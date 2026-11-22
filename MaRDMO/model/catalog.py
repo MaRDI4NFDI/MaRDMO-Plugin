@@ -12,9 +12,9 @@ CATALOG_MODEL_BASICS = f'{BASE_URI}questions/{CATALOG_MODEL_BASICS_NAME}'
 REGISTRATION = Registration(
     catalogs=(
         Catalog(CATALOG_MODEL_NAME, MODEL, 'model', 'MaRDMO/preview_model.html',
-                'MaRDMO.model.worker.PrepareModel', 'run_model'),
+                'MaRDMO.model.worker.PrepareModel', 'MaRDMO.model.checks.ModelChecks'),
         Catalog(CATALOG_MODEL_BASICS_NAME, MODEL, 'model', 'MaRDMO/preview_model_basics.html',
-                'MaRDMO.model.worker.PrepareModel', 'run_model', subset=True),
+                'MaRDMO.model.worker.PrepareModel', 'MaRDMO.model.checks.ModelChecks', subset=True),
     ),
     questions={'model': 'model/data/questions.json'},
     information='MaRDMO.model.handlers.Information',
