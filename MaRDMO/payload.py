@@ -25,7 +25,8 @@ import re
 import requests
 from django.utils.translation import gettext as _
 
-from .helpers import commit_writes, cycle_groups
+from .ordering import cycle_groups
+from .writes import commit_writes
 from .duplicates import item_source, look_up
 from .ids import item_key
 from .markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
@@ -61,7 +62,7 @@ _MEANING_QUALIFIERS = ('object has role', 'symbol represents', 'platform')
 # so found statements of these are checked again.  Formulas ("in defining
 # formula") have their own check that compares the qualifiers.
 _MEANING_PROPERTIES = ('contains', 'described by source', 'uses')
-# Class of new authors and journals of publications (kind, see helpers.PART_KINDS)
+# Class of new authors and journals of publications (kind, see ids.PART_KINDS)
 _NEW_ITEM_CLASS = {'author': 'Author', 'journal': 'Journal'}
 
 
@@ -209,7 +210,7 @@ class GeneratePayload:
                          ``"https://portal.mardi4nfdi.de"``).
             user_items:  Mapping of temporary ``"Item<n>"`` keys to item
                          dicts ``{ID, Name, Description}``.  Produced by
-                         :func:`~MaRDMO.helpers.unique_items`.
+                         :func:`~MaRDMO.ids.unique_items`.
             wikibase:    Wikibase vocabulary dicts.  Expected keys are
                          ``items``, ``properties``, ``relations``, and
                          optionally ``data_properties``.
@@ -433,7 +434,7 @@ class GeneratePayload:
     def set_class(self, name: str) -> None:
         '''Tag the current subject item with an entity-class label.
 
-        Used by ``_export_*`` worker methods so that :func:`~MaRDMO.helpers.compare_items`
+        Used by ``_export_*`` worker methods so that :func:`~MaRDMO.ids.compare_items`
         can include the class in its output for grouping on the success page.
 
         Args:
@@ -1506,7 +1507,7 @@ class GeneratePayload:
                 self._add_entry(key, self._build_item(value['use'], value['Name'], value['Description']))
             else:
                 handler(key, value)
-            # Not sent: the export gives these the new item's ID (helpers.replace_ids)
+            # Not sent: the export gives these the new item's ID (ids.replace_ids)
             if value.get('user_ids'):
                 self.state.dictionary[key]['user_ids'] = value['user_ids']
             # New authors and journals get all their statements here and are

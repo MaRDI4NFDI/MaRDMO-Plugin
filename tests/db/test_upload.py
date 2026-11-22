@@ -17,7 +17,7 @@ import pytest
 
 from MaRDMO import main
 from MaRDMO.catalogs import catalog_of
-from MaRDMO.helpers import topological_order
+from MaRDMO.ordering import topological_order
 from MaRDMO.store import _progress_store
 from tests.db.test_export import DOCUMENTATIONS, imported
 

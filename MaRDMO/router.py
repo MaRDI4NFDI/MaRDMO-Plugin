@@ -52,7 +52,7 @@ from django.urls import Resolver404, resolve
 from rdmo.projects.models import Project, Value
 from rdmo.projects.signals import value_created, value_updated
 from .catalogs import catalog_of
-from .helpers import batched_writes, is_internal_write
+from .writes import batched_writes, is_internal_write
 from .ids import assign_id, follow_tab, give_copies_their_ids, id_attributes, is_tab_id, remove_references, sync_text
 from .builders import (
     build_post_save_handler_set,

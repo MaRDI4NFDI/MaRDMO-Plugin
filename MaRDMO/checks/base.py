@@ -21,7 +21,7 @@ from ..workflow.constants import SECTION_MAP as SECTION_MAP_WORKFLOW
 from ..catalogs import ALGORITHM, MODEL, WORKFLOW, catalog_of
 from ..getters import get_mathmoddb, get_mathalgodb
 from ..getters import get_options
-from ..helpers import find_reference
+from ..properties import find_reference
 from ..ids import NOT_FOUND, is_own_item
 from ..pages import add_tab_names, page_ref
 from ..patterns import LINE_BREAK_RE
@@ -282,7 +282,7 @@ class ChecksBase:
         '''Check selected reference options: value present; DOI, swMATH ID and URLs valid.
 
         References are looked up by option, not by position (see
-        :func:`~MaRDMO.helpers.find_reference`).
+        :func:`~MaRDMO.properties.find_reference`).
 
         Args:
             references: Reference answers ``{collection_index: [option_uri, text]}``.
@@ -448,7 +448,7 @@ class ChecksBase:
                 elif is_own_item(ivalue.get('ID')) and ivalue.get('Name'):
                     same = own.setdefault((ivalue['Name'], ivalue.get('Description') or ''), page_name)
                     # Publications with the same name and description are one publication (other
-                    # ones got their DOI in the description, helpers.distinguish_publications, #183)
+                    # ones got their DOI in the description, pages.distinguish_publications, #183)
                     if same != page_name and okey == 'publication':
                         self.err.append(
                             self._error(

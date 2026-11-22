@@ -10,7 +10,7 @@ entity in the questionnaire section.
 
 from .adders import add_entities, add_new_entities
 from .catalogs import ALGORITHM, MODEL, WORKFLOW, catalog_of
-from .helpers import extract_parts
+from .values import extract_parts
 from .ids import is_item_id
 from .models import Relatant
 

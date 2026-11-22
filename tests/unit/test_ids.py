@@ -1,7 +1,9 @@
 '''IDs of the user's own items: one export item per name and description.'''
 import pytest
 
-from MaRDMO.helpers import collect_items_without_section, extract_parts, unique_items
+from MaRDMO.ids import unique_items
+from MaRDMO.relations import collect_items_without_section
+from MaRDMO.values import extract_parts
 from MaRDMO.ids import is_item_id, is_own_item, is_portal_item, item_key
 
 
@@ -28,7 +30,7 @@ def test_the_same_new_language_on_two_software_pages_is_one_item():
 
 
 def test_own_items_with_the_same_name_are_one_export_item_with_all_their_ids():
-    '''All IDs get the portal ID after the export (helpers.replace_ids).'''
+    '''All IDs get the portal ID after the export (ids.replace_ids).'''
     data = {'quantity': {0: language('user:1'), 1: {'relation': {0: language('user:1')}}},
             'software': {0: {'programminglanguage': {0: language('user:2')}}}}
     items, _ = unique_items(data)

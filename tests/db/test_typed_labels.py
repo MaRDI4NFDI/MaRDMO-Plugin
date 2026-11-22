@@ -5,7 +5,8 @@ import pytest
 
 from MaRDMO import main
 from MaRDMO.checks import Checks
-from MaRDMO.helpers import basic_dict, describe_items_without_page
+from MaRDMO.pages import describe_items_without_page
+from MaRDMO.values import basic_dict
 from tests.db.conftest import answer, save
 
 

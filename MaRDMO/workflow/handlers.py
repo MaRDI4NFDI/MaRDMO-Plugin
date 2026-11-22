@@ -15,7 +15,7 @@ from ..getters import (
     get_items, get_mathalgodb, get_mathmoddb, get_options,
     get_properties, get_questions, get_sparql_query, get_url,
 )
-from ..helpers import value_editor
+from ..writes import value_editor
 from ..ids import item_text
 from ..adders import add_basics, add_relations_flexible, add_relations_static
 from ..queries import query_sparql

@@ -28,7 +28,7 @@ import requests
 from .constants import data_properties_per_class, qudt_reference_ids
 
 from ..getters import get_items, get_mathmoddb, get_options, get_properties, get_url
-from ..helpers import split_value
+from ..values import split_value
 from ..models import QueryBatch, Relatant, RelatantWithClass, RelatantWithQualifier
 from ..queries import http_session
 

@@ -31,14 +31,9 @@ from .getters import (
     get_questions,
     get_url
 )
-from .helpers import (
-    batched_writes,
-    describe_items_without_page,
-    distinguish_publications,
-    link_to_pages,
-    process_question_dict,
-    topological_order
-)
+from .ordering import topological_order
+from .pages import describe_items_without_page, distinguish_publications, link_to_pages
+from .writes import batched_writes
 from .oauth2 import OauthProviderMixin
 from .pages import add_tab_names
 from .problems import attach as attach_problems, report_lines
@@ -444,3 +439,53 @@ class MaRDMOQueryProvider(Export):
         )
 
         return search(answers, options), options
+
+
+def process_question_dict(project, questions, get_answer):
+    """Iterate through the nested questions dict and collect answers via *get_answer*.
+
+    Walks every group in *questions*, skips group-level ``"uri"`` entries,
+    fills in optional config defaults, then delegates each question config to
+    *get_answer* to populate and return the answers dict.
+
+    Args:
+        project:    RDMO project instance.
+        questions:  Nested questions dict as loaded from ``questions.json``.
+        get_answer: Callable ``(project, answers, config) → answers`` that
+                    extracts a single question's answer and merges it into
+                    the running *answers* dict.
+
+    Returns:
+        Flat answers dict built by successive *get_answer* calls.
+    """
+    answers = {}
+
+    for group in questions.values():
+        for sub_key, config in group.items():
+            if sub_key == "uri":
+                continue  # Skip the group-level URI
+
+            if not isinstance(config, dict) or "uri" not in config:
+                continue  # Skip invalid or metadata-only entries
+
+            # Fill in optional/default values
+            config = {
+                "key1": config.get("key1"),
+                "key2": config.get("key2"),
+                "key3": config.get("key3"),
+                "uri": config["uri"],
+                "set_prefix": config.get("set_prefix", False),
+                "set_index": config.get("set_index", False),
+                "collection_index": config.get("collection_index", False),
+                "external_id": config.get("external_id", False),
+                "option_text": config.get("option_text", False),
+            }
+
+            # Call the injected function
+            answers = get_answer(
+                project,
+                answers,
+                config
+            )
+
+    return answers

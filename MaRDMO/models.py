@@ -27,7 +27,7 @@ from typing import Optional
 
 from .constants import software_reference_ids
 from .getters import get_options
-from .helpers import split_value
+from .values import split_value
 
 @dataclass
 class Relatant:

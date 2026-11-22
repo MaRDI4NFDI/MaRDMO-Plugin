@@ -175,7 +175,7 @@ def test_preprints_are_scholarly_articles(crossref_type, entrytype):
 # --- export: new authors and journals are known by where they are (#118)
 
 def test_authors_and_journals_of_publications_have_their_kind():
-    from MaRDMO.helpers import unique_items
+    from MaRDMO.ids import unique_items
     data = {'publication': {0: {'ID': 'user:p', 'Name': 'Paper', 'Description': 'article',
                                 'author': {0: {'ID': 'user:a', 'Name': 'A. Author', 'Description': 'scientist'}},
                                 'journal': {0: {'ID': 'user:j', 'Name': 'Journal', 'Description': 'journal'}}}}}

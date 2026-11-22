@@ -20,7 +20,7 @@ from typing import Optional
 from .utils import get_option_text_pair, get_size
 
 from ..getters import get_options
-from ..helpers import split_value
+from ..values import split_value
 from ..models import QueryBatch, Relatant
 
 

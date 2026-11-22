@@ -45,7 +45,7 @@ from rdmo.projects.models import Value
 from rdmo.questions.models import Question
 
 from .getters import get_items
-from .helpers import unique_items
+from .ids import unique_items
 from .ids import id_attributes, is_own_item, item_text
 from .markers import PUBLICATION_MARKERS, SECTION_MARKERS, class_families, contradictions
 from .queries import find_portal_items, find_publications_by_doi, portal_dois, portal_labels
@@ -61,7 +61,7 @@ CREATED = ('wikidata', 'not found', 'author', 'journal')
 
 
 def item_source(value):
-    '''How the export treats the item *value* of :func:`~MaRDMO.helpers.unique_items`.
+    '''How the export treats the item *value* of :func:`~MaRDMO.ids.unique_items`.
 
     ``mardi`` (exists), ``wikidata`` (created with its Wikidata QID), ``not
     found`` (the user's own), ``author`` or ``journal`` (new parts of a
@@ -452,7 +452,7 @@ def reuse(project, duplicate, label, description):
     "Label (Description)" of the portal item; the name and description of
     its page become the portal item's.  Written with ``update()``, without
     MaRDMO's handlers (they would ask the portal), as
-    :func:`~MaRDMO.helpers.replace_ids` after an export.
+    :func:`~MaRDMO.ids.replace_ids` after an export.
 
     Returns:
         The number of answers changed.

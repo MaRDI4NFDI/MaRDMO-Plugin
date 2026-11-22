@@ -40,7 +40,8 @@ from django.urls import reverse
 from rdmo.projects.models import Project
 
 from .getters import get_items, get_properties
-from .helpers import replace_in_dict, compare_items, replace_ids, collect_statements
+from .ids import compare_items, replace_ids
+from .values import replace_in_dict
 from .ids import item_text
 from .store import _progress_store, _register_job_for_session
 
@@ -894,3 +895,152 @@ class OauthProviderMixin:
             NotImplementedError: Always — subclasses must implement this method.
         '''
         raise NotImplementedError
+
+
+def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
+    """Extract newly added statements as human-readable triples after a portal export.
+
+    Covers two sources:
+
+    - ``RELATION<n>`` entries that were posted to existing items (the portal
+      returned a statement id; entries that already existed or were not
+      reached before an aborted export have none).
+    - Statements embedded in newly created ``Item<n>`` entries (items that had
+      no id before posting).
+
+    Args:
+        init:         Deep copy of the payload taken *before* posting (used to
+                      distinguish new vs. pre-existing items).
+        jsons:        Payload dict *after* posting (all ``Item<n>`` placeholders
+                      replaced with real QIDs by :func:`~MaRDMO.values.replace_in_dict`).
+        pid_to_name:  Dict mapping Wikibase property IDs to human-readable names
+                      (i.e. the inverse of ``get_properties()``).
+        qid_to_name:  Dict mapping Wikibase item QIDs to human-readable names
+                      (i.e. the inverse of ``get_items()``).
+
+    Returns:
+        List of ``[subject_label, subject_qid, property_name, object_label,
+        object_qid, qualifiers, unit_label, unit_qid, qualifiers_added]``
+        lists, JSON-serializable.  ``object_qid`` is an empty string for
+        non-item value types.  ``qualifiers`` is a list of
+        ``{"prop": name, "obj": label, "obj_qid": qid}`` dicts.
+        ``qualifiers_added`` is ``True`` for a statement that was on the
+        portal already and only got the listed qualifiers.
+    """
+    pid_to_name = pid_to_name or {}
+    qid_to_name = qid_to_name or {}
+
+    qid_to_label = {
+        v['id']: v['label']
+        for k, v in jsons.items()
+        if k.startswith('Item') and v.get('id') and v.get('label')
+    }
+
+    def _resolve(qid):
+        """Return a human-readable label for *qid*, falling back to the raw QID."""
+        return qid_to_label.get(qid) or qid_to_name.get(qid) or qid
+
+    def _format_value(datatype, value):
+        """Convert a Wikibase statement value to a ``(display_string, obj_qid)`` pair.
+
+        *obj_qid* is non-empty only for ``wikibase-item`` values so the caller
+        can render a portal link.  Special handling per datatype:
+
+        - ``wikibase-item``    — resolves QID to label via ``_resolve``
+        - ``quantity``         — strips leading ``+`` from amount (unit handled separately)
+        - ``monolingualtext``  — extracts the ``text`` field
+        - ``time``             — extracts the date portion (``YYYY-MM-DD``)
+        - ``math``             — wraps in ``\\(…\\)`` for MathJax inline rendering
+        """
+        if datatype == 'wikibase-item' and isinstance(value, str):
+            return _resolve(value), value
+        if datatype == 'quantity' and isinstance(value, dict):
+            return value.get('amount', '').lstrip('+'), ''
+        if datatype == 'monolingualtext' and isinstance(value, dict):
+            return value.get('text', str(value)), ''
+        if datatype == 'time' and isinstance(value, dict):
+            return value.get('time', '').lstrip('+').split('T')[0], ''
+        if datatype == 'math':
+            return f'\\({value}\\)', ''
+        return str(value), ''
+
+    def _get_unit(datatype, value):
+        """Return ``(unit_label, unit_qid)`` for a quantity value with a named unit.
+
+        Returns ``('', '')`` for non-quantity values or dimensionless quantities
+        (unit ``"1"``).  The unit QID is extracted from the tail of the unit URL
+        and resolved to a label via ``_resolve``.
+        """
+        if datatype != 'quantity' or not isinstance(value, dict):
+            return '', ''
+        u_qid = value.get('unit', '').rsplit('/', 1)[-1]
+        if u_qid == '1':
+            return '', ''
+        return _resolve(u_qid), u_qid
+
+    def _format_qualifiers(quals_raw):
+        """Format a list of raw Wikibase qualifier dicts into display-ready dicts.
+
+        Each output dict has keys ``prop`` (property label), ``obj`` (formatted
+        value string), and ``obj_qid`` (portal QID or empty string).
+        """
+        result = []
+        for q in quals_raw:
+            q_prop_id = q.get('property', {}).get('id', '')
+            q_dtype   = q.get('property', {}).get('data_type', 'string')
+            q_val     = q.get('value', {}).get('content', '')
+            q_prop_name      = pid_to_name.get(q_prop_id, q_prop_id)
+            q_obj, q_obj_qid = _format_value(q_dtype, q_val)
+            result.append({'prop': q_prop_name, 'obj': q_obj, 'obj_qid': q_obj_qid})
+        return result
+
+    statements = []
+
+    # --- RELATION entries posted to existing items
+    for key, entry in jsons.items():
+        if not key.startswith('RELATION'):
+            continue
+        if entry.get('exists') == 'true' or not entry.get('id'):
+            continue
+        url = entry.get('url', '')
+        parts = url.split('/items/')
+        if len(parts) < 2:
+            continue
+        subject_qid   = parts[1].split('/')[0]
+        subject_label = _resolve(subject_qid)
+        stmt     = entry['payload']['statement']
+        prop_id  = stmt['property']['id']
+        datatype = stmt['property']['data_type']
+        value    = stmt['value']['content']
+        prop_name          = pid_to_name.get(prop_id, prop_id)
+        obj_label, obj_qid = _format_value(datatype, value)
+        unit_label, unit_qid = _get_unit(datatype, value)
+        # A statement that was on the portal already only got the qualifiers it lacked
+        added = entry.get('exists') == 'partial'
+        quals = _format_qualifiers(entry['add_qualifiers'] if added else stmt.get('qualifiers', []))
+        statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid,
+                           added])
+
+    # --- Statements embedded in newly created items
+    for key, entry in jsons.items():
+        if not key.startswith('Item'):
+            continue
+        if init.get(key, {}).get('id'):  # was already on portal before posting
+            continue
+        subject_qid = entry.get('id', '')
+        if not subject_qid:
+            continue
+        subject_label = entry.get('label', subject_qid)
+        for stmt_tuple in entry.get('statements', []):
+            if len(stmt_tuple) < 3:
+                continue
+            prop_id, datatype, value = stmt_tuple[0], stmt_tuple[1], stmt_tuple[2]
+            quals_raw = stmt_tuple[3] if len(stmt_tuple) >= 4 else []
+            prop_name          = pid_to_name.get(prop_id, prop_id)
+            obj_label, obj_qid = _format_value(datatype, value)
+            unit_label, unit_qid = _get_unit(datatype, value)
+            quals = _format_qualifiers(quals_raw)
+            statements.append([subject_label, subject_qid, prop_name, obj_label, obj_qid, quals, unit_label, unit_qid,
+                               False])
+
+    return statements

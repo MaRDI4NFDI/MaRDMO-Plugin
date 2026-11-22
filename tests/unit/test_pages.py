@@ -1,7 +1,7 @@
 '''MaRDMO.pages: a relation to a page renders as its name, linked, with the tab (#152).'''
 from django.template import Context, Template
 
-from MaRDMO.helpers import entity_relations, map_entity
+from MaRDMO.relations import entity_relations, map_entity
 from MaRDMO.pages import PageRef, page_refs
 
 

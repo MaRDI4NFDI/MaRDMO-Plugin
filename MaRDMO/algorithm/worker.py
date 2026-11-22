@@ -15,7 +15,8 @@ from .constants import get_relations, preview_relations
 
 from ..constants import BENCHMARK_REFERENCES, SOFTWARE_REFERENCES
 from ..getters import get_items, get_mathalgodb, get_properties, get_publication_mapping, get_url
-from ..helpers import collect_items_without_section, entity_relations, unique_items
+from ..ids import unique_items
+from ..relations import collect_items_without_section, entity_relations
 from ..payload import GeneratePayload
 
 from ..publication.worker import PublicationExport

@@ -27,15 +27,8 @@ from rdmo.options.models import Option
 
 from .constants import BASE_URI
 from .getters import get_id, get_mathmoddb, get_options
-from .helpers import (
-    extract_parts,
-    initialize_counter,
-    process_qualifier,
-    reduce_prefix,
-    relation_exists,
-    relevant_set_ids,
-    value_editor,
-)
+from .values import extract_parts, process_qualifier
+from .writes import value_editor
 from .ids import NEW_ITEM, item_text
 from .model.constants import data_properties_check, qudt_reference_ids
 from .patterns import QUDT_ID_STRICT_RE
@@ -370,7 +363,7 @@ def add_relations_flexible(project, data, props, index, statement):
         project:   RDMO project instance.
         data:      Dataclass instance whose attributes hold lists of relatants.
         props:     Dict with keys ``'keys'`` (attribute names) and ``'mapping'``
-                   (:class:`~MaRDMO.helpers.PropertyRegistry` mapping prop
+                   (:class:`~MaRDMO.properties.PropertyRegistry` mapping prop
                    name → relation URL).
         index:     Dict containing ``'set_prefix'``; updated with
                    ``'set_prefix_reduced'`` and ``'idx'`` in place.
@@ -495,7 +488,7 @@ def add_properties(project, data, uri, set_prefix):
     '''Write the data-property option values from *data.properties* into the questionnaire.
 
     Iterates over the ``{index: [option_uri, …]}`` mapping in
-    ``data.properties`` and calls :func:`~MaRDMO.helpers.value_editor` for
+    ``data.properties`` and calls :func:`~MaRDMO.writes.value_editor` for
     each entry at ``set_index=0``.  Properties already in the question keep
     their line; the others fill the first free lines.
 
@@ -582,3 +575,87 @@ def add_references(project, data, uri, set_index = 0, set_prefix = None):
                 'set_prefix': set_prefix
             }
         )
+
+
+def initialize_counter(counter):
+    '''Return ``max(counter) + 1``, or ``0`` when *counter* is empty.
+
+    Args:
+        counter: Iterable of numeric values (e.g. existing set-index list).
+
+    Returns:
+        Next available integer index.
+    '''
+    return int(max(counter, default=-1)) + 1
+
+
+def reduce_prefix(prefix):
+    '''Strip the ``|``-appended suffix from a set-prefix value and return the integer part.
+
+    Prefixes stored in RDMO can be either plain integers or strings of the
+    form ``"3|1"`` (parent index ``|`` child index).  This function always
+    returns the leading integer component.
+
+    Args:
+        prefix: Integer or string prefix value.
+
+    Returns:
+        Integer prefix.
+    '''
+    if isinstance(prefix, int):
+        prefix_reduced = prefix
+    else:
+        prefix_reduced = int(prefix.split('|')[0])
+    return prefix_reduced
+
+def relation_exists(value, set_prefix_red, info, relation_id=None):
+    '''Check whether a value–set (–relation) triple already exists in the questionnaire.
+
+    Used by :func:`~MaRDMO.adders.add_relations_static` and
+    :func:`~MaRDMO.adders.add_relations_flexible` to avoid duplicate entries.
+
+    A relation is the same when it has the item's ID (#103); another item
+    with the same label and description is another relation.
+
+    Args:
+        value:           Relatant object with an ``id`` attribute.
+        set_prefix_red:  Reduced integer set-prefix of the parent entity.
+        info:            Dict of existing DB values keyed by ``value_ids``,
+                         ``set_prefix_ids``, and optionally ``rels``.
+        relation_id:     Option URI of the relation type; when provided the
+                         check also verifies that the relation type matches.
+
+    Returns:
+        ``True`` if the combination is already present, ``False`` otherwise.
+    '''
+
+    # Case: relation check required
+    if relation_id and "rels" in info:
+        return any(
+            vid == value.id and int(sid) == set_prefix_red and rel == relation_id
+            for vid, sid, rel in zip(info['value_ids'], info['set_prefix_ids'], info['rels'])
+        )
+
+    # Case: only value + set check
+    return any(
+        vid == value.id and int(sid) == set_prefix_red
+        for vid, sid in zip(info['value_ids'], info['set_prefix_ids'])
+    )
+
+def relevant_set_ids(info, set_prefix_red):
+    '''Return all set-index values whose set-prefix matches *set_prefix_red*.
+
+    Args:
+        info:           Dict containing parallel lists ``set_index_ids`` and
+                        ``set_prefix_ids``.
+        set_prefix_red: Reduced integer set-prefix to filter by.
+
+    Returns:
+        List of matching set-index integers.
+    '''
+    relevant_set_ids_list = []
+    for set_index, set_prefix in zip(info['set_index_ids'], info['set_prefix_ids']):
+        # Stored prefixes are strings ('3'), written ones integers
+        if set_prefix not in (None, '') and reduce_prefix(set_prefix) == set_prefix_red:
+            relevant_set_ids_list.append(set_index)
+    return relevant_set_ids_list

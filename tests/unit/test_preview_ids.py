@@ -109,7 +109,7 @@ def test_an_invalid_doi_is_marked_at_the_id():
 
 def same_named(*pages):
     '''Publication pages ``{index: answers}`` named "Introduction" (scientific article), with *pages* ``(ID, DOI)``.'''
-    from MaRDMO.helpers import distinguish_publications, link_to_pages  # noqa: PLC0415
+    from MaRDMO.pages import distinguish_publications, link_to_pages# noqa: PLC0415
     answers = {'publication': {index: new_publication(doi, ID=identifier, Name='Introduction',
                                                       Description='scientific article') if doi else
                                {'ID': identifier, 'Name': 'Introduction', 'Description': 'scientific article'}
@@ -126,7 +126,7 @@ def test_other_publications_with_the_same_name_get_their_doi_in_the_description(
         'scientific article', 'scientific article (DOI 10.1000/b)', 'scientific article (Wikidata QID Q1)']
     # Relations follow their page; the export makes three items of them
     assert answers['model'][0]['RelationP'][0]['Description'] == 'scientific article (DOI 10.1000/b)'
-    from MaRDMO.helpers import unique_items  # noqa: PLC0415
+    from MaRDMO.ids import unique_items# noqa: PLC0415
     items, _ = unique_items({'publication': answers['publication']})
     assert len(items) == 3
 

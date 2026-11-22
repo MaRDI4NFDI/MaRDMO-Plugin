@@ -25,7 +25,8 @@ from .getters import (
     get_sparql_query_parts,
     get_url,
 )
-from .helpers import process_qualifier, value_editor
+from .values import process_qualifier
+from .writes import value_editor
 from .ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .workflow.models import ProcessStepUsage
@@ -220,7 +221,7 @@ def _next_set_index(project, question_set_uri):
     Always reads the current maximum straight from the database. Hydration is
     recursive: while an entity is being filled it can pull in and create sibling
     pages in the *same* section, so any ``set_index`` cached in memory goes stale
-    mid-loop. Reusing a stale index makes :func:`~MaRDMO.helpers.value_editor`
+    mid-loop. Reusing a stale index makes :func:`~MaRDMO.writes.value_editor`
     (which keys ``update_or_create`` on ``set_index`` alone) overwrite an
     unrelated page — the entity then silently vanishes from the questionnaire.
     '''
@@ -416,7 +417,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         new set entry and calls the appropriate fill method.
 
         The ``qualifier`` string is parsed by
-        :func:`~MaRDMO.helpers.process_qualifier` and must follow the
+        :func:`~MaRDMO.values.process_qualifier` and must follow the
         ``"id || label || description"`` format (``' <<||>> '``-separated for
         multiple entries).  Entities already in ``spec.visited`` are skipped.
 

@@ -32,7 +32,7 @@ from django.core.cache import cache
 from django.utils.translation import gettext as _, ngettext
 
 from .constants import TEX_CHECK_URL
-from .helpers import commit_writes
+from .writes import commit_writes
 from .queries import SPARQL_RETRY_STATUS, request_with_retry
 from .validators import normalize_formula
 

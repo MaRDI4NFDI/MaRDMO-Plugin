@@ -77,7 +77,7 @@ SOFTWARE_PROPS = {
 }
 
 # Export mapping of reference answers: (option key, portal property, datatype).
-# Looked up by option, not by position (see helpers.find_reference).
+# Looked up by option, not by position (see properties.find_reference).
 SOFTWARE_REFERENCES = (
     ('DOI',             'DOI',                        'external-id'),
     ('SWMATH',          'swMath work ID',             'external-id'),

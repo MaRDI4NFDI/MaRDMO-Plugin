@@ -2,7 +2,7 @@
 import pytest
 
 import MaRDMO.oauth2 as oauth2
-from MaRDMO.helpers import collect_statements
+from MaRDMO.oauth2 import collect_statements
 
 URL = 'https://portal.example.org/w/rest.php/wikibase/v1/entities/items/Q1/statements'
 ASSUMES = {'property': {'id': 'P20', 'data_type': 'wikibase-item'}, 'value': {'type': 'value', 'content': 'Q30'}}
@@ -61,7 +61,7 @@ def test_new_statement_is_posted(provider):
 
 
 def test_ids_of_the_project_are_not_sent_with_a_new_item(provider):
-    '''user_ids are for writing the new ID back into the project (helpers.replace_ids).'''
+    '''user_ids are for writing the new ID back into the project (ids.replace_ids).'''
     item = {'id': '', 'url': 'https://portal.example.org/w/rest.php/wikibase/v1/entities/items',
             'payload': {'item': {'labels': {'en': 'alpha'}}}, 'user_ids': ['user:1']}
     provider._post_data('Item0000000000', {'Item0000000000': item}, 'token')

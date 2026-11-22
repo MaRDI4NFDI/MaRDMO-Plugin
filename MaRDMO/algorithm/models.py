@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from .constants import benchmark_reference_ids
 
 from ..getters import get_options
-from ..helpers import split_value
+from ..values import split_value
 from ..models import QueryBatch, Relatant
 
 @dataclass
