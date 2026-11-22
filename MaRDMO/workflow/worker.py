@@ -20,7 +20,8 @@ from ..getters import (
 )
 from ..ids import unique_items
 from ..relations import collect_items_without_section, entity_relations, entity_relations_grouped
-from ..payload import GeneratePayload, quantity_amount
+from ..payload import GeneratePayload
+from ..payload.bodies import quantity_amount
 
 from ..publication.worker import PublicationExport
 

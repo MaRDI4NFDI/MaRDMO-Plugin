@@ -166,7 +166,8 @@ class ChecksBase:
         '''
         # pylint: disable=import-outside-toplevel
         from ..getters import get_url
-        from ..payload import PortalUnavailable, fetch_claims
+        from ..payload import PortalUnavailable
+        from ..payload.claims import fetch_claims
         from ..queries import check_deadline
         qid = item.split(':', 1)[1]
         try:

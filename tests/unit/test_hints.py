@@ -37,7 +37,7 @@ def claims(monkeypatch):
         asked.append(list(qids))
         return {'Q5': {'P27': [{'mainsnak': {'datavalue': {'value': 'not-a-doi'}}}],
                        'P1': [{'mainsnak': {'datavalue': {'value': {'amount': '+8.5'}}}}]}}
-    monkeypatch.setattr('MaRDMO.payload.fetch_claims', fetch)
+    monkeypatch.setattr('MaRDMO.payload.claims.fetch_claims', fetch)
     return asked
 
 
@@ -80,7 +80,7 @@ def test_amounts_are_compared_as_the_portal_has_them(claims):
 def test_a_portal_that_does_not_answer_keeps_the_hint_and_the_export_waiting(monkeypatch):
     def fail(*args, **kwargs):
         raise PortalUnavailable('not reachable')
-    monkeypatch.setattr('MaRDMO.payload.fetch_claims', fail)
+    monkeypatch.setattr('MaRDMO.payload.claims.fetch_claims', fail)
     checks = Checks()
     assert found(checks, software(PORTAL, **doi('not-a-doi')), 'software')[0][1] is True
     assert checks.unreachable == 'not reachable'
