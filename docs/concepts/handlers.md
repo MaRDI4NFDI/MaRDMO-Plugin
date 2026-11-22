@@ -114,7 +114,7 @@ handler inside `writes.batched_writes()`:
   *database is locked* when another user saves at the same time.
 - Attributes looked up by URI are remembered until the handler finishes.
 
-All requests to external services go through `queries.http_session()`, which
+All requests to external services go through `sources.http.http_session()`, which
 commits the pending writes and reuses one HTTP session per thread, so repeated
 requests to the same service keep their connection open.
 
@@ -127,7 +127,7 @@ hold it for minutes:
   that query are not filled and the failure is logged.
 - `wbgetentities` retries with backoff, caps every wait (including `Retry-After`) at
   20 seconds and stops retrying after 45 seconds per batch.
-- The same rule (`queries.request_with_retry()`) retries the portal's TeX check
+- The same rule (`sources.http.request_with_retry()`) retries the portal's TeX check
   once; the checks before an export retry twice (see [Export](export.md)).
 
 A new publication (selected by its DOI, #158) is saved at once: its handler
