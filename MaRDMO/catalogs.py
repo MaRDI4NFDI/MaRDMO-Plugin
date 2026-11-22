@@ -100,6 +100,10 @@ class Registration:
                      (``{'question_set', 'question_id', 'prefix'}``).
         fills:       ``{section prefix: (item type, fill method of the handler class)}``:
                      how a related item of a portal or Wikidata is filled in.
+        routing:     The relations a publication of its catalogs can have
+                     (:func:`MaRDMO.publication.constants.routing`): rules with the
+                     ``classes`` of the related items, the relation types
+                     (``props``, ``relation``) and the answer (``relatant``).
     '''
     catalogs: tuple
     questions: dict = field(default_factory=dict)
@@ -109,6 +113,7 @@ class Registration:
     validators: dict = field(default_factory=dict)
     targets: str = ''
     fills: dict = field(default_factory=dict)
+    routing: tuple = ()
 
     @property
     def question_set(self):

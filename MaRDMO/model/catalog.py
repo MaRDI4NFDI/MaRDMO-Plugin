@@ -76,5 +76,17 @@ REGISTRATION = Registration(
         'F':   ('Mathematical Formulation','_fill_formulation_batch'),
         'QQK': ('Quantity',                '_fill_quantity_batch'),
     },
+    routing=(
+        {
+            'props': 'P2ME',
+            'classes': [
+                'mathematical model', 'computational task', 'formula',
+                'research problem', 'academic discipline', 'quantity', 'kind of quantity',
+            ],
+            'mapping': 'publication_mapping',
+            'relation': 'P2ME',
+            'relatant': 'ModelEntityRelatant',
+        },
+    ),
 )
 '''The model catalogs' declaration.'''

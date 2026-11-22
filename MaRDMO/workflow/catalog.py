@@ -86,5 +86,28 @@ REGISTRATION = Registration(
         'HW': ('Hardware',     '_fill_hardware_batch'),
         'PS': ('Process Step', '_fill_process_step_batch'),
     },
+    routing=(
+        {
+            'props': 'P2A',
+            'classes': ['algorithm'],
+            'mapping': 'publication_mapping',
+            'relation': 'P2A',
+            'relatant': 'ARelatant',
+        },
+        {
+            'props': 'P2BS',
+            'classes': ['software', 'computer hardware'],
+            'mapping': 'publication_mapping',
+            'relation': 'P2BS',
+            'relatant': 'HSRelatant',
+        },
+        {
+            'props': 'P2IWE',
+            'classes': ['research workflow', 'process step', 'data set'],
+            'mapping': 'publication_mapping',
+            'relation': 'P2IWE',
+            'relatant': 'IWERelatant',
+        },
+    ),
 )
 '''The workflow catalog's declaration.'''

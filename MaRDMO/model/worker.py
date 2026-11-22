@@ -13,14 +13,13 @@ Provides:
 
 from .constants import (
     data_properties_check,
-    DEPENDENT_PROPERTIES,
-    INDEPENDENT_PROPERTIES,
     preview_relations,
     preview_map_general,
     preview_map_quantity,
     get_relations,
 )
-from .utils import get_data_properties, map_entity_quantity
+from .utils import map_entity_quantity
+from ..markers import DEPENDENT_PROPERTIES, INDEPENDENT_PROPERTIES, get_data_properties
 
 from ..getters import get_items, get_mathmoddb, get_properties, get_publication_mapping, get_url
 from ..ids import unique_items

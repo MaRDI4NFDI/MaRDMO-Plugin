@@ -44,5 +44,21 @@ REGISTRATION = Registration(
         'S':  ('Software',  '_fill_software_batch'),
         'B':  ('Benchmark', '_fill_benchmark_batch'),
     },
+    routing=(
+        {
+            'props': 'P2A',
+            'classes': ['algorithm'],
+            'mapping': 'publication_mapping',
+            'relation': 'P2A',
+            'relatant': 'ARelatant',
+        },
+        {
+            'props': 'P2BS',
+            'classes': ['software', 'benchmark'],
+            'mapping': 'publication_mapping',
+            'relation': 'P2BS',
+            'relatant': 'BSRelatant',
+        },
+    ),
 )
 '''The algorithm catalog's declaration.'''

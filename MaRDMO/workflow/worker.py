@@ -6,7 +6,8 @@ MaRDI Portal Wikibase instance.
 '''
 
 
-from .constants import get_relations, preview_relations, REPRODUCIBILITY, IRREPRODUCIBILITY
+from .constants import get_relations, preview_relations
+from ..markers import IRREPRODUCIBILITY, REPRODUCIBILITY
 
 from ..getters import (
     get_items,

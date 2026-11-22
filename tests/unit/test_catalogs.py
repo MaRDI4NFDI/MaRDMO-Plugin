@@ -14,7 +14,7 @@ from MaRDMO.catalogs import CATALOG_PACKAGES, SEARCH, catalog_of, catalogs, docu
 from MaRDMO.constants import BASE_URI
 from MaRDMO.model.catalog import CATALOG_MODEL_BASICS_NAME, CATALOG_MODEL_NAME
 from MaRDMO.getters import get_questions
-from MaRDMO.publication.constants import ROUTING
+from MaRDMO.publication.constants import routing
 from tests.conftest import questionnaire  # noqa: F401
 
 DC = '{http://purl.org/dc/elements/1.1/}uri'
@@ -53,7 +53,7 @@ def test_the_tables_keyed_by_catalog_have_a_row_for_each():
     from MaRDMO.builders import (build_post_delete_handler_set, build_post_save_handler_set,
                                  build_presave_validator_map)
     for table in (build_post_save_handler_set(), build_post_delete_handler_set(), build_presave_validator_map(),
-                  ROUTING):
+                  routing()):
         assert set(table) == set(documenting())
 
 
