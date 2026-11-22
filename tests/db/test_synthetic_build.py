@@ -38,7 +38,7 @@ from tools.synthetic.writer import SENT, Documentation, polite
 pytestmark = pytest.mark.skipif(os.environ.get('BUILD') != '1', reason='builds with BUILD=1 (see the module)')
 
 PROJECTS = Path(__file__).parents[1] / 'data' / 'projects'
-BUILD_SEARCH_TIMEOUT = 20  # seconds for a dropdown search during the build (MaRDMO: queries.SEARCH_TIMEOUT)
+BUILD_SEARCH_TIMEOUT = 20  # seconds for a dropdown search during the build (MaRDMO: sources.http.SEARCH_TIMEOUT)
 BUILDS = {  # name: (catalog, description module)
     'synthetic_model': ('mardmo-model-catalog', 'tools.synthetic.model'),
     'synthetic_model_basics': ('mardmo-model-basics-catalog', 'tools.synthetic.model_basics'),
@@ -107,6 +107,7 @@ def test_build(name, db, monkeypatch, django_db_setup):
     # The build is not waited for by a user: the portal's class-filtered search may take longer
     # (it answers within seconds, but sometimes not within the dropdown's SEARCH_TIMEOUT)
     monkeypatch.setattr('MaRDMO.queries.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)
+    monkeypatch.setattr('MaRDMO.sources.http.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)    # search_deadline()
     monkeypatch.setattr('MaRDMO.queries.query_api.__defaults__',
                         (BUILD_SEARCH_TIMEOUT, *queries.query_api.__defaults__[1:]))
     SENT.clear()

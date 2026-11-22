@@ -17,7 +17,7 @@ is not one of the supported MaRDMO catalogs, an error page is returned immediate
 ### 2. Collecting Answers
 
 `get_post_data('preview')` reads all RDMO project values and assembles them into a
-nested answers dict via `process_question_dict()`, organised by entity type (e.g.
+nested answers dict via `project.answers.process_question_dict()`, organised by entity type (e.g.
 `{"model": {...}, "formulation": {...}, "publication": {...}}`).
 
 In preview mode, publication metadata is additionally fetched and merged into the
@@ -102,7 +102,7 @@ in some browsers), and **To the top** next to Cancel leads back to the box:
 
 The portal requests of the preview give up sooner than those of the export:
 one retry after 2 seconds, 30 seconds per check
-(`MaRDMO.queries.check_limits`).  A clean preview takes about 1.5 to 2.5
+(`MaRDMO.sources.http.check_limits`).  A clean preview takes about 1.5 to 2.5
 seconds for the largest documentations of the portal.
 
 #### Items already on the MaRDI Portal
@@ -277,7 +277,7 @@ items) are
 retried twice on a timeout, a connection error, or the answers 429, 502, 503 and
 504, after 2 and 5 seconds or the portal's `Retry-After` (at most 10 seconds);
 other answers, such as 400, are not retried.  Each check gives up after
-2 minutes in total.  The rule is the one of `queries.request_with_retry()`,
+2 minutes in total.  The rule is the one of `sources.http.request_with_retry()`,
 which also retries SPARQL queries and the TeX check once (see
 [Handlers](handlers.md#database-writes-and-network-requests)).
 - **Dependency graph**: whenever a new item's statement references another new item

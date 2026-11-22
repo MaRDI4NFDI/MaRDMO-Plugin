@@ -21,7 +21,7 @@ TRAITLETS = Relatant('wikidata:Q107380679', 'traitlets', 'Python library')
 @pytest.fixture(autouse=True)
 def no_twins(monkeypatch):
     '''The portal has no twins of the Wikidata items (#166, see test_portal_twins).'''
-    monkeypatch.setattr('MaRDMO.queries.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.handler_base.find_portal_items', lambda **kwargs: PortalItems())
 
 
 def given(monkeypatch, module, data):

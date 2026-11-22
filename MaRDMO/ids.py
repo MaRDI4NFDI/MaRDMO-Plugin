@@ -17,7 +17,6 @@ with the old one (see :func:`assign_id`); after an export,
 The export takes every item of the answers once (:func:`unique_items`) and
 afterwards finds the items it created (:func:`compare_items`).
 '''
-import html
 import uuid
 from urllib.parse import unquote
 
@@ -25,6 +24,7 @@ from django.db.models import Q
 from rdmo.projects.models import Value
 from rdmo.questions.models import Question, QuestionSet
 
+from .getters import get_options
 from .optionsets import PROVIDERS
 from .properties import find_reference
 from .writes import internal_write
@@ -166,11 +166,6 @@ PLACEHOLDER_PREFIX = 'tab:'
 def tab_placeholder(section, set_index):
     '''The ID the links of tab *set_index* of *section* get while it has no item (#186).'''
     return f'{PLACEHOLDER_PREFIX}{section}:{set_index}'
-
-
-def is_placeholder(identifier):
-    '''Return ``True`` if *identifier* is the :func:`tab_placeholder` of a tab without item.'''
-    return bool(identifier) and identifier.startswith(PLACEHOLDER_PREFIX)
 
 
 def _placeholder_of(value):
@@ -356,49 +351,9 @@ def item_text(name, description):
 
     ``"Label (Description)"``, ``"Label"`` without description.  The source
     is not part of it (#103): the dropdowns show it in the option's help
-    (:func:`option_help`), the preview by the ID.
+    (:func:`~MaRDMO.queries.option_help`), the preview by the ID.
     '''
     return f'{name} ({description})' if description else name
-
-
-# The source of an option (#142): the word of its badge, by the prefix of its ID, with
-# the badge's background and text colours (light, with the word: colour alone is not
-# accessible)
-_SOURCE_TAGS = {'mardi': 'mardi', 'wikidata': 'wikidata', 'user': 'project', 'new': 'new', NOT_FOUND: 'new'}
-_BADGES = {'mardi': ('#dbe9ff', '#1a3d7c'), 'wikidata': ('#dcf3e3', '#1e5e33'),
-           'project': ('#fff1cc', '#7a5a00'), 'new': ('#ece3fb', '#4b2c83')}
-# Hides the plain text of a laid-out option (RDMO shows the text, then the help); a browser
-# without :has() shows both, the text stays readable
-_HIDE_TEXT = ('<style>.interview-select-option:has(.mardmo-option) > span:first-child {display: none}'
-              '.interview-select-option:has(.mardmo-option) > span.ml-10 {margin-left: 0}</style>')
-
-
-def option_help(identifier, text):
-    '''Return the help of a dropdown option for the item *identifier* with the text *text*: its layout (#142).
-
-    A badge with the source (``mardi``, ``wikidata``, ``project`` for an
-    item of the user's own in the project, ``new`` for a new item: typed in
-    a relation, ``not found``, or a new publication, ``new:doi:…``), the
-    label in bold and the description in grey italics on a second line.
-    RDMO renders the help of an option as HTML in the open dropdown only,
-    after its text; a CSS rule hides the text there.  The text stays
-    ``"Label (Description)"``: it is what RDMO stores and shows in the
-    filled field, and what screen readers announce.  ``''`` for an option
-    without source (e.g. "new item").
-    '''
-    from .values import extract_parts# pylint: disable=import-outside-toplevel
-    tag = _SOURCE_TAGS.get((identifier or '').split(':', 1)[0])
-    if not tag or (identifier == NOT_FOUND and text == NEW_ITEM):
-        return ''
-    background, colour = _BADGES[tag]
-    label, description, _ = extract_parts(text or '')
-    layout = (f'<span class="mardmo-option"><span style="display:inline-block;background:{background};'
-              f'color:{colour};border-radius:3px;padding:0 5px;margin-right:6px;font-size:80%;'
-              f'vertical-align:1px">{tag}</span><span style="font-weight:600">{html.escape(label)}</span>')
-    if description and description != 'No Description Provided!':
-        layout += (f'<br><span style="color:#6c757d;font-style:italic;font-size:90%;margin-left:2px">'
-                   f'{html.escape(description)}</span>')
-    return f'{_HIDE_TEXT}{layout}</span>'
 
 
 def sync_text(value):
@@ -531,7 +486,6 @@ def _add_publication_dois(data, items, seen_items):
     The duplicate check finds publications on the MaRDI Portal by it
     (:func:`~MaRDMO.duplicates.look_up`).
     '''
-    from .getters import get_options  # pylint: disable=import-outside-toplevel
     option = get_options()['DOI']
     for page in (data.get('publication') or {}).values():
         if not isinstance(page, dict) or not page.get('ID'):

@@ -7,7 +7,7 @@ import MaRDMO.queries as queries
 from MaRDMO.adders import add_entities
 from MaRDMO.constants import BASE_URI
 from MaRDMO.adders import relation_exists
-from MaRDMO.ids import option_help
+from MaRDMO.queries import option_help
 from MaRDMO.models import Relatant
 from MaRDMO.providers import MaRDMOProvider
 from tests.db.conftest import answer, save

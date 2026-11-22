@@ -10,7 +10,7 @@ from MaRDMO import pipeline
 from MaRDMO.pages import PageRef
 from MaRDMO.payload import DocumentationProblem, PortalUnavailable
 from MaRDMO.problems import HEADER, Problem, report_lines
-from MaRDMO.queries import EXPORT_CHECK_DEADLINE, EXPORT_RETRY_WAITS, check_deadline, check_waits
+from MaRDMO.sources.http import EXPORT_CHECK_DEADLINE, EXPORT_RETRY_WAITS, check_deadline, check_waits
 
 F4 = PageRef('formulation', 3, 'Navier-Stokes equation', 'F4')
 PROJECT = SimpleNamespace(catalog='https://example.org/questions/mardmo-model-catalog')

@@ -1,7 +1,6 @@
 '''The dropdowns offer only the Wikidata items of their classes (#170): the roots, and the filter.'''
 import pytest
 
-import MaRDMO.class_check as class_check
 import MaRDMO.queries as queries
 from MaRDMO.optionsets import NO_WIKIDATA, NOISE_FILTERED, PROVIDERS, WIKIDATA_NOISE, WIKIDATA_ROOTS, Search
 
@@ -62,7 +61,7 @@ def matches(monkeypatch):
         def wikidata_matches(items, roots=None, noise=None, deadline=None):
             calls.append((list(items), roots))
             return None if answers is None else {item: answers.get(item, False) for item in items}
-        monkeypatch.setattr(class_check, 'wikidata_matches', wikidata_matches)
+        monkeypatch.setattr(queries, 'wikidata_matches', wikidata_matches)
         return calls
     return answer
 

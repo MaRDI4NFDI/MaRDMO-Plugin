@@ -4,23 +4,20 @@ Provides helpers for:
 
 * ``query_api`` – Wikibase ``wbsearchentities`` lookups
 * ``find_portal_items`` – duplicates, Wikidata twins and markers on the MaRDI Portal (#141)
-* ``query_sparql`` / ``query_sparql_pool`` – SPARQL SELECT requests
-* ``query_sparql_parts`` – run the split parts of a query and merge their rows
-* ``sparql_string`` – escape text as a SPARQL string literal
 * ``query_sources`` / ``query_sources_with_user_additions`` – combined
   MaRDI + Wikidata search with optional user-defined entries
 * ``query_api_per_class`` – class-filtered full-text search on the MaRDI portal
 * ``query_api_per_profile`` – search of the MaRDI portal by MaRDI profile (faceted search)
-* ``http_session`` – shared HTTP session for all requests to external services
+* ``option_help`` – the layout of a dropdown option (badge, label, description)
+
+The requests themselves (session, retries, time limits, SPARQL):
+:mod:`MaRDMO.sources.http`.
 '''
 import hashlib
+import html
 import json
 import logging
 import re
-import threading
-import time
-from contextlib import contextmanager
-from contextvars import ContextVar
 from dataclasses import dataclass, field
 from itertools import zip_longest
 from multiprocessing.pool import ThreadPool
@@ -29,146 +26,30 @@ import requests
 from django.core.cache import cache
 from rdmo.domain.models import Attribute
 
+from .class_check import wikidata_matches
 from .constants import BASE_URI
 from .getters import get_mathmoddb, get_properties, get_url
+from .sources.http import (
+    SEARCH_RETRY_WAIT,
+    SEARCH_TIMEOUT,
+    query_sparql,
+    request_with_retry,
+    search_deadline,
+)
 from .values import extract_parts
-from .writes import commit_writes
 from .ids import (
     DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, publication_doi,
-    option_help,
 )
+from .validators import doi_problem
 
 logger = logging.getLogger(__name__)
 
 # Search results of the MaRDI Portal and Wikidata are reused for this long
 SEARCH_CACHE_TIMEOUT = 5 * 60
-# A dropdown search request is given up after SEARCH_TIMEOUT seconds and
-# retried once after SEARCH_RETRY_WAIT seconds on a quick failure (#94): a
-# connection error or one of SPARQL_RETRY_STATUS.  A timeout is not retried
-# (search_deadline): the request occupies an RDMO worker all the while
-SEARCH_TIMEOUT = 5
-SEARCH_RETRY_WAIT = 0.5
 # Hits of a Wikidata label search: 10 shown unfiltered; 50 asked for where
 # they are filtered by their classes, which leaves out most of them (#170)
 WIKIDATA_HITS = 10
 WIKIDATA_FILTERED_HITS = 50
-
-# A SPARQL query is given up after this many seconds and retried once on a
-# timeout, a connection error or one of these answers, after the portal's
-# Retry-After (at most SPARQL_MAX_RETRY_WAIT seconds) or SPARQL_RETRY_WAIT;
-# request_with_retry() applies the same rule to other requests
-SPARQL_TIMEOUT = 30
-SPARQL_RETRY_STATUS = (429, 502, 503, 504)
-SPARQL_RETRY_WAIT = 2
-SPARQL_MAX_RETRY_WAIT = 10
-# A failed export check stops the export, so these requests are retried twice
-# (pauses in seconds), and all of a check's requests give up after
-# EXPORT_CHECK_DEADLINE seconds
-EXPORT_RETRY_WAITS = (2, 5)
-EXPORT_CHECK_DEADLINE = 120
-# The preview runs the export's checks too (#152), with its own shorter
-# limits: check_limits() sets them for the checks in its block
-_CHECK_LIMITS = ContextVar('mardmo_check_limits', default=(EXPORT_RETRY_WAITS, EXPORT_CHECK_DEADLINE))
-
-
-@contextmanager
-def check_limits(waits, seconds):
-    '''Retry the export's check requests after *waits* and give each check *seconds* in this block.'''
-    token = _CHECK_LIMITS.set((waits, seconds))
-    try:
-        yield
-    finally:
-        _CHECK_LIMITS.reset(token)
-
-
-def check_waits():
-    '''Pauses before the retries of an export check request (:func:`check_limits`).'''
-    return _CHECK_LIMITS.get()[0]
-
-
-def check_deadline():
-    '''The time (``time.monotonic()``) at which an export check starting now gives up.'''
-    return time.monotonic() + _CHECK_LIMITS.get()[1]
-
-_SESSIONS = threading.local()
-
-
-def http_session():
-    '''Return this thread's HTTP session for requests to external services.
-
-    Reusing the session keeps connections open, so repeated requests to the
-    same service skip the connection setup.  MaRDMO's pending writes are
-    committed first (see :func:`~MaRDMO.writes.batched_writes`), so no
-    transaction stays open while waiting for the answer.
-    '''
-    commit_writes()
-    session = getattr(_SESSIONS, 'session', None)
-    if session is None:
-        session = _SESSIONS.session = requests.Session()
-    return session
-
-
-def search_deadline():
-    '''Return the deadline of a dropdown search request sent now (:func:`request_with_retry`).
-
-    A failure before :data:`SEARCH_TIMEOUT` seconds leaves time for the
-    retry; a timeout does not, so a request never takes much longer than
-    without a retry.
-    '''
-    return time.monotonic() + SEARCH_TIMEOUT + SEARCH_RETRY_WAIT
-
-
-def request_with_retry(method, url, waits=(SPARQL_RETRY_WAIT,), deadline=None, **kwargs):
-    '''Send a request with :func:`http_session` and retry it on transient failures.
-
-    A timeout, a connection error, or one of :data:`SPARQL_RETRY_STATUS` is
-    retried after the next pause in *waits*, or after the answer's
-    ``Retry-After`` (at most :data:`SPARQL_MAX_RETRY_WAIT` seconds).  Other
-    answers, including 400, are returned at once.
-
-    Args:
-        method:   HTTP method (``'get'`` or ``'post'``).
-        url:      Request URL.
-        waits:    Pauses (seconds) before the retries; ``()`` sends the
-                  request once.
-        deadline: :func:`time.monotonic` value after which no retry starts;
-                  the timeout of each attempt is shortened to end by then.
-        **kwargs: Passed on to :meth:`requests.Session.request`.
-
-    Returns:
-        The last :class:`requests.Response`, whatever its status code.
-
-    Raises:
-        requests.exceptions.RequestException: If the last attempt failed
-            without an answer.
-    '''
-    timeout = kwargs.pop('timeout', None)
-    for wait in (*waits, None):
-        if deadline is not None and timeout is not None:
-            kwargs['timeout'] = max(1, min(timeout, deadline - time.monotonic()))
-        else:
-            kwargs['timeout'] = timeout
-        error = None
-        try:
-            response = http_session().request(method, url, **kwargs)
-            if wait is None or response.status_code not in SPARQL_RETRY_STATUS:
-                return response
-            retry_after = response.headers.get('Retry-After')
-            if retry_after and str(retry_after).isdigit():
-                wait = min(float(retry_after), SPARQL_MAX_RETRY_WAIT)
-            reason = f"status {response.status_code}"
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
-            if wait is None:
-                raise
-            error, reason = e, type(e).__name__
-        if deadline is not None and time.monotonic() + wait >= deadline:
-            logger.warning("Request to %s failed (%s); no time left for a retry.", url, reason)
-            if error is not None:
-                raise error
-            return response
-        logger.warning("Request to %s failed (%s); retrying in %s s.", url, reason, wait)
-        time.sleep(wait)
-    return response  # not reached: the last attempt returns or raises
 
 
 # Results of find_portal_items are reused for this long: the preview looks
@@ -387,139 +268,6 @@ def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, 
 
     return []
 
-def sparql_string(value):
-    '''Return *value* as a double-quoted SPARQL string literal.
-
-    Escapes backslashes, quotes, and line breaks so that arbitrary user text
-    (multi-line descriptions, Windows paths, LaTeX, apostrophes) yields a
-    valid query.
-    '''
-    escaped = (
-        str(value)
-        .replace('\\', '\\\\')
-        .replace('"', '\\"')
-        .replace('\n', '\\n')
-        .replace('\r', '\\r')
-        .replace('\t', '\\t')
-    )
-    return f'"{escaped}"'
-
-def query_sparql(query, sparql_endpoint, strict=False, waits=(SPARQL_RETRY_WAIT,), deadline=None):
-    '''Execute a SPARQL SELECT query against *sparql_endpoint* and return bindings.
-
-    Args:
-        query:           SPARQL SELECT query string (UTF-8 encoded on the wire).
-        sparql_endpoint: URL of the SPARQL endpoint (e.g. the MaRDI or Wikidata endpoint).
-        strict:          If ``True``, return ``None`` instead of ``[]`` when the
-                         query fails, so callers can tell "failed" from "no results".
-        waits:           Pauses before the retries (see :func:`request_with_retry`).
-        deadline:        :func:`time.monotonic` value after which no retry starts.
-
-    A query that times out (after :data:`SPARQL_TIMEOUT` seconds), cannot
-    connect, or is answered with one of :data:`SPARQL_RETRY_STATUS` is
-    retried once (or once per pause in *waits*).
-
-    Returns:
-        List of result-binding dicts from ``results.bindings``; on any network
-        error, HTTP error, invalid answer, or missing endpoint an empty list
-        (or ``None`` with *strict*).
-    '''
-    failed = None if strict else []
-
-    if not sparql_endpoint:
-        logger.warning("SPARQL query attempted without a valid endpoint.")
-        return failed
-
-    try:
-        response = request_with_retry(
-            'post',
-            sparql_endpoint,
-            waits=waits,
-            deadline=deadline,
-            data=query.encode("utf-8"),
-            headers={
-                "User-Agent": "MaRDMO (https://zib.de; reidelbach@zib.de)",
-                "Content-Type": "application/sparql-query; charset=UTF-8",
-                "Accept": "application/sparql-results+json"
-            },
-            timeout=SPARQL_TIMEOUT
-        )
-        # Check if request was successful
-        if response.status_code == 200:
-            return response.json().get('results', {}).get('bindings', [])
-        logger.error(
-            "SPARQL request to %s failed with status %s: %s",
-            sparql_endpoint,
-            response.status_code,
-            response.text,
-        )
-
-    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
-        logger.error("SPARQL query to %s failed: %s", sparql_endpoint, e)
-
-    except requests.exceptions.RequestException as e:
-        logger.exception("SPARQL request failed: %s", e)
-
-    except ValueError as e:
-        logger.error("SPARQL answer from %s is not valid JSON: %s", sparql_endpoint, e)
-
-    return failed
-
-def query_sparql_parts(queries, sparql_endpoint):
-    '''Run the parts of a split query one after another and merge their rows.
-
-    The first part decides which items exist and how many rows each has,
-    exactly like the full query; every further part returns one row per item
-    with its own columns, which are added to that item's rows.
-
-    Args:
-        queries:         Part query strings, the deciding part first.
-        sparql_endpoint: URL of the SPARQL endpoint.
-
-    Returns:
-        List of result-binding dicts shaped like those of the full query; an
-        empty list if any part fails, so no item is filled half.
-    '''
-    results = []
-    for number, query in enumerate(queries, 1):
-        rows = query_sparql(query, sparql_endpoint, strict=True)
-        if rows is None:
-            logger.warning(
-                "Part %s of %s of a split SPARQL query failed; no items are filled from it.",
-                number, len(queries),
-            )
-            return []
-        if not rows and not results:
-            return []                 # no item exists, so the other parts have nothing to add
-        results.append(rows)
-
-    columns = {}
-    for rows in results[1:]:
-        for row in rows:
-            columns.setdefault(row['id']['value'], {}).update(row)
-    return [{**columns.get(row['id']['value'], {}), **row} for row in results[0]]
-
-def query_sparql_pool(query_input):
-    '''Execute multiple SPARQL queries in parallel and return a keyed result dict.
-
-    Args:
-        query_input: Dict mapping a source key to a ``(query, endpoint)`` tuple,
-                     e.g. ``{"mardi": (query_str, url), "wikidata": ...}``;
-                     a third element ``True`` makes a failed query give
-                     ``None`` (see the *strict* argument of :func:`query_sparql`).
-
-    Returns:
-        Dict with the same keys as *query_input*, each mapping to the list of
-        SPARQL result bindings returned by :func:`query_sparql`.
-    '''
-    # Map each endpoint's query and store results in a dictionary; the pool
-    # is closed afterwards so its worker threads do not linger
-    commit_writes()
-    with ThreadPool(processes = len(query_input)) as pool:
-        results = pool.map(lambda args: query_sparql(*args), query_input.values())
-    data = dict(zip(query_input.keys(), results))
-    return data
-
 def _cached_search(source, search, item_class, func):
     '''Return ``func(search)`` for *source*, reusing results from the last five minutes.
 
@@ -630,7 +378,6 @@ def publication_options(search):
     refused with the reason (the pre-save validator), which the user would
     not learn from an empty dropdown.
     '''
-    from .validators import doi_problem  # pylint: disable=import-outside-toplevel
     doi = publication_doi(search)
     if not doi:
         return []
@@ -777,7 +524,6 @@ def wikidata_hits(hits, roots, noise=None):
     '''
     if roots is None and noise is None:
         return hits[:WIKIDATA_HITS]
-    from .class_check import wikidata_matches  # it uses this module
     matches = wikidata_matches([hit['id'] for hit in hits if 'id' in hit], roots=roots,
                                noise=None if roots is not None else noise)
     if matches is None:
@@ -971,7 +717,7 @@ def query_user_entries(project, setup):
 
     Returns:
         List of ``{"id": …, "text": "Label (Description)", "help": source tag}``
-        options (:func:`~MaRDMO.ids.option_help`).
+        options (:func:`option_help`).
     '''
     uris = {
         f'{BASE_URI}domain/{query_attribute}/{question}': (query_attribute, question)
@@ -1236,7 +982,6 @@ def item_by_id(source, qid, classes=None, profiles=None, exclude=None, roots=Non
         if found & set(exclude or []):
             return []
     elif roots is not None or noise is not None:
-        from .class_check import wikidata_matches  # it uses this module
         matches = wikidata_matches([target], roots=roots, noise=None if roots is not None else noise)
         if matches is not None and not matches.get(target):
             return []
@@ -1278,3 +1023,42 @@ def rank_by_search_term(option, term):
     if term_lower in desc.lower():
         return 3
     return 4
+
+
+# The source of an option (#142): the word of its badge, by the prefix of its ID, with
+# the badge's background and text colours (light, with the word: colour alone is not
+# accessible)
+_SOURCE_TAGS = {'mardi': 'mardi', 'wikidata': 'wikidata', 'user': 'project', 'new': 'new', NOT_FOUND: 'new'}
+_BADGES = {'mardi': ('#dbe9ff', '#1a3d7c'), 'wikidata': ('#dcf3e3', '#1e5e33'),
+           'project': ('#fff1cc', '#7a5a00'), 'new': ('#ece3fb', '#4b2c83')}
+# Hides the plain text of a laid-out option (RDMO shows the text, then the help); a browser
+# without :has() shows both, the text stays readable
+_HIDE_TEXT = ('<style>.interview-select-option:has(.mardmo-option) > span:first-child {display: none}'
+              '.interview-select-option:has(.mardmo-option) > span.ml-10 {margin-left: 0}</style>')
+
+
+def option_help(identifier, text):
+    '''Return the help of a dropdown option for the item *identifier* with the text *text*: its layout (#142).
+
+    A badge with the source (``mardi``, ``wikidata``, ``project`` for an
+    item of the user's own in the project, ``new`` for a new item: typed in
+    a relation, ``not found``, or a new publication, ``new:doi:…``), the
+    label in bold and the description in grey italics on a second line.
+    RDMO renders the help of an option as HTML in the open dropdown only,
+    after its text; a CSS rule hides the text there.  The text stays
+    ``"Label (Description)"``: it is what RDMO stores and shows in the
+    filled field, and what screen readers announce.  ``''`` for an option
+    without source (e.g. "new item").
+    '''
+    tag = _SOURCE_TAGS.get((identifier or '').split(':', 1)[0])
+    if not tag or (identifier == NOT_FOUND and text == NEW_ITEM):
+        return ''
+    background, colour = _BADGES[tag]
+    label, description, _ = extract_parts(text or '')
+    layout = (f'<span class="mardmo-option"><span style="display:inline-block;background:{background};'
+              f'color:{colour};border-radius:3px;padding:0 5px;margin-right:6px;font-size:80%;'
+              f'vertical-align:1px">{tag}</span><span style="font-weight:600">{html.escape(label)}</span>')
+    if description and description != 'No Description Provided!':
+        layout += (f'<br><span style="color:#6c757d;font-style:italic;font-size:90%;margin-left:2px">'
+                   f'{html.escape(description)}</span>')
+    return f'{_HIDE_TEXT}{layout}</span>'

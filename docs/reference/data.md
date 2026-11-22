@@ -4,6 +4,10 @@
 
 ::: MaRDMO.getters
 
+## Answers of a Project
+
+::: MaRDMO.project.answers
+
 ## Item IDs
 
 ::: MaRDMO.ids
@@ -11,6 +15,10 @@
 ## Base Models
 
 ::: MaRDMO.models
+
+## Requests to External Services
+
+::: MaRDMO.sources.http
 
 ## Queries
 

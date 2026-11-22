@@ -21,8 +21,8 @@ import time
 
 from django.core.cache import cache
 
-from . import queries
 from .constants import WIKIDATA
+from .sources import http
 
 logger = logging.getLogger(__name__)
 
@@ -92,11 +92,11 @@ def query_noise(qids, noise, wikidata=False):
 
 def _found(qids, build, deadline):
     '''The *qids* the query of *build* returns: QLever first, then Wikidata's endpoint; ``None`` if both fail.'''
-    rows = queries.query_sparql(PREFIXES + build(qids, wikidata=False), WIKIDATA['qlever'], strict=True,
+    rows = http.query_sparql(PREFIXES + build(qids, wikidata=False), WIKIDATA['qlever'], strict=True,
                                 waits=(), deadline=time.monotonic() + QLEVER_TIMEOUT)
     if rows is None:
         logger.warning('Class check: QLever failed; asking Wikidata.')
-        rows = queries.query_sparql(build(qids, wikidata=True), WIKIDATA['sparql'], strict=True, waits=(),
+        rows = http.query_sparql(build(qids, wikidata=True), WIKIDATA['sparql'], strict=True, waits=(),
                                     deadline=deadline)
     if rows is None:
         logger.warning('Class check: QLever and Wikidata failed; the hits are not filtered.')
@@ -119,7 +119,7 @@ def wikidata_matches(items, roots=None, noise=None, deadline=None):
         roots:    QIDs of the classes an item must be at or below.
         noise:    QIDs of the classes an item must not be an instance of.
         deadline: :func:`time.monotonic` value by which Wikidata's endpoint
-                  must answer (default: a search's, :func:`~.queries.search_deadline`).
+                  must answer (default: a search's, :func:`~.sources.http.search_deadline`).
 
     Returns:
         ``{QID: True/False}`` for every item; ``None`` if QLever and
@@ -142,10 +142,10 @@ def wikidata_matches(items, roots=None, noise=None, deadline=None):
     if unknown:
         if roots is not None:
             found = _found(unknown, lambda q, wikidata: query_roots(q, classes, wikidata), deadline
-                           or queries.search_deadline())
+                           or http.search_deadline())
         else:
             found = _found(unknown, lambda q, wikidata: query_noise(q, classes, wikidata), deadline
-                           or queries.search_deadline())
+                           or http.search_deadline())
         if found is None:
             return None
         # With roots the query returns the items that fit, with noise those that do not

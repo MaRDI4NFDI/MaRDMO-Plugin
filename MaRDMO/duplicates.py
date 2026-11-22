@@ -44,11 +44,13 @@ from django.utils.translation import gettext as _
 from rdmo.projects.models import Value
 from rdmo.questions.models import Question
 
-from .getters import get_items
+from .getters import get_items, get_questions
 from .ids import unique_items
 from .ids import id_attributes, is_own_item, item_text
 from .markers import PUBLICATION_MARKERS, SECTION_MARKERS, class_families, contradictions
 from .queries import find_portal_items, find_publications_by_doi, portal_dois, portal_labels
+from .constants import BASE_URI
+from .publication.constants import AUTHORS, CITATIONINFOS, JOURNALS, LANGUAGES
 
 logger = logging.getLogger(__name__)
 
@@ -484,10 +486,6 @@ def _reuse_publication(project, set_index, label, description):
     citation is the portal item's, so the one looked up for the new
     publication (title, authors, journal, ...) is removed; the DOI stays.
     """
-    # pylint: disable=import-outside-toplevel
-    from .constants import BASE_URI
-    from .getters import get_questions
-    from .publication.constants import AUTHORS, CITATIONINFOS, JOURNALS, LANGUAGES
     questions = get_questions('publication')['Publication']
     page = Value.objects.filter(project=project, snapshot=None, set_index=set_index)
     changed = 0

@@ -26,7 +26,8 @@ import itertools
 from rdmo.options.models import Option
 
 from .constants import BASE_URI
-from .getters import get_id, get_mathmoddb, get_options
+from .getters import get_mathmoddb, get_options
+from .project.answers import get_id
 from .values import extract_parts, process_qualifier
 from .writes import value_editor
 from .ids import NEW_ITEM, item_text

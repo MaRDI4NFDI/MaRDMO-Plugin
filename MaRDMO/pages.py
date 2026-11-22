@@ -19,8 +19,9 @@ from rdmo.projects.models import Value
 from rdmo.questions.models import Page
 
 from .constants import BASE_URI
-from .ids import is_own_item
+from .ids import is_own_item, tab_placeholder
 from .properties import find_reference
+from .getters import get_options
 
 
 def anchor(section, index):
@@ -78,7 +79,6 @@ def page_refs(data, sections):
     Of two pages with one ID (a copied tab) the first is taken, as the checks
     name it.  A tab is also found by its placeholder (``tab:<section>:<n>``).
     '''
-    from .ids import tab_placeholder  # pylint: disable=import-outside-toplevel
     refs = {}
     for section in sections:
         for index, entry in (data.get(section) or {}).items():
@@ -176,7 +176,6 @@ def distinguish_publications(data):
     Returns:
         *data*.
     '''
-    from .getters import get_options  # pylint: disable=import-outside-toplevel
     option = get_options()['DOI']
     groups = {}
     for index in sorted(data.get('publication') or {}):

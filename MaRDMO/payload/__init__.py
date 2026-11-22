@@ -33,7 +33,7 @@ from ..duplicates import item_source, look_up
 from ..ids import item_key
 from ..markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
 from ..ordering import cycle_groups
-from ..queries import check_deadline, check_waits
+from ..sources.http import check_deadline, check_waits
 from ..writes import commit_writes
 from . import claims
 from .bodies import (

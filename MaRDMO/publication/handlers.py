@@ -34,7 +34,7 @@ from ..getters import (
     get_sparql_query,
     get_url
 )
-from ..queries import query_sparql
+from ..sources.http import query_sparql
 from ..adders import add_basics, add_references, add_relations_flexible
 from ..getters import get_options
 from ..ids import is_portal_item, is_user_id, publication_doi

@@ -19,14 +19,16 @@ from ..model.constants import SECTION_MAP as SECTION_MAP_MODEL
 from ..algorithm.constants import SECTION_MAP as SECTION_MAP_ALGO
 from ..workflow.constants import SECTION_MAP as SECTION_MAP_WORKFLOW
 from ..catalogs import ALGORITHM, MODEL, WORKFLOW, catalog_of
-from ..getters import get_mathmoddb, get_mathalgodb
-from ..getters import get_options
+from ..getters import get_mathalgodb, get_mathmoddb, get_options, get_url
 from ..properties import find_reference
 from ..ids import NOT_FOUND, is_own_item
 from ..pages import add_tab_names, page_ref
 from ..patterns import LINE_BREAK_RE
 from ..problems import Problem
 from ..validators import doi_problem, short_description_problem, swmath_problem, url_problem, url_schemes
+from ..payload import PortalUnavailable
+from ..payload.claims import fetch_claims
+from ..sources.http import check_deadline
 
 # An item without a real ID: the project was made before MaRDMO 0.8.0, which
 # gives every item one (see ids.py); such projects are not supported
@@ -164,11 +166,6 @@ class ChecksBase:
         portal does not answer, ``None``: the finding stays a hint, and
         :attr:`unreachable` keeps the export waiting.
         '''
-        # pylint: disable=import-outside-toplevel
-        from ..getters import get_url
-        from ..payload import PortalUnavailable
-        from ..payload.claims import fetch_claims
-        from ..queries import check_deadline
         qid = item.split(':', 1)[1]
         try:
             claims = fetch_claims([qid], get_url('mardi', 'api'), check_deadline(), 'statements', self._claims)

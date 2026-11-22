@@ -1,8 +1,8 @@
 '''Django views for the MaRDMO plugin.
 
 Provides the endpoints used by the questionnaire frontend to
-communicate with background workers, plus the ``render_preview`` helper
-used by export providers to build HTML previews.
+communicate with background workers (the preview page of the export
+providers: :func:`MaRDMO.main.render_preview`).
 
 Provides:
 
@@ -11,7 +11,6 @@ Provides:
 - ``show_success``   — HTML view that renders the completed-task result page
 - ``reuse_portal_item`` — POST endpoint of the preview's "Use this item" (#141)
 - ``check_tex``      — POST endpoint: the portal's verdict on a formula typed into the interview (#190)
-- ``render_preview`` — helper that renders a Jinja2 template with questionnaire answers
 
 Success page (``show_success``)
 --------------------------------
@@ -46,7 +45,7 @@ from rdmo.projects.models import Project
 
 from . import VERSION
 from .getters import get_item_url
-from .pages import interview_urls
+from .main import MaRDMOExportProvider
 from .success import CLASS_ORDER, group_by_class, result_graph, split_statements
 from .store import (
     _progress_store,
@@ -54,6 +53,9 @@ from .store import (
     _unregister_job_for_session,
     _job_belongs_to_session,
 )
+from .duplicates import preview_duplicates, reuse, same_duplicate
+from .catalogs import catalog_of
+from .tex_check import check_formula
 
 
 @login_required
@@ -173,52 +175,6 @@ def show_success(request, job_id):
     )
 
 
-def render_preview(self, template, answers, option, submit_label, duplicates=None, gate=None):
-    """Render the documentation preview page.
-
-    Args:
-        self:       Export provider instance with ``request``, ``ExportForm``,
-                    ``project`` and ``key`` attributes.
-        template:   Template name (relative path) to include in the preview.
-        answers:    Prepared answers dict passed to the template context.
-        option:     Option string controlling template behaviour (passed to context).
-        duplicates: :class:`~MaRDMO.duplicates.Report` of the items that are on
-                    the MaRDI Portal already; shown at the top, and while it has
-                    rows the export button is disabled (#141).
-        gate:       :class:`~MaRDMO.pipeline.Gate` of the checks; while it is
-                    not clear the export button is disabled (#152).
-
-    Returns:
-        HTTP 200 response rendering ``MaRDMO/preview.html``.
-    """
-    return render(
-        self.request,
-        'MaRDMO/preview.html',
-        {
-            'form': self.ExportForm(),
-            'include_file': template,
-            'include_params': {
-                'title': self.project.title
-            },
-            'answers': answers,
-            'option': option,
-            'submit_label': submit_label,
-            'duplicates': duplicates,
-            'gate': gate,
-            # The interview pages of the problems' pages, linked in "Before you export"
-            'interview': interview_urls(self.project, {problem.page.section for problem in gate.problems + gate.hints
-                                                       if problem.page is not None}) if gate else {},
-            'project': self.project,
-            'export_format': getattr(self, 'key', ''),
-            'mardiURI': get_item_url('mardi'),
-            'wikidataURI': get_item_url('wikidata'),
-            # Appended to the stylesheet URL so browsers reload it after an update
-            'mardmo_version': VERSION,
-        },
-        status=200
-    )
-
-
 def _refuse(request, error):
     return render(request, 'core/error.html',
                   {'title': _('The portal item cannot be used'), 'errors': [error]}, status=400)
@@ -238,10 +194,6 @@ def reuse_portal_item(request, project_id):
     Returns:
         A redirect to the preview's box "Before you export", or an error page.
     """
-    from .duplicates import preview_duplicates, reuse, same_duplicate
-    from .catalogs import catalog_of
-    from .main import MaRDMOExportProvider
-
     project = get_object_or_404(Project, pk=project_id)
     if not request.user.has_perm('projects.change_value_object', project):
         return render(request, 'core/error.html',
@@ -291,8 +243,6 @@ def check_tex(request):
         JSON ``{"state": "valid" | "invalid" | "unverified", "message": …,
         "checked": …}``; HTTP 400 without a formula or for a text too long.
     """
-    from .tex_check import check_formula
-
     tex = request.POST.get('tex', '')
     if not tex.strip() or len(tex) > TEX_CHECK_MAX_LENGTH:
         return JsonResponse({'error': 'tex'}, status=400)

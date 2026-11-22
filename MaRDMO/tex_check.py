@@ -33,7 +33,7 @@ from django.utils.translation import gettext as _, ngettext
 
 from .constants import TEX_CHECK_URL
 from .writes import commit_writes
-from .queries import SPARQL_RETRY_STATUS, request_with_retry
+from .sources.http import SPARQL_RETRY_STATUS, request_with_retry
 from .validators import normalize_formula
 
 logger = logging.getLogger(__name__)

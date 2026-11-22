@@ -37,7 +37,7 @@ from .models import Author, Journal, Publication
 
 from ..constants import BASE_URI
 from ..getters import get_items, get_properties, get_sparql_query, get_url
-from ..queries import http_session, query_sparql, query_sparql_pool
+from ..sources.http import http_session, query_sparql, query_sparql_pool
 
 logger = logging.getLogger(__name__)
 
