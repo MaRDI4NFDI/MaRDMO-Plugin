@@ -65,6 +65,7 @@ def check_deadline():
     '''The time (``time.monotonic()``) at which an export check starting now gives up.'''
     return time.monotonic() + _CHECK_LIMITS.get()[1]
 
+
 _SESSIONS = threading.local()
 
 
@@ -177,6 +178,7 @@ def sparql_string(value):
     )
     return f'"{escaped}"'
 
+
 def query_sparql(query, sparql_endpoint, strict=False, waits=(SPARQL_RETRY_WAIT,), deadline=None):
     '''Execute a SPARQL SELECT query against *sparql_endpoint* and return bindings.
 
@@ -238,6 +240,7 @@ def query_sparql(query, sparql_endpoint, strict=False, waits=(SPARQL_RETRY_WAIT,
 
     return failed
 
+
 def query_sparql_parts(queries, sparql_endpoint):
     '''Run the parts of a split query one after another and merge their rows.
 
@@ -271,6 +274,7 @@ def query_sparql_parts(queries, sparql_endpoint):
         for row in rows:
             columns.setdefault(row['id']['value'], {}).update(row)
     return [{**columns.get(row['id']['value'], {}), **row} for row in results[0]]
+
 
 def query_sparql_pool(query_input):
     '''Execute multiple SPARQL queries in parallel and return a keyed result dict.
