@@ -79,7 +79,8 @@ to another server; a server reached by TCP must be allowed with
 
 ## What runs in CI
 
-`tests.yml` runs ruff, the tests with coverage, and builds the package.  The
+`tests.yml` runs ruff, the layers (`lint-imports`), the tests with coverage,
+and builds the package.  The
 tests use the MaRDMO-Questionnaire branch with the same name as the plugin
 branch; without one, the questionnaire branch of the integration branch the
 plugin branch shares commits with that `main` has not (e.g. `0.8.0`; also
@@ -101,6 +102,27 @@ lower it to make a pull request pass.  Locally:
 
 Besides, `live-check.yml` checks the MaRDI Portal and Wikidata every night
 (see [Live check](#live-check-does-the-portal-still-answer-as-recorded)).
+
+## The layers: when lint-imports fails
+
+```bash
+lint-imports
+```
+
+checks the layers of MaRDMO (contracts in `pyproject.toml`, see
+[Architecture](../../concepts/architecture.md#what-is-checked)).  A broken
+contract names the import, with file and line:
+
+```
+MaRDMO.components is not allowed to import MaRDMO.export:
+
+- MaRDMO.components.validators -> MaRDMO.export.items (l.619)
+```
+
+Move the code to the layer it belongs to — what the lower layer needs goes
+down, not the import up — instead of naming the import as another exception.
+A new folder or module at the top level of `MaRDMO/` must be put into a layer
+of the contract (it is exhaustive); a new catalog goes into the catalog layer.
 
 ## Golden files: when the export changes
 

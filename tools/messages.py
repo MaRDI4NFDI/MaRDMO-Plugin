@@ -36,7 +36,7 @@ KEYWORDS = {
     'npgettext': ((1, 'c'), 2, 3), 'npgettext_lazy': ((1, 'c'), 2, 3),
 }
 # Labels the preview shows from the data files ({% translate label %})
-DATA_LABELS = ['model/data/mapping.json', 'algorithm/data/mapping.json']
+DATA_LABELS = ['data/mathmoddb.json', 'data/mathalgodb.json']
 
 HEADER = {
     'Project-Id-Version': 'MaRDMO',

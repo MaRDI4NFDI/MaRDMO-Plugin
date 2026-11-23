@@ -31,6 +31,21 @@ class MaRDMOConfig(AppConfig):
         self.items = None
         self.properties = None
 
+    def load_questions(self):
+        '''The questions of the publication and of every registered catalog, by question set.
+
+        The publication's questions belong to every catalog; the others are the
+        catalogs' own (``questions`` of their declarations,
+        :func:`~MaRDMO.core.catalogs.registrations`).
+        '''
+        from .core.catalogs import registrations
+        from .core.config import get_data
+
+        questions = {'publication': get_data('components/publication/data/questions.json')}
+        for registration in registrations():
+            questions.update({key: get_data(path) for key, path in registration.questions.items()})
+        return questions
+
     def ready(self):
         '''Load static JSON data into app-config attributes and register signal handlers.
 
@@ -40,15 +55,11 @@ class MaRDMOConfig(AppConfig):
         lookups throughout the plugin.
         '''
 
-        from .core.catalogs import registrations
         from .core.config import get_data
 
-        # The publication's questions belong to every catalog; the others are the catalogs' own
-        self.questions = {'publication': get_data('components/publication/data/questions.json')}
-        for registration in registrations():
-            self.questions.update({key: get_data(path) for key, path in registration.questions.items()})
-        self.mathmoddb          = get_data('model/data/mapping.json')
-        self.mathalgodb         = get_data('algorithm/data/mapping.json')
+        self.questions = self.load_questions()
+        self.mathmoddb          = get_data('data/mathmoddb.json')
+        self.mathalgodb         = get_data('data/mathalgodb.json')
         self.publication_mapping = get_data('components/publication/data/mapping.json')
         self.options = get_data('data/options.json')
         self.items = get_data(settings.MARDMO_PROVIDER['mardi']['items'])

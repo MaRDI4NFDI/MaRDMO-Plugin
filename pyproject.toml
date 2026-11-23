@@ -51,6 +51,11 @@ test = [
     "pyyaml>=6",
     "coverage[toml]>=7",
     "ruff>=0.6",
+    # The layers of MaRDMO (lint-imports, see [tool.importlinter]); 2.15 is
+    # the last for Python 3.10 and knows every part of the contracts
+    "import-linter>=2.15,<3",
+    # tests/static/test_package_data.py reads pyproject.toml (tomllib from 3.11)
+    "tomli>=2; python_version < '3.11'",
     "build>=1",
     # tools/messages.py: the German catalog (tests/static/test_translations.py)
     "babel>=2.14",
@@ -95,3 +100,39 @@ select = ["F", "E9", "E301", "E302", "E303", "E304", "E305", "E306"]
 preview = true
 explicit-preview-rules = true
 
+# The layers of MaRDMO (docs: Concepts, Architecture), checked by lint-imports
+[tool.importlinter]
+root_package = "MaRDMO"
+# The forbidden contract names packages outside MaRDMO
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Each layer uses only the layers below it; the catalogs are independent of each other"
+type = "layers"
+containers = ["MaRDMO"]
+# ":" siblings may use each other, "|" siblings may not; every module of
+# MaRDMO must be in a layer (exhaustive)
+layers = [
+    "urls : views : main : apps : router : builders : providers : optionsets : templatetags",
+    "model | algorithm | workflow | search",
+    "export",
+    "components",
+    "project | sources",
+    "core",
+]
+exhaustive = true
+exhaustive_ignores = ["locale", "static", "templates", "data"]
+ignore_imports = [
+    # The one exception: sources/ commits MaRDMO's pending writes before a
+    # request, so no transaction stays open while waiting for the answer
+    "MaRDMO.sources.* -> MaRDMO.project.writes",
+]
+
+[[tool.importlinter.contracts]]
+# core uses no database and sends no requests: no RDMO, no requests here;
+# django.db is checked by tests/static/test_architecture.py (an outside
+# package's part cannot be forbidden here)
+name = "core uses neither RDMO nor requests"
+type = "forbidden"
+source_modules = ["MaRDMO.core"]
+forbidden_modules = ["rdmo", "requests"]
