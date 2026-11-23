@@ -23,11 +23,3 @@
 ## Workflow
 
 ::: MaRDMO.workflow.checks
-
-## TeX Check
-
-::: MaRDMO.components.tex_check
-
-## Patterns
-
-::: MaRDMO.core.patterns

@@ -1,7 +1,7 @@
 '''Recorded answers of the MaRDI Portal, Wikidata and citation services.
 
 All of MaRDMO's requests to external services go through
-``requests.Session.request`` (queries.http_session).  :func:`replay` answers
+``requests.Session.request`` (MaRDMO.sources.http.http_session).  :func:`replay` answers
 them from a JSON file in tests/data/recorded; a request that is not in the
 file fails the test.  :func:`record` sends them for real, with a pause
 before each, and writes the file::

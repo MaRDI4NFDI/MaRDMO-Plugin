@@ -1,1 +1,1 @@
-'''The export to the MaRDI Portal: what the catalogs' workers share.'''
+'''The export to the MaRDI Portal: the checks, the payload, the upload, the new IDs written back (#198).'''

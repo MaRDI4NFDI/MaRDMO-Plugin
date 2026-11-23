@@ -1,24 +1,23 @@
 """MaRDMO — Mathematical Research Data Management Organiser plugin for RDMO.
 
 MaRDMO extends the Research Data Management Organiser (RDMO) with questionnaire
-catalogs and automated metadata retrieval for three research-artifact types:
+catalogs for mathematical research, filled in from the MaRDI Portal and
+Wikidata, and exports their documentation to the MaRDI Portal:
 
-- **Mathematical models** (:mod:`MaRDMO.model`) — structured documentation of
-  models, formulations, tasks, and quantities linked to the MaRDI Portal.
-- **Algorithms** (:mod:`MaRDMO.algorithm`) — structured documentation of
-  algorithms, problems, software, and benchmarks linked to the MaRDI Portal.
-- **Interdisciplinary workflows** (:mod:`MaRDMO.workflow`) — documentation of
-  computational workflows including process steps, methods, software, hardware,
-  instruments, and data sets.
-- **Publications** (:mod:`MaRDMO.components.publication`) — automated retrieval of
-  bibliographic metadata from Crossref, DataCite, DOI, zbMath, and ORCID.
-- **Portal search** (:mod:`MaRDMO.search`) — SPARQL-based search across models,
-  algorithms, and workflows stored in the MaRDI Portal.
+- **Mathematical models** (:mod:`MaRDMO.model`) — models, formulations, tasks
+  and quantities.
+- **Algorithms** (:mod:`MaRDMO.algorithm`) — algorithms, problems, software
+  and benchmarks.
+- **Interdisciplinary workflows** (:mod:`MaRDMO.workflow`) — process steps,
+  methods, software, hardware, instruments and data sets.
+- **Portal search** (:mod:`MaRDMO.search`) — SPARQL search across the models,
+  algorithms and workflows of the MaRDI Portal.
 
-The plugin uses Signal handlers (:mod:`MaRDMO.router`) to react to
-questionnaire saves and fills related fields automatically.  Export to the
-MaRDI Portal is handled via OAuth2 (:mod:`MaRDMO.export.oauth2`) with live progress
-tracking (:mod:`MaRDMO.export.store`, :mod:`MaRDMO.views`).
+Below the catalogs are the export (:mod:`MaRDMO.export`), the parts of the
+interview (:mod:`MaRDMO.components`, publications by DOI among them), the
+project's answers (:mod:`MaRDMO.project`), the external services
+(:mod:`MaRDMO.sources`) and what all of them need (:mod:`MaRDMO.core`); each
+layer uses only the layers below it (docs: Concepts, Architecture).
 """
 
 __title__ = 'MaRDMO'
