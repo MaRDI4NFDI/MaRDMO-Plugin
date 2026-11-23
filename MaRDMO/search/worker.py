@@ -16,12 +16,14 @@ Three search modes are supported:
 Provides:
 
 - ``search`` — entry point called by the view layer; mutates *answers* in
-  place with ``"query"``, ``"no_results"``, ``"more"`` and ``"links"`` keys.
+  place with ``"query"``, ``"no_results"``, ``"more"``, ``"kind"`` and ``"links"`` keys.
 '''
 
 import re
 
 from dataclasses import dataclass
+
+from django.utils.translation import gettext_noop as N_
 
 from ..core.config import get_item_url, get_items, get_properties, get_url
 from ..sources.sparql import query_sparql, sparql_string
@@ -110,17 +112,19 @@ class Mode:
     Attributes:
         option:  Key of the mode's option in the options (``answers['search']['options']``).
         name:    The mode in the message without filters (``"Model search requested …"``).
+        kind:    The class of its results, above them on the result page (translated there).
         query:   The base query; ``{}`` takes the filters' parts.
         filters: ``(answer key, label in the query's comment, query part, kind)`` per filter.
     '''
     option: str
     name: str
+    kind: str
     query: str
     filters: tuple
 
 
 MODES = (
-    Mode('InterdisciplinaryWorkflow', 'Workflow', QUERY_BASE_WORKFLOW_SEARCH, (
+    Mode('InterdisciplinaryWorkflow', 'Workflow', N_('Interdisciplinary Workflow'), QUERY_BASE_WORKFLOW_SEARCH, (
         ('research-objective', 'research objective', WF_RESEARCH_OBJ_SPARQL, KEYWORD),
         ('academic-discipline', 'academic discipline', WF_DISCIPLINE_SPARQL, ITEM),
         ('mathematical-model', 'mathematical model', WF_MODEL_SPARQL, ITEM),
@@ -131,7 +135,7 @@ MODES = (
         ('instrument', 'instrument', WF_INSTRUMENT_SPARQL, ITEM),
         ('data-set', 'data set', WF_DATASET_SPARQL, ITEM),
     )),
-    Mode('MathematicalModel', 'Model', QUERY_BASE_MODEL_SEARCH, (
+    Mode('MathematicalModel', 'Model', N_('Mathematical Model'), QUERY_BASE_MODEL_SEARCH, (
         ('mathematical-model-properties', 'model property', MM_PROPERTY_SPARQL, PROPERTY),
         ('research-problem', 'research problem', MM_PROBLEM_SPARQL, ITEM),
         ('academic-discipline', 'academic discipline', MM_DISCIPLINE_SPARQL, ITEM),
@@ -139,7 +143,7 @@ MODES = (
         ('formula', 'formula', MM_FORMULA_SPARQL, ITEM),
         ('quantity', 'quantity', MM_QUANTITY_SPARQL, ITEM),
     )),
-    Mode('Algorithm', 'Algorithm', QUERY_BASE_ALGORITHM_SEARCH, (
+    Mode('Algorithm', 'Algorithm', N_('Algorithm'), QUERY_BASE_ALGORITHM_SEARCH, (
         ('algorithmic-task', 'algorithmic task', ALG_TASK_SPARQL, ITEM),
         ('software', 'software', ALG_SOFTWARE_SPARQL, ITEM),
     )),
@@ -190,7 +194,7 @@ def search(answers, options):
 
     Args:
         answers: Top-level answers dict (mutated in place with ``"query"``,
-                 ``"no_results"``, ``"more"`` and ``"links"`` keys).
+                 ``"no_results"``, ``"more"``, ``"kind"`` and ``"links"`` keys).
         options: Global RDMO options dict used for option-value comparisons.
 
     Returns:
@@ -201,10 +205,12 @@ def search(answers, options):
     answers.setdefault('links', [])
     answers.setdefault('search_failed', False)
     answers.setdefault('more', False)
+    answers.setdefault('kind', '')
 
     mode = next((mode for mode in MODES if answers['search'].get('options') == options[mode.option]), None)
     if mode is None:
         return answers
+    answers['kind'] = mode.kind
 
     selected = answers['search']
     if not any(selected.get(key) for key, _, _, _ in mode.filters):

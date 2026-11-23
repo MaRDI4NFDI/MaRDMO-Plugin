@@ -1,34 +1,35 @@
 {% extends 'core/page.html' %}
 {% load i18n %}
-{% load static %}
 
 {% block page %}
+<div align='center'>
+    {% include "MaRDMO/partials/_result_header.html" %}
 
-    <h1>{{ title }}</h1>
-    <br><br><br>
-    <div align='center'>
-        <figure>
-            <img src="{% static 'MaRDMO/images/MaRDMOLogo.png' %}" alt="Logo of MaRDMO Plugin">
-        </figure>
-        <br><br><br>
+    <div style="width:90%;margin:0 auto;text-align:left;">
         {% if searchFailed %}
-            <p style="color:darkred;font-size:32px;font-weight:bold">{% translate "The search could not be run on the MaRDI Portal." %}</p>
-            <p style="color:Black;font-size:20px">{% translate "The portal did not answer or rejected the query. Please try again later." %}</p>
+            <div style="padding:16px 20px;border:2px solid darkred;border-radius:6px;background:#fdecea;">
+                <p style="color:darkred;font-size:24px;font-weight:bold;margin:0 0 8px 0">{% translate "The search could not be run on the MaRDI Portal." %}</p>
+                <p style="color:#333;font-size:15px;margin:0">{% translate "The portal did not answer or rejected the query. Please try again later." %}</p>
+            </div>
         {% else %}
-            <p style="color:Black;font-size:40px;font-weight:bold">{{ noResults }} {{ datatype }}</p>
-            <p style="color:Black;font-size:40px;font-weight:bold">{% translate "in MaRDI Portal!" %}</p>
-            <br>
+            <p style="color:Black;font-size:40px;font-weight:bold;margin:0 0 4px 0">{{ heading }}</p>
             {% if more %}
-                <p style="color:#555555;font-size:15px;font-style:italic">{% blocktranslate trimmed %}More than {{ limit }} were found; the first {{ limit }} are shown, in alphabetical order. Narrow the search with further criteria.{% endblocktranslate %}</p>
+                <p style="color:#555555;font-size:15px;font-style:italic;margin:0 0 20px 0">{% blocktranslate trimmed %}More than {{ limit }} were found; the first {{ limit }} are shown, in alphabetical order. Narrow the search with further criteria.{% endblocktranslate %}</p>
+            {% elif links %}
+                <p style="color:#555555;font-size:15px;font-style:italic;margin:0 0 20px 0">{% translate "Found with the SPARQL query of the preview, in alphabetical order." %}</p>
             {% endif %}
-            {% for link in links %}
-                <p style="color:grey;font-size:20px;font-weight:bold"><a href="{{ link.url }}" style="color:dodgerblue;">{{ link.label }}</a>&#x1F517;</p>
-            {% endfor %}
+            {% if links %}
+                {% if kind %}<p style="color:Black;font-size:22px;font-weight:bold;margin:16px 0 4px 0">{{ kind }}</p>{% endif %}
+                {% for link in links %}
+                    <p style="color:grey;font-size:18px;font-weight:bold;margin:4px 0 2px 20px">
+                        <a href="{{ link.url }}" style="color:dodgerblue;">{{ link.label }}</a>
+                    </p>
+                    {% if link.description %}
+                        <p style="color:#666;font-size:14px;margin:1px 0 8px 40px">{{ link.description }}</p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         {% endif %}
     </div>
-    <!-- Attribution Section -->
-    <div align='center' style="margin-top: 50px; font-size: 14px; color: grey;">
-        <p>{% translate "MaRDMO Logo by" %} <a href="https://www.mardi4nfdi.de/about/mission" target="_blank" style="color: grey;">MaRDI</a>, {% translate "licensed under" %} <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color: grey;">CC BY-NC-ND 4.0</a>.</p>
-    </div>
-
+</div>
 {% endblock %}

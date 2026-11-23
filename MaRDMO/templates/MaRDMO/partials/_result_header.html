@@ -1,0 +1,15 @@
+{% load i18n static %}
+{# The head of a result page (export, search): the logo and its attribution; with graph_credits, those of the graph and the mathematics too #}
+<br><br><br><br><br><br><br>
+<figure style="margin-bottom:6px;">
+    <img src="{% static 'MaRDMO/images/MaRDMOLogo.png' %}" alt="Logo of MaRDMO Plugin">
+</figure>
+<div style="font-size:11px;color:grey;margin-bottom:30px;">
+    {% translate "MaRDMO Logo by" %} <a href="https://www.mardi4nfdi.de/about/mission" target="_blank" style="color:grey;">MaRDI</a>, {% translate "licensed under" %} <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" style="color:grey;">CC BY-NC-ND 4.0</a>.
+    {% if graph_credits %}
+    &ensp;&middot;&ensp;
+    {% translate "Graph powered by" %} <a href="https://js.cytoscape.org/" target="_blank" style="color:grey;">Cytoscape.js</a> (MIT).
+    &ensp;&middot;&ensp;
+    {% translate "Mathematics rendered by" %} <a href="https://www.mathjax.org/" target="_blank" style="color:grey;">MathJax</a> (Apache&nbsp;2.0).
+    {% endif %}
+</div>

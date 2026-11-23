@@ -9,8 +9,9 @@ import html
 import re
 
 import pytest
-from django.template.loader import render_to_string
+from django.utils import translation
 
+from MaRDMO import main
 from MaRDMO.core.config import get_options
 from MaRDMO.search import worker
 from MaRDMO.search.sparql import SEARCH_LIMIT
@@ -162,11 +163,53 @@ def test_an_item_without_description(sent):
     assert result['links'][0]['description'] == ''
 
 
-@pytest.mark.parametrize('more', [True, False])
-def test_the_page_tells_that_there_are_more(more, rf):
-    links = [{'label': 'model 000', 'description': 'the model number 0', 'url': 'https://example.org/Item:Q0'}]
-    page = render_to_string('MaRDMO/search_results.html', {
-        'datatype': 'Mathematical Model(s)', 'noResults': '1', 'links': links, 'more': more,
-        'limit': SEARCH_LIMIT}, request=rf.get('/'))
-    assert ('More than 100 were found; the first 100 are shown' in page) is more
-    assert 'href="https://example.org/Item:Q0"' in page
+def test_the_mode_names_the_class_of_its_results(sent):
+    result = worker.search(answers('Algorithm', **{'software': {0: item('Q302', 'software')}}), OPTIONS)
+    assert result['kind'] == 'Algorithm'
+
+
+# --- The result page ----------------------------------------------------------------------------
+
+def result_page(rf, monkeypatch, count, more=False, failed=False, language='en'):
+    '''The result page of a model search that found *count* models.'''
+    found = {'search': {'options': OPTIONS['MathematicalModel']}, 'kind': 'Mathematical Model', 'more': more,
+             'search_failed': failed, 'links': [
+                 {'label': f'model {number}', 'description': f'the model number {number}' if number else '',
+                  'url': f'https://example.org/Item:Q{number}'} for number in range(count)]}
+    provider = main.MaRDMOQueryProvider('mardi', 'x', 'MaRDMO.main.MaRDMOQueryProvider')
+    provider.request = rf.get('/')
+    monkeypatch.setattr(provider, 'get_post_data', lambda: (found, OPTIONS))
+    with translation.override(language):
+        return provider.submit_mardmo_search().content.decode()
+
+
+@pytest.mark.parametrize('count, more, heading', [
+    (SEARCH_LIMIT, True, 'More than 100 results in the MaRDI Portal'),
+    (3, False, '3 results in the MaRDI Portal'),
+    (1, False, '1 result in the MaRDI Portal'),
+    (0, False, 'No results in the MaRDI Portal'),
+])
+def test_the_result_page_counts_the_results(rf, monkeypatch, count, more, heading):
+    page = result_page(rf, monkeypatch, count, more)
+    assert heading in page
+    assert ('the first 100 are shown' in page) is more
+    assert ('>Mathematical Model</p>' in page) is bool(count)          # the class above the results
+    assert '&#x1F517;' not in page
+
+
+def test_the_result_page_links_the_items_with_their_descriptions(rf, monkeypatch):
+    page = result_page(rf, monkeypatch, 2)
+    assert '<a href="https://example.org/Item:Q1" style="color:dodgerblue;">model 1</a>' in page
+    assert 'the model number 1' in page
+    assert page.count('font-size:14px') == 1                          # model 0 has no description
+
+
+def test_a_failed_search_says_so(rf, monkeypatch):
+    page = result_page(rf, monkeypatch, 0, failed=True)
+    assert 'The search could not be run on the MaRDI Portal.' in page and 'No results' not in page
+
+
+def test_the_result_page_in_german(rf, monkeypatch):
+    page = result_page(rf, monkeypatch, 3, language='de')
+    assert '3 Ergebnisse im MaRDI Portal' in page and '>Mathematisches Modell</p>' in page
+    assert 'alphabetisch geordnet' in page
