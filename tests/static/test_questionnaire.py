@@ -15,6 +15,7 @@ import pytest
 from MaRDMO.core.constants import BASE_URI
 from MaRDMO.core.searches import PROVIDERS
 from tests.conftest import DC_URI
+from tests.static.test_data_files import MAPPINGS
 
 PACKAGE = Path(__file__).parents[2] / 'MaRDMO'
 
@@ -54,10 +55,9 @@ def test_options_exist(questionnaire):
     assert missing == []
 
 
-@pytest.mark.parametrize('path', sorted(PACKAGE.glob('**/data/mapping.json')),
-                         ids=lambda p: p.parent.parent.name)
-def test_relations_exist_as_options(path, questionnaire):
-    internal = INTERNAL_RELATIONS.get(path.parent.parent.name, set())
+@pytest.mark.parametrize('name, path', MAPPINGS.items(), ids=MAPPINGS.keys())
+def test_relations_exist_as_options(name, path, questionnaire):
+    internal = INTERNAL_RELATIONS.get(name, set())
     mapping = load(path)
     missing = sorted(entry['key'] for entry in mapping
                      if entry['url'] not in questionnaire['option'] and entry['key'] not in internal)

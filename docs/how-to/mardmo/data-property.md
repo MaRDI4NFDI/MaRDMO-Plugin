@@ -46,9 +46,9 @@ See [How to Create a New Option](../rdmo/add-option.md)
 and [How to Create a New Optionset](../rdmo/add-optionset.md)
 for further information.
 
-### Step 1b — Register the Option in `model/data/mapping.json`
+### Step 1b — Register the Option in `data/mathmoddb.json`
 
-Add an entry to `model/data/mapping.json`.  This file maps MathModDB property
+Add an entry to `data/mathmoddb.json`.  This file maps MathModDB property
 keys to their RDMO option URIs and human-readable labels:
 
 ```json
@@ -170,7 +170,7 @@ See [How to Create a New Option](../rdmo/add-option.md)
 and [How to Create a New Optionset](../rdmo/add-optionset.md)
 for further information.
 
-### Step 1b — Register the Option in `model/data/mapping.json`
+### Step 1b — Register the Option in `data/mathmoddb.json`
 
 ```json
 {"key": "is_physical_constant", "url": "https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/is-physical-constant", "label": "is physical constant"}

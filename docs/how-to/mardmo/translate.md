@@ -50,8 +50,8 @@ with values `{% blocktranslate trimmed with kind=values.QorQK %}Definition of
 text per line.  Arguments of an include are translated with `_("…")`:
 `{% include "…" with title=_("Research Problems") %}`.  Labels from the data
 files (relations, properties) are translated with `{% translate label %}`;
-the tool takes them from `model/data/mapping.json` and
-`algorithm/data/mapping.json`.
+the tool takes them from `data/mathmoddb.json` and
+`data/mathalgodb.json`.
 
 **JavaScript** gets its texts from the template: the progress page as
 `data-text-*` attributes, the graph of the result page as `graph_texts`

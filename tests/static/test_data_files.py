@@ -7,6 +7,13 @@ import pytest
 
 PACKAGE = Path(__file__).parents[2] / 'MaRDMO'
 DATA_FILES = sorted(PACKAGE.glob('**/data/*.json'))
+# The relation mappings: the ontologies MathModDB and MathAlgoDB (shared by the
+# catalogs) and the publication's roles
+MAPPINGS = {
+    'model': PACKAGE / 'data' / 'mathmoddb.json',
+    'algorithm': PACKAGE / 'data' / 'mathalgodb.json',
+    'publication': PACKAGE / 'components' / 'publication' / 'data' / 'mapping.json',
+}
 
 
 @pytest.mark.parametrize('path', DATA_FILES, ids=lambda p: str(p.relative_to(PACKAGE)))
@@ -42,8 +49,7 @@ def test_portal_and_staging_know_the_same_names(name):
     assert sorted(staging.keys() - portal.keys()) == []
 
 
-@pytest.mark.parametrize('path', sorted(PACKAGE.glob('**/data/mapping.json')),
-                         ids=lambda p: p.parent.parent.name)
+@pytest.mark.parametrize('path', MAPPINGS.values(), ids=MAPPINGS.keys())
 def test_relation_mapping_keys_are_unique(path):
     '''URLs may repeat: contains_model, contains_task, ... are all "contains".'''
     with open(path, encoding='utf-8') as file:
