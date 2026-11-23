@@ -11,8 +11,10 @@ Where the export happens, from the answers to the portal:
 | Post it, report what went wrong | `upload`, `portal_errors` |
 | Write the new IDs back | `ids` (`replace_ids`), `writes` |
 
-Every request to an external service (MaRDI Portal, Wikidata, the citation
-services) goes through `sources.http`: one session, retries, time limits.
+Every request to an external service goes through `sources/`: `http` (one
+session, retries, time limits), `wikibase` (entities of the MaRDI Portal and
+Wikidata), `portal`, `wikidata` and `citations`.  The options of the dropdowns
+are `components.dropdowns`.
 
 Shared utilities (values, relations, ordering, properties) are listed under
 [Utilities](utilities.md).  The catalogs declare themselves (`catalog.py` of each catalog package, see
@@ -53,6 +55,10 @@ Shared utilities (values, relations, ordering, properties) are listed under
 ## Option Set Providers (table)
 
 ::: MaRDMO.optionsets
+
+## Dropdown Options
+
+::: MaRDMO.components.dropdowns
 
 ## Handlers
 

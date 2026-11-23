@@ -27,12 +27,18 @@ from rdmo.domain.models import Attribute
 from ..constants import BASE_URI
 from ..getters import get_mathmoddb, get_properties, get_url
 from ..sources.portal import portal_doi_forms, query_api_per_class, query_api_per_profile
-from ..sources.wikibase import WIKIDATA_HITS, entities_of, entity_classes, get_entities, query_api
+from ..sources.wikibase import (
+    WIKIDATA_HITS,
+    entities_of,
+    entity_classes,
+    get_entities,
+    query_api,
+    search_by_statement,
+)
 from ..sources.wikidata import WIKIDATA_DOI, wikidata_matches
 from ..sources.http import (
     SEARCH_RETRY_WAIT,
     SEARCH_TIMEOUT,
-    request_with_retry,
     search_deadline,
 )
 from ..values import extract_parts
@@ -79,15 +85,8 @@ def _items_with_statement(source, statement):
     request errors (:func:`_cached_search` does not keep a failed search).
     '''
     api_url = get_url(source, 'api')
-    headers = {'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'}
-    found = request_with_retry(
-        'get', api_url, waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline(), headers=headers,
-        timeout=SEARCH_TIMEOUT,
-        params={'action': 'query', 'list': 'search', 'srsearch': f'haswbstatement:{statement}',
-                'srnamespace': 120 if source == 'mardi' else 0, 'srlimit': 10, 'format': 'json'},
-    )
-    found.raise_for_status()
-    qids = [hit['title'].rsplit(':', 1)[-1] for hit in found.json().get('query', {}).get('search', [])]
+    qids = search_by_statement(api_url, statement, 120 if source == 'mardi' else 0, waits=(SEARCH_RETRY_WAIT,),
+                               deadline=search_deadline(), timeout=SEARCH_TIMEOUT)
     if not qids:
         return []
     entities = get_entities(api_url, qids, 'labels|descriptions', languages='en', waits=(SEARCH_RETRY_WAIT,),

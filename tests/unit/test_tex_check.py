@@ -8,6 +8,7 @@ import pytest
 import requests
 
 from MaRDMO import tex_check
+from MaRDMO.sources import portal as portal_api
 from MaRDMO.tex_check import FAILED, UNAVAILABLE
 
 # The portal's answer for b_{\mathrm{B}} (2026-11-16)
@@ -35,7 +36,7 @@ def portal(monkeypatch):
         if isinstance(answer, Exception):
             raise answer
         return answer
-    monkeypatch.setattr(tex_check, 'request_with_retry', ask)
+    monkeypatch.setattr(portal_api, 'request_with_retry', ask)
     return answers, sent
 
 

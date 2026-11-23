@@ -289,3 +289,22 @@ def entity_classes(entity, instance_of):
     '''The QIDs of the classes (*instance_of* statements) of a ``wbgetentities`` *entity*.'''
     return {claim['mainsnak'].get('datavalue', {}).get('value', {}).get('id')
             for claim in entity.get('claims', {}).get(instance_of, [])}
+
+
+def search_by_statement(api_url, statement, namespace, limit=10, waits=(), deadline=None, timeout=None):
+    '''The QIDs of the items with *statement* (``P27=10.…``), by the search of the Wikibase API *api_url*.
+
+    ``haswbstatement`` ignores the case of a DOI.  *namespace* is the
+    namespace of the items (120 on the MaRDI Portal, 0 on Wikidata).
+
+    Raises:
+        requests.exceptions.RequestException: If the search fails.
+    '''
+    found = request_with_retry(
+        'get', api_url, waits=waits, deadline=deadline, headers={'User-Agent': USER_AGENT},
+        timeout=STRICT_TIMEOUT if timeout is None else timeout,
+        params={'action': 'query', 'list': 'search', 'srsearch': f'haswbstatement:{statement}',
+                'srnamespace': namespace, 'srlimit': limit, 'format': 'json'},
+    )
+    found.raise_for_status()
+    return [hit['title'].rsplit(':', 1)[-1] for hit in found.json().get('query', {}).get('search', [])]

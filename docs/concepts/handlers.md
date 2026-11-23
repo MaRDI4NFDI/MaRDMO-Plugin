@@ -46,12 +46,12 @@ are addressed as `'uses_algorithm.qualifier'`.  A twin fits by the rule of the p
 this item" (`markers.contradictions`): one with classes MaRDMO does not know (a plain Wikidata
 import, e.g. the Laplace operator Q7276420 of the heat equation) fits as well, as an unknown
 class contradicts nothing.  One lookup per batch (`_twin_lookup()`, cached by
-`queries.find_portal_items`); a failed lookup keeps the Wikidata items, the preview then lists
+`sources.portal.find_portal_items`); a failed lookup keeps the Wikidata items, the preview then lists
 those on the portal.  A Wikidata item already on a page (`visited`) keeps its ID.  Publications
 have their own rule (`publication_twins()`, #158): the twin with the Wikidata
 QID that is a publication, else the portal publication with the Wikidata
 item's DOI (one `wbgetentities` request to Wikidata for the DOIs, one portal
-search for all of them, `queries.portal_publications_by_doi`); without DOI,
+search for all of them, `sources.portal.portal_publications_by_doi`); without DOI,
 or not on the portal, a Wikidata publication stays one.
 
 `_hydrate_relatants` and `_hydrate_qualifier_entities` then give every new page the name and
@@ -125,8 +125,12 @@ hold it for minutes:
   connection error, or the answers 429, 502, 503 and 504, after the portal's
   `Retry-After` (at most 10 seconds) or 2 seconds.  If it fails again, the items of
   that query are not filled and the failure is logged.
-- `wbgetentities` retries with backoff, caps every wait (including `Retry-After`) at
-  20 seconds and stops retrying after 45 seconds per batch.
+- `wbgetentities` (`sources.wikibase.get_entities`, resilient mode) retries with
+  backoff, caps every wait (including `Retry-After`) at 20 seconds and stops after
+  45 seconds per batch: the timeout of each attempt is shortened to the time left.
+  A chunk that keeps timing out is bisected to isolate one unresponsive item, and
+  after three dead chunks in a row the portal is skipped for two minutes (circuit
+  breaker); what resolved is filled in.
 - The same rule (`sources.http.request_with_retry()`) retries the portal's TeX check
   once; the checks before an export retry twice (see [Export](export.md)).
 
