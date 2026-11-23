@@ -26,7 +26,8 @@ import time
 import pytest
 import requests
 
-from MaRDMO import queries
+import MaRDMO.sources.portal as portal_api
+import MaRDMO.sources.wikibase as wikibase
 from MaRDMO.constants import TEX_CHECK_URL, WIKIDATA
 from MaRDMO.getters import get_items, get_url
 from tests.support.recordings import FOLDER, REAL_REQUEST
@@ -135,9 +136,9 @@ SEARCHES = [('concentration', ['quantity', 'kind of quantity']), ('euler', ['alg
 def test_the_dropdown_searches_find_items(search, classes):
     items = get_items()
     time.sleep(PAUSE)
-    mardi = queries.query_api_per_class(search, [items[name] for name in classes], raise_errors=True)
+    mardi = portal_api.query_api_per_class(search, [items[name] for name in classes], raise_errors=True)
     time.sleep(PAUSE)
-    wikidata = queries.query_api(get_url('wikidata', 'api'), search, raise_errors=True)
+    wikidata = wikibase.query_api(get_url('wikidata', 'api'), search, raise_errors=True)
     problems = []
     if not mardi or not all(option['id'].startswith('mardi:Q') and option['text'] for option in mardi):
         problems.append(f'MaRDI Portal: {mardi[:2]}')

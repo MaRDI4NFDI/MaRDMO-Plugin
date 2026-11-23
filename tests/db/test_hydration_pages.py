@@ -10,7 +10,7 @@ import pytest
 
 from MaRDMO.constants import BASE_URI
 from MaRDMO.models import Relatant, Software
-from MaRDMO.queries import PortalItems
+from MaRDMO.sources.portal import PortalItems
 from MaRDMO.workflow.models import ProcessStep, ProcessStepUsage
 from tests.db.conftest import answer, save
 

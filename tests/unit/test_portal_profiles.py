@@ -13,6 +13,7 @@ import pytest
 import requests
 
 import MaRDMO.queries as queries
+import MaRDMO.sources.portal as portal_api
 import MaRDMO.sources.wikibase as wikibase
 from MaRDMO.getters import get_items, get_properties
 from MaRDMO.optionsets import PROFILES, PROVIDERS, Search
@@ -50,7 +51,7 @@ class Portal:
 
     def __init__(self, monkeypatch, pages, entities):
         self.pages, self.entities, self.params = pages, entities, []
-        monkeypatch.setattr(queries, 'request_with_retry', self)
+        monkeypatch.setattr(portal_api, 'request_with_retry', self)    # the profile search
         monkeypatch.setattr(wikibase, 'request_with_retry', self)    # wbgetentities
 
     def __call__(self, method, url, **kwargs):
@@ -76,7 +77,7 @@ def test_the_profile_search_finds_the_items_of_the_profile_pages_in_their_order(
         '7': {'title': 'Lme4qtl', 'index': 2, 'pageprops': {'wikibase_item': 'Q2'}},
         '5': {'title': 'Lme4', 'index': 1, 'pageprops': {'wikibase_item': 'Q1'}},
         '9': {'title': 'A page without item', 'index': 3}}, {'Q1': entity('lme4'), 'Q2': entity('lme4qtl')})
-    options = queries.query_api_per_profile('lme4', [items['MaRDI software profile'], items['MaRDI algorithm profile']])
+    options = portal_api.query_api_per_profile('lme4', [items['MaRDI software profile'], items['MaRDI algorithm profile']])
     assert options == [{'id': 'mardi:Q1', 'text': 'lme4 (lme4 item)'}, {'id': 'mardi:Q2', 'text': 'lme4qtl (lme4qtl item)'}]
     search, labels = portal.params
     # Several profiles: facets separated by a space (alternatives); the pages are in namespace 0
@@ -96,7 +97,7 @@ def test_a_shared_profile_leaves_out_the_items_of_the_other_class(monkeypatch):
         '2': {'index': 2, 'pageprops': {'wikibase_item': 'Q2'}},
         '3': {'index': 3, 'pageprops': {'wikibase_item': 'Q3'}}},
         {'Q1': entity('sorting', algorithmic), 'Q2': entity('simulation', computational), 'Q3': entity('no class')})
-    options = queries.query_api_per_profile('s', [items['MaRDI task profile']], exclude=[computational])
+    options = portal_api.query_api_per_profile('s', [items['MaRDI task profile']], exclude=[computational])
     assert [option['id'] for option in options] == ['mardi:Q1', 'mardi:Q3']
     assert portal.params[1]['props'] == 'labels|descriptions|claims'
 

@@ -1,4 +1,4 @@
-'''Which Wikidata items fit a dropdown, by their classes (#170).
+'''Wikidata: which of its items fit a dropdown, by their classes (#170), and their DOIs.
 
 A dropdown offers Wikidata items of certain kinds only: those that are an
 instance or a subclass of something at or below its *roots* (e.g. software
@@ -11,6 +11,8 @@ QLever's Wikidata endpoint (updated live) answers such queries in a fraction
 of a second; Wikidata's own endpoint is asked if QLever fails.  If both fail
 the caller shows the hits unfiltered, as before.  Answers are cached per item
 and set of classes, so items found again are not checked again.
+
+:func:`wikidata_dois` gives the DOIs of Wikidata publications (#158).
 '''
 
 import hashlib
@@ -19,10 +21,13 @@ import logging
 import re
 import time
 
+import requests
+
 from django.core.cache import cache
 
-from .constants import WIKIDATA
-from .sources import http
+from ..constants import WIKIDATA
+from . import http
+from .wikibase import claim_values, entities_of
 
 logger = logging.getLogger(__name__)
 
@@ -153,3 +158,25 @@ def wikidata_matches(items, roots=None, noise=None, deadline=None):
         cache.set_many({keys[qid]: fits for qid, fits in checked.items()}, CLASS_CHECK_TIMEOUT)
         known.update(checked)
     return {qid: known[qid] for qid in qids}
+
+
+# Wikidata's DOI property (the portal's is "DOI" in properties.json)
+WIKIDATA_DOI = 'P356'
+
+
+def wikidata_dois(qids):
+    '''``{QID: DOI}`` of the Wikidata items *qids* that have a DOI (P356; the first one).
+
+    One ``wbgetentities`` request per :data:`~MaRDMO.sources.wikibase.ENTITIES_PER_REQUEST` items.  A
+    lookup that fails finds no DOIs.
+    '''
+    qids = sorted(set(qids))
+    if not qids:
+        return {}
+    try:
+        entities = entities_of('wikidata', qids, 'claims')
+    except (requests.exceptions.RequestException, ValueError) as error:
+        logger.warning('Could not look up the DOIs of Wikidata publications: %s', error)
+        return {}
+    # Some have their DOI with a leading "/"
+    return {qid: dois[0].lstrip('/') for qid in qids if (dois := claim_values(entities.get(qid, {}), WIKIDATA_DOI))}

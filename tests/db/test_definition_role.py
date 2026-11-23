@@ -5,7 +5,7 @@ from MaRDMO import main
 from MaRDMO.getters import get_items, get_properties, get_url
 from MaRDMO.model.models import MathematicalModel, Task
 from MaRDMO.model.worker import PrepareModel
-from MaRDMO.queries import PortalItems
+from MaRDMO.sources.portal import PortalItems
 from tests.db.conftest import answer, save
 
 DEFINITION = 'mardi:Q7268735'

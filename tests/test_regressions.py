@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 
 import MaRDMO.queries as queries
-from MaRDMO.queries import PortalItems
+from MaRDMO.sources.portal import PortalItems
 from MaRDMO.getters import get_items, get_mathmoddb, get_properties
 from MaRDMO.model.models import MathematicalModel
 from MaRDMO.payload import GeneratePayload

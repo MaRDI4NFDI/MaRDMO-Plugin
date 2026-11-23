@@ -28,7 +28,8 @@ from rdmo.projects.renderers import XMLRenderer
 from rdmo.projects.serializers.export import ProjectSerializer
 from rdmo.questions.models import Catalog as RDMOCatalog
 
-from MaRDMO import main, pipeline, queries
+from MaRDMO import main, pipeline
+from MaRDMO.sources import wikibase
 from MaRDMO.catalogs import catalog_of
 from MaRDMO.duplicates import preview_duplicates, reuse
 from MaRDMO.problems import report_lines
@@ -108,8 +109,9 @@ def test_build(name, db, monkeypatch, django_db_setup):
     # (it answers within seconds, but sometimes not within the dropdown's SEARCH_TIMEOUT)
     monkeypatch.setattr('MaRDMO.queries.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)
     monkeypatch.setattr('MaRDMO.sources.http.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)    # search_deadline()
-    monkeypatch.setattr('MaRDMO.queries.query_api.__defaults__',
-                        (BUILD_SEARCH_TIMEOUT, *queries.query_api.__defaults__[1:]))
+    monkeypatch.setattr('MaRDMO.sources.portal.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)  # class and profile search
+    monkeypatch.setattr('MaRDMO.sources.wikibase.query_api.__defaults__',
+                        (BUILD_SEARCH_TIMEOUT, *wikibase.query_api.__defaults__[1:]))
     SENT.clear()
     project = Project.objects.create(title=name.replace('_', ' '), site=Site.objects.get_current(),
                                      catalog=RDMOCatalog.objects.get(uri__endswith=catalog_name))

@@ -20,7 +20,7 @@ from MaRDMO.markers import SECTION_MARKERS
 from MaRDMO.model import models
 from MaRDMO.model.handlers import TWINS, Information
 from MaRDMO.models import Algorithm, Relatant, Software
-from MaRDMO.queries import PortalItems
+from MaRDMO.sources.portal import PortalItems
 from MaRDMO.workflow.handlers import _model_uses
 from MaRDMO.workflow.models import ProcessStep, ProcessStepUsage
 from tests.db.conftest import answer, save

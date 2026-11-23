@@ -23,7 +23,7 @@ from rdmo.questions.models import Catalog
 from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_questions
 from MaRDMO.writes import value_editor
-from MaRDMO.queries import PortalItems
+from MaRDMO.sources.portal import PortalItems
 from tests.support.recordings import record, replay
 
 # Referenced elements first; the catalogs use all of them

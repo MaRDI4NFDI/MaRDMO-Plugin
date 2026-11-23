@@ -34,7 +34,8 @@ from .ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .sources.http import query_sparql, query_sparql_parts
 from .publication.handlers import Information
-from .queries import find_portal_items, portal_labels, portal_publications_by_doi, wikidata_dois
+from .sources.portal import find_portal_items, portal_labels, portal_publications_by_doi
+from .sources.wikidata import wikidata_dois
 from .markers import contradictions, PUBLICATION_MARKERS, SECTION_MARKERS
 
 # Lazy singleton – instantiated on first use so that the Django app registry
@@ -86,7 +87,7 @@ def _twin_lookup(qids):
     The twin is the portal item with the Wikidata QID (P12); its label and
     description are the portal's, twins without an English label are left
     out.  One lookup (cached for some minutes, see
-    :func:`~MaRDMO.queries.find_portal_items`); a lookup that fails finds no
+    :func:`~MaRDMO.sources.portal.find_portal_items`); a lookup that fails finds no
     twins.
     '''
     if not qids:

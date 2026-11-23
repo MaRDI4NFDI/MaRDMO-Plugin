@@ -33,7 +33,7 @@ def entity(qid, label, classes=(), profiles=(), **extra):
 
 @pytest.fixture
 def portal(monkeypatch):
-    '''_entities answers from a dict ({QID: entity}); an exception is raised.'''
+    '''entities_of answers from a dict ({QID: entity}); an exception is raised.'''
     asked = []
 
     def use(answers):
@@ -42,7 +42,7 @@ def portal(monkeypatch):
             if isinstance(answers, Exception):
                 raise answers
             return {qid: answers[qid] for qid in qids if qid in answers}
-        monkeypatch.setattr(queries, '_entities', entities)
+        monkeypatch.setattr(queries, 'entities_of', entities)
         return asked
     return use
 

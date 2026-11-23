@@ -3,6 +3,8 @@ import pytest
 import requests
 
 import MaRDMO.queries as queries
+import MaRDMO.sources.wikibase as wikibase
+import MaRDMO.sources.portal as portal_api
 import MaRDMO.sources.http as http
 from MaRDMO.getters import get_items, get_url
 from MaRDMO.queries import option_help
@@ -54,7 +56,7 @@ class Portal:
 def search():
     '''The MaRDI part of a dropdown search for quantities.'''
     items = get_items()
-    return lambda: queries.query_api_per_class('alpha', [items['quantity'], items['kind of quantity']],
+    return lambda: portal_api.query_api_per_class('alpha', [items['quantity'], items['kind of quantity']],
                                                raise_errors=True)
 
 
@@ -107,5 +109,5 @@ def test_the_wikidata_search_is_retried_too(monkeypatch):
 def test_the_export_check_keeps_its_own_retries(monkeypatch):
     '''query_api retries only when asked: the export's duplicate check passes its own waits.'''
     portal = Portal(monkeypatch, requests.exceptions.ConnectionError())
-    assert queries.query_api(get_url('mardi', 'api'), 'alpha') == []
+    assert wikibase.query_api(get_url('mardi', 'api'), 'alpha') == []
     assert portal.requests == ['wbsearchentities']

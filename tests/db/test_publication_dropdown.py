@@ -92,7 +92,7 @@ def test_a_doi_the_portal_has_percent_encoded_is_the_portal_item(options):
 
 
 def test_the_forms_of_a_doi_on_the_portal():
-    from MaRDMO.queries import portal_doi_forms# noqa: PLC0415
+    from MaRDMO.sources.portal import portal_doi_forms# noqa: PLC0415
     assert portal_doi_forms(DIJKSTRA) == [DIJKSTRA]
     assert portal_doi_forms(LORENZ) == [LORENZ, '10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2']
     # The check character of old DOIs

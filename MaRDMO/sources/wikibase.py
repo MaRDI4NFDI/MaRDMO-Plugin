@@ -23,7 +23,8 @@ from dataclasses import dataclass
 
 import requests
 
-from .http import request_with_retry
+from ..getters import get_url
+from .http import SEARCH_RETRY_WAIT, SEARCH_TIMEOUT, request_with_retry
 
 logger = logging.getLogger(__name__)
 
@@ -200,3 +201,91 @@ def _reset(api_url):
     '''Clear the failure streak of *api_url* after a chunk that resolved.'''
     if api_url in _breakers:
         _breakers[api_url] = {'fails': 0, 'open_until': 0}
+
+
+# Hits of a Wikidata label search: 10 shown unfiltered; 50 asked for where
+# they are filtered by their classes, which leaves out most of them (#170)
+WIKIDATA_HITS = 10
+
+
+def query_api(api_url, search_term, timeout=SEARCH_TIMEOUT, raise_errors=False, waits=(), deadline=None,
+              limit=WIKIDATA_HITS):
+    '''Search a Wikibase API endpoint for items whose label matches *search_term*.
+
+    Uses the ``wbsearchentities`` action with at most *limit* hits (at most 50).
+
+    Args:
+        api_url:      Full URL of the Wikibase API endpoint.
+        search_term:  Label string to search for.
+        timeout:      Request timeout in seconds (default :data:`SEARCH_TIMEOUT`).
+        raise_errors: Raise request and JSON errors instead of returning an
+                      empty list, so callers can tell a failure from no hits.
+        waits:        Pauses before retries (see :func:`request_with_retry`);
+                      ``()`` searches once.
+        deadline:     :func:`time.monotonic` value after which no retry starts.
+        limit:        Number of hits asked for.
+
+    Returns:
+        List of raw Wikibase search-result dicts; empty list on any error
+        (unless *raise_errors*).
+    '''
+    try:
+        response = request_with_retry(
+            'get',
+            api_url,
+            waits=waits,
+            deadline=deadline,
+            params={
+                'action': 'wbsearchentities',
+                'format': 'json',
+                'language': 'en',
+                'type': 'item',
+                'limit': limit,
+                'search': search_term
+            },
+            headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
+            timeout=timeout
+        )
+        response.raise_for_status()  # Raise an error on bad HTTP status codes
+        try:
+            return response.json().get('search', [])
+        except ValueError:
+            # Malformed JSON
+            logger.error("Failed to parse JSON.")
+            if raise_errors:
+                raise
+    except requests.exceptions.RequestException as e:
+        logger.error("Search of %s failed: %s", api_url, e)
+        if raise_errors:
+            raise
+
+    return []
+
+
+# The lookups of publication twins while a page is filled (#158): requests are
+# given up after this many seconds and retried once; wbgetentities takes at
+# most 50 items, a search for DOIS_PER_SEARCH DOIs finds at most 50 items
+TWIN_TIMEOUT = 10
+
+
+def entities_of(source, qids, props, waits=(SEARCH_RETRY_WAIT,), deadline=None):
+    '''``{QID: entity}`` of *qids* on *source* (``wbgetentities``, English labels); raises on request errors.
+
+    An error answer of the portal raises too (:class:`~MaRDMO.sources.wikibase.WikibaseError`):
+    it is "the portal did not answer", not "the portal has nothing".
+    '''
+    return get_entities(get_url(source, 'api'), qids, props, languages='en', waits=waits, deadline=deadline,
+                        timeout=TWIN_TIMEOUT)
+
+
+def claim_values(entity, prop):
+    '''The string values of the statements *prop* of *entity* (from ``wbgetentities``).'''
+    return [claim['mainsnak']['datavalue']['value'] for claim in entity.get('claims', {}).get(prop, [])
+            if claim.get('mainsnak', {}).get('snaktype') == 'value'
+            and isinstance(claim['mainsnak']['datavalue']['value'], str)]
+
+
+def entity_classes(entity, instance_of):
+    '''The QIDs of the classes (*instance_of* statements) of a ``wbgetentities`` *entity*.'''
+    return {claim['mainsnak'].get('datavalue', {}).get('value', {}).get('id')
+            for claim in entity.get('claims', {}).get(instance_of, [])}

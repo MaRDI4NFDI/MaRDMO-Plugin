@@ -16,7 +16,8 @@ from MaRDMO.constants import BASE_URI
 from MaRDMO.handler_base import publication_twins
 from MaRDMO.model.handlers import Information
 from MaRDMO.models import Relatant
-from MaRDMO.queries import portal_publications_by_doi, wikidata_dois
+from MaRDMO.sources.portal import portal_publications_by_doi
+from MaRDMO.sources.wikidata import wikidata_dois
 
 DIJKSTRA = Relatant('wikidata:Q21694527', 'A note on two problems in connexion with graphs', 'scientific article')
 HESTENES = Relatant('wikidata:Q55882088', 'Methods of conjugate gradients for solving linear systems',
@@ -69,7 +70,7 @@ def test_publications_of_the_portal_and_on_pages_are_kept(monkeypatch):
 def test_a_failed_lookup_keeps_the_wikidata_publications(no_qid_twins, monkeypatch, caplog):
     def fail(*args, **kwargs):
         raise requests.exceptions.ConnectionError('down')
-    monkeypatch.setattr('MaRDMO.queries.request_with_retry', fail)
+    monkeypatch.setattr('MaRDMO.sources.portal.request_with_retry', fail)
     monkeypatch.setattr('MaRDMO.sources.wikibase.request_with_retry', fail)
     assert portal_publications_by_doi(['10.1007/BF01386390']) == {}
     assert publication_twins([HESTENES]) == [HESTENES]

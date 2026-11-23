@@ -6,7 +6,7 @@ from rdmo.projects.models import Membership
 
 from MaRDMO.constants import BASE_URI
 from MaRDMO.getters import get_items
-from MaRDMO.queries import PortalItems
+from MaRDMO.sources.portal import PortalItems
 from tests.browser.conftest import screenshot
 from tests.db.conftest import answer, save
 

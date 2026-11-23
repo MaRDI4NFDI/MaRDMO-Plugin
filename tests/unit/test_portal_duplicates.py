@@ -1,14 +1,14 @@
 '''Items that exist on the MaRDI Portal already, and the markers of existing items (#141).'''
 import pytest
 
-import MaRDMO.queries as queries
+import MaRDMO.sources.portal as portal_api
 from MaRDMO.duplicates import Duplicate, decide, item_source, look_up
 from MaRDMO.getters import get_items, get_properties
 from MaRDMO.markers import SECTION_MARKERS, allowed, contradictions
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.portal_errors import DuplicateOnPortal, handle_policy_violation
 from MaRDMO.export.worker import CatalogExport
-from MaRDMO.queries import PortalItems, find_portal_items
+from MaRDMO.sources.portal import PortalItems, find_portal_items
 from MaRDMO.upload import Upload
 
 ITEMS = get_items()
@@ -144,7 +144,7 @@ def portal(monkeypatch):
         if 'VALUES ?wikidata' in query:
             return [{'item': {'value': 'https://portal/entity/Q60093'}, 'wikidata': {'value': 'Q7150'}}]
         return [{'item': {'value': 'https://portal/entity/Q60093'}, 'class': {'value': 'https://portal/entity/Q1'}}]
-    monkeypatch.setattr(queries, 'query_sparql', answer)
+    monkeypatch.setattr(portal_api, 'query_sparql', answer)
     return sent
 
 
