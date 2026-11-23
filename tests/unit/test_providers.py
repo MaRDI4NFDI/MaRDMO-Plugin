@@ -1,7 +1,7 @@
 '''The option set providers search as recorded in tests/data/providers.json.
 
 The file was recorded from the 61 classes of MaRDMO 0.6 (one per provider
-key) before they became MaRDMOProvider with the table in MaRDMO.optionsets:
+key) before they became MaRDMOProvider with the table in MaRDMO.core.searches:
 item class, sources, "not found", the user's own items, creation and
 refresh.  Since then providers of programming languages and software search
 from the first character (C, R), all others from three (six workflow
@@ -19,7 +19,8 @@ from pathlib import Path
 
 import pytest
 
-from MaRDMO.optionsets import OPTIONSET_PROVIDERS, PROVIDERS
+from MaRDMO.optionsets import OPTIONSET_PROVIDERS
+from MaRDMO.core.searches import PROVIDERS
 from tests.support.provider_calls import record
 
 GOLDEN = json.loads((Path(__file__).parents[1] / 'data' / 'providers.json').read_text(encoding='utf-8'))

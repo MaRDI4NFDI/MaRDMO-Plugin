@@ -2,7 +2,7 @@
 import pytest
 
 from MaRDMO import main
-from MaRDMO.getters import get_items, get_properties, get_url
+from MaRDMO.core.config import get_items, get_properties, get_url
 from MaRDMO.model.models import MathematicalModel, Task
 from MaRDMO.model.worker import PrepareModel
 from MaRDMO.sources.portal import PortalItems
@@ -41,7 +41,7 @@ def model(project):
 
 
 def test_the_export_writes_contains_with_the_role_definition(model, monkeypatch):
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: PortalItems())
     monkeypatch.setattr('MaRDMO.model.worker.annotate_formulas', lambda answers: None)
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = model, None

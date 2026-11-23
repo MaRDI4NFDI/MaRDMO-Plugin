@@ -2,7 +2,14 @@
 import pytest
 
 import MaRDMO.components.dropdowns as dropdowns
-from MaRDMO.optionsets import NO_WIKIDATA, NOISE_FILTERED, PROVIDERS, WIKIDATA_NOISE, WIKIDATA_ROOTS, Search
+from MaRDMO.core.searches import (
+    NO_WIKIDATA,
+    NOISE_FILTERED,
+    PROVIDERS,
+    WIKIDATA_NOISE,
+    WIKIDATA_ROOTS,
+    Search,
+)
 
 WIKIDATA_ROWS = [key for key, search in PROVIDERS.items()
                  if not search.by_identifier and 'wikidata' in (search.search_sources or ['wikidata'])]

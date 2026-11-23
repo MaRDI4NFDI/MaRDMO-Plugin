@@ -1,10 +1,11 @@
 '''IDs of the user's own items: one export item per name and description.'''
 import pytest
 
-from MaRDMO.ids import unique_items
-from MaRDMO.relations import collect_items_without_section
-from MaRDMO.values import extract_parts
-from MaRDMO.ids import is_item_id, is_own_item, is_portal_item, item_key
+from MaRDMO.export.items import unique_items
+from MaRDMO.export.relations import collect_items_without_section
+from MaRDMO.core.values import extract_parts
+from MaRDMO.core.ids import is_item_id, is_own_item, is_portal_item
+from MaRDMO.export.items import item_key
 
 
 def language(identifier):

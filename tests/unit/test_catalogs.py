@@ -1,4 +1,4 @@
-'''MaRDMO's catalogs (MaRDMO.catalogs, #138, #198): each declared by its package, complete, and what it names exists.
+'''MaRDMO's catalogs (MaRDMO.core.catalogs, #138, #198): each declared by its package, complete, and what it names exists.
 
 A new catalog is a package with its declaration (``catalog.py``) and the rows
 of the tables keyed by catalog; these tests name what is missing.
@@ -9,12 +9,12 @@ from pathlib import Path
 import pytest
 from django.template.loader import get_template
 
-from MaRDMO.checks.base import ChecksBase
-from MaRDMO.catalogs import CATALOG_PACKAGES, SEARCH, catalog_of, catalogs, documenting, registrations
-from MaRDMO.constants import BASE_URI
+from MaRDMO.export.checks import ChecksBase
+from MaRDMO.core.catalogs import CATALOG_PACKAGES, SEARCH, catalog_of, catalogs, documenting, registrations
+from MaRDMO.core.constants import BASE_URI
 from MaRDMO.model.catalog import CATALOG_MODEL_BASICS_NAME, CATALOG_MODEL_NAME
-from MaRDMO.getters import get_questions
-from MaRDMO.publication.constants import routing
+from MaRDMO.core.config import get_questions
+from MaRDMO.components.publication.constants import routing
 from tests.conftest import questionnaire  # noqa: F401
 
 DC = '{http://purl.org/dc/elements/1.1/}uri'

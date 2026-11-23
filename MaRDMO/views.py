@@ -15,7 +15,7 @@ Provides:
 Success page (``show_success``)
 --------------------------------
 After a successful portal export the success page presents two views of the
-exported data (built by :mod:`MaRDMO.success`), switchable via tab buttons:
+exported data (built by :mod:`MaRDMO.export.success`), switchable via tab buttons:
 
 **List view** — every newly created MaRDI Portal item, grouped by class, with
 all its statements shown as ``property → value`` lines.  Values that are
@@ -44,18 +44,18 @@ from rdmo.core.plugins import get_plugin
 from rdmo.projects.models import Project
 
 from . import VERSION
-from .getters import get_item_url
+from .core.config import get_item_url
 from .main import MaRDMOExportProvider
-from .success import CLASS_ORDER, group_by_class, result_graph, split_statements
-from .store import (
+from .export.success import CLASS_ORDER, group_by_class, result_graph, split_statements
+from .export.store import (
     _progress_store,
     clear_progress,
     _unregister_job_for_session,
     _job_belongs_to_session,
 )
-from .duplicates import preview_duplicates, reuse, same_duplicate
-from .catalogs import catalog_of
-from .tex_check import check_formula
+from .export.duplicates import preview_duplicates, reuse, same_duplicate
+from .core.catalogs import catalog_of
+from .components.tex_check import check_formula
 
 
 @login_required
@@ -188,7 +188,7 @@ def reuse_portal_item(request, project_id):
     The preview's "Use this item" posts ``format`` (the export's key),
     ``item`` (the item's ID) and ``qid`` (the portal item).  Nothing of the
     request is trusted: the duplicate is looked up again and must allow the
-    reuse (:func:`~MaRDMO.duplicates.decide`).  The user needs RDMO's
+    reuse (:func:`~MaRDMO.export.duplicates.decide`).  The user needs RDMO's
     permission to change the project's answers; Django checks the CSRF token.
 
     Returns:
@@ -235,7 +235,7 @@ def check_tex(request):
     The interview's script (``MaRDMO/js/math-preview.js``) posts ``tex``
     after a pause in typing.  The verdict comes from the portal's TeX check,
     as for the checks and the export, and with their cache
-    (:func:`~MaRDMO.tex_check.check_formula`).  Only for logged-in users and
+    (:func:`~MaRDMO.components.tex_check.check_formula`).  Only for logged-in users and
     with Django's CSRF token: the interview has both; the URL is not a way
     to the portal's checker for anyone else.
 

@@ -23,12 +23,14 @@ from typing import Optional
 
 from .constants import data_properties_per_class, qudt_reference_ids
 
-from ..getters import get_items, get_mathmoddb, get_options, get_properties, get_url
-from ..values import split_value
-from ..models import QueryBatch, Relatant, RelatantWithClass, RelatantWithQualifier
+from ..core.config import get_items, get_options, get_properties, get_url
+from ..core.properties import get_mathmoddb
+from ..core.values import split_value
+from ..core.models import QueryBatch, Relatant, RelatantWithClass, RelatantWithQualifier
 from ..sources.wikibase import get_entities
 
 logger = logging.getLogger(__name__)
+
 
 def _extract_qualifier_qid(claim, pid_sym_rep):
     '''Return the QID of the symbol-represents qualifier on a claim, or None.
@@ -188,6 +190,7 @@ def fetch_formula_data_wikidata(qids: list) -> dict:
         for qid, data in intermediate.items()
     }
 
+
 @dataclass
 class ResearchField(QueryBatch):
     '''Data Class For Research Field Item'''
@@ -242,6 +245,7 @@ class ResearchField(QueryBatch):
         return cls(
             **research_field
         )
+
 
 @dataclass
 class ResearchProblem(QueryBatch):
@@ -304,6 +308,7 @@ class ResearchProblem(QueryBatch):
         return cls(
             **research_problem
         )
+
 
 @dataclass  # pylint: disable=too-many-instance-attributes
 class MathematicalModel(QueryBatch):
@@ -562,6 +567,7 @@ class MathematicalModel(QueryBatch):
             **mathematical_model
         )
 
+
 @dataclass  # pylint: disable=too-many-instance-attributes
 class QuantityOrQuantityKind(QueryBatch):
     '''Data Class For Quantity [Kind] Item'''
@@ -699,6 +705,7 @@ class QuantityOrQuantityKind(QueryBatch):
             **quantity
         )
 
+
 @dataclass  # pylint: disable=too-many-instance-attributes
 class MathematicalFormulation(QueryBatch):
     '''Data Class For Formulation Item'''
@@ -731,7 +738,6 @@ class MathematicalFormulation(QueryBatch):
     is_weak_formulation_of: list[Relatant] = field(default_factory=list)
     similar_to: list[Relatant] = field(default_factory=list)
     publications: list[Relatant] = field(default_factory=list)
-
 
     @classmethod
     def from_query_single(cls, data: dict) -> 'MathematicalFormulation':
@@ -899,6 +905,7 @@ class MathematicalFormulation(QueryBatch):
         return cls(
             **mathematical_formulation
         )
+
 
 @dataclass  # pylint: disable=too-many-instance-attributes
 class Task(QueryBatch):

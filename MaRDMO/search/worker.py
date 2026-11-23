@@ -24,8 +24,8 @@ import re
 
 from dataclasses import dataclass
 
-from ..getters import get_item_url, get_items, get_properties, get_url
-from ..sources.http import query_sparql, sparql_string
+from ..core.config import get_item_url, get_items, get_properties, get_url
+from ..sources.sparql import query_sparql, sparql_string
 from .sparql import (
     QUERY_BASE_WORKFLOW_SEARCH,
     WF_RESEARCH_OBJ_SPARQL,
@@ -51,6 +51,7 @@ from .sparql import (
 )
 
 _QID_RE = re.compile(r'^Q\d+$')
+
 
 def _comment(text):
     '''Return *text* on a single line, for use in a SPARQL comment.'''

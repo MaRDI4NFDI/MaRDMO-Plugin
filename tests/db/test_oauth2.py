@@ -14,7 +14,7 @@ from urllib.parse import parse_qs, urlparse
 import pytest
 import requests
 
-from MaRDMO.store import _progress_store
+from MaRDMO.export.store import _progress_store
 from tests.db.conftest import portal, white  # noqa: F401 (white_2006, complete; its recorded portal)
 from tests.db.test_upload import Portal
 from tests.support.html import export_page, text
@@ -57,7 +57,7 @@ def threads(monkeypatch):
 
         def start(self):
             started.append((self.target, self.args))
-    monkeypatch.setattr('MaRDMO.oauth2.threading.Thread', Thread)
+    monkeypatch.setattr('MaRDMO.export.oauth2.threading.Thread', Thread)
     return started
 
 
@@ -88,11 +88,11 @@ def test_the_export_goes_through_the_portal_login_to_the_result(white, client, t
     fake = Portal()
     sent, post = [], fake.request
     fake.request = lambda method, url, **kwargs: sent.append(kwargs.get('headers')) or post(method, url, **kwargs)
-    monkeypatch.setattr('MaRDMO.upload.requests.Session', lambda: fake)
-    monkeypatch.setattr('MaRDMO.upload.time.sleep', lambda seconds: None)
+    monkeypatch.setattr('MaRDMO.export.upload.requests.Session', lambda: fake)
+    monkeypatch.setattr('MaRDMO.export.upload.time.sleep', lambda seconds: None)
     # The thread closes its own database connection at the end; run in the test's thread it
     # would close the test's (PostgreSQL and MariaDB refuse queries after that, SQLite reconnects)
-    monkeypatch.setattr('MaRDMO.upload.connection', SimpleNamespace(close=lambda: None))
+    monkeypatch.setattr('MaRDMO.export.upload.connection', SimpleNamespace(close=lambda: None))
     (target, args), = threads
     target(*args)
     # with the user's token

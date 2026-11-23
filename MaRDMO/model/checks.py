@@ -1,4 +1,4 @@
-'''The checks of the model catalogs (full and basics), on the shared :class:`~MaRDMO.checks.base.ChecksBase`.'''
+'''The checks of the model catalogs (full and basics), on the shared :class:`~MaRDMO.export.checks.ChecksBase`.'''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
 from .constants import (
@@ -6,12 +6,22 @@ from .constants import (
     SECTION_MAP as SECTION_MAP_MODEL,
 )
 from .catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
-from ..ids import is_own_item
-from ..checks.base import ChecksBase, without_page
-from ..patterns import QUDT_ID_STRICT_RE
-from ..tex_check import NOT_VERIFIED, UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
-from ..validators import (
-    ELEMENT_SYMBOL_MESSAGES, element_symbol_problems, formula_comment_problem, has_equivalence_sign,
+from ..core.ids import is_own_item
+from ..export.checks import ChecksBase, without_page
+from ..core.patterns import QUDT_ID_STRICT_RE
+from ..components.tex_check import (
+    NOT_VERIFIED,
+    UNAVAILABLE,
+    check_formulas,
+    collect_formulas,
+    environment_hint,
+    verdict,
+)
+from ..components.validators import (
+    ELEMENT_SYMBOL_MESSAGES,
+    element_symbol_problems,
+    formula_comment_problem,
+    has_equivalence_sign,
 )
 
 
@@ -464,7 +474,7 @@ class ModelChecks(ChecksBase):
             catalog: Active catalog URI suffix.
 
         Returns:
-            Sorted list of :class:`~MaRDMO.problems.Problem`, empty when
+            Sorted list of :class:`~MaRDMO.export.problems.Problem`, empty when
             all checks pass.
         '''
         self._tab_names(project, data)

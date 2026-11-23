@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from MaRDMO.optionsets import PROVIDERS
+from MaRDMO.core.searches import PROVIDERS
 from tests.db.test_synthetic_build import BUILDS
 from tools.synthetic.catalog import DOMAIN, OPTIONS, Catalog
 

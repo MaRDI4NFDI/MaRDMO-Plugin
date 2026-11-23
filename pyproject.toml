@@ -39,7 +39,7 @@ where = ["."]
 include = ["MaRDMO*"]
 
 [tool.setuptools.package-data]
-"MaRDMO" = ["templates/MaRDMO/*.html", "templates/MaRDMO/partials/*.html", "templates/projects/*.html", "data/*.json", "static/MaRDMO/css/*.css", "static/MaRDMO/images/*.png", "static/MaRDMO/js/**/*", "algorithm/data/*.json", "model/data/*.json", "publication/data/*.json", "search/data/*.json", "workflow/data/*.json", "model/queries/*.sparql", "model/queries/split/*.sparql", "algorithm/queries/*.sparql", "publication/queries/*.sparql", "workflow/queries/*.sparql", "queries/*.sparql", "locale/*/LC_MESSAGES/django.po", "locale/*/LC_MESSAGES/django.mo"]
+"MaRDMO" = ["templates/MaRDMO/*.html", "templates/MaRDMO/partials/*.html", "templates/projects/*.html", "data/*.json", "static/MaRDMO/css/*.css", "static/MaRDMO/images/*.png", "static/MaRDMO/js/**/*", "algorithm/data/*.json", "model/data/*.json", "components/publication/data/*.json", "search/data/*.json", "workflow/data/*.json", "model/queries/*.sparql", "model/queries/split/*.sparql", "algorithm/queries/*.sparql", "components/publication/queries/*.sparql", "workflow/queries/*.sparql", "components/fill/queries/*.sparql", "locale/*/LC_MESSAGES/django.po", "locale/*/LC_MESSAGES/django.mo"]
 
 [project.optional-dependencies]
 # pip install -e ".[test]"; the tests and CI use these
@@ -88,6 +88,10 @@ fail_under = 89
 extend-exclude = ["dev-tests"]
 
 [tool.ruff.lint]
-# Errors only (pyflakes, syntax); style rules can be added later
-select = ["F", "E9"]
+# Errors (pyflakes, syntax) and the blank lines between definitions (PEP 8).
+# The blank-line rules are still preview rules of ruff: preview is on for
+# them only (explicit-preview-rules)
+select = ["F", "E9", "E301", "E302", "E303", "E304", "E305", "E306"]
+preview = true
+explicit-preview-rules = true
 

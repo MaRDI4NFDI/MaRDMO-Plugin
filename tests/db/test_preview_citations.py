@@ -10,12 +10,12 @@ citations of the sources are given.
 '''
 import pytest
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_options
-from MaRDMO.writes import value_editor
-from MaRDMO.publication import worker
-from MaRDMO.publication.models import Publication
-from MaRDMO.publication.worker import PublicationRetriever
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.config import get_options
+from MaRDMO.project.writes import value_editor
+from MaRDMO.components.publication import worker
+from MaRDMO.components.publication.models import Publication
+from MaRDMO.components.publication.worker import PublicationRetriever
 
 OWN = 'user:6f1c2a3e-0000-4000-8000-000000000000'
 SEG1D = Publication(id='wikidata:Q106245557', label='seg1d', description='scientific article published in 2020',

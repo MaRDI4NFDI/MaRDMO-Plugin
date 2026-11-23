@@ -29,7 +29,7 @@ from rdmo.options.models import Option
 from rdmo.projects.models import Value
 from rdmo.projects.signals import value_created, value_updated
 
-from MaRDMO.ids import DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND
+from MaRDMO.core.ids import DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND
 from MaRDMO.router import PRESAVE_VALIDATOR_MAP
 
 from .catalog import DOMAIN, OPTIONS, Catalog

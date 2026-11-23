@@ -8,8 +8,8 @@ hardware goes with algorithms.  The portal's answers are given here.
 '''
 import pytest
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.models import Relatant, Software
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.models import Relatant, Software
 from MaRDMO.sources.portal import PortalItems
 from MaRDMO.workflow.models import ProcessStep, ProcessStepUsage
 from tests.db.conftest import answer, save
@@ -21,7 +21,7 @@ TRAITLETS = Relatant('wikidata:Q107380679', 'traitlets', 'Python library')
 @pytest.fixture(autouse=True)
 def no_twins(monkeypatch):
     '''The portal has no twins of the Wikidata items (#166, see test_portal_twins).'''
-    monkeypatch.setattr('MaRDMO.handler_base.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.components.fill.base.find_portal_items', lambda **kwargs: PortalItems())
 
 
 def given(monkeypatch, module, data):
@@ -53,7 +53,7 @@ def selected(project, catalog, section, item):
 
 def test_a_dependency_gets_its_page(project, monkeypatch):
     from MaRDMO.algorithm.handlers import Information
-    given(monkeypatch, 'MaRDMO.handler_base', {MATPLOTLIB_INLINE[0]: Software(depends_on_software=[TRAITLETS]),
+    given(monkeypatch, 'MaRDMO.components.fill.base', {MATPLOTLIB_INLINE[0]: Software(depends_on_software=[TRAITLETS]),
                                                TRAITLETS.id: Software()})
     documentation, item = selected(project, 'mardmo-algorithm-catalog', 'software', MATPLOTLIB_INLINE)
     Information()._fill_software_batch(documentation, [item], catalog='mardmo-algorithm-catalog')

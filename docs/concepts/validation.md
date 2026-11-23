@@ -10,10 +10,10 @@ entered values in three places, which all use the same rules:
 | **Documentation checks** | Preview and export, before anything is posted | The preview lists the problems and marks them in red on their pages; the export stops with a list of errors.  On pages of MaRDI Portal items, what is missing and invalid values the portal item has already are blue hints that do not stop the export |
 | **Final export check** | Preview and export, after the payload is built | The same, listed under *Export*; only for the values the export writes |
 
-The rules live in one place — `validators.py`, with the regular expressions in
+The rules live in one place — `components/validators.py`, with the regular expressions in
 `patterns.py` — so that pre-save validation and the checks always agree.  The
 preview's red marks are the problems of the checks themselves
-(`MaRDMO.problems.attach` and the template tags `marks` and `remaining_marks`
+(`MaRDMO.export.problems.attach` and the template tags `marks` and `remaining_marks`
 in `templatetags/mardmo_tags.py`): a template shows a problem where it shows
 the field it belongs to, and the end of each page the rest, so the preview
 marks exactly what the checks report.

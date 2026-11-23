@@ -1,7 +1,7 @@
-'''The data of the export result page (MaRDMO.success, #138): links, grouping and the graph.'''
+'''The data of the export result page (MaRDMO.export.success, #138): links, grouping and the graph.'''
 import pytest
 
-from MaRDMO.success import group_by_class, object_url, result_graph, split_statements
+from MaRDMO.export.success import group_by_class, object_url, result_graph, split_statements
 
 
 @pytest.mark.parametrize('prop, obj, obj_qid, url', [

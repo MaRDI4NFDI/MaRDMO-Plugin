@@ -12,8 +12,8 @@ from types import SimpleNamespace
 import pytest
 from rest_framework.exceptions import ValidationError
 
-from MaRDMO import validators
-from MaRDMO.getters import get_options
+from MaRDMO.components import validators
+from MaRDMO.core.config import get_options
 
 OPTIONS = get_options()
 

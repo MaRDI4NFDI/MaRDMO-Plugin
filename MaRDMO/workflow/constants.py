@@ -11,10 +11,11 @@ Provides:
 - Module-level constants built from the above
 '''
 
-from ..constants import BASE_URI
+from ..core.constants import BASE_URI
 from django.utils.translation import gettext_noop as N_
-from ..getters import get_mathmoddb, get_properties, get_questions
-from ..publication.constants import get_publication_relations
+from ..core.properties import get_mathmoddb
+from ..core.config import get_properties, get_questions
+from ..components.publication.constants import get_publication_relations
 
 SECTION_MAP = {
     'workflow':    N_('Interdisciplinary Workflow'),
@@ -25,6 +26,7 @@ SECTION_MAP = {
     'dataset':     N_('Data Set'),
     'publication': N_('Publication'),
 }
+
 
 # URI PREFIX Map
 def get_uri_prefix_map():

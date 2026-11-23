@@ -13,18 +13,17 @@ from functools import partial
 from .constants import PROPS
 from .models import Benchmark, Problem
 
-from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, twin_fields, use_portal_twins
-from ..constants import BASE_URI
-from ..getters import (
-    get_mathalgodb,
-    get_questions,
+from ..components.fill.base import (
+    BaseInformation,
+    _RelatantSpec,
+    _fetch_by_source,
+    twin_fields,
+    use_portal_twins,
 )
-from ..adders import (
-    add_basics,
-    add_references,
-    add_relations_flexible,
-    add_relations_static,
-)
+from ..core.constants import BASE_URI
+from ..core.properties import get_mathalgodb
+from ..core.config import get_questions
+from ..components.fill.adders import add_basics, add_references, add_relations_flexible, add_relations_static
 
 logger = logging.getLogger(__name__)
 

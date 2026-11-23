@@ -1,11 +1,11 @@
-'''The checks of the workflow catalog, on the shared :class:`~MaRDMO.checks.base.ChecksBase`.'''
+'''The checks of the workflow catalog, on the shared :class:`~MaRDMO.export.checks.ChecksBase`.'''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
 from .constants import SECTION_MAP
 from .catalog import CATALOG_WORKFLOW
-from ..getters import get_options
-from ..checks.base import ChecksBase, SOFTWARE_REFERENCE_CHECKS, without_page
-from ..validators import archive_year_problem, count_problem, doi_problem, size_problem
+from ..core.config import get_options
+from ..export.checks import ChecksBase, SOFTWARE_REFERENCE_CHECKS, without_page
+from ..components.validators import archive_year_problem, count_problem, doi_problem, size_problem
 
 
 class WorkflowChecks(ChecksBase):
@@ -361,7 +361,7 @@ class WorkflowChecks(ChecksBase):
             data:    Top-level answers dict.
 
         Returns:
-            Sorted list of :class:`~MaRDMO.problems.Problem`, empty when
+            Sorted list of :class:`~MaRDMO.export.problems.Problem`, empty when
             all checks pass.
         '''
         self._tab_names(project, data)

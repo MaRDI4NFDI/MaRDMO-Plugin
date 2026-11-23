@@ -4,7 +4,7 @@ import logging
 import pytest
 
 import MaRDMO.sources.wikidata as wikidata_api
-from MaRDMO.constants import WIKIDATA
+from MaRDMO.core.constants import WIKIDATA
 
 
 class Endpoints:
@@ -13,7 +13,7 @@ class Endpoints:
     def __init__(self, monkeypatch, qlever=(), wikidata=()):
         self.answers = {WIKIDATA['qlever']: qlever, WIKIDATA['sparql']: wikidata}
         self.calls = []
-        monkeypatch.setattr(wikidata_api.http, 'query_sparql', self)
+        monkeypatch.setattr(wikidata_api.sparql, 'query_sparql', self)
 
     def __call__(self, query, endpoint, strict=False, waits=(), deadline=None):
         self.calls.append((endpoint, query, deadline))

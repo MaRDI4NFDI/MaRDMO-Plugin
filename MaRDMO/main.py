@@ -23,25 +23,25 @@ from django.utils.translation import gettext_lazy as _
 
 from rdmo.projects.exports import Export
 
-from .catalogs import SEARCH, catalog_of
-from .duplicates import preview_duplicates
+from .core.catalogs import SEARCH, catalog_of
+from .export.duplicates import preview_duplicates
 from . import VERSION
-from .getters import catalog_questions, get_item_url, get_options, get_questions, get_url
+from .core.config import catalog_questions, get_item_url, get_options, get_questions, get_url
 from .project.answers import get_answers, process_question_dict
-from .ordering import topological_order
-from .pages import describe_items_without_page, distinguish_publications, link_to_pages
-from .writes import batched_writes
-from .oauth2 import OauthProviderMixin
-from .pages import add_tab_names, interview_urls
-from .problems import attach as attach_problems, report_lines
-from . import pipeline
+from .export.ordering import topological_order
+from .project.pages import describe_items_without_page, distinguish_publications, link_to_pages
+from .project.writes import batched_writes
+from .export.oauth2 import OauthProviderMixin
+from .project.pages import add_tab_names, interview_urls
+from .export.problems import attach as attach_problems, report_lines
+from .export import pipeline
 
 from .search.worker import search
-from .publication.worker import PublicationRetriever
+from .components.publication.worker import PublicationRetriever
 
 
 def _documenting(project):
-    '''The :class:`~MaRDMO.catalogs.Catalog` of *project* if it documents items, else ``None``.'''
+    '''The :class:`~MaRDMO.core.catalogs.Catalog` of *project* if it documents items, else ``None``.'''
     catalog = catalog_of(project)
     return catalog if catalog and catalog.documents else None
 
@@ -55,10 +55,10 @@ def render_preview(self, template, answers, option, submit_label, duplicates=Non
         template:   Template name (relative path) to include in the preview.
         answers:    Prepared answers dict passed to the template context.
         option:     Option string controlling template behaviour (passed to context).
-        duplicates: :class:`~MaRDMO.duplicates.Report` of the items that are on
+        duplicates: :class:`~MaRDMO.export.duplicates.Report` of the items that are on
                     the MaRDI Portal already; shown at the top, and while it has
                     rows the export button is disabled (#141).
-        gate:       :class:`~MaRDMO.pipeline.Gate` of the checks; while it is
+        gate:       :class:`~MaRDMO.export.pipeline.Gate` of the checks; while it is
                     not clear the export button is disabled (#152).
 
     Returns:
@@ -96,7 +96,7 @@ class BaseMaRDMOExportProvider(OauthProviderMixin, Export, ABC):
     '''Base export provider wiring MaRDMO to the MaRDI Portal OAuth2 flow.
 
     Provides the concrete MaRDI Portal URLs and credentials needed by
-    :class:`~MaRDMO.oauth2.OauthProviderMixin`.  Subclasses implement
+    :class:`~MaRDMO.export.oauth2.OauthProviderMixin`.  Subclasses implement
     the catalog-specific :meth:`render` and :meth:`submit_*` methods.
     '''
     @property
@@ -151,6 +151,7 @@ class BaseMaRDMOExportProvider(OauthProviderMixin, Export, ABC):
             'grant_type': 'authorization_code',
             'code': request.GET.get('code')
         }
+
 
 # The export page names what the export finds; the preview offered the export,
 # so it found nothing then (#152)
@@ -260,14 +261,14 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
     def _submit_catalog(self, catalog):
         '''Check the documentation once more and submit it for any supported catalog.
 
-        Runs what the preview ran (:func:`~MaRDMO.pipeline.run`): the
+        Runs what the preview ran (:func:`~MaRDMO.export.pipeline.run`): the
         preview offers the export only when it found nothing, so whatever is
         found now changed since the preview (in the documentation or on the
-        MaRDI Portal).  Then delegates to :meth:`~.oauth2.OauthProviderMixin.post`
+        MaRDI Portal).  Then delegates to :meth:`~MaRDMO.export.oauth2.OauthProviderMixin.post`
         for the authenticated upload.
 
         Args:
-            catalog: The project's :class:`~MaRDMO.catalogs.Catalog`.
+            catalog: The project's :class:`~MaRDMO.core.catalogs.Catalog`.
 
         Returns:
             HTTP response — either an error page or a redirect to the OAuth

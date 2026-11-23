@@ -11,7 +11,7 @@ ID answer:
 
 The ID dropdown of a page offers **new item** to add an own item (its option
 ID is `not found`).  Before the answer is saved, MaRDMO replaces it by a new
-`user:` ID (`MaRDMO.ids.assign_id`, called
+`user:` ID (`MaRDMO.project.identity.assign_id`, called
 by the pre-save router), whoever saves it: the interview, a project import or
 MaRDMO itself.  The interview shows what the server returns, so the field has
 the real ID at once.  An answer that has a `user:` ID already keeps it:
@@ -43,7 +43,7 @@ dropdown showed.
   programming languages, CPU models, methods and instruments, and in the
   workflow catalog research fields and algorithmic tasks.  Preview, checks
   and export give it the generic description of its kind
-  (`MaRDMO.pages.describe_items_without_page`; not stored in the project):
+  (`MaRDMO.project.pages.describe_items_without_page`; not stored in the project):
 
     | Item | Description |
     |---|---|
@@ -58,24 +58,24 @@ dropdown showed.
     on the MaRDI Portal if it is there already (the user then selects it).
 
 Preview, checks and export find the page of a relation by its ID and use the
-page's name and description (`MaRDMO.pages.link_to_pages`), so a page
+page's name and description (`MaRDMO.project.pages.link_to_pages`), so a page
 renamed later is shown and exported with its new name.  A relation to an own
 item whose page is not there is reported ("Selected … not found in …
 Section"), as are two own pages of a section with the same name and
 description (the export would make one item of them).
 
 Preview and checks name a page by its tab, the name it has in the interview
-(`MaRDMO.pages.add_tab_names`): the preview heads each page with its tab and
+(`MaRDMO.project.pages.add_tab_names`): the preview heads each page with its tab and
 the name of its item ("F4: Navier-Stokes equation") and shows a relation as
 the name of its page's item, linked to the page, with the tab in brackets
-("Navier-Stokes equation (F4)", a `MaRDMO.pages.PageRef`).  A renamed or
+("Navier-Stokes equation (F4)", a `MaRDMO.project.pages.PageRef`).  A renamed or
 deleted tab changes nothing else; the tabs MaRDMO creates are called by
 their section and number ("F4").  Two tabs may have the same name.
 
 ## When the name or description of a page changes
 
 Saving the name or short description of a page in the interview gives every
-answer that refers to its item the new text (`MaRDMO.ids.sync_text`):
+answer that refers to its item the new text (`MaRDMO.project.identity.sync_text`):
 "Label (Description)", "Label" without description, as the dropdowns
 show it.  The source is not part of a text: the dropdowns show it as a grey
 tag (**[mardi]**, **[wikidata]**, **[project]**, **[new]**), the preview by
@@ -96,7 +96,7 @@ and description anyway.
 
 A tab is the item (#186): when the interview saves another item for a tab,
 every answer that referred to its previous item refers to the new one
-(`MaRDMO.ids.follow_tab`), whatever the switch: an own item found on the MaRDI
+(`MaRDMO.project.identity.follow_tab`), whatever the switch: an own item found on the MaRDI
 Portal or Wikidata, a Wikidata item and its portal twin, a correction, or a
 portal item made the template of a new item.  The answers get the new ID, and
 for a portal or Wikidata item the text of the option chosen; a new item keeps
@@ -142,7 +142,7 @@ the data of the previous one.
 
 Deleting the tab of an item removes every answer in the project that refers
 to it, matched by the exact ID: relations, assumptions, publication
-relations, for own and portal items alike (`MaRDMO.ids.remove_references`).
+relations, for own and portal items alike (`MaRDMO.project.identity.remove_references`).
 A relation row (relation type, targets and assumptions of one block) whose
 last target is removed loses its relation type and assumptions too; a row
 with other targets keeps them.
@@ -168,7 +168,7 @@ opened again.
 "Copy tab" (and taking over a tab from another project) copies a tab with
 its ID: RDMO writes the copy with `bulk_create`, without signals.  At the end
 of the copy request (the router remembers its path,
-`MaRDMO.ids.give_copies_their_ids`) every tab of a section with the `user:`
+`MaRDMO.project.identity.give_copies_their_ids`) every tab of a section with the `user:`
 ID of an earlier tab gets a new one: a copy of an own item is a new item,
 and the links stay with the original (the first tab; RDMO numbers a copy
 after the last tab).  The interview shows the copy's old ID until the page
@@ -188,14 +188,14 @@ The user's own items with the same name and description are one item: the
 same new programming language on two software pages is created once.  The
 export item keeps the `user:` IDs it stands for (`user_ids`, not sent to the
 portal); afterwards every answer with one of them gets the new `mardi:` ID
-and the text "Label (Description)" (`MaRDMO.ids.replace_ids`).
+and the text "Label (Description)" (`MaRDMO.export.items.replace_ids`).
 Answers with the ID of an exported Wikidata item get its new `mardi:` ID too.
 
 ## Using a portal item instead
 
 An item the export would create may exist on the MaRDI Portal already (the
 same label and description, or for a Wikidata item the same Wikidata QID).
-The preview lists these; **Use this item** (`MaRDMO.duplicates.reuse`) makes
+The preview lists these; **Use this item** (`MaRDMO.export.duplicates.reuse`) makes
 the item the portal item: every answer with one of its IDs (all `user:` IDs
 the export would merge, or its `wikidata:` ID) gets `mardi:<QID>` and the
 text "Label (Description)" of the portal item, and its page the portal item's
@@ -208,7 +208,7 @@ language) change only in the answers that refer to them.
 The preview writes the authors and the journal of a publication from its
 citation each time again (background answers, no questions).  An author or
 journal that is neither on the MaRDI Portal nor on Wikidata gets a `user:`
-ID derived from its first identifier (`MaRDMO.ids.part_id`: ORCID iD,
+ID derived from its first identifier (`MaRDMO.core.ids.part_id`: ORCID iD,
 zbMATH author ID, Wikidata QID or name; ISSN, Wikidata QID or title), so it
 has the same ID in every preview and in every publication.  The export
 knows from where it is (author or journal of a publication) what to create:

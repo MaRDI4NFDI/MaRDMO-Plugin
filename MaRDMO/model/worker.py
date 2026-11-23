@@ -19,15 +19,17 @@ from .constants import (
     get_relations,
 )
 from .utils import map_entity_quantity
-from ..markers import DEPENDENT_PROPERTIES, INDEPENDENT_PROPERTIES, get_data_properties
+from ..core.markers import DEPENDENT_PROPERTIES, INDEPENDENT_PROPERTIES, get_data_properties
 
-from ..getters import get_items, get_mathmoddb, get_properties, get_publication_mapping, get_url
-from ..ids import unique_items
-from ..relations import map_entity, resolve_relations
-from ..payload import GeneratePayload
+from ..core.config import get_items, get_properties, get_url
+from ..core.properties import get_mathmoddb, get_publication_mapping
+from ..export.items import unique_items
+from ..export.relations import map_entity, resolve_relations
+from ..export.payload import GeneratePayload
 
 from ..export.worker import CatalogExport
-from ..tex_check import annotate_formulas
+from ..components.tex_check import annotate_formulas
+
 
 class PrepareModel(CatalogExport):
     '''Prepare Mathematical Model answers for preview rendering and MaRDI Portal export.
@@ -123,7 +125,7 @@ class PrepareModel(CatalogExport):
     def export(self, data, url):
         '''Assemble and return the complete Wikibase payload for a Model documentation export.
 
-        Creates a :class:`~MaRDMO.payload.GeneratePayload` instance, processes
+        Creates a :class:`~MaRDMO.export.payload.GeneratePayload` instance, processes
         all unique items, then delegates each entity section (fields, problems,
         models, formulations, quantities, tasks, publications) to dedicated
         helper methods.
@@ -134,7 +136,7 @@ class PrepareModel(CatalogExport):
 
         Returns:
             Tuple ``(payload_dict, dependency_order)`` ready for
-            :meth:`~MaRDMO.oauth2.OauthProviderMixin.post`.
+            :meth:`~MaRDMO.export.oauth2.OauthProviderMixin.post`.
         '''
 
         items, dependency = unique_items(data)

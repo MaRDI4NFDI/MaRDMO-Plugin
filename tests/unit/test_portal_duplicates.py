@@ -2,20 +2,20 @@
 import pytest
 
 import MaRDMO.sources.portal as portal_api
-from MaRDMO.duplicates import Duplicate, decide, item_source, look_up
-from MaRDMO.getters import get_items, get_properties
-from MaRDMO.markers import SECTION_MARKERS, allowed, contradictions
-from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
-from MaRDMO.portal_errors import DuplicateOnPortal, handle_policy_violation
+from MaRDMO.export.duplicates import Duplicate, decide, item_source, look_up
+from MaRDMO.core.config import get_items, get_properties
+from MaRDMO.core.markers import SECTION_MARKERS, allowed, contradictions
+from MaRDMO.export.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
+from MaRDMO.export.portal_errors import DuplicateOnPortal, handle_policy_violation
 from MaRDMO.export.worker import CatalogExport
 from MaRDMO.sources.portal import PortalItems, find_portal_items
-from MaRDMO.upload import Upload
+from MaRDMO.export.upload import Upload
 
 ITEMS = get_items()
 
 
 def payload_of(items, found, monkeypatch):
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: found)
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: found)
     payload = GeneratePayload(
         url='https://portal.example.org', user_items=items,
         wikibase={'items': ITEMS, 'properties': get_properties(), 'relations': {}},
@@ -217,7 +217,7 @@ def part(kind, identifier, name, description, **fields):
 def resolve(items, *answers, monkeypatch):
     """look_up with the portal answering *answers* one after the other (the second: rule 3)."""
     answers = iter(answers)
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: next(answers))
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: next(answers))
     found, duplicates = look_up([(item_source(item), item) for item in items], (), None)
     assert duplicates == []      # never shown to the user
     return found
@@ -272,7 +272,7 @@ def test_the_export_uses_creates_or_leaves_out_parts_as_decided(monkeypatch):
                                    ('C', 'scientific journal'): 'Q15'},
                          markers={'Q12': marks(), 'Q13': marks(), 'Q15': marks(classes=[ITEMS['human']])}),
              PortalItems()]
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: found.pop(0))
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: found.pop(0))
     payload = GeneratePayload(url='https://portal.example.org', dependency={},
                               user_items={'Item1': used, 'Item2': named, 'Item3': left},
                               wikibase={'items': ITEMS, 'properties': get_properties(), 'relations': {}})
@@ -336,7 +336,7 @@ def test_the_message_says_what_to_do():
 
 def test_the_job_stores_the_message(monkeypatch):
     stored = {}
-    monkeypatch.setattr('MaRDMO.upload._progress_store', stored)
+    monkeypatch.setattr('MaRDMO.export.upload._progress_store', stored)
     jsons = {'Item1': {'id': '', 'label': 'mass', 'description': 'physical quantity',
                        'payload': {'item': {'labels': {'en': 'mass'}}}, 'statements': []}}
     Upload('job', {}).finish(None, None, jsons, jsons, DuplicateOnPortal('mass', 'physical quantity', 'Q77'), 0, 1)
@@ -346,8 +346,8 @@ def test_the_job_stores_the_message(monkeypatch):
 def test_a_failed_finish_still_stores_a_message(monkeypatch):
     """If writing the result fails, the progress page still gets text, not the exception."""
     stored = {}
-    monkeypatch.setattr('MaRDMO.upload._progress_store', stored)
-    monkeypatch.setattr('MaRDMO.upload.connection', type('Connection', (), {'close': staticmethod(lambda: None)}))
+    monkeypatch.setattr('MaRDMO.export.upload._progress_store', stored)
+    monkeypatch.setattr('MaRDMO.export.upload.connection', type('Connection', (), {'close': staticmethod(lambda: None)}))
     upload = Upload('job', {})
 
     def refuse(key, jsons):

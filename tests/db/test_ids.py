@@ -5,9 +5,10 @@ from rdmo.projects.models import Membership
 
 from MaRDMO import main
 from MaRDMO.model.checks import ModelChecks
-from MaRDMO.checks.base import OLD_PROJECT
-from MaRDMO.constants import BASE_URI
-from MaRDMO.ids import id_attributes, is_user_id
+from MaRDMO.export.checks import OLD_PROJECT
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.project.identity import id_attributes
+from MaRDMO.core.ids import is_user_id
 from tests.db.conftest import answer, save
 
 # Pages with an ID question, and items entered on a page without one of their own

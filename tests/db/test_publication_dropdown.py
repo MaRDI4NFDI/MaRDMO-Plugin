@@ -13,7 +13,7 @@ import pytest
 from rdmo.options.models import OptionSet
 from rdmo.projects.models import Membership
 
-from MaRDMO.ids import publication_doi
+from MaRDMO.core.ids import publication_doi
 from MaRDMO.components.dropdowns import option_help
 
 DIJKSTRA = '10.1007/BF01386390'           # on the portal (Q78129) and on Wikidata (Q21694527)

@@ -24,6 +24,7 @@ nav:
   - Using MaRDMO:
       - Documenting Items: usage/items.md
   - Concepts:
+      - Architecture: concepts/architecture.md
       - Dynamic Providers: concepts/providers.md
       - Handlers: concepts/handlers.md
       - Publications: concepts/publication.md
@@ -50,19 +51,23 @@ nav:
           - Translate MaRDMO: how-to/mardmo/translate.md
           - Make a Release: how-to/mardmo/release.md
   - Reference:
-      - Core:
-          - Entry Points: reference/mardmo.md
-          - Checks: reference/checks.md
-          - Payload: reference/payload.md
-          - Data Access: reference/data.md
-          - Utilities: reference/utilities.md
-          - Question Configuration: reference/questions.md
-      - Submodules:
+      - Entry Points: reference/mardmo.md
+      - Catalogs:
           - Model: reference/model.md
           - Algorithm: reference/algorithm.md
           - Workflow: reference/workflow.md
-          - Publication: reference/publication.md
           - Search: reference/search.md
+      - Export:
+          - Export: reference/export.md
+          - Checks: reference/checks.md
+          - Payload: reference/payload.md
+      - Components:
+          - Components: reference/components.md
+          - Publication: reference/publication.md
+      - Project: reference/project.md
+      - Sources: reference/sources.md
+      - Core: reference/core.md
+      - Question Configuration: reference/questions.md
 
 markdown_extensions:
   # docs/index.md includes the installation sections of the README

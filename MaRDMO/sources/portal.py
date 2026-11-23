@@ -15,10 +15,11 @@ from dataclasses import dataclass, field
 import requests
 from django.core.cache import cache
 
-from ..constants import TEX_CHECK_URL
-from ..getters import get_properties, get_url
-from ..ids import item_text
-from .http import SEARCH_RETRY_WAIT, SEARCH_TIMEOUT, query_sparql, request_with_retry, search_deadline
+from ..core.constants import TEX_CHECK_URL
+from ..core.config import get_properties, get_url
+from ..core.ids import item_text
+from .http import SEARCH_RETRY_WAIT, SEARCH_TIMEOUT, request_with_retry, search_deadline
+from .sparql import query_sparql
 from .wikibase import USER_AGENT, TWIN_TIMEOUT, claim_values, entities_of, entity_classes, get_entities
 
 logger = logging.getLogger(__name__)
@@ -117,6 +118,7 @@ def find_portal_items(pairs=(), wikidata_qids=(), marker_qids=(), waits=(), dead
                           for label, description in chunk)
         sparql = (f'SELECT ?item ?label ?description WHERE {{ VALUES (?label ?description) {{ {values} }} '
                   f'?item rdfs:label ?label ; schema:description ?description . }}')
+
         def parse(rows):
             matches = {}
             for row in rows:
@@ -129,6 +131,7 @@ def find_portal_items(pairs=(), wikidata_qids=(), marker_qids=(), waits=(), dead
         values = ' '.join(json.dumps(qid) for qid in chunk)
         sparql = (f'SELECT ?item ?wikidata WHERE {{ VALUES ?wikidata {{ {values} }} '
                   f'?item wdt:{properties["Wikidata QID"]} ?wikidata . }}')
+
         def parse(rows):
             matches = {}
             for row in rows:
@@ -427,9 +430,9 @@ def _portal_options(qids, raise_errors=False, exclude=None):
 
 
 def tex_check_answer(tex, timeout):
-    '''The answer of the MaRDI Portal's TeX check (texvc, :data:`~MaRDMO.constants.TEX_CHECK_URL`) for *tex*.
+    '''The answer of the MaRDI Portal's TeX check (texvc, :data:`~MaRDMO.core.constants.TEX_CHECK_URL`) for *tex*.
 
-    The verdict is :mod:`MaRDMO.tex_check`'s.
+    The verdict is :mod:`MaRDMO.components.tex_check`'s.
 
     Raises:
         requests.exceptions.RequestException: If the check could not be asked.

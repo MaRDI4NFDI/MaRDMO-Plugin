@@ -2,8 +2,8 @@
 from types import SimpleNamespace
 
 from MaRDMO.model.handlers import add_properties
-from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_mathmoddb
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.properties import get_mathmoddb
 from tests.db.conftest import answer, save
 
 URI = f'{BASE_URI}domain/quantity/properties'

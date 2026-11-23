@@ -6,12 +6,12 @@ authors and journals, algorithms and software (algorithm and workflow
 catalogs) and the plain items (:data:`PLAIN_ITEMS`).  The catalogs' workers
 (``model/worker.py`` etc.) subclass it.
 '''
-from ..constants import SOFTWARE_REFERENCES
-from ..getters import get_items, get_options, get_properties
-from ..ids import is_user_id
-from ..markers import MARKER_PROPERTIES, SECTION_MARKERS, allowed
-from ..properties import find_reference
-from ..values import date_precision
+from ..core.constants import SOFTWARE_REFERENCES
+from ..core.config import get_items, get_options, get_properties
+from ..core.ids import is_user_id
+from ..core.markers import MARKER_PROPERTIES, SECTION_MARKERS, allowed
+from ..core.properties import find_reference
+from ..core.values import date_precision
 
 
 # Items entered on a page without a page of their own, exported with their class
@@ -49,7 +49,7 @@ class CatalogExport:
         '''Export the plain items of *data* under *keys*, in this order: their class and markers.
 
         Args:
-            payload: :class:`~MaRDMO.payload.GeneratePayload` instance.
+            payload: :class:`~MaRDMO.export.payload.GeneratePayload` instance.
             data:    Top-level answers dict.
             keys:    Keys of :data:`PLAIN_ITEMS` (e.g. ``'programminglanguage'``,
                      collected from the software pages).
@@ -74,7 +74,7 @@ class CatalogExport:
         software via implemented-by.
 
         Args:
-            payload:     :class:`~MaRDMO.payload.GeneratePayload` instance.
+            payload:     :class:`~MaRDMO.export.payload.GeneratePayload` instance.
             algorithms:  The ``algorithm`` section of the answers.
             intra_class: Also export the algorithm-to-algorithm relations
                          (the algorithm catalog has them, the workflow catalog not).
@@ -122,7 +122,7 @@ class CatalogExport:
         references.
 
         Args:
-            payload:            :class:`~MaRDMO.payload.GeneratePayload` instance.
+            payload:            :class:`~MaRDMO.export.payload.GeneratePayload` instance.
             softwares:          The ``software`` section of the answers.
             algo_software_keys: The software implementing an algorithm
                                 (:meth:`_implementing_software`).
@@ -169,13 +169,13 @@ class CatalogExport:
         '''Add the markers of *section* to the current subject, and optionally its long description.
 
         The markers (class, community, profile type) are those of
-        :data:`~MaRDMO.markers.SECTION_MARKERS` for the worker's catalog.  A new
+        :data:`~MaRDMO.core.markers.SECTION_MARKERS` for the worker's catalog.  A new
         item gets all; an existing portal item only those it lacks and that do
-        not contradict its own (:func:`~MaRDMO.markers.allowed`, #141); if its
+        not contradict its own (:func:`~MaRDMO.core.markers.allowed`, #141); if its
         markers could not be looked up, none.
 
         Args:
-            payload:          :class:`~MaRDMO.payload.GeneratePayload` instance.
+            payload:          :class:`~MaRDMO.export.payload.GeneratePayload` instance.
             section:          Key of the section in ``SECTION_MARKERS[catalog]``.
             description_long: When ``True``, add a ``description`` statement from the item's
                               ``descriptionLong`` field.
@@ -256,10 +256,10 @@ class CatalogExport:
         '''Add one statement per reference answer (DOI, IDs, URLs) of the current subject.
 
         Args:
-            payload:    :class:`~MaRDMO.payload.GeneratePayload` instance.
+            payload:    :class:`~MaRDMO.export.payload.GeneratePayload` instance.
             references: Reference answers ``{collection_index: [option_uri, text]}``.
             mapping:    Tuples ``(option key, portal property, datatype)``, e.g.
-                        :data:`~MaRDMO.constants.SOFTWARE_REFERENCES`.
+                        :data:`~MaRDMO.core.constants.SOFTWARE_REFERENCES`.
         '''
         options = get_options()
         for option_key, prop, datatype in mapping:
@@ -276,7 +276,7 @@ class CatalogExport:
         '''Whether the author or journal *entry* gets its statements here.
 
         New ones get all of theirs in the payload (#118); those MaRDMO left out
-        (:func:`~MaRDMO.duplicates._resolve_parts`) none.  Portal items get
+        (:func:`~MaRDMO.export.duplicates._resolve_parts`) none.  Portal items get
         theirs here, also a new one the export found on the portal.
         '''
         if not entry.get("ID"):
@@ -290,7 +290,7 @@ class CatalogExport:
         '''Add journal item entries (instance-of + ISSN) for all publications.
 
         Args:
-            payload:      :class:`~MaRDMO.payload.GeneratePayload` instance.
+            payload:      :class:`~MaRDMO.export.payload.GeneratePayload` instance.
             publications: Dict of publication answer dicts keyed by index.
         '''
         for publication in publications.values():
@@ -313,7 +313,7 @@ class CatalogExport:
         '''Add author item entries (instance-of, profile type, ORCID, zbMATH) for all publications.
 
         Args:
-            payload:      :class:`~MaRDMO.payload.GeneratePayload` instance.
+            payload:      :class:`~MaRDMO.export.payload.GeneratePayload` instance.
             publications: Dict of publication answer dicts keyed by index.
         '''
         for publication in publications.values():
@@ -348,7 +348,7 @@ class CatalogExport:
         '''Add publication item entries and their relatant links to the payload.
 
         Args:
-            payload:      :class:`~MaRDMO.payload.GeneratePayload` instance.
+            payload:      :class:`~MaRDMO.export.payload.GeneratePayload` instance.
             publications: Dict of publication answer dicts.
             relations:    List of ``(relation_key, relatant_key)`` pairs that
                           link each publication to its parent entity.

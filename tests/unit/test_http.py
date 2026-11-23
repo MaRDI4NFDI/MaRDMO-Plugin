@@ -1,4 +1,4 @@
-'''MaRDMO's requests to external services (MaRDMO.sources.http, #198): where they fail.
+'''MaRDMO's requests to external services (MaRDMO.sources.http, .sparql, #198): where they fail.
 
 A failed SPARQL query is "no rows" (``[]``), or with *strict* "did not
 answer" (``None``), whatever went wrong; a split query fills no item half;
@@ -9,7 +9,8 @@ import pytest
 import requests
 
 import MaRDMO.sources.http as http
-from MaRDMO.sources.http import query_sparql, query_sparql_parts, request_with_retry
+from MaRDMO.sources.sparql import query_sparql, query_sparql_parts
+from MaRDMO.sources.http import request_with_retry
 
 ENDPOINT = 'https://sparql.example.org/query'
 

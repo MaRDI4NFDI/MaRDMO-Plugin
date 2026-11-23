@@ -5,7 +5,7 @@ as raw TeX with MathJax's message instead of MathJax's red error box.
 '''
 from playwright.sync_api import expect
 
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from tests.browser.conftest import screenshot
 from tests.db.conftest import portal, white  # noqa: F401 (white_2006, complete; its recorded portal)
 from tests.support.html import PREVIEW_URL

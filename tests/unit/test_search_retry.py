@@ -6,7 +6,7 @@ import MaRDMO.components.dropdowns as dropdowns
 import MaRDMO.sources.wikibase as wikibase
 import MaRDMO.sources.portal as portal_api
 import MaRDMO.sources.http as http
-from MaRDMO.getters import get_items, get_url
+from MaRDMO.core.config import get_items, get_url
 from MaRDMO.components.dropdowns import option_help
 
 SEARCH = {'query': {'search': [{'title': 'Item:Q1'}]}}

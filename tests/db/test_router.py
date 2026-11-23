@@ -3,7 +3,7 @@ import pytest
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership
 
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from tests.db.conftest import answer, save
 
 

@@ -1,10 +1,10 @@
 '''Publication metadata: matching authors and journals, cleaning fetched text.'''
 import pytest
 
-from MaRDMO.ids import is_user_id, part_id
-from MaRDMO.publication.models import Author, Journal, Publication
-from MaRDMO.publication.utils import _identifiers, match_portal_items
-from MaRDMO.publication.worker import _single_line
+from MaRDMO.core.ids import is_user_id, part_id
+from MaRDMO.components.publication.models import Author, Journal, Publication
+from MaRDMO.components.publication.utils import _identifiers, match_portal_items
+from MaRDMO.components.publication.worker import _single_line
 
 
 def author(id=None, label='A. Author', orcid=None, zbmath=None, wikidata=None):
@@ -175,7 +175,7 @@ def test_preprints_are_scholarly_articles(crossref_type, entrytype):
 # --- export: new authors and journals are known by where they are (#118)
 
 def test_authors_and_journals_of_publications_have_their_kind():
-    from MaRDMO.ids import unique_items
+    from MaRDMO.export.items import unique_items
     data = {'publication': {0: {'ID': 'user:p', 'Name': 'Paper', 'Description': 'article',
                                 'author': {0: {'ID': 'user:a', 'Name': 'A. Author', 'Description': 'scientist'}},
                                 'journal': {0: {'ID': 'user:j', 'Name': 'Journal', 'Description': 'journal'}}}}}
@@ -185,7 +185,7 @@ def test_authors_and_journals_of_publications_have_their_kind():
 
 
 def test_placeholders_of_before_0_8_0_are_reported():
-    from MaRDMO.checks.base import has_old_id
+    from MaRDMO.export.checks import has_old_id
     assert has_old_id({'ID': 'user:p', 'author': {0: {'ID': 'no author found'}}})
     assert has_old_id({'ID': 'user:p', 'journal': {0: {'ID': 'no journal found'}}})
     assert not has_old_id({'ID': 'user:p', 'author': {0: {'ID': part_id('author', 'A. Author')}}})

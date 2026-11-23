@@ -5,9 +5,9 @@ from rdmo.projects.models import Membership
 
 from MaRDMO.model.checks import ModelChecks
 from MaRDMO.workflow.checks import WorkflowChecks
-from MaRDMO.checks.base import OLD_PROJECT
-from MaRDMO.constants import BASE_URI
-from MaRDMO.ids import is_user_id
+from MaRDMO.export.checks import OLD_PROJECT
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.ids import is_user_id
 from MaRDMO.providers import MaRDMOProvider
 from MaRDMO.components.dropdowns import option_help
 import MaRDMO.components.dropdowns as dropdowns
@@ -142,7 +142,7 @@ def check_messages(project):
 
 def test_relations_show_the_current_name_of_their_page():
     '''Name and description come from the page with the relation's ID, not from the text it was saved with.'''
-    from MaRDMO.pages import link_to_pages
+    from MaRDMO.project.pages import link_to_pages
     answers = {'problem': {0: {'ID': 'user:1', 'Name': 'reaction rate', 'Description': 'rate of a reaction'}},
                'model': {0: {'ID': 'user:m', 'Name': 'a model', 'Description': 'a model',
                              'RPRelatant': {0: {'ID': 'user:1', 'Name': 'old name', 'Description': ''}}}}}

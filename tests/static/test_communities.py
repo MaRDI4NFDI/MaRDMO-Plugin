@@ -8,7 +8,7 @@ algorithm ("implementing software").
 '''
 import pytest
 
-from MaRDMO.markers import PUBLICATION_MARKERS, SECTION_MARKERS
+from MaRDMO.core.markers import PUBLICATION_MARKERS, SECTION_MARKERS
 
 
 def test_every_model_item_belongs_to_mathmoddb():

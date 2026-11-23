@@ -13,13 +13,13 @@ the portal and Wikidata are given here.
 '''
 import pytest
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_items
-from MaRDMO.handler_base import portal_twins, twin_fields, use_portal_twins
-from MaRDMO.markers import SECTION_MARKERS
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.config import get_items
+from MaRDMO.components.fill.base import portal_twins, twin_fields, use_portal_twins
+from MaRDMO.core.markers import SECTION_MARKERS
 from MaRDMO.model import models
 from MaRDMO.model.handlers import TWINS, Information
-from MaRDMO.models import Algorithm, Relatant, Software
+from MaRDMO.core.models import Algorithm, Relatant, Software
 from MaRDMO.sources.portal import PortalItems
 from MaRDMO.workflow.handlers import _model_uses
 from MaRDMO.workflow.models import ProcessStep, ProcessStepUsage
@@ -45,8 +45,8 @@ def portal(monkeypatch):
         asked.append(sorted(wikidata_qids))
         return PortalItems(by_wikidata={'Q29996': 'Q1', 'Q25428': 'Q2', 'Q25358': None},
                            markers={'Q1': QUANTITY, 'Q2': SOFTWARE})
-    monkeypatch.setattr('MaRDMO.handler_base.find_portal_items', find)
-    monkeypatch.setattr('MaRDMO.handler_base.portal_labels',
+    monkeypatch.setattr('MaRDMO.components.fill.base.find_portal_items', find)
+    monkeypatch.setattr('MaRDMO.components.fill.base.portal_labels',
                         lambda qids, **kwargs: {'Q1': ('electric current', 'rate of flow of electric charge')})
     return asked
 
@@ -58,7 +58,7 @@ def test_only_fitting_twins_replace_wikidata_items(portal):
 
 
 def test_a_failed_lookup_keeps_the_wikidata_items(monkeypatch):
-    monkeypatch.setattr('MaRDMO.handler_base.find_portal_items', lambda **kwargs: PortalItems(wikidata_failed=True))
+    monkeypatch.setattr('MaRDMO.components.fill.base.find_portal_items', lambda **kwargs: PortalItems(wikidata_failed=True))
     data = models.MathematicalFormulation(contains_quantity=[CURRENT, RESISTANCE])
     use_portal_twins([data], twin_fields('model', TWINS['formulation']))
     assert data.contains_quantity == [CURRENT, RESISTANCE]
@@ -130,8 +130,8 @@ def twins(monkeypatch):
         asked.append(sorted(wikidata_qids))
         return PortalItems(by_wikidata={qid: portal[qid][0] if qid in portal else None for qid in wikidata_qids},
                            markers={twin: markers for twin, markers, _ in portal.values()})
-    monkeypatch.setattr('MaRDMO.handler_base.find_portal_items', find)
-    monkeypatch.setattr('MaRDMO.handler_base.portal_labels', lambda qids, **kwargs: {
+    monkeypatch.setattr('MaRDMO.components.fill.base.find_portal_items', find)
+    monkeypatch.setattr('MaRDMO.components.fill.base.portal_labels', lambda qids, **kwargs: {
         twin: label for twin, _, label in portal.values() if twin in qids})
     return asked
 
@@ -144,7 +144,7 @@ def filled(monkeypatch):
     def fetch(items, mardi_query, wikidata_query, entity):
         calls.append((entity.__name__, sorted(external_id for _, external_id, _ in items)))
         return {external_id: found.get(external_id, entity()) for _, external_id, _ in items}
-    for module in ('MaRDMO.handler_base', 'MaRDMO.workflow.handlers'):
+    for module in ('MaRDMO.components.fill.base', 'MaRDMO.workflow.handlers'):
         monkeypatch.setattr(f'{module}._fetch_by_source', fetch)
     return found, calls
 

@@ -13,7 +13,7 @@ from rdmo.questions.models import Page
 
 import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO import router
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from tests.browser.conftest import screenshot
 from tests.db.conftest import answer, save
 

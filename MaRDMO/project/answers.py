@@ -1,16 +1,16 @@
 '''The answers of a project, read from the RDMO database.
 
 :func:`get_answers` reads the values of one question into the answers dict
-(where they go: :func:`~MaRDMO.rules.route`), :func:`process_question_dict`
+(where they go: :func:`~MaRDMO.project.rules.route`), :func:`process_question_dict`
 does so for every question of a catalog, and :func:`get_id` reads fields of
 the values of one attribute.
 '''
 from rdmo.domain.models import Attribute
 
-from ..constants import BASE_URI
-from ..rules import route
-from ..values import nested_set
-from ..writes import get_attribute
+from ..core.constants import BASE_URI
+from .rules import route
+from ..core.values import nested_set
+from .writes import get_attribute
 
 
 def get_id(project, uri, keys):
@@ -48,13 +48,14 @@ def get_id(project, uri, keys):
             identifiers.append(identifier)
     return identifiers
 
+
 def get_answers(project, val, config):
     '''Read questionnaire values for one attribute and merge them into *val*.
 
     Iterates over all :class:`~rdmo.projects.models.Value` objects for the
     attribute described by *config*, determines the appropriate path in *val*
-    with :func:`~.rules.route`, and calls
-    :func:`~.values.nested_set` to write the entry.
+    with :func:`~MaRDMO.project.rules.route`, and calls
+    :func:`~MaRDMO.core.values.nested_set` to write the entry.
 
     Args:
         project: RDMO project instance.

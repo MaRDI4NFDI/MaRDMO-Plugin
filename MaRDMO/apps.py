@@ -8,6 +8,7 @@ during the ``ready()`` phase and registers the signal router.
 from django.apps import AppConfig
 from django.conf import settings
 
+
 class MaRDMOConfig(AppConfig):
     '''MaRDMO Configuration'''
 
@@ -39,16 +40,16 @@ class MaRDMOConfig(AppConfig):
         lookups throughout the plugin.
         '''
 
-        from .catalogs import registrations
-        from .getters import get_data
+        from .core.catalogs import registrations
+        from .core.config import get_data
 
         # The publication's questions belong to every catalog; the others are the catalogs' own
-        self.questions = {'publication': get_data('publication/data/questions.json')}
+        self.questions = {'publication': get_data('components/publication/data/questions.json')}
         for registration in registrations():
             self.questions.update({key: get_data(path) for key, path in registration.questions.items()})
         self.mathmoddb          = get_data('model/data/mapping.json')
         self.mathalgodb         = get_data('algorithm/data/mapping.json')
-        self.publication_mapping = get_data('publication/data/mapping.json')
+        self.publication_mapping = get_data('components/publication/data/mapping.json')
         self.options = get_data('data/options.json')
         self.items = get_data(settings.MARDMO_PROVIDER['mardi']['items'])
         self.properties = get_data(settings.MARDMO_PROVIDER['mardi']['properties'])

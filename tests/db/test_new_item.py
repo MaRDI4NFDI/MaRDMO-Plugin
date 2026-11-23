@@ -4,10 +4,10 @@ from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership
 
 import MaRDMO.components.dropdowns as dropdowns
-from MaRDMO.adders import add_entities
-from MaRDMO.constants import BASE_URI
-from MaRDMO.ids import is_user_id
-from MaRDMO.models import Relatant
+from MaRDMO.components.fill.adders import add_entities
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.ids import is_user_id
+from MaRDMO.core.models import Relatant
 from tests.db.conftest import answer, save
 
 
@@ -57,7 +57,7 @@ def test_a_portal_page_switched_to_new_item_keeps_name_and_description(interview
 def test_an_own_publication_queries_no_citation(interview, monkeypatch):
     def query(*args):
         raise AssertionError('citation queried')
-    monkeypatch.setattr('MaRDMO.publication.handlers._query_citations', query)
+    monkeypatch.setattr('MaRDMO.components.publication.handlers._query_citations', query)
     model, edit = interview()
     save(model, answer('publication', 'P1', set_index=0),
          answer('publication/id', 'A paper (scientific article) [mardi]', external_id='mardi:Q1', set_index=0))

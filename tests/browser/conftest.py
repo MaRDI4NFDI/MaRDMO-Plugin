@@ -19,7 +19,7 @@ from django.test import Client
 from django.core.servers.basehttp import ThreadedWSGIServer
 from django.test.testcases import LiveServerThread
 
-from MaRDMO.store import SESSION_JOBS_KEY
+from MaRDMO.export.store import SESSION_JOBS_KEY
 
 # The test database with the questionnaire, and the helpers to fill projects
 from tests.db.conftest import django_db_setup, project  # noqa: F401
@@ -34,7 +34,6 @@ def screenshot(target, name, full_page=False):
         os.makedirs(SCREENSHOTS, exist_ok=True)
         options = {'full_page': True} if full_page else {}
         target.screenshot(path=os.path.join(SCREENSHOTS, f'{name}.png'), **options)
-
 
 
 # Without Playwright the test modules cannot even be imported (the tests run

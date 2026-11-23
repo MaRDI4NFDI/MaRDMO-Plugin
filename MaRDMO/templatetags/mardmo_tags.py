@@ -19,7 +19,7 @@ Provides:
 - ``remaining_marks``       — tag: the problems and hints of a page no ``marks`` showed
 
 The red marks of the preview are the problems of the checks
-(:func:`~MaRDMO.problems.attach`), the blue ones their hints: what a MaRDI
+(:func:`~MaRDMO.export.problems.attach`), the blue ones their hints: what a MaRDI
 Portal item could have (#167).  A template shows them with ``marks`` where
 it shows the field, and ``remaining_marks`` at the end of each page shows
 the rest, so every problem and hint is on its page and nothing else is
@@ -31,12 +31,12 @@ from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, gettext_noop as N_, ngettext
 
-from ..getters import get_options
-from ..properties import find_reference
-from ..ids import DOI_PREFIX, is_own_item
-from ..pages import PageRef
-from ..validators import formula_comment_problem
-from ..tex_check import FAILED, NOT_VERIFIED, failure_hint
+from ..core.config import get_options
+from ..core.properties import find_reference
+from ..core.ids import DOI_PREFIX, is_own_item
+from ..project.pages import PageRef
+from ..components.validators import formula_comment_problem
+from ..components.tex_check import FAILED, NOT_VERIFIED, failure_hint
 
 register = template.Library()
 
@@ -115,7 +115,7 @@ def remaining_marks(page):
 
 @register.filter
 def own_item(identifier):
-    '''Return ``True`` if *identifier* is an item of the user's own (``user:`` ID, see :func:`~MaRDMO.ids.is_own_item`).
+    '''Return ``True`` if *identifier* is an item of the user's own (``user:`` ID, see :func:`~MaRDMO.core.ids.is_own_item`).
 
     Usage: ``{% if values.ID|own_item %}``.
     '''
@@ -145,8 +145,8 @@ def formula(tex, verdict=None):
 
     Args:
         tex:     TeX string.
-        verdict: Result of :func:`~MaRDMO.tex_check.check_formulas` for *tex*:
-                 ``None`` (valid), one of :data:`~MaRDMO.tex_check.NOT_VERIFIED`
+        verdict: Result of :func:`~MaRDMO.components.tex_check.check_formulas` for *tex*:
+                 ``None`` (valid), one of :data:`~MaRDMO.components.tex_check.NOT_VERIFIED`
                  (no verdict), or the checker's message.
 
     Invalid formulas are not handed to MathJax (an unbalanced brace would
@@ -155,10 +155,10 @@ def formula(tex, verdict=None):
     so the browser can show them as raw TeX if MathJax cannot render them.
     Formulas that could not be checked get a note: the portal did not answer,
     or its checker failed on the formula, which is exported unchecked (with
-    the likely cause and how to avoid it, :func:`~MaRDMO.tex_check.failure_hint`);
+    the likely cause and how to avoid it, :func:`~MaRDMO.components.tex_check.failure_hint`);
     multi-line formulas with a
     ``%`` comment are shown as raw TeX (see
-    :func:`~MaRDMO.validators.formula_comment_problem`).
+    :func:`~MaRDMO.components.validators.formula_comment_problem`).
     '''
     if formula_comment_problem(tex):
         return format_html('<code class="mardmo-tex">{}</code>', tex)

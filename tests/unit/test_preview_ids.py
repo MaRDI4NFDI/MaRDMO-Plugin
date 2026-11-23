@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 
 from MaRDMO.model.checks import ModelChecks
 from MaRDMO.model.catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
-from MaRDMO.problems import attach
+from MaRDMO.export.problems import attach
 from tests.support.html import text
 
 OWN = 'user:6f1c2a3e-0000-4000-8000-000000000000'
@@ -73,7 +73,7 @@ def test_own_page_with_the_name_and_description_of_an_earlier_one_is_marked():
 # --- New publications, selected by their DOI (#158) ----------------------------------------------
 
 def new_publication(doi, **answers):
-    from MaRDMO.getters import get_options  # noqa: PLC0415
+    from MaRDMO.core.config import get_options  # noqa: PLC0415
     return {'ID': OWN, 'reference': {0: [get_options()['DOI'], doi]}, **answers}
 
 
@@ -109,7 +109,7 @@ def test_an_invalid_doi_is_marked_at_the_id():
 
 def same_named(*pages):
     '''Publication pages ``{index: answers}`` named "Introduction" (scientific article), with *pages* ``(ID, DOI)``.'''
-    from MaRDMO.pages import distinguish_publications, link_to_pages# noqa: PLC0415
+    from MaRDMO.project.pages import distinguish_publications, link_to_pages# noqa: PLC0415
     answers = {'publication': {index: new_publication(doi, ID=identifier, Name='Introduction',
                                                       Description='scientific article') if doi else
                                {'ID': identifier, 'Name': 'Introduction', 'Description': 'scientific article'}
@@ -126,7 +126,7 @@ def test_other_publications_with_the_same_name_get_their_doi_in_the_description(
         'scientific article', 'scientific article (DOI 10.1000/b)', 'scientific article (Wikidata QID Q1)']
     # Relations follow their page; the export makes three items of them
     assert answers['model'][0]['RelationP'][0]['Description'] == 'scientific article (DOI 10.1000/b)'
-    from MaRDMO.ids import unique_items# noqa: PLC0415
+    from MaRDMO.export.items import unique_items# noqa: PLC0415
     items, _ = unique_items({'publication': answers['publication']})
     assert len(items) == 3
 

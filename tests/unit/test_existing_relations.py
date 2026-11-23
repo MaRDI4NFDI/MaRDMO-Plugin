@@ -5,7 +5,7 @@ is made.  Every data type MaRDMO writes is decided once found and once new.
 '''
 import pytest
 
-from MaRDMO.payload import GeneratePayload, PortalUnavailable
+from MaRDMO.export.payload import GeneratePayload, PortalUnavailable
 
 API = 'https://portal.example.org/w/api.php'
 PROP, QUAL = 'P1', 'P2'

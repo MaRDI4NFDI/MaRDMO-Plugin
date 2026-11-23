@@ -1,8 +1,8 @@
 '''What the export sends (Upload.post_data) and lists afterwards (collect_statements).'''
 import pytest
 
-import MaRDMO.upload as upload
-from MaRDMO.upload import Upload, collect_statements
+import MaRDMO.export.upload as upload
+from MaRDMO.export.upload import Upload, collect_statements
 
 URL = 'https://portal.example.org/w/rest.php/wikibase/v1/entities/items/Q1/statements'
 ASSUMES = {'property': {'id': 'P20', 'data_type': 'wikibase-item'}, 'value': {'type': 'value', 'content': 'Q30'}}

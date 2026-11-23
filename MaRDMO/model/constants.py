@@ -14,9 +14,10 @@ Provides:
 
 from django.utils.translation import gettext_noop as N_
 
-from ..constants import BASE_URI, SECTION_MAP_BASE
-from ..getters import get_items, get_mathmoddb, get_properties, get_questions
-from ..publication.constants import get_publication_relations
+from ..core.constants import BASE_URI, SECTION_MAP_BASE
+from ..core.config import get_items, get_properties, get_questions
+from ..core.properties import get_mathmoddb
+from ..components.publication.constants import get_publication_relations
 
 # Data Properties Check
 data_properties_check = [
@@ -212,6 +213,7 @@ relatant_uris = {
     ("QuantityKind", "Quantity"): "QKQRelatant",
 }
 
+
 # Relations
 def get_relations():
     '''Build the relation mapping for the Model Documentation.
@@ -360,6 +362,7 @@ def get_relations():
         ]
     }
     return relations
+
 
 # Parameter for Entity relations
 preview_relations = [
@@ -517,6 +520,7 @@ preview_map_quantity = [
     ('formulation'),
     ('quantity'),
 ]
+
 
 # URI PREFIX Map (I)
 def get_uri_prefix_map():

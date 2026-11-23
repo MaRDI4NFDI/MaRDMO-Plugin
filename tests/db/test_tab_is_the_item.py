@@ -10,8 +10,8 @@ import pytest
 from rdmo.projects.models import Membership
 
 from MaRDMO import router
-from MaRDMO.constants import BASE_URI
-from MaRDMO.ids import is_user_id
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.ids import is_user_id
 from tests.db.conftest import answer, save
 
 API = '/api/v1/projects/projects/{}/values/'

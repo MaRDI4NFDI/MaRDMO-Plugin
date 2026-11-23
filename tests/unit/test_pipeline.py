@@ -1,4 +1,4 @@
-'''MaRDMO.pipeline.run: what preview and export find before the export (#152).
+'''MaRDMO.export.pipeline.run: what preview and export find before the export (#152).
 
 The checks and the catalog's worker are stubs; what they raise decides.
 '''
@@ -6,10 +6,10 @@ from types import SimpleNamespace
 
 import pytest
 
-from MaRDMO import pipeline
-from MaRDMO.pages import PageRef
-from MaRDMO.payload import DocumentationProblem, PortalUnavailable
-from MaRDMO.problems import HEADER, Problem, report_lines
+from MaRDMO.export import pipeline
+from MaRDMO.project.pages import PageRef
+from MaRDMO.export.payload import DocumentationProblem, PortalUnavailable
+from MaRDMO.export.problems import HEADER, Problem, report_lines
 from MaRDMO.sources.http import EXPORT_CHECK_DEADLINE, EXPORT_RETRY_WAITS, check_deadline, check_waits
 
 F4 = PageRef('formulation', 3, 'Navier-Stokes equation', 'F4')

@@ -7,7 +7,7 @@ import collections
 
 import pytest
 
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from rdmo.options.models import OptionSet
 from rdmo.projects.models import Value
 from rdmo.projects.signals import value_updated

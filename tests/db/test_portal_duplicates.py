@@ -6,8 +6,8 @@ import pytest
 from django.test import Client
 from rdmo.projects.models import Membership
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_items
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.config import get_items
 from MaRDMO.sources.portal import PortalItems
 from tests.db.conftest import answer, save
 from tests.support.html import attribute, element, elements, export_button, links, preview_page, text
@@ -48,8 +48,8 @@ def model(project, client, django_user_model, monkeypatch):
 def portal(monkeypatch):
     '''The portal has what a test puts into it: ``portal(by_label=..., by_wikidata=..., markers=...)``.'''
     def use(**found):
-        monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems(**found))
-        monkeypatch.setattr('MaRDMO.duplicates.portal_labels',
+        monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: PortalItems(**found))
+        monkeypatch.setattr('MaRDMO.export.duplicates.portal_labels',
                             lambda qids, waits=(), deadline=None: {qid: ('ecology', 'branch of biology') for qid in qids})
     return use
 

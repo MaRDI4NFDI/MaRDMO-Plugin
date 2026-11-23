@@ -24,8 +24,9 @@ import requests
 from django.core.cache import cache
 from rdmo.domain.models import Attribute
 
-from ..constants import BASE_URI
-from ..getters import get_mathmoddb, get_properties, get_url
+from ..core.constants import BASE_URI
+from ..core.properties import get_mathmoddb
+from ..core.config import get_properties, get_url
 from ..sources.portal import portal_doi_forms, query_api_per_class, query_api_per_profile
 from ..sources.wikibase import (
     WIKIDATA_HITS,
@@ -41,11 +42,18 @@ from ..sources.http import (
     SEARCH_TIMEOUT,
     search_deadline,
 )
-from ..values import extract_parts
-from ..ids import (
-    DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, publication_doi,
+from ..core.values import extract_parts
+from ..core.ids import (
+    DOI_PREFIX,
+    NEW_DOI,
+    NEW_ITEM,
+    NOT_FOUND,
+    is_item_id,
+    is_user_id,
+    item_text,
+    publication_doi,
 )
-from ..validators import doi_problem
+from .validators import doi_problem
 
 logger = logging.getLogger(__name__)
 
@@ -268,6 +276,7 @@ def query_sources(search, item_class=None, sources=None, not_found=True, roots=N
 
     return options
 
+
 def query_sources_with_user_additions(search, project, setup):
     '''Fetch KG options, prepend matching user-defined entries, and optionally allow creation.
 
@@ -336,6 +345,7 @@ def query_sources_with_user_additions(search, project, setup):
             options.insert(0, {'id': NOT_FOUND, 'text': search, 'help': option_help(NOT_FOUND, search)})
 
     return options
+
 
 def query_user_entries(project, setup):
     '''Return the options of the items the user has already added to the questionnaire.

@@ -6,15 +6,15 @@ position of a page and its tab differ.
 import pytest
 
 from MaRDMO.model.checks import ModelChecks
-from MaRDMO.constants import BASE_URI
-from MaRDMO.pages import PageRef
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.project.pages import PageRef
 from tests.db.test_export import imported
 from tests.support.html import element, links, rendered_preview, text
 
 
 @pytest.fixture
 def white(project, portal, monkeypatch):
-    monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
+    monkeypatch.setattr('MaRDMO.components.tex_check.check_formulas', lambda formulas: {})
     monkeypatch.setattr('MaRDMO.model.checks.check_formulas', lambda formulas: {})
     portal('export_white_2006')
     return imported(project, 'white_2006')

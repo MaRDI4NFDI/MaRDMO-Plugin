@@ -25,9 +25,9 @@ from django.utils import translation
 from django.template.loader import render_to_string
 
 from MaRDMO import main
-from MaRDMO.catalogs import catalog_of
-from MaRDMO.constants import BASE_URI
-from MaRDMO.problems import attach
+from MaRDMO.core.catalogs import catalog_of
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.export.problems import attach
 from tests.db.conftest import select
 from tests.db.test_export import imported
 from tests.db.test_hydration import CASES
@@ -120,7 +120,7 @@ def mutations(documentation, questions):
 @pytest.mark.django_db
 @pytest.mark.parametrize('name, how, language', PROJECTS)
 def test_marks_are_the_problems_of_the_checks(name, how, language, project, portal, monkeypatch, questionnaire):
-    monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
+    monkeypatch.setattr('MaRDMO.components.tex_check.check_formulas', lambda formulas: {})
     monkeypatch.setattr('MaRDMO.model.checks.check_formulas', lambda formulas: {})
     if how == 'import':
         portal(f'export_{name}')

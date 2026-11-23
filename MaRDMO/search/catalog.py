@@ -1,5 +1,5 @@
 '''The search catalog, as MaRDMO knows it: it searches the MaRDI Portal, it documents nothing (#198).'''
-from ..catalogs import SEARCH, Catalog, Registration
+from ..core.catalogs import SEARCH, Catalog, Registration
 
 CATALOG_SEARCH_NAME = 'mardmo-search-catalog'
 

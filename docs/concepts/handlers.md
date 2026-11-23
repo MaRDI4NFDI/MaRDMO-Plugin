@@ -34,14 +34,14 @@ The sequence when a user picks a *Mathematical Model* from the portal:
 8. A `visited` set is passed through the entire call tree to prevent infinite loops when entities reference each other cyclically.
 
 **Wikidata chains (#166).**  Hydration ends at Wikidata relatants.  Each `_fill_*_batch`
-first calls `handler_base.use_portal_twins()` on the fetched data: every Wikidata relatant of a
+first calls `components.fill.base.use_portal_twins()` on the fetched data: every Wikidata relatant of a
 relation attribute whose twin on the MaRDI Portal (same Wikidata QID, P12) fits becomes the
 portal item, with the portal's label and description, both for relations with a page
 (dependencies, quantities, formulas, ...) and without one (programming languages, CPUs,
 research fields of process steps, the models and tasks of a workflow), so the preview shows
 no Wikidata duplicate of a portal item.  The attributes and the sections whose markers a twin
 must fit are the `TWINS` tables (`model.handlers`, `workflow.handlers`, `ALGORITHM_TWINS` and
-`SOFTWARE_TWINS` in `handler_base`; `twin_fields()` turns them into markers); qualifier entities
+`SOFTWARE_TWINS` in `components.fill.base`; `twin_fields()` turns them into markers); qualifier entities
 are addressed as `'uses_algorithm.qualifier'`.  A twin fits by the rule of the preview's "Use
 this item" (`markers.contradictions`): one with classes MaRDMO does not know (a plain Wikidata
 import, e.g. the Laplace operator Q7276420 of the heat equation) fits as well, as an unknown
@@ -66,7 +66,7 @@ its whole dependency tree.
 (`questions.json`) but has no quantities, academic disciplines and formula notation.  Its
 hydration uses the basics queries (`_sparql_file`) and fetches no formula data
 (`_fill_formulation_batch`), so a selected formula brings no notation and no quantity pages.
-The export reads only answers to the catalog's own questions (`getters.catalog_questions()`,
+The export reads only answers to the catalog's own questions (`core.config.catalog_questions()`,
 from the catalog's pages and questions; the citation data of publications is kept): answers
 an older MaRDMO wrote there neither block nor reach the portal.
 

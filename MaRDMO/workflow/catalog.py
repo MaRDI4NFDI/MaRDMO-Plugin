@@ -1,7 +1,7 @@
 '''The interdisciplinary workflow catalog, as MaRDMO knows it (#198).'''
-from ..catalogs import WORKFLOW, Catalog, Registration
-from ..constants import BASE_URI
-from ..validators import (
+from ..core.catalogs import WORKFLOW, Catalog, Registration
+from ..core.constants import BASE_URI
+from ..components.validators import (
     validate_archive_year,
     validate_count,
     validate_data_size,

@@ -1,76 +1,19 @@
 # Entry Points
 
-Where the export happens, from the answers to the portal:
+What Django and RDMO call; everything else of MaRDMO is below them (see
+[Architecture](../concepts/architecture.md)).
 
-| Step | Module |
-|---|---|
-| Read the answers, add pages and IDs | `main`, `project.answers`, `getters`, `pages`, `ids` |
-| Check and preview | `checks`, `pipeline`, `views` |
-| Build the payload | the catalog's `worker` on `export.worker`, `payload` (`bodies`, `claims`, `validation`) |
-| Authorize | `oauth2` |
-| Post it, report what went wrong | `upload`, `portal_errors` |
-| Write the new IDs back | `ids` (`replace_ids`), `writes` |
+## App
 
-Every request to an external service goes through `sources/`: `http` (one
-session, retries, time limits), `wikibase` (entities of the MaRDI Portal and
-Wikidata), `portal`, `wikidata` and `citations`.  The options of the dropdowns
-are `components.dropdowns`.
-
-Shared utilities (values, relations, ordering, properties) are listed under
-[Utilities](utilities.md).  The catalogs declare themselves (`catalog.py` of each catalog package, see
-[Catalogs](#catalogs-registry) and [How to add a catalog](../how-to/rdmo/add-catalog.md#in-mardmo)).
+::: MaRDMO.apps
 
 ## Main
 
 ::: MaRDMO.main
 
-## Catalogs (registry)
+## Views
 
-::: MaRDMO.catalogs
-
-## OAuth2
-
-::: MaRDMO.oauth2
-
-## Upload
-
-::: MaRDMO.upload
-
-## Export Base
-
-::: MaRDMO.export.worker
-
-## Portal Errors
-
-::: MaRDMO.portal_errors
-
-## Store
-
-::: MaRDMO.store
-
-## Providers
-
-::: MaRDMO.providers
-
-## Option Set Providers (table)
-
-::: MaRDMO.optionsets
-
-## Dropdown Options
-
-::: MaRDMO.components.dropdowns
-
-## Handlers
-
-::: MaRDMO.handlers
-
-## Handler Base
-
-::: MaRDMO.handler_base
-
-## Adders
-
-::: MaRDMO.adders
+::: MaRDMO.views
 
 ## Router
 
@@ -80,14 +23,14 @@ Shared utilities (values, relations, ordering, properties) are listed under
 
 ::: MaRDMO.builders
 
-## Validators
+## Providers
 
-::: MaRDMO.validators
+::: MaRDMO.providers
 
-## Views
+## Option Set Providers (setting)
 
-::: MaRDMO.views
+::: MaRDMO.optionsets
 
-## Result Page
+## Template Tags
 
-::: MaRDMO.success
+::: MaRDMO.templatetags.mardmo_tags

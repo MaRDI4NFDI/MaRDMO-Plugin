@@ -4,8 +4,8 @@ import re
 import pytest
 from rdmo.projects.models import Membership
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_items
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.config import get_items
 from MaRDMO.sources.portal import PortalItems
 from tests.browser.conftest import screenshot
 from tests.db.conftest import answer, save
@@ -25,7 +25,7 @@ def documentation(project, django_user_model, monkeypatch):
         # After the reuse the quantity is a portal item: no longer asked for
         return PortalItems(by_label={pair: qid for pair, qid in found.by_label.items() if pair in pairs},
                            markers=found.markers)
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', find)
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', find)
     model = project('mardmo-model-catalog')
     owner = django_user_model.objects.create_user('owner', password='owner')
     Membership.objects.create(project=model, user=owner, role='owner')
@@ -113,7 +113,7 @@ def test_use_portal_item_in_the_browser(documentation, page_as):
 
 def test_without_duplicates_the_export_button_is_back(documentation, page_as, monkeypatch):
     model, owner = documentation
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: PortalItems())
     page = page_as(owner)
     page.goto(f'/projects/{model.pk}/export/wikibase/')
     assert page.locator('#portal-duplicates').count() == 0

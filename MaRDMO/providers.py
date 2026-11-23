@@ -1,22 +1,22 @@
-'''RDMO option set provider of MaRDMO: one class, its searches in :mod:`MaRDMO.optionsets`.
+'''RDMO option set provider of MaRDMO: one class, its searches in :mod:`MaRDMO.core.searches`.
 
 :class:`MaRDMOProvider` looks up its search by the provider key RDMO gives
-it (see :mod:`MaRDMO.optionsets`).  Up to 0.6, every key had a class of its
+it (see :mod:`MaRDMO.core.searches`).  Up to 0.6, every key had a class of its
 own (``MaRDMO.model.providers.MathematicalModel`` and so on); settings that
 still list those must be replaced by :data:`MaRDMO.optionsets.OPTIONSET_PROVIDERS`.
 '''
 from rdmo.options.providers import Provider
 
-from .getters import get_items
+from .core.config import get_items
 
-from .optionsets import PROVIDERS
+from .core.searches import PROVIDERS
 from .components.dropdowns import (
     item_by_id, publication_options, query_sources, query_sources_with_user_additions, typed_item_id,
 )
 
 
 class MaRDMOProvider(Provider):
-    '''Searches the MaRDI Portal (and Wikidata) as its row in :data:`~MaRDMO.optionsets.PROVIDERS` says.'''
+    '''Searches the MaRDI Portal (and Wikidata) as its row in :data:`~MaRDMO.core.searches.PROVIDERS` says.'''
 
     search = True
 

@@ -6,8 +6,8 @@ do; "exists" is set as the existence check would.
 '''
 import pytest
 
-from MaRDMO.payload import GeneratePayload
-from MaRDMO.payload.claims import same_meaning
+from MaRDMO.export.payload import GeneratePayload
+from MaRDMO.export.payload.claims import same_meaning
 
 CONTAINS, USES, ROLE, SYMBOL, PLATFORM, ASSUMES = 'P1', 'P2', 'P10', 'P11', 'P12', 'P20'
 SUBJECT, OBJECT = 'Item0000000001', 'Item0000000002'
@@ -165,7 +165,6 @@ def test_claims_that_cannot_be_fetched_stop_the_export(payload, monkeypatch):
     relation(payload, (ASSUMES, 'Q30'))
     with pytest.raises(ValueError, match='Nothing was exported'):
         payload.merge_qualifiers('https://portal.example.org/w/api.php')
-
 
 
 # --- plain statements found by the existence check (it also finds statements with a qualifier)

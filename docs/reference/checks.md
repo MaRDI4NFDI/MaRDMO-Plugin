@@ -2,15 +2,15 @@
 
 ## Pipeline
 
-::: MaRDMO.pipeline
+::: MaRDMO.export.pipeline
 
 ## Problems
 
-::: MaRDMO.problems
+::: MaRDMO.export.problems
 
 ## Base
 
-::: MaRDMO.checks.base
+::: MaRDMO.export.checks
 
 ## Algorithm
 
@@ -23,11 +23,3 @@
 ## Workflow
 
 ::: MaRDMO.workflow.checks
-
-## TeX Check
-
-::: MaRDMO.tex_check
-
-## Patterns
-
-::: MaRDMO.patterns

@@ -9,12 +9,12 @@ from django.template.loader import render_to_string
 
 import MaRDMO.model.handlers as handlers
 from MaRDMO.model.checks import ModelChecks
-from MaRDMO.pages import PageRef
-from MaRDMO.problems import attach
-from MaRDMO.models import Relatant
+from MaRDMO.project.pages import PageRef
+from MaRDMO.export.problems import attach
+from MaRDMO.core.models import Relatant
 from MaRDMO.model.utils import map_entity_quantity
-from MaRDMO.payload import GeneratePayload
-from MaRDMO.validators import element_symbol_problems
+from MaRDMO.export.payload import GeneratePayload
+from MaRDMO.components.validators import element_symbol_problems
 
 VELOCITY = {'ID': 'mardi:Q10', 'Name': 'velocity', 'Description': 'speed in a direction'}
 PRESSURE = {'ID': 'mardi:Q11', 'Name': 'pressure', 'Description': 'force per area'}

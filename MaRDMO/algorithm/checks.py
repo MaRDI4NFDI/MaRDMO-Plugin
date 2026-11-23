@@ -1,9 +1,9 @@
-'''The checks of the algorithm catalog, on the shared :class:`~MaRDMO.checks.base.ChecksBase`.'''
+'''The checks of the algorithm catalog, on the shared :class:`~MaRDMO.export.checks.ChecksBase`.'''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
 from .constants import SECTION_MAP
 from .catalog import CATALOG_ALGORITHM
-from ..checks.base import ChecksBase, BENCHMARK_REFERENCE_CHECKS, SOFTWARE_REFERENCE_CHECKS
+from ..export.checks import ChecksBase, BENCHMARK_REFERENCE_CHECKS, SOFTWARE_REFERENCE_CHECKS
 
 
 class AlgorithmChecks(ChecksBase):
@@ -145,7 +145,7 @@ class AlgorithmChecks(ChecksBase):
             data:    Top-level answers dict.
 
         Returns:
-            Sorted list of :class:`~MaRDMO.problems.Problem`, empty when
+            Sorted list of :class:`~MaRDMO.export.problems.Problem`, empty when
             all checks pass.
         '''
         self._tab_names(project, data)

@@ -14,9 +14,10 @@ Provides:
 
 from django.utils.translation import gettext_noop as N_
 
-from ..constants import ALGORITHM_PROPS, BASE_URI, SECTION_MAP_BASE
-from ..getters import get_mathalgodb, get_properties, get_questions
-from ..publication.constants import get_publication_relations
+from ..core.constants import ALGORITHM_PROPS, BASE_URI, SECTION_MAP_BASE
+from ..core.properties import get_mathalgodb
+from ..core.config import get_properties, get_questions
+from ..components.publication.constants import get_publication_relations
 
 #Dictionary for internal / external section names
 SECTION_MAP = {**SECTION_MAP_BASE, 'problem': N_('Algorithmic Task')}
@@ -36,6 +37,7 @@ benchmark_reference_ids = [
     'DESCRIPTION_URL',
     'SOURCECODE_URL',
 ]
+
 
 # Relations
 def get_relations():
@@ -98,6 +100,7 @@ def get_relations():
     }
     return relations
 
+
 # URI PREFIX Map
 def get_uri_prefix_map():
     '''Build the attribute-URI → section config mapping for the Algorithm Documentation.
@@ -138,6 +141,7 @@ def get_uri_prefix_map():
         },
     }
     return uri_prefix_map
+
 
 # Parameter for Entity relations
 preview_relations = [

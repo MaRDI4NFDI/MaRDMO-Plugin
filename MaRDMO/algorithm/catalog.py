@@ -1,7 +1,7 @@
 '''The algorithm catalog, as MaRDMO knows it (#198).'''
-from ..catalogs import ALGORITHM, Catalog, Registration
-from ..constants import BASE_URI
-from ..validators import validate_reference, validate_short_description
+from ..core.catalogs import ALGORITHM, Catalog, Registration
+from ..core.constants import BASE_URI
+from ..components.validators import validate_reference, validate_short_description
 
 CATALOG_ALGORITHM_NAME = 'mardmo-algorithm-catalog'
 CATALOG_ALGORITHM = f'{BASE_URI}questions/{CATALOG_ALGORITHM_NAME}'

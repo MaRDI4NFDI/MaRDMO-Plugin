@@ -25,8 +25,8 @@ import requests
 
 from django.core.cache import cache
 
-from ..constants import WIKIDATA
-from . import http
+from ..core.constants import WIKIDATA
+from . import http, sparql
 from .wikibase import claim_values, entities_of
 
 logger = logging.getLogger(__name__)
@@ -97,11 +97,11 @@ def query_noise(qids, noise, wikidata=False):
 
 def _found(qids, build, deadline):
     '''The *qids* the query of *build* returns: QLever first, then Wikidata's endpoint; ``None`` if both fail.'''
-    rows = http.query_sparql(PREFIXES + build(qids, wikidata=False), WIKIDATA['qlever'], strict=True,
+    rows = sparql.query_sparql(PREFIXES + build(qids, wikidata=False), WIKIDATA['qlever'], strict=True,
                                 waits=(), deadline=time.monotonic() + QLEVER_TIMEOUT)
     if rows is None:
         logger.warning('Class check: QLever failed; asking Wikidata.')
-        rows = http.query_sparql(build(qids, wikidata=True), WIKIDATA['sparql'], strict=True, waits=(),
+        rows = sparql.query_sparql(build(qids, wikidata=True), WIKIDATA['sparql'], strict=True, waits=(),
                                     deadline=deadline)
     if rows is None:
         logger.warning('Class check: QLever and Wikidata failed; the hits are not filtered.')
@@ -124,7 +124,7 @@ def wikidata_matches(items, roots=None, noise=None, deadline=None):
         roots:    QIDs of the classes an item must be at or below.
         noise:    QIDs of the classes an item must not be an instance of.
         deadline: :func:`time.monotonic` value by which Wikidata's endpoint
-                  must answer (default: a search's, :func:`~.sources.http.search_deadline`).
+                  must answer (default: a search's, :func:`~MaRDMO.sources.http.search_deadline`).
 
     Returns:
         ``{QID: True/False}`` for every item; ``None`` if QLever and
