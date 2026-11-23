@@ -351,7 +351,7 @@ def item_text(name, description):
 
     ``"Label (Description)"``, ``"Label"`` without description.  The source
     is not part of it (#103): the dropdowns show it in the option's help
-    (:func:`~MaRDMO.queries.option_help`), the preview by the ID.
+    (:func:`~MaRDMO.components.dropdowns.option_help`), the preview by the ID.
     '''
     return f'{name} ({description})' if description else name
 

@@ -12,7 +12,8 @@ import re
 import requests
 from django.utils.translation import gettext as _
 
-from ..sources.http import check_waits, request_with_retry
+from ..sources.http import check_waits
+from ..sources.wikibase import ENTITIES_PER_REQUEST, get_entities
 from .errors import DocumentationProblem, PortalUnavailable
 
 _logger = logging.getLogger(__name__)
@@ -42,38 +43,19 @@ def fetch_claims(qids, api_url, deadline, what, cache=None):
     '''
     claims_by_item = cache if cache is not None else {}
     qids = [qid for qid in qids if qid not in claims_by_item]
-    for i in range(0, len(qids), 50):
-        body = None
+    for i in range(0, len(qids), ENTITIES_PER_REQUEST):
         try:
-            resp = request_with_retry(
-                'get',
-                api_url,
-                waits=check_waits(),
-                deadline=deadline,
-                params={
-                    'action': 'wbgetentities',
-                    'ids':    '|'.join(qids[i:i + 50]),
-                    'props':  'claims',
-                    'format': 'json',
-                },
-                headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
-                timeout=30,
-            )
-            resp.raise_for_status()
-            body = resp.json()
+            entities = get_entities(api_url, qids[i:i + ENTITIES_PER_REQUEST], 'claims',
+                                    waits=check_waits(), deadline=deadline)
         except (requests.exceptions.RequestException, ValueError) as exc:
             _logger.warning("Claims check via API failed: %s", exc)
-        if body is not None and 'error' in body:
-            _logger.warning("Claims check via API failed: %s", body['error'])
-            body = None
-        if body is None:
             raise PortalUnavailable({
                 'statements': _('Could not check which statements already exist on the MaRDI Portal '
                                 '(API not reachable). Nothing was exported; please try again later.'),
                 'formulas': _('Could not check which formulas already exist on the MaRDI Portal '
                               '(API not reachable). Nothing was exported; please try again later.'),
-            }[what])
-        for qid, entity in body.get('entities', {}).items():
+            }[what]) from exc
+        for qid, entity in entities.items():
             claims_by_item[qid] = entity.get('claims', {})
     return claims_by_item
 

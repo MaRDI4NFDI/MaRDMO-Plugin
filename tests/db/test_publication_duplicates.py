@@ -21,7 +21,7 @@ from MaRDMO.duplicates import look_up
 from MaRDMO.getters import get_items
 from MaRDMO.ids import unique_items
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
-from MaRDMO.queries import PortalItems
+from MaRDMO.sources.portal import PortalItems
 from tests.db.conftest import answer, save
 from tests.support.html import attribute, element, elements, links, preview_page, text
 

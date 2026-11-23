@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
-import MaRDMO.queries as queries
-from MaRDMO.queries import PortalItems
+import MaRDMO.components.dropdowns as dropdowns
+from MaRDMO.sources.portal import PortalItems
 from MaRDMO.getters import get_items, get_mathmoddb, get_properties
 from MaRDMO.model.models import MathematicalModel
 from MaRDMO.payload import GeneratePayload
@@ -37,17 +37,17 @@ def search_results(monkeypatch):
             {'id': 'Q102', 'display': {'label': {'value': 'Heat Equation'}}},
         ],
     }
-    monkeypatch.setattr(queries, '_cached_search', lambda source, search, item_class, func: results[source])
+    monkeypatch.setattr(dropdowns, '_cached_search', lambda source, search, item_class, func: results[source])
 
 
 def test_wikidata_duplicate_of_a_mardi_item_is_left_out(search_results):
-    ids = {option['id'] for option in queries.query_sources('Navier-Stokes', not_found=False)}
+    ids = {option['id'] for option in dropdowns.query_sources('Navier-Stokes', not_found=False)}
     assert ids == {'mardi:Q1', 'mardi:Q2', 'wikidata:Q101', 'wikidata:Q102'}
 
 
 def test_label_without_description_does_not_make_items_the_same(search_results):
     '''"Heat Equation" without description on both sides: both are offered.'''
-    ids = {option['id'] for option in queries.query_sources('Heat', not_found=False)}
+    ids = {option['id'] for option in dropdowns.query_sources('Heat', not_found=False)}
     assert {'mardi:Q2', 'wikidata:Q102'} <= ids
 
 
@@ -182,8 +182,8 @@ def test_publication_on_the_portal_creates_nothing():
 # --- Search results deduplication needs the description
 
 def test_label_description_ignores_options_without_description():
-    assert queries._label_description({'text': 'Heat (No Description Provided!) [wikidata]'}) is None
-    assert queries._label_description({'text': 'Heat Equation (a PDE) [mardi]'}) == ('heat equation', 'a PDE')
+    assert dropdowns._label_description({'text': 'Heat (No Description Provided!) [wikidata]'}) is None
+    assert dropdowns._label_description({'text': 'Heat Equation (a PDE) [mardi]'}) == ('heat equation', 'a PDE')
 
 
 def test_publication_name_is_stored_as_label():

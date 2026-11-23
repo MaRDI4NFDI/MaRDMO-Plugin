@@ -9,8 +9,8 @@ from MaRDMO.checks.base import OLD_PROJECT
 from MaRDMO.constants import BASE_URI
 from MaRDMO.ids import is_user_id
 from MaRDMO.providers import MaRDMOProvider
-from MaRDMO.queries import option_help
-import MaRDMO.queries as queries
+from MaRDMO.components.dropdowns import option_help
+import MaRDMO.components.dropdowns as dropdowns
 from tests.db.conftest import answer, save
 
 
@@ -108,7 +108,7 @@ def test_new_item_without_page_in_the_workflow_catalog(interview, monkeypatch):
 
 
 def test_dropdown_offers_own_items_with_the_id_of_their_page(project, monkeypatch):
-    monkeypatch.setattr(queries, 'query_sources', lambda **kwargs: [])
+    monkeypatch.setattr(dropdowns, 'query_sources', lambda **kwargs: [])
     model = project('mardmo-model-catalog')
     save(model, answer('problem/id', 'not found', external_id='user:1', set_index=0),
          answer('problem/name', 'reaction rate', set_prefix='0'),

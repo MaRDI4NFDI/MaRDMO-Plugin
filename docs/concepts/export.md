@@ -199,7 +199,7 @@ and a dependency graph:
       code, or ISSN as appropriate).
 
     Before, all items are looked up on the MaRDI Portal at once
-    (`MaRDMO.queries.find_portal_items`, a few batched SPARQL queries; results are
+    (`MaRDMO.sources.portal.find_portal_items`, a few batched SPARQL queries; results are
     reused for 15 minutes):
 
     | Rule | Items | Stops the export | If the lookup fails |

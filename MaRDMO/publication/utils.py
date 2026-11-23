@@ -1,18 +1,13 @@
 '''Utility functions for fetching and normalizing publication metadata.
 
-Provides helpers that query external bibliographic APIs (Crossref, DataCite,
-ZbMATH, ORCID), parse their responses, and map the results to the internal
+Combines the answers of the citation services (:mod:`MaRDMO.sources.citations`:
+Crossref, DataCite, zbMATH, ORCID, the DOI resolver), parses them, and maps the results to the internal
 :class:`~MaRDMO.publication.models.Author`, :class:`~MaRDMO.publication.models.Journal`,
 and :class:`~MaRDMO.publication.models.Publication` dataclasses.
 
 Provides:
 
 - ``get_citation``            — primary entry point: fetch full citation data for a DOI
-- ``get_crossref_data``       — query the Crossref REST API
-- ``get_datacite_data``       — query the DataCite REST API
-- ``get_doi_data``            — DOI resolver wrapper
-- ``get_zbmath_data``         — query the ZbMATH Open API
-- ``get_orcids``              — look up the ORCID records of publication authors
 - ``extract_authors``         — parse author list from API response
 - ``extract_journals``        — parse journal info from API response
 - ``match_portal_items``      — give authors and journals the ID of the portal or Wikidata item with their identifier
@@ -27,7 +22,6 @@ import logging
 import re
 from multiprocessing.pool import ThreadPool
 
-import requests
 
 from django.core.cache import cache
 from rdmo.projects.models import Value
@@ -37,13 +31,11 @@ from .models import Author, Journal, Publication
 
 from ..constants import BASE_URI
 from ..getters import get_items, get_properties, get_sparql_query, get_url
-from ..sources.http import http_session, query_sparql, query_sparql_pool
+from ..sources.citations import get_crossref_data, get_datacite_data, get_doi_data, get_orcids, get_zbmath_data
+from ..sources.http import query_sparql, query_sparql_pool
 
 logger = logging.getLogger(__name__)
 
-# Timeout (seconds) for each external metadata request (Crossref, DataCite,
-# zbMATH, DOI resolver, ORCID); the sources are queried in parallel
-REQUEST_TIMEOUT = 10
 
 # Citation data of a DOI is reused for this long (preview runs the lookup on
 # every click); failed lookups are not kept
@@ -494,110 +486,3 @@ def _orcid_authors(doi):
     return authors
 
 
-def get_crossref_data(doi):
-    '''Fetch citation metadata for *doi* from the CrossRef REST API.
-
-    Args:
-        doi: DOI string.
-
-    Returns:
-        :class:`requests.Response` (status 200) on success, or the caught
-        :class:`requests.exceptions.RequestException` on failure.
-    '''
-    try:
-        request = http_session().get(
-            f"https://api.crossref.org/works/{doi}",
-            timeout = REQUEST_TIMEOUT
-        )
-        request.raise_for_status()
-        return request
-    except requests.exceptions.RequestException as error:
-        return error
-
-def get_datacite_data(doi):
-    '''Fetch citation metadata for *doi* from the DataCite REST API.
-
-    Args:
-        doi: DOI string.
-
-    Returns:
-        :class:`requests.Response` (status 200) on success, or the caught
-        :class:`requests.exceptions.RequestException` on failure.
-    '''
-    try:
-        request = http_session().get(
-            f"https://api.datacite.org/dois/{doi}",
-            timeout = REQUEST_TIMEOUT
-        )
-        request.raise_for_status()
-        return request
-    except requests.exceptions.RequestException as error:
-        return error
-
-def get_doi_data(doi):
-    '''Fetch citation metadata for *doi* from the DOI metadata service.
-
-    Args:
-        doi: DOI string.
-
-    Returns:
-        :class:`requests.Response` (status 200) on success, or the caught
-        :class:`requests.exceptions.RequestException` on failure.
-    '''
-    try:
-        request = http_session().get(
-            f"https://citation.doi.org/metadata?doi={doi}",
-            headers = {"accept": "application/json"},
-            timeout = REQUEST_TIMEOUT
-        )
-        request.raise_for_status()
-        return request
-    except requests.exceptions.RequestException as error:
-        return error
-
-def get_zbmath_data(doi):
-    '''Fetch citation metadata for *doi* from the zbMath Open API.
-
-    Args:
-        doi: DOI string.
-
-    Returns:
-        :class:`requests.Response` (status 200) on success, or the caught
-        :class:`requests.exceptions.RequestException` on failure.
-    '''
-    try:
-        request = http_session().get(
-            f"https://api.zbmath.org/v1/document/_structured_search?page=0&results_per_page=100&DOI={doi}",
-            timeout = REQUEST_TIMEOUT
-        )
-        request.raise_for_status()
-        return request
-    except requests.exceptions.RequestException as error:
-        return error
-
-def get_orcids(doi):
-    '''Query the ORCID public API for researchers associated with *doi*.
-
-    The expanded search returns the names with the ORCID iDs, so no further
-    request per researcher is needed.
-
-    Args:
-        doi: DOI string used as the ``doi-self`` search criterion.
-
-    Returns:
-        :class:`requests.Response` (status 200) containing a JSON payload with
-        an ``"expanded-result"`` list of ORCID records on success, or ``None``
-        on failure (logged as a warning).
-    '''
-    try:
-        request = http_session().get(
-            'https://pub.orcid.org/v3.0/expanded-search/',
-            params = {'q': f'doi-self:"{doi}"'},
-            headers = {'Accept': 'application/json'},
-            timeout = REQUEST_TIMEOUT
-        )
-        request.raise_for_status()
-        return request
-    except requests.exceptions.RequestException as error:
-        logger.warning("ORCID search for %s failed: %s", doi, error)
-        return None

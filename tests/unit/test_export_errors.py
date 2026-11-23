@@ -8,7 +8,7 @@ pages: tests/unit/test_pipeline.py).
 import pytest
 import requests
 
-import MaRDMO.payload.claims as claims_module
+import MaRDMO.sources.wikibase as wikibase
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 
 
@@ -51,7 +51,7 @@ def test_unreachable_api_is_portal_unavailable(payload, monkeypatch):
     def unreachable(*args, **kwargs):
         raise requests.exceptions.ConnectionError('offline')
 
-    monkeypatch.setattr(claims_module, 'request_with_retry', unreachable)
+    monkeypatch.setattr(wikibase, 'request_with_retry', unreachable)
     with pytest.raises(PortalUnavailable):
         payload._fetch_claims(['Q1'], 'https://portal.example.org/w/api.php', None, 'formulas')
 

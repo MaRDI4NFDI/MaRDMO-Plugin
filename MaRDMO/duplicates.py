@@ -48,7 +48,7 @@ from .getters import get_items, get_questions
 from .ids import unique_items
 from .ids import id_attributes, is_own_item, item_text
 from .markers import PUBLICATION_MARKERS, SECTION_MARKERS, class_families, contradictions
-from .queries import find_portal_items, find_publications_by_doi, portal_dois, portal_labels
+from .sources.portal import find_portal_items, find_publications_by_doi, portal_dois, portal_labels
 from .constants import BASE_URI
 from .publication.constants import AUTHORS, CITATIONINFOS, JOURNALS, LANGUAGES
 
@@ -128,7 +128,7 @@ def look_up(items, waits, deadline):
     the user cannot change them, so :func:`_resolve_parts` decides.
 
     Returns:
-        ``(found, duplicates)``: the :class:`~MaRDMO.queries.PortalItems`
+        ``(found, duplicates)``: the :class:`~MaRDMO.sources.portal.PortalItems`
         (with the markers of the existing items and of the duplicates' portal
         items) and the :class:`Duplicate` items.
     """

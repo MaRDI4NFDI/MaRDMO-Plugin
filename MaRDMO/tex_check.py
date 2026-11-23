@@ -31,9 +31,9 @@ import requests
 from django.core.cache import cache
 from django.utils.translation import gettext as _, ngettext
 
-from .constants import TEX_CHECK_URL
 from .writes import commit_writes
-from .sources.http import SPARQL_RETRY_STATUS, request_with_retry
+from .sources.http import SPARQL_RETRY_STATUS
+from .sources.portal import tex_check_answer
 from .validators import normalize_formula
 
 logger = logging.getLogger(__name__)
@@ -127,13 +127,7 @@ def _check_one(tex):
     if cached is not None:
         return None if cached == _VALID else cached
     try:
-        response = request_with_retry(
-            'post',
-            TEX_CHECK_URL,
-            data={'q': tex},
-            headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
-            timeout=TEX_CHECK_TIMEOUT,
-        )
+        response = tex_check_answer(tex, TEX_CHECK_TIMEOUT)
     except requests.exceptions.RequestException as err:
         logger.warning("TeX check failed: %s", err)
         return UNAVAILABLE
@@ -176,7 +170,7 @@ def check_formulas(formulas):
     Requests run in parallel; verdicts are cached for a week, so repeated
     previews and checks do not resend unchanged formulas.  A request that
     times out or gets a 429/502/503/504 is retried once (see
-    :func:`~MaRDMO.queries.request_with_retry`); failed requests are not cached.
+    :func:`~MaRDMO.sources.http.request_with_retry`); failed requests are not cached.
 
     Args:
         formulas: Iterable of TeX strings (empty ones are skipped).

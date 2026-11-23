@@ -3,7 +3,7 @@ import pytest
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership
 
-import MaRDMO.queries as queries
+import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO.adders import add_entities
 from MaRDMO.constants import BASE_URI
 from MaRDMO.ids import is_user_id
@@ -39,8 +39,8 @@ def text(project, path, **index):
 
 
 def test_the_id_dropdown_offers_new_item(monkeypatch):
-    monkeypatch.setattr(queries, '_cached_search', lambda *args: [])
-    assert queries.query_sources('alpha', 'Q1') == [{'id': 'not found', 'text': 'new item'}]
+    monkeypatch.setattr(dropdowns, '_cached_search', lambda *args: [])
+    assert dropdowns.query_sources('alpha', 'Q1') == [{'id': 'not found', 'text': 'new item'}]
 
 
 def test_a_portal_page_switched_to_new_item_keeps_name_and_description(interview):

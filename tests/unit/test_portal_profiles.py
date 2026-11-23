@@ -12,11 +12,14 @@ from pathlib import Path
 import pytest
 import requests
 
-import MaRDMO.queries as queries
+import MaRDMO
+import MaRDMO.components.dropdowns as dropdowns
+import MaRDMO.sources.portal as portal_api
+import MaRDMO.sources.wikibase as wikibase
 from MaRDMO.getters import get_items, get_properties
 from MaRDMO.optionsets import PROFILES, PROVIDERS, Search
 
-DATA = Path(queries.__file__).parent / 'data'
+DATA = Path(MaRDMO.__file__).parent / 'data'
 
 
 def test_every_class_and_profile_is_known_on_every_portal():
@@ -49,7 +52,8 @@ class Portal:
 
     def __init__(self, monkeypatch, pages, entities):
         self.pages, self.entities, self.params = pages, entities, []
-        monkeypatch.setattr(queries, 'request_with_retry', self)
+        monkeypatch.setattr(portal_api, 'request_with_retry', self)    # the profile search
+        monkeypatch.setattr(wikibase, 'request_with_retry', self)    # wbgetentities
 
     def __call__(self, method, url, **kwargs):
         params = kwargs['params']
@@ -74,7 +78,7 @@ def test_the_profile_search_finds_the_items_of_the_profile_pages_in_their_order(
         '7': {'title': 'Lme4qtl', 'index': 2, 'pageprops': {'wikibase_item': 'Q2'}},
         '5': {'title': 'Lme4', 'index': 1, 'pageprops': {'wikibase_item': 'Q1'}},
         '9': {'title': 'A page without item', 'index': 3}}, {'Q1': entity('lme4'), 'Q2': entity('lme4qtl')})
-    options = queries.query_api_per_profile('lme4', [items['MaRDI software profile'], items['MaRDI algorithm profile']])
+    options = portal_api.query_api_per_profile('lme4', [items['MaRDI software profile'], items['MaRDI algorithm profile']])
     assert options == [{'id': 'mardi:Q1', 'text': 'lme4 (lme4 item)'}, {'id': 'mardi:Q2', 'text': 'lme4qtl (lme4qtl item)'}]
     search, labels = portal.params
     # Several profiles: facets separated by a space (alternatives); the pages are in namespace 0
@@ -94,7 +98,7 @@ def test_a_shared_profile_leaves_out_the_items_of_the_other_class(monkeypatch):
         '2': {'index': 2, 'pageprops': {'wikibase_item': 'Q2'}},
         '3': {'index': 3, 'pageprops': {'wikibase_item': 'Q3'}}},
         {'Q1': entity('sorting', algorithmic), 'Q2': entity('simulation', computational), 'Q3': entity('no class')})
-    options = queries.query_api_per_profile('s', [items['MaRDI task profile']], exclude=[computational])
+    options = portal_api.query_api_per_profile('s', [items['MaRDI task profile']], exclude=[computational])
     assert [option['id'] for option in options] == ['mardi:Q1', 'mardi:Q3']
     assert portal.params[1]['props'] == 'labels|descriptions|claims'
 
@@ -110,18 +114,18 @@ def searches(monkeypatch):
     def by_profile(term, profiles, exclude=None, raise_errors=False):
         calls.append(('profile', profiles, exclude))
         return [{'id': 'mardi:Q0', 'text': 'both'}] + [{'id': f'mardi:P{n}', 'text': f'profile {n}'} for n in range(30)]
-    monkeypatch.setattr(queries, 'query_api_per_class', by_class)
-    monkeypatch.setattr(queries, 'query_api_per_profile', by_profile)
+    monkeypatch.setattr(dropdowns, 'query_api_per_class', by_class)
+    monkeypatch.setattr(dropdowns, 'query_api_per_profile', by_profile)
     return calls
 
 
 def test_classes_with_a_profile_are_searched_by_it_only(searches):
-    queries.query_sources('s', None, sources=['mardi'], not_found=False, profiles=['Q9'], exclude=['Q8'])
+    dropdowns.query_sources('s', None, sources=['mardi'], not_found=False, profiles=['Q9'], exclude=['Q8'])
     assert searches == [('profile', ['Q9'], ['Q8'])]
 
 
 def test_a_dropdown_of_both_kinds_searches_both_and_takes_them_in_turns(searches):
-    options = queries.query_sources('s', 'Q7', sources=['mardi'], not_found=False, profiles=['Q9'])
+    options = dropdowns.query_sources('s', 'Q7', sources=['mardi'], not_found=False, profiles=['Q9'])
     ids = [option['id'] for option in options]
     assert sorted(searches) == [('class', 'Q7'), ('profile', ['Q9'], None)]
     # The first 25 have hits of both searches, each once
@@ -130,12 +134,12 @@ def test_a_dropdown_of_both_kinds_searches_both_and_takes_them_in_turns(searches
 
 
 def test_without_profiles_the_portal_is_searched_by_class_as_before(searches):
-    queries.query_sources('s', 'Q7', sources=['mardi'], not_found=False)
+    dropdowns.query_sources('s', 'Q7', sources=['mardi'], not_found=False)
     assert searches == [('class', 'Q7')]
 
 
 def test_the_cache_keeps_searches_with_other_profiles_apart(searches):
-    queries.query_sources('s', None, sources=['mardi'], not_found=False, profiles=['Q9'])
-    queries.query_sources('s', None, sources=['mardi'], not_found=False, profiles=['Q9'], exclude=['Q8'])
-    queries.query_sources('s', None, sources=['mardi'], not_found=False, profiles=['Q9'])
+    dropdowns.query_sources('s', None, sources=['mardi'], not_found=False, profiles=['Q9'])
+    dropdowns.query_sources('s', None, sources=['mardi'], not_found=False, profiles=['Q9'], exclude=['Q8'])
+    dropdowns.query_sources('s', None, sources=['mardi'], not_found=False, profiles=['Q9'])
     assert searches == [('profile', ['Q9'], None), ('profile', ['Q9'], ['Q8'])]

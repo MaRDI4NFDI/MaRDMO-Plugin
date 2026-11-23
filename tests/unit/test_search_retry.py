@@ -2,10 +2,12 @@
 import pytest
 import requests
 
-import MaRDMO.queries as queries
+import MaRDMO.components.dropdowns as dropdowns
+import MaRDMO.sources.wikibase as wikibase
+import MaRDMO.sources.portal as portal_api
 import MaRDMO.sources.http as http
 from MaRDMO.getters import get_items, get_url
-from MaRDMO.queries import option_help
+from MaRDMO.components.dropdowns import option_help
 
 SEARCH = {'query': {'search': [{'title': 'Item:Q1'}]}}
 ENTITIES = {'entities': {'Q1': {'labels': {'en': {'value': 'alpha'}}, 'descriptions': {'en': {'value': 'first'}}}}}
@@ -54,7 +56,7 @@ class Portal:
 def search():
     '''The MaRDI part of a dropdown search for quantities.'''
     items = get_items()
-    return lambda: queries.query_api_per_class('alpha', [items['quantity'], items['kind of quantity']],
+    return lambda: portal_api.query_api_per_class('alpha', [items['quantity'], items['kind of quantity']],
                                                raise_errors=True)
 
 
@@ -77,7 +79,7 @@ def test_a_failure_after_four_seconds_is_retried_within_the_time_of_one_request(
     portal = Portal(monkeypatch, Response(502), Response(body=SEARCH), Response(body=ENTITIES), takes=4)
     search()
     assert portal.requests == ['query', 'query', 'wbgetentities']
-    assert portal.timeouts == [queries.SEARCH_TIMEOUT, 1, queries.SEARCH_TIMEOUT]
+    assert portal.timeouts == [dropdowns.SEARCH_TIMEOUT, 1, dropdowns.SEARCH_TIMEOUT]
 
 
 def test_a_timeout_is_not_retried(monkeypatch, search):
@@ -86,20 +88,20 @@ def test_a_timeout_is_not_retried(monkeypatch, search):
     with pytest.raises(requests.exceptions.Timeout):
         search()
     assert portal.requests == ['query']
-    assert portal.now - start == queries.SEARCH_TIMEOUT
+    assert portal.now - start == dropdowns.SEARCH_TIMEOUT
 
 
 def test_a_second_failure_shows_no_results_and_is_not_cached(monkeypatch):
     portal = Portal(monkeypatch, Response(503), Response(503), Response(body=SEARCH), Response(body=ENTITIES))
-    assert queries.query_sources('alpha', get_items()['quantity'], sources=['mardi'], not_found=False) == []
-    assert queries.query_sources('alpha', get_items()['quantity'], sources=['mardi'], not_found=False) == [
+    assert dropdowns.query_sources('alpha', get_items()['quantity'], sources=['mardi'], not_found=False) == []
+    assert dropdowns.query_sources('alpha', get_items()['quantity'], sources=['mardi'], not_found=False) == [
         {'id': 'mardi:Q1', 'text': 'alpha (first)', 'help': option_help('mardi:Q1', 'alpha (first)')}]
     assert portal.requests == ['query', 'query', 'query', 'wbgetentities']
 
 
 def test_the_wikidata_search_is_retried_too(monkeypatch):
     portal = Portal(monkeypatch, requests.exceptions.ConnectionError(), Response(body=WIKIDATA))
-    assert queries.query_sources('alpha', [], sources=['wikidata'], not_found=False) == [
+    assert dropdowns.query_sources('alpha', [], sources=['wikidata'], not_found=False) == [
         {'id': 'wikidata:Q2', 'text': 'alpha (second)', 'help': option_help('wikidata:Q2', 'alpha (second)')}]
     assert portal.requests == ['wbsearchentities', 'wbsearchentities']
 
@@ -107,5 +109,5 @@ def test_the_wikidata_search_is_retried_too(monkeypatch):
 def test_the_export_check_keeps_its_own_retries(monkeypatch):
     '''query_api retries only when asked: the export's duplicate check passes its own waits.'''
     portal = Portal(monkeypatch, requests.exceptions.ConnectionError())
-    assert queries.query_api(get_url('mardi', 'api'), 'alpha') == []
+    assert wikibase.query_api(get_url('mardi', 'api'), 'alpha') == []
     assert portal.requests == ['wbsearchentities']

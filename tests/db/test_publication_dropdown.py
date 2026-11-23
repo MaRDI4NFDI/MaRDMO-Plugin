@@ -14,7 +14,7 @@ from rdmo.options.models import OptionSet
 from rdmo.projects.models import Membership
 
 from MaRDMO.ids import publication_doi
-from MaRDMO.queries import option_help
+from MaRDMO.components.dropdowns import option_help
 
 DIJKSTRA = '10.1007/BF01386390'           # on the portal (Q78129) and on Wikidata (Q21694527)
 SEG1D = '10.21105/joss.02404'             # only on Wikidata (Q106245557)
@@ -78,7 +78,7 @@ def test_the_case_of_a_doi_does_not_matter(options):
 
 
 def test_an_invalid_doi_is_offered_without_a_search(options, monkeypatch):
-    monkeypatch.setattr('MaRDMO.queries.find_publications', lambda doi: pytest.fail('searched'))
+    monkeypatch.setattr('MaRDMO.components.dropdowns.find_publications', lambda doi: pytest.fail('searched'))
     assert options('doi:11.1000/x') == [('new:doi:11.1000/x', 'doi:11.1000/x', option_help('new:doi:', 'doi:11.1000/x'))]
 
 
@@ -92,7 +92,7 @@ def test_a_doi_the_portal_has_percent_encoded_is_the_portal_item(options):
 
 
 def test_the_forms_of_a_doi_on_the_portal():
-    from MaRDMO.queries import portal_doi_forms# noqa: PLC0415
+    from MaRDMO.sources.portal import portal_doi_forms# noqa: PLC0415
     assert portal_doi_forms(DIJKSTRA) == [DIJKSTRA]
     assert portal_doi_forms(LORENZ) == [LORENZ, '10.1175/1520-0469(1963)020%3C0130:DNF%3E2.0.CO;2']
     # The check character of old DOIs

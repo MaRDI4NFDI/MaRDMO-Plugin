@@ -5,8 +5,8 @@ answers' format would show here.
 '''
 import pytest
 
-import MaRDMO.class_check as class_check
-import MaRDMO.queries as queries
+import MaRDMO.sources.wikidata as wikidata_api
+import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO.constants import WIKIDATA
 from MaRDMO.optionsets import PROVIDERS
 
@@ -19,29 +19,29 @@ HUMAN = ['Q5']
 
 def test_qlever_tells_which_items_are_software(portal):
     portal('class_check')
-    assert class_check.wikidata_matches(ITEMS, roots=SOFTWARE) == {'Q642141': True, 'Q21155124': True,
+    assert wikidata_api.wikidata_matches(ITEMS, roots=SOFTWARE) == {'Q642141': True, 'Q21155124': True,
                                                                    'Q11423': False}
 
 
 def test_qlever_tells_which_items_are_noise(portal):
     portal('class_check')
-    assert class_check.wikidata_matches(['Q937', 'Q762045'], noise=HUMAN) == {'Q937': False, 'Q762045': True}
+    assert wikidata_api.wikidata_matches(['Q937', 'Q762045'], noise=HUMAN) == {'Q937': False, 'Q762045': True}
 
 
 @pytest.fixture
 def qlever_down(monkeypatch):
     '''QLever fails; Wikidata's endpoint answers (recorded).'''
-    query_sparql = class_check.http.query_sparql
+    query_sparql = wikidata_api.http.query_sparql
 
     def without_qlever(query, endpoint, **kwargs):
         return None if endpoint == WIKIDATA['qlever'] else query_sparql(query, endpoint, **kwargs)
-    monkeypatch.setattr(class_check.http, 'query_sparql', without_qlever)
+    monkeypatch.setattr(wikidata_api.http, 'query_sparql', without_qlever)
 
 
 def test_the_software_dropdown_offers_wikidata_software_only(portal):
     '''Wikidata's 50 hits for MATLAB are mostly places and people named Matlab; software stays.'''
     portal('class_check')
-    options = queries.query_sources('MATLAB', sources=['wikidata'], not_found=False,
+    options = dropdowns.query_sources('MATLAB', sources=['wikidata'], not_found=False,
                                     roots=PROVIDERS['Software'].wikidata_roots)
     texts = [option['text'] for option in options]
     assert any(text.startswith('MATLAB (') for text in texts), texts
@@ -73,7 +73,7 @@ NOISE = ['Q937', 'Q37198983', 'Q727775', 'Q3542269']
 
 def test_the_research_problems_on_the_portal_are_not_noise(portal):
     portal('class_check')
-    matches = class_check.wikidata_matches(RESEARCH_PROBLEMS + NOISE,
+    matches = wikidata_api.wikidata_matches(RESEARCH_PROBLEMS + NOISE,
                                            noise=PROVIDERS['ResearchProblem'].wikidata_noise)
     assert [qid for qid in RESEARCH_PROBLEMS if not matches[qid]] == []
     assert [qid for qid in NOISE if matches[qid]] == []
@@ -81,7 +81,7 @@ def test_the_research_problems_on_the_portal_are_not_noise(portal):
 
 def test_the_research_problem_dropdown_leaves_out_films_and_albums(portal):
     portal('class_check')
-    options = queries.query_sources('turbulence', sources=['wikidata'], not_found=False,
+    options = dropdowns.query_sources('turbulence', sources=['wikidata'], not_found=False,
                                     noise=PROVIDERS['ResearchProblem'].wikidata_noise)
     ids = [option['id'] for option in options]
     assert 'wikidata:Q190132' in ids, [option['text'] for option in options]  # turbulence
@@ -90,15 +90,15 @@ def test_the_research_problem_dropdown_leaves_out_films_and_albums(portal):
 
 def test_wikidata_tells_the_same_if_qlever_fails(portal, qlever_down):
     portal('class_check')
-    assert class_check.wikidata_matches(ITEMS, roots=SOFTWARE) == {'Q642141': True, 'Q21155124': True,
+    assert wikidata_api.wikidata_matches(ITEMS, roots=SOFTWARE) == {'Q642141': True, 'Q21155124': True,
                                                                    'Q11423': False}
-    assert class_check.wikidata_matches(['Q937', 'Q762045'], noise=HUMAN) == {'Q937': False, 'Q762045': True}
+    assert wikidata_api.wikidata_matches(['Q937', 'Q762045'], noise=HUMAN) == {'Q937': False, 'Q762045': True}
 
 
 def test_without_qlever_scholarly_articles_are_noise_too(portal, qlever_down):
     '''Wikidata's main endpoint does not have them; research problems without a class it has.'''
     portal('class_check')
-    matches = class_check.wikidata_matches(RESEARCH_PROBLEMS + NOISE,
+    matches = wikidata_api.wikidata_matches(RESEARCH_PROBLEMS + NOISE,
                                            noise=PROVIDERS['ResearchProblem'].wikidata_noise)
     assert [qid for qid in RESEARCH_PROBLEMS if not matches[qid]] == []
     assert [qid for qid in NOISE if matches[qid]] == []

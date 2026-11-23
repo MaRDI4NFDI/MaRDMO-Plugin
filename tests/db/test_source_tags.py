@@ -3,11 +3,11 @@ from types import SimpleNamespace
 
 import pytest
 
-import MaRDMO.queries as queries
+import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO.adders import add_entities
 from MaRDMO.constants import BASE_URI
 from MaRDMO.adders import relation_exists
-from MaRDMO.queries import option_help
+from MaRDMO.components.dropdowns import option_help
 from MaRDMO.models import Relatant
 from MaRDMO.providers import MaRDMOProvider
 from tests.db.conftest import answer, save
@@ -26,19 +26,19 @@ WIKIDATA = [{'id': 'Q2', 'display': {'label': {'value': 'alpha'}, 'description':
 def portal(monkeypatch):
     '''The MaRDI Portal and Wikidata each find one "alpha"; returns what the searches gave.'''
     found = {'mardi': MARDI, 'wikidata': WIKIDATA}
-    monkeypatch.setattr(queries, '_cached_search', lambda source, *args: found[source])
+    monkeypatch.setattr(dropdowns, '_cached_search', lambda source, *args: found[source])
     return found
 
 
 def test_portal_and_wikidata_options_carry_their_source_in_the_help(portal):
-    assert queries.query_sources('alpha', 'Q1') == [
+    assert dropdowns.query_sources('alpha', 'Q1') == [
         {'id': 'not found', 'text': 'new item'},
         {'id': 'mardi:Q1', 'text': 'alpha (first)', 'help': tag('mardi:Q1', 'alpha (first)')},
         {'id': 'wikidata:Q2', 'text': 'alpha (second)', 'help': tag('wikidata:Q2', 'alpha (second)')}]
 
 
 def test_the_cached_search_results_stay_as_they_are(portal):
-    queries.query_sources('alpha', 'Q1')
+    dropdowns.query_sources('alpha', 'Q1')
     assert MARDI == [{'id': 'mardi:Q1', 'text': 'alpha (first)'}]
 
 
@@ -55,7 +55,7 @@ def model(project):
 
 
 def options(project, key, search, monkeypatch):
-    monkeypatch.setattr(queries, 'query_sources', lambda **kwargs: [])
+    monkeypatch.setattr(dropdowns, 'query_sources', lambda **kwargs: [])
     return MaRDMOProvider(key, key, 'MaRDMO.providers.MaRDMOProvider').get_options(project, search=search)
 
 

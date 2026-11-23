@@ -18,15 +18,27 @@
 
 ## Requests to External Services
 
+::: MaRDMO.sources
+
+### HTTP
+
 ::: MaRDMO.sources.http
 
-## Queries
+### Wikibase API
 
-::: MaRDMO.queries
+::: MaRDMO.sources.wikibase
 
-## Class Check
+### MaRDI Portal
 
-::: MaRDMO.class_check
+::: MaRDMO.sources.portal
+
+### Wikidata
+
+::: MaRDMO.sources.wikidata
+
+### Citation Services
+
+::: MaRDMO.sources.citations
 
 ## Duplicates
 
