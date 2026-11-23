@@ -1,7 +1,7 @@
 '''The dropdowns offer only the Wikidata items of their classes (#170): the roots, and the filter.'''
 import pytest
 
-import MaRDMO.queries as queries
+import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO.optionsets import NO_WIKIDATA, NOISE_FILTERED, PROVIDERS, WIKIDATA_NOISE, WIKIDATA_ROOTS, Search
 
 WIKIDATA_ROWS = [key for key, search in PROVIDERS.items()
@@ -61,7 +61,7 @@ def matches(monkeypatch):
         def wikidata_matches(items, roots=None, noise=None, deadline=None):
             calls.append((list(items), roots))
             return None if answers is None else {item: answers.get(item, False) for item in items}
-        monkeypatch.setattr(queries, 'wikidata_matches', wikidata_matches)
+        monkeypatch.setattr(dropdowns, 'wikidata_matches', wikidata_matches)
         return calls
     return answer
 
@@ -69,22 +69,22 @@ def matches(monkeypatch):
 def test_the_hits_of_the_classes_stay_in_their_order(matches):
     calls = matches({'Q3': True, 'Q1': True})
     hits = [hit('Q1', 'one'), hit('Q2', 'two'), hit('Q3', 'three'), {'no': 'id'}]
-    assert queries.wikidata_hits(hits, ['Q7397']) == [hits[0], hits[2]]
+    assert dropdowns.wikidata_hits(hits, ['Q7397']) == [hits[0], hits[2]]
     assert calls == [(['Q1', 'Q2', 'Q3'], ['Q7397'])]
 
 
 def test_with_noise_the_hits_that_are_not_noise_stay(matches):
     calls = matches({'Q2': True})
     hits = [hit('Q1', 'a film'), hit('Q2', 'a phenomenon')]
-    assert queries.wikidata_hits(hits, None, ['Q11424']) == [hits[1]]
+    assert dropdowns.wikidata_hits(hits, None, ['Q11424']) == [hits[1]]
     assert calls == [(['Q1', 'Q2'], None)]
 
 
 def test_unfiltered_or_after_a_failed_check_the_first_ten_hits(matches):
     hits = [hit(f'Q{n}', f'item {n}') for n in range(1, 51)]
     calls = matches(None)
-    assert queries.wikidata_hits(hits, ['Q7397']) == hits[:10]
-    assert queries.wikidata_hits(hits, None) == hits[:10]
+    assert dropdowns.wikidata_hits(hits, ['Q7397']) == hits[:10]
+    assert dropdowns.wikidata_hits(hits, None) == hits[:10]
     # Without roots nothing is checked
     assert len(calls) == 1
 
@@ -96,6 +96,6 @@ def test_a_dropdown_asks_for_fifty_hits_and_offers_those_of_its_classes(matches,
     def query_api(api_url, search_term, **kwargs):
         searched.append(kwargs['limit'])
         return [hit('Q1', 'alpha snake'), hit('Q2', 'alpha software')]
-    monkeypatch.setattr(queries, 'query_api', query_api)
-    options = queries.query_sources('alpha', sources=['wikidata'], not_found=False, roots=['Q7397'])
+    monkeypatch.setattr(dropdowns, 'query_api', query_api)
+    options = dropdowns.query_sources('alpha', sources=['wikidata'], not_found=False, roots=['Q7397'])
     assert [option['id'] for option in options] == ['wikidata:Q2'] and searched == [50]

@@ -176,7 +176,7 @@ def check_formulas(formulas):
     Requests run in parallel; verdicts are cached for a week, so repeated
     previews and checks do not resend unchanged formulas.  A request that
     times out or gets a 429/502/503/504 is retried once (see
-    :func:`~MaRDMO.queries.request_with_retry`); failed requests are not cached.
+    :func:`~MaRDMO.sources.http.request_with_retry`); failed requests are not cached.
 
     Args:
         formulas: Iterable of TeX strings (empty ones are skipped).

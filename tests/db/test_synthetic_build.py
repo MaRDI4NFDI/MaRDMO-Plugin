@@ -107,7 +107,7 @@ def test_build(name, db, monkeypatch, django_db_setup):
     polite(monkeypatch)
     # The build is not waited for by a user: the portal's class-filtered search may take longer
     # (it answers within seconds, but sometimes not within the dropdown's SEARCH_TIMEOUT)
-    monkeypatch.setattr('MaRDMO.queries.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)
+    monkeypatch.setattr('MaRDMO.components.dropdowns.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)
     monkeypatch.setattr('MaRDMO.sources.http.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)    # search_deadline()
     monkeypatch.setattr('MaRDMO.sources.portal.SEARCH_TIMEOUT', BUILD_SEARCH_TIMEOUT)  # class and profile search
     monkeypatch.setattr('MaRDMO.sources.wikibase.query_api.__defaults__',

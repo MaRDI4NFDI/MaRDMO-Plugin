@@ -11,7 +11,7 @@ import pytest
 from rdmo.projects.models import Membership
 from rdmo.questions.models import Page
 
-import MaRDMO.queries as queries
+import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO import router
 from MaRDMO.constants import BASE_URI
 from tests.browser.conftest import screenshot
@@ -27,9 +27,9 @@ FOUND = {'mardi': PORTAL, 'mardi-profiles': PORTAL,
 @pytest.fixture
 def interview(project, django_user_model, monkeypatch):
     '''The quantity page of a model documentation with one tab; the searches are given, nothing is filled.'''
-    monkeypatch.setattr(queries, '_cached_search', lambda source, *args: FOUND[source])
+    monkeypatch.setattr(dropdowns, '_cached_search', lambda source, *args: FOUND[source])
     # The Wikidata hit is a quantity (class check, #170)
-    monkeypatch.setattr(queries, 'wikidata_matches', lambda items, **kwargs: {item: True for item in items})
+    monkeypatch.setattr(dropdowns, 'wikidata_matches', lambda items, **kwargs: {item: True for item in items})
     monkeypatch.setitem(router.HANDLER_MAP['mardmo-model-catalog'], f'{BASE_URI}domain/quantity/id',
                         lambda instance: None)
     documentation = project('mardmo-model-catalog')

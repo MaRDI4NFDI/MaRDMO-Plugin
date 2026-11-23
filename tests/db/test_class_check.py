@@ -6,7 +6,7 @@ answers' format would show here.
 import pytest
 
 import MaRDMO.sources.wikidata as wikidata_api
-import MaRDMO.queries as queries
+import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO.constants import WIKIDATA
 from MaRDMO.optionsets import PROVIDERS
 
@@ -41,7 +41,7 @@ def qlever_down(monkeypatch):
 def test_the_software_dropdown_offers_wikidata_software_only(portal):
     '''Wikidata's 50 hits for MATLAB are mostly places and people named Matlab; software stays.'''
     portal('class_check')
-    options = queries.query_sources('MATLAB', sources=['wikidata'], not_found=False,
+    options = dropdowns.query_sources('MATLAB', sources=['wikidata'], not_found=False,
                                     roots=PROVIDERS['Software'].wikidata_roots)
     texts = [option['text'] for option in options]
     assert any(text.startswith('MATLAB (') for text in texts), texts
@@ -81,7 +81,7 @@ def test_the_research_problems_on_the_portal_are_not_noise(portal):
 
 def test_the_research_problem_dropdown_leaves_out_films_and_albums(portal):
     portal('class_check')
-    options = queries.query_sources('turbulence', sources=['wikidata'], not_found=False,
+    options = dropdowns.query_sources('turbulence', sources=['wikidata'], not_found=False,
                                     noise=PROVIDERS['ResearchProblem'].wikidata_noise)
     ids = [option['id'] for option in options]
     assert 'wikidata:Q190132' in ids, [option['text'] for option in options]  # turbulence

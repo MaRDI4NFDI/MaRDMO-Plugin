@@ -10,7 +10,7 @@ from rdmo.options.providers import Provider
 from .getters import get_items
 
 from .optionsets import PROVIDERS
-from .queries import (
+from .components.dropdowns import (
     item_by_id, publication_options, query_sources, query_sources_with_user_additions, typed_item_id,
 )
 
@@ -117,7 +117,7 @@ def define_setup(query_attributes, creation=False, query_id='', sources=None, it
                           leaves out (``None``: none).
 
     Returns:
-        Dict consumed by :func:`~MaRDMO.queries.query_sources_with_user_additions`.
+        Dict consumed by :func:`~MaRDMO.components.dropdowns.query_sources_with_user_additions`.
     """
     return {
         'creation': creation,

@@ -1,17 +1,16 @@
-'''Functions that query external data sources (Wikibase API, SPARQL endpoints, Crossref, etc.).
+'''The options of MaRDMO's dropdowns: the knowledge-graph search of the interview (#198).
 
-Provides helpers for:
+A dropdown offers the items of the MaRDI Portal, Wikidata and the project
+that fit its classes:
 
-* ``query_api`` – Wikibase ``wbsearchentities`` lookups
-* ``find_portal_items`` – duplicates, Wikidata twins and markers on the MaRDI Portal (#141)
-* ``query_sources`` / ``query_sources_with_user_additions`` – combined
-  MaRDI + Wikidata search with optional user-defined entries
-* ``query_api_per_class`` – class-filtered full-text search on the MaRDI portal
-* ``query_api_per_profile`` – search of the MaRDI portal by MaRDI profile (faceted search)
-* ``option_help`` – the layout of a dropdown option (badge, label, description)
+- :func:`query_sources_with_user_additions` — the options for a search: the
+  portal's and Wikidata's hits (:func:`query_sources`), the project's own
+  items (:func:`query_user_entries`) and "new item";
+- :func:`item_by_id` — an item typed by its ID (``mardi:Q…``, ``wikidata:Q…``);
+- :func:`publication_options` — publications by their DOI (#158);
+- :func:`option_help` — the layout of an option (badge, label, description).
 
-The requests themselves (session, retries, time limits, SPARQL):
-:mod:`MaRDMO.sources.http`.
+The requests to the portal and Wikidata: :mod:`MaRDMO.sources`.
 '''
 import hashlib
 import html
@@ -25,22 +24,22 @@ import requests
 from django.core.cache import cache
 from rdmo.domain.models import Attribute
 
-from .constants import BASE_URI
-from .getters import get_mathmoddb, get_properties, get_url
-from .sources.portal import portal_doi_forms, query_api_per_class, query_api_per_profile
-from .sources.wikibase import WIKIDATA_HITS, entities_of, entity_classes, get_entities, query_api
-from .sources.wikidata import WIKIDATA_DOI, wikidata_matches
-from .sources.http import (
+from ..constants import BASE_URI
+from ..getters import get_mathmoddb, get_properties, get_url
+from ..sources.portal import portal_doi_forms, query_api_per_class, query_api_per_profile
+from ..sources.wikibase import WIKIDATA_HITS, entities_of, entity_classes, get_entities, query_api
+from ..sources.wikidata import WIKIDATA_DOI, wikidata_matches
+from ..sources.http import (
     SEARCH_RETRY_WAIT,
     SEARCH_TIMEOUT,
     request_with_retry,
     search_deadline,
 )
-from .values import extract_parts
-from .ids import (
+from ..values import extract_parts
+from ..ids import (
     DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, publication_doi,
 )
-from .validators import doi_problem
+from ..validators import doi_problem
 
 logger = logging.getLogger(__name__)
 
@@ -174,7 +173,7 @@ def query_sources(search, item_class=None, sources=None, not_found=True, roots=N
 
     Queries the requested sources in parallel (results are cached for five
     minutes, see :func:`_cached_search`), merges the results, and sorts them by
-    relevance to *search* using :func:`~.queries.rank_by_search_term`.
+    relevance to *search* using :func:`rank_by_search_term`.
     A Wikidata result with the same label and description as a MaRDI result
     is left out: it is the same item, and the export would ask the user to
     select the MaRDI one.

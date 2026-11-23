@@ -1,7 +1,7 @@
-'''The project's own items in the dropdowns of related items (queries.query_user_entries).'''
+'''The project's own items in the dropdowns of related items (dropdowns.query_user_entries).'''
 import pytest
 
-import MaRDMO.queries as queries
+import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO.providers import MaRDMOProvider
 from tests.db.conftest import answer, save
 
@@ -9,7 +9,7 @@ from tests.db.conftest import answer, save
 @pytest.fixture
 def options(monkeypatch):
     '''The options of the provider *key* for *search*, with the portal and Wikidata answering nothing.'''
-    monkeypatch.setattr(queries, 'query_sources', lambda **kwargs: [])
+    monkeypatch.setattr(dropdowns, 'query_sources', lambda **kwargs: [])
 
     def get(project, key, search):
         provider = MaRDMOProvider(key, key, 'MaRDMO.providers.MaRDMOProvider')

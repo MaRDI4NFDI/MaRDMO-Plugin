@@ -11,7 +11,7 @@ import inspect
 import json
 import sys
 
-import MaRDMO.queries as queries
+import MaRDMO.components.dropdowns as dropdowns
 
 SEARCHES = ('', 'a', 'ab', 'abc')
 FUNCTIONS = ('query_sources', 'query_sources_with_user_additions')
@@ -22,10 +22,10 @@ def record(class_path, key, monkeypatch):
     module_name, class_name = class_path.rsplit('.', 1)
     module = importlib.import_module(module_name)
     seen = []
-    originals = {function: getattr(queries, function) for function in FUNCTIONS}
+    originals = {function: getattr(dropdowns, function) for function in FUNCTIONS}
     # the providers' modules imported the functions; queries itself keeps them
     for loaded in [m for name, m in sys.modules.items()
-                   if name.startswith('MaRDMO') and m is not None and m is not queries]:
+                   if name.startswith('MaRDMO') and m is not None and m is not dropdowns]:
         for function, real in originals.items():
             current = getattr(loaded, function, None)
             if current is real or getattr(current, 'recorder', False):

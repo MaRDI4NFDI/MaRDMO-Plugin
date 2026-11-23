@@ -297,9 +297,9 @@ class GeneratePayload:
         to (wbgetentities, 50 items per request) and decides each entry with
         :func:`~MaRDMO.payload.claims.exists_in_claims`.  The qualifier merge
         and the symbol check use the same claims.  Failed requests are retried after
-        :data:`~MaRDMO.queries.EXPORT_RETRY_WAITS`; all of them together give
-        up after :data:`~MaRDMO.queries.EXPORT_CHECK_DEADLINE` seconds (in the
-        preview its shorter limits, :func:`~MaRDMO.queries.check_limits`).
+        :data:`~MaRDMO.sources.http.EXPORT_RETRY_WAITS`; all of them together give
+        up after :data:`~MaRDMO.sources.http.EXPORT_CHECK_DEADLINE` seconds (in the
+        preview its shorter limits, :func:`~MaRDMO.sources.http.check_limits`).
 
         Args:
             api_url: Action API URL of the portal.
