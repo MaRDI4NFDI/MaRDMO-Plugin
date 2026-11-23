@@ -19,7 +19,7 @@ Provides:
 - ``remaining_marks``       — tag: the problems and hints of a page no ``marks`` showed
 
 The red marks of the preview are the problems of the checks
-(:func:`~MaRDMO.problems.attach`), the blue ones their hints: what a MaRDI
+(:func:`~MaRDMO.export.problems.attach`), the blue ones their hints: what a MaRDI
 Portal item could have (#167).  A template shows them with ``marks`` where
 it shows the field, and ``remaining_marks`` at the end of each page shows
 the rest, so every problem and hint is on its page and nothing else is

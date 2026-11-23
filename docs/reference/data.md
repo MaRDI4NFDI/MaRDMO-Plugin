@@ -54,7 +54,7 @@
 
 ## Duplicates
 
-::: MaRDMO.duplicates
+::: MaRDMO.export.duplicates
 
 ## Markers
 

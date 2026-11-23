@@ -10,11 +10,11 @@
 
 ## Relations
 
-::: MaRDMO.relations
+::: MaRDMO.export.relations
 
 ## Ordering
 
-::: MaRDMO.ordering
+::: MaRDMO.export.ordering
 
 ## Properties
 

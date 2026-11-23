@@ -19,7 +19,7 @@ Provides:
 - :func:`validate_count`             — rejects counts (nodes, CPUs, cores) that are not whole numbers
 - :func:`validate_data_size`         — rejects data sizes that are not numbers (whole for items)
 
-Shared rules, also used by the documentation checker (:mod:`~MaRDMO.checks`)
+Shared rules, also used by the documentation checker (:mod:`~MaRDMO.export.checks`)
 and the preview templates (:mod:`~MaRDMO.templatetags.mardmo_tags`), so that
 all three always agree:
 

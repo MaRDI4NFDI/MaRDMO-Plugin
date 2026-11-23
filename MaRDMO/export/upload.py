@@ -3,7 +3,7 @@
 :class:`Upload` posts the entries of the payload and reports its progress;
 afterwards the project gets the IDs of the created items
 (:func:`~MaRDMO.export.items.replace_ids`) and the result page lists them and the
-statements (:func:`collect_statements`).  :mod:`MaRDMO.oauth2` starts it
+statements (:func:`collect_statements`).  :mod:`MaRDMO.export.oauth2` starts it
 after the authorization.
 '''
 
@@ -21,17 +21,12 @@ from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
-from .core.config import get_items, get_properties
-from .export.items import compare_items, replace_ids
-from .core.ids import item_text
-from .portal_errors import (
-    DuplicateOnPortal,
-    explain_error,
-    extract_error_message,
-    handle_policy_violation,
-)
+from ..core.config import get_items, get_properties
+from .items import compare_items, replace_ids
+from ..core.ids import item_text
+from .portal_errors import DuplicateOnPortal, explain_error, extract_error_message, handle_policy_violation
 from .store import _progress_store
-from .core.values import replace_in_dict
+from ..core.values import replace_in_dict
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +40,7 @@ def in_language(language, function):
 
 
 class Upload:
-    '''One export to the MaRDI Portal, run in the background (:meth:`run`), its progress in :mod:`~MaRDMO.store`.
+    '''One export to the MaRDI Portal, run in the background (:meth:`run`), its progress in :mod:`~MaRDMO.export.store`.
 
     Posts all ``Item*`` entries of the payload, then all ``RELATION*`` and
     ``ALIAS*`` entries (:meth:`post_data`), with retries, and replaces the
@@ -56,7 +51,7 @@ class Upload:
         '''Prepare the export *job_id*.
 
         Args:
-            job_id:  Key of the job in :data:`~MaRDMO.store._progress_store`.
+            job_id:  Key of the job in :data:`~MaRDMO.export.store._progress_store`.
             headers: The authorization headers of the requests (the user's token).
             session: The :class:`requests.Session` of the requests; one is
                      opened with the first request if not given.

@@ -7,7 +7,7 @@ has its Wikidata QID (P12), a publication also if a portal item has its DOI
 (#158); also an own item with the label and description of a Wikidata item
 of the same documentation (the portal takes only one).
 :func:`look_up` finds them; the export stops at them
-(:meth:`~MaRDMO.payload.GeneratePayload.process_items`), the preview lists
+(:meth:`~MaRDMO.export.payload.GeneratePayload.process_items`), the preview lists
 them at the top (:func:`preview_duplicates`), with the action the user can
 take:
 
@@ -44,14 +44,14 @@ from django.utils.translation import gettext as _
 from rdmo.projects.models import Value
 from rdmo.questions.models import Question
 
-from .core.config import get_items, get_questions
-from .export.items import unique_items
-from .project.identity import id_attributes
-from .core.ids import is_own_item, item_text
-from .core.markers import PUBLICATION_MARKERS, SECTION_MARKERS, class_families, contradictions
-from .sources.portal import find_portal_items, find_publications_by_doi, portal_dois, portal_labels
-from .core.constants import BASE_URI
-from .components.publication.constants import AUTHORS, CITATIONINFOS, JOURNALS, LANGUAGES
+from ..core.config import get_items, get_questions
+from .items import unique_items
+from ..project.identity import id_attributes
+from ..core.ids import is_own_item, item_text
+from ..core.markers import PUBLICATION_MARKERS, SECTION_MARKERS, class_families, contradictions
+from ..sources.portal import find_portal_items, find_publications_by_doi, portal_dois, portal_labels
+from ..core.constants import BASE_URI
+from ..components.publication.constants import AUTHORS, CITATIONINFOS, JOURNALS, LANGUAGES
 
 logger = logging.getLogger(__name__)
 

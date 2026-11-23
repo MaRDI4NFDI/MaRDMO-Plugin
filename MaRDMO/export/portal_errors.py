@@ -9,7 +9,7 @@ import re
 
 from django.utils.translation import gettext_lazy as _
 
-from .core.config import get_properties
+from ..core.config import get_properties
 
 # Field path in a Wikibase REST API 400 error, e.g.
 # "Invalid value at '/item/statements/P69/0/value/content'"
@@ -28,7 +28,7 @@ _POLICY_VIOLATIONS = {
 class DuplicateOnPortal(RuntimeError):
     '''The portal did not create an item: one with its label and description exists (#141).
 
-    The export looked its items up before (:func:`~MaRDMO.duplicates.look_up`),
+    The export looked its items up before (:func:`~MaRDMO.export.duplicates.look_up`),
     so the item was probably created in the meantime.  MaRDMO does not link
     it silently: the user decides in the preview (or, for an author or
     journal of a publication, the next export does).

@@ -8,7 +8,7 @@ import pytest
 from django.template.loader import render_to_string
 
 from MaRDMO.workflow.checks import WorkflowChecks
-from MaRDMO.problems import attach
+from MaRDMO.export.problems import attach
 from MaRDMO.workflow.worker import PrepareWorkflow
 from tests.support.html import elements, text
 

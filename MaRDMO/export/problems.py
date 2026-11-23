@@ -18,7 +18,7 @@ from typing import Optional
 
 from django.utils.translation import gettext as _, gettext_lazy
 
-from .project.pages import PageRef
+from ..project.pages import PageRef
 
 # First line of the error page of an export that is stopped
 HEADER = gettext_lazy('Following aspects prevented the export:')

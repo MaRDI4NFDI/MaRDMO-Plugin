@@ -2,7 +2,7 @@
 
 The export job stores the created items (``ids``: ``[class, name, QID]``)
 and the statements it added (``statements``, see
-:func:`~MaRDMO.upload.collect_statements`).  :func:`split_statements` sorts
+:func:`~MaRDMO.export.upload.collect_statements`).  :func:`split_statements` sorts
 the statements to their items, :func:`group_by_class` orders the items,
 and :func:`result_graph` builds the graph of the page.
 '''
@@ -10,7 +10,7 @@ from collections import defaultdict
 
 from django.utils.translation import gettext_noop as N_
 
-from .core.constants import (
+from ..core.constants import (
     DOI_BASE_URL,
     ISSN_BASE_URL,
     MORWIKI_BASE_URL,
@@ -21,7 +21,7 @@ from .core.constants import (
     WIKIDATA,
     ZBMATH_AUTHOR_BASE_URL,
 )
-from .components.validators import url_problem
+from ..components.validators import url_problem
 
 CLASS_ORDER = [
     N_('Mathematical Model'), N_('Research Problem'), N_('Formula'), N_('Computational Task'),

@@ -46,7 +46,7 @@ def unique_items(data, title = None):
         ``author`` or ``journal`` for the authors and journals of
         publications, see :data:`PART_KINDS`) and *dependency*
         maps the same keys to empty sets (populated later by
-        :class:`~MaRDMO.payload.GeneratePayload`).
+        :class:`~MaRDMO.export.payload.GeneratePayload`).
     '''
     # Set up Item Dict and track seen Items
     items = {}
@@ -108,7 +108,7 @@ def _add_publication_dois(data, items, seen_items):
     '''Give the items of the publication pages of *data* their DOI (``doi``), if they have one (#158).
 
     The duplicate check finds publications on the MaRDI Portal by it
-    (:func:`~MaRDMO.duplicates.look_up`).
+    (:func:`~MaRDMO.export.duplicates.look_up`).
     '''
     option = get_options()['DOI']
     for page in (data.get('publication') or {}).values():

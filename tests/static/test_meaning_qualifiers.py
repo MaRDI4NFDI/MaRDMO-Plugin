@@ -13,7 +13,7 @@ import pytest
 from MaRDMO.algorithm.constants import get_relations as algorithm_relations
 from MaRDMO.core.config import get_properties
 from MaRDMO.model.constants import get_relations as model_relations
-from MaRDMO.payload.claims import MEANING_PROPERTIES
+from MaRDMO.export.payload.claims import MEANING_PROPERTIES
 from MaRDMO.workflow.constants import get_relations as workflow_relations
 
 PACKAGE = Path(__file__).parents[2] / 'MaRDMO'

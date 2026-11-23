@@ -17,8 +17,8 @@ from ..core.constants import BENCHMARK_REFERENCES
 from ..core.config import get_items, get_properties, get_url
 from ..core.properties import get_mathalgodb, get_publication_mapping
 from ..export.items import unique_items
-from ..relations import collect_items_without_section, resolve_relations
-from ..payload import GeneratePayload
+from ..export.relations import collect_items_without_section, resolve_relations
+from ..export.payload import GeneratePayload
 
 from ..export.worker import CatalogExport
 
@@ -63,7 +63,7 @@ class PrepareAlgorithm(CatalogExport):
     def export(self, data, url):
         '''Assemble and return the complete Wikibase payload for an Algorithm documentation export.
 
-        Creates a :class:`~MaRDMO.payload.GeneratePayload` instance, processes
+        Creates a :class:`~MaRDMO.export.payload.GeneratePayload` instance, processes
         all unique items, then delegates each entity section (algorithms, problems,
         software, benchmarks, publications) to dedicated helper methods.
 
@@ -73,7 +73,7 @@ class PrepareAlgorithm(CatalogExport):
 
         Returns:
             Tuple ``(payload_dict, dependency_order)`` ready for
-            :meth:`~MaRDMO.oauth2.OauthProviderMixin.post`.
+            :meth:`~MaRDMO.export.oauth2.OauthProviderMixin.post`.
         '''
 
         items, dependency = unique_items(data)

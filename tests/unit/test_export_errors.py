@@ -9,7 +9,7 @@ import pytest
 import requests
 
 import MaRDMO.sources.wikibase as wikibase
-from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
+from MaRDMO.export.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 
 
 @pytest.fixture

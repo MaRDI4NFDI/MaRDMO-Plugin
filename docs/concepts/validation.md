@@ -13,7 +13,7 @@ entered values in three places, which all use the same rules:
 The rules live in one place — `components/validators.py`, with the regular expressions in
 `patterns.py` — so that pre-save validation and the checks always agree.  The
 preview's red marks are the problems of the checks themselves
-(`MaRDMO.problems.attach` and the template tags `marks` and `remaining_marks`
+(`MaRDMO.export.problems.attach` and the template tags `marks` and `remaining_marks`
 in `templatetags/mardmo_tags.py`): a template shows a problem where it shows
 the field it belongs to, and the end of each page the rest, so the preview
 marks exactly what the checks report.

@@ -1,6 +1,6 @@
 '''Relations between the entries of a documentation, resolved to their pages for preview and export.'''
-from .export.items import item_key
-from .project.pages import page_refs
+from .items import item_key
+from ..project.pages import page_refs
 
 
 def check_list(list_var):

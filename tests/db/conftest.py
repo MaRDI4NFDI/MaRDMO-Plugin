@@ -107,7 +107,7 @@ def white(project, portal, client, django_user_model, monkeypatch):
     monkeypatch.setattr('MaRDMO.components.publication.worker.PublicationRetriever.get_information',
                         lambda self, project, snapshot, answers: answers)
     # Nothing of it is on the portal already (the lookup by label changes with the answers)
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: PortalItems())
     portal('export_white_2006')
     documentation = imported(project, 'white_2006')
     user = django_user_model.objects.create_user('owner', password='owner')

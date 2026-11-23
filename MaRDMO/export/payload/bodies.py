@@ -1,11 +1,11 @@
 '''The parts of the payload: texts and values cleaned for the portal, request bodies and URLs.
 
-Pure functions: :class:`~MaRDMO.payload.GeneratePayload` assembles the
+Pure functions: :class:`~MaRDMO.export.payload.GeneratePayload` assembles the
 payload from them.
 '''
 import re
 
-from ..components.validators import normalize_formula
+from ...components.validators import normalize_formula
 
 # Datatypes whose values the portal stores as single-line text
 TEXT_TYPES = ('string', 'external-id', 'url', 'URL', 'monolingualtext')
@@ -52,7 +52,7 @@ def quantity_amount(text):
     '''Return *text* as a Wikibase quantity amount (``"08"`` → ``"+8"``, ``" 1.50"`` → ``"+1.50"``).
 
     Strips whitespace and leading zeros of plain decimals; anything else is
-    passed through with a ``+`` so that :meth:`~MaRDMO.payload.GeneratePayload.validate_identifiers`
+    passed through with a ``+`` so that :meth:`~MaRDMO.export.payload.GeneratePayload.validate_identifiers`
     reports it instead of the portal rejecting it during the upload.
     '''
     text = str(text or '').strip()
@@ -179,7 +179,7 @@ def normalize_aliases(aliases_dict: dict) -> list[str]:
 
 
 def build_qualifier(identifier, data_type, content):
-    '''Build a single-qualifier list for use in :meth:`~MaRDMO.payload.GeneratePayload.add_answer`.
+    '''Build a single-qualifier list for use in :meth:`~MaRDMO.export.payload.GeneratePayload.add_answer`.
 
     Args:
         identifier: Wikibase property ID string for the qualifier (e.g. ``"P3"``).

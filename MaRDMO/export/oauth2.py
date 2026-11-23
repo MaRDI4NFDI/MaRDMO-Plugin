@@ -2,7 +2,7 @@
 
 Provides :class:`OauthProviderMixin`: the authorization flow against the
 MaRDI Portal (``/authorize`` → ``/callback`` → token exchange), after which
-the export runs in the background (:class:`~MaRDMO.upload.Upload`) and the
+the export runs in the background (:class:`~MaRDMO.export.upload.Upload`) and the
 browser shows its progress.
 '''
 
@@ -34,7 +34,7 @@ class OauthProviderMixin:
     :meth:`get_callback_auth`, :meth:`get_callback_headers`,
     :meth:`get_callback_params` and :meth:`get_callback_data`.  The mixin
     handles state validation and token exchange, then starts the upload
-    (:class:`~MaRDMO.upload.Upload`) and shows its progress.
+    (:class:`~MaRDMO.export.upload.Upload`) and shows its progress.
     '''
 
     # ------------------- OAUTH FLOW -------------------
@@ -75,7 +75,7 @@ class OauthProviderMixin:
         '''Handle the OAuth callback, exchange the code for a token, and start posting.
 
         Validates the *state* parameter, exchanges the authorization code for an
-        access token, then launches :meth:`~MaRDMO.upload.Upload.run` in a daemon thread
+        access token, then launches :meth:`~MaRDMO.export.upload.Upload.run` in a daemon thread
         and redirects to the live-progress page.
 
         Args:

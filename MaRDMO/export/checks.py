@@ -1,4 +1,10 @@
-'''Base validation helpers shared across all catalog check modules.
+'''The checks of a documentation before the export: what they share (#198).
+
+:class:`ChecksBase` holds the shared checks; each catalog has its own
+subclass (``model/checks.py``, ``algorithm/checks.py``,
+``workflow/checks.py``), which its :class:`~MaRDMO.core.catalogs.Catalog`
+names.  They return what they find as :class:`~MaRDMO.export.problems.Problem`
+(see :mod:`MaRDMO.export.pipeline`).
 
 Three kinds of findings (#167): what a page lacks (:meth:`ChecksBase._missing`),
 an invalid value (:meth:`ChecksBase._invalid`) and a broken structure
@@ -11,7 +17,7 @@ valid, and the structure always.
 
 The messages are translated when the checks run (the language of the
 request); sections and class names stay English in the problems and are
-marked with ``N_`` so that the catalog has them (see :mod:`MaRDMO.problems`).
+marked with ``N_`` so that the catalog has them (see :mod:`MaRDMO.export.problems`).
 '''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
@@ -21,7 +27,7 @@ from ..core.properties import find_reference
 from ..core.ids import NOT_FOUND, is_own_item
 from ..project.pages import add_tab_names, page_ref
 from ..core.patterns import LINE_BREAK_RE
-from ..problems import Problem
+from .problems import Problem
 from ..components.validators import (
     doi_problem,
     short_description_problem,
@@ -29,8 +35,8 @@ from ..components.validators import (
     url_problem,
     url_schemes,
 )
-from ..payload import PortalUnavailable
-from ..payload.claims import fetch_claims
+from .payload import PortalUnavailable
+from .payload.claims import fetch_claims
 from ..sources.http import check_deadline
 
 # An item without a real ID: the project was made before MaRDMO 0.8.0, which
@@ -136,7 +142,7 @@ class ChecksBase:
 
     @staticmethod
     def _error(section, page, message, field=None):
-        '''The :class:`~MaRDMO.problems.Problem` *message* of *page* in *section*.
+        '''The :class:`~MaRDMO.export.problems.Problem` *message* of *page* in *section*.
 
         As text it reads ``"Section (Page <tab>): message"``.
         '''
@@ -595,8 +601,8 @@ class ChecksBase:
         '''Return the problems, sorted by their text (the order of the error page).
 
         Returns:
-            ``self.err``: a list of :class:`~MaRDMO.problems.Problem`, empty when
-            no issues were found.  :func:`~MaRDMO.problems.report_lines` gives
+            ``self.err``: a list of :class:`~MaRDMO.export.problems.Problem`, empty when
+            no issues were found.  :func:`~MaRDMO.export.problems.report_lines` gives
             the error page's lines.
         '''
         self.err.sort(key=str)

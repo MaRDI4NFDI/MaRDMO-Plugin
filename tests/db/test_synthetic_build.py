@@ -28,11 +28,12 @@ from rdmo.projects.renderers import XMLRenderer
 from rdmo.projects.serializers.export import ProjectSerializer
 from rdmo.questions.models import Catalog as RDMOCatalog
 
-from MaRDMO import main, pipeline
+from MaRDMO import main
+from MaRDMO.export import pipeline
 from MaRDMO.sources import wikibase
 from MaRDMO.core.catalogs import catalog_of
-from MaRDMO.duplicates import preview_duplicates, reuse
-from MaRDMO.problems import report_lines
+from MaRDMO.export.duplicates import preview_duplicates, reuse
+from MaRDMO.export.problems import report_lines
 from tools.synthetic.catalog import Catalog
 from tools.synthetic.writer import SENT, Documentation, polite
 

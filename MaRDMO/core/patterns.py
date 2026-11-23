@@ -92,7 +92,7 @@ Only visible line breaks are matched; tabs and other invisible whitespace
 (also rejected by the portal) are replaced by spaces on export instead.
 
 Used by the pre-save validator for textarea answers (:mod:`~MaRDMO.components.validators`),
-the documentation checker (:mod:`~MaRDMO.checks.base`), and the preview templates.
+the documentation checker (:mod:`~MaRDMO.export.checks`), and the preview templates.
 '''
 
 # ---------------------------------------------------------------------------

@@ -17,10 +17,10 @@ import requests
 from rdmo.projects.models import Membership
 
 from MaRDMO.core.constants import BASE_URI
-from MaRDMO.duplicates import look_up
+from MaRDMO.export.duplicates import look_up
 from MaRDMO.core.config import get_items
 from MaRDMO.export.items import unique_items
-from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
+from MaRDMO.export.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.sources.portal import PortalItems
 from tests.db.conftest import answer, save
 from tests.support.html import attribute, element, elements, links, preview_page, text
@@ -67,7 +67,7 @@ def model(project, client, django_user_model, monkeypatch):
 def found(portal, monkeypatch):
     '''The DOI lookups recorded; the portal has Dijkstra's label and description (Q78129), and markers.'''
     portal('publication_duplicates')
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems(
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: PortalItems(
         by_label={DIJKSTRA: 'Q78129'}, markers={'Q5814205': PUBLICATION, 'Q78129': PUBLICATION}))
 
 
@@ -126,7 +126,7 @@ def test_another_publication_is_created_with_its_doi_in_the_description(found):
 
 def test_a_portal_item_with_that_description_is_the_publication(model, client, found, monkeypatch):
     created = (DIJKSTRA[0], f'{DIJKSTRA[1]} (DOI {OTHER_DOI})')
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda pairs=(), **kwargs: PortalItems(
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda pairs=(), **kwargs: PortalItems(
         by_label={pair: qid for pair, qid in {DIJKSTRA: 'Q78129', created: 'Q7'}.items() if pair in pairs},
         markers={'Q5814205': PUBLICATION, 'Q78129': PUBLICATION, 'Q7': PUBLICATION}))
     listed = rows(preview_page(client, model))
@@ -154,8 +154,8 @@ def test_the_export_stops_at_a_publication_on_the_portal(found):
 def unreachable(monkeypatch):
     def fail(*args, **kwargs):
         raise requests.exceptions.ConnectionError('down')
-    monkeypatch.setattr('MaRDMO.duplicates.find_publications_by_doi', fail)
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_publications_by_doi', fail)
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: PortalItems())
 
 
 def test_a_failed_doi_lookup_is_noticed(unreachable):

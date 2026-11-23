@@ -48,8 +48,8 @@ def model(project, client, django_user_model, monkeypatch):
 def portal(monkeypatch):
     '''The portal has what a test puts into it: ``portal(by_label=..., by_wikidata=..., markers=...)``.'''
     def use(**found):
-        monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems(**found))
-        monkeypatch.setattr('MaRDMO.duplicates.portal_labels',
+        monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: PortalItems(**found))
+        monkeypatch.setattr('MaRDMO.export.duplicates.portal_labels',
                             lambda qids, waits=(), deadline=None: {qid: ('ecology', 'branch of biology') for qid in qids})
     return use
 

@@ -17,7 +17,7 @@ from MaRDMO.sources.portal import PortalItems
 from MaRDMO.core.config import get_items, get_properties
 from MaRDMO.core.properties import get_mathmoddb
 from MaRDMO.model.models import MathematicalModel
-from MaRDMO.payload import GeneratePayload
+from MaRDMO.export.payload import GeneratePayload
 from MaRDMO.templatetags.mardmo_tags import publication_info
 
 PACKAGE = Path(__file__).parents[1] / 'MaRDMO'
@@ -79,7 +79,7 @@ def new_publication_items(monkeypatch):
         dependency={'Item0000000001': set(), 'Item0000000002': set()},
     )
     # Neither item exists on the portal
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: PortalItems())
     payload.process_items()
     return payload.state.dictionary
 

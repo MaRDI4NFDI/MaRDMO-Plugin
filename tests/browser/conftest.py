@@ -19,7 +19,7 @@ from django.test import Client
 from django.core.servers.basehttp import ThreadedWSGIServer
 from django.test.testcases import LiveServerThread
 
-from MaRDMO.store import SESSION_JOBS_KEY
+from MaRDMO.export.store import SESSION_JOBS_KEY
 
 # The test database with the questionnaire, and the helpers to fill projects
 from tests.db.conftest import django_db_setup, project  # noqa: F401

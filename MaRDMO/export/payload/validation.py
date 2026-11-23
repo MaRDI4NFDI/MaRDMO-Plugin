@@ -3,8 +3,8 @@ import re
 
 from django.utils.translation import gettext as _
 
-from ..core.patterns import QUANTITY_AMOUNT_RE
-from ..components.validators import (
+from ...core.patterns import QUANTITY_AMOUNT_RE
+from ...components.validators import (
     REPOSITORY_URL_SCHEMES,
     WEB_URL_SCHEMES,
     doi_problem,

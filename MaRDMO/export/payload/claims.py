@@ -12,8 +12,8 @@ import re
 import requests
 from django.utils.translation import gettext as _
 
-from ..sources.http import check_waits
-from ..sources.wikibase import ENTITIES_PER_REQUEST, get_entities
+from ...sources.http import check_waits
+from ...sources.wikibase import ENTITIES_PER_REQUEST, get_entities
 from .errors import DocumentationProblem, PortalUnavailable
 
 _logger = logging.getLogger(__name__)

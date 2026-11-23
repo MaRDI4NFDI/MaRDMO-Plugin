@@ -15,8 +15,8 @@ from collections import Counter
 
 import pytest
 
-from MaRDMO.ordering import cycle_groups, is_cyclic, topological_order
-from MaRDMO.payload import GeneratePayload
+from MaRDMO.export.ordering import cycle_groups, is_cyclic, topological_order
+from MaRDMO.export.payload import GeneratePayload
 
 URL = 'https://portal.example.org'
 P = 'P1'                                        # any property

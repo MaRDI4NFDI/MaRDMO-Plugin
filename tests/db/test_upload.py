@@ -17,9 +17,9 @@ import pytest
 
 from MaRDMO import main
 from MaRDMO.core.catalogs import catalog_of
-from MaRDMO.ordering import topological_order
-from MaRDMO.store import _progress_store
-from MaRDMO.upload import Upload
+from MaRDMO.export.ordering import topological_order
+from MaRDMO.export.store import _progress_store
+from MaRDMO.export.upload import Upload
 from tests.db.test_export import DOCUMENTATIONS, imported
 
 PLACEHOLDER = re.compile(r'Item\d{10}')
@@ -81,7 +81,7 @@ def test_the_upload_writes_everything_in_order(name, project, portal, monkeypatc
     expected.update(entry['payload']['statement']['property']['id'] for entry in relations
                     if entry['url'].split('/items/')[1].split('/')[0] in new)
     fake = Portal()
-    monkeypatch.setattr('MaRDMO.upload.time.sleep', lambda seconds: None)
+    monkeypatch.setattr('MaRDMO.export.upload.time.sleep', lambda seconds: None)
     request = SimpleNamespace(build_absolute_uri=lambda path: path)
     Upload(f'test-{name}', {'Authorization': 'Bearer token'}, fake).run(
         request, json.loads(json.dumps(payload)), topological_order(dependency), None)

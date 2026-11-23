@@ -50,7 +50,7 @@ of the preview page triggers the actual export.
 
 #### Before you export
 
-The preview runs everything the export checks (`MaRDMO.pipeline.run`): the
+The preview runs everything the export checks (`MaRDMO.export.pipeline.run`): the
 [validation checks](#5-validation-checks) and, when they find nothing, the
 export itself on a copy of the answers, without posting
 ([payload construction](#6-payload-construction) with its checks against the
@@ -60,7 +60,7 @@ What prevents the export is shown at the top, in the box **Before you export**
 items already on the MaRDI Portal (below), **Errors, inconsistencies and
 incomplete documentation**, and the optional **Portal items you could
 complete** (see below).  The first two prevent the export.  The latter lists what the
-checks find (`MaRDMO.problems.Problem`) by section and page; each page is
+checks find (`MaRDMO.export.problems.Problem`) by section and page; each page is
 linked to its place in the preview and to its page in the interview
 (`MaRDMO.project.pages.interview_urls`; RDMO opens a page, not a tab, so the tab is
 named).  The export's own problems have no page and are listed under
@@ -107,7 +107,7 @@ seconds for the largest documentations of the portal.
 
 #### Items already on the MaRDI Portal
 
-Before the template, `MaRDMO.duplicates.preview_duplicates` looks up the items
+Before the template, `MaRDMO.export.duplicates.preview_duplicates` looks up the items
 the export would create, with the same rules as the export (see
 [Payload Construction](#6-payload-construction); the results are cached, so the
 export reuses them).  If any exist on the portal, the part **Items already on
@@ -143,7 +143,7 @@ failed, the section says so, and the export waits until the portal answers.
 permission `projects.change_value_object`).  The view trusts nothing of the
 request: it looks the duplicate up again and refuses unless the preview would
 offer this action for exactly this item and portal item.  Then
-`MaRDMO.duplicates.reuse` gives every answer with the item's ID(s) the portal
+`MaRDMO.export.duplicates.reuse` gives every answer with the item's ID(s) the portal
 item's `mardi:` ID and text, and its page the portal item's label and
 description (see [Item IDs](ids.md#using-a-portal-item-instead)), and the
 preview opens again at the box (`#before-export`), with its checks run again
@@ -171,7 +171,7 @@ data processing happens.
 ### 5. Validation Checks
 
 `get_post_data()` re-collects the answers dict (submit mode — without publication
-retrieval), and `MaRDMO.pipeline.run` runs what the preview ran.
+retrieval), and `MaRDMO.export.pipeline.run` runs what the preview ran.
 The catalog's checks (`ModelChecks.run()` …) validate the collected answers for completeness and
 consistency, including the value formats described in
 [Validation](validation.md) and, for the detailed model catalog, the formula
@@ -211,7 +211,7 @@ and a dependency graph:
     stops the export too (the portal takes only one).  All of them are listed at once.
 
     Authors and journals of publications never stop the export; the user
-    cannot change them (`MaRDMO.duplicates._resolve_parts`, in this order):
+    cannot change them (`MaRDMO.export.duplicates._resolve_parts`, in this order):
 
     1. a portal item with their Wikidata QID is theirs;
     2. so is one with their label and MaRDMO's description with their own
@@ -227,7 +227,7 @@ and a dependency graph:
        without it.
 
     A portal item used for them gets the identifiers and markers it lacks.  The preview runs the
-    same lookup (`MaRDMO.duplicates.look_up`) and lists them before the export
+    same lookup (`MaRDMO.export.duplicates.look_up`) and lists them before the export
     (see [Items already on the MaRDI Portal](#items-already-on-the-mardi-portal)).
 
 - **Markers of existing items** (`MaRDMO.core.markers`): every section sets its
@@ -387,7 +387,7 @@ instead of writing it again.
 
 #### Error Handling
 
-The upload layer handles MaRDI Portal communication errors gracefully (the messages: `portal_errors`):
+The upload layer handles MaRDI Portal communication errors gracefully (the messages: `export.portal_errors`):
 
 | Condition | Behaviour |
 |---|---|

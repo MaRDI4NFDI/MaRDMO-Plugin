@@ -45,7 +45,7 @@ class Catalog:
         worker:     Import path of the class that prepares the export
                     (``MaRDMO.model.worker.PrepareModel``); empty for the search.
         check:      Import path of its checks, a subclass of
-                    :class:`~MaRDMO.checks.base.ChecksBase` (``MaRDMO.model.checks.ModelChecks``).
+                    :class:`~MaRDMO.export.checks.ChecksBase` (``MaRDMO.model.checks.ModelChecks``).
         subset:     It has only part of the questions of its question set
                     (model basics, #168): the answers are read for its own.
     '''

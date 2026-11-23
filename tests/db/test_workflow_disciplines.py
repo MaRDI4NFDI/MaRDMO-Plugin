@@ -29,7 +29,7 @@ def workflow(project):
 
 
 def test_the_export_gives_disciplines_class_community_and_profile(workflow, monkeypatch):
-    monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())
+    monkeypatch.setattr('MaRDMO.export.duplicates.find_portal_items', lambda **kwargs: PortalItems())
     provider = main.MaRDMOExportProvider('wikibase', 'x', 'MaRDMO.main.MaRDMOExportProvider')
     provider.project, provider.snapshot = workflow, None
     answers, _ = provider.get_post_data()

@@ -1,7 +1,7 @@
 '''Worker module for Interdisciplinary Workflow preview and export.
 
 Provides :class:`PrepareWorkflow`, which assembles RDMO questionnaire answers
-into a :class:`~MaRDMO.payload.GeneratePayload` ready for submission to the
+into a :class:`~MaRDMO.export.payload.GeneratePayload` ready for submission to the
 MaRDI Portal Wikibase instance.
 '''
 
@@ -12,9 +12,9 @@ from ..core.markers import IRREPRODUCIBILITY, REPRODUCIBILITY
 from ..core.config import get_items, get_options, get_properties, get_url
 from ..core.properties import get_mathalgodb, get_mathmoddb, get_publication_mapping
 from ..export.items import unique_items
-from ..relations import collect_items_without_section, resolve_relations
-from ..payload import GeneratePayload
-from ..payload.bodies import quantity_amount
+from ..export.relations import collect_items_without_section, resolve_relations
+from ..export.payload import GeneratePayload
+from ..export.payload.bodies import quantity_amount
 
 from ..export.worker import CatalogExport
 
@@ -40,7 +40,7 @@ class PrepareWorkflow(CatalogExport):
         '''Enrich the answers dict with derived display structures for the preview template.
 
         First resolves the relations of :data:`~MaRDMO.workflow.constants.preview_relations`
-        (:func:`~MaRDMO.relations.resolve_relations`, e.g. Workflow → Process Step) in the
+        (:func:`~MaRDMO.export.relations.resolve_relations`, e.g. Workflow → Process Step) in the
         ``answers`` dict, as the model and algorithm preview workers do.
 
         Then builds ``model_task_pairs`` — an ordered list of dicts with keys ``model``,
@@ -187,7 +187,7 @@ class PrepareWorkflow(CatalogExport):
 
         Returns:
             Tuple ``(payload_dict, dependency_order)`` ready for
-            :meth:`~MaRDMO.oauth2.OauthProviderMixin.post`.
+            :meth:`~MaRDMO.export.oauth2.OauthProviderMixin.post`.
         '''
 
         items, dependency = unique_items(data)

@@ -13,8 +13,8 @@ from MaRDMO.algorithm.checks import AlgorithmChecks
 from MaRDMO.workflow.checks import WorkflowChecks
 from MaRDMO.algorithm.catalog import CATALOG_ALGORITHM
 from MaRDMO.core.config import get_options
-from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
-from MaRDMO.problems import Problem, report_lines
+from MaRDMO.export.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
+from MaRDMO.export.problems import Problem, report_lines
 
 PORTAL, OWN, WIKIDATA = 'mardi:Q5', 'user:0b5c1e8a-7d1c-4d7e-9d2a-1f3a6c9e2b10', 'wikidata:Q7'
 
@@ -38,7 +38,7 @@ def claims(monkeypatch):
         asked.append(list(qids))
         return {'Q5': {'P27': [{'mainsnak': {'datavalue': {'value': 'not-a-doi'}}}],
                        'P1': [{'mainsnak': {'datavalue': {'value': {'amount': '+8.5'}}}}]}}
-    monkeypatch.setattr('MaRDMO.checks.base.fetch_claims', fetch)
+    monkeypatch.setattr('MaRDMO.export.checks.fetch_claims', fetch)
     return asked
 
 
@@ -81,7 +81,7 @@ def test_amounts_are_compared_as_the_portal_has_them(claims):
 def test_a_portal_that_does_not_answer_keeps_the_hint_and_the_export_waiting(monkeypatch):
     def fail(*args, **kwargs):
         raise PortalUnavailable('not reachable')
-    monkeypatch.setattr('MaRDMO.checks.base.fetch_claims', fail)
+    monkeypatch.setattr('MaRDMO.export.checks.fetch_claims', fail)
     checks = AlgorithmChecks()
     assert found(checks, software(PORTAL, **doi('not-a-doi')), 'software')[0][1] is True
     assert checks.unreachable == 'not reachable'

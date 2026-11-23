@@ -11,11 +11,11 @@ into a fully structured payload dict ready for posting to the MaRDI Portal:
 
 Its parts:
 
-- :mod:`~MaRDMO.payload.bodies`: texts and values cleaned for the portal,
+- :mod:`~MaRDMO.export.payload.bodies`: texts and values cleaned for the portal,
   request bodies and URLs.
-- :mod:`~MaRDMO.payload.claims`: the statements against those on the portal.
-- :mod:`~MaRDMO.payload.validation`: values the portal would reject.
-- :mod:`~MaRDMO.payload.errors`: :exc:`DocumentationProblem`, :exc:`PortalUnavailable`.
+- :mod:`~MaRDMO.export.payload.claims`: the statements against those on the portal.
+- :mod:`~MaRDMO.export.payload.validation`: values the portal would reject.
+- :mod:`~MaRDMO.export.payload.errors`: :exc:`DocumentationProblem`, :exc:`PortalUnavailable`.
 
 Key methods: :meth:`~GeneratePayload.add_data_properties`,
 :meth:`~GeneratePayload.add_aliases`,
@@ -30,11 +30,11 @@ from typing import Optional
 from django.utils.translation import gettext as _
 
 from ..duplicates import item_source, look_up
-from ..export.items import item_key
-from ..core.markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
+from ..items import item_key
+from ...core.markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
 from ..ordering import cycle_groups
-from ..sources.http import check_deadline, check_waits
-from ..project.writes import commit_writes
+from ...sources.http import check_deadline, check_waits
+from ...project.writes import commit_writes
 from . import claims
 from .bodies import (
     ITEM_KEY_RE,
@@ -146,7 +146,7 @@ class GeneratePayload:
         The returned dict maps ``"Item<n>"``, ``"RELATION<n>"``, and
         ``"ALIAS<n>"`` keys to their respective payload entries.  This is the
         top-level structure posted to the Wikibase REST API by
-        :class:`~MaRDMO.oauth2.OauthProviderMixin`.
+        :class:`~MaRDMO.export.oauth2.OauthProviderMixin`.
         '''
         # Get Target Dictionary
         target_dictionary = self.state.dictionary
@@ -214,7 +214,7 @@ class GeneratePayload:
             self.state.dictionary[self.state.subject_item]['class'] = name
 
     def add_qualifier(self, identifier, data_type, content):
-        '''Build a single-qualifier list for use in :meth:`add_answer` (:func:`~MaRDMO.payload.bodies.build_qualifier`).'''
+        '''Build a single-qualifier list for use in :meth:`add_answer` (:func:`~MaRDMO.export.payload.bodies.build_qualifier`).'''
         return build_qualifier(identifier, data_type, content)
 
     def add_data_properties(self, item_class):
@@ -276,7 +276,7 @@ class GeneratePayload:
         and the checks, so an export never fails halfway because of them.
         Only what is written: statements the portal has already
         (:meth:`check_existing_relations` marked them) are left out (#167);
-        see :func:`~MaRDMO.payload.validation.invalid_values`.
+        see :func:`~MaRDMO.export.payload.validation.invalid_values`.
 
         Raises:
             DocumentationProblem: One argument per invalid value, naming item and property.
@@ -295,7 +295,7 @@ class GeneratePayload:
 
         Fetches the claims of the existing items the RELATION entries belong
         to (wbgetentities, 50 items per request) and decides each entry with
-        :func:`~MaRDMO.payload.claims.exists_in_claims`.  The qualifier merge
+        :func:`~MaRDMO.export.payload.claims.exists_in_claims`.  The qualifier merge
         and the symbol check use the same claims.  Failed requests are retried after
         :data:`~MaRDMO.sources.http.EXPORT_RETRY_WAITS`; all of them together give
         up after :data:`~MaRDMO.sources.http.EXPORT_CHECK_DEADLINE` seconds (in the
@@ -330,7 +330,7 @@ class GeneratePayload:
         self.check_symbols(api_url, deadline)
 
     def _fetch_claims(self, qids, api_url, deadline, what):
-        '''Return ``{qid: claims}`` of portal items (:func:`~MaRDMO.payload.claims.fetch_claims`).
+        '''Return ``{qid: claims}`` of portal items (:func:`~MaRDMO.export.payload.claims.fetch_claims`).
 
         Items fetched before during this export are taken from the earlier
         answer (the existence check, the qualifier merge and the symbol check need the same).
@@ -340,7 +340,7 @@ class GeneratePayload:
     def merge_qualifiers(self, api_url, deadline=None):
         '''Turn new statements that only add qualifiers into additions to the portal statement.
 
-        See :func:`~MaRDMO.payload.claims.merge_qualifiers`.
+        See :func:`~MaRDMO.export.payload.claims.merge_qualifiers`.
         '''
         claims.merge_qualifiers(self.state.dictionary, self.wikibase['properties'],
                                 lambda qids: self._fetch_claims(qids, api_url, deadline, 'statements'))
@@ -348,7 +348,7 @@ class GeneratePayload:
     def check_symbols(self, api_url, deadline=None):
         '''Compare new "in defining formula" statements with the symbols of the item on the portal.
 
-        See :func:`~MaRDMO.payload.claims.check_symbols`.
+        See :func:`~MaRDMO.export.payload.claims.check_symbols`.
         '''
         claims.check_symbols(self.state.dictionary, self.wikibase['properties'],
                              lambda qids: self._fetch_claims(qids, api_url, deadline, 'formulas'))
@@ -928,7 +928,7 @@ class GeneratePayload:
         exactly their label and description (the portal's own rule), Wikidata
         items also if a portal item has their Wikidata QID (P12), publications
         also if one has their DOI (#158), see
-        :func:`~MaRDMO.duplicates.look_up` (the preview lists the same).  The
+        :func:`~MaRDMO.export.duplicates.look_up` (the preview lists the same).  The
         markers of the existing items are kept for :meth:`subject_markers`.
 
         Raises:

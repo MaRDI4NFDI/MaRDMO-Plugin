@@ -14,11 +14,11 @@ from typing import Optional
 from django.utils.translation import gettext as _, gettext_noop as N_
 
 from .duplicates import PREVIEW_DEADLINE, PREVIEW_RETRY_WAITS
-from .core.config import get_url
+from ..core.config import get_url
 from .ordering import cycle_groups, is_cyclic
 from .payload import DocumentationProblem, PortalUnavailable
 from .problems import Problem
-from .sources.http import check_limits
+from ..sources.http import check_limits
 
 # The section of the problems the export's own checks find (they have no page)
 EXPORT_SECTION = N_('Export')
@@ -29,10 +29,10 @@ class Gate:
     '''What :func:`run` found.
 
     Attributes:
-        problems:    :class:`~MaRDMO.problems.Problem` of the checks or, when
+        problems:    :class:`~MaRDMO.export.problems.Problem` of the checks or, when
                      these found nothing, of the export's own checks.
         hints:       What portal items of the documentation could have
-                     (:attr:`~MaRDMO.problems.Problem.hint`, #167); they do
+                     (:attr:`~MaRDMO.export.problems.Problem.hint`, #167); they do
                      not prevent the export.
         unreachable: The MaRDI Portal did not answer a check (duplicates, TeX
                      check, the statements of existing items); the message.
@@ -95,7 +95,7 @@ def run(project, answers, prepare_class, checks_class, preview=False, duplicates
         prepare_class: The catalog's worker (``PrepareModel`` ...).
         checks_class:  Its checks (``ModelChecks`` ...).
         preview:       Use the preview's shorter limits for the portal requests.
-        duplicates:    The preview's :class:`~MaRDMO.duplicates.Report`; with
+        duplicates:    The preview's :class:`~MaRDMO.export.duplicates.Report`; with
                        rows, the export's checks are not run.
 
     Returns:

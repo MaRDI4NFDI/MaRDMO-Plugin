@@ -6,8 +6,8 @@ do; "exists" is set as the existence check would.
 '''
 import pytest
 
-from MaRDMO.payload import GeneratePayload
-from MaRDMO.payload.claims import same_meaning
+from MaRDMO.export.payload import GeneratePayload
+from MaRDMO.export.payload.claims import same_meaning
 
 CONTAINS, USES, ROLE, SYMBOL, PLATFORM, ASSUMES = 'P1', 'P2', 'P10', 'P11', 'P12', 'P20'
 SUBJECT, OBJECT = 'Item0000000001', 'Item0000000002'

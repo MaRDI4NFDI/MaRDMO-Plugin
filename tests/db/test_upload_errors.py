@@ -13,9 +13,9 @@ from types import SimpleNamespace
 import pytest
 import requests
 
-from MaRDMO.portal_errors import extract_error_message
-from MaRDMO.store import _progress_store
-from MaRDMO.upload import Upload, retry_after_seconds
+from MaRDMO.export.portal_errors import extract_error_message
+from MaRDMO.export.store import _progress_store
+from MaRDMO.export.upload import Upload, retry_after_seconds
 
 URI = 'https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items'
 OK = 'ok'
@@ -71,7 +71,7 @@ class Portal:
 def upload(db, monkeypatch):
     '''Upload the export to a portal with the given script; returns ``(result, portal, slept)``.'''
     slept = []
-    monkeypatch.setattr('MaRDMO.upload.time.sleep', slept.append)
+    monkeypatch.setattr('MaRDMO.export.upload.time.sleep', slept.append)
 
     def run(*script):
         upload = Upload('job', {'Authorization': 'Bearer token'}, Portal(*script))

@@ -2,7 +2,7 @@
 import pytest
 
 from MaRDMO.export.items import unique_items
-from MaRDMO.relations import collect_items_without_section
+from MaRDMO.export.relations import collect_items_without_section
 from MaRDMO.core.values import extract_parts
 from MaRDMO.core.ids import is_item_id, is_own_item, is_portal_item
 from MaRDMO.export.items import item_key

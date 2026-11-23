@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 from django.template.loader import get_template
 
-from MaRDMO.checks.base import ChecksBase
+from MaRDMO.export.checks import ChecksBase
 from MaRDMO.core.catalogs import CATALOG_PACKAGES, SEARCH, catalog_of, catalogs, documenting, registrations
 from MaRDMO.core.constants import BASE_URI
 from MaRDMO.model.catalog import CATALOG_MODEL_BASICS_NAME, CATALOG_MODEL_NAME

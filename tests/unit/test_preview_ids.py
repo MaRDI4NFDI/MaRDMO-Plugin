@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 
 from MaRDMO.model.checks import ModelChecks
 from MaRDMO.model.catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
-from MaRDMO.problems import attach
+from MaRDMO.export.problems import attach
 from tests.support.html import text
 
 OWN = 'user:6f1c2a3e-0000-4000-8000-000000000000'

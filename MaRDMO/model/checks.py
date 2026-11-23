@@ -1,4 +1,4 @@
-'''The checks of the model catalogs (full and basics), on the shared :class:`~MaRDMO.checks.base.ChecksBase`.'''
+'''The checks of the model catalogs (full and basics), on the shared :class:`~MaRDMO.export.checks.ChecksBase`.'''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
 from .constants import (
@@ -7,7 +7,7 @@ from .constants import (
 )
 from .catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..core.ids import is_own_item
-from ..checks.base import ChecksBase, without_page
+from ..export.checks import ChecksBase, without_page
 from ..core.patterns import QUDT_ID_STRICT_RE
 from ..components.tex_check import (
     NOT_VERIFIED,
@@ -474,7 +474,7 @@ class ModelChecks(ChecksBase):
             catalog: Active catalog URI suffix.
 
         Returns:
-            Sorted list of :class:`~MaRDMO.problems.Problem`, empty when
+            Sorted list of :class:`~MaRDMO.export.problems.Problem`, empty when
             all checks pass.
         '''
         self._tab_names(project, data)

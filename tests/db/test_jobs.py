@@ -6,7 +6,7 @@ job afterwards.  The jobs are written here as the upload writes them.
 '''
 import pytest
 
-from MaRDMO.store import SESSION_JOBS_KEY, _progress_store
+from MaRDMO.export.store import SESSION_JOBS_KEY, _progress_store
 from tests.support.html import text
 
 RESULT = {

@@ -17,8 +17,8 @@ catalogs and automated metadata retrieval for three research-artifact types:
 
 The plugin uses Signal handlers (:mod:`MaRDMO.router`) to react to
 questionnaire saves and fills related fields automatically.  Export to the
-MaRDI Portal is handled via OAuth2 (:mod:`MaRDMO.oauth2`) with live progress
-tracking (:mod:`MaRDMO.store`, :mod:`MaRDMO.views`).
+MaRDI Portal is handled via OAuth2 (:mod:`MaRDMO.export.oauth2`) with live progress
+tracking (:mod:`MaRDMO.export.store`, :mod:`MaRDMO.views`).
 """
 
 __title__ = 'MaRDMO'

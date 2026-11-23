@@ -8,7 +8,7 @@ import re
 import pytest
 from playwright.sync_api import expect
 
-from MaRDMO.store import get_progress_data, set_progress_data
+from MaRDMO.export.store import get_progress_data, set_progress_data
 from tests.browser.conftest import screenshot
 
 JOB = 'job-1'

@@ -67,7 +67,7 @@ entry point:
 | `WorkflowChecks.run(project, data, catalog)` | Workflow catalog |
 
 These methods validate the collected answers for completeness and consistency and
-return a list of `MaRDMO.problems.Problem` (section, page, message, field), made
+return a list of `MaRDMO.export.problems.Problem` (section, page, message, field), made
 with `self._error(section, self._page(section_key, index, entry), message,
 field='Field')`; the preview lists them under *Before you export* and marks
 them on the page where it shows *field*, and the export stops if the list is

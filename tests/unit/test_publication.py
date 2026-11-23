@@ -185,7 +185,7 @@ def test_authors_and_journals_of_publications_have_their_kind():
 
 
 def test_placeholders_of_before_0_8_0_are_reported():
-    from MaRDMO.checks.base import has_old_id
+    from MaRDMO.export.checks import has_old_id
     assert has_old_id({'ID': 'user:p', 'author': {0: {'ID': 'no author found'}}})
     assert has_old_id({'ID': 'user:p', 'journal': {0: {'ID': 'no journal found'}}})
     assert not has_old_id({'ID': 'user:p', 'author': {0: {'ID': part_id('author', 'A. Author')}}})
