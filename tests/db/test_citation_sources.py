@@ -12,7 +12,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from MaRDMO.publication import utils
+from MaRDMO.sources import citations
 from MaRDMO.publication.models import Author, Publication
 
 ATTENTION = '10.48550/arXiv.1706.03762'      # a preprint: DataCite, no journal
@@ -30,10 +30,10 @@ def answers(portal):
     '''The recorded answers of all sources for the three publications.'''
     portal('citation_sources')
     return {
-        'datacite': utils.get_datacite_data(ATTENTION).json(),
-        'zbmath': utils.get_zbmath_data(DIJKSTRA).json(),
-        'doi': utils.get_doi_data(SEG1D).json(),
-        'orcid': utils.get_orcids(SEG1D).json(),
+        'datacite': citations.get_datacite_data(ATTENTION).json(),
+        'zbmath': citations.get_zbmath_data(DIJKSTRA).json(),
+        'doi': citations.get_doi_data(SEG1D).json(),
+        'orcid': citations.get_orcids(SEG1D).json(),
     }
 
 
