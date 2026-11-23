@@ -120,7 +120,7 @@ def mutations(documentation, questions):
 @pytest.mark.django_db
 @pytest.mark.parametrize('name, how, language', PROJECTS)
 def test_marks_are_the_problems_of_the_checks(name, how, language, project, portal, monkeypatch, questionnaire):
-    monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
+    monkeypatch.setattr('MaRDMO.components.tex_check.check_formulas', lambda formulas: {})
     monkeypatch.setattr('MaRDMO.model.checks.check_formulas', lambda formulas: {})
     if how == 'import':
         portal(f'export_{name}')

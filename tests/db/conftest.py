@@ -101,10 +101,10 @@ def select(project, qkey, item_type, external_id, text, set_index=0):
 def white(project, portal, client, django_user_model, monkeypatch):
     '''white_2006, imported, with an owner logged in; offline and without duplicates on the portal.'''
     from tests.db.test_export import imported
-    monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
+    monkeypatch.setattr('MaRDMO.components.tex_check.check_formulas', lambda formulas: {})
     monkeypatch.setattr('MaRDMO.model.checks.check_formulas', lambda formulas: {})
     # The preview looks up the publication; the recorded portal has no answers for it
-    monkeypatch.setattr('MaRDMO.publication.worker.PublicationRetriever.get_information',
+    monkeypatch.setattr('MaRDMO.components.publication.worker.PublicationRetriever.get_information',
                         lambda self, project, snapshot, answers: answers)
     # Nothing of it is on the portal already (the lookup by label changes with the answers)
     monkeypatch.setattr('MaRDMO.duplicates.find_portal_items', lambda **kwargs: PortalItems())

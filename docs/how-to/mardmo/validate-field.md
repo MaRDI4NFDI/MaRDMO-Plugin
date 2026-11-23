@@ -43,7 +43,7 @@ validator, the preview, the documentation checker, and the export.
 '''
 ```
 
-**File:** `validators.py` — add a `*_problem()` function that returns a message
+**File:** `components/validators.py` — add a `*_problem()` function that returns a message
 for the user, or `None` if the value is fine.  Ignore leading and trailing
 whitespace (it is removed on export) and treat an empty value as "nothing to
 check" — whether a value is required is decided elsewhere:
@@ -69,7 +69,7 @@ directly.  They are translated (`gettext`, see
 
 ## Step 3 — Pre-save validation
 
-**File:** `validators.py` — add a validator that receives the RDMO `Value`
+**File:** `components/validators.py` — add a validator that receives the RDMO `Value`
 about to be saved and raises `rest_framework.exceptions.ValidationError` with
 the message under `text`.  RDMO shows that message below the question.  If the
 question offers several options (DOI, URL, swMATH ID, …), react only to your

@@ -10,7 +10,7 @@ catalogs and automated metadata retrieval for three research-artifact types:
 - **Interdisciplinary workflows** (:mod:`MaRDMO.workflow`) — documentation of
   computational workflows including process steps, methods, software, hardware,
   instruments, and data sets.
-- **Publications** (:mod:`MaRDMO.publication`) — automated retrieval of
+- **Publications** (:mod:`MaRDMO.components.publication`) — automated retrieval of
   bibliographic metadata from Crossref, DataCite, DOI, zbMath, and ORCID.
 - **Portal search** (:mod:`MaRDMO.search`) — SPARQL-based search across models,
   algorithms, and workflows stored in the MaRDI Portal.

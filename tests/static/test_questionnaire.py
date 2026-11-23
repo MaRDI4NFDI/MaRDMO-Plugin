@@ -41,7 +41,7 @@ def uris(config):
                 yield from uris(value)
 
 
-@pytest.mark.parametrize('path', sorted(PACKAGE.glob('*/data/questions.json')),
+@pytest.mark.parametrize('path', sorted(PACKAGE.glob('**/data/questions.json')),
                          ids=lambda p: p.parent.parent.name)
 def test_questions_exist_as_attributes(path, questionnaire):
     missing = sorted(uri for uri in uris(load(path)) if f'{BASE_URI}{uri}' not in questionnaire['attribute'])
@@ -54,7 +54,7 @@ def test_options_exist(questionnaire):
     assert missing == []
 
 
-@pytest.mark.parametrize('path', sorted(PACKAGE.glob('*/data/mapping.json')),
+@pytest.mark.parametrize('path', sorted(PACKAGE.glob('**/data/mapping.json')),
                          ids=lambda p: p.parent.parent.name)
 def test_relations_exist_as_options(path, questionnaire):
     internal = INTERNAL_RELATIONS.get(path.parent.parent.name, set())

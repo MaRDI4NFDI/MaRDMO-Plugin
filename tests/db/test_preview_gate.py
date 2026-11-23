@@ -68,7 +68,7 @@ def test_an_unanswered_tex_check_asks_to_try_again(white, client, monkeypatch):
 def test_a_formula_the_tex_check_fails_on_passes_unverified(white, client, monkeypatch):
     '''The checker fails on a formula (e.g. HTTP 500 for valid TeX, #165): no dead end, a note.'''
     monkeypatch.setattr('MaRDMO.model.checks.check_formulas', lambda formulas: {tex: 'failed' for tex in formulas})
-    monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {tex: 'failed' for tex in formulas})
+    monkeypatch.setattr('MaRDMO.components.tex_check.check_formulas', lambda formulas: {tex: 'failed' for tex in formulas})
     html = preview_page(client, white)
     assert not elements(html, id='before-export') and export_button(html) == 'enabled'
     assert "TeX check failed on this formula; it is exported unchecked" in text(html)

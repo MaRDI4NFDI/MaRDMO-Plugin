@@ -75,7 +75,7 @@ not empty.  The message is translated (`_('… {item} …').format(item=…)`), 
 section is the English name, marked with `N_('…')` (see
 [How to Translate MaRDMO](translate.md)).  Add checks for any
 mandatory fields or cross-entity constraints introduced by the new entity.  For
-the format of individual values, reuse the shared rules in `validators.py` — see
+the format of individual values, reuse the shared rules in `components/validators.py` — see
 [How to Validate a New Field](validate-field.md).
 
 ---

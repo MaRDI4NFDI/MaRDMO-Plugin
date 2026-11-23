@@ -21,7 +21,7 @@ from .core.constants import (
     WIKIDATA,
     ZBMATH_AUTHOR_BASE_URL,
 )
-from .validators import url_problem
+from .components.validators import url_problem
 
 CLASS_ORDER = [
     N_('Mathematical Model'), N_('Research Problem'), N_('Formula'), N_('Computational Task'),

@@ -268,7 +268,7 @@ class GeneratePayload:
     def validate_identifiers(self):
         '''Reject malformed URLs, DOIs, swMATH IDs, dates and amounts before anything is posted.
 
-        Applies the strict rules from :mod:`~MaRDMO.validators` to every URL
+        Applies the strict rules from :mod:`~MaRDMO.components.validators` to every URL
         statement and qualifier and to every "DOI" and "swMath work ID" value,
         checks that every time value is a ``+YYYY-MM-DDThh:mm:ssZ`` string and
         every quantity amount a Wikibase decimal (``+8``, ``+1.5``).

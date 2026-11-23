@@ -9,10 +9,10 @@ related entity in the questionnaire section.
 '''
 
 from .adders import add_entities, add_new_entities
-from .core.catalogs import catalog_of, registration_of
-from .core.values import extract_parts
-from .core.ids import is_item_id
-from .core.models import Relatant
+from ...core.catalogs import catalog_of, registration_of
+from ...core.values import extract_parts
+from ...core.ids import is_item_id
+from ...core.models import Relatant
 
 # The handler of each catalog, one instance per handler class, created when
 # first used (a mutable dict, so no global statement is needed)
@@ -44,7 +44,7 @@ class Information:  # pylint: disable=too-few-public-methods
            the user's own (``user:`` ID) with the label (and description)
            typed in the relation.
         2. Hydrates a portal or Wikidata entity via ``fill_entity`` on the
-           appropriate :class:`~MaRDMO.handler_base.BaseInformation` subclass.
+           appropriate :class:`~MaRDMO.components.fill.base.BaseInformation` subclass.
 
         Args:
             instance: RDMO Value instance carrying ``project``, ``text``,

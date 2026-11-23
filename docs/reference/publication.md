@@ -1,18 +1,18 @@
 # Publication
 
-::: MaRDMO.publication
+::: MaRDMO.components.publication
 
 ## Handlers
-::: MaRDMO.publication.handlers
+::: MaRDMO.components.publication.handlers
 
 ## Models
-::: MaRDMO.publication.models
+::: MaRDMO.components.publication.models
 
 ## Workers
-::: MaRDMO.publication.worker
+::: MaRDMO.components.publication.worker
 
 ## Constants
-::: MaRDMO.publication.constants
+::: MaRDMO.components.publication.constants
 
 ## Utils
-::: MaRDMO.publication.utils
+::: MaRDMO.components.publication.utils

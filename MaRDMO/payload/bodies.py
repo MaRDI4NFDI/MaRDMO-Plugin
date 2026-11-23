@@ -5,7 +5,7 @@ payload from them.
 '''
 import re
 
-from ..validators import normalize_formula
+from ..components.validators import normalize_formula
 
 # Datatypes whose values the portal stores as single-line text
 TEXT_TYPES = ('string', 'external-id', 'url', 'URL', 'monolingualtext')

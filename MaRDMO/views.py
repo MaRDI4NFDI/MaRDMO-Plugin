@@ -55,7 +55,7 @@ from .store import (
 )
 from .duplicates import preview_duplicates, reuse, same_duplicate
 from .core.catalogs import catalog_of
-from .tex_check import check_formula
+from .components.tex_check import check_formula
 
 
 @login_required
@@ -235,7 +235,7 @@ def check_tex(request):
     The interview's script (``MaRDMO/js/math-preview.js``) posts ``tex``
     after a pause in typing.  The verdict comes from the portal's TeX check,
     as for the checks and the export, and with their cache
-    (:func:`~MaRDMO.tex_check.check_formula`).  Only for logged-in users and
+    (:func:`~MaRDMO.components.tex_check.check_formula`).  Only for logged-in users and
     with Django's CSRF token: the interview has both; the URL is not a way
     to the portal's checker for anyone else.
 

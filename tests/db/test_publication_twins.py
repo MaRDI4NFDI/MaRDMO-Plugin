@@ -13,7 +13,7 @@ import pytest
 import requests
 
 from MaRDMO.core.constants import BASE_URI
-from MaRDMO.handler_base import publication_twins
+from MaRDMO.components.fill.base import publication_twins
 from MaRDMO.model.handlers import Information
 from MaRDMO.core.models import Relatant
 from MaRDMO.sources.portal import portal_publications_by_doi
@@ -33,7 +33,7 @@ def recorded(portal):
 @pytest.fixture
 def no_qid_twins(monkeypatch):
     '''The portal knows no twin by Wikidata QID: only the DOI finds one.'''
-    monkeypatch.setattr('MaRDMO.handler_base.portal_twins', lambda relatants, markers: {})
+    monkeypatch.setattr('MaRDMO.components.fill.base.portal_twins', lambda relatants, markers: {})
 
 
 def test_the_dois_of_wikidata_publications(recorded):
@@ -62,7 +62,7 @@ def test_a_wikidata_publication_found_on_the_portal_by_its_doi(recorded, no_qid_
 
 
 def test_publications_of_the_portal_and_on_pages_are_kept(monkeypatch):
-    monkeypatch.setattr('MaRDMO.handler_base.portal_twins', lambda *args: pytest.fail('looked up'))
+    monkeypatch.setattr('MaRDMO.components.fill.base.portal_twins', lambda *args: pytest.fail('looked up'))
     publications = [Relatant('mardi:Q78129', 'a', 'b'), DIJKSTRA]
     assert publication_twins(publications, visited={DIJKSTRA.id}) == publications
 
@@ -79,7 +79,7 @@ def test_a_failed_lookup_keeps_the_wikidata_publications(no_qid_twins, monkeypat
 
 def test_the_page_of_a_wikidata_publication_is_the_portal_item(project, recorded, no_qid_twins, monkeypatch):
     filled = []
-    monkeypatch.setattr('MaRDMO.publication.handlers.Information.fill_citations',
+    monkeypatch.setattr('MaRDMO.components.publication.handlers.Information.fill_citations',
                         lambda self, project, entries, catalog='', snapshot=None: filled.extend(entries))
     documentation = project('mardmo-model-catalog')
     Information()._hydrate_publications(documentation, [HESTENES, ELEMENTS], 'mardmo-model-catalog', set())

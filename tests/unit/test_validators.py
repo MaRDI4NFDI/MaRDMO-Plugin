@@ -1,7 +1,7 @@
 '''The checks behind the validators and the documentation check.'''
 import pytest
 
-from MaRDMO import validators as v
+from MaRDMO.components import validators as v
 
 
 @pytest.mark.parametrize('doi, problem', [

@@ -1,7 +1,7 @@
 '''SPARQL queries of MaRDMO: the query files, and running them (#198).
 
 The queries live as ``.sparql`` files in the packages that use them
-(``model/queries/``, ``publication/queries/``, ...); a query too slow for the
+(``model/queries/``, ``components/publication/queries/``, ...); a query too slow for the
 portal as one exists only as its parts (``.../split/``), run one after
 another (:func:`query_sparql_parts`).  :func:`query_sparql` sends a query
 through :func:`~MaRDMO.sources.http.request_with_retry`.

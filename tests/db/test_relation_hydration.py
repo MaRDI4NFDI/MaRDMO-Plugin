@@ -27,7 +27,7 @@ def filled(monkeypatch):
     def fetch(items, mardi_query, wikidata_query, entity):
         calls.append((entity.__name__, sorted(external_id for _, external_id, _ in items)))
         return {external_id: data[external_id] for _, external_id, _ in items if external_id in data}
-    for module in ('MaRDMO.algorithm.handlers', 'MaRDMO.handler_base', 'MaRDMO.workflow.handlers'):
+    for module in ('MaRDMO.algorithm.handlers', 'MaRDMO.components.fill.base', 'MaRDMO.workflow.handlers'):
         monkeypatch.setattr(f'{module}._fetch_by_source', fetch)
     return calls
 

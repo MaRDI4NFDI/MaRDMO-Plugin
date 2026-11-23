@@ -2,9 +2,9 @@
 import pytest
 
 from MaRDMO.core.ids import is_user_id, part_id
-from MaRDMO.publication.models import Author, Journal, Publication
-from MaRDMO.publication.utils import _identifiers, match_portal_items
-from MaRDMO.publication.worker import _single_line
+from MaRDMO.components.publication.models import Author, Journal, Publication
+from MaRDMO.components.publication.utils import _identifiers, match_portal_items
+from MaRDMO.components.publication.worker import _single_line
 
 
 def author(id=None, label='A. Author', orcid=None, zbmath=None, wikidata=None):

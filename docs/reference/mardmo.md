@@ -66,15 +66,15 @@ Shared utilities (values, relations, ordering, properties) are listed under
 
 ## Handlers
 
-::: MaRDMO.handlers
+::: MaRDMO.components.fill.relations
 
 ## Handler Base
 
-::: MaRDMO.handler_base
+::: MaRDMO.components.fill.base
 
 ## Adders
 
-::: MaRDMO.adders
+::: MaRDMO.components.fill.adders
 
 ## Router
 
@@ -86,7 +86,7 @@ Shared utilities (values, relations, ordering, properties) are listed under
 
 ## Validators
 
-::: MaRDMO.validators
+::: MaRDMO.components.validators
 
 ## Views
 

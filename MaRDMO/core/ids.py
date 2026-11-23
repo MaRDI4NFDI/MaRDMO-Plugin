@@ -87,7 +87,7 @@ def publication_doi(text):
     pasted after the prefix (``doi:https://doi.org/10.1000/x``) are dropped.
     A link is percent-encoded (``%3C`` for ``<``, ``%23`` for ``#`` in old
     DOIs): its DOI is decoded.  The DOI itself is not checked:
-    :func:`~MaRDMO.validators.doi_problem` does.
+    :func:`~MaRDMO.components.validators.doi_problem` does.
     '''
     prefix, separator, rest = (text or '').strip().partition(':')
     if not separator or prefix.strip().lower() != DOI_PREFIX[:-1]:

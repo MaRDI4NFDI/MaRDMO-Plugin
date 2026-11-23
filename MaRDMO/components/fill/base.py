@@ -17,20 +17,20 @@ from typing import Any
 
 from rdmo.domain.models import Attribute
 
-from .core.constants import ALGORITHM_PROPS, SOFTWARE_PROPS
-from .core.models import Algorithm, Relatant, Software, Usage
-from .core.config import get_items, get_properties, get_url
-from .sources.sparql import get_sparql_query, get_sparql_query_optional, get_sparql_query_parts
-from .project.answers import get_id
-from .core.values import process_qualifier
-from .project.writes import value_editor
-from .core.ids import is_portal_item, item_text
+from ...core.constants import ALGORITHM_PROPS, SOFTWARE_PROPS
+from ...core.models import Algorithm, Relatant, Software, Usage
+from ...core.config import get_items, get_properties, get_url
+from ...sources.sparql import get_sparql_query, get_sparql_query_optional, get_sparql_query_parts
+from ...project.answers import get_id
+from ...core.values import process_qualifier
+from ...project.writes import value_editor
+from ...core.ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
-from .sources.sparql import query_sparql, query_sparql_parts
-from .publication.handlers import Information
-from .sources.portal import find_portal_items, portal_labels, portal_publications_by_doi
-from .sources.wikidata import wikidata_dois
-from .core.markers import contradictions, PUBLICATION_MARKERS, SECTION_MARKERS
+from ...sources.sparql import query_sparql, query_sparql_parts
+from ..publication.handlers import Information
+from ...sources.portal import find_portal_items, portal_labels, portal_publications_by_doi
+from ...sources.wikidata import wikidata_dois
+from ...core.markers import contradictions, PUBLICATION_MARKERS, SECTION_MARKERS
 
 # Lazy singleton – instantiated on first use so that the Django app registry
 # is guaranteed to be ready (publication.handlers imports rdmo ORM models).
@@ -38,7 +38,7 @@ _PUB_INFO: list = []
 
 
 def _get_pub_info():
-    '''Return the singleton :class:`~MaRDMO.publication.handlers.Information` instance.'''
+    '''Return the singleton :class:`~MaRDMO.components.publication.handlers.Information` instance.'''
     if not _PUB_INFO:
         _PUB_INFO.append(Information())
     return _PUB_INFO[0]
@@ -544,8 +544,8 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         algorithm  = self.questions['Algorithm']
         data_by_id = _fetch_by_source(
             items,
-            'queries/algorithm_mardi.sparql',
-            'queries/algorithm_wikidata.sparql',
+            'components/fill/queries/algorithm_mardi.sparql',
+            'components/fill/queries/algorithm_wikidata.sparql',
             Algorithm,
         )
         if not data_by_id:
@@ -633,8 +633,8 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         software   = self.questions['Software']
         data_by_id = _fetch_by_source(
             items,
-            'queries/software_mardi.sparql',
-            'queries/software_wikidata.sparql',
+            'components/fill/queries/software_mardi.sparql',
+            'components/fill/queries/software_wikidata.sparql',
             Software,
         )
         if not data_by_id:
@@ -740,7 +740,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         '''Write basic questionnaire fields and delegate SPARQL hydration.
 
         Only for items of the MaRDI Portal and Wikidata: calls
-        :func:`~MaRDMO.adders.add_basics`, then delegates to
+        :func:`~MaRDMO.components.fill.adders.add_basics`, then delegates to
         *batch_fill_method*.  An own item (its page's ID shows "new item")
         keeps the name and description of its page: a portal page switched
         to "new item" is the template of a new item.

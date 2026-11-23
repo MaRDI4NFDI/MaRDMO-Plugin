@@ -4,9 +4,9 @@ from types import SimpleNamespace
 import pytest
 
 import MaRDMO.components.dropdowns as dropdowns
-from MaRDMO.adders import add_entities
+from MaRDMO.components.fill.adders import add_entities
 from MaRDMO.core.constants import BASE_URI
-from MaRDMO.adders import relation_exists
+from MaRDMO.components.fill.adders import relation_exists
 from MaRDMO.components.dropdowns import option_help
 from MaRDMO.core.models import Relatant
 from MaRDMO.providers import MaRDMOProvider

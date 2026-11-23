@@ -42,7 +42,7 @@ def test_portal_and_staging_know_the_same_names(name):
     assert sorted(staging.keys() - portal.keys()) == []
 
 
-@pytest.mark.parametrize('path', sorted(PACKAGE.glob('*/data/mapping.json')),
+@pytest.mark.parametrize('path', sorted(PACKAGE.glob('**/data/mapping.json')),
                          ids=lambda p: p.parent.parent.name)
 def test_relation_mapping_keys_are_unique(path):
     '''URLs may repeat: contains_model, contains_task, ... are all "contains".'''

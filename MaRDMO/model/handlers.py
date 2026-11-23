@@ -16,19 +16,20 @@ from rdmo.options.models import Option
 from . import models
 from .constants import data_properties_check, props, qudt_reference_ids, relatant_uris, relation_uris
 
-from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, twin_fields, use_portal_twins
+from ..components.fill.base import (
+    BaseInformation,
+    _RelatantSpec,
+    _fetch_by_source,
+    twin_fields,
+    use_portal_twins,
+)
 from ..core.constants import BASE_URI
 from ..core.properties import get_mathmoddb
 from ..core.config import get_questions
 from ..core.patterns import QUDT_ID_STRICT_RE
 from ..project.writes import value_editor
 from ..core.ids import item_text
-from ..adders import (
-    add_basics,
-    add_references,
-    add_relations_flexible,
-    add_relations_static,
-)
+from ..components.fill.adders import add_basics, add_references, add_relations_flexible, add_relations_static
 
 logger = logging.getLogger(__name__)
 

@@ -25,7 +25,7 @@ def questions():
                 found.append((path.parent.parent.name, data))
             for inner in data.values():
                 walk(path, inner)
-    for path in sorted(PACKAGE.glob('*/data/questions.json')):
+    for path in sorted(PACKAGE.glob('**/data/questions.json')):
         walk(path, json.loads(path.read_text()))
     return found
 

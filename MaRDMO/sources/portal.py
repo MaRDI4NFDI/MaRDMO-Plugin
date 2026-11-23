@@ -430,7 +430,7 @@ def _portal_options(qids, raise_errors=False, exclude=None):
 def tex_check_answer(tex, timeout):
     '''The answer of the MaRDI Portal's TeX check (texvc, :data:`~MaRDMO.core.constants.TEX_CHECK_URL`) for *tex*.
 
-    The verdict is :mod:`MaRDMO.tex_check`'s.
+    The verdict is :mod:`MaRDMO.components.tex_check`'s.
 
     Raises:
         requests.exceptions.RequestException: If the check could not be asked.

@@ -17,7 +17,7 @@ from django.utils.translation import gettext_noop as N_
 from ..core.constants import BASE_URI, SECTION_MAP_BASE
 from ..core.config import get_items, get_properties, get_questions
 from ..core.properties import get_mathmoddb
-from ..publication.constants import get_publication_relations
+from ..components.publication.constants import get_publication_relations
 
 # Data Properties Check
 data_properties_check = [

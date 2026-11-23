@@ -93,7 +93,7 @@ class Registration:
         information: Import path of its handler class (the hydration of its items).
         handlers:    The questions with a handler of that class: ``{question: method}``.
         relations:   The relation questions, handled by the general relation
-                     handler (:meth:`MaRDMO.handlers.Information.relation`).
+                     handler (:meth:`MaRDMO.components.fill.relations.Information.relation`).
         validators:  The pre-save validators: ``{validator: [question, …]}``.
         targets:     Import path of the function that maps the attribute URI
                      of a relation question to the section of its items
@@ -101,7 +101,7 @@ class Registration:
         fills:       ``{section prefix: (item type, fill method of the handler class)}``:
                      how a related item of a portal or Wikidata is filled in.
         routing:     The relations a publication of its catalogs can have
-                     (:func:`MaRDMO.publication.constants.routing`): rules with the
+                     (:func:`MaRDMO.components.publication.constants.routing`): rules with the
                      ``classes`` of the related items, the relation types
                      (``props``, ``relation``) and the answer (``relatant``).
     '''

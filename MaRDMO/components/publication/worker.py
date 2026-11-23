@@ -17,10 +17,10 @@ from multiprocessing.pool import ThreadPool
 from .constants import ITEMINFOS, CITATIONINFOS, JOURNALS, AUTHORS, LANGUAGES
 from .utils import clean_background_data, get_citation
 
-from ..core.constants import BASE_URI
-from ..core.config import get_questions
-from ..project.writes import commit_writes, value_editor
-from ..core.ids import is_user_id
+from ...core.constants import BASE_URI
+from ...core.config import get_questions
+from ...project.writes import commit_writes, value_editor
+from ...core.ids import is_user_id
 
 # Publications whose citation data is looked up at the same time
 CITATION_LOOKUPS_IN_PARALLEL = 3

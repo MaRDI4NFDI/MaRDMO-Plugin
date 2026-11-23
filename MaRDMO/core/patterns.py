@@ -6,17 +6,17 @@ variant:
 QUDT identifier patterns
 ------------------------
 - :data:`QUDT_ID_RE`        — lenient, used in pre-save validation
-  (:mod:`~MaRDMO.validators`).  Accepts a single uppercase letter so that
+  (:mod:`~MaRDMO.components.validators`).  Accepts a single uppercase letter so that
   incremental typing is not rejected before the user has finished.
 - :data:`QUDT_ID_STRICT_RE` — strict, used in the documentation checker
-  (:mod:`~MaRDMO.model.checks`) and portal importer (:mod:`~MaRDMO.adders`).
+  (:mod:`~MaRDMO.model.checks`) and portal importer (:mod:`~MaRDMO.components.fill.adders`).
   Requires at least two characters so that a lone capital letter is flagged as
   incomplete.
 
 DOI patterns
 ------------
 - :data:`DOI_RE`        — progressive, used in pre-save validation
-  (:mod:`~MaRDMO.validators`).  Accepts every valid prefix character by
+  (:mod:`~MaRDMO.components.validators`).  Accepts every valid prefix character by
   character (``1``, ``10``, ``10.``, ``10.1234``, ``10.1234/``,
   ``10.1234/suffix``) so the user is not blocked while still typing.
 - :data:`DOI_STRICT_RE` — strict, used in the documentation checker
@@ -91,7 +91,7 @@ LINE_BREAK_RE = re.compile(r'[\n\r]')
 Only visible line breaks are matched; tabs and other invisible whitespace
 (also rejected by the portal) are replaced by spaces on export instead.
 
-Used by the pre-save validator for textarea answers (:mod:`~MaRDMO.validators`),
+Used by the pre-save validator for textarea answers (:mod:`~MaRDMO.components.validators`),
 the documentation checker (:mod:`~MaRDMO.checks.base`), and the preview templates.
 '''
 

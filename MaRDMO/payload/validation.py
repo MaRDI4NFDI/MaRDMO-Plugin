@@ -4,7 +4,13 @@ import re
 from django.utils.translation import gettext as _
 
 from ..core.patterns import QUANTITY_AMOUNT_RE
-from ..validators import REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, doi_problem, swmath_problem, url_problem
+from ..components.validators import (
+    REPOSITORY_URL_SCHEMES,
+    WEB_URL_SCHEMES,
+    doi_problem,
+    swmath_problem,
+    url_problem,
+)
 from .bodies import ITEM_KEY_RE
 
 TIME_RE = re.compile(r'^\+?(-?\d+)-(\d{2})-(\d{2})(T.*)$')
@@ -13,7 +19,7 @@ TIME_RE = re.compile(r'^\+?(-?\d+)-(\d{2})-(\d{2})(T.*)$')
 def invalid_values(dictionary, properties):
     '''Malformed URLs, DOIs, swMATH IDs, dates and amounts of the payload *dictionary*, one message each.
 
-    Applies the strict rules from :mod:`~MaRDMO.validators` to every URL
+    Applies the strict rules from :mod:`~MaRDMO.components.validators` to every URL
     statement and qualifier and to every "DOI" and "swMath work ID" value,
     checks that every time value is a ``+YYYY-MM-DDThh:mm:ssZ`` string and
     every quantity amount a Wikibase decimal (``+8``, ``+1.5``).  Only what

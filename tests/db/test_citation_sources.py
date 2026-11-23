@@ -13,7 +13,7 @@ from types import SimpleNamespace
 import pytest
 
 from MaRDMO.sources import citations
-from MaRDMO.publication.models import Author, Publication
+from MaRDMO.components.publication.models import Author, Publication
 
 ATTENTION = '10.48550/arXiv.1706.03762'      # a preprint: DataCite, no journal
 DIJKSTRA = '10.1007/BF01386390'              # zbMATH, with journal and year

@@ -15,7 +15,7 @@ from ..core.constants import BASE_URI
 from django.utils.translation import gettext_noop as N_
 from ..core.properties import get_mathmoddb
 from ..core.config import get_properties, get_questions
-from ..publication.constants import get_publication_relations
+from ..components.publication.constants import get_publication_relations
 
 SECTION_MAP = {
     'workflow':    N_('Interdisciplinary Workflow'),

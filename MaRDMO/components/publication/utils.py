@@ -2,8 +2,8 @@
 
 Combines the answers of the citation services (:mod:`MaRDMO.sources.citations`:
 Crossref, DataCite, zbMATH, ORCID, the DOI resolver), parses them, and maps the results to the internal
-:class:`~MaRDMO.publication.models.Author`, :class:`~MaRDMO.publication.models.Journal`,
-and :class:`~MaRDMO.publication.models.Publication` dataclasses.
+:class:`~MaRDMO.components.publication.models.Author`, :class:`~MaRDMO.components.publication.models.Journal`,
+and :class:`~MaRDMO.components.publication.models.Publication` dataclasses.
 
 Provides:
 
@@ -29,11 +29,17 @@ from rdmo.domain.models import Attribute
 
 from .models import Author, Journal, Publication
 
-from ..core.constants import BASE_URI
-from ..core.config import get_items, get_properties, get_url
-from ..sources.sparql import get_sparql_query
-from ..sources.citations import get_crossref_data, get_datacite_data, get_doi_data, get_orcids, get_zbmath_data
-from ..sources.sparql import query_sparql, query_sparql_pool
+from ...core.constants import BASE_URI
+from ...core.config import get_items, get_properties, get_url
+from ...sources.sparql import get_sparql_query
+from ...sources.citations import (
+    get_crossref_data,
+    get_datacite_data,
+    get_doi_data,
+    get_orcids,
+    get_zbmath_data,
+)
+from ...sources.sparql import query_sparql, query_sparql_pool
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +70,7 @@ def additional_queries(publication, choice, key, parameter, function):
 
     # Get & Extract Information from  Wikidata
     wikidata_query = get_sparql_query(
-        f"publication/queries/{key}.sparql"
+        f"components/publication/queries/{key}.sparql"
     ).format(
         *parameter['wikidata']
     )
@@ -84,7 +90,7 @@ def additional_queries(publication, choice, key, parameter, function):
         parameter['mardi'][-1] = wikidata_id
 
     mardi_query = get_sparql_query(
-        f"publication/queries/{key}.sparql"
+        f"components/publication/queries/{key}.sparql"
     ).format(
         *parameter['mardi']
     )
@@ -299,14 +305,14 @@ def _lookup_citation(doi):
     # The DOI as a SPARQL string: a quotation mark or backslash in it would end the string early
     literal = json.dumps(doi)
     mardi_query = get_sparql_query(
-        'publication/queries/full_doi_mardi.sparql'
+        'components/publication/queries/full_doi_mardi.sparql'
     ).format(
         literal,
         **get_items(),
         **get_properties()
     )
     wikidata_query = get_sparql_query(
-        'publication/queries/full_doi_wikidata.sparql'
+        'components/publication/queries/full_doi_wikidata.sparql'
     ).format(
         literal
     )

@@ -23,13 +23,13 @@ Provides:
 
 from rdmo.options.models import Option
 
-from .core.constants import BASE_URI
-from .core.config import get_options
-from .project.answers import get_id
-from .core.values import extract_parts, process_qualifier
-from .project.writes import value_editor
-from .core.ids import NEW_ITEM, item_text
-from .core.models import Usage
+from ...core.constants import BASE_URI
+from ...core.config import get_options
+from ...project.answers import get_id
+from ...core.values import extract_parts, process_qualifier
+from ...project.writes import value_editor
+from ...core.ids import NEW_ITEM, item_text
+from ...core.models import Usage
 
 def add_basics(project, text, questions, item_type, index = (None, None)):
     '''Parse the ID-question text and write label/description into the questionnaire.
@@ -559,8 +559,8 @@ def reduce_prefix(prefix):
 def relation_exists(value, set_prefix_red, info, relation_id=None):
     '''Check whether a value–set (–relation) triple already exists in the questionnaire.
 
-    Used by :func:`~MaRDMO.adders.add_relations_static` and
-    :func:`~MaRDMO.adders.add_relations_flexible` to avoid duplicate entries.
+    Used by :func:`~MaRDMO.components.fill.adders.add_relations_static` and
+    :func:`~MaRDMO.components.fill.adders.add_relations_flexible` to avoid duplicate entries.
 
     A relation is the same when it has the item's ID (#103); another item
     with the same label and description is another relation.

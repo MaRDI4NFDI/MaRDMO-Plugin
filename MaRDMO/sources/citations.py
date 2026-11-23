@@ -3,7 +3,7 @@
 Crossref, DataCite, the DOI resolver (doi.org), zbMATH Open, and ORCID (the
 researchers who list the DOI).  Each function returns the service's answer
 or the error of the request; combining them into a citation is the
-publication's (:func:`MaRDMO.publication.utils.get_citation`).
+publication's (:func:`MaRDMO.components.publication.utils.get_citation`).
 '''
 import logging
 

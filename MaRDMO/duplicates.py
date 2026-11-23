@@ -51,7 +51,7 @@ from .core.ids import is_own_item, item_text
 from .core.markers import PUBLICATION_MARKERS, SECTION_MARKERS, class_families, contradictions
 from .sources.portal import find_portal_items, find_publications_by_doi, portal_dois, portal_labels
 from .core.constants import BASE_URI
-from .publication.constants import AUTHORS, CITATIONINFOS, JOURNALS, LANGUAGES
+from .components.publication.constants import AUTHORS, CITATIONINFOS, JOURNALS, LANGUAGES
 
 logger = logging.getLogger(__name__)
 

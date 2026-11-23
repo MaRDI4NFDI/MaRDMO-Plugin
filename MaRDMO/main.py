@@ -37,7 +37,7 @@ from .problems import attach as attach_problems, report_lines
 from . import pipeline
 
 from .search.worker import search
-from .publication.worker import PublicationRetriever
+from .components.publication.worker import PublicationRetriever
 
 
 def _documenting(project):

@@ -8,8 +8,8 @@ sources were recorded (``citation_lookup``).
 '''
 import pytest
 
-from MaRDMO.publication.utils import get_citation
-from MaRDMO.publication.worker import best_citation
+from MaRDMO.components.publication.utils import get_citation
+from MaRDMO.components.publication.worker import best_citation
 
 DIJKSTRA = '10.1007/BF01386390'                 # on the portal and on Wikidata
 SEG1D = '10.21105/JOSS.02404'                   # on Wikidata, not on the portal
@@ -59,7 +59,7 @@ def test_a_doi_with_a_quotation_mark_is_a_valid_sparql_string(monkeypatch):
     def ask(sources):
         queries.extend(query for query, _, _ in sources.values())
         raise Asked
-    monkeypatch.setattr('MaRDMO.publication.utils.query_sparql_pool', ask)
+    monkeypatch.setattr('MaRDMO.components.publication.utils.query_sparql_pool', ask)
     with pytest.raises(Asked):
         get_citation('10.1000/A"B\\C')
     assert len(queries) == 2 and all('"10.1000/A\\"B\\\\C"' in query for query in queries)

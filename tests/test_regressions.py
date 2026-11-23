@@ -188,6 +188,6 @@ def test_label_description_ignores_options_without_description():
 
 
 def test_publication_name_is_stored_as_label():
-    from MaRDMO.publication.constants import ITEMINFOS
+    from MaRDMO.components.publication.constants import ITEMINFOS
     assert ITEMINFOS['Name'] == 'label'
 

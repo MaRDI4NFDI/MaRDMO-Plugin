@@ -25,24 +25,16 @@ from rdmo.projects.models import Project, Value
 
 from dataclasses import replace
 
-from ..core.constants import BASE_URI
-from ..core.config import get_items, get_properties, get_questions, get_url
-from ..core.properties import get_publication_mapping
-from ..sources.sparql import get_sparql_query
-from ..sources.sparql import query_sparql
-from ..adders import add_basics, add_references, add_relations_flexible
-from ..core.config import get_options
-from ..core.ids import is_portal_item, is_user_id, publication_doi
+from ...core.constants import BASE_URI
+from ...core.config import get_items, get_properties, get_questions, get_url
+from ...core.properties import get_publication_mapping
+from ...sources.sparql import get_sparql_query
+from ...sources.sparql import query_sparql
+from ..fill.adders import add_basics, add_references, add_relations_flexible
+from ...core.config import get_options
+from ...core.ids import is_portal_item, is_user_id, publication_doi
 
-from .constants import (
-    PROPS,
-    routing,
-    ITEMINFOS,
-    CITATIONINFOS,
-    LANGUAGES,
-    JOURNALS,
-    AUTHORS
-)
+from .constants import PROPS, routing, ITEMINFOS, CITATIONINFOS, LANGUAGES, JOURNALS, AUTHORS
 from .utils import clean_background_data, get_citation
 from .models import Publication
 from .worker import best_citation, write_citation
@@ -66,7 +58,7 @@ def _query_citations(source, external_ids):
     for start in range(0, len(external_ids), CITATION_BATCH):
         chunk = external_ids[start:start + CITATION_BATCH]
         query = get_sparql_query(
-            f'publication/queries/doi_from_{source}.sparql'
+            f'components/publication/queries/doi_from_{source}.sparql'
         ).format(
             ' '.join(f'wd:{external_id.split(":")[1]}' for external_id in chunk),
             **get_items(),

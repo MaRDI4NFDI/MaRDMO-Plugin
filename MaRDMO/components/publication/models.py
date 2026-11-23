@@ -15,9 +15,9 @@ Provides:
 from dataclasses import dataclass, field
 from typing import Optional, ClassVar
 
-from ..core.config import get_items, get_options
-from ..core.values import date_format, split_value
-from ..core.ids import part_id
+from ...core.config import get_items, get_options
+from ...core.values import date_format, split_value
+from ...core.ids import part_id
 
 
 def _first(values):
@@ -29,7 +29,7 @@ def _first(values):
     if isinstance(values, list):
         return values[0] if values else None
     return values
-from ..core.models import Relatant, RelatantWithClass
+from ...core.models import Relatant, RelatantWithClass
 
 @dataclass
 class Author:

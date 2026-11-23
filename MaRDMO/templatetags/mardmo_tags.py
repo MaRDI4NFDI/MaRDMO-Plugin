@@ -35,8 +35,8 @@ from ..core.config import get_options
 from ..core.properties import find_reference
 from ..core.ids import DOI_PREFIX, is_own_item
 from ..project.pages import PageRef
-from ..validators import formula_comment_problem
-from ..tex_check import FAILED, NOT_VERIFIED, failure_hint
+from ..components.validators import formula_comment_problem
+from ..components.tex_check import FAILED, NOT_VERIFIED, failure_hint
 
 register = template.Library()
 
@@ -145,8 +145,8 @@ def formula(tex, verdict=None):
 
     Args:
         tex:     TeX string.
-        verdict: Result of :func:`~MaRDMO.tex_check.check_formulas` for *tex*:
-                 ``None`` (valid), one of :data:`~MaRDMO.tex_check.NOT_VERIFIED`
+        verdict: Result of :func:`~MaRDMO.components.tex_check.check_formulas` for *tex*:
+                 ``None`` (valid), one of :data:`~MaRDMO.components.tex_check.NOT_VERIFIED`
                  (no verdict), or the checker's message.
 
     Invalid formulas are not handed to MathJax (an unbalanced brace would
@@ -155,10 +155,10 @@ def formula(tex, verdict=None):
     so the browser can show them as raw TeX if MathJax cannot render them.
     Formulas that could not be checked get a note: the portal did not answer,
     or its checker failed on the formula, which is exported unchecked (with
-    the likely cause and how to avoid it, :func:`~MaRDMO.tex_check.failure_hint`);
+    the likely cause and how to avoid it, :func:`~MaRDMO.components.tex_check.failure_hint`);
     multi-line formulas with a
     ``%`` comment are shown as raw TeX (see
-    :func:`~MaRDMO.validators.formula_comment_problem`).
+    :func:`~MaRDMO.components.validators.formula_comment_problem`).
     '''
     if formula_comment_problem(tex):
         return format_html('<code class="mardmo-tex">{}</code>', tex)

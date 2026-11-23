@@ -43,9 +43,9 @@ from django.utils.text import format_lazy
 from django.utils.translation import gettext, gettext_lazy as _, gettext_noop as N_
 from rest_framework.exceptions import ValidationError
 
-from .core.config import get_options
-from .core.ids import is_own_item, publication_doi
-from .core.patterns import (
+from ..core.config import get_options
+from ..core.ids import is_own_item, publication_doi
+from ..core.patterns import (
     DOI_RE,
     DOI_STRICT_RE,
     LINE_BREAK_RE,

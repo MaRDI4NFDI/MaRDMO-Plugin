@@ -14,7 +14,7 @@ from MaRDMO.core.catalogs import CATALOG_PACKAGES, SEARCH, catalog_of, catalogs,
 from MaRDMO.core.constants import BASE_URI
 from MaRDMO.model.catalog import CATALOG_MODEL_BASICS_NAME, CATALOG_MODEL_NAME
 from MaRDMO.core.config import get_questions
-from MaRDMO.publication.constants import routing
+from MaRDMO.components.publication.constants import routing
 from tests.conftest import questionnaire  # noqa: F401
 
 DC = '{http://purl.org/dc/elements/1.1/}uri'

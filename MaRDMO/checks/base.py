@@ -22,7 +22,13 @@ from ..core.ids import NOT_FOUND, is_own_item
 from ..project.pages import add_tab_names, page_ref
 from ..core.patterns import LINE_BREAK_RE
 from ..problems import Problem
-from ..validators import doi_problem, short_description_problem, swmath_problem, url_problem, url_schemes
+from ..components.validators import (
+    doi_problem,
+    short_description_problem,
+    swmath_problem,
+    url_problem,
+    url_schemes,
+)
 from ..payload import PortalUnavailable
 from ..payload.claims import fetch_claims
 from ..sources.http import check_deadline
@@ -399,7 +405,7 @@ class ChecksBase:
         '''Check that every entity page has a non-empty ID, Name, and Description.
 
         Also flags equal Name/Description pairs and overlong descriptions
-        (rules from :func:`~MaRDMO.validators.short_description_problem`).
+        (rules from :func:`~MaRDMO.components.validators.short_description_problem`).
         Skips entity types not relevant to *catalog*.
 
         Args:

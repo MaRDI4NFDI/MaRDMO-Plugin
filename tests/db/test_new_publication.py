@@ -14,8 +14,8 @@ from rdmo.projects.models import Membership, Value
 
 from MaRDMO.core.constants import BASE_URI
 from MaRDMO.core.ids import is_user_id
-from MaRDMO.publication import handlers
-from MaRDMO.publication.models import Author, Journal, Publication
+from MaRDMO.components.publication import handlers
+from MaRDMO.components.publication.models import Author, Journal, Publication
 
 DOI = '10.21105/joss.02404'
 SEG1D = Publication(label='seg1d', description='scientific article published in 2020',

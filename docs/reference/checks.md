@@ -26,7 +26,7 @@
 
 ## TeX Check
 
-::: MaRDMO.tex_check
+::: MaRDMO.components.tex_check
 
 ## Patterns
 

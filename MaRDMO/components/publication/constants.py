@@ -9,9 +9,9 @@ source for the shared publication-role → Wikibase-property mapping used by
 the model, algorithm, and workflow ``get_relations()`` functions.
 '''
 
-from ..core.catalogs import registrations
-from ..core.config import get_items, get_properties
-from ..core.properties import get_publication_mapping
+from ...core.catalogs import registrations
+from ...core.config import get_items, get_properties
+from ...core.properties import get_publication_mapping
 
 
 def get_publication_relations():

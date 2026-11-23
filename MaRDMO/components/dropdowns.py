@@ -53,7 +53,7 @@ from ..core.ids import (
     item_text,
     publication_doi,
 )
-from ..validators import doi_problem
+from .validators import doi_problem
 
 logger = logging.getLogger(__name__)
 

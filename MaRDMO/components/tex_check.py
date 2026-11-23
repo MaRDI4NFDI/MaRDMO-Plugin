@@ -31,9 +31,9 @@ import requests
 from django.core.cache import cache
 from django.utils.translation import gettext as _, ngettext
 
-from .project.writes import commit_writes
-from .sources.http import SPARQL_RETRY_STATUS
-from .sources.portal import tex_check_answer
+from ..project.writes import commit_writes
+from ..sources.http import SPARQL_RETRY_STATUS
+from ..sources.portal import tex_check_answer
 from .validators import normalize_formula
 
 logger = logging.getLogger(__name__)

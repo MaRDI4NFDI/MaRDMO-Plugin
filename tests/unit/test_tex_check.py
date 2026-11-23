@@ -7,9 +7,9 @@ formula pass as not verified, as trying again would not help.
 import pytest
 import requests
 
-from MaRDMO import tex_check
+from MaRDMO.components import tex_check
 from MaRDMO.sources import portal as portal_api
-from MaRDMO.tex_check import FAILED, UNAVAILABLE
+from MaRDMO.components.tex_check import FAILED, UNAVAILABLE
 
 # The portal's answer for b_{\mathrm{B}} (2026-11-16)
 CRASH = ('{"message":"Error: exception of type TypeError: MediaWiki\\\\Extension\\\\Math\\\\WikiTexVC\\\\Nodes\\\\'

@@ -14,7 +14,7 @@ from tests.support.html import element, links, rendered_preview, text
 
 @pytest.fixture
 def white(project, portal, monkeypatch):
-    monkeypatch.setattr('MaRDMO.tex_check.check_formulas', lambda formulas: {})
+    monkeypatch.setattr('MaRDMO.components.tex_check.check_formulas', lambda formulas: {})
     monkeypatch.setattr('MaRDMO.model.checks.check_formulas', lambda formulas: {})
     portal('export_white_2006')
     return imported(project, 'white_2006')
