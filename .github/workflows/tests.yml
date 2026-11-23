@@ -117,6 +117,10 @@ jobs:
       - name: Lint (ruff)
         run: ruff check MaRDMO tests docs_hooks
 
+      # The layers of MaRDMO (contracts: [tool.importlinter] in pyproject.toml)
+      - name: Layers (import-linter)
+        run: lint-imports
+
       # The database container is the only host the tests may reach
       - name: Tests
         env:
