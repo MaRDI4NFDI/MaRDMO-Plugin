@@ -29,6 +29,7 @@ from rdmo.domain.models import Attribute
 from .class_check import wikidata_matches
 from .constants import BASE_URI
 from .getters import get_mathmoddb, get_properties, get_url
+from .sources.wikibase import get_entities
 from .sources.http import (
     SEARCH_RETRY_WAIT,
     SEARCH_TIMEOUT,
@@ -335,14 +336,8 @@ def _items_with_statement(source, statement):
     qids = [hit['title'].rsplit(':', 1)[-1] for hit in found.json().get('query', {}).get('search', [])]
     if not qids:
         return []
-    entities = request_with_retry(
-        'get', api_url, waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline(), headers=headers,
-        timeout=SEARCH_TIMEOUT,
-        params={'action': 'wbgetentities', 'ids': '|'.join(qids), 'props': 'labels|descriptions',
-                'languages': 'en', 'format': 'json'},
-    )
-    entities.raise_for_status()
-    entities = entities.json().get('entities', {})
+    entities = get_entities(api_url, qids, 'labels|descriptions', languages='en', waits=(SEARCH_RETRY_WAIT,),
+                            deadline=search_deadline(), timeout=SEARCH_TIMEOUT)
     return [{'id': f'{source}:{qid}',
              'text': item_text(entities.get(qid, {}).get('labels', {}).get('en', {}).get('value', qid),
                                entities.get(qid, {}).get('descriptions', {}).get('en', {}).get(
@@ -393,22 +388,17 @@ def publication_options(search):
 # given up after this many seconds and retried once; wbgetentities takes at
 # most 50 items, a search for DOIS_PER_SEARCH DOIs finds at most 50 items
 TWIN_TIMEOUT = 10
-ENTITIES_PER_REQUEST = 50
 DOIS_PER_SEARCH = 20
 
 
 def _entities(source, qids, props, waits=(SEARCH_RETRY_WAIT,), deadline=None):
-    '''``{QID: entity}`` of *qids* on *source* (``wbgetentities``, English labels); raises on request errors.'''
-    entities = {}
-    for start in range(0, len(qids), ENTITIES_PER_REQUEST):
-        response = request_with_retry(
-            'get', get_url(source, 'api'), waits=waits, deadline=deadline, timeout=TWIN_TIMEOUT,
-            headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
-            params={'action': 'wbgetentities', 'ids': '|'.join(qids[start:start + ENTITIES_PER_REQUEST]),
-                    'props': props, 'languages': 'en', 'format': 'json'})
-        response.raise_for_status()
-        entities.update(response.json().get('entities', {}))
-    return entities
+    '''``{QID: entity}`` of *qids* on *source* (``wbgetentities``, English labels); raises on request errors.
+
+    An error answer of the portal raises too (:class:`~MaRDMO.sources.wikibase.WikibaseError`):
+    it is "the portal did not answer", not "the portal has nothing".
+    '''
+    return get_entities(get_url(source, 'api'), qids, props, languages='en', waits=waits, deadline=deadline,
+                        timeout=TWIN_TIMEOUT)
 
 
 def _claim_values(entity, prop):
@@ -426,7 +416,7 @@ def _by_qid(qids):
 def wikidata_dois(qids):
     '''``{QID: DOI}`` of the Wikidata items *qids* that have a DOI (P356; the first one).
 
-    One ``wbgetentities`` request per :data:`ENTITIES_PER_REQUEST` items.  A
+    One ``wbgetentities`` request per :data:`~MaRDMO.sources.wikibase.ENTITIES_PER_REQUEST` items.  A
     lookup that fails finds no DOIs.
     '''
     qids = sorted(set(qids))
@@ -883,23 +873,10 @@ def _portal_options(qids, raise_errors=False, exclude=None):
     if not qids:
         return []
     try:
-        entity_resp = request_with_retry(
-            'get',
-            get_url('mardi', 'api'),
-            waits=(SEARCH_RETRY_WAIT,),
-            deadline=search_deadline(),
-            params={
-                'action':    'wbgetentities',
-                'ids':       '|'.join(qids),
-                'props':     'labels|descriptions|claims' if exclude else 'labels|descriptions',
-                'languages': 'en',
-                'format':    'json',
-            },
-            headers={'User-Agent': 'MaRDMO (https://zib.de; reidelbach@zib.de)'},
-            timeout=SEARCH_TIMEOUT,
-        )
-        entity_resp.raise_for_status()
-        entities = entity_resp.json().get('entities', {})
+        entities = get_entities(get_url('mardi', 'api'), qids,
+                                'labels|descriptions|claims' if exclude else 'labels|descriptions',
+                                languages='en', waits=(SEARCH_RETRY_WAIT,), deadline=search_deadline(),
+                                timeout=SEARCH_TIMEOUT)
     except requests.exceptions.RequestException as e:
         logger.error("MaRDI entity fetch failed: %s", e)
         if raise_errors:

@@ -13,6 +13,7 @@ import pytest
 import requests
 
 import MaRDMO.queries as queries
+import MaRDMO.sources.wikibase as wikibase
 from MaRDMO.getters import get_items, get_properties
 from MaRDMO.optionsets import PROFILES, PROVIDERS, Search
 
@@ -50,6 +51,7 @@ class Portal:
     def __init__(self, monkeypatch, pages, entities):
         self.pages, self.entities, self.params = pages, entities, []
         monkeypatch.setattr(queries, 'request_with_retry', self)
+        monkeypatch.setattr(wikibase, 'request_with_retry', self)    # wbgetentities
 
     def __call__(self, method, url, **kwargs):
         params = kwargs['params']

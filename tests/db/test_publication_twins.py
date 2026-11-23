@@ -70,6 +70,7 @@ def test_a_failed_lookup_keeps_the_wikidata_publications(no_qid_twins, monkeypat
     def fail(*args, **kwargs):
         raise requests.exceptions.ConnectionError('down')
     monkeypatch.setattr('MaRDMO.queries.request_with_retry', fail)
+    monkeypatch.setattr('MaRDMO.sources.wikibase.request_with_retry', fail)
     assert portal_publications_by_doi(['10.1007/BF01386390']) == {}
     assert publication_twins([HESTENES]) == [HESTENES]
     assert 'Could not look up the DOIs of Wikidata publications' in caplog.text

@@ -17,185 +17,18 @@ Provides:
 # pylint: disable=too-many-lines
 
 import logging
-import random
-import time
 
 from dataclasses import dataclass, field
 from typing import Optional
-
-import requests
 
 from .constants import data_properties_per_class, qudt_reference_ids
 
 from ..getters import get_items, get_mathmoddb, get_options, get_properties, get_url
 from ..values import split_value
 from ..models import QueryBatch, Relatant, RelatantWithClass, RelatantWithQualifier
-from ..sources.http import http_session
+from ..sources.wikibase import get_entities
 
 logger = logging.getLogger(__name__)
-
-_USER_AGENT = 'MaRDMO (https://zib.de; reidelbach@zib.de)'
-
-# --- wbgetentities resilience knobs -----------------------------------------
-# The MaRDI portal API is prone to transient failures under database load:
-# HTTP 500/503 pages *and* HTTP 200 responses whose body is a MediaWiki
-# ``{"error": ...}`` object (e.g. ``internal_api_error_DBConnectionError``).
-_WB_CHUNK_SIZE   = 50     # QIDs per request
-_WB_MAX_ATTEMPTS = 4      # attempts per (sub-)chunk before splitting / giving up
-_WB_BACKOFF_BASE = 1.0    # seconds; delay is base * 2**(attempt-1) + jitter
-_WB_MAX_BACKOFF  = 20.0   # cap on a single retry delay, also on the portal's Retry-After
-_WB_DEADLINE     = 45     # seconds per batch after which nothing is retried or bisected
-_WB_TIMEOUT      = 30     # per-request timeout (seconds)
-_WB_OUTAGE_TRIP  = 3      # consecutive dead chunks that open the circuit breaker
-_WB_COOLDOWN     = 120    # seconds to stay "open" (fail fast) after tripping
-
-# Process-wide circuit-breaker state, keyed by endpoint. While a breaker is
-# open, calls to that endpoint return immediately with whatever is cached so a
-# full portal outage degrades to "partial import" fast instead of retrying for
-# minutes on every entity.
-_wb_breakers: dict = {}
-
-
-class _WbOutage(Exception):
-    '''A wbgetentities failure that looks endpoint-wide (5xx / connection / DB error).'''
-
-
-def _wbgetentities_batch(api_url, qids, props, extra_params=None):
-    '''Fetch Wikibase entities via ``wbgetentities`` with retry and a circuit breaker.
-
-    QIDs are requested in chunks of :data:`_WB_CHUNK_SIZE`. Each chunk is
-    retried with exponential backoff on transient failures — HTTP 5xx, network
-    errors, timeouts, and HTTP 200 bodies carrying a MediaWiki ``error``
-    object. A chunk that keeps timing out is bisected to isolate a single
-    unresponsive entity. After :data:`_WB_DEADLINE` seconds nothing is retried
-    or bisected any more, so a struggling portal cannot hold the request for
-    minutes. Once :data:`_WB_OUTAGE_TRIP` chunks die in a row the
-    endpoint's circuit breaker opens for :data:`_WB_COOLDOWN` seconds and
-    further calls short-circuit, returning only what resolved.
-
-    Args:
-        api_url:     Base URL of the Wikibase API endpoint.
-        qids:        List of QID strings to fetch (e.g. ``['Q123', 'Q456']``).
-        props:       Pipe-separated property string passed to ``wbgetentities``
-                     (e.g. ``'labels|descriptions'`` or ``'claims'``).
-        extra_params: Optional dict of additional API parameters (e.g. ``{'languages': 'en'}``).
-
-    Returns:
-        Dict mapping QID strings to their entity data dicts. May be partial or
-        empty if the endpoint is unavailable.
-    '''
-    params_base = {
-        'action': 'wbgetentities',
-        'props':  props,
-        'format': 'json',
-        **(extra_params or {}),
-    }
-
-    if _wb_circuit_open(api_url):
-        logger.warning("wbgetentities: circuit open for %s, skipping %s qids",
-                       api_url, len(qids))
-        return {}
-
-    result = {}
-    deadline = time.monotonic() + _WB_DEADLINE
-    for i in range(0, len(qids), _WB_CHUNK_SIZE):
-        chunk = qids[i:i + _WB_CHUNK_SIZE]
-        try:
-            result.update(_wbget_chunk(api_url, params_base, chunk, deadline))
-        except _WbOutage:
-            _wb_record_failure(api_url)
-            if _wb_circuit_open(api_url):
-                logger.error("wbgetentities: %s unresponsive, aborting batch", api_url)
-                break
-        else:
-            _wb_reset(api_url)
-
-    return result
-
-
-def _wb_circuit_open(api_url):
-    '''True while *api_url*'s breaker is within its cooldown window.'''
-    tripped_at = _wb_breakers.get(api_url, {}).get('open_until', 0)
-    return time.monotonic() < tripped_at
-
-
-def _wb_record_failure(api_url):
-    '''Count one dead chunk; open the breaker once the streak hits the limit.'''
-    breaker = _wb_breakers.setdefault(api_url, {'fails': 0, 'open_until': 0})
-    breaker['fails'] += 1
-    if breaker['fails'] >= _WB_OUTAGE_TRIP:
-        breaker['open_until'] = time.monotonic() + _WB_COOLDOWN
-
-
-def _wb_reset(api_url):
-    '''Clear the failure streak for *api_url* after a successful chunk.'''
-    if api_url in _wb_breakers:
-        _wb_breakers[api_url] = {'fails': 0, 'open_until': 0}
-
-
-def _wbget_chunk(api_url, params_base, chunk, deadline):
-    '''Fetch one chunk of QIDs, retrying transient failures with backoff.
-
-    Args:
-        api_url:     Wikibase API endpoint.
-        params_base: Shared query params (without ``ids``).
-        chunk:       List of QID strings for this (sub-)request.
-        deadline:    ``time.monotonic()`` value after which the chunk is not
-                     retried or bisected any more.
-
-    Returns:
-        Dict ``{qid: entity}`` for every QID that resolved (may be partial).
-
-    Raises:
-        _WbOutage: The chunk still fails after all retries with an
-            endpoint-wide error. The caller feeds this to the circuit breaker.
-    '''
-    params = {**params_base, 'ids': '|'.join(chunk)}
-    outage = None
-
-    for attempt in range(1, _WB_MAX_ATTEMPTS + 1):
-        retry_after = None
-        try:
-            resp = http_session().get(
-                api_url, params=params,
-                headers={'User-Agent': _USER_AGENT}, timeout=_WB_TIMEOUT,
-            )
-            if resp.status_code >= 500:
-                retry_after = resp.headers.get('Retry-After')
-                raise _WbOutage(f'HTTP {resp.status_code}')
-            resp.raise_for_status()
-            body = resp.json()
-            if isinstance(body, dict) and 'error' in body:
-                raise _WbOutage(f"api-error:{body['error'].get('code', 'unknown')}")
-            return body.get('entities', {})
-        except requests.exceptions.Timeout:
-            outage = None
-        except (requests.exceptions.RequestException, _WbOutage, ValueError) as exc:
-            outage = _WbOutage(str(exc))
-
-        if attempt < _WB_MAX_ATTEMPTS:
-            delay = min(_WB_BACKOFF_BASE * 2 ** (attempt - 1), _WB_MAX_BACKOFF)
-            if retry_after and str(retry_after).isdigit():
-                delay = max(delay, min(float(retry_after), _WB_MAX_BACKOFF))
-            delay += random.uniform(0, 0.5)
-            if time.monotonic() + delay >= deadline:
-                break
-            time.sleep(delay)
-
-    # Retries exhausted. A persistent timeout may be one oversized entity —
-    # bisect to isolate it. An endpoint-wide error propagates to the breaker.
-    if outage is None and len(chunk) > 1 and time.monotonic() < deadline:
-        mid = len(chunk) // 2
-        return {
-            **_wbget_chunk(api_url, params_base, chunk[:mid], deadline),
-            **_wbget_chunk(api_url, params_base, chunk[mid:], deadline),
-        }
-
-    logger.error("wbgetentities failed for %s..%s", chunk[0], chunk[-1])
-    if outage is not None:
-        raise outage
-    return {}
-
 
 def _extract_qualifier_qid(claim, pid_sym_rep):
     '''Return the QID of the symbol-represents qualifier on a claim, or None.
@@ -249,10 +82,7 @@ def _fetch_qty_labels(api_url, qty_qids_needed):
     '''
     if not qty_qids_needed:
         return {}
-    entities = _wbgetentities_batch(
-        api_url, list(qty_qids_needed), 'labels|descriptions',
-        extra_params={'languages': 'en'},
-    )
+    entities = get_entities(api_url, qty_qids_needed, 'labels|descriptions', languages='en', resilient=True)
     return {
         qid: (
             entity.get('labels', {}).get('en', {}).get('value', 'No Label Provided!'),
@@ -315,7 +145,7 @@ def fetch_formula_data(qids: list) -> dict:
     pid_sym_rep    = props.get('symbol represents')
     api_url        = get_url('mardi', 'api')
 
-    entities                    = _wbgetentities_batch(api_url, qids, 'claims')
+    entities                    = get_entities(api_url, qids, 'claims', resilient=True)
     intermediate, qty_qids_needed = _parse_formula_claims(
         entities, pid_formula, pid_in_formula, pid_sym_rep
     )
@@ -347,7 +177,7 @@ def fetch_formula_data_wikidata(qids: list) -> dict:
 
     api_url = get_url('wikidata', 'api')
 
-    entities                      = _wbgetentities_batch(api_url, qids, 'claims')
+    entities                      = get_entities(api_url, qids, 'claims', resilient=True)
     intermediate, qty_qids_needed = _parse_formula_claims(
         entities, 'P2534', 'P7235', 'P9758'
     )

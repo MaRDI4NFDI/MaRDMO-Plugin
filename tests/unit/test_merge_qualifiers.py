@@ -156,7 +156,7 @@ def test_role_referring_to_a_new_item_is_a_new_statement(payload):
 def test_claims_that_cannot_be_fetched_stop_the_export(payload, monkeypatch):
     import requests
 
-    import MaRDMO.payload.claims as module
+    import MaRDMO.sources.wikibase as module
 
     def unreachable(*args, **kwargs):
         raise requests.exceptions.ConnectionError('offline')
