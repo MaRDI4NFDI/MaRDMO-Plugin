@@ -96,7 +96,7 @@ A test of the database jobs fails if the tests did not run on the database
 asked for, so a database job cannot pass on SQLite unnoticed.
 
 Every job fails if the coverage falls below `fail_under` in `pyproject.toml`
-(89 %; 91 % were reached).  Raise the floor when the coverage rises; never
+(91 %; every job reached 93–94 %).  Raise the floor when the coverage rises; never
 lower it to make a pull request pass.  Locally:
 `coverage run -m pytest && coverage report`.
 
