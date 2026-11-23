@@ -18,7 +18,8 @@ from django.core.cache import cache
 from ..core.constants import TEX_CHECK_URL
 from ..core.config import get_properties, get_url
 from ..core.ids import item_text
-from .http import SEARCH_RETRY_WAIT, SEARCH_TIMEOUT, query_sparql, request_with_retry, search_deadline
+from .http import SEARCH_RETRY_WAIT, SEARCH_TIMEOUT, request_with_retry, search_deadline
+from .sparql import query_sparql
 from .wikibase import USER_AGENT, TWIN_TIMEOUT, claim_values, entities_of, entity_classes, get_entities
 
 logger = logging.getLogger(__name__)

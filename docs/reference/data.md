@@ -32,7 +32,7 @@
 
 ::: MaRDMO.sources.http
 
-### SPARQL Query Files
+### SPARQL Queries
 
 ::: MaRDMO.sources.sparql
 

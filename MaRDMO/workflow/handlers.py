@@ -17,7 +17,7 @@ from ..sources.sparql import get_sparql_query
 from ..project.writes import value_editor
 from ..core.ids import item_text
 from ..adders import add_basics, add_relations_flexible, add_relations_static
-from ..sources.http import query_sparql
+from ..sources.sparql import query_sparql
 
 from .constants import PROPS
 from .models import Cpu, ProcessStep, Hardware, DataSet, Workflow

@@ -26,7 +26,7 @@ from .core.values import process_qualifier
 from .project.writes import value_editor
 from .core.ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
-from .sources.http import query_sparql, query_sparql_parts
+from .sources.sparql import query_sparql, query_sparql_parts
 from .publication.handlers import Information
 from .sources.portal import find_portal_items, portal_labels, portal_publications_by_doi
 from .sources.wikidata import wikidata_dois

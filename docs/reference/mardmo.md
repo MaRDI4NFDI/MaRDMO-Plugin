@@ -12,7 +12,7 @@ Where the export happens, from the answers to the portal:
 | Write the new IDs back | `export.items` (`replace_ids`), `project.writes` |
 
 Every request to an external service goes through `sources/`: `http` (one
-session, retries, time limits), `wikibase` (entities of the MaRDI Portal and
+session, retries, time limits), `sparql` (the queries and their files), `wikibase` (entities of the MaRDI Portal and
 Wikidata), `portal`, `wikidata` and `citations`.  The options of the dropdowns
 are `components.dropdowns`.
 

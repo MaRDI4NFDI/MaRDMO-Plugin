@@ -33,7 +33,7 @@ from ..core.constants import BASE_URI
 from ..core.config import get_items, get_properties, get_url
 from ..sources.sparql import get_sparql_query
 from ..sources.citations import get_crossref_data, get_datacite_data, get_doi_data, get_orcids, get_zbmath_data
-from ..sources.http import query_sparql, query_sparql_pool
+from ..sources.sparql import query_sparql, query_sparql_pool
 
 logger = logging.getLogger(__name__)
 

@@ -31,11 +31,11 @@ def test_qlever_tells_which_items_are_noise(portal):
 @pytest.fixture
 def qlever_down(monkeypatch):
     '''QLever fails; Wikidata's endpoint answers (recorded).'''
-    query_sparql = wikidata_api.http.query_sparql
+    query_sparql = wikidata_api.sparql.query_sparql
 
     def without_qlever(query, endpoint, **kwargs):
         return None if endpoint == WIKIDATA['qlever'] else query_sparql(query, endpoint, **kwargs)
-    monkeypatch.setattr(wikidata_api.http, 'query_sparql', without_qlever)
+    monkeypatch.setattr(wikidata_api.sparql, 'query_sparql', without_qlever)
 
 
 def test_the_software_dropdown_offers_wikidata_software_only(portal):
