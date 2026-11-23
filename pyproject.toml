@@ -51,8 +51,11 @@ test = [
     "pyyaml>=6",
     "coverage[toml]>=7",
     "ruff>=0.6",
-    # The layers of MaRDMO (lint-imports, see [tool.importlinter])
-    "import-linter>=2.17,<3",
+    # The layers of MaRDMO (lint-imports, see [tool.importlinter]); 2.15 is
+    # the last for Python 3.10 and knows every part of the contracts
+    "import-linter>=2.15,<3",
+    # tests/static/test_package_data.py reads pyproject.toml (tomllib from 3.11)
+    "tomli>=2; python_version < '3.11'",
     "build>=1",
     # tools/messages.py: the German catalog (tests/static/test_translations.py)
     "babel>=2.14",

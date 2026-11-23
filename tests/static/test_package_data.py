@@ -6,8 +6,12 @@ from the installed MaRDMO.  So every file under MaRDMO/ that is not Python
 must match a pattern, and every pattern must match a file (a pattern left
 from a moved folder would match none).
 '''
-import tomllib
 from pathlib import Path
+
+try:
+    import tomllib
+except ModuleNotFoundError:          # Python 3.10
+    import tomli as tomllib
 
 PACKAGE = Path(__file__).parents[2] / 'MaRDMO'
 PATTERNS = tomllib.loads((PACKAGE.parent / 'pyproject.toml').read_text(encoding='utf-8'))[
