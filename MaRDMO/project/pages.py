@@ -18,10 +18,10 @@ from django.utils.html import format_html
 from rdmo.projects.models import Value
 from rdmo.questions.models import Page
 
-from .core.constants import BASE_URI
-from .core.ids import is_own_item, tab_placeholder
-from .core.properties import find_reference
-from .core.config import get_options
+from ..core.constants import BASE_URI
+from ..core.ids import is_own_item, tab_placeholder
+from ..core.properties import find_reference
+from ..core.config import get_options
 
 
 def anchor(section, index):

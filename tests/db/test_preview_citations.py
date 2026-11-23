@@ -12,7 +12,7 @@ import pytest
 
 from MaRDMO.core.constants import BASE_URI
 from MaRDMO.core.config import get_options
-from MaRDMO.writes import value_editor
+from MaRDMO.project.writes import value_editor
 from MaRDMO.publication import worker
 from MaRDMO.publication.models import Publication
 from MaRDMO.publication.worker import PublicationRetriever

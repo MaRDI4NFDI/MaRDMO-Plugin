@@ -21,7 +21,7 @@ from ..core.constants import BASE_URI
 from ..core.properties import get_mathmoddb
 from ..core.config import get_questions
 from ..core.patterns import QUDT_ID_STRICT_RE
-from ..writes import value_editor
+from ..project.writes import value_editor
 from ..core.ids import item_text
 from ..adders import (
     add_basics,
@@ -92,7 +92,7 @@ def add_properties(project, data, uri, set_prefix):
     '''Write the data-property option values from *data.properties* into the questionnaire.
 
     Iterates over the ``{index: [option_uri, …]}`` mapping in
-    ``data.properties`` and calls :func:`~MaRDMO.writes.value_editor` for
+    ``data.properties`` and calls :func:`~MaRDMO.project.writes.value_editor` for
     each entry at ``set_index=0``.  Properties already in the question keep
     their line; the others fill the first free lines.
 

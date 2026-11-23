@@ -59,7 +59,7 @@ class Gate:
     def groups(self):
         '''The problems by section and page, in their order: ``[(section, page, [messages])]``.
 
-        *page* is the :class:`~MaRDMO.pages.PageRef` (``None`` for the
+        *page* is the :class:`~MaRDMO.project.pages.PageRef` (``None`` for the
         export's own checks); the preview links it to the page.
         '''
         return _groups(self.problems)

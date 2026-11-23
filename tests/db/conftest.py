@@ -22,7 +22,7 @@ from rdmo.questions.models import Catalog
 
 from MaRDMO.core.constants import BASE_URI
 from MaRDMO.core.config import get_questions
-from MaRDMO.writes import value_editor
+from MaRDMO.project.writes import value_editor
 from MaRDMO.sources.portal import PortalItems
 from tests.support.recordings import record, replay
 

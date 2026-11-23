@@ -92,8 +92,8 @@ def basic_dict(value):
     relation answer and returns them together with the external ID.  The
     text of a portal item is ``"Label (Description)"``; the text of
     an own item is its label as typed (#129): an item with a page gets its
-    page's name and description (:func:`~MaRDMO.pages.link_to_pages`), one without a
-    generic description (:func:`~MaRDMO.pages.describe_items_without_page`).
+    page's name and description (:func:`~MaRDMO.project.pages.link_to_pages`), one without a
+    generic description (:func:`~MaRDMO.project.pages.describe_items_without_page`).
 
     Args:
         value: An RDMO :class:`~rdmo.projects.models.Value` instance.

@@ -2,7 +2,7 @@
 
 Defines the RDMO base URI and the shared section-name map (:data:`SECTION_MAP_BASE`);
 the names of the catalogs are their packages' (``model/catalog.py`` etc.).
-Where a questionnaire value goes in the answers: :mod:`MaRDMO.rules`.
+Where a questionnaire value goes in the answers: :mod:`MaRDMO.project.rules`.
 '''
 
 from django.utils.translation import gettext_noop as N_

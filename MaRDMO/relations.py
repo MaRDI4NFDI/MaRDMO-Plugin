@@ -1,6 +1,6 @@
 '''Relations between the entries of a documentation, resolved to their pages for preview and export.'''
 from .export.items import item_key
-from .pages import page_refs
+from .project.pages import page_refs
 
 
 def check_list(list_var):
@@ -35,7 +35,7 @@ def build_new_value(from_entry, entity, key, resolved, assumption, mapping):
         entity:     Configuration dict with keys ``relation``, ``old_name``
                     and ``new_name``.
         key:        Relation key within *from_entry*.
-        resolved:   Resolved relatant (:class:`~MaRDMO.pages.PageRef` or ID).
+        resolved:   Resolved relatant (:class:`~MaRDMO.project.pages.PageRef` or ID).
         assumption: Boolean; if ``True``, attach assumption qualifier.
         mapping:    :class:`~MaRDMO.core.properties.PropertyRegistry` for relation lookup.
 
@@ -166,7 +166,7 @@ def map_entity(data, idx, entity):
 
     Similar to :func:`entity_relations` but without relation types: every
     nested ``old_name`` entry of a source entity becomes the
-    :class:`~MaRDMO.pages.PageRef` of the page with its ID, or keeps the ID
+    :class:`~MaRDMO.project.pages.PageRef` of the page with its ID, or keeps the ID
     (an item without page), under ``new_name``.
 
     Args:

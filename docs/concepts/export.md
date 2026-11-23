@@ -62,7 +62,7 @@ incomplete documentation**, and the optional **Portal items you could
 complete** (see below).  The first two prevent the export.  The latter lists what the
 checks find (`MaRDMO.problems.Problem`) by section and page; each page is
 linked to its place in the preview and to its page in the interview
-(`MaRDMO.pages.interview_urls`; RDMO opens a page, not a tab, so the tab is
+(`MaRDMO.project.pages.interview_urls`; RDMO opens a page, not a tab, so the tab is
 named).  The export's own problems have no page and are listed under
 *Export*.  On the pages of the preview a problem is a red mark at its field
 (template tag `marks`); an empty relation block says *NOT DOCUMENTED* only if

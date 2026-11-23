@@ -43,7 +43,7 @@ dropdown showed.
   programming languages, CPU models, methods and instruments, and in the
   workflow catalog research fields and algorithmic tasks.  Preview, checks
   and export give it the generic description of its kind
-  (`MaRDMO.pages.describe_items_without_page`; not stored in the project):
+  (`MaRDMO.project.pages.describe_items_without_page`; not stored in the project):
 
     | Item | Description |
     |---|---|
@@ -58,17 +58,17 @@ dropdown showed.
     on the MaRDI Portal if it is there already (the user then selects it).
 
 Preview, checks and export find the page of a relation by its ID and use the
-page's name and description (`MaRDMO.pages.link_to_pages`), so a page
+page's name and description (`MaRDMO.project.pages.link_to_pages`), so a page
 renamed later is shown and exported with its new name.  A relation to an own
 item whose page is not there is reported ("Selected … not found in …
 Section"), as are two own pages of a section with the same name and
 description (the export would make one item of them).
 
 Preview and checks name a page by its tab, the name it has in the interview
-(`MaRDMO.pages.add_tab_names`): the preview heads each page with its tab and
+(`MaRDMO.project.pages.add_tab_names`): the preview heads each page with its tab and
 the name of its item ("F4: Navier-Stokes equation") and shows a relation as
 the name of its page's item, linked to the page, with the tab in brackets
-("Navier-Stokes equation (F4)", a `MaRDMO.pages.PageRef`).  A renamed or
+("Navier-Stokes equation (F4)", a `MaRDMO.project.pages.PageRef`).  A renamed or
 deleted tab changes nothing else; the tabs MaRDMO creates are called by
 their section and number ("F4").  Two tabs may have the same name.
 

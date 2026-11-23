@@ -17,7 +17,7 @@ from multiprocessing.pool import ThreadPool
 
 import requests
 
-from ..writes import commit_writes
+from ..project.writes import commit_writes
 
 logger = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ def http_session():
 
     Reusing the session keeps connections open, so repeated requests to the
     same service skip the connection setup.  MaRDMO's pending writes are
-    committed first (see :func:`~MaRDMO.writes.batched_writes`), so no
+    committed first (see :func:`~MaRDMO.project.writes.batched_writes`), so no
     transaction stays open while waiting for the answer.
     '''
     commit_writes()

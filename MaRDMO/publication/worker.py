@@ -19,7 +19,7 @@ from .utils import clean_background_data, get_citation
 
 from ..core.constants import BASE_URI
 from ..core.config import get_questions
-from ..writes import commit_writes, value_editor
+from ..project.writes import commit_writes, value_editor
 from ..core.ids import is_user_id
 
 # Publications whose citation data is looked up at the same time

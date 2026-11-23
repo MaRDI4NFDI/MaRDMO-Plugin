@@ -17,7 +17,7 @@ The entry is ``[option URI, text]`` (``option_text``), the item
 only its ID), or the value itself.
 '''
 
-from .core.values import basic_dict, basic_list
+from ..core.values import basic_dict, basic_list
 
 FLAGS = ('set_prefix', 'set_index', 'collection_index', 'external_id', 'option_text')
 '''The flags of a question, in the order of :func:`flags`.'''

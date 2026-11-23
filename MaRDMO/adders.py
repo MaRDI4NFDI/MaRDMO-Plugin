@@ -27,7 +27,7 @@ from .core.constants import BASE_URI
 from .core.config import get_options
 from .project.answers import get_id
 from .core.values import extract_parts, process_qualifier
-from .writes import value_editor
+from .project.writes import value_editor
 from .core.ids import NEW_ITEM, item_text
 from .core.models import Usage
 

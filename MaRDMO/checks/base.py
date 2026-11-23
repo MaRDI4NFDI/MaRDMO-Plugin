@@ -19,7 +19,7 @@ from ..core.properties import get_mathalgodb, get_mathmoddb
 from ..core.config import get_options, get_url
 from ..core.properties import find_reference
 from ..core.ids import NOT_FOUND, is_own_item
-from ..pages import add_tab_names, page_ref
+from ..project.pages import add_tab_names, page_ref
 from ..core.patterns import LINE_BREAK_RE
 from ..problems import Problem
 from ..validators import doi_problem, short_description_problem, swmath_problem, url_problem, url_schemes
@@ -36,7 +36,7 @@ def without_page(values):
     '''Return ``True`` if one of the resolved relations *values* is an own item without page.
 
     The preview resolves a relation to the page with its ID (a
-    :class:`~MaRDMO.pages.PageRef`); one that keeps a ``user:`` ID refers to
+    :class:`~MaRDMO.project.pages.PageRef`); one that keeps a ``user:`` ID refers to
     an own item whose page is not there (deleted, or not in this section).
     '''
     return any(isinstance(value, str) and is_own_item(value) for value in values)
@@ -186,7 +186,7 @@ class ChecksBase:
     def _tab_names(project, data):
         '''Give the pages of *data* their tab names, if the answers do not have them yet.
 
-        ``get_post_data`` writes them (:func:`~MaRDMO.pages.add_tab_names`);
+        ``get_post_data`` writes them (:func:`~MaRDMO.project.pages.add_tab_names`);
         the checks name the pages by them.
         '''
         if any(isinstance(entry, dict) and 'Tab' not in entry
@@ -195,7 +195,7 @@ class ChecksBase:
 
     @staticmethod
     def _page(section, index, entry):
-        '''The :class:`~MaRDMO.pages.PageRef` of page *index* of *section* (answers *entry*).'''
+        '''The :class:`~MaRDMO.project.pages.PageRef` of page *index* of *section* (answers *entry*).'''
         return page_ref(section, index, entry)
 
     def _check_static(self, data, page_name, relation, from_class, to_class):

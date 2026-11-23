@@ -5,7 +5,7 @@ hint (#167): something the portal item lacks, or an invalid value it has
 already.  Hints do not prevent the export; the preview lists them as
 optional.
 
-A :class:`Problem` names its section and page (a :class:`~MaRDMO.pages.PageRef`,
+A :class:`Problem` names its section and page (a :class:`~MaRDMO.project.pages.PageRef`,
 or none for a problem of the whole documentation); as text it reads as the
 checks have always reported it: "Formula (Page F4): Missing Short Description".
 
@@ -18,7 +18,7 @@ from typing import Optional
 
 from django.utils.translation import gettext as _, gettext_lazy
 
-from .pages import PageRef
+from .project.pages import PageRef
 
 # First line of the error page of an export that is stopped
 HEADER = gettext_lazy('Following aspects prevented the export:')

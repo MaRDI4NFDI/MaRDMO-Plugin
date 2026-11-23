@@ -29,10 +29,10 @@ from . import VERSION
 from .core.config import catalog_questions, get_item_url, get_options, get_questions, get_url
 from .project.answers import get_answers, process_question_dict
 from .ordering import topological_order
-from .pages import describe_items_without_page, distinguish_publications, link_to_pages
-from .writes import batched_writes
+from .project.pages import describe_items_without_page, distinguish_publications, link_to_pages
+from .project.writes import batched_writes
 from .oauth2 import OauthProviderMixin
-from .pages import add_tab_names, interview_urls
+from .project.pages import add_tab_names, interview_urls
 from .problems import attach as attach_problems, report_lines
 from . import pipeline
 

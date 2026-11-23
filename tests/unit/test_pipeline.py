@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from MaRDMO import pipeline
-from MaRDMO.pages import PageRef
+from MaRDMO.project.pages import PageRef
 from MaRDMO.payload import DocumentationProblem, PortalUnavailable
 from MaRDMO.problems import HEADER, Problem, report_lines
 from MaRDMO.sources.http import EXPORT_CHECK_DEADLINE, EXPORT_RETRY_WAITS, check_deadline, check_waits

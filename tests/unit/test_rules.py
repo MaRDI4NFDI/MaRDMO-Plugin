@@ -1,7 +1,7 @@
-'''Where a questionnaire value goes in the answers (MaRDMO.rules, #138).
+'''Where a questionnaire value goes in the answers (MaRDMO.project.rules, #138).
 
 Every question of the catalogs' ``questions.json`` uses a flag combination
-:func:`~MaRDMO.rules.route` handles.  The paths of real projects are covered
+:func:`~MaRDMO.project.rules.route` handles.  The paths of real projects are covered
 by the golden tests.
 '''
 import json
@@ -10,7 +10,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from MaRDMO.rules import ALLOWED, FLAGS, flags, route
+from MaRDMO.project.rules import ALLOWED, FLAGS, flags, route
 
 PACKAGE = Path(__file__).resolve().parents[2] / 'MaRDMO'
 

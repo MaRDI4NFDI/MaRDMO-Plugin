@@ -34,7 +34,7 @@ from ..export.items import item_key
 from ..core.markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
 from ..ordering import cycle_groups
 from ..sources.http import check_deadline, check_waits
-from ..writes import commit_writes
+from ..project.writes import commit_writes
 from . import claims
 from .bodies import (
     ITEM_KEY_RE,

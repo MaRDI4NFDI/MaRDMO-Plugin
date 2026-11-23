@@ -4,12 +4,12 @@ Where the export happens, from the answers to the portal:
 
 | Step | Module |
 |---|---|
-| Read the answers, add pages and IDs | `main`, `project.answers`, `core.config`, `pages`, `core.ids` |
+| Read the answers, add pages and IDs | `main`, `project.answers`, `project.pages`, `core.config`, `core.ids` |
 | Check and preview | `checks`, `pipeline`, `views` |
 | Build the payload | the catalog's `worker` on `export.worker`, `payload` (`bodies`, `claims`, `validation`) |
 | Authorize | `oauth2` |
 | Post it, report what went wrong | `upload`, `portal_errors` |
-| Write the new IDs back | `export.items` (`replace_ids`), `writes` |
+| Write the new IDs back | `export.items` (`replace_ids`), `project.writes` |
 
 Every request to an external service goes through `sources/`: `http` (one
 session, retries, time limits), `wikibase` (entities of the MaRDI Portal and

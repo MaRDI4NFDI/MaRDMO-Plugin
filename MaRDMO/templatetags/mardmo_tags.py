@@ -34,7 +34,7 @@ from django.utils.translation import gettext as _, gettext_noop as N_, ngettext
 from ..core.config import get_options
 from ..core.properties import find_reference
 from ..core.ids import DOI_PREFIX, is_own_item
-from ..pages import PageRef
+from ..project.pages import PageRef
 from ..validators import formula_comment_problem
 from ..tex_check import FAILED, NOT_VERIFIED, failure_hint
 

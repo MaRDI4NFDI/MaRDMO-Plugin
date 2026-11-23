@@ -10,7 +10,7 @@ from rdmo.projects.models import Value
 from ..core.config import get_options
 from ..core.ids import is_own_item, is_user_id, item_text
 from ..core.properties import find_reference
-from ..writes import internal_write
+from ..project.writes import internal_write
 
 
 # Answer keys of a publication's parts: an item under them is an author or a

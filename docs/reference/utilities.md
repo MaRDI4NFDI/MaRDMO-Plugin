@@ -2,7 +2,7 @@
 
 ## Writes
 
-::: MaRDMO.writes
+::: MaRDMO.project.writes
 
 ## Values
 
@@ -22,11 +22,11 @@
 
 ## Pages
 
-::: MaRDMO.pages
+::: MaRDMO.project.pages
 
 ## Rules
 
-::: MaRDMO.rules
+::: MaRDMO.project.rules
 
 ## Template Tags
 

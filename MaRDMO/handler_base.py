@@ -23,7 +23,7 @@ from .core.config import get_items, get_properties, get_url
 from .sources.sparql import get_sparql_query, get_sparql_query_optional, get_sparql_query_parts
 from .project.answers import get_id
 from .core.values import process_qualifier
-from .writes import value_editor
+from .project.writes import value_editor
 from .core.ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .sources.http import query_sparql, query_sparql_parts
@@ -215,7 +215,7 @@ def _next_set_index(project, question_set_uri):
     Always reads the current maximum straight from the database. Hydration is
     recursive: while an entity is being filled it can pull in and create sibling
     pages in the *same* section, so any ``set_index`` cached in memory goes stale
-    mid-loop. Reusing a stale index makes :func:`~MaRDMO.writes.value_editor`
+    mid-loop. Reusing a stale index makes :func:`~MaRDMO.project.writes.value_editor`
     (which keys ``update_or_create`` on ``set_index`` alone) overwrite an
     unrelated page — the entity then silently vanishes from the questionnaire.
     '''

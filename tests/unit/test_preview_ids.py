@@ -109,7 +109,7 @@ def test_an_invalid_doi_is_marked_at_the_id():
 
 def same_named(*pages):
     '''Publication pages ``{index: answers}`` named "Introduction" (scientific article), with *pages* ``(ID, DOI)``.'''
-    from MaRDMO.pages import distinguish_publications, link_to_pages# noqa: PLC0415
+    from MaRDMO.project.pages import distinguish_publications, link_to_pages# noqa: PLC0415
     answers = {'publication': {index: new_publication(doi, ID=identifier, Name='Introduction',
                                                       Description='scientific article') if doi else
                                {'ID': identifier, 'Name': 'Introduction', 'Description': 'scientific article'}

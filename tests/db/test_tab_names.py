@@ -7,7 +7,7 @@ import pytest
 
 from MaRDMO.model.checks import ModelChecks
 from MaRDMO.core.constants import BASE_URI
-from MaRDMO.pages import PageRef
+from MaRDMO.project.pages import PageRef
 from tests.db.test_export import imported
 from tests.support.html import element, links, rendered_preview, text
 

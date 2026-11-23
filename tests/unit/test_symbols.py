@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 
 import MaRDMO.model.handlers as handlers
 from MaRDMO.model.checks import ModelChecks
-from MaRDMO.pages import PageRef
+from MaRDMO.project.pages import PageRef
 from MaRDMO.problems import attach
 from MaRDMO.core.models import Relatant
 from MaRDMO.model.utils import map_entity_quantity
