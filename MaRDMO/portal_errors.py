@@ -9,7 +9,7 @@ import re
 
 from django.utils.translation import gettext_lazy as _
 
-from .getters import get_properties
+from .core.config import get_properties
 
 # Field path in a Wikibase REST API 400 error, e.g.
 # "Invalid value at '/item/statements/P69/0/value/content'"

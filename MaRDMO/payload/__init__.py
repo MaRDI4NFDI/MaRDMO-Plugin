@@ -30,8 +30,8 @@ from typing import Optional
 from django.utils.translation import gettext as _
 
 from ..duplicates import item_source, look_up
-from ..ids import item_key
-from ..markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
+from ..export.items import item_key
+from ..core.markers import MARKER_PROPERTIES, PUBLICATION_MARKERS
 from ..ordering import cycle_groups
 from ..sources.http import check_deadline, check_waits
 from ..writes import commit_writes
@@ -99,7 +99,7 @@ class GeneratePayload:
                          ``"https://portal.mardi4nfdi.de"``).
             user_items:  Mapping of temporary ``"Item<n>"`` keys to item
                          dicts ``{ID, Name, Description}``.  Produced by
-                         :func:`~MaRDMO.ids.unique_items`.
+                         :func:`~MaRDMO.export.items.unique_items`.
             wikibase:    Wikibase vocabulary dicts.  Expected keys are
                          ``items``, ``properties``, ``relations``, and
                          optionally ``data_properties``.
@@ -204,7 +204,7 @@ class GeneratePayload:
     def set_class(self, name: str) -> None:
         '''Tag the current subject item with an entity-class label.
 
-        Used by ``_export_*`` worker methods so that :func:`~MaRDMO.ids.compare_items`
+        Used by ``_export_*`` worker methods so that :func:`~MaRDMO.export.items.compare_items`
         can include the class in its output for grouping on the success page.
 
         Args:
@@ -849,7 +849,7 @@ class GeneratePayload:
         return statements
 
     def _marker_statements(self, value, section):
-        """The marker statements of the new author or journal *value* (*section*, see :mod:`MaRDMO.markers`)."""
+        """The marker statements of the new author or journal *value* (*section*, see :mod:`MaRDMO.core.markers`)."""
         self.marked.setdefault(value['ID'], set()).add(section)
         return [[self.wikibase['properties'][MARKER_PROPERTIES[kind]], 'wikibase-item', qid]
                 for kind, qid in PUBLICATION_MARKERS[section].qids().items() if qid]

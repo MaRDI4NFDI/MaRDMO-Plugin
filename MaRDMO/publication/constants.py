@@ -9,8 +9,9 @@ source for the shared publication-role → Wikibase-property mapping used by
 the model, algorithm, and workflow ``get_relations()`` functions.
 '''
 
-from ..catalogs import registrations
-from ..getters import get_items, get_properties, get_publication_mapping
+from ..core.catalogs import registrations
+from ..core.config import get_items, get_properties
+from ..core.properties import get_publication_mapping
 
 
 def get_publication_relations():
@@ -69,7 +70,7 @@ PROPS = {
 def routing():
     '''The relations a publication can have, per catalog: ``{catalog name: [rule, …]}``.
 
-    Each catalog declares its rules (:attr:`~MaRDMO.catalogs.Registration.routing`):
+    Each catalog declares its rules (:attr:`~MaRDMO.core.catalogs.Registration.routing`):
     which classes of items a publication of it can be related to, by which
     relation types (:data:`PROPS`) and in which answer.
     '''

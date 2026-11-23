@@ -4,7 +4,7 @@ import logging
 import pytest
 
 import MaRDMO.sources.wikidata as wikidata_api
-from MaRDMO.constants import WIKIDATA
+from MaRDMO.core.constants import WIKIDATA
 
 
 class Endpoints:

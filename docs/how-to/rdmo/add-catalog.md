@@ -41,7 +41,7 @@ catalog.  The numbered fields are explained in the sections that follow.
 A catalog is a package of MaRDMO (`model`, `algorithm`, `workflow`,
 `search`), and the shared code names none of them: each package declares
 itself in its module `catalog.py` (`REGISTRATION`, a
-`MaRDMO.catalogs.Registration`), and the registry finds the packages listed
+`MaRDMO.core.catalogs.Registration`), and the registry finds the packages listed
 in `CATALOG_PACKAGES` (`MaRDMO/catalogs.py`), as Django finds the apps of
 `INSTALLED_APPS`.  A new catalog is therefore a new package with its
 `catalog.py`, and one line in `CATALOG_PACKAGES`.
@@ -62,7 +62,7 @@ The declaration holds:
 The questions are named by `(question set, question)` of its `questions.json`,
 classes and functions by their import path.  What several catalogs share
 lives outside the packages: the publications, the markers of the portal's
-item kinds (`markers.py`), the export of algorithms and software
+item kinds (`core/markers.py`), the export of algorithms and software
 (`export/worker.py`) and the shared checks (`checks/base.py`).
 
 `tests/unit/test_catalogs.py` names what is missing: a catalog of the

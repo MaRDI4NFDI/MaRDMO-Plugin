@@ -12,10 +12,10 @@ the portal and Wikidata were recorded (``publication_twins``).
 import pytest
 import requests
 
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from MaRDMO.handler_base import publication_twins
 from MaRDMO.model.handlers import Information
-from MaRDMO.models import Relatant
+from MaRDMO.core.models import Relatant
 from MaRDMO.sources.portal import portal_publications_by_doi
 from MaRDMO.sources.wikidata import wikidata_dois
 

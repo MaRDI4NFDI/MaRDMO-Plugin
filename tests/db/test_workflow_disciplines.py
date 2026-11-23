@@ -2,8 +2,8 @@
 import pytest
 
 from MaRDMO import main
-from MaRDMO.getters import get_items, get_properties, get_url
-from MaRDMO.markers import SECTION_MARKERS
+from MaRDMO.core.config import get_items, get_properties, get_url
+from MaRDMO.core.markers import SECTION_MARKERS
 from MaRDMO.sources.portal import PortalItems
 from MaRDMO.workflow.worker import PrepareWorkflow
 from tests.db.conftest import answer, save

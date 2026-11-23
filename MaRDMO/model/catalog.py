@@ -1,6 +1,6 @@
 '''The model catalogs, as MaRDMO knows them: the full catalog and the basics (#198).'''
-from ..catalogs import MODEL, Catalog, Registration
-from ..constants import BASE_URI
+from ..core.catalogs import MODEL, Catalog, Registration
+from ..core.constants import BASE_URI
 from ..validators import validate_qudt_id, validate_short_description, validate_single_line
 from .validators import validate_properties
 

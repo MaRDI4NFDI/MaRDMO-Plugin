@@ -6,12 +6,12 @@ authors and journals, algorithms and software (algorithm and workflow
 catalogs) and the plain items (:data:`PLAIN_ITEMS`).  The catalogs' workers
 (``model/worker.py`` etc.) subclass it.
 '''
-from ..constants import SOFTWARE_REFERENCES
-from ..getters import get_items, get_options, get_properties
-from ..ids import is_user_id
-from ..markers import MARKER_PROPERTIES, SECTION_MARKERS, allowed
-from ..properties import find_reference
-from ..values import date_precision
+from ..core.constants import SOFTWARE_REFERENCES
+from ..core.config import get_items, get_options, get_properties
+from ..core.ids import is_user_id
+from ..core.markers import MARKER_PROPERTIES, SECTION_MARKERS, allowed
+from ..core.properties import find_reference
+from ..core.values import date_precision
 
 
 # Items entered on a page without a page of their own, exported with their class
@@ -169,9 +169,9 @@ class CatalogExport:
         '''Add the markers of *section* to the current subject, and optionally its long description.
 
         The markers (class, community, profile type) are those of
-        :data:`~MaRDMO.markers.SECTION_MARKERS` for the worker's catalog.  A new
+        :data:`~MaRDMO.core.markers.SECTION_MARKERS` for the worker's catalog.  A new
         item gets all; an existing portal item only those it lacks and that do
-        not contradict its own (:func:`~MaRDMO.markers.allowed`, #141); if its
+        not contradict its own (:func:`~MaRDMO.core.markers.allowed`, #141); if its
         markers could not be looked up, none.
 
         Args:
@@ -259,7 +259,7 @@ class CatalogExport:
             payload:    :class:`~MaRDMO.payload.GeneratePayload` instance.
             references: Reference answers ``{collection_index: [option_uri, text]}``.
             mapping:    Tuples ``(option key, portal property, datatype)``, e.g.
-                        :data:`~MaRDMO.constants.SOFTWARE_REFERENCES`.
+                        :data:`~MaRDMO.core.constants.SOFTWARE_REFERENCES`.
         '''
         options = get_options()
         for option_key, prop, datatype in mapping:

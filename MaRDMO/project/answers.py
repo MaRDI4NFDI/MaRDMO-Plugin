@@ -7,9 +7,9 @@ the values of one attribute.
 '''
 from rdmo.domain.models import Attribute
 
-from ..constants import BASE_URI
+from ..core.constants import BASE_URI
 from ..rules import route
-from ..values import nested_set
+from ..core.values import nested_set
 from ..writes import get_attribute
 
 
@@ -54,7 +54,7 @@ def get_answers(project, val, config):
     Iterates over all :class:`~rdmo.projects.models.Value` objects for the
     attribute described by *config*, determines the appropriate path in *val*
     with :func:`~.rules.route`, and calls
-    :func:`~.values.nested_set` to write the entry.
+    :func:`~MaRDMO.core.values.nested_set` to write the entry.
 
     Args:
         project: RDMO project instance.

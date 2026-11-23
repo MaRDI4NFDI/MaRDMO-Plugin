@@ -10,13 +10,12 @@ from functools import partial
 from types import SimpleNamespace
 
 from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, twin_fields, use_portal_twins
-from ..constants import BASE_URI
-from ..getters import (
-    get_items, get_mathalgodb, get_mathmoddb, get_options,
-    get_properties, get_questions, get_sparql_query, get_url,
-)
+from ..core.constants import BASE_URI
+from ..core.config import get_items, get_options, get_properties, get_questions, get_url
+from ..core.properties import get_mathalgodb, get_mathmoddb
+from ..sources.sparql import get_sparql_query
 from ..writes import value_editor
-from ..ids import item_text
+from ..core.ids import item_text
 from ..adders import add_basics, add_relations_flexible, add_relations_static
 from ..sources.http import query_sparql
 

@@ -3,8 +3,8 @@ import pytest
 
 import MaRDMO.sources.portal as portal_api
 from MaRDMO.duplicates import Duplicate, decide, item_source, look_up
-from MaRDMO.getters import get_items, get_properties
-from MaRDMO.markers import SECTION_MARKERS, allowed, contradictions
+from MaRDMO.core.config import get_items, get_properties
+from MaRDMO.core.markers import SECTION_MARKERS, allowed, contradictions
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.portal_errors import DuplicateOnPortal, handle_policy_violation
 from MaRDMO.export.worker import CatalogExport

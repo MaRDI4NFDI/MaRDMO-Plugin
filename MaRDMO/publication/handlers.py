@@ -25,19 +25,14 @@ from rdmo.projects.models import Project, Value
 
 from dataclasses import replace
 
-from ..constants import BASE_URI
-from ..getters import (
-    get_items,
-    get_properties,
-    get_publication_mapping,
-    get_questions,
-    get_sparql_query,
-    get_url
-)
+from ..core.constants import BASE_URI
+from ..core.config import get_items, get_properties, get_questions, get_url
+from ..core.properties import get_publication_mapping
+from ..sources.sparql import get_sparql_query
 from ..sources.http import query_sparql
 from ..adders import add_basics, add_references, add_relations_flexible
-from ..getters import get_options
-from ..ids import is_portal_item, is_user_id, publication_doi
+from ..core.config import get_options
+from ..core.ids import is_portal_item, is_user_id, publication_doi
 
 from .constants import (
     PROPS,

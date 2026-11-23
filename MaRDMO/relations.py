@@ -1,5 +1,5 @@
 '''Relations between the entries of a documentation, resolved to their pages for preview and export.'''
-from .ids import item_key
+from .export.items import item_key
 from .pages import page_refs
 
 
@@ -37,7 +37,7 @@ def build_new_value(from_entry, entity, key, resolved, assumption, mapping):
         key:        Relation key within *from_entry*.
         resolved:   Resolved relatant (:class:`~MaRDMO.pages.PageRef` or ID).
         assumption: Boolean; if ``True``, attach assumption qualifier.
-        mapping:    :class:`~MaRDMO.properties.PropertyRegistry` for relation lookup.
+        mapping:    :class:`~MaRDMO.core.properties.PropertyRegistry` for relation lookup.
 
     Returns:
         Processed relation dict, or *resolved* unchanged when no relation is set.
@@ -86,7 +86,7 @@ def entity_relations(data, idx, entity, assumption, mapping, grouped=False):
                     target types of the pages).
         entity:     Dict with keys ``relation``, ``old_name`` and ``new_name``.
         assumption: Boolean controlling assumption qualifier attachment.
-        mapping:    :class:`~MaRDMO.properties.PropertyRegistry` for relation type lookup.
+        mapping:    :class:`~MaRDMO.core.properties.PropertyRegistry` for relation type lookup.
         grouped:    Write every entry, also one equal to an entry already written.
     """
     refs = page_refs(data, check_list(idx.get('to')))
@@ -140,7 +140,7 @@ def resolve_relations(data, relations, mappings, default):
                    ``to_idx``, ``relation``, ``old_name``, ``new_name`` and
                    optionally ``assumption``, ``grouped`` and ``mapping``.
         mappings:  ``{name: PropertyRegistry}`` for the rows' ``mapping``.
-        default:   The :class:`~MaRDMO.properties.PropertyRegistry` of rows
+        default:   The :class:`~MaRDMO.core.properties.PropertyRegistry` of rows
                    without (or with another) ``mapping``.
     """
     for relation in relations:

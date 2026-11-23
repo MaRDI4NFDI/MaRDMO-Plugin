@@ -6,8 +6,8 @@ import pytest
 from django.test import Client
 from rdmo.projects.models import Membership
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_items
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.config import get_items
 from MaRDMO.sources.portal import PortalItems
 from tests.db.conftest import answer, save
 from tests.support.html import attribute, element, elements, export_button, links, preview_page, text

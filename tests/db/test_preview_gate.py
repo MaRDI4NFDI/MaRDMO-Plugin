@@ -8,7 +8,7 @@ once more: what it finds changed since the preview.
 '''
 from rdmo.questions.models import Page
 
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from tests.db.conftest import without_description
 from tests.support.html import element, elements, export_button, export_page, links, preview_page, text

@@ -14,8 +14,9 @@ Provides:
 
 from django.utils.translation import gettext_noop as N_
 
-from ..constants import ALGORITHM_PROPS, BASE_URI, SECTION_MAP_BASE
-from ..getters import get_mathalgodb, get_properties, get_questions
+from ..core.constants import ALGORITHM_PROPS, BASE_URI, SECTION_MAP_BASE
+from ..core.properties import get_mathalgodb
+from ..core.config import get_properties, get_questions
 from ..publication.constants import get_publication_relations
 
 #Dictionary for internal / external section names

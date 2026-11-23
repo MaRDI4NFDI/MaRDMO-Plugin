@@ -23,9 +23,10 @@ from typing import Optional
 
 from .constants import data_properties_per_class, qudt_reference_ids
 
-from ..getters import get_items, get_mathmoddb, get_options, get_properties, get_url
-from ..values import split_value
-from ..models import QueryBatch, Relatant, RelatantWithClass, RelatantWithQualifier
+from ..core.config import get_items, get_options, get_properties, get_url
+from ..core.properties import get_mathmoddb
+from ..core.values import split_value
+from ..core.models import QueryBatch, Relatant, RelatantWithClass, RelatantWithQualifier
 from ..sources.wikibase import get_entities
 
 logger = logging.getLogger(__name__)

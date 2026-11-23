@@ -3,7 +3,7 @@ from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 from rest_framework.exceptions import ValidationError
 
-from ..getters import get_mathmoddb
+from ..core.properties import get_mathmoddb
 from .constants import data_properties_check
 
 

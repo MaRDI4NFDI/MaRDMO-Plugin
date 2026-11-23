@@ -31,9 +31,9 @@ from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, gettext_noop as N_, ngettext
 
-from ..getters import get_options
-from ..properties import find_reference
-from ..ids import DOI_PREFIX, is_own_item
+from ..core.config import get_options
+from ..core.properties import find_reference
+from ..core.ids import DOI_PREFIX, is_own_item
 from ..pages import PageRef
 from ..validators import formula_comment_problem
 from ..tex_check import FAILED, NOT_VERIFIED, failure_hint
@@ -115,7 +115,7 @@ def remaining_marks(page):
 
 @register.filter
 def own_item(identifier):
-    '''Return ``True`` if *identifier* is an item of the user's own (``user:`` ID, see :func:`~MaRDMO.ids.is_own_item`).
+    '''Return ``True`` if *identifier* is an item of the user's own (``user:`` ID, see :func:`~MaRDMO.core.ids.is_own_item`).
 
     Usage: ``{% if values.ID|own_item %}``.
     '''

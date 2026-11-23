@@ -15,7 +15,8 @@ source software*) do not count.
 from dataclasses import dataclass
 from functools import lru_cache
 
-from .getters import get_items, get_mathmoddb
+from .config import get_items
+from .properties import get_mathmoddb
 
 # Key-Item Map for Class-Independent Data Properties
 INDEPENDENT_PROPERTIES = [

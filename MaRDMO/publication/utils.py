@@ -29,8 +29,9 @@ from rdmo.domain.models import Attribute
 
 from .models import Author, Journal, Publication
 
-from ..constants import BASE_URI
-from ..getters import get_items, get_properties, get_sparql_query, get_url
+from ..core.constants import BASE_URI
+from ..core.config import get_items, get_properties, get_url
+from ..sources.sparql import get_sparql_query
 from ..sources.citations import get_crossref_data, get_datacite_data, get_doi_data, get_orcids, get_zbmath_data
 from ..sources.http import query_sparql, query_sparql_pool
 
@@ -50,7 +51,7 @@ def additional_queries(publication, choice, key, parameter, function):
     on ``publication[choice].<key>``.
 
     Args:
-        publication: Dict mapping source keys to :class:`~.models.Publication`
+        publication: Dict mapping source keys to :class:`~MaRDMO.core.models.Publication`
                      instances (mutated in place).
         choice:      Active source key (e.g. ``"crossref"``).
         key:         Sub-entity attribute name and query file stem
@@ -140,8 +141,8 @@ def match_portal_items(entities, mardi_info, wikidata_info):
     description of the item replace theirs.
 
     Args:
-        entities:      Iterable of :class:`~.models.Author` or
-                       :class:`~.models.Journal` instances to update.
+        entities:      Iterable of :class:`~MaRDMO.core.models.Author` or
+                       :class:`~MaRDMO.core.models.Journal` instances to update.
         mardi_info:    Dict of entities found on the MaRDI Portal.
         wikidata_info: Dict of entities found on Wikidata.
     '''
@@ -181,7 +182,7 @@ def assign_orcid(publication, source, id_type = 'orcid'):
     '''Back-fill missing ORCID iDs on authors from the *orcid* lookup result.
 
     Args:
-        publication: Dict mapping source keys to :class:`~.models.Publication`
+        publication: Dict mapping source keys to :class:`~MaRDMO.core.models.Publication`
                      instances (mutated in place).
         source:      Key of the publication entry whose authors are updated.
         id_type:     Key for the ORCID lookup result dict (default ``"orcid"``).
@@ -213,7 +214,7 @@ def clean_background_data(key_dict, questions, project, snapshot, set_index):
         ).delete()
 
 def extract_authors(data):
-    '''Parse SPARQL result rows into a dict of :class:`~.models.Author` instances.
+    '''Parse SPARQL result rows into a dict of :class:`~MaRDMO.core.models.Author` instances.
 
     Expects ``data[0]["author_info"]["value"]`` as a ``" || "``-delimited
     string of author records.
@@ -233,7 +234,7 @@ def extract_authors(data):
     return authors
 
 def extract_journals(data):
-    '''Parse SPARQL result rows into a dict of :class:`~.models.Journal` instances.
+    '''Parse SPARQL result rows into a dict of :class:`~MaRDMO.core.models.Journal` instances.
 
     Expects ``data[0]["journal_info"]["value"]`` as a ``" || "``-delimited
     string of journal records.
@@ -269,7 +270,7 @@ def get_citation(doi):
 
     Returns:
         Dict mapping source keys (``"mardi"``, ``"wikidata"``, ``"crossref"``,
-        etc.) to :class:`~.models.Publication` instances or ``None``; empty
+        etc.) to :class:`~MaRDMO.core.models.Publication` instances or ``None``; empty
         dict if *doi* does not match the expected format.
     '''
     if not re.match(r'10.\d{4,9}/[-._;()/:a-z0-9A-Z]+', doi):

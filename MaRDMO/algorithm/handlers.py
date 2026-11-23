@@ -14,11 +14,9 @@ from .constants import PROPS
 from .models import Benchmark, Problem
 
 from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, twin_fields, use_portal_twins
-from ..constants import BASE_URI
-from ..getters import (
-    get_mathalgodb,
-    get_questions,
-)
+from ..core.constants import BASE_URI
+from ..core.properties import get_mathalgodb
+from ..core.config import get_questions
 from ..adders import (
     add_basics,
     add_references,

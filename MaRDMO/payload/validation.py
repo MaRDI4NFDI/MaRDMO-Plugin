@@ -3,7 +3,7 @@ import re
 
 from django.utils.translation import gettext as _
 
-from ..patterns import QUANTITY_AMOUNT_RE
+from ..core.patterns import QUANTITY_AMOUNT_RE
 from ..validators import REPOSITORY_URL_SCHEMES, WEB_URL_SCHEMES, doi_problem, swmath_problem, url_problem
 from .bodies import ITEM_KEY_RE
 

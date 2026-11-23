@@ -7,8 +7,8 @@ import pytest
 
 import MaRDMO.sources.wikidata as wikidata_api
 import MaRDMO.components.dropdowns as dropdowns
-from MaRDMO.constants import WIKIDATA
-from MaRDMO.optionsets import PROVIDERS
+from MaRDMO.core.constants import WIKIDATA
+from MaRDMO.core.searches import PROVIDERS
 
 SOFTWARE = ['Q7397']
 # LAPACK and OpenBLAS are software, mass is not

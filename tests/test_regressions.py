@@ -14,7 +14,8 @@ import pytest
 
 import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO.sources.portal import PortalItems
-from MaRDMO.getters import get_items, get_mathmoddb, get_properties
+from MaRDMO.core.config import get_items, get_properties
+from MaRDMO.core.properties import get_mathmoddb
 from MaRDMO.model.models import MathematicalModel
 from MaRDMO.payload import GeneratePayload
 from MaRDMO.templatetags.mardmo_tags import publication_info
@@ -137,8 +138,8 @@ def test_data_sets_are_looked_up_by_doi_only(name):
 
 def test_research_field_relatant_prefix_is_ad():
     '''Research fields are academic disciplines: "AD", not "RF".'''
-    from MaRDMO.constants import BASE_URI
-    from MaRDMO.getters import get_questions
+    from MaRDMO.core.constants import BASE_URI
+    from MaRDMO.core.config import get_questions
     from MaRDMO.model.constants import get_uri_prefix_map
     questions = get_questions('model')
     assert get_uri_prefix_map()[f'{BASE_URI}{questions["Research Problem"]["RFRelatant"]["uri"]}']['prefix'] == 'AD'

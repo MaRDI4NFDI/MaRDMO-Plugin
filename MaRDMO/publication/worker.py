@@ -17,10 +17,10 @@ from multiprocessing.pool import ThreadPool
 from .constants import ITEMINFOS, CITATIONINFOS, JOURNALS, AUTHORS, LANGUAGES
 from .utils import clean_background_data, get_citation
 
-from ..constants import BASE_URI
-from ..getters import get_questions
+from ..core.constants import BASE_URI
+from ..core.config import get_questions
 from ..writes import commit_writes, value_editor
-from ..ids import is_user_id
+from ..core.ids import is_user_id
 
 # Publications whose citation data is looked up at the same time
 CITATION_LOOKUPS_IN_PARALLEL = 3
@@ -62,7 +62,7 @@ def best_citation(citations):
 
 
 def write_citation(project, set_index, data):
-    '''Write the citation *data* (:class:`~.models.Publication`) into the hidden answers of publication *set_index*.
+    '''Write the citation *data* (:class:`~MaRDMO.core.models.Publication`) into the hidden answers of publication *set_index*.
 
     Name, description, entry type, title, date, volume, issue, pages, and the
     languages, journals and authors, each as one answer (metadata text on one

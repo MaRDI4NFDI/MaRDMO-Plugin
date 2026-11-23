@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.optionsets import PROVIDERS
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.searches import PROVIDERS
 from tests.conftest import DC_URI
 
 PACKAGE = Path(__file__).parents[2] / 'MaRDMO'
@@ -88,7 +88,7 @@ def provider_keys(questionnaire):
 
 
 def test_every_option_set_has_a_provider(questionnaire):
-    """An option set without a row of MaRDMO.optionsets offers nothing in the interview."""
+    """An option set without a row of MaRDMO.core.searches offers nothing in the interview."""
     assert sorted(provider_keys(questionnaire) - PROVIDERS.keys()) == []
 
 
@@ -115,7 +115,7 @@ def test_no_question_uses_the_creatable_select(questionnaire):
 # Imported references are stored at the position of their option in the
 # option set, where RDMO's checkbox widget expects them (CheckboxInput.js)
 REFERENCE_ORDERS = {
-    'software-reference': ['MaRDMO.constants'],
+    'software-reference': ['MaRDMO.core.constants'],
     'benchmark-reference': ['MaRDMO.algorithm.constants'],
     'quantity-reference': ['MaRDMO.model.constants'],
 }

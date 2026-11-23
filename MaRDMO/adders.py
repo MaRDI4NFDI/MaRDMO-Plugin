@@ -23,13 +23,13 @@ Provides:
 
 from rdmo.options.models import Option
 
-from .constants import BASE_URI
-from .getters import get_options
+from .core.constants import BASE_URI
+from .core.config import get_options
 from .project.answers import get_id
-from .values import extract_parts, process_qualifier
+from .core.values import extract_parts, process_qualifier
 from .writes import value_editor
-from .ids import NEW_ITEM, item_text
-from .models import Usage
+from .core.ids import NEW_ITEM, item_text
+from .core.models import Usage
 
 def add_basics(project, text, questions, item_type, index = (None, None)):
     '''Parse the ID-question text and write label/description into the questionnaire.
@@ -73,7 +73,7 @@ def add_basics(project, text, questions, item_type, index = (None, None)):
     )
 
 def _first_part(text):
-    '''*text* up to its first ``|`` (as :func:`~MaRDMO.getters.get_id` reads a single field).'''
+    '''*text* up to its first ``|`` (as :func:`~MaRDMO.project.answers.get_id` reads a single field).'''
     return text.split('|')[0] if isinstance(text, str) and '|' in text else text
 
 
@@ -86,7 +86,7 @@ def add_entities(project, question_set, datas, prefix):
     Args:
         project:      RDMO project instance.
         question_set: Attribute URI of the set question (e.g. the section root).
-        datas:        Iterable of :class:`~MaRDMO.models.Relatant` instances.
+        datas:        Iterable of :class:`~MaRDMO.core.models.Relatant` instances.
         prefix:       Label prefix for the set page (e.g. ``"AD"``).
     '''
 
@@ -138,7 +138,7 @@ def add_new_entities(project, question_set, datas, prefix):
     Args:
         project:      RDMO project instance.
         question_set: Attribute URI of the set question.
-        datas:        Iterable of :class:`~MaRDMO.models.Relatant` instances
+        datas:        Iterable of :class:`~MaRDMO.core.models.Relatant` instances
                       (``id`` is the ``user:`` ID).
         prefix:       Label prefix for the set page.
     '''
@@ -360,7 +360,7 @@ def add_relations_flexible(project, data, props, index, statement):
         project:   RDMO project instance.
         data:      Dataclass instance whose attributes hold lists of relatants.
         props:     Dict with keys ``'keys'`` (attribute names) and ``'mapping'``
-                   (:class:`~MaRDMO.properties.PropertyRegistry` mapping prop
+                   (:class:`~MaRDMO.core.properties.PropertyRegistry` mapping prop
                    name → relation URL).
         index:     Dict containing ``'set_prefix'``; updated with
                    ``'set_prefix_reduced'`` and ``'idx'`` in place.

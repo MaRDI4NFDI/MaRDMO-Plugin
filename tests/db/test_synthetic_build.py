@@ -30,7 +30,7 @@ from rdmo.questions.models import Catalog as RDMOCatalog
 
 from MaRDMO import main, pipeline
 from MaRDMO.sources import wikibase
-from MaRDMO.catalogs import catalog_of
+from MaRDMO.core.catalogs import catalog_of
 from MaRDMO.duplicates import preview_duplicates, reuse
 from MaRDMO.problems import report_lines
 from tools.synthetic.catalog import Catalog
@@ -102,7 +102,7 @@ def test_build(name, db, monkeypatch, django_db_setup):
     except ModuleNotFoundError:
         pytest.skip(f'{module} is not written yet')
     counter = itertools.count(1)
-    monkeypatch.setattr('MaRDMO.ids.new_user_id',
+    monkeypatch.setattr('MaRDMO.core.ids.new_user_id',
                         lambda: f'user:{uuid.uuid5(uuid.NAMESPACE_URL, f"mardmo/{name}/{next(counter)}")}')
     polite(monkeypatch)
     # The build is not waited for by a user: the portal's class-filtered search may take longer

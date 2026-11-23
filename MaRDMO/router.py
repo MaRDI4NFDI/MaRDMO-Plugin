@@ -4,13 +4,13 @@ On every ``value_created`` or ``value_updated`` signal the post-save router chec
 whether the project's catalog is a MaRDMO catalog and, if so, looks up the
 saved attribute URI in ``HANDLER_MAP`` to call the matching handler method; a
 page's saved name or description also goes to the answers that refer to its
-item (:func:`~MaRDMO.ids.sync_text`), and when a tab gets another item, the
-answers that referred to the old one follow it (:func:`~MaRDMO.ids.follow_tab`).  Only the interview sends these signals,
+item (:func:`~MaRDMO.project.identity.sync_text`), and when a tab gets another item, the
+answers that referred to the old one follow it (:func:`~MaRDMO.project.identity.follow_tab`).  Only the interview sends these signals,
 so hydration and imports are not synced (their texts come with them).
 
 On every Django ``post_delete`` signal on ``Value`` the post-delete router does the
 same lookup in ``DELETE_HANDLER_MAP``; a deleted page's ID answer also removes
-the answers that refer to its item (:func:`~MaRDMO.ids.remove_references`).
+the answers that refer to its item (:func:`~MaRDMO.project.identity.remove_references`).
 Using ``post_delete`` (rather than RDMO's custom ``value_deleted``) ensures the
 handler fires for both individual REST deletions and set deletions via RDMO's
 ``delete_set``, which calls ``value.delete()`` directly.
@@ -28,7 +28,7 @@ check all values.  ``PRESAVE_VALIDATOR_MAP`` is assembled explicitly by
 :func:`~MaRDMO.builders.build_presave_validator_map`.
 
 Before an answer is saved, from anywhere, the pre-save router gives the item
-it holds a real ID (:func:`~MaRDMO.ids.assign_id`): "not found" (the option
+it holds a real ID (:func:`~MaRDMO.project.identity.assign_id`): "not found" (the option
 "new item") becomes ``user:<uuid>``.
 
 All maps are assembled once at startup.
@@ -51,9 +51,17 @@ from django.dispatch import receiver
 from django.urls import Resolver404, resolve
 from rdmo.projects.models import Project, Value
 from rdmo.projects.signals import value_created, value_updated
-from .catalogs import catalog_of
+from .core.catalogs import catalog_of
 from .writes import batched_writes, is_internal_write
-from .ids import assign_id, follow_tab, give_copies_their_ids, id_attributes, is_tab_id, remove_references, sync_text
+from .project.identity import (
+    assign_id,
+    follow_tab,
+    give_copies_their_ids,
+    id_attributes,
+    is_tab_id,
+    remove_references,
+    sync_text,
+)
 from .builders import (
     build_post_save_handler_set,
     build_post_delete_handler_set,
@@ -102,7 +110,7 @@ def _forget_request_path(sender, **kwargs):  # pylint: disable=unused-argument
     '''Clear the stored request path once the response is finished.
 
     After RDMO copied a tab, the copies of own items first get IDs of their
-    own (:func:`~MaRDMO.ids.give_copies_their_ids`, #186): RDMO writes the
+    own (:func:`~MaRDMO.project.identity.give_copies_their_ids`, #186): RDMO writes the
     copy without signals, and this is the first moment MaRDMO can act.
     '''
     path = _request_path.get()
@@ -234,7 +242,7 @@ def mardmo_router_pre_save(sender, instance=None, **kwargs):  # pylint: disable=
 
     Connected to Django's ``pre_save`` signal on ``Value``.
     Every saved answer of a MaRDMO catalog that holds an item gets a real ID
-    (:func:`~MaRDMO.ids.assign_id`): from the interview, imports and MaRDMO's
+    (:func:`~MaRDMO.project.identity.assign_id`): from the interview, imports and MaRDMO's
     own writes alike.  Only answers saved through the interview are
     validated; skips fixture loads, snapshots, non-MaRDMO catalogs,
     attributes with no registered validator, and every other save (see

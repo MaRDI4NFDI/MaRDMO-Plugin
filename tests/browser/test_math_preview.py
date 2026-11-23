@@ -15,7 +15,7 @@ from playwright.sync_api import expect
 from rdmo.projects.models import Membership
 from rdmo.questions.models import Page
 
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from tests.browser.conftest import screenshot
 from tests.db.conftest import answer, save
 

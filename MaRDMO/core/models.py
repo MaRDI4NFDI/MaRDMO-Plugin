@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from .constants import software_reference_ids
-from .getters import get_options
+from .config import get_options
 from .values import split_value
 
 @dataclass
@@ -77,7 +77,7 @@ class Usage:
 
     The shared hydration and adders write its qualifier and hardware items
     from these fields; a :class:`Relatant` gives its qualifiers as text
-    (:func:`~MaRDMO.values.process_qualifier`).  The workflow's process steps
+    (:func:`~MaRDMO.core.values.process_qualifier`).  The workflow's process steps
     use it (:class:`~MaRDMO.workflow.models.ProcessStepUsage`).
     '''
     id: Optional[str]

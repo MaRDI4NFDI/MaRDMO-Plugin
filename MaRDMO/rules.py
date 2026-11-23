@@ -4,7 +4,7 @@ A question of ``questions.json`` names its place in the answers with the keys
 ``key1``, ``key2`` and an optional ``key3``, and five flags: ``set_prefix``,
 ``set_index``, ``collection_index``, ``external_id`` and ``option_text``.
 :func:`route` turns a value of the question into its entry and the path of
-the entry; :func:`~MaRDMO.getters.get_answers` writes it there.
+the entry; :func:`~MaRDMO.project.answers.get_answers` writes it there.
 
 The path is ``key1``, then the set prefix (``set_prefix``), ``key2``, the set
 index (``set_index``), the collection index (``collection_index``) and
@@ -17,7 +17,7 @@ The entry is ``[option URI, text]`` (``option_text``), the item
 only its ID), or the value itself.
 '''
 
-from .values import basic_dict, basic_list
+from .core.values import basic_dict, basic_list
 
 FLAGS = ('set_prefix', 'set_index', 'collection_index', 'external_id', 'option_text')
 '''The flags of a question, in the order of :func:`flags`.'''

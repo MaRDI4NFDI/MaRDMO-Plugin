@@ -5,9 +5,9 @@ from rdmo.projects.models import Membership
 
 import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO.adders import add_entities
-from MaRDMO.constants import BASE_URI
-from MaRDMO.ids import is_user_id
-from MaRDMO.models import Relatant
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.ids import is_user_id
+from MaRDMO.core.models import Relatant
 from tests.db.conftest import answer, save
 
 

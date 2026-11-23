@@ -8,8 +8,8 @@ hardware goes with algorithms.  The portal's answers are given here.
 '''
 import pytest
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.models import Relatant, Software
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.models import Relatant, Software
 from MaRDMO.sources.portal import PortalItems
 from MaRDMO.workflow.models import ProcessStep, ProcessStepUsage
 from tests.db.conftest import answer, save

@@ -7,7 +7,7 @@ find what they should; the rest is checked on the query alone.
 '''
 import pytest
 
-from MaRDMO.getters import get_options
+from MaRDMO.core.config import get_options
 from MaRDMO.search import worker
 
 OPTIONS = get_options()

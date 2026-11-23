@@ -8,9 +8,9 @@ its own page.  Here for benchmarks (algorithm catalog) and software
 import pytest
 
 from MaRDMO.algorithm.models import Benchmark
-from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_options
-from MaRDMO.models import Software
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.config import get_options
+from MaRDMO.core.models import Software
 from tests.db.conftest import select
 from tests.db.test_relations import interview, page  # noqa: F401 (the interview fixture)
 

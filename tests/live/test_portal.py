@@ -28,8 +28,8 @@ import requests
 
 import MaRDMO.sources.portal as portal_api
 import MaRDMO.sources.wikibase as wikibase
-from MaRDMO.constants import TEX_CHECK_URL, WIKIDATA
-from MaRDMO.getters import get_items, get_url
+from MaRDMO.core.constants import TEX_CHECK_URL, WIKIDATA
+from MaRDMO.core.config import get_items, get_url
 from tests.support.recordings import FOLDER, REAL_REQUEST
 
 pytestmark = pytest.mark.skipif(os.environ.get('LIVE') != '1', reason='live check: LIVE=1 (see module docstring)')

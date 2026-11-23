@@ -230,7 +230,7 @@ and a dependency graph:
     same lookup (`MaRDMO.duplicates.look_up`) and lists them before the export
     (see [Items already on the MaRDI Portal](#items-already-on-the-mardi-portal)).
 
-- **Markers of existing items** (`MaRDMO.markers`): every section sets its
+- **Markers of existing items** (`MaRDMO.core.markers`): every section sets its
   items' class (`instance of`), and some their `community` and `MaRDI profile
   type`, as the table `SECTION_MARKERS` says per catalog and section; the
   workers read them from there (`_add_common_metadata(payload, section)`), and

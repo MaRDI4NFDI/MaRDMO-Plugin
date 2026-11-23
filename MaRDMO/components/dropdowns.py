@@ -24,8 +24,9 @@ import requests
 from django.core.cache import cache
 from rdmo.domain.models import Attribute
 
-from ..constants import BASE_URI
-from ..getters import get_mathmoddb, get_properties, get_url
+from ..core.constants import BASE_URI
+from ..core.properties import get_mathmoddb
+from ..core.config import get_properties, get_url
 from ..sources.portal import portal_doi_forms, query_api_per_class, query_api_per_profile
 from ..sources.wikibase import (
     WIKIDATA_HITS,
@@ -41,9 +42,16 @@ from ..sources.http import (
     SEARCH_TIMEOUT,
     search_deadline,
 )
-from ..values import extract_parts
-from ..ids import (
-    DOI_PREFIX, NEW_DOI, NEW_ITEM, NOT_FOUND, is_item_id, is_user_id, item_text, publication_doi,
+from ..core.values import extract_parts
+from ..core.ids import (
+    DOI_PREFIX,
+    NEW_DOI,
+    NEW_ITEM,
+    NOT_FOUND,
+    is_item_id,
+    is_user_id,
+    item_text,
+    publication_doi,
 )
 from ..validators import doi_problem
 

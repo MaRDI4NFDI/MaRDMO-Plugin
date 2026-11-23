@@ -12,7 +12,7 @@ import pytest
 from MaRDMO.algorithm.checks import AlgorithmChecks
 from MaRDMO.workflow.checks import WorkflowChecks
 from MaRDMO.algorithm.catalog import CATALOG_ALGORITHM
-from MaRDMO.getters import get_options
+from MaRDMO.core.config import get_options
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.problems import Problem, report_lines
 

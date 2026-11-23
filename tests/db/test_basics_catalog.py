@@ -10,7 +10,7 @@ from rdmo.questions.models import Catalog
 
 from MaRDMO import main
 from MaRDMO.model.catalog import CATALOG_MODEL_BASICS_NAME, CATALOG_MODEL_NAME
-from MaRDMO.getters import catalog_questions, get_questions
+from MaRDMO.core.config import catalog_questions, get_questions
 from MaRDMO.model import models
 from MaRDMO.model.handlers import Information
 from tests.db.conftest import answer, save

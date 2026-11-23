@@ -16,7 +16,7 @@ from types import SimpleNamespace
 import pytest
 
 from MaRDMO import main
-from MaRDMO.catalogs import catalog_of
+from MaRDMO.core.catalogs import catalog_of
 from MaRDMO.ordering import topological_order
 from MaRDMO.store import _progress_store
 from MaRDMO.upload import Upload

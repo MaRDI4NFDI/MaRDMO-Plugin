@@ -1,8 +1,8 @@
 # Data Access
 
-## Getters
+## Configuration
 
-::: MaRDMO.getters
+::: MaRDMO.core.config
 
 ## Answers of a Project
 
@@ -10,11 +10,19 @@
 
 ## Item IDs
 
-::: MaRDMO.ids
+::: MaRDMO.core.ids
+
+### While a Project Is Answered
+
+::: MaRDMO.project.identity
+
+### Items of an Export
+
+::: MaRDMO.export.items
 
 ## Base Models
 
-::: MaRDMO.models
+::: MaRDMO.core.models
 
 ## Requests to External Services
 
@@ -23,6 +31,10 @@
 ### HTTP
 
 ::: MaRDMO.sources.http
+
+### SPARQL Query Files
+
+::: MaRDMO.sources.sparql
 
 ### Wikibase API
 
@@ -46,4 +58,4 @@
 
 ## Markers
 
-::: MaRDMO.markers
+::: MaRDMO.core.markers

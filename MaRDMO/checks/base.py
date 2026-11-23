@@ -15,11 +15,12 @@ marked with ``N_`` so that the catalog has them (see :mod:`MaRDMO.problems`).
 '''
 from django.utils.translation import gettext as _, gettext_noop as N_
 
-from ..getters import get_mathalgodb, get_mathmoddb, get_options, get_url
-from ..properties import find_reference
-from ..ids import NOT_FOUND, is_own_item
+from ..core.properties import get_mathalgodb, get_mathmoddb
+from ..core.config import get_options, get_url
+from ..core.properties import find_reference
+from ..core.ids import NOT_FOUND, is_own_item
 from ..pages import add_tab_names, page_ref
-from ..patterns import LINE_BREAK_RE
+from ..core.patterns import LINE_BREAK_RE
 from ..problems import Problem
 from ..validators import doi_problem, short_description_problem, swmath_problem, url_problem, url_schemes
 from ..payload import PortalUnavailable
@@ -94,7 +95,7 @@ class ChecksBase:
     '''Core infrastructure: registry init, error helpers, shared checks, and publication.
 
     The checks of a catalog are a subclass (``model/checks.py`` etc., named by
-    its :class:`~MaRDMO.catalogs.Catalog`) with a method ``run`` and these
+    its :class:`~MaRDMO.core.catalogs.Catalog`) with a method ``run`` and these
     class attributes, which the shared checks read:
 
     - ``section_map``: section of the answers → its name in the messages;
@@ -280,7 +281,7 @@ class ChecksBase:
         '''Check selected reference options: value present; DOI, swMATH ID and URLs valid.
 
         References are looked up by option, not by position (see
-        :func:`~MaRDMO.properties.find_reference`).
+        :func:`~MaRDMO.core.properties.find_reference`).
 
         Args:
             references: Reference answers ``{collection_index: [option_uri, text]}``.
@@ -316,7 +317,7 @@ class ChecksBase:
 
         Args:
             doc:           Dict ``{collection_index: [option_uri, text]}``.
-            options:       Options dict from :func:`~MaRDMO.getters.get_options`.
+            options:       Options dict from :func:`~MaRDMO.core.config.get_options`.
             page_name:     Human-readable page label for error messages.
             context_label: Label prefix for the error (e.g. ``"Software Requirements"``).
             doc_field:     The answer the preview shows the entries with (the problems' field).

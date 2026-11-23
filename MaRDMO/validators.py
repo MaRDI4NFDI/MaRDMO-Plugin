@@ -3,7 +3,7 @@
 Each validator receives an RDMO ``Value`` instance and raises
 ``rest_framework.exceptions.ValidationError`` when the value is rejected.
 The catalogs register them for their questions (``catalog.py``,
-:attr:`~MaRDMO.catalogs.Registration.validators`); :mod:`MaRDMO.builders`
+:attr:`~MaRDMO.core.catalogs.Registration.validators`); :mod:`MaRDMO.builders`
 builds the map.
 
 Provides:
@@ -43,12 +43,24 @@ from django.utils.text import format_lazy
 from django.utils.translation import gettext, gettext_lazy as _, gettext_noop as N_
 from rest_framework.exceptions import ValidationError
 
-from .getters import get_options
-from .ids import is_own_item, publication_doi
-from .patterns import (
-    DOI_RE, DOI_STRICT_RE, LINE_BREAK_RE, QUDT_ID_RE, SWMATH_ID_RE,
-    COUNT_RE, COUNT_STRICT_RE, FORMULA_WHITESPACE_RE, SIZE_RE, SIZE_STRICT_RE, TEX_COMMENT_RE,
-    URL_FORBIDDEN_CHARS_RE, URL_HOST_RE, YEAR_RE, YEAR_STRICT_RE,
+from .core.config import get_options
+from .core.ids import is_own_item, publication_doi
+from .core.patterns import (
+    DOI_RE,
+    DOI_STRICT_RE,
+    LINE_BREAK_RE,
+    QUDT_ID_RE,
+    SWMATH_ID_RE,
+    COUNT_RE,
+    COUNT_STRICT_RE,
+    FORMULA_WHITESPACE_RE,
+    SIZE_RE,
+    SIZE_STRICT_RE,
+    TEX_COMMENT_RE,
+    URL_FORBIDDEN_CHARS_RE,
+    URL_HOST_RE,
+    YEAR_RE,
+    YEAR_STRICT_RE,
 )
 
 SHORT_DESCRIPTION_MAX_LENGTH = 2000
@@ -184,7 +196,7 @@ def doi_problem(doi):
     '''Return what is wrong with a complete DOI, or ``None`` if it is valid.
 
     Used by the preview, the documentation checker, and the export (the
-    pre-save validator uses the progressive :data:`~MaRDMO.patterns.DOI_RE`).
+    pre-save validator uses the progressive :data:`~MaRDMO.core.patterns.DOI_RE`).
     '''
     doi = (doi or '').strip()
     if not doi:
@@ -217,7 +229,7 @@ def archive_year_problem(year):
     '''Return what is wrong with a complete archival year, or ``None`` if it is valid.
 
     Used by the preview, the documentation checker, and the export (the
-    pre-save validator uses the progressive :data:`~MaRDMO.patterns.YEAR_RE`).
+    pre-save validator uses the progressive :data:`~MaRDMO.core.patterns.YEAR_RE`).
     '''
     year = str(year or '').strip()
     if not year:

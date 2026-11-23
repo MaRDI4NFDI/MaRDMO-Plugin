@@ -19,9 +19,9 @@ from typing import Optional
 
 from .utils import get_option_text_pair, get_size
 
-from ..getters import get_options
-from ..values import split_value
-from ..models import QueryBatch, Relatant, Usage
+from ..core.config import get_options
+from ..core.values import split_value
+from ..core.models import QueryBatch, Relatant, Usage
 
 
 @dataclass

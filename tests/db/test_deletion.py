@@ -3,8 +3,8 @@ import pytest
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.ids import relation_rows
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.project.identity import relation_rows
 from tests.db.conftest import answer, save
 
 

@@ -11,7 +11,7 @@ import MaRDMO.model.handlers as handlers
 from MaRDMO.model.checks import ModelChecks
 from MaRDMO.pages import PageRef
 from MaRDMO.problems import attach
-from MaRDMO.models import Relatant
+from MaRDMO.core.models import Relatant
 from MaRDMO.model.utils import map_entity_quantity
 from MaRDMO.payload import GeneratePayload
 from MaRDMO.validators import element_symbol_problems

@@ -3,16 +3,16 @@
 Provides :class:`Information`, whose :meth:`~Information.relation` method is
 called whenever a relation value is saved to any MaRDMO questionnaire.  It
 looks up the declaration of the project's catalog
-(:class:`~MaRDMO.catalogs.Registration`: where the related items go, how
+(:class:`~MaRDMO.core.catalogs.Registration`: where the related items go, how
 they are filled in, by which handler class), then registers and hydrates the
 related entity in the questionnaire section.
 '''
 
 from .adders import add_entities, add_new_entities
-from .catalogs import catalog_of, registration_of
-from .values import extract_parts
-from .ids import is_item_id
-from .models import Relatant
+from .core.catalogs import catalog_of, registration_of
+from .core.values import extract_parts
+from .core.ids import is_item_id
+from .core.models import Relatant
 
 # The handler of each catalog, one instance per handler class, created when
 # first used (a mutable dict, so no global statement is needed)

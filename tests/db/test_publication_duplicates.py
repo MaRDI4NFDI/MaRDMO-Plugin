@@ -16,10 +16,10 @@ import pytest
 import requests
 from rdmo.projects.models import Membership
 
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from MaRDMO.duplicates import look_up
-from MaRDMO.getters import get_items
-from MaRDMO.ids import unique_items
+from MaRDMO.core.config import get_items
+from MaRDMO.export.items import unique_items
 from MaRDMO.payload import DocumentationProblem, GeneratePayload, PortalUnavailable
 from MaRDMO.sources.portal import PortalItems
 from tests.db.conftest import answer, save

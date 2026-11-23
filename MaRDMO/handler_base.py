@@ -17,26 +17,20 @@ from typing import Any
 
 from rdmo.domain.models import Attribute
 
-from .constants import ALGORITHM_PROPS, SOFTWARE_PROPS
-from .models import Algorithm, Relatant, Software, Usage
-from .getters import (
-    get_items,
-    get_properties,
-    get_sparql_query,
-    get_sparql_query_optional,
-    get_sparql_query_parts,
-    get_url,
-)
+from .core.constants import ALGORITHM_PROPS, SOFTWARE_PROPS
+from .core.models import Algorithm, Relatant, Software, Usage
+from .core.config import get_items, get_properties, get_url
+from .sources.sparql import get_sparql_query, get_sparql_query_optional, get_sparql_query_parts
 from .project.answers import get_id
-from .values import process_qualifier
+from .core.values import process_qualifier
 from .writes import value_editor
-from .ids import is_portal_item, item_text
+from .core.ids import is_portal_item, item_text
 from .adders import add_basics, add_references, add_relations_flexible, add_relations_static
 from .sources.http import query_sparql, query_sparql_parts
 from .publication.handlers import Information
 from .sources.portal import find_portal_items, portal_labels, portal_publications_by_doi
 from .sources.wikidata import wikidata_dois
-from .markers import contradictions, PUBLICATION_MARKERS, SECTION_MARKERS
+from .core.markers import contradictions, PUBLICATION_MARKERS, SECTION_MARKERS
 
 # Lazy singleton – instantiated on first use so that the Django app registry
 # is guaranteed to be ready (publication.handlers imports rdmo ORM models).
@@ -100,7 +94,7 @@ def _twin_lookup(qids):
 
 
 def _fits(portal, markers):
-    '''Whether one of *markers* (:class:`~MaRDMO.markers.Markers`) does not contradict the markers *portal*.
+    '''Whether one of *markers* (:class:`~MaRDMO.core.markers.Markers`) does not contradict the markers *portal*.
 
     The rule of the preview's "Use this item" (#141): classes MaRDMO does
     not use contradict nothing.
@@ -186,7 +180,7 @@ def twin_fields(catalog, table):
     '''``{attribute: markers}`` for :func:`use_portal_twins` from *table* ``{section: attributes}``.
 
     The markers are those of the section in *catalog* (see
-    :data:`~MaRDMO.markers.SECTION_MARKERS`); a tuple of sections fits
+    :data:`~MaRDMO.core.markers.SECTION_MARKERS`); a tuple of sections fits
     any of them (e.g. quantity and quantity kind).
     '''
     markers = SECTION_MARKERS[catalog]
@@ -235,11 +229,11 @@ def _fetch_by_source(items, mardi_file, wikidata_file, model_class):
     Splits *items* by source prefix (``mardi:`` / ``wikidata:``), fires a
     separate SPARQL request to each endpoint, and merges the results.  If the
     MaRDI template exists as split parts (see
-    :func:`~MaRDMO.getters.get_sparql_query_parts`), the parts are run and
+    :func:`~MaRDMO.sources.sparql.get_sparql_query_parts`), the parts are run and
     their rows merged.
 
-    Uses :func:`~MaRDMO.getters.get_sparql_query` for the MaRDI template
-    (always required) and :func:`~MaRDMO.getters.get_sparql_query_optional`
+    Uses :func:`~MaRDMO.sources.sparql.get_sparql_query` for the MaRDI template
+    (always required) and :func:`~MaRDMO.sources.sparql.get_sparql_query_optional`
     for the Wikidata template (no-op if the file is absent).  Both helpers
     are LRU-cached so repeated calls are free.
 
@@ -363,7 +357,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         Args:
             project:   RDMO project instance.
             data:      Dataclass instance whose attributes are iterated over
-                       ``prop_keys`` to yield :class:`~MaRDMO.models.Relatant` items.
+                       ``prop_keys`` to yield :class:`~MaRDMO.core.models.Relatant` items.
             prop_keys: Sequence of attribute names on *data* to iterate.
             spec:      :class:`_RelatantSpec` instance bundling context parameters.
         '''
@@ -411,12 +405,12 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
         '''Register and hydrate entities embedded as qualifier values on relatants.
 
         Iterates over the relatant lists named by *prop_keys*, inspects the
-        ``qualifier`` attribute of each :class:`~MaRDMO.models.RelatantWithQualifier`,
+        ``qualifier`` attribute of each :class:`~MaRDMO.core.models.RelatantWithQualifier`,
         and for every qualifier item that has not yet been visited, creates a
         new set entry and calls the appropriate fill method.
 
         The ``qualifier`` string is parsed by
-        :func:`~MaRDMO.values.process_qualifier` and must follow the
+        :func:`~MaRDMO.core.values.process_qualifier` and must follow the
         ``"id || label || description"`` format (``' <<||>> '``-separated for
         multiple entries).  Entities already in ``spec.visited`` are skipped.
 
@@ -495,7 +489,7 @@ class BaseInformation:  # pylint: disable=too-few-public-methods
 
         Args:
             project:      RDMO project instance.
-            publications: Iterable of :class:`~MaRDMO.models.Relatant` items
+            publications: Iterable of :class:`~MaRDMO.core.models.Relatant` items
                           representing publications to register.
             catalog:      Current project catalog string, forwarded to the
                           publication handler.

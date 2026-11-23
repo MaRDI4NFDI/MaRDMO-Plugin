@@ -25,8 +25,8 @@ from django.utils import translation
 from django.template.loader import render_to_string
 
 from MaRDMO import main
-from MaRDMO.catalogs import catalog_of
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.catalogs import catalog_of
+from MaRDMO.core.constants import BASE_URI
 from MaRDMO.problems import attach
 from tests.db.conftest import select
 from tests.db.test_export import imported

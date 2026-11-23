@@ -1,5 +1,5 @@
 '''The live check compares answers by structure, and sends only reading requests (tests/live, #93).'''
-from MaRDMO.constants import TEX_CHECK_URL, WIKIDATA
+from MaRDMO.core.constants import TEX_CHECK_URL, WIKIDATA
 from tests.live.test_portal import compare, read_only, recorded
 
 API = 'https://portal.mardi4nfdi.de/w/api.php'

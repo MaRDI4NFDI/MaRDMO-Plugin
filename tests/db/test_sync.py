@@ -3,7 +3,7 @@ import pytest
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership
 
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from tests.db.conftest import answer, save
 
 
@@ -109,7 +109,7 @@ def test_a_publication_on_its_own_tab(interview):
 
 def test_the_sync_is_one_read_and_one_write(project, django_assert_num_queries):
     '''However many answers refer to the item (#105): no query per answer, no signals.'''
-    from MaRDMO.ids import id_attributes, sync_text
+    from MaRDMO.project.identity import id_attributes, sync_text
     model = project('mardmo-model-catalog')
     save(model, answer('quantity/id', 'new item', external_id='user:aaa', set_index=0),
          answer('quantity/name', 'reaction rate', set_prefix='0'),

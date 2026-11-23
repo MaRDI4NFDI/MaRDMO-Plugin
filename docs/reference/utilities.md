@@ -6,7 +6,7 @@
 
 ## Values
 
-::: MaRDMO.values
+::: MaRDMO.core.values
 
 ## Relations
 
@@ -18,7 +18,7 @@
 
 ## Properties
 
-::: MaRDMO.properties
+::: MaRDMO.core.properties
 
 ## Pages
 

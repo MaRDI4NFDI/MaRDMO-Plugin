@@ -7,18 +7,11 @@ MaRDI Portal Wikibase instance.
 
 
 from .constants import get_relations, preview_relations
-from ..markers import IRREPRODUCIBILITY, REPRODUCIBILITY
+from ..core.markers import IRREPRODUCIBILITY, REPRODUCIBILITY
 
-from ..getters import (
-    get_items,
-    get_mathalgodb,
-    get_mathmoddb,
-    get_options,
-    get_properties,
-    get_publication_mapping,
-    get_url
-)
-from ..ids import unique_items
+from ..core.config import get_items, get_options, get_properties, get_url
+from ..core.properties import get_mathalgodb, get_mathmoddb, get_publication_mapping
+from ..export.items import unique_items
 from ..relations import collect_items_without_section, resolve_relations
 from ..payload import GeneratePayload
 from ..payload.bodies import quantity_amount

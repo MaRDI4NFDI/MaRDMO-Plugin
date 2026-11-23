@@ -4,11 +4,11 @@ The router (``router.py``) calls a handler after a value of a question is
 saved or deleted, and a validator before it is saved.  This module builds
 the maps ``{catalog name: {attribute URI: handler or validator}}`` once at
 startup from the declarations of the catalogs (``catalog.py``,
-:class:`~MaRDMO.catalogs.Registration`), which name the questions by
+:class:`~MaRDMO.core.catalogs.Registration`), which name the questions by
 ``(question set, question)`` of their ``questions.json``.
 
 A catalog gets the maps of its question set
-(:attr:`~MaRDMO.catalogs.Catalog.questions`), so the model basics catalog
+(:attr:`~MaRDMO.core.catalogs.Catalog.questions`), so the model basics catalog
 those of the model catalog: it has part of its questions, with the same
 handlers and validators.  Every catalog also gets the publication's.
 
@@ -19,9 +19,9 @@ Provides:
 - ``build_presave_validator_map``   — pre-save validation dispatch dict
 '''
 
-from .catalogs import catalogs, documenting, registrations
-from .constants import BASE_URI
-from .getters import get_questions
+from .core.catalogs import catalogs, documenting, registrations
+from .core.constants import BASE_URI
+from .core.config import get_questions
 from .publication.handlers import Information as PublicationInformation
 from .handlers import Information as GeneralInformation
 from .validators import validate_publication_id

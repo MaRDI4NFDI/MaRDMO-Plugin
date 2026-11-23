@@ -4,8 +4,8 @@ import re
 import pytest
 from rdmo.projects.models import Membership
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_items
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.config import get_items
 from MaRDMO.sources.portal import PortalItems
 from tests.browser.conftest import screenshot
 from tests.db.conftest import answer, save

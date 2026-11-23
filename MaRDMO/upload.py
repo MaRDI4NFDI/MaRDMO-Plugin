@@ -2,7 +2,7 @@
 
 :class:`Upload` posts the entries of the payload and reports its progress;
 afterwards the project gets the IDs of the created items
-(:func:`~MaRDMO.ids.replace_ids`) and the result page lists them and the
+(:func:`~MaRDMO.export.items.replace_ids`) and the result page lists them and the
 statements (:func:`collect_statements`).  :mod:`MaRDMO.oauth2` starts it
 after the authorization.
 '''
@@ -21,8 +21,9 @@ from django.urls import reverse
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
-from .getters import get_items, get_properties
-from .ids import compare_items, item_text, replace_ids
+from .core.config import get_items, get_properties
+from .export.items import compare_items, replace_ids
+from .core.ids import item_text
 from .portal_errors import (
     DuplicateOnPortal,
     explain_error,
@@ -30,7 +31,7 @@ from .portal_errors import (
     handle_policy_violation,
 )
 from .store import _progress_store
-from .values import replace_in_dict
+from .core.values import replace_in_dict
 
 logger = logging.getLogger(__name__)
 
@@ -372,7 +373,7 @@ def collect_statements(init, jsons, pid_to_name=None, qid_to_name=None):
         init:         Deep copy of the payload taken *before* posting (used to
                       distinguish new vs. pre-existing items).
         jsons:        Payload dict *after* posting (all ``Item<n>`` placeholders
-                      replaced with real QIDs by :func:`~MaRDMO.values.replace_in_dict`).
+                      replaced with real QIDs by :func:`~MaRDMO.core.values.replace_in_dict`).
         pid_to_name:  Dict mapping Wikibase property IDs to human-readable names
                       (i.e. the inverse of ``get_properties()``).
         qid_to_name:  Dict mapping Wikibase item QIDs to human-readable names

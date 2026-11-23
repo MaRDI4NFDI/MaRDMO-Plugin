@@ -3,7 +3,7 @@ import pytest
 import requests
 
 import MaRDMO.components.dropdowns as dropdowns
-from MaRDMO.getters import get_items, get_properties
+from MaRDMO.core.config import get_items, get_properties
 from MaRDMO.providers import MaRDMOProvider
 
 

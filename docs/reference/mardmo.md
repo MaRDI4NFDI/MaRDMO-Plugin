@@ -4,12 +4,12 @@ Where the export happens, from the answers to the portal:
 
 | Step | Module |
 |---|---|
-| Read the answers, add pages and IDs | `main`, `project.answers`, `getters`, `pages`, `ids` |
+| Read the answers, add pages and IDs | `main`, `project.answers`, `core.config`, `pages`, `core.ids` |
 | Check and preview | `checks`, `pipeline`, `views` |
 | Build the payload | the catalog's `worker` on `export.worker`, `payload` (`bodies`, `claims`, `validation`) |
 | Authorize | `oauth2` |
 | Post it, report what went wrong | `upload`, `portal_errors` |
-| Write the new IDs back | `ids` (`replace_ids`), `writes` |
+| Write the new IDs back | `export.items` (`replace_ids`), `writes` |
 
 Every request to an external service goes through `sources/`: `http` (one
 session, retries, time limits), `wikibase` (entities of the MaRDI Portal and
@@ -26,7 +26,7 @@ Shared utilities (values, relations, ordering, properties) are listed under
 
 ## Catalogs (registry)
 
-::: MaRDMO.catalogs
+::: MaRDMO.core.catalogs
 
 ## OAuth2
 
@@ -52,9 +52,13 @@ Shared utilities (values, relations, ordering, properties) are listed under
 
 ::: MaRDMO.providers
 
-## Option Set Providers (table)
+## Option Set Providers (setting)
 
 ::: MaRDMO.optionsets
+
+## Option Set Providers (table)
+
+::: MaRDMO.core.searches
 
 ## Dropdown Options
 

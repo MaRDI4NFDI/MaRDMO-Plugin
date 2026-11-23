@@ -39,8 +39,8 @@ class MaRDMOConfig(AppConfig):
         lookups throughout the plugin.
         '''
 
-        from .catalogs import registrations
-        from .getters import get_data
+        from .core.catalogs import registrations
+        from .core.config import get_data
 
         # The publication's questions belong to every catalog; the others are the catalogs' own
         self.questions = {'publication': get_data('publication/data/questions.json')}

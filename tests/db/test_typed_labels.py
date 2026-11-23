@@ -6,7 +6,7 @@ import pytest
 from MaRDMO import main
 from MaRDMO.algorithm.checks import AlgorithmChecks
 from MaRDMO.pages import describe_items_without_page
-from MaRDMO.values import basic_dict
+from MaRDMO.core.values import basic_dict
 from tests.db.conftest import answer, save
 
 

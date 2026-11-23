@@ -1,4 +1,5 @@
 '''Looking up ontology properties and reference answers.'''
+from django.apps import apps
 
 
 def find_reference(references, option_uri):
@@ -52,3 +53,39 @@ class PropertyRegistry:
         if url is not None:
             return self._by_url.get(url)
         raise ValueError("Provide exactly one of: key, label, url")
+
+
+def get_mathmoddb():
+    '''Return a :class:`~MaRDMO.core.properties.PropertyRegistry` for the MathModDB ontology.
+
+    Returns:
+        :class:`~MaRDMO.core.properties.PropertyRegistry` wrapping
+        :attr:`~MaRDMO.apps.MaRDMOConfig.mathmoddb`.
+    '''
+    return PropertyRegistry(
+        apps.get_app_config("MaRDMO").mathmoddb
+    )
+
+
+def get_mathalgodb():
+    '''Return a :class:`~MaRDMO.core.properties.PropertyRegistry` for the MathAlgoDB ontology.
+
+    Returns:
+        :class:`~MaRDMO.core.properties.PropertyRegistry` wrapping
+        :attr:`~MaRDMO.apps.MaRDMOConfig.mathalgodb`.
+    '''
+    return PropertyRegistry(
+        apps.get_app_config("MaRDMO").mathalgodb
+    )
+
+
+def get_publication_mapping():
+    '''Return a :class:`~MaRDMO.core.properties.PropertyRegistry` for the shared publication role options.
+
+    Returns:
+        :class:`~MaRDMO.core.properties.PropertyRegistry` wrapping
+        :attr:`~MaRDMO.apps.MaRDMOConfig.publication_mapping`.
+    '''
+    return PropertyRegistry(
+        apps.get_app_config("MaRDMO").publication_mapping
+    )

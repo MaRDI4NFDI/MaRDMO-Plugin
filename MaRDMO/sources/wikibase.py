@@ -23,7 +23,7 @@ from dataclasses import dataclass
 
 import requests
 
-from ..getters import get_url
+from ..core.config import get_url
 from .http import SEARCH_RETRY_WAIT, SEARCH_TIMEOUT, request_with_retry
 
 logger = logging.getLogger(__name__)

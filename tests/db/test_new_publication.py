@@ -12,8 +12,8 @@ import pytest
 from rdmo.domain.models import Attribute
 from rdmo.projects.models import Membership, Value
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.ids import is_user_id
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.ids import is_user_id
 from MaRDMO.publication import handlers
 from MaRDMO.publication.models import Author, Journal, Publication
 

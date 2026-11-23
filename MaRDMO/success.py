@@ -10,9 +10,17 @@ from collections import defaultdict
 
 from django.utils.translation import gettext_noop as N_
 
-from .constants import (DOI_BASE_URL, ISSN_BASE_URL, MORWIKI_BASE_URL, ORCID_BASE_URL,
-                        QUDT_CONSTANT_URL, QUDT_QUANTITYKIND_URL, SWMATH_BASE_URL,
-                        WIKIDATA, ZBMATH_AUTHOR_BASE_URL)
+from .core.constants import (
+    DOI_BASE_URL,
+    ISSN_BASE_URL,
+    MORWIKI_BASE_URL,
+    ORCID_BASE_URL,
+    QUDT_CONSTANT_URL,
+    QUDT_QUANTITYKIND_URL,
+    SWMATH_BASE_URL,
+    WIKIDATA,
+    ZBMATH_AUTHOR_BASE_URL,
+)
 from .validators import url_problem
 
 CLASS_ORDER = [

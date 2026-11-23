@@ -4,8 +4,8 @@ lme4 (an R package) has the software profile but no class; the search by
 class finds no software for "lme4", the search by profile finds it.
 '''
 import MaRDMO.sources.portal as portal_api
-from MaRDMO.getters import get_items
-from MaRDMO.optionsets import PROVIDERS
+from MaRDMO.core.config import get_items
+from MaRDMO.core.searches import PROVIDERS
 
 LME4 = 'mardi:Q16687'
 

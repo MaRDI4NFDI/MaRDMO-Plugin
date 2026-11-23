@@ -6,7 +6,7 @@ position of a page and its tab differ.
 import pytest
 
 from MaRDMO.model.checks import ModelChecks
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from MaRDMO.pages import PageRef
 from tests.db.test_export import imported
 from tests.support.html import element, links, rendered_preview, text

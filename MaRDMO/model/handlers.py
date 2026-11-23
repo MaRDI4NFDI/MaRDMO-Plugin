@@ -17,14 +17,12 @@ from . import models
 from .constants import data_properties_check, props, qudt_reference_ids, relatant_uris, relation_uris
 
 from ..handler_base import BaseInformation, _RelatantSpec, _fetch_by_source, twin_fields, use_portal_twins
-from ..constants import BASE_URI
-from ..getters import (
-    get_mathmoddb,
-    get_questions,
-)
-from ..patterns import QUDT_ID_STRICT_RE
+from ..core.constants import BASE_URI
+from ..core.properties import get_mathmoddb
+from ..core.config import get_questions
+from ..core.patterns import QUDT_ID_STRICT_RE
 from ..writes import value_editor
-from ..ids import item_text
+from ..core.ids import item_text
 from ..adders import (
     add_basics,
     add_references,

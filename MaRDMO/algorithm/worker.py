@@ -13,9 +13,10 @@ Provides:
 
 from .constants import get_relations, preview_relations
 
-from ..constants import BENCHMARK_REFERENCES
-from ..getters import get_items, get_mathalgodb, get_properties, get_publication_mapping, get_url
-from ..ids import unique_items
+from ..core.constants import BENCHMARK_REFERENCES
+from ..core.config import get_items, get_properties, get_url
+from ..core.properties import get_mathalgodb, get_publication_mapping
+from ..export.items import unique_items
 from ..relations import collect_items_without_section, resolve_relations
 from ..payload import GeneratePayload
 

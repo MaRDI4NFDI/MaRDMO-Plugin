@@ -5,10 +5,10 @@ import pytest
 
 import MaRDMO.components.dropdowns as dropdowns
 from MaRDMO.adders import add_entities
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from MaRDMO.adders import relation_exists
 from MaRDMO.components.dropdowns import option_help
-from MaRDMO.models import Relatant
+from MaRDMO.core.models import Relatant
 from MaRDMO.providers import MaRDMOProvider
 from tests.db.conftest import answer, save
 

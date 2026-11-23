@@ -11,7 +11,7 @@ ID answer:
 
 The ID dropdown of a page offers **new item** to add an own item (its option
 ID is `not found`).  Before the answer is saved, MaRDMO replaces it by a new
-`user:` ID (`MaRDMO.ids.assign_id`, called
+`user:` ID (`MaRDMO.project.identity.assign_id`, called
 by the pre-save router), whoever saves it: the interview, a project import or
 MaRDMO itself.  The interview shows what the server returns, so the field has
 the real ID at once.  An answer that has a `user:` ID already keeps it:
@@ -75,7 +75,7 @@ their section and number ("F4").  Two tabs may have the same name.
 ## When the name or description of a page changes
 
 Saving the name or short description of a page in the interview gives every
-answer that refers to its item the new text (`MaRDMO.ids.sync_text`):
+answer that refers to its item the new text (`MaRDMO.project.identity.sync_text`):
 "Label (Description)", "Label" without description, as the dropdowns
 show it.  The source is not part of a text: the dropdowns show it as a grey
 tag (**[mardi]**, **[wikidata]**, **[project]**, **[new]**), the preview by
@@ -96,7 +96,7 @@ and description anyway.
 
 A tab is the item (#186): when the interview saves another item for a tab,
 every answer that referred to its previous item refers to the new one
-(`MaRDMO.ids.follow_tab`), whatever the switch: an own item found on the MaRDI
+(`MaRDMO.project.identity.follow_tab`), whatever the switch: an own item found on the MaRDI
 Portal or Wikidata, a Wikidata item and its portal twin, a correction, or a
 portal item made the template of a new item.  The answers get the new ID, and
 for a portal or Wikidata item the text of the option chosen; a new item keeps
@@ -142,7 +142,7 @@ the data of the previous one.
 
 Deleting the tab of an item removes every answer in the project that refers
 to it, matched by the exact ID: relations, assumptions, publication
-relations, for own and portal items alike (`MaRDMO.ids.remove_references`).
+relations, for own and portal items alike (`MaRDMO.project.identity.remove_references`).
 A relation row (relation type, targets and assumptions of one block) whose
 last target is removed loses its relation type and assumptions too; a row
 with other targets keeps them.
@@ -168,7 +168,7 @@ opened again.
 "Copy tab" (and taking over a tab from another project) copies a tab with
 its ID: RDMO writes the copy with `bulk_create`, without signals.  At the end
 of the copy request (the router remembers its path,
-`MaRDMO.ids.give_copies_their_ids`) every tab of a section with the `user:`
+`MaRDMO.project.identity.give_copies_their_ids`) every tab of a section with the `user:`
 ID of an earlier tab gets a new one: a copy of an own item is a new item,
 and the links stay with the original (the first tab; RDMO numbers a copy
 after the last tab).  The interview shows the copy's old ID until the page
@@ -188,7 +188,7 @@ The user's own items with the same name and description are one item: the
 same new programming language on two software pages is created once.  The
 export item keeps the `user:` IDs it stands for (`user_ids`, not sent to the
 portal); afterwards every answer with one of them gets the new `mardi:` ID
-and the text "Label (Description)" (`MaRDMO.ids.replace_ids`).
+and the text "Label (Description)" (`MaRDMO.export.items.replace_ids`).
 Answers with the ID of an exported Wikidata item get its new `mardi:` ID too.
 
 ## Using a portal item instead
@@ -208,7 +208,7 @@ language) change only in the answers that refer to them.
 The preview writes the authors and the journal of a publication from its
 citation each time again (background answers, no questions).  An author or
 journal that is neither on the MaRDI Portal nor on Wikidata gets a `user:`
-ID derived from its first identifier (`MaRDMO.ids.part_id`: ORCID iD,
+ID derived from its first identifier (`MaRDMO.core.ids.part_id`: ORCID iD,
 zbMATH author ID, Wikidata QID or name; ISSN, Wikidata QID or title), so it
 has the same ID in every preview and in every publication.  The export
 knows from where it is (author or journal of a publication) what to create:

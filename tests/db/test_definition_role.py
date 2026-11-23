@@ -2,7 +2,7 @@
 import pytest
 
 from MaRDMO import main
-from MaRDMO.getters import get_items, get_properties, get_url
+from MaRDMO.core.config import get_items, get_properties, get_url
 from MaRDMO.model.models import MathematicalModel, Task
 from MaRDMO.model.worker import PrepareModel
 from MaRDMO.sources.portal import PortalItems

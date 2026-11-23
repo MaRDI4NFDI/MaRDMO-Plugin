@@ -20,8 +20,8 @@ from html.parser import HTMLParser
 from django.template.loader import render_to_string
 
 from MaRDMO import main
-from MaRDMO.catalogs import catalog_of
-from MaRDMO.getters import get_item_url
+from MaRDMO.core.catalogs import catalog_of
+from MaRDMO.core.config import get_item_url
 
 PREVIEW_URL = '/projects/{}/export/wikibase/'
 # Elements without content

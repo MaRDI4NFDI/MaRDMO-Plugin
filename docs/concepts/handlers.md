@@ -66,7 +66,7 @@ its whole dependency tree.
 (`questions.json`) but has no quantities, academic disciplines and formula notation.  Its
 hydration uses the basics queries (`_sparql_file`) and fetches no formula data
 (`_fill_formulation_batch`), so a selected formula brings no notation and no quantity pages.
-The export reads only answers to the catalog's own questions (`getters.catalog_questions()`,
+The export reads only answers to the catalog's own questions (`core.config.catalog_questions()`,
 from the catalog's pages and questions; the citation data of publications is kept): answers
 an older MaRDMO wrote there neither block nor reach the portal.
 

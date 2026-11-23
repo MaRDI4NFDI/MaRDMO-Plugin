@@ -30,4 +30,4 @@
 
 ## Patterns
 
-::: MaRDMO.patterns
+::: MaRDMO.core.patterns

@@ -13,13 +13,13 @@ the portal and Wikidata are given here.
 '''
 import pytest
 
-from MaRDMO.constants import BASE_URI
-from MaRDMO.getters import get_items
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.config import get_items
 from MaRDMO.handler_base import portal_twins, twin_fields, use_portal_twins
-from MaRDMO.markers import SECTION_MARKERS
+from MaRDMO.core.markers import SECTION_MARKERS
 from MaRDMO.model import models
 from MaRDMO.model.handlers import TWINS, Information
-from MaRDMO.models import Algorithm, Relatant, Software
+from MaRDMO.core.models import Algorithm, Relatant, Software
 from MaRDMO.sources.portal import PortalItems
 from MaRDMO.workflow.handlers import _model_uses
 from MaRDMO.workflow.models import ProcessStep, ProcessStepUsage

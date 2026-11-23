@@ -19,10 +19,11 @@ from .constants import (
     get_relations,
 )
 from .utils import map_entity_quantity
-from ..markers import DEPENDENT_PROPERTIES, INDEPENDENT_PROPERTIES, get_data_properties
+from ..core.markers import DEPENDENT_PROPERTIES, INDEPENDENT_PROPERTIES, get_data_properties
 
-from ..getters import get_items, get_mathmoddb, get_properties, get_publication_mapping, get_url
-from ..ids import unique_items
+from ..core.config import get_items, get_properties, get_url
+from ..core.properties import get_mathmoddb, get_publication_mapping
+from ..export.items import unique_items
 from ..relations import map_entity, resolve_relations
 from ..payload import GeneratePayload
 

@@ -14,7 +14,7 @@ take:
 - ``reuse``: the portal item may be used instead; :func:`reuse` rewrites the
   answers to it.  Allowed if none of the markers (class, community, profile
   type) the export would give the item contradicts the portal item's
-  (:func:`~MaRDMO.markers.contradictions`); the export then adds the missing
+  (:func:`~MaRDMO.core.markers.contradictions`); the export then adds the missing
   ones.
 - ``rename``: an own item whose portal namesake is another kind of item;
   the user renames it.
@@ -44,12 +44,13 @@ from django.utils.translation import gettext as _
 from rdmo.projects.models import Value
 from rdmo.questions.models import Question
 
-from .getters import get_items, get_questions
-from .ids import unique_items
-from .ids import id_attributes, is_own_item, item_text
-from .markers import PUBLICATION_MARKERS, SECTION_MARKERS, class_families, contradictions
+from .core.config import get_items, get_questions
+from .export.items import unique_items
+from .project.identity import id_attributes
+from .core.ids import is_own_item, item_text
+from .core.markers import PUBLICATION_MARKERS, SECTION_MARKERS, class_families, contradictions
 from .sources.portal import find_portal_items, find_publications_by_doi, portal_dois, portal_labels
-from .constants import BASE_URI
+from .core.constants import BASE_URI
 from .publication.constants import AUTHORS, CITATIONINFOS, JOURNALS, LANGUAGES
 
 logger = logging.getLogger(__name__)
@@ -63,7 +64,7 @@ CREATED = ('wikidata', 'not found', 'author', 'journal')
 
 
 def item_source(value):
-    '''How the export treats the item *value* of :func:`~MaRDMO.ids.unique_items`.
+    '''How the export treats the item *value* of :func:`~MaRDMO.export.items.unique_items`.
 
     ``mardi`` (exists), ``wikidata`` (created with its Wikidata QID), ``not
     found`` (the user's own), ``author`` or ``journal`` (new parts of a
@@ -216,7 +217,7 @@ def _same_in_documentation(documented, reported):
 
     The portal takes only one item per label and description.  (Own items
     with the same name and description are one item already, see
-    :func:`~MaRDMO.ids.item_key`; Wikidata has no two such items.)
+    :func:`~MaRDMO.export.items.item_key`; Wikidata has no two such items.)
     """
     wikidata = {(item['Name'], item['Description']): item for source, item in documented
                 if source == 'wikidata' and item['Description']}
@@ -314,7 +315,7 @@ def _names(qids):
 
 
 def _reasons(sections, catalog, portal):
-    '''Why the item of *sections* (:data:`~MaRDMO.markers.SECTION_MARKERS`) may not become the portal item.'''
+    '''Why the item of *sections* (:data:`~MaRDMO.core.markers.SECTION_MARKERS`) may not become the portal item.'''
     reasons = []
     families = class_families()
     for section in sorted(sections):
@@ -454,7 +455,7 @@ def reuse(project, duplicate, label, description):
     "Label (Description)" of the portal item; the name and description of
     its page become the portal item's.  Written with ``update()``, without
     MaRDMO's handlers (they would ask the portal), as
-    :func:`~MaRDMO.ids.replace_ids` after an export.
+    :func:`~MaRDMO.export.items.replace_ids` after an export.
 
     Returns:
         The number of answers changed.

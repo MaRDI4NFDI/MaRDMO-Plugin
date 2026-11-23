@@ -101,7 +101,7 @@ data_properties_per_class = {
 }
 ```
 
-**3c** (`markers.py`, the item kinds shared by the catalogs) — Register as class-dependent.  The second element is the item name
+**3c** (`core/markers.py`, the item kinds shared by the catalogs) — Register as class-dependent.  The second element is the item name
 prefix; MaRDMO appends the entity class name automatically to look up the
 correct Wikibase item ("dimensional model", "dimensional formula", etc.):
 
@@ -214,7 +214,7 @@ data_properties_per_class = {
 }
 ```
 
-**3c** (`markers.py`, the item kinds shared by the catalogs) — Register as class-independent.  The second element is the full item
+**3c** (`core/markers.py`, the item kinds shared by the catalogs) — Register as class-independent.  The second element is the full item
 name used for all entity classes:
 
 ```python

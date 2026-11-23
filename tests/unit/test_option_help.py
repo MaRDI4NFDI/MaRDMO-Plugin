@@ -9,7 +9,7 @@ import re
 
 import pytest
 
-from MaRDMO.ids import NEW_DOI, NEW_ITEM, NOT_FOUND
+from MaRDMO.core.ids import NEW_DOI, NEW_ITEM, NOT_FOUND
 from MaRDMO.components.dropdowns import option_help
 
 

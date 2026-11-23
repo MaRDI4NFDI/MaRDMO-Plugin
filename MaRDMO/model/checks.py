@@ -6,9 +6,9 @@ from .constants import (
     SECTION_MAP as SECTION_MAP_MODEL,
 )
 from .catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
-from ..ids import is_own_item
+from ..core.ids import is_own_item
 from ..checks.base import ChecksBase, without_page
-from ..patterns import QUDT_ID_STRICT_RE
+from ..core.patterns import QUDT_ID_STRICT_RE
 from ..tex_check import NOT_VERIFIED, UNAVAILABLE, check_formulas, collect_formulas, environment_hint, verdict
 from ..validators import (
     ELEMENT_SYMBOL_MESSAGES, element_symbol_problems, formula_comment_problem, has_equivalence_sign,

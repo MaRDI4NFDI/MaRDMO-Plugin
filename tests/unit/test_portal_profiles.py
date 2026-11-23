@@ -16,8 +16,8 @@ import MaRDMO
 import MaRDMO.components.dropdowns as dropdowns
 import MaRDMO.sources.portal as portal_api
 import MaRDMO.sources.wikibase as wikibase
-from MaRDMO.getters import get_items, get_properties
-from MaRDMO.optionsets import PROFILES, PROVIDERS, Search
+from MaRDMO.core.config import get_items, get_properties
+from MaRDMO.core.searches import PROFILES, PROVIDERS, Search
 
 DATA = Path(MaRDMO.__file__).parent / 'data'
 

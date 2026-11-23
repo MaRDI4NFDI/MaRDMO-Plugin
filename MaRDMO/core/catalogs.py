@@ -134,7 +134,7 @@ class Registration:
 @lru_cache(maxsize=None)
 def registrations():
     '''The :class:`Registration` of every package of :data:`CATALOG_PACKAGES`, loaded when first needed.'''
-    return tuple(import_module(f'{__package__}.{package}.catalog').REGISTRATION for package in CATALOG_PACKAGES)
+    return tuple(import_module(f'MaRDMO.{package}.catalog').REGISTRATION for package in CATALOG_PACKAGES)
 
 
 def catalogs():

@@ -6,8 +6,8 @@ from rdmo.projects.models import Membership
 from MaRDMO.model.checks import ModelChecks
 from MaRDMO.workflow.checks import WorkflowChecks
 from MaRDMO.checks.base import OLD_PROJECT
-from MaRDMO.constants import BASE_URI
-from MaRDMO.ids import is_user_id
+from MaRDMO.core.constants import BASE_URI
+from MaRDMO.core.ids import is_user_id
 from MaRDMO.providers import MaRDMOProvider
 from MaRDMO.components.dropdowns import option_help
 import MaRDMO.components.dropdowns as dropdowns

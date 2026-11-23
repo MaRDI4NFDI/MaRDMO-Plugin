@@ -44,7 +44,7 @@ from rdmo.core.plugins import get_plugin
 from rdmo.projects.models import Project
 
 from . import VERSION
-from .getters import get_item_url
+from .core.config import get_item_url
 from .main import MaRDMOExportProvider
 from .success import CLASS_ORDER, group_by_class, result_graph, split_statements
 from .store import (
@@ -54,7 +54,7 @@ from .store import (
     _job_belongs_to_session,
 )
 from .duplicates import preview_duplicates, reuse, same_duplicate
-from .catalogs import catalog_of
+from .core.catalogs import catalog_of
 from .tex_check import check_formula
 
 

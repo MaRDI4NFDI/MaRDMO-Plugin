@@ -12,7 +12,7 @@ from rdmo.projects.models import Membership
 
 from MaRDMO import main
 from MaRDMO.model.checks import ModelChecks
-from MaRDMO.constants import BASE_URI
+from MaRDMO.core.constants import BASE_URI
 from MaRDMO.model.catalog import CATALOG_MODEL
 from tests.db.conftest import answer, save
 

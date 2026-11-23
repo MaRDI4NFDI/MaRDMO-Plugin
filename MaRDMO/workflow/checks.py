@@ -3,7 +3,7 @@ from django.utils.translation import gettext as _, gettext_noop as N_
 
 from .constants import SECTION_MAP
 from .catalog import CATALOG_WORKFLOW
-from ..getters import get_options
+from ..core.config import get_options
 from ..checks.base import ChecksBase, SOFTWARE_REFERENCE_CHECKS, without_page
 from ..validators import archive_year_problem, count_problem, doi_problem, size_problem
 

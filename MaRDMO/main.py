@@ -23,10 +23,10 @@ from django.utils.translation import gettext_lazy as _
 
 from rdmo.projects.exports import Export
 
-from .catalogs import SEARCH, catalog_of
+from .core.catalogs import SEARCH, catalog_of
 from .duplicates import preview_duplicates
 from . import VERSION
-from .getters import catalog_questions, get_item_url, get_options, get_questions, get_url
+from .core.config import catalog_questions, get_item_url, get_options, get_questions, get_url
 from .project.answers import get_answers, process_question_dict
 from .ordering import topological_order
 from .pages import describe_items_without_page, distinguish_publications, link_to_pages
@@ -41,7 +41,7 @@ from .publication.worker import PublicationRetriever
 
 
 def _documenting(project):
-    '''The :class:`~MaRDMO.catalogs.Catalog` of *project* if it documents items, else ``None``.'''
+    '''The :class:`~MaRDMO.core.catalogs.Catalog` of *project* if it documents items, else ``None``.'''
     catalog = catalog_of(project)
     return catalog if catalog and catalog.documents else None
 
@@ -267,7 +267,7 @@ class MaRDMOExportProvider(BaseMaRDMOExportProvider):
         for the authenticated upload.
 
         Args:
-            catalog: The project's :class:`~MaRDMO.catalogs.Catalog`.
+            catalog: The project's :class:`~MaRDMO.core.catalogs.Catalog`.
 
         Returns:
             HTTP response — either an error page or a redirect to the OAuth

@@ -25,7 +25,7 @@ import requests
 
 from django.core.cache import cache
 
-from ..constants import WIKIDATA
+from ..core.constants import WIKIDATA
 from . import http
 from .wikibase import claim_values, entities_of
 

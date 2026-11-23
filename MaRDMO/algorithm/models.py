@@ -9,16 +9,16 @@ Provides:
 - :class:`Benchmark`  — benchmark problem associated with an algorithm
 - :class:`Software`   — software implementation of an algorithm
 - :class:`Problem`    — algorithmic problem solved by an algorithm
-- :class:`Algorithm`  — re-exported from :mod:`MaRDMO.models`
+- :class:`Algorithm`  — re-exported from :mod:`MaRDMO.core.models`
 '''
 
 from dataclasses import dataclass, field
 
 from .constants import benchmark_reference_ids
 
-from ..getters import get_options
-from ..values import split_value
-from ..models import QueryBatch, Relatant
+from ..core.config import get_options
+from ..core.values import split_value
+from ..core.models import QueryBatch, Relatant
 
 @dataclass
 class Benchmark(QueryBatch):
