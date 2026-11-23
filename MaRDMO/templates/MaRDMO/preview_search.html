@@ -1,4 +1,15 @@
 {% load i18n %}
+<style>
+    /* The query in the colors of a query service (MaRDMO.search.highlight) */
+    .mardmo-sparql { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 12px 16px;
+                     font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+    .mardmo-sparql .sparql-keyword  { color: #7b1fa2; font-weight: bold; }
+    .mardmo-sparql .sparql-variable { color: #1565c0; }
+    .mardmo-sparql .sparql-prefixed { color: #2e7d32; }
+    .mardmo-sparql .sparql-iri      { color: #2e7d32; }
+    .mardmo-sparql .sparql-string   { color: #a1452a; }
+    .mardmo-sparql .sparql-number   { color: #00838f; }
+    .mardmo-sparql .sparql-comment  { color: #6c757d; font-style: italic; }
+</style>
 <h1 id="SPARQLQuery"> {% translate "SPARQL Query" %} </h1>
-<pre><code>{{ answers.query|safe }}</code></pre>
-   
+<pre class="mardmo-sparql"><code>{{ answers.query|safe }}</code></pre>

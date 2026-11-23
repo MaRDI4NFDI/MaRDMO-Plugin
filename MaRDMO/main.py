@@ -19,7 +19,7 @@ from django import forms
 from django.conf import settings
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _, ngettext
 
 from rdmo.projects.exports import Export
 
@@ -36,6 +36,7 @@ from .project.pages import add_tab_names, interview_urls
 from .export.problems import attach as attach_problems, report_lines
 from .export import pipeline
 
+from .search.sparql import SEARCH_LIMIT
 from .search.worker import search
 from .components.publication.worker import PublicationRetriever
 
@@ -432,30 +433,33 @@ class MaRDMOQueryProvider(Export):
     def submit_mardmo_search(self):
         '''Execute a MaRDI Portal search and render the matching results.
 
-        Reads the search type from the answers dict to set the result datatype label.
+        The headline counts the results, or says that there are more than
+        :data:`~MaRDMO.search.sparql.SEARCH_LIMIT`; the class of the search
+        mode stands above them, as on the result page of the export.
 
         Returns:
             Rendered ``MaRDMO/search_results.html`` response with the list of
             matching portal items.
         '''
-        answers, options = self.get_post_data()
-
-        if answers['search']['options'] == options['InterdisciplinaryWorkflow']:
-            datatype = _("Workflow(s)")
-        elif answers['search']['options'] == options['MathematicalModel']:
-            datatype = _("Mathematical Model(s)")
-        elif answers['search']['options'] == options['Algorithm']:
-            datatype = _("Algorithm(s)")
+        answers, _options = self.get_post_data()
+        kind, count = answers.get('kind'), len(answers['links'])
+        if answers.get('more'):
+            heading = gettext('More than %(limit)s results in the MaRDI Portal') % {'limit': SEARCH_LIMIT}
+        elif count:
+            heading = ngettext('%(count)s result in the MaRDI Portal', '%(count)s results in the MaRDI Portal',
+                               count) % {'count': count}
         else:
-            datatype = _("Unknown")
+            heading = gettext('No results in the MaRDI Portal')
 
         return render(
             self.request,
             'MaRDMO/search_results.html',
             {
-                'datatype': datatype,
-                'noResults': answers['no_results'],
+                'heading': heading,
+                'kind': gettext(kind) if kind else '',
                 'links': answers['links'],
+                'more': answers.get('more', False),
+                'limit': SEARCH_LIMIT,
                 'searchFailed': answers.get('search_failed', False),
             },
             status=200

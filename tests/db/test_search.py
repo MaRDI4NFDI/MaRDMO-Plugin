@@ -5,10 +5,16 @@ selected items and keywords.  One real query per mode was sent to the
 portal and recorded (``search_*``), so the queries are valid SPARQL and
 find what they should; the rest is checked on the query alone.
 '''
-import pytest
+import html
+import re
 
+import pytest
+from django.utils import translation
+
+from MaRDMO import main
 from MaRDMO.core.config import get_options
 from MaRDMO.search import worker
+from MaRDMO.search.sparql import SEARCH_LIMIT
 
 OPTIONS = get_options()
 EGYPTIAN_OBJECTS, SIS_MODEL, QUICKSORT = 'Q6032641', 'Q6675171', 'Q6825489'
@@ -23,7 +29,7 @@ def answers(mode, **filters):
 
 
 def links(result):
-    return {url.rsplit('Item:', 1)[1] for _, url in result['links']}
+    return {link['url'].rsplit('Item:', 1)[1] for link in result['links']}
 
 
 # --- Real queries (recorded) --------------------------------------------------------------------
@@ -88,9 +94,11 @@ def test_every_filter_is_in_the_query(sent, mode, filters):
             if isinstance(value, dict):
                 assert f'wd:{value["ID"].split(":")[1]}' in query, value
                 assert value['Name'] in query
-    assert result['no_results'] == '1' and result['links'] == [['found', 'https://portal.mardi4nfdi.de/wiki/Item:Q1']]
-    # The query is shown escaped, line by line
-    assert '<br>' in result['query'] and '<' not in result['query'].replace('<br>', '')
+    assert result['no_results'] == '1' and result['links'] == [
+        {'label': 'found', 'description': '', 'url': 'https://portal.mardi4nfdi.de/wiki/Item:Q1'}]
+    # The query is shown in color, unchanged (MaRDMO.search.highlight)
+    assert '<span class="sparql-keyword">SELECT</span>' in result['query']
+    assert html.unescape(re.sub(r'</?span[^>]*>', '', result['query'])) == query
 
 
 def test_a_keyword_cannot_break_out_of_the_query(sent):
@@ -124,3 +132,84 @@ def test_a_failed_query_is_not_zero_results(sent):
 def test_an_unknown_mode_changes_nothing(sent):
     result = worker.search({'search': {'options': 'https://example.org/other'}}, OPTIONS)
     assert sent['queries'] == [] and result['query'] == '' and not result['search_failed']
+
+
+# --- The results (#182) -------------------------------------------------------------------------
+
+def rows(count):
+    return [{'label': {'value': f'model {number:03}'}, 'description': {'value': f'the model number {number}'},
+             'qid': {'value': f'Q{number}'}} for number in range(count)]
+
+
+def test_the_results_come_by_label_one_more_than_shown(sent):
+    worker.search(answers('Algorithm', **{'software': {0: item('Q302', 'software')}}), OPTIONS)
+    query, = sent['queries']
+    assert query.endswith(f'}}\nORDER BY LCASE(?label)\nLIMIT {SEARCH_LIMIT + 1}')
+
+
+@pytest.mark.parametrize('count, shown, more', [(SEARCH_LIMIT + 1, SEARCH_LIMIT, True),
+                                                 (SEARCH_LIMIT, SEARCH_LIMIT, False), (3, 3, False)])
+def test_more_results_than_shown_are_told(sent, count, shown, more):
+    sent['rows'] = rows(count)
+    result = worker.search(answers('Algorithm', **{'software': {0: item('Q302', 'software')}}), OPTIONS)
+    assert len(result['links']) == shown and result['no_results'] == str(shown) and result['more'] is more
+    assert result['links'][0] == {'label': 'model 000', 'description': 'the model number 0',
+                                  'url': 'https://portal.mardi4nfdi.de/wiki/Item:Q0'}
+
+
+def test_an_item_without_description(sent):
+    sent['rows'] = [{'label': {'value': 'found'}, 'qid': {'value': 'Q1'}}]
+    result = worker.search(answers('Algorithm', **{'software': {0: item('Q302', 'software')}}), OPTIONS)
+    assert result['links'][0]['description'] == ''
+
+
+def test_the_mode_names_the_class_of_its_results(sent):
+    result = worker.search(answers('Algorithm', **{'software': {0: item('Q302', 'software')}}), OPTIONS)
+    assert result['kind'] == 'Algorithm'
+
+
+# --- The result page ----------------------------------------------------------------------------
+
+def result_page(rf, monkeypatch, count, more=False, failed=False, language='en'):
+    '''The result page of a model search that found *count* models.'''
+    found = {'search': {'options': OPTIONS['MathematicalModel']}, 'kind': 'Mathematical Model', 'more': more,
+             'search_failed': failed, 'links': [
+                 {'label': f'model {number}', 'description': f'the model number {number}' if number else '',
+                  'url': f'https://example.org/Item:Q{number}'} for number in range(count)]}
+    provider = main.MaRDMOQueryProvider('mardi', 'x', 'MaRDMO.main.MaRDMOQueryProvider')
+    provider.request = rf.get('/')
+    monkeypatch.setattr(provider, 'get_post_data', lambda: (found, OPTIONS))
+    with translation.override(language):
+        return provider.submit_mardmo_search().content.decode()
+
+
+@pytest.mark.parametrize('count, more, heading', [
+    (SEARCH_LIMIT, True, 'More than 100 results in the MaRDI Portal'),
+    (3, False, '3 results in the MaRDI Portal'),
+    (1, False, '1 result in the MaRDI Portal'),
+    (0, False, 'No results in the MaRDI Portal'),
+])
+def test_the_result_page_counts_the_results(rf, monkeypatch, count, more, heading):
+    page = result_page(rf, monkeypatch, count, more)
+    assert heading in page
+    assert ('the first 100 are shown' in page) is more
+    assert ('>Mathematical Model</p>' in page) is bool(count)          # the class above the results
+    assert '&#x1F517;' not in page
+
+
+def test_the_result_page_links_the_items_with_their_descriptions(rf, monkeypatch):
+    page = result_page(rf, monkeypatch, 2)
+    assert '<a href="https://example.org/Item:Q1" style="color:dodgerblue;">model 1</a>' in page
+    assert 'the model number 1' in page
+    assert page.count('font-size:14px') == 1                          # model 0 has no description
+
+
+def test_a_failed_search_says_so(rf, monkeypatch):
+    page = result_page(rf, monkeypatch, 0, failed=True)
+    assert 'The search could not be run on the MaRDI Portal.' in page and 'No results' not in page
+
+
+def test_the_result_page_in_german(rf, monkeypatch):
+    page = result_page(rf, monkeypatch, 3, language='de')
+    assert '3 Ergebnisse im MaRDI Portal' in page and '>Mathematisches Modell</p>' in page
+    assert 'alphabetisch geordnet' in page

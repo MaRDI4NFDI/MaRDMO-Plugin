@@ -6,6 +6,11 @@ placeholder strings bind Wikibase item/property QIDs at format-time via
 :meth:`str.format`.
 '''
 
+# The results of a search: at most SEARCH_LIMIT, by label (#182).  One more is
+# asked for, so the page can tell that there are more
+SEARCH_LIMIT = 100
+ORDER_AND_LIMIT = 'ORDER BY LCASE(?label)\nLIMIT {limit}'
+
 
 # ---------------------------------------------------------------------------
 # Workflow search — base query and per-entity-type fragment templates.
@@ -13,15 +18,15 @@ placeholder strings bind Wikibase item/property QIDs at format-time via
 # for Wikibase QIDs; all are substituted in one .format() call.
 # ---------------------------------------------------------------------------
 
-QUERY_BASE_WORKFLOW_SEARCH = """SELECT DISTINCT ?label ?qid
+QUERY_BASE_WORKFLOW_SEARCH = """SELECT DISTINCT ?label ?description ?qid
 WHERE {{
   ?workflow wdt:{instance of} wd:{research workflow} ;
             rdfs:label ?label .
   FILTER(LANG(?label) = "en")
 {0}
+  OPTIONAL {{ ?workflow schema:description ?description . FILTER(LANG(?description) = "en") }}
   BIND(STRAFTER(STR(?workflow), STR(wd:)) AS ?qid)
-}}
-LIMIT 10"""
+}}"""
 
 WF_RESEARCH_OBJ_SPARQL = (
     "  ?workflow wdt:{problem statement} ?obj_{idx} .\n"
@@ -101,15 +106,15 @@ WF_DATASET_SPARQL = (
 # Model search — base query and per-criterion fragment templates.
 # ---------------------------------------------------------------------------
 
-QUERY_BASE_MODEL_SEARCH = """SELECT DISTINCT ?label ?qid
+QUERY_BASE_MODEL_SEARCH = """SELECT DISTINCT ?label ?description ?qid
 WHERE {{
   ?model wdt:{instance of} wd:{mathematical model} ;
          rdfs:label ?label .
   FILTER(LANG(?label) = "en")
 {0}
+  OPTIONAL {{ ?model schema:description ?description . FILTER(LANG(?description) = "en") }}
   BIND(STRAFTER(STR(?model), STR(wd:)) AS ?qid)
-}}
-LIMIT 10"""
+}}"""
 
 MM_PROPERTY_TO_ITEM = {
     'is-deterministic':    'deterministic model',
@@ -177,15 +182,15 @@ MM_QUANTITY_SPARQL = (
 # Algorithm search — base query and per-criterion fragment templates.
 # ---------------------------------------------------------------------------
 
-QUERY_BASE_ALGORITHM_SEARCH = """SELECT DISTINCT ?label ?qid
+QUERY_BASE_ALGORITHM_SEARCH = """SELECT DISTINCT ?label ?description ?qid
 WHERE {{
   ?algo wdt:{instance of} wd:{algorithm} ;
         rdfs:label ?label .
   FILTER(LANG(?label) = "en")
 {0}
+  OPTIONAL {{ ?algo schema:description ?description . FILTER(LANG(?description) = "en") }}
   BIND(STRAFTER(STR(?algo), STR(wd:)) AS ?qid)
-}}
-LIMIT 10"""
+}}"""
 
 ALG_TASK_SPARQL = "  wd:{qid} wdt:{solved by} ?algo .\n"
 
