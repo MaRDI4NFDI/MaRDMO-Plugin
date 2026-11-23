@@ -10,3 +10,7 @@
 
 ## Workers
 ::: MaRDMO.search.worker
+
+## Query in Color
+
+::: MaRDMO.search.highlight

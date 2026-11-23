@@ -5,6 +5,9 @@ selected items and keywords.  One real query per mode was sent to the
 portal and recorded (``search_*``), so the queries are valid SPARQL and
 find what they should; the rest is checked on the query alone.
 '''
+import html
+import re
+
 import pytest
 from django.template.loader import render_to_string
 
@@ -92,8 +95,9 @@ def test_every_filter_is_in_the_query(sent, mode, filters):
                 assert value['Name'] in query
     assert result['no_results'] == '1' and result['links'] == [
         {'label': 'found', 'description': '', 'url': 'https://portal.mardi4nfdi.de/wiki/Item:Q1'}]
-    # The query is shown escaped, line by line
-    assert '<br>' in result['query'] and '<' not in result['query'].replace('<br>', '')
+    # The query is shown in color, unchanged (MaRDMO.search.highlight)
+    assert '<span class="sparql-keyword">SELECT</span>' in result['query']
+    assert html.unescape(re.sub(r'</?span[^>]*>', '', result['query'])) == query
 
 
 def test_a_keyword_cannot_break_out_of_the_query(sent):

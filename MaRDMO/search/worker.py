@@ -19,13 +19,13 @@ Provides:
   place with ``"query"``, ``"no_results"``, ``"more"`` and ``"links"`` keys.
 '''
 
-import html
 import re
 
 from dataclasses import dataclass
 
 from ..core.config import get_item_url, get_items, get_properties, get_url
 from ..sources.sparql import query_sparql, sparql_string
+from .highlight import highlight
 from .sparql import (
     ORDER_AND_LIMIT,
     SEARCH_LIMIT,
@@ -79,7 +79,7 @@ def _run_query(answers, query):
     failed query (portal unreachable, query rejected) sets
     ``answers["search_failed"]`` instead of reporting zero results.
     '''
-    answers['query'] = html.escape(query).replace('\n', '<br>')
+    answers['query'] = highlight(query)
     results = query_sparql(query, get_url('mardi', 'sparql'), strict=True)
     if results is None:
         answers['search_failed'] = True
