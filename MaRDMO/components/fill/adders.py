@@ -31,6 +31,7 @@ from ...project.writes import value_editor
 from ...core.ids import NEW_ITEM, item_text
 from ...core.models import Usage
 
+
 def add_basics(project, text, questions, item_type, index = (None, None)):
     '''Parse the ID-question text and write label/description into the questionnaire.
 
@@ -71,6 +72,7 @@ def add_basics(project, text, questions, item_type, index = (None, None)):
             'set_prefix': index[1]
         }
     )
+
 
 def _first_part(text):
     '''*text* up to its first ``|`` (as :func:`~MaRDMO.project.answers.get_id` reads a single field).'''
@@ -126,6 +128,7 @@ def add_entities(project, question_set, datas, prefix):
             # Update Index and existing Items
             idx += 1
             info['value_ids'].append(data.id)
+
 
 def add_new_entities(project, question_set, datas, prefix):
     '''Ensure each new item of the user's own in *datas* has a page in *question_set*.
@@ -197,6 +200,7 @@ def add_new_entities(project, question_set, datas, prefix):
         # Update Index and existing Items
         idx += 1
         info['value_ids'].append(data.id)
+
 
 def add_relations_static(project, data, props, index, statement):
     '''Write static (fixed-type) relations from *data* into the questionnaire.
@@ -348,6 +352,7 @@ def add_relations_static(project, data, props, index, statement):
             info['value_ids'].append(value.id)
             info['set_prefix_ids'].append(index['set_prefix_reduced'])
 
+
 def add_relations_flexible(project, data, props, index, statement):
     '''Write flexible (typed) relations from *data* into the questionnaire.
 
@@ -481,6 +486,7 @@ def add_relations_flexible(project, data, props, index, statement):
         if used:
             index['idx'] += 1
 
+
 def add_references(project, data, uri, set_index = 0, set_prefix = None, formats=None):
     '''Write the reference entries from *data.reference* into the questionnaire.
 
@@ -556,6 +562,7 @@ def reduce_prefix(prefix):
         prefix_reduced = int(prefix.split('|')[0])
     return prefix_reduced
 
+
 def relation_exists(value, set_prefix_red, info, relation_id=None):
     '''Check whether a value–set (–relation) triple already exists in the questionnaire.
 
@@ -589,6 +596,7 @@ def relation_exists(value, set_prefix_red, info, relation_id=None):
         vid == value.id and int(sid) == set_prefix_red
         for vid, sid in zip(info['value_ids'], info['set_prefix_ids'])
     )
+
 
 def relevant_set_ids(info, set_prefix_red):
     '''Return all set-index values whose set-prefix matches *set_prefix_red*.

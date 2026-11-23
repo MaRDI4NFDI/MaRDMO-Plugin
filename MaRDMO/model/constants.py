@@ -213,6 +213,7 @@ relatant_uris = {
     ("QuantityKind", "Quantity"): "QKQRelatant",
 }
 
+
 # Relations
 def get_relations():
     '''Build the relation mapping for the Model Documentation.
@@ -361,6 +362,7 @@ def get_relations():
         ]
     }
     return relations
+
 
 # Parameter for Entity relations
 preview_relations = [
@@ -518,6 +520,7 @@ preview_map_quantity = [
     ('formulation'),
     ('quantity'),
 ]
+
 
 # URI PREFIX Map (I)
 def get_uri_prefix_map():

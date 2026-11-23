@@ -20,6 +20,7 @@ from ..core.config import get_options
 from ..core.values import split_value
 from ..core.models import QueryBatch, Relatant
 
+
 @dataclass
 class Benchmark(QueryBatch):
     '''Data Class For Benchmark Item'''
@@ -49,6 +50,7 @@ class Benchmark(QueryBatch):
         return cls(
             **benchmark
         )
+
 
 @dataclass
 class Problem(QueryBatch):

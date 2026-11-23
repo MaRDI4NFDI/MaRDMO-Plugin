@@ -77,6 +77,7 @@ def routing():
     return {catalog.name: list(registration.routing) for registration in registrations()
             for catalog in registration.catalogs if registration.routing}
 
+
 # URI mappings for item infos
 # The name is the label: a publication referenced by its MaRDI Portal or
 # Wikidata ID is shown with the item's label and description (the title

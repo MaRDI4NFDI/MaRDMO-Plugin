@@ -38,6 +38,7 @@ benchmark_reference_ids = [
     'SOURCECODE_URL',
 ]
 
+
 # Relations
 def get_relations():
     '''Build the relation mapping for the Algorithm Documentation.
@@ -99,6 +100,7 @@ def get_relations():
     }
     return relations
 
+
 # URI PREFIX Map
 def get_uri_prefix_map():
     '''Build the attribute-URI → section config mapping for the Algorithm Documentation.
@@ -139,6 +141,7 @@ def get_uri_prefix_map():
         },
     }
     return uri_prefix_map
+
 
 # Parameter for Entity relations
 preview_relations = [

@@ -27,6 +27,7 @@ SECTION_MAP = {
     'publication': N_('Publication'),
 }
 
+
 # URI PREFIX Map
 def get_uri_prefix_map():
     '''Build the attribute-URI → section config mapping for the Workflow Documentation.

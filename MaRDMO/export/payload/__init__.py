@@ -122,7 +122,6 @@ class GeneratePayload:
         # QID → claims of portal items fetched during this export
         self._claims: dict = {}
 
-
     def _find_key_by_values(self, id_value, name_value, description_value):
         '''Look up the ``"Item<n>"`` key matching the given ID, Name, and Description.
 

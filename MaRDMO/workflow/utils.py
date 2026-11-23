@@ -10,6 +10,7 @@ Provides:
 - ``get_option_text_pair`` — resolve an option label and paired text value from a SPARQL result
 '''
 
+
 def get_size(data, options):
     '''Extract the size unit and value from a data-set answer dict.
 
@@ -31,6 +32,7 @@ def get_size(data, options):
     value = size_value or size_record
 
     return [unit, value] if unit and value else []
+
 
 def get_option_text_pair(data, options, opt_key, *value_keys):
     '''Resolve an option label and the first available text value from a SPARQL result dict.

@@ -8,6 +8,7 @@ during the ``ready()`` phase and registers the signal router.
 from django.apps import AppConfig
 from django.conf import settings
 
+
 class MaRDMOConfig(AppConfig):
     '''MaRDMO Configuration'''
 

@@ -167,7 +167,6 @@ def test_claims_that_cannot_be_fetched_stop_the_export(payload, monkeypatch):
         payload.merge_qualifiers('https://portal.example.org/w/api.php')
 
 
-
 # --- plain statements found by the existence check (it also finds statements with a qualifier)
 
 def test_only_a_plain_statement_against_one_with_a_role(payload):

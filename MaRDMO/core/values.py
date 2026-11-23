@@ -32,6 +32,7 @@ def date_format(parts: list) -> str | None:
     year, month, day = (numbers + [0, 0])[:3]
     return f"{year:04d}-{month:02d}-{day:02d}T00:00:00Z"
 
+
 def date_precision(date_str: str) -> int | None:
     """
     Return Wikibase precision based on a date string.
@@ -85,6 +86,7 @@ def split_value(
 
     return parts
 
+
 def basic_dict(value):
     '''Build a basic entity dict from an RDMO ``Value`` object.
 
@@ -111,6 +113,7 @@ def basic_dict(value):
         'Name': label,
         'Description': description
     }
+
 
 def basic_list(value):
     '''Build a two-element list ``[option_uri, text]`` from an RDMO ``Value``.
@@ -140,6 +143,7 @@ def nested_set(data, path, entry):
     for key in path[:-1]:
         d = d.setdefault(key, {})
     d[path[-1]] = entry
+
 
 def extract_parts(string):
     '''Extract the label, description, and source tag from an ID question text string.

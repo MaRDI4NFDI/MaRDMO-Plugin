@@ -65,6 +65,7 @@ def has_old_id(entry):
         return False
     return entry.get('ID') in _OLD_IDS or any(has_old_id(value) for value in entry.values())
 
+
 # Reference answers to check: (option key, label in messages, noun for "no ... provided")
 SOFTWARE_REFERENCE_CHECKS = (
     ('DOI',             'DOI',             'ID'),
@@ -78,6 +79,7 @@ BENCHMARK_REFERENCE_CHECKS = (
     ('DESCRIPTION_URL', N_('Description URL'), 'URL'),
     ('SOURCECODE_URL',  N_('Repository URL'),  'URL'),
 )
+
 
 def _normalized(value):
     '''*value* as the statements of the portal have it: text without surrounding spaces and leading "+".'''

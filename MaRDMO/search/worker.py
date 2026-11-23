@@ -52,6 +52,7 @@ from .sparql import (
 
 _QID_RE = re.compile(r'^Q\d+$')
 
+
 def _comment(text):
     '''Return *text* on a single line, for use in a SPARQL comment.'''
     return ' '.join(str(text or '').split())

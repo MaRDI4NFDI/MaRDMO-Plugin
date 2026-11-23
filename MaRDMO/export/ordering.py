@@ -34,6 +34,7 @@ def topological_order(direct_dependencies: dict[str, set[str]]) -> list[str]:
                 queue.append(dependent)
     return order
 
+
 def cycle_groups(dependencies: dict[str, set[str]]) -> list[list[str]]:
     '''The groups of nodes that depend on each other in a cycle, each sorted, sorted by first node (#164).
 

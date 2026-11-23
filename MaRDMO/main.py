@@ -152,6 +152,7 @@ class BaseMaRDMOExportProvider(OauthProviderMixin, Export, ABC):
             'code': request.GET.get('code')
         }
 
+
 # The export page names what the export finds; the preview offered the export,
 # so it found nothing then (#152)
 CHANGED_HINT = _('Something changed since the preview. Open the preview again, fix the points it lists, '

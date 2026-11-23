@@ -28,7 +28,6 @@ class PrepareWorkflow(CatalogExport):
     '''
     catalog = 'workflow'
 
-
     def __init__(self):
         '''Initialise with Wikibase vocabulary and ontology registries.'''
         super().__init__()
@@ -265,7 +264,6 @@ class PrepareWorkflow(CatalogExport):
                 yield section, entry
         yield from self._software_entries(data)
         yield from self._publication_entries(data)
-
 
     def _export_workflows(self, payload, data: dict):
         '''Export the top-level research workflow item.

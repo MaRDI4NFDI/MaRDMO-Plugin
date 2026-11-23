@@ -29,6 +29,7 @@ from .constants import software_reference_ids
 from .config import get_options
 from .values import split_value
 
+
 @dataclass
 class Relatant:
     '''Data Class For Relatant Items'''
@@ -70,6 +71,7 @@ class Relatant:
             label = label,
             description = description,
         )
+
 
 @dataclass
 class Usage:
@@ -123,6 +125,7 @@ class RelatantWithClass:
             item_class = item_class
         )
 
+
 @dataclass
 class RelatantWithQualifier:
     '''Entity triple extended with a qualifier value.
@@ -157,6 +160,7 @@ class RelatantWithQualifier:
             description = description,
             qualifier = qualifier,
         )
+
 
 class QueryBatch:
     '''Base of the entities filled from a batch SPARQL query (one row per item).

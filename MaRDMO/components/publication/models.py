@@ -29,7 +29,10 @@ def _first(values):
     if isinstance(values, list):
         return values[0] if values else None
     return values
+
+
 from ...core.models import Relatant, RelatantWithClass
+
 
 @dataclass
 class Author:
@@ -58,7 +61,6 @@ class Author:
             Author instance populated from the parsed fields.
         '''
         identifier, label, description, orcid_id, zbmath_id, wikidata_id = raw.split(" <|> ")
-
 
         if not description:
             if orcid_id:
@@ -115,7 +117,6 @@ class Author:
                 description = f'scientist (ORCID iD {orcid_id})'
             else:
                 description = 'scientist'
-
 
         return cls(
             id = identifier,
@@ -281,6 +282,7 @@ class Author:
             zbmath_id = zbmath_id,
             wikidata_id = wikidata_id
         )
+
 
 @dataclass
 class Journal:

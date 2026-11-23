@@ -36,7 +36,6 @@ def screenshot(target, name, full_page=False):
         target.screenshot(path=os.path.join(SCREENSHOTS, f'{name}.png'), **options)
 
 
-
 # Without Playwright the test modules cannot even be imported (the tests run
 # without it, e.g. CI's test step); with it but without BROWSER=1 they are skipped
 collect_ignore_glob = [] if importlib.util.find_spec('playwright') else ['test_*.py']

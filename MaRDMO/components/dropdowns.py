@@ -276,6 +276,7 @@ def query_sources(search, item_class=None, sources=None, not_found=True, roots=N
 
     return options
 
+
 def query_sources_with_user_additions(search, project, setup):
     '''Fetch KG options, prepend matching user-defined entries, and optionally allow creation.
 
@@ -344,6 +345,7 @@ def query_sources_with_user_additions(search, project, setup):
             options.insert(0, {'id': NOT_FOUND, 'text': search, 'help': option_help(NOT_FOUND, search)})
 
     return options
+
 
 def query_user_entries(project, setup):
     '''Return the options of the items the user has already added to the questionnaire.

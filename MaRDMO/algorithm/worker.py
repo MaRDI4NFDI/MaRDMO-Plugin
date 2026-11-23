@@ -22,6 +22,7 @@ from ..export.payload import GeneratePayload
 
 from ..export.worker import CatalogExport
 
+
 class PrepareAlgorithm(CatalogExport):
     '''Prepare Algorithm documentation answers for preview rendering and MaRDI Portal export.
 

@@ -66,6 +66,7 @@ def unique_items(data, title = None):
         seen_items[triple] = f'Item{str(0).zfill(10)}'
         dependency.update({f'Item{str(0).zfill(10)}': set()})
     # Add Workflow Component Items
+
     def search(subdict, kind=None):
         '''Search unique Items; *kind* is the kind of the publication part they are in.'''
         if isinstance(subdict, dict) and 'ID' in subdict:

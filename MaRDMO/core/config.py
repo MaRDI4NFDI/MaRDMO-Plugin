@@ -28,6 +28,7 @@ def get_options():
     '''
     return apps.get_app_config("MaRDMO").options
 
+
 def get_items():
     '''Return the Wikibase items dict from the app config.
 
@@ -36,6 +37,7 @@ def get_items():
     '''
     return apps.get_app_config("MaRDMO").items
 
+
 def get_properties():
     '''Return the Wikibase properties dict from the app config.
 
@@ -43,6 +45,7 @@ def get_properties():
         Dict mapping property label strings to Wikibase property ID strings.
     '''
     return apps.get_app_config("MaRDMO").properties
+
 
 def get_questions(question_set):
     '''Return the questions sub-dict for a given catalog question set.
@@ -55,6 +58,7 @@ def get_questions(question_set):
         related metadata.
     '''
     return apps.get_app_config("MaRDMO").questions[question_set]
+
 
 def catalog_questions(questions, catalog, keep=('Publication',)):
     '''*questions* without the sections and questions *catalog* does not have (#168).
@@ -103,6 +107,7 @@ def get_url(source, url_type):
         return WIKIDATA[url_type]
     return settings.MARDMO_PROVIDER[source][url_type]
 
+
 def get_item_url(source):
     '''Return the base URL for browsing Wikibase items on a provider's wiki.
 
@@ -118,6 +123,7 @@ def get_item_url(source):
     if source == 'wikidata':
         return f"{WIKIDATA['uri']}/wiki/Item:"
     return f"{settings.MARDMO_PROVIDER[source]['uri']}/wiki/Item:"
+
 
 @lru_cache(maxsize=None)
 def get_data(file_name):

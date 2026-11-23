@@ -72,6 +72,7 @@ HANDLER_MAP           = build_post_save_handler_set()
 DELETE_HANDLER_MAP    = build_post_delete_handler_set()
 PRESAVE_VALIDATOR_MAP = build_presave_validator_map()
 
+
 def _catalog_name(instance):
     '''Return the name of *instance*'s catalog if it is a documenting MaRDMO catalog, else ``None``.'''
     catalog = catalog_of(instance.project)

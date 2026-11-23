@@ -30,6 +30,7 @@ from ..export.payload import GeneratePayload
 from ..export.worker import CatalogExport
 from ..components.tex_check import annotate_formulas
 
+
 class PrepareModel(CatalogExport):
     '''Prepare Mathematical Model answers for preview rendering and MaRDI Portal export.
 

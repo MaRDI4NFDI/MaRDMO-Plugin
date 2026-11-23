@@ -48,6 +48,7 @@ logger = logging.getLogger(__name__)
 # every click); failed lookups are not kept
 CITATION_CACHE_TIMEOUT = 60 * 60
 
+
 def additional_queries(publication, choice, key, parameter, function):
     '''Run supplemental Wikidata and MaRDI Portal SPARQL queries for a sub-entity type.
 
@@ -102,6 +103,7 @@ def additional_queries(publication, choice, key, parameter, function):
 
     # Add (missing) MaRDI Portal / Wikidata IDs, per entity the portal first
     match_portal_items(getattr(publication[choice], key), mardi_info, wikidata_info)
+
 
 # Identifiers that make two authors or journals the same, in the order they
 # decide when they point to different items
@@ -199,6 +201,7 @@ def assign_orcid(publication, source, id_type = 'orcid'):
                 if author.label == id_author.label:
                     author.orcid_id = id_author.orcid_id
 
+
 def clean_background_data(key_dict, questions, project, snapshot, set_index):
     '''Delete questionnaire values that were temporarily saved during background processing.
 
@@ -218,6 +221,7 @@ def clean_background_data(key_dict, questions, project, snapshot, set_index):
             project = project,
             snapshot = snapshot
         ).delete()
+
 
 def extract_authors(data):
     '''Parse SPARQL result rows into a dict of :class:`~MaRDMO.core.models.Author` instances.
@@ -239,6 +243,7 @@ def extract_authors(data):
                 authors[idx] = Author.from_query(entry)
     return authors
 
+
 def extract_journals(data):
     '''Parse SPARQL result rows into a dict of :class:`~MaRDMO.core.models.Journal` instances.
 
@@ -258,6 +263,7 @@ def extract_journals(data):
             if entry:
                 journals[idx] = Journal.from_query(entry)
     return journals
+
 
 def get_citation(doi):
     '''Retrieve full citation metadata for a DOI from multiple sources.
@@ -462,6 +468,7 @@ def _lookup_citation(doi):
     found = any(publication.get(source)
                 for source in ('mardi', 'wikidata', 'crossref', 'datacite', 'zbmath', 'doi'))
     return publication, answered and found
+
 
 def _try_enrichment(label, function, *args):
     '''Run an optional enrichment step (author/journal IDs); log instead of failing.

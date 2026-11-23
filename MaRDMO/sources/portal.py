@@ -118,6 +118,7 @@ def find_portal_items(pairs=(), wikidata_qids=(), marker_qids=(), waits=(), dead
                           for label, description in chunk)
         sparql = (f'SELECT ?item ?label ?description WHERE {{ VALUES (?label ?description) {{ {values} }} '
                   f'?item rdfs:label ?label ; schema:description ?description . }}')
+
         def parse(rows):
             matches = {}
             for row in rows:
@@ -130,6 +131,7 @@ def find_portal_items(pairs=(), wikidata_qids=(), marker_qids=(), waits=(), dead
         values = ' '.join(json.dumps(qid) for qid in chunk)
         sparql = (f'SELECT ?item ?wikidata WHERE {{ VALUES ?wikidata {{ {values} }} '
                   f'?item wdt:{properties["Wikidata QID"]} ?wikidata . }}')
+
         def parse(rows):
             matches = {}
             for row in rows:

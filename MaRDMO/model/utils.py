@@ -37,6 +37,7 @@ def build_quantity_info(quantity, qtype):
 
     return base_info
 
+
 def map_entity_quantity(data, entity_type):
     '''Attach Quantity/QuantityKind ``Info`` dicts to matching formula elements.
 

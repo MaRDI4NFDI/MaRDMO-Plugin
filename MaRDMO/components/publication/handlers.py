@@ -236,7 +236,6 @@ class Information:
                 },
             )
 
-
     def publication_delete(self, instance):
         '''Handle Publication set deletion: remove hidden citation background data.
 

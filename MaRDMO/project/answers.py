@@ -48,6 +48,7 @@ def get_id(project, uri, keys):
             identifiers.append(identifier)
     return identifiers
 
+
 def get_answers(project, val, config):
     '''Read questionnaire values for one attribute and merge them into *val*.
 
