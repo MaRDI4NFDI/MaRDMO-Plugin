@@ -611,75 +611,75 @@ msgstr "POST-Anfrage nach %(attempts)s Wiederholungen fehlgeschlagen: %(detail)s
 msgid "The MaRDI Portal could not be reached (no response after several attempts). Please try again later."
 msgstr "Das MaRDI Portal war nicht erreichbar (keine Antwort nach mehreren Versuchen). Bitte versuchen Sie es später erneut."
 
-#: MaRDMO/main.py:158
+#: MaRDMO/main.py:159
 msgid "Something changed since the preview. Open the preview again, fix the points it lists, then export."
 msgstr "Seit der Vorschau hat sich etwas geändert. Öffnen Sie die Vorschau erneut, beheben Sie die aufgeführten Punkte und exportieren Sie dann."
 
-#: MaRDMO/main.py:160
+#: MaRDMO/main.py:161
 msgid "The MaRDI Portal is not reachable at the moment, so the documentation could not be checked completely. Nothing was exported; please try again shortly."
 msgstr "Das MaRDI Portal ist im Moment nicht erreichbar, daher konnte die Dokumentation nicht vollständig geprüft werden. Es wurde nichts exportiert; bitte versuchen Sie es in Kürze erneut."
 
-#: MaRDMO/main.py:208
+#: MaRDMO/main.py:209
 msgid "Export to MaRDI Portal"
 msgstr "Zum MaRDI Portal exportieren"
 
-#: MaRDMO/main.py:217 MaRDMO/main.py:401
+#: MaRDMO/main.py:218 MaRDMO/main.py:402
 msgid "Catalog Error"
 msgstr "Katalogfehler"
 
-#: MaRDMO/main.py:218
+#: MaRDMO/main.py:219
 msgid "The catalog is not supported by the MaRDMO Plugin."
 msgstr "Der Katalog wird vom MaRDMO-Plugin nicht unterstützt."
 
-#: MaRDMO/main.py:240
+#: MaRDMO/main.py:241
 msgid "Missing Credentials"
 msgstr "Zugangsdaten fehlen"
 
-#: MaRDMO/main.py:241
+#: MaRDMO/main.py:242
 msgid "Credentials for MaRDI Portal are missing!"
 msgstr "Die Zugangsdaten für das MaRDI Portal fehlen!"
 
-#: MaRDMO/main.py:253 MaRDMO/main.py:426
+#: MaRDMO/main.py:254 MaRDMO/main.py:427
 msgid "Unknown catalog"
 msgstr "Unbekannter Katalog"
 
-#: MaRDMO/main.py:254 MaRDMO/main.py:427
+#: MaRDMO/main.py:255 MaRDMO/main.py:428
 msgid "Cannot handle this catalog type."
 msgstr "Dieser Katalogtyp kann nicht verarbeitet werden."
 
-#: MaRDMO/main.py:281
+#: MaRDMO/main.py:282
 msgid "MaRDI Portal not reachable"
 msgstr "MaRDI Portal nicht erreichbar"
 
-#: MaRDMO/main.py:287
+#: MaRDMO/main.py:288
 msgid "Export not possible"
 msgstr "Export nicht möglich"
 
-#: MaRDMO/main.py:291
+#: MaRDMO/main.py:292
 msgid "Incomplete or Inconsistent Documentation"
 msgstr "Unvollständige oder widersprüchliche Dokumentation"
 
-#: MaRDMO/main.py:394
+#: MaRDMO/main.py:395
 msgid "Query MaRDI Portal"
 msgstr "MaRDI Portal abfragen"
 
-#: MaRDMO/main.py:402
+#: MaRDMO/main.py:403
 msgid "The catalog is not supported by the MaRDMO Query Plugin."
 msgstr "Der Katalog wird vom MaRDMO-Abfrage-Plugin nicht unterstützt."
 
-#: MaRDMO/main.py:444
+#: MaRDMO/main.py:445
 msgid "Workflow(s)"
 msgstr "Workflow(s)"
 
-#: MaRDMO/main.py:446
+#: MaRDMO/main.py:447
 msgid "Mathematical Model(s)"
 msgstr "Mathematische(s) Modell(e)"
 
-#: MaRDMO/main.py:448
+#: MaRDMO/main.py:449
 msgid "Algorithm(s)"
 msgstr "Algorithmus/Algorithmen"
 
-#: MaRDMO/main.py:450
+#: MaRDMO/main.py:451
 msgid "Unknown"
 msgstr "Unbekannt"
 
@@ -1137,11 +1137,11 @@ msgstr "Interdisziplinärer Workflow, Prozessschritt oder Datensatz"
 msgid "Missing Algorithm, Hardware/Software, or Workflow Entity"
 msgstr "Algorithmus, Hardware/Software oder Workflow-Entität fehlt"
 
-#: MaRDMO/templates/MaRDMO/export_result.html:22 MaRDMO/templates/MaRDMO/progress.html:39 MaRDMO/templates/MaRDMO/search_results.html:28
+#: MaRDMO/templates/MaRDMO/export_result.html:22 MaRDMO/templates/MaRDMO/progress.html:39 MaRDMO/templates/MaRDMO/search_results.html:31
 msgid "MaRDMO Logo by"
 msgstr "MaRDMO-Logo von"
 
-#: MaRDMO/templates/MaRDMO/export_result.html:22 MaRDMO/templates/MaRDMO/progress.html:39 MaRDMO/templates/MaRDMO/search_results.html:28
+#: MaRDMO/templates/MaRDMO/export_result.html:22 MaRDMO/templates/MaRDMO/progress.html:39 MaRDMO/templates/MaRDMO/search_results.html:31
 msgid "licensed under"
 msgstr "lizenziert unter"
 
@@ -1891,6 +1891,11 @@ msgstr "Das Portal hat nicht geantwortet oder die Abfrage abgelehnt. Bitte versu
 #: MaRDMO/templates/MaRDMO/search_results.html:19
 msgid "in MaRDI Portal!"
 msgstr "im MaRDI Portal!"
+
+#: MaRDMO/templates/MaRDMO/search_results.html:22
+#, python-format
+msgid "More than %(limit)s were found; the first %(limit)s are shown, in alphabetical order. Narrow the search with further criteria."
+msgstr "Mehr als %(limit)s gefunden; die ersten %(limit)s werden angezeigt, alphabetisch geordnet. Grenzen Sie die Suche mit weiteren Kriterien ein."
 
 #: MaRDMO/templates/projects/project_interview.html:20
 msgid "MathJax cannot show this formula:"

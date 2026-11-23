@@ -16,7 +16,7 @@ Three search modes are supported:
 Provides:
 
 - ``search`` — entry point called by the view layer; mutates *answers* in
-  place with ``"query"``, ``"no_results"``, and ``"links"`` keys.
+  place with ``"query"``, ``"no_results"``, ``"more"`` and ``"links"`` keys.
 '''
 
 import html
@@ -27,6 +27,8 @@ from dataclasses import dataclass
 from ..core.config import get_item_url, get_items, get_properties, get_url
 from ..sources.sparql import query_sparql, sparql_string
 from .sparql import (
+    ORDER_AND_LIMIT,
+    SEARCH_LIMIT,
     QUERY_BASE_WORKFLOW_SEARCH,
     WF_RESEARCH_OBJ_SPARQL,
     WF_DISCIPLINE_SPARQL,
@@ -71,7 +73,10 @@ def _item_qid(item):
 def _run_query(answers, query):
     '''Run *query* on the MaRDI Portal and store query, result count, and links in *answers*.
 
-    A failed query (portal unreachable, query rejected) sets
+    The query asks for one result more than
+    :data:`~MaRDMO.search.sparql.SEARCH_LIMIT` (#182): if it comes, the first
+    ones are shown and ``answers["more"]`` tells that there are more.  A
+    failed query (portal unreachable, query rejected) sets
     ``answers["search_failed"]`` instead of reporting zero results.
     '''
     answers['query'] = html.escape(query).replace('\n', '<br>')
@@ -81,9 +86,15 @@ def _run_query(answers, query):
         answers['no_results'] = '0'
         answers['links'] = []
         return
+    answers['more'] = len(results) > SEARCH_LIMIT
+    results = results[:SEARCH_LIMIT]
     answers['no_results'] = str(len(results))
     answers['links'] = [
-        [result["label"]["value"], f"{get_item_url('mardi')}{result['qid']['value']}"]
+        {
+            'label': result['label']['value'],
+            'description': result.get('description', {}).get('value', ''),
+            'url': f"{get_item_url('mardi')}{result['qid']['value']}",
+        }
         for result in results
     ]
 
@@ -179,7 +190,7 @@ def search(answers, options):
 
     Args:
         answers: Top-level answers dict (mutated in place with ``"query"``,
-                 ``"no_results"``, and ``"links"`` keys).
+                 ``"no_results"``, ``"more"`` and ``"links"`` keys).
         options: Global RDMO options dict used for option-value comparisons.
 
     Returns:
@@ -189,6 +200,7 @@ def search(answers, options):
     answers.setdefault('no_results', '0')
     answers.setdefault('links', [])
     answers.setdefault('search_failed', False)
+    answers.setdefault('more', False)
 
     mode = next((mode for mode in MODES if answers['search'].get('options') == options[mode.option]), None)
     if mode is None:
@@ -217,7 +229,7 @@ def search(answers, options):
             **props,
         ).splitlines()
         if line.strip()
-    )
+    ) + '\n' + ORDER_AND_LIMIT.format(limit=SEARCH_LIMIT + 1)
 
     _run_query(answers, query)
     return answers

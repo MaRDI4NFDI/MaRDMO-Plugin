@@ -36,6 +36,7 @@ from .project.pages import add_tab_names, interview_urls
 from .export.problems import attach as attach_problems, report_lines
 from .export import pipeline
 
+from .search.sparql import SEARCH_LIMIT
 from .search.worker import search
 from .components.publication.worker import PublicationRetriever
 
@@ -456,6 +457,8 @@ class MaRDMOQueryProvider(Export):
                 'datatype': datatype,
                 'noResults': answers['no_results'],
                 'links': answers['links'],
+                'more': answers.get('more', False),
+                'limit': SEARCH_LIMIT,
                 'searchFailed': answers.get('search_failed', False),
             },
             status=200

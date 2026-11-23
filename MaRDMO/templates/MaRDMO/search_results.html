@@ -18,8 +18,11 @@
             <p style="color:Black;font-size:40px;font-weight:bold">{{ noResults }} {{ datatype }}</p>
             <p style="color:Black;font-size:40px;font-weight:bold">{% translate "in MaRDI Portal!" %}</p>
             <br>
-            {% for x, y in links %}
-                <p style="color:grey;font-size:20px;font-weight:bold"><a href="{{ y }}" style="color:dodgerblue;">{{ x }}</a>&#x1F517;</p>
+            {% if more %}
+                <p style="color:#555555;font-size:15px;font-style:italic">{% blocktranslate trimmed %}More than {{ limit }} were found; the first {{ limit }} are shown, in alphabetical order. Narrow the search with further criteria.{% endblocktranslate %}</p>
+            {% endif %}
+            {% for link in links %}
+                <p style="color:grey;font-size:20px;font-weight:bold"><a href="{{ link.url }}" style="color:dodgerblue;">{{ link.label }}</a>&#x1F517;</p>
             {% endfor %}
         {% endif %}
     </div>

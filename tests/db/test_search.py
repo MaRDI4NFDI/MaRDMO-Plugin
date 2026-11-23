@@ -6,9 +6,11 @@ portal and recorded (``search_*``), so the queries are valid SPARQL and
 find what they should; the rest is checked on the query alone.
 '''
 import pytest
+from django.template.loader import render_to_string
 
 from MaRDMO.core.config import get_options
 from MaRDMO.search import worker
+from MaRDMO.search.sparql import SEARCH_LIMIT
 
 OPTIONS = get_options()
 EGYPTIAN_OBJECTS, SIS_MODEL, QUICKSORT = 'Q6032641', 'Q6675171', 'Q6825489'
@@ -23,7 +25,7 @@ def answers(mode, **filters):
 
 
 def links(result):
-    return {url.rsplit('Item:', 1)[1] for _, url in result['links']}
+    return {link['url'].rsplit('Item:', 1)[1] for link in result['links']}
 
 
 # --- Real queries (recorded) --------------------------------------------------------------------
@@ -88,7 +90,8 @@ def test_every_filter_is_in_the_query(sent, mode, filters):
             if isinstance(value, dict):
                 assert f'wd:{value["ID"].split(":")[1]}' in query, value
                 assert value['Name'] in query
-    assert result['no_results'] == '1' and result['links'] == [['found', 'https://portal.mardi4nfdi.de/wiki/Item:Q1']]
+    assert result['no_results'] == '1' and result['links'] == [
+        {'label': 'found', 'description': '', 'url': 'https://portal.mardi4nfdi.de/wiki/Item:Q1'}]
     # The query is shown escaped, line by line
     assert '<br>' in result['query'] and '<' not in result['query'].replace('<br>', '')
 
@@ -124,3 +127,42 @@ def test_a_failed_query_is_not_zero_results(sent):
 def test_an_unknown_mode_changes_nothing(sent):
     result = worker.search({'search': {'options': 'https://example.org/other'}}, OPTIONS)
     assert sent['queries'] == [] and result['query'] == '' and not result['search_failed']
+
+
+# --- The results (#182) -------------------------------------------------------------------------
+
+def rows(count):
+    return [{'label': {'value': f'model {number:03}'}, 'description': {'value': f'the model number {number}'},
+             'qid': {'value': f'Q{number}'}} for number in range(count)]
+
+
+def test_the_results_come_by_label_one_more_than_shown(sent):
+    worker.search(answers('Algorithm', **{'software': {0: item('Q302', 'software')}}), OPTIONS)
+    query, = sent['queries']
+    assert query.endswith(f'}}\nORDER BY LCASE(?label)\nLIMIT {SEARCH_LIMIT + 1}')
+
+
+@pytest.mark.parametrize('count, shown, more', [(SEARCH_LIMIT + 1, SEARCH_LIMIT, True),
+                                                 (SEARCH_LIMIT, SEARCH_LIMIT, False), (3, 3, False)])
+def test_more_results_than_shown_are_told(sent, count, shown, more):
+    sent['rows'] = rows(count)
+    result = worker.search(answers('Algorithm', **{'software': {0: item('Q302', 'software')}}), OPTIONS)
+    assert len(result['links']) == shown and result['no_results'] == str(shown) and result['more'] is more
+    assert result['links'][0] == {'label': 'model 000', 'description': 'the model number 0',
+                                  'url': 'https://portal.mardi4nfdi.de/wiki/Item:Q0'}
+
+
+def test_an_item_without_description(sent):
+    sent['rows'] = [{'label': {'value': 'found'}, 'qid': {'value': 'Q1'}}]
+    result = worker.search(answers('Algorithm', **{'software': {0: item('Q302', 'software')}}), OPTIONS)
+    assert result['links'][0]['description'] == ''
+
+
+@pytest.mark.parametrize('more', [True, False])
+def test_the_page_tells_that_there_are_more(more, rf):
+    links = [{'label': 'model 000', 'description': 'the model number 0', 'url': 'https://example.org/Item:Q0'}]
+    page = render_to_string('MaRDMO/search_results.html', {
+        'datatype': 'Mathematical Model(s)', 'noResults': '1', 'links': links, 'more': more,
+        'limit': SEARCH_LIMIT}, request=rf.get('/'))
+    assert ('More than 100 were found; the first 100 are shown' in page) is more
+    assert 'href="https://example.org/Item:Q0"' in page
