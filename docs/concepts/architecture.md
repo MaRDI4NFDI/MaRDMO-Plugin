@@ -2,7 +2,8 @@
 
 MaRDMO is a Django app that plugs into RDMO: RDMO calls it when an answer is
 saved, when a dropdown needs options, and when a project is exported.  Its
-code is arranged in layers; each layer uses only the layers below it.
+code is arranged in layers; each layer uses only the layers below it, which
+CI checks (see [What Is Checked](#what-is-checked)).
 
 ![The layers of MaRDMO: entry points, catalogs, export, components, project and sources, core](img/layers.svg)
 
@@ -59,13 +60,37 @@ session (`sources.http.http_session`), so retries and time limits are the
 same everywhere, and the tests can answer the requests from recorded answers
 of the services (only the live tests ask the services themselves).
 
+## What Is Checked
+
+**The layers** are contracts in `pyproject.toml` (`[tool.importlinter]`), which
+CI checks with `lint-imports` after ruff: each layer uses only the layers below
+it, the catalogs do not use each other, and every module of MaRDMO is in a
+layer, so a new one has to be placed.  The one exception is named there with
+its reason.  That `core/` uses neither RDMO nor `requests` is a contract too;
+that it uses no database (`django.db`) is checked by
+`tests/static/test_architecture.py`.
+
+**One catalog alone.**  `tests/db/test_one_catalog.py` registers one catalog
+package only, as an installation with only that catalog would have it: the
+registry, the questions and the router know that catalog only, every
+documentation of it exports exactly as with all catalogs, and an answer of a
+catalog that is not registered runs nothing.
+
+**The installed package.**  The tests run from the repository; that every
+data, query and template file is in the wheel too is checked by
+`tests/static/test_package_data.py`.
+
+See [Run and Update the Tests](../how-to/mardmo/tests.md#the-layers-when-lint-imports-fails)
+for what to do when a check fails.
+
 ## Where Something New Goes
 
 | A new … | Goes to |
 |---|---|
-| catalog | a package of its own with a `catalog.py`, and its name in `core/catalogs.py` |
+| catalog | a package of its own with a `catalog.py`, and its name in `core/catalogs.py` and in the catalog layer of `pyproject.toml` |
 | question of a catalog | its row in the catalog's `data/questions.json` and its declaration (see [Add a Question](../how-to/mardmo/register-question.md)) |
 | check of a field | `components/validators.py` (see [Validate a New Field](../how-to/mardmo/validate-field.md)) |
 | check before the export | the catalog's `checks.py`, or `export/checks.py` if every catalog needs it |
 | external service | a module in `sources/` |
+| module | the folder of its layer; a new folder or module at the top level is a new entry in the layers of `pyproject.toml` |
 | part of the interview that other templates could use | `components/` |
