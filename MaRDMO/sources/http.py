@@ -8,6 +8,7 @@ limits of a dropdown search (:func:`search_deadline`) and of the export's
 checks (:func:`check_limits`) are set here.
 '''
 import logging
+import random
 import threading
 import time
 from contextlib import contextmanager
@@ -92,22 +93,33 @@ def search_deadline():
     return time.monotonic() + SEARCH_TIMEOUT + SEARCH_RETRY_WAIT
 
 
-def request_with_retry(method, url, waits=(SPARQL_RETRY_WAIT,), deadline=None, **kwargs):
+def request_with_retry(method, url, waits=(SPARQL_RETRY_WAIT,), deadline=None, *, retry_status=SPARQL_RETRY_STATUS,
+                       transient=None, jitter=0.0, max_retry_after=SPARQL_MAX_RETRY_WAIT, **kwargs):
     '''Send a request with :func:`http_session` and retry it on transient failures.
 
-    A timeout, a connection error, or one of :data:`SPARQL_RETRY_STATUS` is
-    retried after the next pause in *waits*, or after the answer's
-    ``Retry-After`` (at most :data:`SPARQL_MAX_RETRY_WAIT` seconds).  Other
-    answers, including 400, are returned at once.
+    A timeout, a connection error, an answer with one of *retry_status*, or
+    an answer *transient* calls a failure is retried after the next pause in
+    *waits* (plus up to *jitter* seconds), or later if the answer's
+    ``Retry-After`` asks for it (at most *max_retry_after* seconds).  Other
+    answers, including 400, are returned at once.  Every caller sets its own
+    limits: the export's checks, the dropdowns and the hydration of items
+    differ (:mod:`MaRDMO.sources.wikibase`).
 
     Args:
-        method:   HTTP method (``'get'`` or ``'post'``).
-        url:      Request URL.
-        waits:    Pauses (seconds) before the retries; ``()`` sends the
-                  request once.
-        deadline: :func:`time.monotonic` value after which no retry starts;
-                  the timeout of each attempt is shortened to end by then.
-        **kwargs: Passed on to :meth:`requests.Session.request`.
+        method:          HTTP method (``'get'`` or ``'post'``).
+        url:             Request URL.
+        waits:           Pauses (seconds) before the retries; ``()`` sends the
+                         request once.
+        deadline:        :func:`time.monotonic` value after which no retry
+                         starts; the timeout of each attempt is shortened to
+                         end by then.
+        retry_status:    The status codes of an answer worth a retry.
+        transient:       ``transient(response)``: whether an answer with
+                         another status is a failure worth a retry (e.g. a
+                         MediaWiki ``error`` in a 200 answer).
+        jitter:          Up to this many seconds are added to each pause at random.
+        max_retry_after: The longest pause an answer's ``Retry-After`` may ask for.
+        **kwargs:        Passed on to :meth:`requests.Session.request`.
 
     Returns:
         The last :class:`requests.Response`, whatever its status code.
@@ -125,16 +137,19 @@ def request_with_retry(method, url, waits=(SPARQL_RETRY_WAIT,), deadline=None, *
         error = None
         try:
             response = http_session().request(method, url, **kwargs)
-            if wait is None or response.status_code not in SPARQL_RETRY_STATUS:
+            failed = response.status_code in retry_status or (transient is not None and transient(response))
+            if wait is None or not failed:
                 return response
             retry_after = response.headers.get('Retry-After')
             if retry_after and str(retry_after).isdigit():
-                wait = min(float(retry_after), SPARQL_MAX_RETRY_WAIT)
+                wait = max(wait, min(float(retry_after), max_retry_after))
             reason = f"status {response.status_code}"
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
             if wait is None:
                 raise
             error, reason = e, type(e).__name__
+        if jitter:
+            wait += random.uniform(0, jitter)
         if deadline is not None and time.monotonic() + wait >= deadline:
             logger.warning("Request to %s failed (%s); no time left for a retry.", url, reason)
             if error is not None:
