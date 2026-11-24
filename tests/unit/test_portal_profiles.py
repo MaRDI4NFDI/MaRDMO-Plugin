@@ -48,20 +48,31 @@ def test_classes_without_a_profile_are_searched_by_class():
 
 
 class Portal:
-    '''Answers the portal's API: a profile search (pages) and wbgetentities.'''
+    '''Answers the portal's API: a profile search (pages), wbgetentities by ID and by sitelink (*sitelinks*).'''
 
-    def __init__(self, monkeypatch, pages, entities):
+    def __init__(self, monkeypatch, pages, entities, sitelinks=None, fail_titles=False):
         self.pages, self.entities, self.params = pages, entities, []
-        monkeypatch.setattr(portal_api, 'request_with_retry', self)    # the profile search
+        self.sitelinks, self.fail_titles = sitelinks or {}, fail_titles
+        monkeypatch.setattr(portal_api, 'request_with_retry', self)    # the profile search, the items of pages
         monkeypatch.setattr(wikibase, 'request_with_retry', self)    # wbgetentities
 
     def __call__(self, method, url, **kwargs):
         params = kwargs['params']
         self.params.append(params)
+        if params.get('titles') and self.fail_titles:
+            raise requests.exceptions.ConnectionError('the portal did not answer')
         response = requests.Response()
         response.status_code = 200
-        body = ({'query': {'pages': self.pages}} if params.get('generator') == 'search'
-                else {'entities': {qid: self.entities[qid] for qid in params['ids'].split('|')}})
+        if params.get('generator') == 'search':
+            body = {'query': {'pages': self.pages}}
+        elif params.get('titles'):
+            body = {'entities': {
+                self.sitelinks.get(title, f'-{number}'): (
+                    {'id': self.sitelinks[title], 'sitelinks': {'mardi': {'site': 'mardi', 'title': title}}}
+                    if title in self.sitelinks else {'site': 'mardi', 'title': title, 'missing': ''})
+                for number, title in enumerate(params['titles'].split('|'), 1)}}
+        else:
+            body = {'entities': {qid: self.entities[qid] for qid in params['ids'].split('|')}}
         response._content = json.dumps(body).encode()
         return response
 
@@ -80,7 +91,9 @@ def test_the_profile_search_finds_the_items_of_the_profile_pages_in_their_order(
         '9': {'title': 'A page without item', 'index': 3}}, {'Q1': entity('lme4'), 'Q2': entity('lme4qtl')})
     options = portal_api.query_api_per_profile('lme4', [items['MaRDI software profile'], items['MaRDI algorithm profile']])
     assert options == [{'id': 'mardi:Q1', 'text': 'lme4 (lme4 item)'}, {'id': 'mardi:Q2', 'text': 'lme4qtl (lme4qtl item)'}]
-    search, labels = portal.params
+    search, titles, labels = portal.params
+    # The page without item property is looked up by its title: no item has it
+    assert titles['titles'] == 'A page without item' and titles['sites'] == 'mardi'
     # Several profiles: facets separated by a space (alternatives); the pages are in namespace 0
     profile = properties['MaRDI profile type']
     assert search['gsrsearch'] == (f'lme4* haswbfacet:{profile}={items["MaRDI software profile"]} '
@@ -101,6 +114,30 @@ def test_a_shared_profile_leaves_out_the_items_of_the_other_class(monkeypatch):
     options = portal_api.query_api_per_profile('s', [items['MaRDI task profile']], exclude=[computational])
     assert [option['id'] for option in options] == ['mardi:Q1', 'mardi:Q3']
     assert portal.params[1]['props'] == 'labels|descriptions|claims'
+
+
+def test_a_page_without_its_item_property_is_found_by_its_title(monkeypatch, caplog):
+    '''The portal lost the page property of some profile pages; the item's sitelink still names the page.'''
+    items = get_items()
+    Portal(monkeypatch, {
+        '5': {'title': 'Epidemiology', 'index': 1, 'pageprops': {'unexpectedUnconnectedPage': '0'}},
+        '7': {'title': 'Epidemiology of plague', 'index': 2, 'pageprops': {'wikibase_item': 'Q2'}}},
+        {'Q1': entity('epidemiology'), 'Q2': entity('epidemiology of plague')}, sitelinks={'Epidemiology': 'Q1'})
+    options = portal_api.query_api_per_profile('epidemiology', [items['MaRDI research field profile']])
+    assert [option['id'] for option in options] == ['mardi:Q1', 'mardi:Q2']           # in the order of the search
+    assert 'without their item property, found by their title: Epidemiology (Q1)' in caplog.text
+
+
+def test_a_failed_lookup_of_pages_keeps_the_other_items(monkeypatch):
+    items = get_items()
+    Portal(monkeypatch, {
+        '5': {'title': 'Epidemiology', 'index': 1},
+        '7': {'title': 'Epidemiology of plague', 'index': 2, 'pageprops': {'wikibase_item': 'Q2'}}},
+        {'Q2': entity('epidemiology of plague')}, fail_titles=True)
+    options = portal_api.query_api_per_profile('epidemiology', [items['MaRDI research field profile']])
+    assert [option['id'] for option in options] == ['mardi:Q2']
+    with pytest.raises(requests.exceptions.ConnectionError):
+        portal_api.query_api_per_profile('epidemiology', [items['MaRDI research field profile']], raise_errors=True)
 
 
 @pytest.fixture
