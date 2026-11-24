@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 
 from rdmo.core.settings import *  # noqa: F401,F403  (RDMO's defaults)
-from rdmo.core.settings import INSTALLED_APPS, PROJECT_EXPORTS, _
+from rdmo.core.settings import INSTALLED_APPS, MIDDLEWARE, PROJECT_EXPORTS, _
 
 BASE_DIR = Path(__file__).parent
 MEDIA_ROOT = BASE_DIR / 'media_root'
@@ -63,6 +63,9 @@ else:
     raise ValueError(f'TEST_DB={TEST_DB!r}: use sqlite, postgresql or mysql')
 
 INSTALLED_APPS = ['MaRDMO'] + INSTALLED_APPS
+
+# MaRDMO's rendering of LaTeX in the interview
+MIDDLEWARE = MIDDLEWARE + ['MaRDMO.middleware.InterviewMathPreview']
 
 ROOT_URLCONF = 'tests.urls'
 
