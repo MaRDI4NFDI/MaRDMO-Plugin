@@ -57,9 +57,12 @@ PROJECT_EXPORTS += [
 # All option set providers of MaRDMO (the questionnaire's option sets name them by key)
 OPTIONSET_PROVIDERS += MARDMO_OPTIONSET_PROVIDERS
 
+# The LaTeX of formulas and symbols, rendered in the interview
+MIDDLEWARE += ['MaRDMO.middleware.InterviewMathPreview']
+
 ```
 
-Up to MaRDMO 0.6 the settings listed the providers one by one (`MaRDMO.model.providers.MathematicalModel` and so on); these classes no longer exist, so replace such a list by the import and the line `OPTIONSET_PROVIDERS += MARDMO_OPTIONSET_PROVIDERS` above. Providers of later MaRDMO versions then need no change of the settings.
+Without the `MIDDLEWARE` line the interview does not render formulas and symbols; `python manage.py check` then warns (MaRDMO.W001). Up to MaRDMO 0.6 the settings listed the providers one by one (`MaRDMO.model.providers.MathematicalModel` and so on); these classes no longer exist, so replace such a list by the import and the line `OPTIONSET_PROVIDERS += MARDMO_OPTIONSET_PROVIDERS` above. Providers of later MaRDMO versions then need no change of the settings.
 
 In addition add the following urlpattern to `config/urls.py`:
 

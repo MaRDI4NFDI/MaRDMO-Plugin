@@ -39,7 +39,7 @@ where = ["."]
 include = ["MaRDMO*"]
 
 [tool.setuptools.package-data]
-"MaRDMO" = ["templates/MaRDMO/*.html", "templates/MaRDMO/partials/*.html", "templates/projects/*.html", "data/*.json", "static/MaRDMO/css/*.css", "static/MaRDMO/images/*.png", "static/MaRDMO/js/**/*", "algorithm/data/*.json", "model/data/*.json", "components/publication/data/*.json", "search/data/*.json", "workflow/data/*.json", "model/queries/*.sparql", "model/queries/split/*.sparql", "algorithm/queries/*.sparql", "components/publication/queries/*.sparql", "workflow/queries/*.sparql", "components/fill/queries/*.sparql", "locale/*/LC_MESSAGES/django.po", "locale/*/LC_MESSAGES/django.mo"]
+"MaRDMO" = ["templates/MaRDMO/*.html", "templates/MaRDMO/partials/*.html", "data/*.json", "static/MaRDMO/css/*.css", "static/MaRDMO/images/*.png", "static/MaRDMO/js/**/*", "algorithm/data/*.json", "model/data/*.json", "components/publication/data/*.json", "search/data/*.json", "workflow/data/*.json", "model/queries/*.sparql", "model/queries/split/*.sparql", "algorithm/queries/*.sparql", "components/publication/queries/*.sparql", "workflow/queries/*.sparql", "components/fill/queries/*.sparql", "locale/*/LC_MESSAGES/django.po", "locale/*/LC_MESSAGES/django.mo"]
 
 [project.optional-dependencies]
 # pip install -e ".[test]"; the tests and CI use these
@@ -114,7 +114,7 @@ containers = ["MaRDMO"]
 # ":" siblings may use each other, "|" siblings may not; every module of
 # MaRDMO must be in a layer (exhaustive)
 layers = [
-    "urls : views : main : apps : router : builders : providers : optionsets : templatetags",
+    "urls : views : main : apps : router : builders : providers : optionsets : templatetags : middleware",
     "model | algorithm | workflow | search",
     "export",
     "components",

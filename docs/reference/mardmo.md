@@ -34,3 +34,7 @@ What Django and RDMO call; everything else of MaRDMO is below them (see
 ## Template Tags
 
 ::: MaRDMO.templatetags.mardmo_tags
+
+## Middleware
+
+::: MaRDMO.middleware
