@@ -39,6 +39,20 @@ whether it accepts the formula; a note below the field means it does not
 (it accepts less than LaTeX, e.g. not `gather` or `align*`), or that the
 formula cannot be shown at all.  What you typed is never changed.
 
+A formula or quantity has **one** defining formula; a system of equations
+is one formula (e.g. in an `align` environment).
+
+Below the formula, its symbols and the quantities they stand for.  A symbol
+that stands for the **same quantity in all formulas** of the documentation
+is entered **once**, in any formula or quantity definition: every other
+formula that uses it gets it from there, and the preview shows such a row
+with *cf. page …*, the page it comes from.  A symbol that stands for
+**different quantities** (`h` the hormone level in one model, the insulin
+level in another) is entered in **every** formula that uses it; a formula
+that uses it without its own row cannot be exported until it has one.  The
+preview also names letters of a formula that no symbol table defines, in
+case they stand for quantities.
+
 ## Changing the name or short description
 
 Name and short description are always changed in their own questions on
