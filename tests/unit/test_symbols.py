@@ -125,6 +125,18 @@ def test_symbol_without_quantity_is_written_without_one(monkeypatch):
     assert not any('No Label Provided!' in str(info) for _, info in written)
 
 
+def test_only_the_first_of_several_formulas_is_written(monkeypatch, caplog):
+    '''An item has one defining formula; should the portal have two, the first is used and the second logged.'''
+    written = []
+    monkeypatch.setattr(handlers, 'value_editor', lambda project, uri, info: written.append((uri, info)))
+    page = {name: {'uri': f'domain/formulation/{name}'} for name in ('Formula', 'Element Symbol', 'Element Quantity')}
+    data = FormulaData()
+    data.formulas = ['a = b', 'b = a']
+    handlers.write_defining_formula(None, page, data, 3)
+    assert [info['text'] for uri, info in written if uri.endswith('Formula')] == ['a = b']
+    assert 'has 2 defining formulas' in caplog.text
+
+
 # --- export: the symbols of the item on the portal
 
 IN_FORMULA, REPRESENTS = 'P983', 'P984'

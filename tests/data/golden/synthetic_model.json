@@ -2720,17 +2720,7 @@
          "id": "P989"
         },
         "value": {
-         "content": "\\frac{d a}{d t} = \\int_0^t c \\, a \\, d s",
-         "type": "value"
-        }
-       },
-       {
-        "property": {
-         "data_type": "math",
-         "id": "P989"
-        },
-        "value": {
-         "content": "q = k + \\int_0^t c \\, a \\, d s",
+         "content": "\\begin{align} \\frac{d a}{d t} &= \\int_0^t c \\, a \\, d s \\\\ q &= k + \\int_0^t c \\, a \\, d s \\end{align}",
          "type": "value"
         }
        }
@@ -2766,13 +2756,7 @@
     [
      "P989",
      "math",
-     "\\frac{d a}{d t} = \\int_0^t c \\, a \\, d s",
-     []
-    ],
-    [
-     "P989",
-     "math",
-     "q = k + \\int_0^t c \\, a \\, d s",
+     "\\begin{align} \\frac{d a}{d t} &= \\int_0^t c \\, a \\, d s \\\\ q &= k + \\int_0^t c \\, a \\, d s \\end{align}",
      []
     ],
     [

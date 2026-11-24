@@ -2035,7 +2035,7 @@
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>0</collection_index>
-			<text>\frac{d a}{d t} = \int_0^t c \, a \, d s</text>
+			<text>\begin{align} \frac{d a}{d t} &amp;= \int_0^t c \, a \, d s \\ q &amp;= k + \int_0^t c \, a \, d s \end{align}</text>
 			<option/>
 			<file/>
 			<value_type>text</value_type>
@@ -2043,21 +2043,6 @@
 			<external_id/>
 			<created>2026-11-18T08:28:29.019400+01:00</created>
 			<updated>2026-11-18T08:28:29.019411+01:00</updated>
-		</value>
-		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formula"/>
-			<set_prefix>3|0</set_prefix>
-			<set_index>0</set_index>
-			<set_collection>False</set_collection>
-			<collection_index>1</collection_index>
-			<text>q = k + \int_0^t c \, a \, d s</text>
-			<option/>
-			<file/>
-			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
-			<created>2026-11-18T08:28:31.702235+01:00</created>
-			<updated>2026-11-18T08:28:31.702246+01:00</updated>
 		</value>
 		<value>
 			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formula"/>

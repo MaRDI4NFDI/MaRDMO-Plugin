@@ -134,9 +134,10 @@ def describe(doc):
         ('C', 'F3', ('is-stochastic-differential-equation',),
          r'd a = c \, a \, d t + b \, d W', (('a', quantity_a), ('b', quantity_b), ('c', quantity_c),
                                               ('t', kind_a), ('W', kind_b))),
+        # One defining formula per item: D is a system of two equations in one formula
         ('D', 'F4', ('is-integro-differential-equation',),
-         r'\frac{d a}{d t} = \int_0^t c \, a \, d s', (('a', quantity_a), ('c', quantity_c), ('t', kind_a),
-                                                       ('s', kind_a))),
+         r'\begin{align} \frac{d a}{d t} &= \int_0^t c \, a \, d s \\ q &= k + \int_0^t c \, a \, d s \end{align}',
+         (('a', quantity_a), ('c', quantity_c), ('t', kind_a), ('s', kind_a))),
     ):
         formula = doc.tab('formulation', tab, synthetic('formula', letter))
         formula.answer('properties', *properties)
@@ -149,7 +150,6 @@ def describe(doc):
     formulas['D'].block('element', {'element/symbol': 'k', 'element/quantity': NUMBER_OF_INFECTED})
     typed_quantity = Typed('MaRDMO synthetic quantity typed')
     formulas['D'].block('element', {'element/symbol': 'q', 'element/quantity': typed_quantity})
-    formulas['D'].answer('formula', r'q = k + \int_0^t c \, a \, d s')
     typed = doc.find('quantity', typed_quantity)
     typed.answer('description', 'synthetic quantity typed into a formula')
     typed.answer('is-quantity-or-quantity-kind', 'quantity')

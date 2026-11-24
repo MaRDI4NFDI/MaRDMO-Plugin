@@ -49,17 +49,34 @@ rule serves all three places.
 | Counts (compute nodes, CPU occurrence, processor cores, data size in items) | Digits without a leading zero | Whole number of at least 1 |
 | Data size (kilobyte to terabyte) | Digits with at most one dot; a decimal comma is rejected with a hint | Positive decimal with a dot (`12`, `1.5`) |
 | Formulas and formula symbols | — | Accepted by the MaRDI Portal's TeX checker (see below); no `%` comment in multi-line formulas |
-| Symbol table of a formula or quantity definition | — | Every symbol has a quantity; a symbol stands for exactly one quantity, and no symbol appears twice with the same quantity (see below) |
+| Symbol table of a formula or quantity definition | — | Every symbol has a quantity; a symbol stands for exactly one quantity, and no symbol appears twice with the same quantity; a symbol the formula uses that stands for several quantities in the documentation has a row of its own (see below) |
 
-The symbol table belongs to the formula or quantity, not to one formula field:
-whether the formula fields hold an equation system (e.g. in an `align`
-environment) or several equivalent formulas, a symbol stands for the same
-quantity in all of them.  Several symbols may stand for one quantity (`k_1`,
+The symbol table belongs to the formula or quantity: whether its one defining
+formula is a single equation or a system (e.g. in an `align` environment), a
+symbol stands for the same quantity in all of it.  Several symbols may stand for one quantity (`k_1`,
 `k_2` for a reaction rate constant); different formulas may use the same
 symbol for different quantities.  Symbols are compared as they are exported
 (line breaks and outer whitespace removed).  A symbol fetched from the MaRDI
 Portal without *symbol represents* comes into the questionnaire without a
 quantity, so the checks and the preview ask for it.
+
+**Symbols entered once (#179).**  The rows of all symbol tables define the
+symbols of a documentation.  A formula that uses a symbol defined with exactly
+one quantity, without a row of its own, gets the row derived
+(`MaRDMO.model.symbols`): each time the answers are read, so the checks, the
+preview (*cf. page …*) and the payload see the same tables; nothing is written
+to the project, and an own row always wins.  A symbol defined with several
+quantities needs a row in every formula that uses it, otherwise the export is
+blocked ("stands for different quantities in this documentation").  Letters of
+a formula that no table defines are a hint.
+
+"Uses" means: the symbol occurs in the TeX as a whole symbol.  Every letter of
+a formula is a symbol of its own (`bx` is *b* times *x*); an index, a label or
+a star belongs to its symbol (`C_P`, `C^\text{f}_\text{m}`, `x^*`), a power does
+not (`x^2`); `A_m`, `A_\text{m}` and `A_{\mathrm{m}}` are the same symbol, as
+the MaRDI Portal and the formulas write them differently; the longest symbol
+wins (`\Delta t` before `t`); the differential (`\frac{dT}{dt}`, `\, dx`) is not
+the symbol `d`.  So `C` is never found in `C_P`.
 
 Allowed URL schemes are `http` and `https`; the *source code repository URL*
 additionally accepts `git`, `ssh`, `svn`, `cvs`, `bzr` and `ftp`.  Only `http`

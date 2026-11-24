@@ -28,11 +28,11 @@ msgstr "Benchmark"
 msgid "Programming Language"
 msgstr "Programmiersprache"
 
-#: MaRDMO/algorithm/checks.py:112 MaRDMO/algorithm/checks.py:129 MaRDMO/model/checks.py:277 MaRDMO/workflow/checks.py:239
+#: MaRDMO/algorithm/checks.py:112 MaRDMO/algorithm/checks.py:129 MaRDMO/model/checks.py:292 MaRDMO/workflow/checks.py:239
 msgid "Missing Reference"
 msgstr "Referenz fehlt"
 
-#: MaRDMO/algorithm/checks.py:169 MaRDMO/algorithm/checks.py:177 MaRDMO/algorithm/checks.py:182 MaRDMO/core/constants.py:47 MaRDMO/export/checks.py:575 MaRDMO/export/checks.py:582 MaRDMO/export/checks.py:588 MaRDMO/export/success.py:31 MaRDMO/model/checks.py:506 MaRDMO/workflow/checks.py:387 MaRDMO/workflow/checks.py:395 MaRDMO/workflow/checks.py:403 MaRDMO/workflow/checks.py:408 MaRDMO/workflow/constants.py:27
+#: MaRDMO/algorithm/checks.py:169 MaRDMO/algorithm/checks.py:177 MaRDMO/algorithm/checks.py:182 MaRDMO/core/constants.py:47 MaRDMO/export/checks.py:575 MaRDMO/export/checks.py:582 MaRDMO/export/checks.py:588 MaRDMO/export/success.py:31 MaRDMO/model/checks.py:523 MaRDMO/workflow/checks.py:387 MaRDMO/workflow/checks.py:395 MaRDMO/workflow/checks.py:403 MaRDMO/workflow/checks.py:408 MaRDMO/workflow/constants.py:27
 msgid "Publication"
 msgstr "Publikation"
 
@@ -186,23 +186,23 @@ msgstr "Geben Sie die Größe als Zahl ein (z. B. 12 oder 1.5)."
 msgid "Archival year must be a 4-digit year (e.g. 2030)."
 msgstr "Das Archivierungsjahr muss eine vierstellige Jahreszahl sein (z. B. 2030)."
 
-#: MaRDMO/core/constants.py:39 MaRDMO/export/success.py:27 MaRDMO/model/checks.py:147 MaRDMO/model/checks.py:154 MaRDMO/model/checks.py:161 MaRDMO/model/checks.py:167 MaRDMO/model/checks.py:179 MaRDMO/model/checks.py:187 MaRDMO/search/worker.py:138
+#: MaRDMO/core/constants.py:39 MaRDMO/export/success.py:27 MaRDMO/model/checks.py:162 MaRDMO/model/checks.py:169 MaRDMO/model/checks.py:176 MaRDMO/model/checks.py:182 MaRDMO/model/checks.py:194 MaRDMO/model/checks.py:202 MaRDMO/search/worker.py:138
 msgid "Mathematical Model"
 msgstr "Mathematisches Modell"
 
-#: MaRDMO/core/constants.py:40 MaRDMO/export/success.py:27 MaRDMO/model/checks.py:155 MaRDMO/model/checks.py:212 MaRDMO/model/checks.py:218 MaRDMO/model/checks.py:230 MaRDMO/model/checks.py:238 MaRDMO/model/checks.py:249
+#: MaRDMO/core/constants.py:40 MaRDMO/export/success.py:27 MaRDMO/model/checks.py:170 MaRDMO/model/checks.py:227 MaRDMO/model/checks.py:233 MaRDMO/model/checks.py:245 MaRDMO/model/checks.py:253 MaRDMO/model/checks.py:264
 msgid "Computational Task"
 msgstr "Berechnungsaufgabe"
 
-#: MaRDMO/core/constants.py:41 MaRDMO/export/success.py:27 MaRDMO/model/checks.py:168 MaRDMO/model/checks.py:219 MaRDMO/model/checks.py:272 MaRDMO/model/checks.py:277 MaRDMO/model/checks.py:284 MaRDMO/model/checks.py:292 MaRDMO/model/checks.py:300 MaRDMO/model/checks.py:301 MaRDMO/model/checks.py:304 MaRDMO/model/checks.py:309 MaRDMO/model/checks.py:311 MaRDMO/model/checks.py:312 MaRDMO/model/checks.py:318
+#: MaRDMO/core/constants.py:41 MaRDMO/export/success.py:27 MaRDMO/model/checks.py:183 MaRDMO/model/checks.py:234 MaRDMO/model/checks.py:287 MaRDMO/model/checks.py:292 MaRDMO/model/checks.py:299 MaRDMO/model/checks.py:307 MaRDMO/model/checks.py:315 MaRDMO/model/checks.py:316 MaRDMO/model/checks.py:319 MaRDMO/model/checks.py:324 MaRDMO/model/checks.py:326 MaRDMO/model/checks.py:327 MaRDMO/model/checks.py:328 MaRDMO/model/checks.py:334
 msgid "Formula"
 msgstr "Formel"
 
-#: MaRDMO/core/constants.py:42 MaRDMO/model/checks.py:338 MaRDMO/model/checks.py:343 MaRDMO/model/checks.py:345 MaRDMO/model/checks.py:349 MaRDMO/model/checks.py:351 MaRDMO/model/checks.py:355 MaRDMO/model/checks.py:362 MaRDMO/model/checks.py:367 MaRDMO/model/checks.py:370 MaRDMO/model/checks.py:374 MaRDMO/model/checks.py:377 MaRDMO/model/checks.py:379 MaRDMO/model/checks.py:380
+#: MaRDMO/core/constants.py:42 MaRDMO/model/checks.py:354 MaRDMO/model/checks.py:359 MaRDMO/model/checks.py:361 MaRDMO/model/checks.py:365 MaRDMO/model/checks.py:367 MaRDMO/model/checks.py:371 MaRDMO/model/checks.py:378 MaRDMO/model/checks.py:383 MaRDMO/model/checks.py:386 MaRDMO/model/checks.py:390 MaRDMO/model/checks.py:393 MaRDMO/model/checks.py:395 MaRDMO/model/checks.py:396 MaRDMO/model/checks.py:397
 msgid "Quantity [Kind]"
 msgstr "Quantität [-sart]"
 
-#: MaRDMO/core/constants.py:43 MaRDMO/export/success.py:30 MaRDMO/model/checks.py:435 MaRDMO/model/checks.py:457 MaRDMO/workflow/checks.py:113
+#: MaRDMO/core/constants.py:43 MaRDMO/export/success.py:30 MaRDMO/model/checks.py:452 MaRDMO/model/checks.py:474 MaRDMO/workflow/checks.py:113
 msgid "Academic Discipline"
 msgstr "Akademische Disziplin"
 
@@ -498,7 +498,7 @@ msgstr "Das MaRDI Portal hat den Wert für \"{field}\" von {target} abgelehnt. B
 msgid "the new item '{label}'"
 msgstr "dem neuen Item '{label}'"
 
-#: MaRDMO/export/portal_errors.py:110 MaRDMO/model/checks.py:124 MaRDMO/model/checks.py:124 MaRDMO/model/validators.py:57 MaRDMO/model/validators.py:58
+#: MaRDMO/export/portal_errors.py:110 MaRDMO/model/checks.py:139 MaRDMO/model/checks.py:139 MaRDMO/model/validators.py:57 MaRDMO/model/validators.py:58
 msgid "label"
 msgstr "Label"
 
@@ -539,11 +539,11 @@ msgstr "Folgende Punkte haben den Export verhindert:"
 msgid "{section} (Page {tab}): {message}"
 msgstr "{section} (Seite {tab}): {message}"
 
-#: MaRDMO/export/success.py:27 MaRDMO/model/checks.py:148 MaRDMO/model/checks.py:426 MaRDMO/model/checks.py:434 MaRDMO/model/constants.py:73
+#: MaRDMO/export/success.py:27 MaRDMO/model/checks.py:163 MaRDMO/model/checks.py:443 MaRDMO/model/checks.py:451 MaRDMO/model/constants.py:73
 msgid "Research Problem"
 msgstr "Forschungsproblem"
 
-#: MaRDMO/export/success.py:28 MaRDMO/model/checks.py:250 MaRDMO/model/checks.py:387 MaRDMO/model/checks.py:393 MaRDMO/model/checks.py:400 MaRDMO/model/checks.py:406 MaRDMO/templates/MaRDMO/partials/_in_defining_formula.html:15 MaRDMO/data/mathmoddb.json
+#: MaRDMO/export/success.py:28 MaRDMO/model/checks.py:265 MaRDMO/model/checks.py:404 MaRDMO/model/checks.py:410 MaRDMO/model/checks.py:417 MaRDMO/model/checks.py:423 MaRDMO/templates/MaRDMO/partials/_in_defining_formula.html:15 MaRDMO/data/mathmoddb.json
 msgid "Quantity"
 msgstr "Quantität"
 
@@ -683,117 +683,125 @@ msgstr[1] "%(count)s Ergebnisse im MaRDI Portal"
 msgid "No results in the MaRDI Portal"
 msgstr "Keine Ergebnisse im MaRDI Portal"
 
-#: MaRDMO/model/checks.py:49
+#: MaRDMO/model/checks.py:51
 msgid "Invalid Formula {number}: {problem}"
 msgstr "Ungültige Formel {number}: {problem}"
 
-#: MaRDMO/model/checks.py:56
+#: MaRDMO/model/checks.py:58
 msgid "Invalid Formula {number}: rejected by the MaRDI Portal ({problem}), {hint}"
 msgstr "Ungültige Formel {number}: vom MaRDI Portal abgelehnt ({problem}), {hint}"
 
-#: MaRDMO/model/checks.py:57
+#: MaRDMO/model/checks.py:59
 msgid "see the preview for details"
 msgstr "Details in der Vorschau"
 
-#: MaRDMO/model/checks.py:62
+#: MaRDMO/model/checks.py:64
 msgid "Invalid Symbol \"{symbol}\": {problem}"
 msgstr "Ungültiges Symbol \"{symbol}\": {problem}"
 
-#: MaRDMO/model/checks.py:68
+#: MaRDMO/model/checks.py:70
 msgid "Invalid Symbol \"{symbol}\": rejected by the MaRDI Portal ({problem})"
 msgstr "Ungültiges Symbol \"{symbol}\": vom MaRDI Portal abgelehnt ({problem})"
 
-#: MaRDMO/model/checks.py:85
+#: MaRDMO/model/checks.py:87
 msgid "Symbol \"{symbol}\" {problem}"
 msgstr "Symbol \"{symbol}\" {problem}"
 
-#: MaRDMO/model/checks.py:123
+#: MaRDMO/model/checks.py:138
 msgid "Inconsistent Properties ({a} and {b})"
 msgstr "Widersprüchliche Eigenschaften ({a} und {b})"
 
-#: MaRDMO/model/checks.py:179
+#: MaRDMO/model/checks.py:194
 msgid "Missing Assumption (Mathematical Model Specialization)"
 msgstr "Annahme fehlt (Spezialisierung des mathematischen Modells)"
 
-#: MaRDMO/model/checks.py:189 MaRDMO/model/checks.py:240 MaRDMO/model/checks.py:294
+#: MaRDMO/model/checks.py:204 MaRDMO/model/checks.py:255 MaRDMO/model/checks.py:309
 msgid "Selected Formula not found in Section"
 msgstr "Ausgewählte Formel nicht im Abschnitt gefunden"
 
-#: MaRDMO/model/checks.py:230
+#: MaRDMO/model/checks.py:245
 msgid "Missing Assumption (Computational Task Specialization)"
 msgstr "Annahme fehlt (Spezialisierung der Berechnungsaufgabe)"
 
-#: MaRDMO/model/checks.py:284
+#: MaRDMO/model/checks.py:299
 msgid "Missing Assumption (Formula Specialization)"
 msgstr "Annahme fehlt (Spezialisierung der Formel)"
 
-#: MaRDMO/model/checks.py:300
+#: MaRDMO/model/checks.py:315
 msgid "Missing Formula Formula"
 msgstr "Formel der Formel fehlt"
 
-#: MaRDMO/model/checks.py:304
+#: MaRDMO/model/checks.py:319
 msgid "Missing Formula Element Information"
 msgstr "Angaben zu den Formelsymbolen fehlen"
 
-#: MaRDMO/model/checks.py:309
+#: MaRDMO/model/checks.py:324
 msgid "Missing Formula Symbol"
 msgstr "Formelsymbol fehlt"
 
-#: MaRDMO/model/checks.py:311
+#: MaRDMO/model/checks.py:326
 msgid "Missing Formula Quantity"
 msgstr "Quantität des Formelsymbols fehlt"
 
-#: MaRDMO/model/checks.py:338
+#: MaRDMO/model/checks.py:354
 msgid "Missing Quantity [Kind] Class"
 msgstr "Klasse der Quantität [-sart] fehlt"
 
-#: MaRDMO/model/checks.py:343
+#: MaRDMO/model/checks.py:359
 msgid "QUDT Quantity Kind ID selected, but no ID provided!"
 msgstr "QUDT-Quantitätsart-ID ausgewählt, aber keine ID angegeben!"
 
-#: MaRDMO/model/checks.py:346
+#: MaRDMO/model/checks.py:362
 msgid "Invalid QUDT Quantity Kind ID format: \"{value}\""
 msgstr "Ungültiges Format der QUDT-Quantitätsart-ID: \"{value}\""
 
-#: MaRDMO/model/checks.py:349
+#: MaRDMO/model/checks.py:365
 msgid "QUDT Constant ID selected, but no ID provided!"
 msgstr "QUDT-Konstanten-ID ausgewählt, aber keine ID angegeben!"
 
-#: MaRDMO/model/checks.py:352
+#: MaRDMO/model/checks.py:368
 msgid "Invalid QUDT Constant ID format: \"{value}\""
 msgstr "Ungültiges Format der QUDT-Konstanten-ID: \"{value}\""
 
-#: MaRDMO/model/checks.py:356
+#: MaRDMO/model/checks.py:372
 msgid "QUDT Quantity Kind ID limited to Quantity Kinds!"
 msgstr "Die QUDT-Quantitätsart-ID gibt es nur für Quantitätsarten!"
 
-#: MaRDMO/model/checks.py:363
+#: MaRDMO/model/checks.py:379
 msgid "QUDT Constant ID limited to Quantities!"
 msgstr "Die QUDT-Konstanten-ID gibt es nur für Quantitäten!"
 
-#: MaRDMO/model/checks.py:371
+#: MaRDMO/model/checks.py:387
 msgid "Inconsistent Quantity Definition (missing \\equiv)"
 msgstr "Widersprüchliche Definition der Quantität (\\equiv fehlt)"
 
-#: MaRDMO/model/checks.py:374
+#: MaRDMO/model/checks.py:390
 msgid "Missing Quantity Definition Element Information"
 msgstr "Angaben zu den Symbolen der Quantitätsdefinition fehlen"
 
-#: MaRDMO/model/checks.py:377
+#: MaRDMO/model/checks.py:393
 msgid "Missing Quantity Definition Symbol"
 msgstr "Symbol der Quantitätsdefinition fehlt"
 
-#: MaRDMO/model/checks.py:379
+#: MaRDMO/model/checks.py:395
 msgid "Missing Quantity Definition Quantity"
 msgstr "Quantität eines Symbols der Quantitätsdefinition fehlt"
 
-#: MaRDMO/model/checks.py:486
+#: MaRDMO/model/checks.py:503
 msgid "The TeX check of the MaRDI Portal did not answer for some formulas."
 msgstr "Die TeX-Prüfung des MaRDI Portals hat für einige Formeln nicht geantwortet."
 
-#: MaRDMO/model/checks.py:507
+#: MaRDMO/model/checks.py:524
 msgid "Mathematical Model Entity"
 msgstr "Entität des mathematischen Modells"
+
+#: MaRDMO/model/symbols.py:263
+msgid "Symbol \"{symbol}\" stands for different quantities in this documentation (cf. pages {tabs}): enter it in this table too"
+msgstr "Symbol \"{symbol}\" steht in dieser Dokumentation für verschiedene Quantitäten (vgl. Seiten {tabs}): tragen Sie es auch in diese Tabelle ein"
+
+#: MaRDMO/model/symbols.py:269
+msgid "No symbol table defines {symbols}: if they stand for quantities, enter them in this table"
+msgstr "Keine Symboltabelle definiert {symbols}: wenn sie für Quantitäten stehen, tragen Sie sie in diese Tabelle ein"
 
 #: MaRDMO/model/validators.py:54
 msgid "Inconsistent properties: {a} and {b} cannot both be selected."
@@ -1371,6 +1379,11 @@ msgstr "Quantitätsart-ID"
 #: MaRDMO/templates/MaRDMO/partials/_in_defining_formula.html:19
 msgid "Description"
 msgstr "Beschreibung"
+
+#: MaRDMO/templates/MaRDMO/partials/_in_defining_formula.html:25
+#, python-format
+msgid "cf. page \"%(tab)s\""
+msgstr "vgl. Seite \"%(tab)s\""
 
 #: MaRDMO/templates/MaRDMO/partials/_item_card.html:4
 msgid "project"

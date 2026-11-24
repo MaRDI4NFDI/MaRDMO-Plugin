@@ -22,7 +22,7 @@
         <tbody>
             {% for key, value in element.items %}
                 <tr>
-                    <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} {% formula value.symbol value.symbol_check %} {% else %} - {% endif %}</td>
+                    <td style="text-align: center; vertical-align: middle;">{% if value.symbol %} {% formula value.symbol value.symbol_check %} {% else %} - {% endif %}{% if value.derived %}<br><small class="text-muted">{% blocktranslate trimmed with tab=value.derived %}cf. page "{{ tab }}"{% endblocktranslate %}</small>{% endif %}</td>
                 {% if value.Info.Type == "Quantity" %}
                     <td style="text-align: center; vertical-align: middle;">{{ value.Info.Name|default:"-" }}</td>
                     <td style="text-align: center; vertical-align: middle;">{% if value.Info.ID|own_item %} - {% else %} {{ value.Info.ID }} {% endif %}</td>
