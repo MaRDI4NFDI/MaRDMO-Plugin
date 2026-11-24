@@ -47,7 +47,11 @@ def _sparql_file(template, catalog):
 
 
 def write_defining_formula(project, page, data, set_index):
-    """Write the formulas and the symbol table of a formula or quantity into its page.
+    """Write the formula and the symbol table of a formula or quantity into its page.
+
+    An item has one defining formula (the questionnaire has one field for
+    it); should the portal have several, the first is written and the others
+    are logged.
 
     Args:
         project:   RDMO project instance.
@@ -57,9 +61,12 @@ def write_defining_formula(project, page, data, set_index):
                    (a quantity per symbol, ``id`` empty if the portal has none).
         set_index: Set index of the page.
     """
-    for idx, formula in enumerate(data.formulas):
+    if len(data.formulas) > 1:
+        logger.warning('The MaRDI Portal has %s defining formulas for one item; the first is used: %s',
+                       len(data.formulas), data.formulas)
+    if data.formulas:
         value_editor(project=project, uri=f'{BASE_URI}{page["Formula"]["uri"]}',
-                     info={'text': formula, 'collection_index': idx,
+                     info={'text': data.formulas[0], 'collection_index': 0,
                            'set_index': 0, 'set_prefix': f'{set_index}|0'})
 
     for idx, symbol in enumerate(data.symbols):
