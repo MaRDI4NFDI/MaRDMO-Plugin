@@ -59,6 +59,12 @@ def test_option_set_providers_come_from_mardmo():
     assert 'OPTIONSET_PROVIDERS += MARDMO_OPTIONSET_PROVIDERS' in install
 
 
+def test_the_middleware_of_the_interview_is_named():
+    install = section('install')
+    assert "MIDDLEWARE += ['MaRDMO.middleware.InterviewMathPreview']" in install
+    assert hasattr(importlib.import_module('MaRDMO.middleware'), 'InterviewMathPreview')
+
+
 def test_questionnaire_files_are_imported(questionnaire):
     imported = re.findall(r'catalog/([\w-]+\.xml)', section('questionnaire'))
     assert len(imported) == len(set(imported))

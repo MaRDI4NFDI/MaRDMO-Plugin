@@ -144,10 +144,15 @@ render are shown the same way instead of MathJax's error box.
 **In the interview**, the TeX of the formula and symbol questions is rendered
 below their fields while it is typed (`MaRDMO/js/math-preview.js`, with
 MaRDMO's MathJax; #190).  The questionnaire marks these questions by an
-empty `<span class="mardmo-math">` in their help; MaRDMO's template of the
-interview page extends RDMO's (`templates/projects/project_interview.html`)
-by the script, which loads MathJax only on a page with a marked question.
-The field is only read.
+empty `<span class="mardmo-math">` in their help.  MaRDMO's middleware
+(`MaRDMO.middleware.InterviewMathPreview`, named in the settings) adds the
+script to RDMO's interview page before its `</body>`, as the Django Debug
+Toolbar adds its own, and leaves every other response as it is.  MaRDMO
+replaces no template of RDMO: it does not depend on the order of
+`INSTALLED_APPS`, and another plugin may replace the interview's template.
+Without the middleware in the settings, `manage.py check` warns
+(MaRDMO.W001).  The script loads MathJax only on a page with a marked
+question; the field is only read.
 
 After a pause in typing (a second), the script asks MaRDMO's view
 `tex_check` (`services/tex-check/`, POST, for logged-in users with the CSRF

@@ -66,3 +66,7 @@ class MaRDMOConfig(AppConfig):
         self.properties = get_data(settings.MARDMO_PROVIDER['mardi']['properties'])
 
         from . import router  # noqa: F401  (registers the signal receivers)
+        from django.core import checks
+        from .middleware import check_middleware
+        # manage.py check warns when the settings lack the middleware of the interview
+        checks.register(check_middleware)
