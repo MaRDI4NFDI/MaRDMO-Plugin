@@ -32,6 +32,8 @@ PORTAL_LOOKUP_TIMEOUT = 15 * 60
 
 # Pairs and IDs per SPARQL query of find_portal_items
 PORTAL_LOOKUP_CHUNK = 50
+# The site of the MaRDI Portal's pages in the sitelinks of its items
+PORTAL_SITE = 'mardi'
 
 
 @dataclass
@@ -359,12 +361,13 @@ def query_api_per_profile(search_term, profiles, exclude=None, raise_errors=Fals
     '''
     profile_type = get_properties()['MaRDI profile type']
     facets = ' '.join(f'haswbfacet:{profile_type}={qid}' for qid in profiles)
+    deadline = search_deadline()
     try:
         response = request_with_retry(
             'get',
             get_url('mardi', 'api'),
             waits=(SEARCH_RETRY_WAIT,),
-            deadline=search_deadline(),
+            deadline=deadline,
             params={
                 'action':       'query',
                 'generator':    'search',
@@ -386,11 +389,60 @@ def query_api_per_profile(search_term, profiles, exclude=None, raise_errors=Fals
             raise
         return []
 
-    # In the order of the search; a page without an item is left out
+    # In the order of the search; a page whose item property is missing is
+    # found by its title (the item's sitelink), else left out
     ranked = sorted(pages, key=lambda page: page.get('index', 0))
-    qids = list(dict.fromkeys(page['pageprops']['wikibase_item'] for page in ranked
-                              if page.get('pageprops', {}).get('wikibase_item')))
-    return _portal_options(qids, raise_errors, exclude)
+    unlinked = [page['title'] for page in ranked
+                if not page.get('pageprops', {}).get('wikibase_item') and page.get('title')]
+    by_title = {}
+    if unlinked:
+        try:
+            by_title = items_of_pages(unlinked, deadline)
+        except requests.exceptions.RequestException as e:
+            logger.error("MaRDI search: the items of profile pages could not be looked up: %s", e)
+            if raise_errors:
+                raise
+        if by_title:
+            logger.warning("Profile pages of the MaRDI Portal without their item property, found by their "
+                           "title: %s", ', '.join(f'{title} ({qid})' for title, qid in by_title.items()))
+    qids = list(dict.fromkeys(page.get('pageprops', {}).get('wikibase_item') or by_title.get(page.get('title'))
+                              for page in ranked))
+    return _portal_options([qid for qid in qids if qid], raise_errors, exclude)
+
+
+def items_of_pages(titles, deadline=None):
+    '''``{page title: QID}`` of the MaRDI Portal's items whose sitelink is one of *titles*.
+
+    A page names its item by its page property ``wikibase_item``, a copy of
+    the item's sitelink to the page that the portal writes when it updates
+    the page's links.  Where that copy is missing, the item is found by its
+    sitelink: one request for up to 50 pages.  A page without item is left
+    out.
+    '''
+    found = {}
+    for start in range(0, len(titles), 50):
+        response = request_with_retry(
+            'get',
+            get_url('mardi', 'api'),
+            waits=(SEARCH_RETRY_WAIT,),
+            deadline=deadline,
+            params={
+                'action':     'wbgetentities',
+                'sites':      PORTAL_SITE,
+                'titles':     '|'.join(titles[start:start + 50]),
+                'props':      'sitelinks',
+                'sitefilter': PORTAL_SITE,
+                'format':     'json',
+            },
+            headers={'User-Agent': USER_AGENT},
+            timeout=SEARCH_TIMEOUT,
+        )
+        response.raise_for_status()
+        for qid, entity in response.json().get('entities', {}).items():
+            title = (entity.get('sitelinks') or {}).get(PORTAL_SITE, {}).get('title')
+            if title and 'missing' not in entity:
+                found[title] = qid
+    return found
 
 
 def _portal_options(qids, raise_errors=False, exclude=None):
