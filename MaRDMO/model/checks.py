@@ -8,6 +8,8 @@ from .constants import (
 from .catalog import CATALOG_MODEL, CATALOG_MODEL_BASICS
 from ..core.ids import is_own_item
 from ..export.checks import ChecksBase, without_page
+from ..export.problems import Problem
+from .symbols import ambiguous_message, unknown_message
 from ..core.patterns import QUDT_ID_STRICT_RE
 from ..components.tex_check import (
     NOT_VERIFIED,
@@ -84,6 +86,19 @@ class ModelChecks(ChecksBase):
             self._invalid(
                 section, page_name, _('Symbol "{symbol}" {problem}').format(symbol=symbol, problem=_(ELEMENT_SYMBOL_MESSAGES[problem])),
                 'element', [symbol])
+
+    def _check_symbol_uses(self, ivalue, section, page_name):
+        '''Report the symbols of the formula that its table lacks (#179).
+
+        A symbol that stands for different quantities in the documentation
+        needs a row here (a problem); letters that no table defines may be
+        quantities (a hint).  See :mod:`MaRDMO.model.symbols`.
+        '''
+        for symbol, tabs in (ivalue.get('SymbolsAmbiguous') or {}).items():
+            self._missing(section, page_name, ambiguous_message(symbol, tabs), 'element')
+        if ivalue.get('SymbolsUnknown'):
+            self.err.append(Problem(section, page_name, unknown_message(ivalue['SymbolsUnknown']), 'element',
+                                    hint=True))
 
     def properties(self, project, data, catalog):
         '''Check for mutually exclusive (conflicting) data-property combinations.
@@ -310,6 +325,7 @@ class ModelChecks(ChecksBase):
                 if not_quantity:
                     self._missing(N_('Formula'), page_name, _('Missing Formula Quantity'), 'element')
                 self._check_element_symbols(ivalue, N_('Formula'), page_name)
+            self._check_symbol_uses(ivalue, N_('Formula'), page_name)
 
             self._check_flexible(
                 data       = ivalue,
@@ -378,6 +394,7 @@ class ModelChecks(ChecksBase):
                     if any(not ev.get('quantity') for ev in ivalue['element'].values()):
                         self._missing(N_('Quantity [Kind]'), page_name, _('Missing Quantity Definition Quantity'), 'element')
                     self._check_element_symbols(ivalue, N_('Quantity [Kind]'), page_name)
+                self._check_symbol_uses(ivalue, N_('Quantity [Kind]'), page_name)
 
             if ivalue.get('QorQK') == self.mathmoddb.get(key='Quantity')["label"]:
                 self._check_flexible(

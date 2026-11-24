@@ -1,0 +1,270 @@
+'''The symbols of the formulas: defined once, used in every formula (#179).
+
+A symbol that stands for the same quantity in all formulas of a
+documentation needs one row in one symbol table (of a formula or a quantity
+definition); every other formula that uses it gets the row derived.  A
+symbol that stands for different quantities needs a row in every formula
+that uses it.  Own rows always take precedence; nothing is written to the
+project: the rows are derived each time the answers are read
+(:func:`derive_symbols`, from :meth:`MaRDMO.model.worker.PrepareModel.preview`),
+so the checks, the preview and the payload see the same tables.
+
+"Uses" means: the symbol occurs in the formula's TeX as a whole symbol.  TeX
+is read as tokens — a command, a word in ``\\text{}``/``\\mathrm{}``, a letter
+(every letter of a formula is a symbol of its own: ``bx`` is *b* times *x*),
+a digit, a character — and an index (``_0``, ``_{\\text{init}}``) or a star
+belongs to the symbol before it.  The longest symbol wins (``\\Delta t`` before
+``t``, ``D_1(0)`` before ``D_1``), and ``d`` at the start of a fraction's part
+or after a thin space (``\\frac{dT}{dt}``, ``\\, dx``) is the differential.
+'''
+import re
+
+from django.utils.translation import gettext as _
+
+# The sections whose pages have a formula and a symbol table
+SECTIONS = ('formulation', 'quantity')
+
+_TOKEN = re.compile(r'''
+    \\(?:begin|end)\s*\{[^{}]*\}                                         # an environment
+  | \{\s*\\rm\s+[^{}]*\}                                                 # {\rm m}: a word
+  | \\(?:text|textrm|textit|mathrm|mathit|operatorname|rm)\s*\{[^{}]*\}   # a word
+  | \\[A-Za-z]+                                                          # a command
+  | \\.                                                                  # \, \; \{ ...
+  | [A-Za-z0-9]
+  | \S
+''', re.VERBOSE)
+# What only sets a font: left out of an index or a label (A_\text{m} is A_m)
+_WRAPPERS = re.compile(r'\\(?:text|textrm|textit|mathrm|mathit|rm)\b\s*')
+
+GREEK = {
+    'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'varepsilon', 'zeta', 'eta', 'theta', 'vartheta', 'iota',
+    'kappa', 'lambda', 'mu', 'nu', 'xi', 'pi', 'varpi', 'rho', 'varrho', 'sigma', 'varsigma', 'tau', 'upsilon',
+    'phi', 'varphi', 'chi', 'psi', 'omega', 'Gamma', 'Delta', 'Theta', 'Lambda', 'Xi', 'Pi', 'Sigma',
+    'Upsilon', 'Phi', 'Psi', 'Omega', 'ell', 'hbar',
+}
+# Commands that write a symbol in another font: \mathcal{L} is a symbol of its own
+_FONTS = {'mathcal', 'mathbb', 'mathbf', 'mathfrak', 'mathsf', 'boldsymbol', 'bm', 'mathscr', 'textbf'}
+# What may stand before a differential: d at the start, after {, a space, an operator, an integral
+_BEFORE_DIFFERENTIAL = {'{', '(', '=', '+', '-', '&', r'\,', r'\;', r'\:', r'\!', r'\quad', r'\qquad',
+                        r'\int', r'\iint', r'\iiint', r'\oint'}
+# Not quantities, however written: the circle constant; operators before a symbol (\Delta x, \nabla u)
+_CONSTANTS = {r'\pi'}
+_OPERATORS = {r'\Delta', r'\nabla'}
+
+
+class Token(str):
+    '''A token of a formula: its canonical text; ``upright`` for a word (``\\mathrm{d}``).'''
+    upright = False
+
+
+def _group(raw, start):
+    '''The balanced ``{...}`` of *raw* at *start* (or the single token there) and the position after it.'''
+    if raw[start] != '{':
+        match = _TOKEN.match(raw, start)
+        return (match.group(), match.end()) if match else ('', start + 1)
+    depth = 0
+    for position in range(start, len(raw)):
+        depth += {'{': 1, '}': -1}.get(raw[position], 0)
+        if depth == 0:
+            return raw[start:position + 1], position + 1
+    return raw[start:], len(raw)
+
+
+def _label(group):
+    '''An index or a label without font, braces and spaces: ``{\\text{eff}}`` and ``{\\rm eff}`` are ``eff``.'''
+    return re.sub(r'[\s{}]', '', _WRAPPERS.sub('', group))
+
+
+def _word(text):
+    '''The text of a word token (``\\mathrm{d}`` -> ``d``, ``{\\rm m}`` -> ``m``).'''
+    return _label(re.sub(r'^\{?\s*\\(?:text|textrm|textit|mathrm|mathit|operatorname|rm)', '', text))
+
+
+def tokens(tex):
+    '''The tokens of *tex*: a symbol with its index, label and primes as one canonical token.
+
+    ``T_{0}`` and ``T_0``, ``A_\\text{m}`` and ``A_m``, ``V^\\text{f}_\\text{m}``
+    and ``V_{m}^{f}`` give the same token; a power (``x^2``) is not part of
+    the symbol, a star or a label is (``x^*``, ``C^\\text{f}``).
+    '''
+    raw, out, position = tex or '', [], 0
+    while True:
+        match = _TOKEN.search(raw, position)
+        if not match:
+            return out
+        text, position = match.group(), match.end()
+        upright = False
+        if re.match(r'\{?\s*\\(?:text|textrm|textit|mathrm|mathit|operatorname|rm)\b', text):
+            text, upright = _word(text), True
+        elif text.startswith('\\') and text[1:] in _FONTS:
+            spaced = position + re.match(r'\s*', raw[position:]).end()
+            if spaced < len(raw):
+                group, position = _group(raw, spaced)
+                text = (r'\mathbf' if text == r'\textbf' else text) + '{' + _label(group) + '}'
+        sub, sup, primes = '', '', ''
+        while True:
+            spaced = position + re.match(r'\s*', raw[position:]).end()
+            if spaced >= len(raw) or raw[spaced] not in "_^'":
+                break
+            mark = raw[spaced]
+            if mark == "'":
+                primes, position = primes + "'", spaced + 1
+                continue
+            group, end = _group(raw, spaced + 1 + re.match(r'\s*', raw[spaced + 1:]).end()) \
+                if spaced + 1 < len(raw) else ('', spaced + 1)
+            label = _label(group)
+            if mark == '^' and not (label in ('*', r'\ast', r'\star', r'\prime') or _WRAPPERS.search(group)):
+                break                                     # a power: not part of the symbol
+            if mark == '_':
+                sub = label
+            else:
+                sup = r"'" if label == r'\prime' else label
+            position = end
+        token = Token(text + (f'_{{{sub}}}' if sub else '') + (f'^{{{sup}}}' if sup else '') + primes)
+        token.upright = upright
+        out.append(token)
+
+
+def _base(token):
+    return re.split(r"[_^']", token, maxsplit=1)[0]
+
+
+def is_symbol(token):
+    '''Whether *token* can be a quantity's symbol: a letter or a Greek letter (with index), a font command.'''
+    base = _base(token)
+    return bool(re.fullmatch(r'[A-Za-z]', base)) or base[1:] in GREEK or (
+        base.startswith('\\') and base[1:].split('{', 1)[0] in _FONTS)
+
+
+def _differential(found, index):
+    '''Whether the token at *index* is the differential (``\\frac{dT}{dt}``, ``d a = c\\, dt``, ``\\mathrm{d}x``).'''
+    token = found[index]
+    if token != 'd' or index + 1 >= len(found) or not is_symbol(found[index + 1]):
+        return False
+    return token.upright or index == 0 or found[index - 1] in _BEFORE_DIFFERENTIAL
+
+
+def occurrences(symbol, tex):
+    '''The positions in the tokens of *tex* where *symbol* is written as a whole symbol.'''
+    wanted, found = tokens(symbol), tokens(tex)
+    if not wanted:
+        return []
+    return [index for index in range(len(found) - len(wanted) + 1)
+            if found[index:index + len(wanted)] == wanted
+            and not (len(wanted) == 1 and _differential(found, index))]
+
+
+def canonical(symbol):
+    '''A symbol as its tokens: ``T_{0}`` and ``T_0``, ``A_\\text{m}`` and ``A_m`` are the same symbol.'''
+    return ' '.join(tokens(symbol))
+
+
+def formulas_of(page):
+    '''The TeX of the formulas of *page* (one, or by collection index).'''
+    formula = page.get('Formula')
+    if isinstance(formula, dict):
+        return [text for _, text in sorted(formula.items()) if text]
+    return [formula] if formula else []
+
+
+def definitions(answers):
+    '''``{canonical symbol: {quantity ID: (quantity, tab)}}`` of the rows of every symbol table.
+
+    A row counts with its quantity (its ID); the tab is the first page that has it.
+    '''
+    found = {}
+    for section in SECTIONS:
+        for page in (answers.get(section) or {}).values():
+            if not isinstance(page, dict):
+                continue
+            for element in (page.get('element') or {}).values():
+                quantity = element.get('quantity') if isinstance(element, dict) else None
+                if not element.get('symbol') or not isinstance(quantity, dict) or not quantity.get('ID'):
+                    continue
+                key = canonical(element['symbol'])
+                found.setdefault(key, {}).setdefault(quantity['ID'], (quantity, page.get('Tab') or page.get('Name', '')))
+    return found
+
+
+def derive_symbols(answers):
+    '''Complete the symbol tables of *answers* from the rows of the documentation (mutated in place).
+
+    Every page with a formula gets a derived row (``derived``: the tab it comes
+    from) for each symbol of the documentation that its TeX uses and its own
+    table lacks, if the symbol stands for one quantity only.  A symbol it uses
+    that stands for several quantities, without an own row, goes into
+    ``SymbolsAmbiguous`` (``{symbol: [tabs]}``); a letter of its TeX that no
+    table defines into ``SymbolsUnknown``.
+
+    Returns:
+        *answers*.
+    '''
+    defined = definitions(answers)
+    # Longest first: \Delta t before t, D_1(0) before D_1
+    by_length = sorted(defined, key=lambda key: -len(key.split(' ')))
+    for section in SECTIONS:
+        for page in (answers.get(section) or {}).values():
+            if not isinstance(page, dict):
+                continue
+            texts = formulas_of(page)
+            if not texts:
+                continue
+            elements = page.setdefault('element', {})
+            own = {canonical(element['symbol']) for element in elements.values()
+                   if isinstance(element, dict) and element.get('symbol')}
+            ambiguous, used = {}, {}               # used: key -> (formula, position) of its first use
+            for tex in texts:
+                found, taken = tokens(tex), set()
+                for key in by_length:
+                    length = len(key.split(' '))
+                    for index in occurrences(key, tex):
+                        span = set(range(index, index + length))
+                        if span & taken:
+                            continue                      # part of a longer symbol
+                        taken |= span
+                        if key not in own:
+                            used.setdefault(key, (texts.index(tex), index))
+                for index, token in enumerate(found):
+                    nxt = found[index + 1] if index + 1 < len(found) else ''
+                    exponential = token == 'e' and nxt == '^'
+                    operator = token in _OPERATORS and is_symbol(nxt)
+                    if index not in taken and is_symbol(token) and not _differential(found, index) \
+                            and not (exponential or operator or token in _CONSTANTS) and str(token) not in own:
+                        page.setdefault('SymbolsUnknown', [])
+                        if token not in page['SymbolsUnknown']:
+                            page['SymbolsUnknown'].append(str(token))
+            number = max([key for key in elements if isinstance(key, int)], default=-1) + 1
+            for key in sorted(used, key=used.get):
+                quantities = defined[key]
+                if len(quantities) > 1:
+                    ambiguous[key] = sorted({tab for _, tab in quantities.values()})
+                    continue
+                quantity, tab = next(iter(quantities.values()))
+                elements[number] = {'symbol': _symbol_text(key, answers), 'quantity': dict(quantity), 'derived': tab}
+                number += 1
+            if ambiguous:
+                page['SymbolsAmbiguous'] = {_symbol_text(key, answers): tabs for key, tabs in sorted(ambiguous.items())}
+    return answers
+
+
+def _symbol_text(key, answers):
+    '''The symbol *key* as the first row of the documentation writes it.'''
+    for section in SECTIONS:
+        for page in (answers.get(section) or {}).values():
+            for element in (page.get('element') or {}).values() if isinstance(page, dict) else ():
+                if isinstance(element, dict) and element.get('symbol') and canonical(element['symbol']) == key \
+                        and not element.get('derived'):
+                    return element['symbol']
+    return key
+
+
+def ambiguous_message(symbol, tabs):
+    '''The problem of a symbol that stands for several quantities and has no row in this table.'''
+    return _('Symbol "{symbol}" stands for different quantities in this documentation (cf. pages {tabs}): '
+             'enter it in this table too').format(symbol=symbol, tabs=', '.join(f'"{tab}"' for tab in tabs))
+
+
+def unknown_message(symbols):
+    '''The hint for letters of a formula that no symbol table defines.'''
+    return _('No symbol table defines {symbols}: if they stand for quantities, enter them in this table').format(
+        symbols=', '.join(f'"{symbol}"' for symbol in symbols))

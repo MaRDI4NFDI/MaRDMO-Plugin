@@ -11,6 +11,7 @@ Provides:
 '''
 
 
+from .symbols import derive_symbols
 from .constants import (
     data_properties_check,
     preview_relations,
@@ -82,6 +83,9 @@ class PrepareModel(CatalogExport):
         for quantity in answers.get("quantity", {}).values():
             if quantity.get("QorQK"):
                 quantity['QorQK'] = self.mathmoddb.get(url=quantity["QorQK"])['label']
+
+        # The symbols defined once complete the tables of the other formulas (#179)
+        derive_symbols(answers)
 
         # Prepare Quantity Mapping
         for mapping in preview_map_quantity:
