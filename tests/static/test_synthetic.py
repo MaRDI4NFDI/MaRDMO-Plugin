@@ -89,6 +89,9 @@ def test_every_option_with_a_text_is_used_with_one(built):
 # Sources a dropdown offers that have no item of its class yet: {(question, source): why}
 UNAVAILABLE = {
     ('processstep/instrument-relatant', 'mardi'): 'the MaRDI Portal has no research tools (instruments) yet',
+    # The computational tasks' root on Wikidata (Q140136486) has no items below it yet (#170)
+    ('task/id', 'wikidata'): 'Wikidata has no computational tasks yet',
+    ('model/task-relatant', 'wikidata'): 'Wikidata has no computational tasks yet',
 }
 
 

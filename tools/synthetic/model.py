@@ -14,7 +14,10 @@ from .writer import Doi, New, Portal, Typed, Wikidata
 SIS_MODEL = Portal('Q6675171', 'susceptible infectious susceptible model')
 BLACK_SCHOLES = Wikidata('Q1338307', 'Black–Scholes model')
 KINETIC_SIMULATION = Portal('Q6684556', 'simulation of complex kinetic systems')
-PARAMETER_ESTIMATION = Wikidata('Q131147154', 'parameter estimation')
+# A computational task of the portal whose profile page lacks its item property (found by its
+# sitelink, #170); Wikidata has no computational tasks below the dropdown's root yet, so none
+# of Wikidata is offered ("parameter estimation", Q131147154, was before #170)
+PARAMETER_ESTIMATION = Portal('Q6684554', 'parameter estimation of enzyme kinetics')
 SIS_INFECTIOUS = Portal('Q6674293', 'rate of change of infectious in the SIS model')
 STATIONARY_NAVIER_STOKES = Portal('Q6830615', 'stationary Navier-Stokes equations')
 WAVE_EQUATION = Wikidata('Q193846', 'wave equation')
