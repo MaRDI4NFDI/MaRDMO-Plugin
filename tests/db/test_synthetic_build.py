@@ -72,7 +72,7 @@ def preview(project):
     provider.project, provider.snapshot = project, None
     answers, _ = provider.get_post_data('preview')
     catalog = catalog_of(project)
-    prepare_class, check = catalog.prepare_class, catalog.check
+    prepare_class, check = catalog.prepare_class, catalog.checks_class
     found = preview_duplicates(project, answers, prepare_class())
     return found, pipeline.run(project, answers, prepare_class, check, preview=True, duplicates=found)
 
