@@ -1158,6 +1158,138 @@
         }
        }
       ],
+      "P1560": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "value": {
+         "content": "Item0000000017",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "value": {
+         "content": "Item0000000014",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P560"
+          },
+          "value": {
+           "content": "Q6534259",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "Item0000000007",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P560"
+          },
+          "value": {
+           "content": "Q6534262",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "Item0000000014",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P560"
+          },
+          "value": {
+           "content": "Q6534266",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "Item0000000007",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P560"
+          },
+          "value": {
+           "content": "Q6534264",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "Item0000000013",
+         "type": "value"
+        }
+       },
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1560"
+        },
+        "qualifiers": [
+         {
+          "property": {
+           "data_type": "wikibase-item",
+           "id": "P560"
+          },
+          "value": {
+           "content": "Q6534267",
+           "type": "value"
+          }
+         }
+        ],
+        "value": {
+         "content": "Item0000000017",
+         "type": "value"
+        }
+       }
+      ],
       "P1655": [
        {
         "property": {
@@ -1199,6 +1331,18 @@
         "property": {
          "data_type": "wikibase-item",
          "id": "P1658"
+        },
+        "value": {
+         "content": "Item0000000013",
+         "type": "value"
+        }
+       }
+      ],
+      "P1674": [
+       {
+        "property": {
+         "data_type": "wikibase-item",
+         "id": "P1674"
         },
         "value": {
          "content": "Item0000000013",
@@ -1417,6 +1561,109 @@
      "string",
      "The rate of change of a is proportional to a, in variant A.",
      []
+    ],
+    [
+     "P1674",
+     "wikibase-item",
+     "Item0000000013",
+     []
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000017",
+     []
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000014",
+     []
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000007",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6534259",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000014",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6534262",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000007",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6534266",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000013",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6534264",
+        "type": "value"
+       }
+      }
+     ]
+    ],
+    [
+     "P1560",
+     "wikibase-item",
+     "Item0000000017",
+     [
+      {
+       "property": {
+        "data_type": "wikibase-item",
+        "id": "P560"
+       },
+       "value": {
+        "content": "Q6534267",
+        "type": "value"
+       }
+      }
+     ]
     ],
     [
      "P1655",

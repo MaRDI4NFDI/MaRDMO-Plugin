@@ -176,16 +176,11 @@ def describe(doc):
     for relation, relatants in (('assumes', [formulas['B']]), ('contains', [formulas['C'], IDEAL_GAS_LAW]),
                                 ('contains-boundary-condition', [formulas['D']]),
                                 ('contains-constraint-condition', [SIS_INFECTIOUS]),
-                                ('contains-coupling-condition', [typed_formula]),
+                                ('contains-coupling-condition', [formulas['D']]),
                                 ('contains-initial-condition', [formulas['B']]),
                                 ('contains-final-condition', [formulas['C']])):
-        formulas['A'].block('formulation-to-formulation-1', {'formulation-relation-1': relation,
-                                                            'formulation-relatant-1': relatants})
-    typed = doc.find('formulation', typed_formula)
-    typed.answer('description', 'synthetic formula typed into a relation')
-    typed.answer('formula', 'a = c')
-    typed.block('element', {'element/symbol': 'a', 'element/quantity': quantity_a})
-    typed.block('element', {'element/symbol': 'c', 'element/quantity': quantity_c})
+        formulas['A'].block('formulation-to-formulation', {'formulation-relation': relation,
+                                                          'formulation-relatant': relatants})
     # Formulas related to formulas (approximations, specializations with assumptions, ...)
     # Relations stored on the other item ("approximates" is "approximated by" there) close cycles
     # of new items (#164): A approximated by B, B specialized by C, A approximates C (A, B, C);
@@ -196,13 +191,20 @@ def describe(doc):
                                ('linearized-by', formulas['C']), ('linearizes', formulas['B']),
                                ('nondimensionalized-by', formulas['B']), ('nondimensionalizes', SIS_INFECTIOUS),
                                ('similar-to', STATIONARY_NAVIER_STOKES)):
-        formulas['A'].block('formulation-to-formulation-2', {'formulation-relation-2': relation,
-                                                            'formulation-relatant-2': [relatant]})
-    formulas['B'].block('formulation-to-formulation-2', {
-        'formulation-relation-2': 'specialized-by', 'formulation-relatant-2': [formulas['C']],
-        'formulation-assumption': [formulas['D'], IDEAL_GAS_LAW, SIS_INFECTIOUS]})
-    formulas['C'].block('formulation-to-formulation-2', {
-        'formulation-relation-2': 'specializes', 'formulation-relatant-2': [SIS_INFECTIOUS],
+        formulas['A'].block('formulation-to-formulation', {'formulation-relation': relation,
+                                                          'formulation-relatant': [relatant]})
+    # a formula typed in as an assumption: the relations offer only formulas of the documentation
+    # and the portal (#213), an assumption also a new one
+    formulas['B'].block('formulation-to-formulation', {
+        'formulation-relation': 'specialized-by', 'formulation-relatant': [formulas['C']],
+        'formulation-assumption': [formulas['D'], IDEAL_GAS_LAW, SIS_INFECTIOUS, typed_formula]})
+    typed = doc.find('formulation', typed_formula)
+    typed.answer('description', 'synthetic formula typed into an assumption')
+    typed.answer('formula', 'a = c')
+    typed.block('element', {'element/symbol': 'a', 'element/quantity': quantity_a})
+    typed.block('element', {'element/symbol': 'c', 'element/quantity': quantity_c})
+    formulas['C'].block('formulation-to-formulation', {
+        'formulation-relation': 'specializes', 'formulation-relatant': [SIS_INFECTIOUS],
         'formulation-assumption': [formulas['D']]})
 
     # --- Computational tasks ------------------------------------------------------------

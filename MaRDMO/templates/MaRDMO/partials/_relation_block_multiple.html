@@ -4,7 +4,7 @@
     {% if relation.relation %}{% translate relation.relation.label %}{% else %}-{% endif %}: {% relatant relation.relatant %}
     {# Assumptions of a specialization (general to special) #}
     {% if relation.relation.key == 'specialized_by' or relation.relation.key == 'specializes' %}
-        {% if anchor == 'MM2MM' or anchor == 'CT2CT' or anchor == 'MF2MF_2' %}
+        {% if anchor == 'MM2MM' or anchor == 'CT2CT' or anchor == 'MF2MF' %}
             - {% translate "assumptions (general to special)" %}:
             {% for val in relation.assumption.values %}{% relatant val %}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
         {% endif %}

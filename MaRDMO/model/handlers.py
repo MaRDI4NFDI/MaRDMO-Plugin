@@ -569,13 +569,15 @@ class Information(BaseInformation):
                     batch_fill_method=self._fill_quantity_batch,
                 ))
 
+            # All relations to formulas in one block: the parts (MF2MF) and the others (Formulation)
             add_relations_flexible(
                 project=project, data=data,
-                props={'keys': props['MF2MF'], 'mapping': self.mathmoddb},
-                index={'set_prefix': f'{set_index}|0'},
+                props={'keys': [*props['MF2MF'], *props['Formulation']], 'mapping': self.mathmoddb},
+                index={'set_prefix': set_index},
                 statement={
-                    'relation': f'{self.base}{formulation["MF2MF"]["uri"]}',
-                    'relatant': f'{self.base}{formulation["MFRelatant"]["uri"]}',
+                    'relation':   f'{self.base}{formulation["IntraClassRelation"]["uri"]}',
+                    'relatant':   f'{self.base}{formulation["IntraClassElement"]["uri"]}',
+                    'assumption': f'{self.base}{formulation["Assumption"]["uri"]}',
                 })
 
             self._hydrate_relatants(
@@ -591,16 +593,6 @@ class Information(BaseInformation):
                     catalog=catalog, visited=visited,
                     batch_fill_method=self._fill_formulation_batch,
                 ))
-
-            add_relations_flexible(
-                project=project, data=data,
-                props={'keys': props['Formulation'], 'mapping': self.mathmoddb},
-                index={'set_prefix': set_index},
-                statement={
-                    'relation':   f'{self.base}{formulation["IntraClassRelation"]["uri"]}',
-                    'relatant':   f'{self.base}{formulation["IntraClassElement"]["uri"]}',
-                    'assumption': f'{self.base}{formulation["Assumption"]["uri"]}',
-                })
 
             self._hydrate_qualifier_entities(
                 project=project, data=data, prop_keys=props['Formulation'],

@@ -86,7 +86,7 @@
     {% include "MaRDMO/partials/_properties.html" with properties=values.Properties_Check %}
 
     {# Include Block for multiple Relations between Formulation and Formulation #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_2" title=_("Formulas") relations=values.RelationMF2 class="FORMULA" field="RelationMF2" %}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF" title=_("Formulas") relations=values.RelationMF class="FORMULA" field="RelationMF" %}
     {% remaining_marks values %}
 
 

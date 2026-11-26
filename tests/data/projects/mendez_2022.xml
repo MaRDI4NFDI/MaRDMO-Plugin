@@ -1340,7 +1340,7 @@
 			<updated>2026-11-17T13:37:52.957755+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>4</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
@@ -1355,7 +1355,7 @@
 			<updated>2026-11-17T13:37:52.962669+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>4</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>

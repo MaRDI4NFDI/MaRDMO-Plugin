@@ -425,17 +425,9 @@ preview_relations = [
     {
         "from_idx": "formulation",
         "to_idx": "formulation",
-        "relation": "MF2MF",
-        "old_name": "MFRelatant",
-        "new_name": "RelationMF1",
-        "assumption": False,
-    },
-    {
-        "from_idx": "formulation",
-        "to_idx": "formulation",
         "relation": "IntraClassRelation",
         "old_name": "IntraClassElement",
-        "new_name": "RelationMF2",
+        "new_name": "RelationMF",
         "assumption": True,
     },
     {
@@ -577,7 +569,7 @@ def get_uri_prefix_map():
             "question_id": f'{BASE_URI}{questions["Mathematical Formulation"]["ID"]["uri"]}',
             "prefix": "F"
         },
-        f'{BASE_URI}{questions["Mathematical Formulation"]["MFRelatant"]["uri"]}': {
+        f'{BASE_URI}{questions["Mathematical Formulation"]["IntraClassElement"]["uri"]}': {
             "question_set": f'{BASE_URI}{questions["Mathematical Formulation"]["uri"]}',
             "question_id": f'{BASE_URI}{questions["Mathematical Formulation"]["ID"]["uri"]}',
             "prefix": "F"

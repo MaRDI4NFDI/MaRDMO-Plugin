@@ -102,11 +102,8 @@
     {# Include Formulation In Defining Formulas #}
     {% include "MaRDMO/partials/_in_defining_formula.html" with element=values.element %}
 
-    {# Include Block for multiple Relations between Formulation and Formulation I #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_1" title=_("Formulas I") relations=values.RelationMF1 class="FORMULA" field="RelationMF1" %}
-
-    {# Include Block for multiple Relations between Formulation and Formulation II #}
-    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF_2" title=_("Formulas II") relations=values.RelationMF2 class="FORMULA" field="RelationMF2" %}
+    {# Include Block for multiple Relations between Formulation and Formulation #}
+    {% include "MaRDMO/partials/_relation_block_multiple.html" with anchor="MF2MF" title=_("Formulas") relations=values.RelationMF class="FORMULA" field="RelationMF" %}
     {% remaining_marks values %}
 
 
