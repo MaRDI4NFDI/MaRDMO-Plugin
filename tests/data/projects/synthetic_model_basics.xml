@@ -5,6 +5,231 @@
 	<catalog dc:uri="https://rdmo.mardi4nfdi.de/terms/questions/mardmo-model-basics-catalog"/>
 	<values>
 		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/assumes"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-25T09:48:10.243146+01:00</created>
+			<updated>2026-11-25T09:48:10.243154+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>MaRDMO synthetic formula B (synthetic formula B of the MaRDMO tests)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>user:d18f3010-2a53-4abc-8d41-999fd57d5c05</external_id>
+			<created>2026-11-25T09:48:10.261613+01:00</created>
+			<updated>2026-11-25T09:48:10.261625+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-25T09:48:10.243146+01:00</created>
+			<updated>2026-11-25T09:48:10.243154+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>MaRDMO synthetic formula C (synthetic formula C of the MaRDMO tests)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>user:96e1aedf-b0d9-4e13-ac9b-f66def472319</external_id>
+			<created>2026-11-25T09:48:10.261613+01:00</created>
+			<updated>2026-11-25T09:48:10.261625+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>1</collection_index>
+			<text>rate of change of infectious in the SIS model (rate of change of infectious individuals in the continuous-time SIS model)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6674293</external_id>
+			<created>2026-11-25T09:48:10.261613+01:00</created>
+			<updated>2026-11-25T09:48:10.261625+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-boundary-condition"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-25T09:48:10.243146+01:00</created>
+			<updated>2026-11-25T09:48:10.243154+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>2</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>MaRDMO synthetic formula D (synthetic formula D of the MaRDMO tests)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>user:6d825fe7-5b61-4619-a965-9f6364373b38</external_id>
+			<created>2026-11-25T09:48:10.261613+01:00</created>
+			<updated>2026-11-25T09:48:10.261625+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-constraint-condition"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-25T09:48:10.243146+01:00</created>
+			<updated>2026-11-25T09:48:10.243154+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>3</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>rate of change of infectious in the SIS model (rate of change of infectious individuals in the continuous-time SIS model)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>mardi:Q6674293</external_id>
+			<created>2026-11-25T09:48:10.261613+01:00</created>
+			<updated>2026-11-25T09:48:10.261625+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-coupling-condition"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-25T09:48:10.243146+01:00</created>
+			<updated>2026-11-25T09:48:10.243154+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>4</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>MaRDMO synthetic formula D (synthetic formula D of the MaRDMO tests)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>user:6d825fe7-5b61-4619-a965-9f6364373b38</external_id>
+			<created>2026-11-25T09:48:10.261613+01:00</created>
+			<updated>2026-11-25T09:48:10.261625+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-initial-condition"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-25T09:48:10.243146+01:00</created>
+			<updated>2026-11-25T09:48:10.243154+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>5</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>MaRDMO synthetic formula B (synthetic formula B of the MaRDMO tests)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>user:d18f3010-2a53-4abc-8d41-999fd57d5c05</external_id>
+			<created>2026-11-25T09:48:10.261613+01:00</created>
+			<updated>2026-11-25T09:48:10.261625+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmo.mardi4nfdi.de/terms/options/mathmoddb/contains-final-condition"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-25T09:48:10.243146+01:00</created>
+			<updated>2026-11-25T09:48:10.243154+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
+			<set_index>6</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>MaRDMO synthetic formula C (synthetic formula C of the MaRDMO tests)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id>user:96e1aedf-b0d9-4e13-ac9b-f66def472319</external_id>
+			<created>2026-11-25T09:48:10.261613+01:00</created>
+			<updated>2026-11-25T09:48:10.261625+01:00</updated>
+		</value>
+		<value>
 			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation"/>
 			<set_prefix/>
 			<set_index>0</set_index>
@@ -350,9 +575,9 @@
 			<updated>2026-11-25T09:48:19.625687+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>0</set_index>
+			<set_index>7</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>MaRDMO synthetic formula B (synthetic formula B of the MaRDMO tests)</text>
@@ -365,9 +590,9 @@
 			<updated>2026-11-25T09:48:10.261625+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>1</set_index>
+			<set_index>8</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>MaRDMO synthetic formula C (synthetic formula C of the MaRDMO tests)</text>
@@ -380,9 +605,9 @@
 			<updated>2026-11-25T09:48:10.287845+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>2</set_index>
+			<set_index>9</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>MaRDMO synthetic formula B (synthetic formula B of the MaRDMO tests)</text>
@@ -395,9 +620,9 @@
 			<updated>2026-11-25T09:48:10.313860+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>3</set_index>
+			<set_index>10</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>rate of change of infectious in the SIS model (rate of change of infectious individuals in the continuous-time SIS model)</text>
@@ -410,9 +635,9 @@
 			<updated>2026-11-25T09:48:10.334847+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>4</set_index>
+			<set_index>11</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>rate of change of infectious in the SIS model (rate of change of infectious individuals in the continuous-time SIS model)</text>
@@ -425,9 +650,9 @@
 			<updated>2026-11-25T09:48:10.355986+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>5</set_index>
+			<set_index>12</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>MaRDMO synthetic formula B (synthetic formula B of the MaRDMO tests)</text>
@@ -440,9 +665,9 @@
 			<updated>2026-11-25T09:48:10.381507+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>6</set_index>
+			<set_index>13</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>MaRDMO synthetic formula C (synthetic formula C of the MaRDMO tests)</text>
@@ -455,9 +680,9 @@
 			<updated>2026-11-25T09:48:10.406951+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>7</set_index>
+			<set_index>14</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>MaRDMO synthetic formula B (synthetic formula B of the MaRDMO tests)</text>
@@ -470,9 +695,9 @@
 			<updated>2026-11-25T09:48:10.432770+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>8</set_index>
+			<set_index>15</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>MaRDMO synthetic formula B (synthetic formula B of the MaRDMO tests)</text>
@@ -485,9 +710,9 @@
 			<updated>2026-11-25T09:48:10.461001+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>9</set_index>
+			<set_index>16</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>rate of change of infectious in the SIS model (rate of change of infectious individuals in the continuous-time SIS model)</text>
@@ -500,9 +725,9 @@
 			<updated>2026-11-25T09:48:10.481980+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>10</set_index>
+			<set_index>17</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>stationary Navier-Stokes equations (stationary limit of the Navier-Stokes equations)</text>
@@ -515,7 +740,7 @@
 			<updated>2026-11-25T09:48:12.158965+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>1</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
@@ -530,7 +755,7 @@
 			<updated>2026-11-25T09:48:12.184864+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>2</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
@@ -545,7 +770,7 @@
 			<updated>2026-11-25T09:48:19.605864+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>8</set_prefix>
 			<set_index>0</set_index>
 			<set_collection/>
@@ -560,9 +785,9 @@
 			<updated>2026-11-25T09:49:34.338926+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>0</set_index>
+			<set_index>7</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -575,9 +800,9 @@
 			<updated>2026-11-25T09:48:10.243154+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>1</set_index>
+			<set_index>8</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -590,9 +815,9 @@
 			<updated>2026-11-25T09:48:10.268110+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>2</set_index>
+			<set_index>9</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -605,9 +830,9 @@
 			<updated>2026-11-25T09:48:10.294293+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>3</set_index>
+			<set_index>10</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -620,9 +845,9 @@
 			<updated>2026-11-25T09:48:10.320419+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>4</set_index>
+			<set_index>11</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -635,9 +860,9 @@
 			<updated>2026-11-25T09:48:10.341205+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>5</set_index>
+			<set_index>12</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -650,9 +875,9 @@
 			<updated>2026-11-25T09:48:10.362319+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>6</set_index>
+			<set_index>13</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -665,9 +890,9 @@
 			<updated>2026-11-25T09:48:10.388285+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>7</set_index>
+			<set_index>14</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -680,9 +905,9 @@
 			<updated>2026-11-25T09:48:10.413300+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>8</set_index>
+			<set_index>15</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -695,9 +920,9 @@
 			<updated>2026-11-25T09:48:10.439236+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>9</set_index>
+			<set_index>16</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -710,9 +935,9 @@
 			<updated>2026-11-25T09:48:10.467394+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>10</set_index>
+			<set_index>17</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -725,7 +950,7 @@
 			<updated>2026-11-25T09:48:10.488888+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>1</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
@@ -740,7 +965,7 @@
 			<updated>2026-11-25T09:48:12.165397+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>2</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
@@ -755,7 +980,7 @@
 			<updated>2026-11-25T09:48:19.589578+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>8</set_prefix>
 			<set_index>0</set_index>
 			<set_collection/>

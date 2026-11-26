@@ -283,33 +283,17 @@
             "set_index": true,
             "external_id": true
         },
-        "MF2MF": {
-            "key1": "formulation",
-            "key2": "MF2MF",
-            "uri": "domain/formulation/formulation-relation-1",
-            "set_prefix": true,
-            "set_index": true
-        },
-        "MFRelatant": {
-            "key1": "formulation",
-            "key2": "MFRelatant",
-            "uri": "domain/formulation/formulation-relatant-1",
-            "set_prefix": true,
-            "set_index": true,
-            "collection_index": true,
-            "external_id": true
-        },
         "IntraClassRelation": {
             "key1": "formulation",
             "key2": "IntraClassRelation",
-            "uri": "domain/formulation/formulation-relation-2",
+            "uri": "domain/formulation/formulation-relation",
             "set_prefix": true,
             "set_index": true
         },
         "IntraClassElement": {
             "key1": "formulation",
             "key2": "IntraClassElement",
-            "uri": "domain/formulation/formulation-relatant-2",
+            "uri": "domain/formulation/formulation-relatant",
             "set_prefix": true,
             "set_index": true,
             "collection_index": true,

@@ -35,7 +35,7 @@ REGISTRATION = Registration(
         ('Mathematical Model', 'Assumption'),
         ('Task', 'Assumption'),
         ('Mathematical Formulation', 'Assumption'),
-        ('Mathematical Formulation', 'MFRelatant'),
+        ('Mathematical Formulation', 'IntraClassElement'),
         ('Research Problem', 'RFRelatant'),
         ('Mathematical Model', 'RPRelatant'),
         ('Mathematical Model', 'TRelatant'),

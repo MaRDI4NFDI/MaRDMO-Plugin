@@ -32,7 +32,7 @@ msgstr "Programmiersprache"
 msgid "Missing Reference"
 msgstr "Referenz fehlt"
 
-#: MaRDMO/algorithm/checks.py:169 MaRDMO/algorithm/checks.py:177 MaRDMO/algorithm/checks.py:182 MaRDMO/core/constants.py:47 MaRDMO/export/checks.py:575 MaRDMO/export/checks.py:582 MaRDMO/export/checks.py:588 MaRDMO/export/success.py:31 MaRDMO/model/checks.py:523 MaRDMO/workflow/checks.py:387 MaRDMO/workflow/checks.py:395 MaRDMO/workflow/checks.py:403 MaRDMO/workflow/checks.py:408 MaRDMO/workflow/constants.py:27
+#: MaRDMO/algorithm/checks.py:169 MaRDMO/algorithm/checks.py:177 MaRDMO/algorithm/checks.py:182 MaRDMO/core/constants.py:47 MaRDMO/export/checks.py:575 MaRDMO/export/checks.py:582 MaRDMO/export/checks.py:588 MaRDMO/export/success.py:31 MaRDMO/model/checks.py:516 MaRDMO/workflow/checks.py:387 MaRDMO/workflow/checks.py:395 MaRDMO/workflow/checks.py:403 MaRDMO/workflow/checks.py:408 MaRDMO/workflow/constants.py:27
 msgid "Publication"
 msgstr "Publikation"
 
@@ -194,15 +194,15 @@ msgstr "Mathematisches Modell"
 msgid "Computational Task"
 msgstr "Berechnungsaufgabe"
 
-#: MaRDMO/core/constants.py:41 MaRDMO/export/success.py:27 MaRDMO/model/checks.py:183 MaRDMO/model/checks.py:234 MaRDMO/model/checks.py:287 MaRDMO/model/checks.py:292 MaRDMO/model/checks.py:299 MaRDMO/model/checks.py:307 MaRDMO/model/checks.py:315 MaRDMO/model/checks.py:316 MaRDMO/model/checks.py:319 MaRDMO/model/checks.py:324 MaRDMO/model/checks.py:326 MaRDMO/model/checks.py:327 MaRDMO/model/checks.py:328 MaRDMO/model/checks.py:334
+#: MaRDMO/core/constants.py:41 MaRDMO/export/success.py:27 MaRDMO/model/checks.py:183 MaRDMO/model/checks.py:234 MaRDMO/model/checks.py:287 MaRDMO/model/checks.py:292 MaRDMO/model/checks.py:299 MaRDMO/model/checks.py:307 MaRDMO/model/checks.py:315 MaRDMO/model/checks.py:316 MaRDMO/model/checks.py:319 MaRDMO/model/checks.py:324 MaRDMO/model/checks.py:326 MaRDMO/model/checks.py:327 MaRDMO/model/checks.py:328
 msgid "Formula"
 msgstr "Formel"
 
-#: MaRDMO/core/constants.py:42 MaRDMO/model/checks.py:354 MaRDMO/model/checks.py:359 MaRDMO/model/checks.py:361 MaRDMO/model/checks.py:365 MaRDMO/model/checks.py:367 MaRDMO/model/checks.py:371 MaRDMO/model/checks.py:378 MaRDMO/model/checks.py:383 MaRDMO/model/checks.py:386 MaRDMO/model/checks.py:390 MaRDMO/model/checks.py:393 MaRDMO/model/checks.py:395 MaRDMO/model/checks.py:396 MaRDMO/model/checks.py:397
+#: MaRDMO/core/constants.py:42 MaRDMO/model/checks.py:347 MaRDMO/model/checks.py:352 MaRDMO/model/checks.py:354 MaRDMO/model/checks.py:358 MaRDMO/model/checks.py:360 MaRDMO/model/checks.py:364 MaRDMO/model/checks.py:371 MaRDMO/model/checks.py:376 MaRDMO/model/checks.py:379 MaRDMO/model/checks.py:383 MaRDMO/model/checks.py:386 MaRDMO/model/checks.py:388 MaRDMO/model/checks.py:389 MaRDMO/model/checks.py:390
 msgid "Quantity [Kind]"
 msgstr "Quantität [-sart]"
 
-#: MaRDMO/core/constants.py:43 MaRDMO/export/success.py:30 MaRDMO/model/checks.py:452 MaRDMO/model/checks.py:474 MaRDMO/workflow/checks.py:113
+#: MaRDMO/core/constants.py:43 MaRDMO/export/success.py:30 MaRDMO/model/checks.py:445 MaRDMO/model/checks.py:467 MaRDMO/workflow/checks.py:113
 msgid "Academic Discipline"
 msgstr "Akademische Disziplin"
 
@@ -539,11 +539,11 @@ msgstr "Folgende Punkte haben den Export verhindert:"
 msgid "{section} (Page {tab}): {message}"
 msgstr "{section} (Seite {tab}): {message}"
 
-#: MaRDMO/export/success.py:27 MaRDMO/model/checks.py:163 MaRDMO/model/checks.py:443 MaRDMO/model/checks.py:451 MaRDMO/model/constants.py:73
+#: MaRDMO/export/success.py:27 MaRDMO/model/checks.py:163 MaRDMO/model/checks.py:436 MaRDMO/model/checks.py:444 MaRDMO/model/constants.py:73
 msgid "Research Problem"
 msgstr "Forschungsproblem"
 
-#: MaRDMO/export/success.py:28 MaRDMO/model/checks.py:265 MaRDMO/model/checks.py:404 MaRDMO/model/checks.py:410 MaRDMO/model/checks.py:417 MaRDMO/model/checks.py:423 MaRDMO/templates/MaRDMO/partials/_in_defining_formula.html:15 MaRDMO/data/mathmoddb.json
+#: MaRDMO/export/success.py:28 MaRDMO/model/checks.py:265 MaRDMO/model/checks.py:397 MaRDMO/model/checks.py:403 MaRDMO/model/checks.py:410 MaRDMO/model/checks.py:416 MaRDMO/templates/MaRDMO/partials/_in_defining_formula.html:15 MaRDMO/data/mathmoddb.json
 msgid "Quantity"
 msgstr "Quantität"
 
@@ -743,63 +743,63 @@ msgstr "Formelsymbol fehlt"
 msgid "Missing Formula Quantity"
 msgstr "Quantität des Formelsymbols fehlt"
 
-#: MaRDMO/model/checks.py:354
+#: MaRDMO/model/checks.py:347
 msgid "Missing Quantity [Kind] Class"
 msgstr "Klasse der Quantität [-sart] fehlt"
 
-#: MaRDMO/model/checks.py:359
+#: MaRDMO/model/checks.py:352
 msgid "QUDT Quantity Kind ID selected, but no ID provided!"
 msgstr "QUDT-Quantitätsart-ID ausgewählt, aber keine ID angegeben!"
 
-#: MaRDMO/model/checks.py:362
+#: MaRDMO/model/checks.py:355
 msgid "Invalid QUDT Quantity Kind ID format: \"{value}\""
 msgstr "Ungültiges Format der QUDT-Quantitätsart-ID: \"{value}\""
 
-#: MaRDMO/model/checks.py:365
+#: MaRDMO/model/checks.py:358
 msgid "QUDT Constant ID selected, but no ID provided!"
 msgstr "QUDT-Konstanten-ID ausgewählt, aber keine ID angegeben!"
 
-#: MaRDMO/model/checks.py:368
+#: MaRDMO/model/checks.py:361
 msgid "Invalid QUDT Constant ID format: \"{value}\""
 msgstr "Ungültiges Format der QUDT-Konstanten-ID: \"{value}\""
 
-#: MaRDMO/model/checks.py:372
+#: MaRDMO/model/checks.py:365
 msgid "QUDT Quantity Kind ID limited to Quantity Kinds!"
 msgstr "Die QUDT-Quantitätsart-ID gibt es nur für Quantitätsarten!"
 
-#: MaRDMO/model/checks.py:379
+#: MaRDMO/model/checks.py:372
 msgid "QUDT Constant ID limited to Quantities!"
 msgstr "Die QUDT-Konstanten-ID gibt es nur für Quantitäten!"
 
-#: MaRDMO/model/checks.py:387
+#: MaRDMO/model/checks.py:380
 msgid "Inconsistent Quantity Definition (missing \\equiv)"
 msgstr "Widersprüchliche Definition der Quantität (\\equiv fehlt)"
 
-#: MaRDMO/model/checks.py:390
+#: MaRDMO/model/checks.py:383
 msgid "Missing Quantity Definition Element Information"
 msgstr "Angaben zu den Symbolen der Quantitätsdefinition fehlen"
 
-#: MaRDMO/model/checks.py:393
+#: MaRDMO/model/checks.py:386
 msgid "Missing Quantity Definition Symbol"
 msgstr "Symbol der Quantitätsdefinition fehlt"
 
-#: MaRDMO/model/checks.py:395
+#: MaRDMO/model/checks.py:388
 msgid "Missing Quantity Definition Quantity"
 msgstr "Quantität eines Symbols der Quantitätsdefinition fehlt"
 
-#: MaRDMO/model/checks.py:503
+#: MaRDMO/model/checks.py:496
 msgid "The TeX check of the MaRDI Portal did not answer for some formulas."
 msgstr "Die TeX-Prüfung des MaRDI Portals hat für einige Formeln nicht geantwortet."
 
-#: MaRDMO/model/checks.py:524
+#: MaRDMO/model/checks.py:517
 msgid "Mathematical Model Entity"
 msgstr "Entität des mathematischen Modells"
 
-#: MaRDMO/model/symbols.py:263
+#: MaRDMO/model/symbols.py:331
 msgid "Symbol \"{symbol}\" stands for different quantities in this documentation (cf. pages {tabs}): enter it in this table too"
 msgstr "Symbol \"{symbol}\" steht in dieser Dokumentation für verschiedene Quantitäten (vgl. Seiten {tabs}): tragen Sie es auch in diese Tabelle ein"
 
-#: MaRDMO/model/symbols.py:269
+#: MaRDMO/model/symbols.py:337
 msgid "No symbol table defines {symbols}: if they stand for quantities, enter them in this table"
 msgstr "Keine Symboltabelle definiert {symbols}: wenn sie für Quantitäten stehen, tragen Sie sie in diese Tabelle ein"
 
@@ -1393,6 +1393,14 @@ msgstr "Projekt"
 msgid "new"
 msgstr "neu"
 
+#: MaRDMO/templates/MaRDMO/partials/_math_preview.html:15
+msgid "MathJax cannot show this formula:"
+msgstr "MathJax kann diese Formel nicht darstellen:"
+
+#: MaRDMO/templates/MaRDMO/partials/_math_preview.html:16
+msgid "The MaRDI Portal does not accept this formula:"
+msgstr "Das MaRDI Portal akzeptiert diese Formel nicht:"
+
 #: MaRDMO/templates/MaRDMO/partials/_mathjax_errors.html:5
 msgid "FORMULA CANNOT BE DISPLAYED"
 msgstr "FORMEL KANN NICHT ANGEZEIGT WERDEN"
@@ -1600,7 +1608,7 @@ msgstr "KEINE SOFTWARE DOKUMENTIERT"
 msgid "NO BENCHMARK DOCUMENTED"
 msgstr "KEIN BENCHMARK DOKUMENTIERT"
 
-#: MaRDMO/templates/MaRDMO/preview_algorithm.html:103 MaRDMO/templates/MaRDMO/preview_model.html:117 MaRDMO/templates/MaRDMO/preview_model_basics.html:97 MaRDMO/templates/MaRDMO/preview_workflow.html:219
+#: MaRDMO/templates/MaRDMO/preview_algorithm.html:103 MaRDMO/templates/MaRDMO/preview_model.html:114 MaRDMO/templates/MaRDMO/preview_model_basics.html:97 MaRDMO/templates/MaRDMO/preview_workflow.html:219
 msgid "Publications"
 msgstr "Publikationen"
 
@@ -1608,7 +1616,7 @@ msgstr "Publikationen"
 msgid "Benchmarks or Software"
 msgstr "Benchmarks oder Software"
 
-#: MaRDMO/templates/MaRDMO/preview_algorithm.html:127 MaRDMO/templates/MaRDMO/preview_model.html:138 MaRDMO/templates/MaRDMO/preview_model_basics.html:122 MaRDMO/templates/MaRDMO/preview_workflow.html:246
+#: MaRDMO/templates/MaRDMO/preview_algorithm.html:127 MaRDMO/templates/MaRDMO/preview_model.html:135 MaRDMO/templates/MaRDMO/preview_model_basics.html:122 MaRDMO/templates/MaRDMO/preview_workflow.html:246
 msgid "NO PUBLICATION DOCUMENTED"
 msgstr "KEINE PUBLIKATION DOKUMENTIERT"
 
@@ -1616,7 +1624,7 @@ msgstr "KEINE PUBLIKATION DOKUMENTIERT"
 msgid "Mathematical Models"
 msgstr "Mathematische Modelle"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:25 MaRDMO/templates/MaRDMO/preview_model.html:168 MaRDMO/templates/MaRDMO/preview_model_basics.html:19 MaRDMO/templates/MaRDMO/preview_model_basics.html:125
+#: MaRDMO/templates/MaRDMO/preview_model.html:25 MaRDMO/templates/MaRDMO/preview_model.html:165 MaRDMO/templates/MaRDMO/preview_model_basics.html:19 MaRDMO/templates/MaRDMO/preview_model_basics.html:125
 msgid "Research Problems"
 msgstr "Forschungsprobleme"
 
@@ -1624,7 +1632,7 @@ msgstr "Forschungsprobleme"
 msgid "models"
 msgstr "modelliert"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:28 MaRDMO/templates/MaRDMO/preview_model.html:64 MaRDMO/templates/MaRDMO/preview_model.html:78 MaRDMO/templates/MaRDMO/preview_model_basics.html:22 MaRDMO/templates/MaRDMO/preview_model_basics.html:52 MaRDMO/templates/MaRDMO/preview_model_basics.html:63 MaRDMO/templates/MaRDMO/preview_model_basics.html:89
+#: MaRDMO/templates/MaRDMO/preview_model.html:28 MaRDMO/templates/MaRDMO/preview_model.html:64 MaRDMO/templates/MaRDMO/preview_model.html:78 MaRDMO/templates/MaRDMO/preview_model.html:106 MaRDMO/templates/MaRDMO/preview_model_basics.html:22 MaRDMO/templates/MaRDMO/preview_model_basics.html:52 MaRDMO/templates/MaRDMO/preview_model_basics.html:63 MaRDMO/templates/MaRDMO/preview_model_basics.html:89
 msgid "Formulas"
 msgstr "Formeln"
 
@@ -1640,7 +1648,7 @@ msgstr "verwendet von"
 msgid "NO MODEL DOCUMENTED"
 msgstr "KEIN MODELL DOKUMENTIERT"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:67 MaRDMO/templates/MaRDMO/preview_model.html:198
+#: MaRDMO/templates/MaRDMO/preview_model.html:67 MaRDMO/templates/MaRDMO/preview_model.html:195
 msgid "Quantities / Quantity Kinds"
 msgstr "Quantitäten / Quantitätsarten"
 
@@ -1648,80 +1656,72 @@ msgstr "Quantitäten / Quantitätsarten"
 msgid "NO TASK DOCUMENTED"
 msgstr "KEINE AUFGABE DOKUMENTIERT"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:106
-msgid "Formulas I"
-msgstr "Formeln I"
-
-#: MaRDMO/templates/MaRDMO/preview_model.html:109
-msgid "Formulas II"
-msgstr "Formeln II"
-
-#: MaRDMO/templates/MaRDMO/preview_model.html:114 MaRDMO/templates/MaRDMO/preview_model_basics.html:94
+#: MaRDMO/templates/MaRDMO/preview_model.html:111 MaRDMO/templates/MaRDMO/preview_model_basics.html:94
 msgid "NO FORMULA DOCUMENTED"
 msgstr "KEINE FORMEL DOKUMENTIERT"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:133 MaRDMO/templates/MaRDMO/preview_model_basics.html:117
+#: MaRDMO/templates/MaRDMO/preview_model.html:130 MaRDMO/templates/MaRDMO/preview_model_basics.html:117
 msgid "Entities of the Mathematical Models"
 msgstr "Entitäten der mathematischen Modelle"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:141 MaRDMO/templates/MaRDMO/preview_model.html:187 MaRDMO/templates/MaRDMO/preview_workflow.html:85
+#: MaRDMO/templates/MaRDMO/preview_model.html:138 MaRDMO/templates/MaRDMO/preview_model.html:184 MaRDMO/templates/MaRDMO/preview_workflow.html:85
 msgid "Academic Disciplines"
 msgstr "Akademische Disziplinen"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:160
+#: MaRDMO/templates/MaRDMO/preview_model.html:157
 msgid "other Academic Disciplines"
 msgstr "andere akademische Disziplinen"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:165
+#: MaRDMO/templates/MaRDMO/preview_model.html:162
 msgid "NO ACADEMIC DISCIPLINE DOCUMENTED"
 msgstr "KEINE AKADEMISCHE DISZIPLIN DOKUMENTIERT"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:187
+#: MaRDMO/templates/MaRDMO/preview_model.html:184
 msgid "contained in Field"
 msgstr "enthalten in Disziplin"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:190 MaRDMO/templates/MaRDMO/preview_model_basics.html:138
+#: MaRDMO/templates/MaRDMO/preview_model.html:187 MaRDMO/templates/MaRDMO/preview_model_basics.html:138
 msgid "other Research Problems"
 msgstr "andere Forschungsprobleme"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:195
+#: MaRDMO/templates/MaRDMO/preview_model.html:192
 msgid "NO RESEARCH PROBLEM DOCUMENTED"
 msgstr "KEIN FORSCHUNGSPROBLEM DOKUMENTIERT"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:213
+#: MaRDMO/templates/MaRDMO/preview_model.html:210
 msgid "Class"
 msgstr "Klasse"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:217
+#: MaRDMO/templates/MaRDMO/preview_model.html:214
 msgid "QUDT Quantity Kind ID"
 msgstr "QUDT-Quantitätsart-ID"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:219
+#: MaRDMO/templates/MaRDMO/preview_model.html:216
 msgid "QUDT Constant ID"
 msgstr "QUDT-Konstanten-ID"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:232
+#: MaRDMO/templates/MaRDMO/preview_model.html:229
 #, python-format
 msgid "Definition of %(kind)s"
 msgstr "Definition von %(kind)s"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:245
+#: MaRDMO/templates/MaRDMO/preview_model.html:242
 msgid "other Quantities"
 msgstr "andere Quantitäten"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:248
+#: MaRDMO/templates/MaRDMO/preview_model.html:245
 msgid "Quantity Kinds"
 msgstr "Quantitätsarten"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:253
+#: MaRDMO/templates/MaRDMO/preview_model.html:250
 msgid "other Quantity Kinds"
 msgstr "andere Quantitätsarten"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:256
+#: MaRDMO/templates/MaRDMO/preview_model.html:253
 msgid "Quantities"
 msgstr "Quantitäten"
 
-#: MaRDMO/templates/MaRDMO/preview_model.html:262
+#: MaRDMO/templates/MaRDMO/preview_model.html:259
 msgid "NO QUANTITY / QUANTITY KIND DOCUMENTED"
 msgstr "KEINE QUANTITÄT / QUANTITÄTSART DOKUMENTIERT"
 
@@ -1909,14 +1909,6 @@ msgstr "Mehr als %(limit)s gefunden; die ersten %(limit)s werden angezeigt, alph
 #: MaRDMO/templates/MaRDMO/search_results.html:19
 msgid "Found with the SPARQL query of the preview, in alphabetical order."
 msgstr "Gefunden mit der SPARQL-Abfrage der Vorschau, alphabetisch geordnet."
-
-#: MaRDMO/templates/projects/project_interview.html:20
-msgid "MathJax cannot show this formula:"
-msgstr "MathJax kann diese Formel nicht darstellen:"
-
-#: MaRDMO/templates/projects/project_interview.html:21
-msgid "The MaRDI Portal does not accept this formula:"
-msgstr "Das MaRDI Portal akzeptiert diese Formel nicht:"
 
 #: MaRDMO/data/mathmoddb.json
 msgid "approximates"

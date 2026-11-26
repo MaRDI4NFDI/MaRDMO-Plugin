@@ -408,13 +408,6 @@ class PrepareModel(CatalogExport):
 
             payload.add_multiple_relation(
                 statement = {
-                    'relation': "MF2MF",
-                    'relatant': "MFRelatant"
-                }
-            )
-
-            payload.add_multiple_relation(
-                statement = {
                     'relation': "IntraClassRelation",
                     'relatant': "IntraClassElement"
                 },

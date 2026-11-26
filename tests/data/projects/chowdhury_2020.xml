@@ -2550,8 +2550,8 @@
 			<updated>2026-11-06T11:30:25.873847+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>0|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -2565,8 +2565,8 @@
 			<updated>2026-11-06T08:23:06.791930+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>0|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>1</collection_index>
@@ -2580,8 +2580,8 @@
 			<updated>2026-11-06T08:24:09.703592+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>11|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>11</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -2595,8 +2595,8 @@
 			<updated>2026-11-06T15:04:21.769285+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>3|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>3</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -2610,8 +2610,8 @@
 			<updated>2026-11-06T10:12:07.138085+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>3|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>3</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>1</collection_index>
@@ -2625,8 +2625,8 @@
 			<updated>2026-11-06T10:13:29.264905+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>3|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>3</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>2</collection_index>
@@ -2640,8 +2640,8 @@
 			<updated>2026-11-06T10:14:30.789270+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-1"/>
-			<set_prefix>0|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>0</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -2655,8 +2655,8 @@
 			<updated>2026-11-06T08:22:17.496202+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-1"/>
-			<set_prefix>11|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>11</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -2670,8 +2670,8 @@
 			<updated>2026-11-06T15:00:16.488054+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-1"/>
-			<set_prefix>3|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>3</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>

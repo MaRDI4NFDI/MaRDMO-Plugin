@@ -46,6 +46,15 @@ def describe(doc):
     wave = doc.tab('formulation', 'F6', WAVE_EQUATION)
     if not wave.answered('reference'):
         wave.answer('reference', 'The second time derivative equals the squared speed times the Laplacian.')
+    # Formulas in formulas (assumptions, boundary conditions, ...): one block with the relations below (#213)
+    for relation, relatants in (('assumes', [formulas['B']]), ('contains', [formulas['C'], SIS_INFECTIOUS]),
+                                ('contains-boundary-condition', [formulas['D']]),
+                                ('contains-constraint-condition', [SIS_INFECTIOUS]),
+                                ('contains-coupling-condition', [formulas['D']]),
+                                ('contains-initial-condition', [formulas['B']]),
+                                ('contains-final-condition', [formulas['C']])):
+        formulas['A'].block('formulation-to-formulation', {'formulation-relation': relation,
+                                                          'formulation-relatant': relatants})
     # Relations stored on the other item ("approximates" is "approximated by" there) close cycles
     # of new items (#164): A approximated by B, B specialized by C, A approximates C (A, B, C);
     # A approximated by B, A linearizes B (A, B).  The others go to the portal
@@ -55,17 +64,17 @@ def describe(doc):
                                ('linearized-by', formulas['C']), ('linearizes', formulas['B']),
                                ('nondimensionalized-by', formulas['B']), ('nondimensionalizes', SIS_INFECTIOUS),
                                ('similar-to', STATIONARY_NAVIER_STOKES)):
-        formulas['A'].block('formulation-to-formulation-basics', {'formulation-relation-2': relation,
-                                                                 'formulation-relatant-2': [relatant]})
+        formulas['A'].block('formulation-to-formulation', {'formulation-relation': relation,
+                                                                 'formulation-relatant': [relatant]})
     typed_formula = Typed('MaRDMO synthetic formula typed')
-    formulas['B'].block('formulation-to-formulation-basics', {
-        'formulation-relation-2': 'specialized-by', 'formulation-relatant-2': [formulas['C']],
+    formulas['B'].block('formulation-to-formulation', {
+        'formulation-relation': 'specialized-by', 'formulation-relatant': [formulas['C']],
         'formulation-assumption': [formulas['D'], WAVE_EQUATION, SIS_INFECTIOUS, typed_formula]})
     typed = doc.find('formulation', typed_formula)
     typed.answer('description', 'synthetic formula typed into a relation')
     typed.answer('reference', 'a equals c')
-    formulas['C'].block('formulation-to-formulation-basics', {
-        'formulation-relation-2': 'specializes', 'formulation-relatant-2': [SIS_INFECTIOUS],
+    formulas['C'].block('formulation-to-formulation', {
+        'formulation-relation': 'specializes', 'formulation-relatant': [SIS_INFECTIOUS],
         'formulation-assumption': [formulas['D']]})
 
     # --- Computational tasks ---------------------------------------------------------------

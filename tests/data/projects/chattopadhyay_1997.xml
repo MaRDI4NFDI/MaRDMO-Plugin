@@ -3487,7 +3487,7 @@
 		<value>
 			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-assumption"/>
 			<set_prefix>0</set_prefix>
-			<set_index>0</set_index>
+			<set_index>1</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>no predation on sound prey (predation coefficient of sound prey is zero)</text>
@@ -3500,8 +3500,8 @@
 			<updated>2026-11-17T13:39:54.895978+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>0|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -3515,8 +3515,8 @@
 			<updated>2026-11-17T13:39:54.900556+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>0|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>1</collection_index>
@@ -3530,8 +3530,8 @@
 			<updated>2026-11-17T13:39:54.905083+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>0|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>0</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>2</collection_index>
@@ -3545,8 +3545,8 @@
 			<updated>2026-11-17T13:39:54.909609+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>11|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>11</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -3560,8 +3560,8 @@
 			<updated>2026-11-17T13:39:54.914409+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>11|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>11</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>1</collection_index>
@@ -3575,8 +3575,8 @@
 			<updated>2026-11-17T13:39:54.919816+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>4|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>4</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -3590,8 +3590,8 @@
 			<updated>2026-11-17T13:39:54.924362+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>4|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>4</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>1</collection_index>
@@ -3605,8 +3605,8 @@
 			<updated>2026-11-17T13:39:54.928974+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-1"/>
-			<set_prefix>4|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
+			<set_prefix>4</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>2</collection_index>
@@ -3620,9 +3620,9 @@
 			<updated>2026-11-17T13:39:54.933638+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>0</set_prefix>
-			<set_index>0</set_index>
+			<set_index>1</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>predator-prey with disease in prey ODE system (predation on infected prey only) (system of ordinary differential equations describing the interaction of sound prey, infected prey, and predators)</text>
@@ -3635,9 +3635,9 @@
 			<updated>2026-11-17T13:39:54.938625+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relatant"/>
 			<set_prefix>11</set_prefix>
-			<set_index>0</set_index>
+			<set_index>1</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>predator-prey with disease in prey ODE system (predation on infected prey only) (system of ordinary differential equations describing the interaction of sound prey, infected prey, and predators)</text>
@@ -3650,8 +3650,8 @@
 			<updated>2026-11-17T13:39:54.943717+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-1"/>
-			<set_prefix>0|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>0</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -3665,8 +3665,8 @@
 			<updated>2026-11-17T13:39:54.948275+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-1"/>
-			<set_prefix>11|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>11</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -3680,8 +3680,8 @@
 			<updated>2026-11-17T13:39:54.952891+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-1"/>
-			<set_prefix>4|0</set_prefix>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
+			<set_prefix>4</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
@@ -3695,9 +3695,9 @@
 			<updated>2026-11-17T13:39:54.957437+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>0</set_prefix>
-			<set_index>0</set_index>
+			<set_index>1</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>
@@ -3710,9 +3710,9 @@
 			<updated>2026-11-17T13:39:54.961628+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation-2"/>
+			<attribute dc:uri="https://rdmo.mardi4nfdi.de/terms/domain/formulation/formulation-relation"/>
 			<set_prefix>11</set_prefix>
-			<set_index>0</set_index>
+			<set_index>1</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text/>

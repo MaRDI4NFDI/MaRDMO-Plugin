@@ -283,7 +283,7 @@ class ModelChecks(ChecksBase):
             self._check_flexible(
                 data       = ivalue,
                 page_name  = page_name,
-                relation   = 'RelationMF2',
+                relation   = 'RelationMF',
                 from_class =N_('Formula')
             )
 
@@ -294,20 +294,20 @@ class ModelChecks(ChecksBase):
 
             if any(
                 not mval.get('assumption')
-                for mval in self._specializations(ivalue.get('RelationMF2', {}))
+                for mval in self._specializations(ivalue.get('RelationMF', {}))
             ):
-                self._missing(N_('Formula'), page_name, _('Missing Assumption (Formula Specialization)'), 'RelationMF2')
+                self._missing(N_('Formula'), page_name, _('Missing Assumption (Formula Specialization)'), 'RelationMF')
 
             if any(
                 without_page((mval.get('assumption') or {}).values())
-                for mval in self._specializations(ivalue.get('RelationMF2', {}))
+                for mval in self._specializations(ivalue.get('RelationMF', {}))
             ):
                 self.err.append(
                     self._error(
                         section = N_('Formula'),
                         page    = page_name,
                         message = _('Selected Formula not found in Section'),
-                        field   = 'RelationMF2'
+                        field   = 'RelationMF'
                     )
                 )
 
@@ -326,13 +326,6 @@ class ModelChecks(ChecksBase):
                     self._missing(N_('Formula'), page_name, _('Missing Formula Quantity'), 'element')
                 self._check_element_symbols(ivalue, N_('Formula'), page_name)
             self._check_symbol_uses(ivalue, N_('Formula'), page_name)
-
-            self._check_flexible(
-                data       = ivalue,
-                page_name  = page_name,
-                relation   = 'RelationMF1',
-                from_class = N_('Formula')
-            )
 
     def quantity(self, project, data, catalog):
         '''Check Quantity [Kind] documentation completeness and consistency.

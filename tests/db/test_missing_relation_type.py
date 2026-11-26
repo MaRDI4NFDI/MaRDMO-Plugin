@@ -19,7 +19,7 @@ def page(section, index, identifier, name):
 @pytest.mark.parametrize('section, relatant, name', [
     ('model', 'model/model-relatant', 'Mathematical Model'),
     ('task', 'task/task-relatant', 'Computational Task'),
-    ('formulation', 'formulation/formulation-relatant-2', 'Formula'),
+    ('formulation', 'formulation/formulation-relatant', 'Formula'),
 ])
 def test_a_missing_relation_type_is_reported(project, monkeypatch, section, relatant, name):
     monkeypatch.setattr('MaRDMO.model.worker.annotate_formulas', lambda answers: None)
