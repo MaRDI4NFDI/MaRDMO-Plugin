@@ -17,9 +17,11 @@ is read as tokens — a command, a word in ``\\text{}``/``\\mathrm{}``, a letter
 a digit, a character — and an index (``_0``, ``_{\\text{init}}``) or a star
 belongs to the symbol before it.  The longest symbol wins (``\\Delta t`` before
 ``t``, ``D_1(0)`` before ``D_1``), and ``d`` at the start of a fraction's part
-or after a thin space (``\\frac{dT}{dt}``, ``\\, dx``) is the differential.  The
-variable of a derivative is used also inside a longer symbol (the ``t`` of a
-row ``\\frac{dc}{dt}``, of ``\\partial_t``).  Upright is another symbol than
+or after a thin space (``\\frac{dT}{dt}``, ``\\, dx``) is the differential.  A
+symbol inside a longer one is used as well (the ``t`` of a row ``s(t)`` or
+``\\frac{dc}{dt}``, the ``D`` of ``\\frac{D}{h^2}``, and of ``\\partial_t``), but not
+at its start, under an accent or an operator, or in a name written in letters
+(``D_1`` of ``D_1(0)``, ``\\Delta t``, ``\\tilde{A}``, the ``o`` of ``score_{max}``).  Upright is another symbol than
 italic (``\\mathrm{i}``, the imaginary unit, and ``i``); a row that does not
 start with a symbol (``^2`` for "square") defines nothing for other formulas.
 '''
@@ -61,6 +63,10 @@ _BEFORE_DIFFERENTIAL = {'{', '(', '=', '+', '-', '&', r'\,', r'\;', r'\:', r'\!'
 # Not quantities, however written: the circle constant; operators before a symbol (\Delta x, \nabla u)
 _CONSTANTS = {r'\pi'}
 _OPERATORS = {r'\Delta', r'\nabla'}
+# What makes another symbol of the one after it, inside a longer symbol: \Delta t is not t, \tilde{A} not A
+_MODIFIERS = _OPERATORS | {'\\' + accent for accent in (
+    'hat', 'widehat', 'tilde', 'widetilde', 'bar', 'overline', 'underline', 'vec', 'overrightarrow',
+    'dot', 'ddot', 'dddot', 'check', 'breve', 'acute', 'grave', 'mathring')}
 
 
 class Token(str):
@@ -158,16 +164,29 @@ def _differential(found, index):
 
 
 def _variables(found):
-    '''The positions of the variables of the differentials and partial derivatives in *found*.
+    '''The positions and symbols of the variables of the partial derivatives in *found*.
 
-    ``t`` of ``\\frac{dc}{dt}`` and of ``\\partial_t`` is used by the formula, also
-    where the derivative is a symbol of its own (a row ``\\frac{dc}{dt}``).
+    ``t`` of ``\\partial_t`` is used by the formula, though it is the index of a token.
     '''
     for index, token in enumerate(found):
-        if _differential(found, index):
-            yield index + 1, str(found[index + 1])
-        elif _base(token) == r'\partial' and '_{' in token:
+        if _base(token) == r'\partial' and '_{' in token:
             yield index, canonical(token.split('_{', 1)[1].split('}', 1)[0])
+
+
+def _made_of(found, index, length):
+    '''Whether the symbol at *index* (*length* tokens) is a part another symbol is made of, not one it uses.
+
+    An accent or an operator stands on it (``\\Delta t``, ``\\tilde{A}``), or it
+    is a letter of a name written in letters (the ``o`` of ``score_{max}``, the
+    ``Z`` of ``RZ``); the differential before it is no letter (``\\frac{dc}{dt}``).
+    '''
+    def letter(position):
+        return 0 <= position < len(found) and bool(re.fullmatch(r'[A-Za-z]', _base(found[position])))
+    before = index - 1
+    while before >= 0 and found[before] == '{':
+        before -= 1
+    return (before >= 0 and found[before] in _MODIFIERS) or (letter(index - 1) and not _differential(found, index - 1)) \
+        or letter(index + length)
 
 
 def occurrences(symbol, tex):
@@ -253,14 +272,21 @@ def derive_symbols(answers):
                    if isinstance(element, dict) and element.get('symbol')}
             ambiguous, used = {}, {}               # used: key -> (formula, position) of its first use
             for tex in texts:
-                found, taken = tokens(tex), set()
+                found, taken, longer = tokens(tex), set(), []
                 for key in by_length:
                     length = len(key.split(' '))
                     for index in occurrences(key, tex):
                         span = set(range(index, index + length))
                         if span & taken:
-                            continue                      # part of a longer symbol
+                            # inside a longer symbol: used (the t of s(t)), not where the longer symbol is
+                            # made of it: at its start (D_1 of D_1(0)), under an accent (\Delta t), in a name (RZ)
+                            if any(span < outer and index != min(outer) for outer in longer) \
+                                    and not _made_of(found, index, length) and key not in own:
+                                used.setdefault(key, (texts.index(tex), index))
+                            continue
                         taken |= span
+                        if length > 1:
+                            longer.append(span)
                         if key not in own:
                             used.setdefault(key, (texts.index(tex), index))
                 for index, variable in _variables(found):
