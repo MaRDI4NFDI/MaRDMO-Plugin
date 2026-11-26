@@ -2,7 +2,9 @@
 
 A symbol that stands for the same quantity in all formulas of a
 documentation needs one row in one symbol table (of a formula or a quantity
-definition); every other formula that uses it gets the row derived.  A
+definition); every other formula of the user's own items that uses it gets the
+row derived (a MaRDI Portal item's table stays as the portal has it, but
+defines symbols for the others).  A
 symbol that stands for different quantities needs a row in every formula
 that uses it.  Own rows always take precedence; nothing is written to the
 project: the rows are derived each time the answers are read
@@ -15,11 +17,17 @@ is read as tokens — a command, a word in ``\\text{}``/``\\mathrm{}``, a letter
 a digit, a character — and an index (``_0``, ``_{\\text{init}}``) or a star
 belongs to the symbol before it.  The longest symbol wins (``\\Delta t`` before
 ``t``, ``D_1(0)`` before ``D_1``), and ``d`` at the start of a fraction's part
-or after a thin space (``\\frac{dT}{dt}``, ``\\, dx``) is the differential.
+or after a thin space (``\\frac{dT}{dt}``, ``\\, dx``) is the differential.  The
+variable of a derivative is used also inside a longer symbol (the ``t`` of a
+row ``\\frac{dc}{dt}``, of ``\\partial_t``).  Upright is another symbol than
+italic (``\\mathrm{i}``, the imaginary unit, and ``i``); a row that does not
+start with a symbol (``^2`` for "square") defines nothing for other formulas.
 '''
 import re
 
 from django.utils.translation import gettext as _
+
+from ..core.ids import is_portal_item
 
 # The sections whose pages have a formula and a symbol table
 SECTIONS = ('formulation', 'quantity')
@@ -34,6 +42,9 @@ _TOKEN = re.compile(r'''
   | \S
 ''', re.VERBOSE)
 # What only sets a font: left out of an index or a label (A_\text{m} is A_m)
+# A superscript that is a label, not a power: only a word in a font (C^\text{f}, C^{\rm f}),
+# not an exponent that contains one (e^{\mathrm{i} \omega t})
+_LABEL = re.compile(r'\{?\s*\\(?:text|textrm|textit|mathrm|mathit|rm)\s*(?:\{[^{}]*\}|\w+)\s*\}?')
 _WRAPPERS = re.compile(r'\\(?:text|textrm|textit|mathrm|mathit|rm)\b\s*')
 
 GREEK = {
@@ -95,7 +106,9 @@ def tokens(tex):
         text, position = match.group(), match.end()
         upright = False
         if re.match(r'\{?\s*\\(?:text|textrm|textit|mathrm|mathit|operatorname|rm)\b', text):
-            text, upright = _word(text), True
+            # Upright is another symbol than italic (\mathrm{i} the imaginary unit, i an index);
+            # in an index or a label the font does not matter (_label)
+            text, upright = r'\mathrm{' + _word(text) + '}', True
         elif text.startswith('\\') and text[1:] in _FONTS:
             spaced = position + re.match(r'\s*', raw[position:]).end()
             if spaced < len(raw):
@@ -113,7 +126,7 @@ def tokens(tex):
             group, end = _group(raw, spaced + 1 + re.match(r'\s*', raw[spaced + 1:]).end()) \
                 if spaced + 1 < len(raw) else ('', spaced + 1)
             label = _label(group)
-            if mark == '^' and not (label in ('*', r'\ast', r'\star', r'\prime') or _WRAPPERS.search(group)):
+            if mark == '^' and not (label in ('*', r'\ast', r'\star', r'\prime') or _LABEL.fullmatch(group.strip())):
                 break                                     # a power: not part of the symbol
             if mark == '_':
                 sub = label
@@ -132,16 +145,29 @@ def _base(token):
 def is_symbol(token):
     '''Whether *token* can be a quantity's symbol: a letter or a Greek letter (with index), a font command.'''
     base = _base(token)
-    return bool(re.fullmatch(r'[A-Za-z]', base)) or base[1:] in GREEK or (
+    return bool(re.fullmatch(r'[A-Za-z]|\\mathrm\{[A-Za-z]\}', base)) or base[1:] in GREEK or (
         base.startswith('\\') and base[1:].split('{', 1)[0] in _FONTS)
 
 
 def _differential(found, index):
     '''Whether the token at *index* is the differential (``\\frac{dT}{dt}``, ``d a = c\\, dt``, ``\\mathrm{d}x``).'''
     token = found[index]
-    if token != 'd' or index + 1 >= len(found) or not is_symbol(found[index + 1]):
+    if token not in ('d', r'\mathrm{d}') or index + 1 >= len(found) or not is_symbol(found[index + 1]):
         return False
     return token.upright or index == 0 or found[index - 1] in _BEFORE_DIFFERENTIAL
+
+
+def _variables(found):
+    '''The positions of the variables of the differentials and partial derivatives in *found*.
+
+    ``t`` of ``\\frac{dc}{dt}`` and of ``\\partial_t`` is used by the formula, also
+    where the derivative is a symbol of its own (a row ``\\frac{dc}{dt}``).
+    '''
+    for index, token in enumerate(found):
+        if _differential(found, index):
+            yield index + 1, str(found[index + 1])
+        elif _base(token) == r'\partial' and '_{' in token:
+            yield index, canonical(token.split('_{', 1)[1].split('}', 1)[0])
 
 
 def occurrences(symbol, tex):
@@ -182,8 +208,21 @@ def definitions(answers):
                 if not element.get('symbol') or not isinstance(quantity, dict) or not quantity.get('ID'):
                     continue
                 key = canonical(element['symbol'])
+                if not _defines(key):
+                    continue
                 found.setdefault(key, {}).setdefault(quantity['ID'], (quantity, page.get('Tab') or page.get('Name', '')))
     return found
+
+
+def _defines(key):
+    '''Whether a row with the canonical symbol *key* defines it for other formulas.
+
+    It starts with a symbol (``T``, ``\\mathbf{x}``) or a command that makes one
+    (``\\frac``, ``\\hat``); an operator written as a row (``^2`` for "square")
+    does not: it would stand wherever something is squared.
+    '''
+    first = key.split(' ', 1)[0]
+    return is_symbol(first) or bool(re.fullmatch(r'\\[A-Za-z]+', _base(first)))
 
 
 def derive_symbols(answers):
@@ -207,8 +246,8 @@ def derive_symbols(answers):
             if not isinstance(page, dict):
                 continue
             texts = formulas_of(page)
-            if not texts:
-                continue
+            if not texts or is_portal_item(page.get('ID')):
+                continue                                  # a portal item's table stays as the portal has it
             elements = page.setdefault('element', {})
             own = {canonical(element['symbol']) for element in elements.values()
                    if isinstance(element, dict) and element.get('symbol')}
@@ -224,9 +263,12 @@ def derive_symbols(answers):
                         taken |= span
                         if key not in own:
                             used.setdefault(key, (texts.index(tex), index))
+                for index, variable in _variables(found):
+                    if variable in defined and variable not in own:
+                        used.setdefault(variable, (texts.index(tex), index))
                 for index, token in enumerate(found):
                     nxt = found[index + 1] if index + 1 < len(found) else ''
-                    exponential = token == 'e' and nxt == '^'
+                    exponential = token in ('e', r'\mathrm{e}') and nxt == '^'
                     operator = token in _OPERATORS and is_symbol(nxt)
                     if index not in taken and is_symbol(token) and not _differential(found, index) \
                             and not (exponential or operator or token in _CONSTANTS) and str(token) not in own:
