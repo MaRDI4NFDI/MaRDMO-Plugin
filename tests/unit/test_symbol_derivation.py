@@ -156,6 +156,36 @@ def test_the_variable_of_a_derivative_counts_inside_a_longer_symbol():
     assert derived(answers['formulation'][2]) == {('t', 'time', 'ODE system')}
 
 
+def test_a_symbol_inside_a_longer_symbol_is_used():
+    '''Portal models: rows ``s_m(t)`` and ``\\frac{D_A}{h^2}`` use ``t``, ``D_A`` and ``h`` all the same.'''
+    answers = {'formulation': {
+        0: page('ODE system', r'\frac{ds_m(t)}{dt} = -D_A s_m(t)', [('s_m(t)', 'susceptible'), ('t', 'time'),
+                                                                   ('D_A', 'diffusion'), ('h', 'grid width')]),
+        1: page('conservation', r'i_m(t) = P_m - s_m(t)', [('i_m(t)', 'infected'), ('P_m', 'population')]),
+        2: page('jump rate', r'd_A \equiv \frac{D_A}{h^2}', [('d_A', 'jump rate'), (r'\frac{D_A}{h^2}', 'jump rate')]),
+    }}
+    derive_symbols(answers)
+    assert derived(answers['formulation'][1]) == {('s_m(t)', 'susceptible', 'ODE system'), ('t', 'time', 'ODE system')}
+    assert derived(answers['formulation'][2]) == {('D_A', 'diffusion', 'ODE system'), ('h', 'grid width', 'ODE system')}
+
+
+@pytest.mark.parametrize('tex, row', [(r'\Delta t = 1', r'\Delta t'), (r'\tilde{A} = A^*', r'\tilde{A}'),
+                                      (r'\overline{\mathbf{A}} = 0', r'\overline{\mathbf{A}}'),
+                                      ('D_1(0) = A_G D', 'D_1(0)'), (r'y \leq score_{max}', 'score_{max}'),
+                                      (r'\frac{Z_l}{RZ}', 'RZ')])
+def test_a_symbol_the_longer_symbol_is_made_of_is_not_used(tex, row):
+    '''chowdhury_2020: ``D_1(0)``, the value at 0, is a symbol of its own; its formulas do not use ``D_1``.
+
+    The portal's ``score_{max}`` and ``RZ`` are names in letters: no ``o``, no ``Z`` in them.
+    '''
+    inner = {r'\Delta t': 't', r'\tilde{A}': 'A', r'\overline{\mathbf{A}}': r'\mathbf{A}', 'D_1(0)': 'D_1',
+             'score_{max}': 'o', 'RZ': 'Z'}[row]
+    answers = {'formulation': {0: page('a', f'{inner} = 0', [(inner, 'plain')]),
+                               1: page('b', tex, [(row, 'modified')])}}
+    derive_symbols(answers)
+    assert derived(answers['formulation'][1]) == set()
+
+
 def test_an_indexed_variant_is_another_symbol():
     '''``t_1`` is not ``t`` (portal Gramians): such a formula needs the row itself (the help says so).'''
     answers = {'formulation': {0: page('a', 't = 0', [('t', 'time')]),
@@ -170,3 +200,16 @@ def test_a_portal_item_keeps_its_table():
                                1: page('portal', 'T(t) = T_0 e^{-t}', identifier='mardi:Q1')}}
     derive_symbols(answers)
     assert derived(answers['formulation'][1]) == set() and 'SymbolsUnknown' not in answers['formulation'][1]
+
+
+def test_a_portal_item_defines_symbols_for_the_users_items():
+    '''Rows go one way: a portal formula's row comes to the user's formulas, and counts for ambiguity.'''
+    answers = {'formulation': {0: page('portal', 'x = v t', [('t', 'time')], identifier='mardi:Q1'),
+                               1: page('own', 'y = t^2', [('y', 'height')])}}
+    derive_symbols(answers)
+    assert derived(answers['formulation'][1]) == {('t', 'time', 'portal')}
+    answers['formulation'][2] = page('other', 's = t', [('t', 'duration')])
+    answers['formulation'][3] = page('third', 'z = t', [('z', 'height')])
+    derive_symbols(answers)
+    assert answers['formulation'][3]['SymbolsAmbiguous'] == {'t': ['other', 'portal']}
+    assert derived(answers['formulation'][0]) == set() and 'SymbolsAmbiguous' not in answers['formulation'][0]

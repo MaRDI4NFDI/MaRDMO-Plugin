@@ -77,8 +77,10 @@ a star belongs to its symbol (`C_P`, `C^\text{f}_\text{m}`, `x^*`), a power does
 not (`x^2`); `A_m`, `A_\text{m}` and `A_{\mathrm{m}}` are the same symbol, as
 the MaRDI Portal and the formulas write them differently; the longest symbol
 wins (`\Delta t` before `t`); the differential (`\frac{dT}{dt}`, `\, dx`) is not
-the symbol `d`, and its variable is used even inside a longer symbol (the `t`
-of a row `\frac{dc}{dt}`, of `\partial_t`).  So `C` is never found in `C_P`, and
+the symbol `d`.  A symbol inside a longer one is used as well (the `t` of a row
+`s(t)` or `\frac{dc}{dt}`, the `D` of `\frac{D}{h^2}`, and of `\partial_t`), but not
+at its start, under an accent or an operator, or in a name written in letters
+(`D_1` of `D_1(0)`, `\Delta t`, `\tilde{A}`, the `o` of `score_{max}`).  So `C` is never found in `C_P`, and
 `t_1` is not `t`.  Upright is another symbol than italic (`\mathrm{i}`, the
 imaginary unit, and the index `i`); a row that does not start with a symbol
 (`^2` for "square" on the portal) defines nothing for other formulas.
