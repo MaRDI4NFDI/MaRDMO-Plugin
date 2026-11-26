@@ -61,8 +61,9 @@ Portal without *symbol represents* comes into the questionnaire without a
 quantity, so the checks and the preview ask for it.
 
 **Symbols entered once (#179).**  The rows of all symbol tables define the
-symbols of a documentation.  A formula that uses a symbol defined with exactly
-one quantity, without a row of its own, gets the row derived
+symbols of a documentation.  A formula of the user's own items that uses a
+symbol defined with exactly one quantity, without a row of its own, gets the
+row derived (a MaRDI Portal item keeps its table as the portal has it)
 (`MaRDMO.model.symbols`): each time the answers are read, so the checks, the
 preview (*cf. page …*) and the payload see the same tables; nothing is written
 to the project, and an own row always wins.  A symbol defined with several
@@ -76,7 +77,11 @@ a star belongs to its symbol (`C_P`, `C^\text{f}_\text{m}`, `x^*`), a power does
 not (`x^2`); `A_m`, `A_\text{m}` and `A_{\mathrm{m}}` are the same symbol, as
 the MaRDI Portal and the formulas write them differently; the longest symbol
 wins (`\Delta t` before `t`); the differential (`\frac{dT}{dt}`, `\, dx`) is not
-the symbol `d`.  So `C` is never found in `C_P`.
+the symbol `d`, and its variable is used even inside a longer symbol (the `t`
+of a row `\frac{dc}{dt}`, of `\partial_t`).  So `C` is never found in `C_P`, and
+`t_1` is not `t`.  Upright is another symbol than italic (`\mathrm{i}`, the
+imaginary unit, and the index `i`); a row that does not start with a symbol
+(`^2` for "square" on the portal) defines nothing for other formulas.
 
 Allowed URL schemes are `http` and `https`; the *source code repository URL*
 additionally accepts `git`, `ssh`, `svn`, `cvs`, `bzr` and `ftp`.  Only `http`

@@ -30,7 +30,7 @@ def test_a_power_is_not_part_of_the_symbol():
 
 def test_every_letter_is_a_symbol_and_words_are_not():
     assert [str(token) for token in tokens(r'bsi \text{if} \begin{cases} a \end{cases}')] == [
-        'b', 's', 'i', 'if', r'\begin{cases}', 'a', r'\end{cases}']
+        'b', 's', 'i', r'\mathrm{if}', r'\begin{cases}', 'a', r'\end{cases}']
     assert occurrences('s', r'\begin{cases} s \end{cases}') == [1]
 
 
@@ -45,8 +45,8 @@ def test_the_differential_is_not_the_symbol_d(tex):
     assert occurrences('d', tex) == [last]
 
 
-def page(tab, tex=None, rows=()):
-    entry = {'Tab': tab, 'element': {index: {'symbol': symbol, 'quantity': {'ID': quantity, 'Name': quantity}}
+def page(tab, tex=None, rows=(), identifier=None):
+    entry = {'Tab': tab, 'ID': identifier or f'user:{tab}', 'element': {index: {'symbol': symbol, 'quantity': {'ID': quantity, 'Name': quantity}}
                                      for index, (symbol, quantity) in enumerate(rows)}}
     if tex is not None:
         entry['Formula'] = {0: tex}
@@ -122,3 +122,51 @@ def test_a_symbol_is_not_found_inside_another():
     }}
     derive_symbols(answers)
     assert derived(answers['formulation'][1]) == {('C_P', 'isobaric', 'heat'), ('C_V', 'isochoric', 'heat')}
+
+
+# --- Cases of the MaRDI Portal's models (#179) -------------------------------------------------
+
+def test_upright_is_another_symbol_than_italic():
+    '''``\\mathrm{i}`` is the imaginary unit (portal Q6481153), ``i`` an index or a variable.'''
+    assert canonical(r'\mathrm{i}') != canonical('i') and canonical(r'\mathrm{i}') == canonical(r'\text{i}')
+    answers = {'quantity': {0: page('imaginary unit', r'\mathrm{i} \equiv \sqrt{-1}', [(r'\mathrm{i}', 'imaginary unit')])},
+               'formulation': {0: page('wave', r'\psi = e^{\mathrm{i} \omega t} + x_i + i', [(r'\psi', 'wave function')])}}
+    derive_symbols(answers)
+    assert derived(answers['formulation'][0]) == {(r'\mathrm{i}', 'imaginary unit', 'imaginary unit')}
+
+
+def test_an_operator_written_as_a_row_defines_nothing():
+    '''The portal's "imaginary unit" has the row ``^2`` for "square": it is not found in every square.'''
+    answers = {'quantity': {0: page('imaginary unit', r'\mathrm{i} \equiv \sqrt{-1}', [('^2', 'square')])},
+               'formulation': {0: page('energy', r'E = m c^2', [('E', 'energy')])}}
+    derive_symbols(answers)
+    assert derived(answers['formulation'][0]) == set()
+
+
+def test_the_variable_of_a_derivative_counts_inside_a_longer_symbol():
+    '''Portal Theorell-Chance models: the derivative is a row of its own, its ``t`` is used all the same.'''
+    answers = {'formulation': {
+        0: page('ODE system', r'\frac{dc_{E}}{dt} = k_{1} c_{E}', [(r'\frac{dc_{E}}{dt}', 'rate'), ('c_{E}', 'enzyme'),
+                                                                  ('k_{1}', 'rate constant'), ('t', 'time')]),
+        1: page('enzyme ODE', r'\frac{dc_{E}}{dt} = - k_{1} c_{E}', [(r'\frac{dc_{E}}{dt}', 'rate')]),
+        2: page('heat equation', r'\partial_t u = \Delta u', [('u', 'temperature')]),
+    }}
+    derive_symbols(answers)
+    assert ('t', 'time', 'ODE system') in derived(answers['formulation'][1])
+    assert derived(answers['formulation'][2]) == {('t', 'time', 'ODE system')}
+
+
+def test_an_indexed_variant_is_another_symbol():
+    '''``t_1`` is not ``t`` (portal Gramians): such a formula needs the row itself (the help says so).'''
+    answers = {'formulation': {0: page('a', 't = 0', [('t', 'time')]),
+                               1: page('Gramian', r'P_{1}(t_{1}) \equiv e^{A t_{1}} B', [('A', 'matrix')])}}
+    derive_symbols(answers)
+    assert all(symbol != 't' for symbol, _, _ in derived(answers['formulation'][1]))
+
+
+def test_a_portal_item_keeps_its_table():
+    '''Only the user's own items get rows: a portal formula's table stays as the portal has it.'''
+    answers = {'formulation': {0: page('own', 'T = t', [('T', 'temperature'), ('t', 'time')]),
+                               1: page('portal', 'T(t) = T_0 e^{-t}', identifier='mardi:Q1')}}
+    derive_symbols(answers)
+    assert derived(answers['formulation'][1]) == set() and 'SymbolsUnknown' not in answers['formulation'][1]
