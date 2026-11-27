@@ -56,7 +56,7 @@ def question(page, text):
 
 
 def formula_field(page):
-    formula = question(page, 'Defining Formula')
+    formula = question(page, 'Defining formula')
     field = formula.locator('.interview-input input').first
     field.wait_for(timeout=30000)
     return formula, field, formula.locator('.mardmo-math-preview')
