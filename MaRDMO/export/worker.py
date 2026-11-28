@@ -372,7 +372,7 @@ class CatalogExport:
                     payload.add_answer(
                         verb = self.properties["DOI"],
                         object_and_type = [
-                            entry["reference"][0][1].upper(),
+                            entry["reference"][0][1],
                             "external-id"
                         ],
                     )

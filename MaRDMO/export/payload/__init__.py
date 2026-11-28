@@ -214,7 +214,17 @@ class GeneratePayload:
 
     def add_qualifier(self, identifier, data_type, content):
         '''Build a single-qualifier list for use in :meth:`add_answer` (:func:`~MaRDMO.export.payload.bodies.build_qualifier`).'''
-        return build_qualifier(identifier, data_type, content)
+        return build_qualifier(identifier, data_type, self._portal_form(identifier, content))
+
+    def _portal_form(self, prop_id, value):
+        '''*value* as the MaRDI Portal writes it for the property *prop_id*: a DOI in uppercase (#217).
+
+        Every statement and qualifier passes here, whatever the user typed or a
+        source returned; the answers in the project stay as they are.
+        '''
+        if isinstance(value, str) and prop_id == self.wikibase['properties'].get('DOI'):
+            return value.upper()
+        return value
 
     def add_data_properties(self, item_class):
         '''Add ``instance of`` statements for each data property selected on the current subject.
@@ -401,7 +411,7 @@ class GeneratePayload:
             subject = self.state.subject_item
         if qualifier is None:
             qualifier = []
-        value = strip_text(object_and_type[0], object_and_type[1])
+        value = self._portal_form(verb, strip_text(object_and_type[0], object_and_type[1]))
         if object_and_type[1] in TEXT_TYPES and not text_of(value):
             return
         # Gather Statement

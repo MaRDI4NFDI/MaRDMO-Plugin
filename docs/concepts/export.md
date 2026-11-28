@@ -188,7 +188,10 @@ it, and nothing is exported.
 ### 6. Payload Construction
 
 `PrepareX().export()` translates the answers dict into a Wikibase-ready payload dict
-and a dependency graph:
+and a dependency graph.  Every DOI goes to the portal in uppercase, as a statement
+or a qualifier (`GeneratePayload._portal_form`), whatever the user typed or a source
+returned; the answers in the project keep their text, and a DOI the portal has in
+lowercase is left as it is.
 
 - **`unique_items()`** deduplicates all entities referenced across the questionnaire.
 - **`process_items()`** assigns each unique item to one of two tracks:
@@ -264,7 +267,8 @@ and a dependency graph:
   statement, with the same value and all its qualifiers, is there already
   (`payload.claims.exists_in_claims()`).  Values are compared by datatype: items by QID,
   text and formulas (LaTeX) as stored, monolingual text with its language,
-  quantities by amount and unit, dates by time and precision.  If the
+  quantities by amount and unit, dates by time and precision, DOIs without
+  regard to case.  If the
   statements cannot be fetched, the export is aborted, since posting without
   the check could create duplicate statements.
 - **Qualifier merge**: `merge_qualifiers()` then decides, with the same
