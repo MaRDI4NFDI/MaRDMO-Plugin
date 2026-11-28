@@ -3,9 +3,9 @@ from . import complete
 from .writer import Doi, New, Portal, Typed, Wikidata
 
 EGYPTIAN_OBJECTS = Portal('Q6032641', 'Logical Data Analysis for Egyptian Objects')
-SCIENTIFIC_WORKFLOW_SYSTEM = Wikidata('Q7433829', 'scientific workflow system')
+# The only Wikidata item below the research workflow root (Q115682347, #170); found by the start of its label
+REPRODUCIBILITY_PROTOCOL = Wikidata('Q115706422', 'A reproducibility protocol and dataset on the biomedical sentence similarity v3')
 EXTRACT_RULES = Portal('Q6486610', 'Extract logical Rules from encoded Subset of Objects from the Cachette de Karnak')
-DATA_CLEANSING = Wikidata('Q1172378', 'data cleansing')
 LENOVO = Portal('Q6487066', 'Lenovo IdeaPad Flex 5 14ARE05')
 RASPBERRY_PI = Wikidata('Q65015606', 'Raspberry Pi 4 Model B')
 MNIST_784 = Portal('Q6033287', 'mnist_784', search='MNIST')
@@ -13,7 +13,8 @@ MNIST = Wikidata('Q17069496', 'MNIST database')
 RYZEN = Portal('Q6487068', 'AMD Ryzen 7 4700U')
 XEON = Wikidata('Q66730546', 'Xeon E5-4650L')
 EXHAUSTION = Portal('Q7278483', 'method of exhaustion')
-GALERKIN = Wikidata('Q1491980', 'Galerkin method')
+# An experimental method below the method roots (#170); the Galerkin method is a numerical one
+MASS_SPECTROMETRY = Wikidata('Q180809', 'mass spectrometry')
 MICROSCOPE = Wikidata('Q196538', 'microscope')
 SIS_MODEL = Portal('Q6675171', 'susceptible infectious susceptible model')
 KINETIC_SIMULATION = Portal('Q6684556', 'simulation of complex kinetic systems')
@@ -119,18 +120,18 @@ def describe(doc):
     step_a.answer('field-relatant', EPIDEMIOLOGY, SCIENTIFIC_WORKFLOWS, Typed('MaRDMO synthetic academic discipline typed'))
     step_b.answer('input-data-set-relatant', datasets['C'])
     step_b.answer('output-data-set-relatant', datasets['D'], datasets['E'], MNIST)
-    step_b.block('experimental', {'method-relatant': [EXHAUSTION, GALERKIN,
+    step_b.block('experimental', {'method-relatant': [EXHAUSTION, MASS_SPECTROMETRY,
                                                       Typed('MaRDMO synthetic method')],
                                   'method-parameter': ['magnification 400x'],
                                   'method-documentation': [('doi', '10.5281/zenodo.4011114'),
                                                            ('url', 'https://www.mardi4nfdi.de/')],
                                   'instrument-relatant': MICROSCOPE})
-    step_b.block('experimental', {'method-relatant': [GALERKIN],
+    step_b.block('experimental', {'method-relatant': [MASS_SPECTROMETRY],
                                   'method-documentation': [('url', 'https://www.mardi4nfdi.de/')],
                                   'instrument-relatant': Typed('MaRDMO synthetic instrument')})
     step_b.answer('field-relatant', EPIDEMIOLOGY)
     doc.tab('processstep', 'PS3', EXTRACT_RULES)
-    data_cleansing = doc.tab('processstep', 'PS4', DATA_CLEANSING)
+    # no process step from Wikidata: it is not searched there (NO_WIKIDATA, #170)
 
     # --- Workflows: every answer of the reproducibility questions ----------------------------
     workflow_a = doc.tab('workflow', 'WF1', synthetic('workflow', 'A'))
@@ -146,14 +147,14 @@ def describe(doc):
     workflow_a.answer('transferability', 'other data sets of handwritten digits', 'other sorting tasks')
     workflow_a.block('workflow-to-model', {'model': SIS_MODEL, 'task': [KINETIC_SIMULATION]})
     typed_step = Typed('MaRDMO synthetic process step typed')
-    workflow_a.answer('step-relatant', step_a, step_b, EXTRACT_RULES, data_cleansing, typed_step)
+    workflow_a.answer('step-relatant', step_a, step_b, EXTRACT_RULES, typed_step)
     workflow_b.answer('step-relatant', step_b)
     workflow_c.answer('step-relatant', step_a)
     workflow_a.block('workflow-to-workflow', {'workflow-relation': 'contains', 'workflow-relatant': [workflow_b]})
     workflow_b.block('workflow-to-workflow', {'workflow-relation': 'contained-in',
                                               'workflow-relatant': [workflow_a, EGYPTIAN_OBJECTS]})
     doc.tab('workflow', 'WF4', EGYPTIAN_OBJECTS)
-    doc.tab('workflow', 'WF5', SCIENTIFIC_WORKFLOW_SYSTEM)
+    doc.tab('workflow', 'WF5', REPRODUCIBILITY_PROTOCOL)
 
     # --- Publications -------------------------------------------------------------------------
     publication = doc.tab('publication', 'P1', HEROIN_EPIDEMICS)

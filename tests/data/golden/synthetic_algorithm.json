@@ -321,7 +321,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:4cc73cb2-f227-53c3-8c43-5d0031b9fbc8"
+    "user:bd7bb988-acb1-439a-8dc9-0b0a7307a48c"
    ]
   },
   "Item0000000001": {
@@ -451,7 +451,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:cfc2a60d-f0be-59a7-8107-3685a9f30eec"
+    "user:48d6eeed-e604-4c57-b6b6-3ba4edbd3b33"
    ]
   },
   "Item0000000002": {
@@ -673,7 +673,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:240c94dc-3b00-5bb2-bff9-a481e1f87d43"
+    "user:62a1c8b6-24ed-4f4f-8247-35f19acac029"
    ]
   },
   "Item0000000005": {
@@ -980,7 +980,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:200eafb2-2133-5ddc-8bbd-c28d987b47e7"
+    "user:0b3deb0f-33e7-4898-b909-32e13dcd67d8"
    ]
   },
   "Item0000000006": {
@@ -1220,7 +1220,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:36f7d52b-af13-5328-aaa6-6f0912b944ed"
+    "user:334abf06-6d52-494d-b886-9372163e9133"
    ]
   },
   "Item0000000009": {
@@ -1396,7 +1396,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:5668578d-1992-557e-aad9-4befe0b1758e"
+    "user:8d57884b-a0c3-452d-8d81-44e2ddf508b5"
    ]
   },
   "Item0000000010": {
@@ -1526,7 +1526,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:309e04e9-72f4-5ff8-91fe-ad372d2cf235"
+    "user:56a444a4-f8fe-4a57-a72c-c1b6bc109185"
    ]
   },
   "Item0000000012": {
@@ -1681,7 +1681,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:52fc8d76-8b56-5ac6-b3cd-6f70b087c4e9"
+    "user:9511f4e9-7f39-4328-9862-41c21f04dda8"
    ]
   },
   "Item0000000013": {
@@ -2146,7 +2146,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:b6028d35-ec68-52b9-bc87-a9217451b45d"
+    "user:fac5abf5-c97d-4344-81af-0ffe858f7c2b"
    ]
   },
   "Item0000000024": {
@@ -2167,16 +2167,16 @@
   },
   "Item0000000025": {
    "class": "Benchmark",
-   "description": "database of handwritten digits",
+   "description": "synthetic benchmark for evaluating the performance of computers",
    "id": "",
-   "label": "MNIST database",
+   "label": "Whetstone",
    "payload": {
     "item": {
      "descriptions": {
-      "en": "database of handwritten digits"
+      "en": "synthetic benchmark for evaluating the performance of computers"
      },
      "labels": {
-      "en": "MNIST database"
+      "en": "Whetstone"
      },
      "statements": {
       "P104": [
@@ -2186,7 +2186,7 @@
          "id": "P104"
         },
         "value": {
-         "content": "https://paperswithcode.com/dataset/mnist",
+         "content": "https://portal.mardi4nfdi.de/",
          "type": "value"
         }
        }
@@ -2198,7 +2198,7 @@
          "id": "P12"
         },
         "value": {
-         "content": "Q17069496",
+         "content": "Q608140",
          "type": "value"
         }
        }
@@ -2258,7 +2258,7 @@
     [
      "P12",
      "external-id",
-     "Q17069496"
+     "Q608140"
     ],
     [
      "P930",
@@ -2287,7 +2287,7 @@
     [
      "P104",
      "URL",
-     "https://paperswithcode.com/dataset/mnist",
+     "https://portal.mardi4nfdi.de/",
      []
     ]
    ],
@@ -2386,7 +2386,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:67ab3bb1-98ff-5c7b-b245-85294b540c51"
+    "user:d5c4aa0a-710c-4060-b832-fa30dca71deb"
    ]
   },
   "Item0000000027": {
@@ -2500,7 +2500,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:a93374f4-1de1-52ce-88e0-c99cc3c6caee"
+    "user:ce6a4a2b-d4c8-4f40-9369-89a5eb323e06"
    ]
   },
   "Item0000000028": {
@@ -2706,7 +2706,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:2ce2c556-412c-5f54-be7f-9da7340fbb33"
+    "user:1d808be6-4876-4d3a-8327-17be64d657d1"
    ]
   },
   "Item0000000036": {
@@ -2823,7 +2823,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:c65deb29-14a7-510d-b99c-b56011e45740"
+    "user:71e61aa5-453f-4afc-9732-c1148398439a"
    ]
   },
   "Item0000000039": {
@@ -2920,7 +2920,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:cb1fb66d-d7a9-59ec-a49b-2f4f2dee1110"
+    "user:c33c6f0b-afdf-4a55-8d4d-32fa381674e8"
    ]
   },
   "Item0000000041": {
@@ -4224,7 +4224,7 @@
    ],
    "url": "https://portal.mardi4nfdi.de/w/rest.php/wikibase/v1/entities/items",
    "user_ids": [
-    "user:6aecf941-036a-52a5-a3c4-895fa4a1dffc"
+    "user:975c73c6-bbc5-4b23-9139-e7461810fdfe"
    ]
   },
   "Item0000000074": {

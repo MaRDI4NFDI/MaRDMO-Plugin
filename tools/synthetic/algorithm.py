@@ -14,7 +14,8 @@ SCIPY = Portal('Q6825551', 'SciPy')
 MATPLOTLIB_INLINE = Wikidata('Q107380685', 'matplotlib-inline')
 HPL = Portal('Q6826014', 'HPL')
 MIPLIB = Portal('Q6826034', 'MIPLIB 2017')
-MNIST = Wikidata('Q17069496', 'MNIST database')
+# A Wikidata benchmark below the benchmark root (Q816747, #170); MNIST is a data set there
+WHETSTONE = Wikidata('Q608140', 'Whetstone')
 PYTHON = Portal('Q6230810', 'Python')
 FORTRAN = Portal('Q56773', 'Fortran')
 FORTRAN_90 = Wikidata('Q20754790', 'Fortran 90')
@@ -36,7 +37,7 @@ def describe(doc):
                        ('source-code-repository-url', 'https://github.com/MaRDI4NFDI/MaRDMO-Plugin'))
     benchmark_b.answer('reference', ('described-at-url', 'https://portal.mardi4nfdi.de/'))
     doc.tab('benchmark', 'B3', HPL)
-    doc.tab('benchmark', 'B4', MNIST)
+    doc.tab('benchmark', 'B4', WHETSTONE)
 
     # --- Software ------------------------------------------------------------------------------
     software_a = doc.tab('software', 'S1', synthetic('software', 'A'))
@@ -57,7 +58,7 @@ def describe(doc):
     typed.answer('description', 'synthetic software typed into a relation')
     typed.answer('reference', ('described-at-url', 'https://www.mardi4nfdi.de/'))
     typed_benchmark = Typed('MaRDMO synthetic benchmark typed')
-    software_a.answer('benchmark-relatant', benchmark_a, HPL, MNIST, typed_benchmark)
+    software_a.answer('benchmark-relatant', benchmark_a, HPL, WHETSTONE, typed_benchmark)
     typed = doc.find('benchmark', typed_benchmark)
     typed.answer('description', 'synthetic benchmark typed into a relation')
     typed.answer('reference', ('morwiki', 'Flow_Meter'))
@@ -68,7 +69,7 @@ def describe(doc):
     task_b = doc.tab('problem', 'AT2', synthetic('algorithmic task', 'B'))
     doc.tab('problem', 'AT3', SORTING)
     doc.tab('problem', 'AT4', BIN_PACKING)
-    task_a.answer('benchmark-relatant', benchmark_a, HPL, MNIST, Typed('MaRDMO synthetic benchmark typed again'))
+    task_a.answer('benchmark-relatant', benchmark_a, HPL, WHETSTONE, Typed('MaRDMO synthetic benchmark typed again'))
     typed = doc.tabs('benchmark')[-1]
     typed.answer('description', 'synthetic benchmark typed into a relation of an algorithmic task')
     typed.answer('reference', ('described-at-url', 'https://www.mardi4nfdi.de/'))
