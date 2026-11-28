@@ -12,6 +12,7 @@ import re
 import requests
 from django.utils.translation import gettext as _
 
+from ...core.config import get_properties
 from ...sources.http import check_waits
 from ...sources.wikibase import ENTITIES_PER_REQUEST, get_entities
 from .errors import DocumentationProblem, PortalUnavailable
@@ -137,6 +138,9 @@ def snak_matches(snak, value, data_type):
         return isinstance(api, dict) and isinstance(value, dict) \
             and api.get('time') == value.get('time') \
             and api.get('precision') == value.get('precision', api.get('precision'))
+    if isinstance(api, str) and isinstance(value, str) and snak.get('property') == get_properties().get('DOI'):
+        # A DOI the portal has in lowercase is the same DOI (#217): no second statement in uppercase
+        return api.upper() == value.upper()
     return api == value
 
 
