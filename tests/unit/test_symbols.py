@@ -174,6 +174,27 @@ def portal(payload, *statements):
     ]}}
 
 
+def test_a_portal_formula_with_a_symbol_without_quantity_is_exported(payload):
+    """A portal formula whose symbol has no quantity there (hydrated so): the statement is the portal's own."""
+    payload.state.subject_item, payload.state.subject = FORMULA, {'element': {0: {'symbol': 'a'}}}
+    payload.add_in_defining_formula()
+    key = f'RELATION{payload.state.counter - 1}'
+    statement = payload.state.dictionary[key]['payload']['statement']
+    assert statement['value']['content'] == 'a' and statement.get('qualifiers', []) == []
+    payload._claims = {'Q1': {IN_FORMULA: [{'id': 'Q1$a', 'mainsnak': {'datavalue': {'value': 'a'}}}]}}
+    payload._fetch_claims = lambda qids, api_url, deadline, what: payload._claims
+    payload.check_existing_relations('https://portal.example.org/w/api.php')
+    assert payload.state.dictionary[key]['exists'] == 'true'
+
+
+def test_a_symbol_without_quantity_adds_nothing_to_a_new_formula(payload):
+    payload.state.dictionary['Item0000000003'] = {'id': '', 'label': 'new', 'description': 'a new formula',
+                                                  'statements': []}
+    payload.state.subject_item, payload.state.subject = 'Item0000000003', {'element': {0: {'symbol': 'a'}}}
+    payload.add_in_defining_formula()
+    assert payload.state.dictionary['Item0000000003']['statements'] == []
+
+
 def test_symbol_without_quantity_on_the_portal_is_completed(payload):
     key = symbol(payload)
     portal(payload, ('Q1$a', 'a', []))
