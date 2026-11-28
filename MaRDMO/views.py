@@ -19,7 +19,7 @@ exported data (built by :mod:`MaRDMO.export.success`), switchable via tab button
 
 **List view** — every newly created MaRDI Portal item, grouped by class, with
 all its statements shown as ``property → value`` lines.  Values that are
-external identifiers (DOI, ORCID, swMath ID, …) or URLs are rendered as
+external identifiers (DOI, ORCID, swMATH ID, …) or URLs are rendered as
 clickable links.  Qualifier statements are shown indented beneath their parent.
 Mathematical expressions (``math`` datatype) are typeset via
 `MathJax <https://www.mathjax.org/>`_ (Apache 2.0).

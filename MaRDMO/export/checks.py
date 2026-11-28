@@ -69,7 +69,7 @@ def has_old_id(entry):
 # Reference answers to check: (option key, label in messages, noun for "no ... provided")
 SOFTWARE_REFERENCE_CHECKS = (
     ('DOI',             'DOI',             'ID'),
-    ('SWMATH',          N_('swMath ID'),       'ID'),
+    ('SWMATH',          N_('swMATH ID'),       'ID'),
     ('DESCRIPTION_URL', N_('Description URL'), 'URL'),
     ('SOURCECODE_URL',  N_('Repository URL'),  'URL'),
 )

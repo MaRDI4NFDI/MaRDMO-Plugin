@@ -211,8 +211,8 @@ msgid "Made with MaRDMO before 0.8.0, not supported (enter it in a new project)"
 msgstr "Mit MaRDMO vor 0.8.0 erstellt, nicht unterstützt (bitte in einem neuen Projekt erfassen)"
 
 #: MaRDMO/export/checks.py:72 MaRDMO/templates/MaRDMO/preview_algorithm.html:63 MaRDMO/templates/MaRDMO/preview_workflow.html:126
-msgid "swMath ID"
-msgstr "swMath-ID"
+msgid "swMATH ID"
+msgstr "swMATH-ID"
 
 #: MaRDMO/export/checks.py:73 MaRDMO/export/checks.py:79
 msgid "Description URL"
@@ -394,39 +394,39 @@ msgstr "Item in der Aussage fehlt!"
 msgid "All Items need to have a 'Name' and 'Description'!"
 msgstr "Alle Items brauchen einen 'Namen' und eine 'Beschreibung'!"
 
-#: MaRDMO/export/payload/__init__.py:944
+#: MaRDMO/export/payload/__init__.py:954
 msgid "Could not check which Wikidata items already exist on the MaRDI Portal (the portal did not answer). Nothing was exported; please try again later."
 msgstr "Es konnte nicht geprüft werden, welche Wikidata-Items es auf dem MaRDI Portal schon gibt (das Portal hat nicht geantwortet). Es wurde nichts exportiert; bitte versuchen Sie es später erneut."
 
-#: MaRDMO/export/payload/__init__.py:949
+#: MaRDMO/export/payload/__init__.py:959
 msgid "Could not check which publications already exist on the MaRDI Portal by their DOI (the portal did not answer). Nothing was exported; please try again later."
 msgstr "Es konnte nicht über ihre DOI geprüft werden, welche Publikationen es auf dem MaRDI Portal schon gibt (das Portal hat nicht geantwortet). Es wurde nichts exportiert; bitte versuchen Sie es später erneut."
 
-#: MaRDMO/export/payload/__init__.py:962
+#: MaRDMO/export/payload/__init__.py:972
 msgid "'{name}' ({description}) has the label and description of the Wikidata item {qid} of this documentation; the MaRDI Portal takes only one item per label and description. Rename yours, or select the Wikidata item."
 msgstr "'{name}' ({description}) hat das Label und die Beschreibung des Wikidata-Items {qid} dieser Dokumentation; das MaRDI Portal nimmt nur ein Item pro Label und Beschreibung an. Benennen Sie Ihres um oder wählen Sie das Wikidata-Item."
 
-#: MaRDMO/export/payload/__init__.py:968
+#: MaRDMO/export/payload/__init__.py:978
 msgid "'{name}' has the DOI {doi}, which the MaRDI Portal has as {portal_qid}: it is this publication. Use the portal item (in the preview), or correct the DOI."
 msgstr "'{name}' hat die DOI {doi}, die das MaRDI Portal als {portal_qid} hat: Es ist diese Publikation. Verwenden Sie das Portal-Item (in der Vorschau), oder korrigieren Sie die DOI."
 
-#: MaRDMO/export/payload/__init__.py:974
+#: MaRDMO/export/payload/__init__.py:984
 msgid "'{name}' ({description}) is the Wikidata item {qid}, which exists on the MaRDI Portal as {portal_qid}. Use the portal item, or choose another item or make it a new item."
 msgstr "'{name}' ({description}) ist das Wikidata-Item {qid}, das es auf dem MaRDI Portal als {portal_qid} gibt. Verwenden Sie das Portal-Item, oder wählen Sie ein anderes Item oder machen Sie es zu einem neuen Item."
 
-#: MaRDMO/export/payload/__init__.py:980
+#: MaRDMO/export/payload/__init__.py:990
 msgid "An item ({qid}) with the label '{name}' and description '{description}' already exists on the MaRDI Portal. Use the portal item, or rename yours."
 msgstr "Ein Item ({qid}) mit dem Label '{name}' und der Beschreibung '{description}' gibt es auf dem MaRDI Portal schon. Verwenden Sie das Portal-Item oder benennen Sie Ihres um."
 
-#: MaRDMO/export/payload/claims.py:53
+#: MaRDMO/export/payload/claims.py:54
 msgid "Could not check which statements already exist on the MaRDI Portal (API not reachable). Nothing was exported; please try again later."
 msgstr "Es konnte nicht geprüft werden, welche Aussagen es auf dem MaRDI Portal schon gibt (API nicht erreichbar). Es wurde nichts exportiert; bitte versuchen Sie es später erneut."
 
-#: MaRDMO/export/payload/claims.py:55
+#: MaRDMO/export/payload/claims.py:56
 msgid "Could not check which formulas already exist on the MaRDI Portal (API not reachable). Nothing was exported; please try again later."
 msgstr "Es konnte nicht geprüft werden, welche Formeln es auf dem MaRDI Portal schon gibt (API nicht erreichbar). Es wurde nichts exportiert; bitte versuchen Sie es später erneut."
 
-#: MaRDMO/export/payload/claims.py:338
+#: MaRDMO/export/payload/claims.py:342
 msgid "\"{label}\" ({qid}): on the MaRDI Portal the symbol {symbol} already stands for {other}. MaRDMO cannot change this: use that quantity for the symbol, or correct it on the MaRDI Portal."
 msgstr "\"{label}\" ({qid}): Auf dem MaRDI Portal steht das Symbol {symbol} schon für {other}. MaRDMO kann das nicht ändern: Verwenden Sie diese Quantität für das Symbol oder korrigieren Sie es auf dem MaRDI Portal."
 
@@ -498,7 +498,7 @@ msgstr "Das MaRDI Portal hat den Wert für \"{field}\" von {target} abgelehnt. B
 msgid "the new item '{label}'"
 msgstr "dem neuen Item '{label}'"
 
-#: MaRDMO/export/portal_errors.py:110 MaRDMO/model/checks.py:139 MaRDMO/model/checks.py:139 MaRDMO/model/validators.py:57 MaRDMO/model/validators.py:58
+#: MaRDMO/export/portal_errors.py:110
 msgid "label"
 msgstr "Label"
 
