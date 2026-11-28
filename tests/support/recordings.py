@@ -28,11 +28,16 @@ from pathlib import Path
 import requests
 from requests.structures import CaseInsensitiveDict
 
+from MaRDMO.sources.http import SPARQL_RETRY_STATUS
+
 FOLDER = Path(__file__).parent.parent / 'data' / 'recorded'
 PAUSE = 1
 REAL_REQUEST = requests.Session.request
 # Recordings written in this test run: later tests add their requests
 _WRITTEN = set()
+# A service that is down for a moment answers like this; such an answer is never recorded, else a
+# test would replay the outage for good (a 502 of the portal's TeX check, 2026-11-28)
+TRANSIENT = SPARQL_RETRY_STATUS
 VALUES_BLOCK = re.compile(r'(VALUES\s+\?\w+\s*\{)([^}]*)(\})')
 
 
@@ -98,6 +103,8 @@ def replay(monkeypatch, names, missing):
             # RECORD=missing: send it for real and add it to the last recording
             time.sleep(PAUSE)
             response = REAL_REQUEST(session, method, url, params=params, data=data, **kwargs)
+            if response.status_code in TRANSIENT:
+                return response
             entry = {'key': request_key, 'url': url, 'status': response.status_code,
                      'content_type': response.headers.get('Content-Type', ''), 'body': response.text,
                      'request': sent(method, params, data, kwargs.get('headers'))}
@@ -127,6 +134,8 @@ def record(monkeypatch, names):
     def request(session, method, url, params=None, data=None, **kwargs):
         time.sleep(PAUSE)
         response = REAL_REQUEST(session, method, url, params=params, data=data, **kwargs)
+        if response.status_code in TRANSIENT:
+            return response
         with lock:
             entries[key(method, url, params, data)] = {
                 'key': key(method, url, params, data), 'url': url, 'status': response.status_code,
