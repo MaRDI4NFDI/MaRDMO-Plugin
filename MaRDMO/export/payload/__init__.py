@@ -593,18 +593,16 @@ class GeneratePayload:
         to the quantity item via a qualifier.
         '''
         for element in self.state.subject.get('element', {}).values():
-            # Get Item Key
-            quantity_item = self.get_item_key(
-                element.get('quantity', {}),
-                'object'
-            )
-            # Add Quantity Qualifier
+            # A symbol without quantity (a portal item can have one): no item, no qualifier
+            quantity = element.get('quantity') or {}
+            quantity_item = self.get_item_key(quantity, 'object') if quantity else None
             qualifier = self.add_qualifier(
                 self.wikibase['properties']['symbol represents'],
                 'wikibase-item',
                 quantity_item
-            )
-            # A symbol without quantity adds nothing to a new item.  A
+            ) if quantity_item else []
+            # A symbol without quantity adds nothing to a new item; on an existing
+            # item it is compared with the portal's statement like any other.  A
             # quantity whose formula has its own symbol refers to itself:
             # order_items adds that statement after its creation (#164)
             if self.state.dictionary[self.state.subject_item]['id'] or ITEM_KEY_RE.match(quantity_item or ''):
